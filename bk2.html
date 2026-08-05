@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>BK1 · Berpikir Komputasional · Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* Gaya tambahan untuk konten dan aktivitas interaktif */
+    .materi-detail {
+      margin: 1.2rem 0 0.8rem 0;
+      border: 1px solid #e0d3c8;
+      border-radius: 16px;
+      background: #fcf9f6;
+      overflow: hidden;
+    }
+    .materi-detail summary {
+      padding: 0.9rem 1.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #3b2b1e;
+      background: #f3ede6;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.2s;
+    }
+    .materi-detail summary:hover {
+      background: #ece2d7;
+    }
+    .materi-detail summary::-webkit-details-marker {
+      display: none;
+    }
+    .materi-detail summary::after {
+      content: "▾";
+      font-size: 1.2rem;
+      color: #7a6656;
+      transition: transform 0.3s;
+    }
+    .materi-detail[open] summary::after {
+      transform: rotate(180deg);
+    }
+    .materi-detail .isi-detail {
+      padding: 1.2rem 1.8rem 1.8rem 1.8rem;
+      border-top: 1px solid #e5dbd0;
+    }
+    .materi-detail .isi-detail ul {
+      margin-left: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .materi-detail .isi-detail li {
+      margin-bottom: 0.5rem;
+    }
+    .materi-detail .isi-detail strong {
+      color: #4d3829;
+    }
+
+    /* Gaya untuk aktivitas game */
+    #game-container {
+      background: #f5f0eb;
+      border-radius: 28px;
+      padding: 1.8rem 2rem;
+      margin-top: 2rem;
+      border: 2px solid #d9cdbf;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+    }
+    #game-container h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.25rem;
+    }
+    #game-container .sub-game {
+      color: #5c4a3a;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px dashed #d9cdbf;
+      padding-bottom: 0.5rem;
+    }
+    #game-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      background: #e8e0d8;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      color: #2f241b;
+    }
+    #game-status .skor {
+      background: #4d3829;
+      color: #f5ede6;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+    }
+    .scene {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .scene.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .scene h4 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #4d3829;
+      margin-bottom: 0.3rem;
+    }
+    .scene .cerita {
+      background: #fcf9f6;
+      padding: 1rem 1.5rem;
+      border-radius: 16px;
+      border-left: 6px solid #dbb9a6;
+      margin: 0.5rem 0 1.2rem 0;
+      font-style: italic;
+      color: #2f2822;
+    }
+    .scene .pertanyaan {
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin: 0.8rem 0 0.8rem 0;
+    }
+    .pilihan-jawaban {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 0.8rem 0 1rem 0;
+    }
+    .pilihan-jawaban button {
+      background: #f3ede6;
+      border: 2px solid #d9cdbf;
+      border-radius: 40px;
+      padding: 0.6rem 1.5rem;
+      text-align: left;
+      font-weight: 500;
+      font-size: 1rem;
+      color: #2f241b;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .pilihan-jawaban button:hover {
+      background: #ece2d7;
+      border-color: #b99f89;
+      transform: translateX(4px);
+    }
+    .pilihan-jawaban button:focus-visible {
+      outline: 3px solid #a3836a;
+    }
+    .pilihan-jawaban button.benar {
+      background: #c8e6d9;
+      border-color: #2d8f6f;
+      color: #1a4d3a;
+    }
+    .pilihan-jawaban button.salah {
+      background: #f7d4d4;
+      border-color: #b35a5a;
+      color: #6b2e2e;
+    }
+    .feedback {
+      background: #f5ede6;
+      padding: 0.8rem 1.5rem;
+      border-radius: 16px;
+      margin: 1rem 0 1.2rem 0;
+      border-left: 6px solid #b99f89;
+      display: none;
+    }
+    .feedback.tampil {
+      display: block;
+    }
+    .feedback.benar {
+      border-left-color: #2d8f6f;
+      background: #e6f4ef;
+    }
+    .feedback.salah {
+      border-left-color: #b35a5a;
+      background: #f7e6e6;
+    }
+    .tombol-game {
+      display: inline-block;
+      background: #4d3829;
+      color: #f5ede6;
+      border: none;
+      padding: 0.5rem 1.8rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-right: 0.5rem;
+      margin-top: 0.3rem;
+    }
+    .tombol-game:hover {
+      background: #6b4f3a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+    }
+    .tombol-game:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .tombol-game.sekunder {
+      background: #d9cdbf;
+      color: #2f241b;
+    }
+    .tombol-game.sekunder:hover {
+      background: #cbb9a8;
+    }
+
+    /* Drag and drop sederhana untuk algoritma */
+    .daftar-langkah {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin: 0.8rem 0 1rem 0;
+      max-width: 500px;
+    }
+    .item-langkah {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: #fcf9f6;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      border: 2px solid #d9cdbf;
+      transition: all 0.15s;
+    }
+    .item-langkah .nomor {
+      font-weight: 700;
+      color: #7a6656;
+      min-width: 28px;
+    }
+    .item-langkah .teks {
+      flex: 1;
+      font-weight: 500;
+    }
+    .item-langkah .tombol-geser {
+      background: #e8e0d8;
+      border: none;
+      border-radius: 30px;
+      padding: 0.1rem 0.7rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #4d3829;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .item-langkah .tombol-geser:hover {
+      background: #d9cdbf;
+    }
+    .item-langkah .tombol-geser:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Hasil akhir */
+    .hasil-akhir {
+      text-align: center;
+      padding: 1.5rem 0;
+    }
+    .hasil-akhir .level-badge {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #cd7f32, #a05a2c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hasil-akhir .level-badge.perak {
+      background: linear-gradient(135deg, #c0c0c0, #888888);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hasil-akhir .level-badge.emas {
+      background: linear-gradient(135deg, #f5d442, #d4a017);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hasil-akhir .level-badge.platinum {
+      background: linear-gradient(135deg, #a8d8ea, #5b9bd5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .sertifikat {
+      background: #fcf9f6;
+      border: 4px double #d9cdbf;
+      border-radius: 28px;
+      padding: 1.8rem;
+      max-width: 450px;
+      margin: 1.5rem auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    }
+    .sertifikat h5 {
+      font-size: 1.5rem;
+      color: #4d3829;
+      margin-bottom: 0.2rem;
+    }
+    .sertifikat .sub-sertifikat {
+      color: #7a6656;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 560px) {
+      #game-container {
+        padding: 1rem 1rem;
+      }
+      .scene h4 {
+        font-size: 1.1rem;
+      }
+      .pilihan-jawaban button {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+      }
+      .daftar-langkah {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <!-- diisi oleh script.js -->
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+
+      <h1>🧠 Berpikir Komputasional</h1>
+      <p style="font-size:1.1rem; font-weight:500; color:#4d3829;">Materi &amp; Aktivitas Interaktif — Kartu #2</p>
+
+      <!-- ===== BAGIAN MATERI ===== -->
+      <section style="margin-top:0.5rem;">
+
+        <h2>A. Pendahuluan: Apa Itu Berpikir Komputasional?</h2>
+        <p>Pernahkah kamu melihat filter di media sosial yang bisa mengubah wajah menjadi karakter kartun? Atau aplikasi navigasi yang memberi tahu rute tercepat untuk menghindari macet? Di balik semua teknologi canggih itu, ada sebuah cara berpikir yang disebut <strong>berpikir komputasional</strong> (<em>computational thinking</em>).</p>
+        <p><strong>Berpikir komputasional</strong> adalah pendekatan pemecahan masalah dengan mengadopsi cara berpikir yang logis dan terstruktur, seperti yang digunakan dalam ilmu komputer. Penting untuk dipahami: <em>ini bukan tentang berpikir seperti komputer</em>, melainkan tentang menggunakan pola pikir sistematis untuk menyelesaikan masalah kompleks di berbagai bidang—baik di dunia teknologi maupun kehidupan sehari-hari.</p>
+
+        <!-- Empat Pilar (dengan expand) -->
+        <h2>B. Empat Pilar Berpikir Komputasional</h2>
+        <p style="margin-bottom:0.8rem;">Berpikir komputasional memiliki empat pilar utama yang saling berkaitan:</p>
+
+        <!-- Pilar 1 -->
+        <details class="materi-detail">
+          <summary>1. Dekomposisi (Memecah Masalah)</summary>
+          <div class="isi-detail">
+            <p><strong>Dekomposisi</strong> adalah kemampuan memecah masalah besar menjadi bagian-bagian kecil yang lebih mudah dikelola.</p>
+            <p><strong>Contoh dalam kehidupan sehari-hari:</strong></p>
+            <ul>
+              <li><strong>Membuat proyek sekolah:</strong> Tidak langsung mengerjakan semuanya sekaligus, tapi memecahnya menjadi: menentukan topik → mencari referensi → membuat kerangka → menulis isi → membuat presentasi.</li>
+              <li><strong>Merencanakan acara ulang tahun:</strong> Dibagi menjadi beberapa tugas: menentukan lokasi, menyusun daftar tamu, memesan katering, menyiapkan hiburan.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Pilar 2 -->
+        <details class="materi-detail">
+          <summary>2. Pengenalan Pola (Pattern Recognition)</summary>
+          <div class="isi-detail">
+            <p><strong>Pengenalan pola</strong> adalah kemampuan menemukan kesamaan atau kemiripan dalam berbagai masalah.</p>
+            <p><strong>Contoh dalam kehidupan sehari-hari:</strong></p>
+            <ul>
+              <li><strong>Memasak:</strong> Jika kamu sudah bisa membuat nasi goreng, kamu akan lebih mudah membuat kwetiau goreng atau mie goreng karena proses dan bumbunya memiliki pola yang sama.</li>
+              <li><strong>Menganalisis kebiasaan:</strong> Menyadari bahwa setiap hari Senin pagi lalu lintas lebih macet, sehingga kamu memutuskan berangkat lebih awal.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Pilar 3 -->
+        <details class="materi-detail">
+          <summary>3. Abstraksi (Mengabaikan Detail yang Tidak Penting)</summary>
+          <div class="isi-detail">
+            <p><strong>Abstraksi</strong> adalah kemampuan fokus pada informasi penting dan mengabaikan detail yang tidak relevan.</p>
+            <p><strong>Contoh dalam kehidupan sehari-hari:</strong></p>
+            <ul>
+              <li><strong>Menggunakan peta:</strong> Saat melihat peta untuk mencari rute, kita tidak memperhatikan setiap pohon atau bangunan. Kita hanya fokus pada jalan, marka, dan arah.</li>
+              <li><strong>Memasak nasi goreng:</strong> Kita tidak perlu memikirkan bagaimana kedelai diolah menjadi kecap. Cukup fokus pada langkah memasak yang penting.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Pilar 4 -->
+        <details class="materi-detail">
+          <summary>4. Algoritma (Langkah-langkah Sistematis)</summary>
+          <div class="isi-detail">
+            <p><strong>Algoritma</strong> adalah serangkaian instruksi langkah demi langkah untuk menyelesaikan masalah.</p>
+            <p><strong>Contoh dalam kehidupan sehari-hari:</strong></p>
+            <ul>
+              <li><strong>Resep memasak:</strong> Algoritma membuat kopi instan: (1) Buka sachet, (2) Tuang ke gelas, (3) Panaskan air, (4) Tuang air panas, (5) Aduk, (6) Siap dinikmati.</li>
+              <li><strong>Petunjuk menuju sekolah:</strong> Rute yang kamu pikirkan sebelum berangkat adalah algoritma perjalanan.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Penerapan (dengan expand) -->
+        <h2 style="margin-top:2rem;">C. Penerapan Berpikir Komputasional dalam Kehidupan Sehari-hari</h2>
+
+        <details class="materi-detail">
+          <summary>1. Media Sosial dan Rekomendasi Konten</summary>
+          <div class="isi-detail">
+            <p>Pernah bertanya-tanya mengapa YouTube atau Instagram bisa merekomendasikan video atau produk yang sesuai dengan seleramu? Itu adalah hasil dari algoritma yang menggunakan pengenalan pola dari data aktivitasmu.</p>
+            <p><strong>Koneksi dengan Berpikir Komputasional:</strong></p>
+            <ul>
+              <li><strong>Pengenalan Pola:</strong> Sistem mendeteksi pola dari tontonan sebelumnya.</li>
+              <li><strong>Dekomposisi:</strong> Masalah "memberi rekomendasi" dipecah menjadi: analisis riwayat → deteksi preferensi → pencarian konten serupa.</li>
+              <li><strong>Algoritma:</strong> Ada langkah-langkah spesifik bagaimana rekomendasi itu dihasilkan.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="materi-detail">
+          <summary>2. Aplikasi Navigasi (Google Maps/Waze)</summary>
+          <div class="isi-detail">
+            <p>Aplikasi navigasi menggunakan algoritma canggih untuk menemukan rute tercepat.</p>
+            <p><strong>Koneksi dengan Berpikir Komputasional:</strong></p>
+            <ul>
+              <li><strong>Dekomposisi:</strong> Peta jalan dipecah menjadi titik (persimpangan) dan garis (jalan).</li>
+              <li><strong>Abstraksi:</strong> Hanya data jalan dan kondisi lalu lintas yang diperhatikan, bukan gedung atau pohon di sekitar.</li>
+              <li><strong>Algoritma:</strong> Ada perhitungan matematis untuk menemukan rute optimal.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="materi-detail">
+          <summary>3. Filter Wajah di Media Sosial</summary>
+          <div class="isi-detail">
+            <p>Filter yang mengikuti gerakan wajahmu secara real-time adalah contoh teknologi pengenalan pola dan citra.</p>
+            <p><strong>Koneksi dengan Berpikir Komputasional:</strong></p>
+            <ul>
+              <li><strong>Pengenalan Pola:</strong> Sistem mengenali pola wajah manusia (mata, hidung, mulut).</li>
+              <li><strong>Abstraksi:</strong> Hanya fitur-fitur penting wajah yang dideteksi, bukan detail seperti warna rambut atau latar belakang.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="materi-detail">
+          <summary>4. Game Online</summary>
+          <div class="isi-detail">
+            <p>Game seperti Mobile Legends atau PUBG menggunakan prinsip informatika dalam pengembangan karakter dan sistem permainan.</p>
+            <p><strong>Koneksi dengan Berpikir Komputasional:</strong></p>
+            <ul>
+              <li><strong>Dekomposisi:</strong> Pengembangan game dipecah menjadi bagian: grafis, audio, logika permainan, jaringan.</li>
+              <li><strong>Algoritma:</strong> Perilaku musuh (NPC) dalam game mengikuti algoritma tertentu.</li>
+            </ul>
+          </div>
+        </details>
+
+        <h2 style="margin-top:2rem;">D. Latihan: Mengaitkan Konsep dengan Kehidupan</h2>
+        <p>Coba perhatikan aktivitas sehari-harimu. Bisakah kamu menemukan contoh penerapan 4 pilar berpikir komputasional dalam kegiatan berikut?</p>
+        <ul>
+          <li>Menyusun jadwal belajar harian</li>
+          <li>Merencanakan perjalanan liburan keluarga</li>
+          <li>Menyusun strategi bermain game</li>
+          <li>Mengatur keuangan jajan mingguan</li>
+        </ul>
+      </section>
+
+      <!-- ===== AKTIVITAS INTERAKTIF ===== -->
+      <div id="game-container">
+        <h3>🎮 Petualangan Berpikir Komputasional</h3>
+        <div class="sub-game">Asah kemampuanmu dengan skenario interaktif!</div>
+
+        <div id="game-status">
+          <span id="progress-text">Skenario 0 / 6</span>
+          <span class="skor">⭐ Skor: <span id="skor-angka">0</span></span>
+        </div>
+
+        <!-- ===== SCENE 0: PEMBUKA ===== -->
+        <div id="scene-0" class="scene active">
+          <h4>🚀 Selamat Datang, Agen CT!</h4>
+          <div class="cerita">
+            Kamu adalah agen rahasia yang akan memulai petualangan di kota digital. 
+            Tugasmu: selesaikan setiap misi dengan menggunakan 4 pilar berpikir komputasional!
+          </div>
+          <div style="text-align:center; margin:1.5rem 0;">
+            <button class="tombol-game" id="btn-mulai" onclick="mulaiPetualangan()">▶ Mulai Petualangan</button>
+          </div>
+        </div>
+
+        <!-- ===== SCENE 1: RAKA & REKOMENDASI ===== -->
+        <div id="scene-1" class="scene">
+          <h4>📺 Skenario 1: Raka dan Rekomendasi Ajaib</h4>
+          <div class="cerita">
+            Raka terkejut saat YouTube merekomendasikan lagu baru dari band favoritnya, padahal dia belum pernah mencarinya.
+          </div>
+          <p class="pertanyaan">Menurutmu, mengapa YouTube bisa memberikan rekomendasi yang tepat? Konsep berpikir komputasional apa yang digunakan?</p>
+          <div class="pilihan-jawaban" id="pilihan-scene1">
+            <button onclick="jawabScene1(this, 'A')">A. Dekomposisi (memecah masalah)</button>
+            <button onclick="jawabScene1(this, 'B')">B. Pengenalan Pola (melihat kesamaan dari tontonan sebelumnya)</button>
+            <button onclick="jawabScene1(this, 'C')">C. Abstraksi (mengabaikan detail)</button>
+            <button onclick="jawabScene1(this, 'D')">D. Algoritma (langkah-langkah)</button>
+          </div>
+          <div id="feedback-1" class="feedback"></div>
+          <button class="tombol-game" id="lanjut-1" style="display:none;" onclick="lanjutScene(2)">Lanjut ➜</button>
+        </div>
+
+        <!-- ===== SCENE 2: AUREL & FILTER ===== -->
+        <div id="scene-2" class="scene">
+          <h4>🤳 Skenario 2: Aurel vs Filter Selfie</h4>
+          <div class="cerita">
+            Aurel suka selfie dengan filter yang bisa mengubah wajahnya menjadi karakter anime. Filter ini mengikuti gerakan wajahnya secara real-time.
+          </div>
+          <p class="pertanyaan">Bagaimana filter bisa mendeteksi wajah dengan cepat? Konsep apa yang diterapkan?</p>
+          <div class="pilihan-jawaban" id="pilihan-scene2">
+            <button onclick="jawabScene2(this, 'A')">A. Dekomposisi</button>
+            <button onclick="jawabScene2(this, 'B')">B. Pengenalan Pola</button>
+            <button onclick="jawabScene2(this, 'C')">C. Abstraksi (hanya fokus pada fitur penting wajah)</button>
+            <button onclick="jawabScene2(this, 'D')">D. Algoritma</button>
+          </div>
+          <div id="feedback-2" class="feedback"></div>
+          <button class="tombol-game" id="lanjut-2" style="display:none;" onclick="lanjutScene(3)">Lanjut ➜</button>
+        </div>
+
+        <!-- ===== SCENE 3: ALGORITMA KOPI ===== -->
+        <div id="scene-3" class="scene">
+          <h4>☕ Skenario 3: Membuat Kopi untuk Ibu</h4>
+          <div class="cerita">
+            Kamu ingin membantu ibu membuat kopi, tapi harus mengikuti urutan langkah yang benar.
+          </div>
+          <p class="pertanyaan">Susunlah langkah-langkah membuat kopi dengan urutan yang benar! (Geser dengan tombol ↑/↓)</p>
+          <div class="daftar-langkah" id="daftar-langkah-kopi">
+            <!-- Akan diisi oleh JS -->
+          </div>
+          <div id="feedback-3" class="feedback"></div>
+          <button class="tombol-game" onclick="periksaUrutanKopi()">Periksa Urutan</button>
+          <button class="tombol-game sekunder" onclick="resetUrutanKopi()">↺ Urutkan Ulang</button>
+          <button class="tombol-game" id="lanjut-3" style="display:none; margin-top:0.5rem;" onclick="lanjutScene(4)">Lanjut ➜</button>
+        </div>
+
+        <!-- ===== SCENE 4: DEKOMPOSISI LIBURAN ===== -->
+        <div id="scene-4" class="scene">
+          <h4>🏖️ Skenario 4: Merencanakan Liburan</h4>
+          <div class="cerita">
+            Keluarga akan merencanakan liburan ke pantai. Ada banyak hal yang harus diatur.
+          </div>
+          <p class="pertanyaan">Jika kamu ditugaskan merencanakan liburan, apa langkah pertama yang harus dilakukan dengan konsep dekomposisi?</p>
+          <div class="pilihan-jawaban" id="pilihan-scene4">
+            <button onclick="jawabScene4(this, 'A')">A. Memesan tiket pesawat</button>
+            <button onclick="jawabScene4(this, 'B')">B. Memecah perencanaan menjadi tugas-tugas kecil (transportasi, penginapan, makanan, aktivitas)</button>
+            <button onclick="jawabScene4(this, 'C')">C. Mencari tahu cuaca</button>
+            <button onclick="jawabScene4(this, 'D')">D. Menentukan tanggal berangkat</button>
+          </div>
+          <div id="feedback-4" class="feedback"></div>
+          <button class="tombol-game" id="lanjut-4" style="display:none;" onclick="lanjutScene(5)">Lanjut ➜</button>
+        </div>
+
+        <!-- ===== SCENE 5: TANTANGAN AKHIR ===== -->
+        <div id="scene-5" class="scene">
+          <h4>🕵️ Tantangan Akhir: Agen CT</h4>
+          <div class="cerita">
+            Kamu adalah agen rahasia yang harus menyelesaikan misi terakhir! Jawab 5 pertanyaan acak dengan tepat.
+          </div>
+          <div id="soal-tantangan">
+            <!-- Akan diisi JS -->
+          </div>
+          <div id="feedback-5" class="feedback"></div>
+          <div id="tombol-tantangan" style="margin-top:0.8rem;">
+            <button class="tombol-game" id="jawab-tantangan" onclick="jawabTantangan()">Kirim Jawaban</button>
+          </div>
+        </div>
+
+        <!-- ===== SCENE 6: HASIL AKHIR ===== -->
+        <div id="scene-6" class="scene">
+          <div class="hasil-akhir">
+            <h4>🏆 Misi Selesai!</h4>
+            <div id="hasil-level" style="margin: 1rem 0;">
+              <!-- Akan diisi JS -->
+            </div>
+            <div class="sertifikat" id="sertifikat-digital">
+              <h5>📜 Sertifikat Agen CT</h5>
+              <div class="sub-sertifikat">Diberikan kepada:</div>
+              <div style="font-size:1.2rem; font-weight:700; color:#4d3829; margin:0.3rem 0;">Pemenang Petualangan</div>
+              <div id="level-sertifikat" style="font-weight:700; font-size:1.1rem; color:#7a6656;">Level: --</div>
+              <div style="margin-top:0.5rem; font-size:0.9rem; color:#7a6656;">Skor: <span id="skor-akhir">0</span></div>
+            </div>
+            <button class="tombol-game" onclick="resetGame()" style="margin-top:1rem;">🔄 Main Lagi</button>
+          </div>
+        </div>
+
+        <!-- Navigasi antar scene -->
+        <div style="display:flex; gap:0.5rem; margin-top:1.5rem; flex-wrap:wrap; border-top:2px solid #d9cdbf; padding-top:1rem;">
+          <button class="tombol-game sekunder" id="btn-kembali" onclick="kembaliScene()" style="display:none;">◀ Kembali</button>
+        </div>
+      </div>
+
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- TOMBOL SCROLL -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="script.js"></script>
+
+  <!-- ===== SCRIPT AKTIVITAS INTERAKTIF ===== -->
+  <script>
+    // ===== VARIABEL GLOBAL =====
+    let skor = 0;
+    let sceneAktif = 0;
+    let jawabanBenarScene1 = false;
+    let jawabanBenarScene2 = false;
+    let jawabanBenarScene4 = false;
+    let urutanKopiBenar = false;
+    let soalTantangan = [];
+    let indeksSoalTantangan = 0;
+    let jawabanTantanganTerpilih = null;
+    let tantanganDimulai = false;
+    let jawabanTantanganDikunci = false;
+
+    // Data soal tantangan
+    const bankSoalTantangan = [
+      { 
+        soal: 'Apa nama pilar berpikir komputasional yang berarti "memecah masalah besar menjadi bagian-bagian kecil"?',
+        pilihan: ['Dekomposisi', 'Pengenalan Pola', 'Abstraksi', 'Algoritma'],
+        jawaban: 0
+      },
+      { 
+        soal: 'Konsep apa yang digunakan saat sistem YouTube merekomendasikan video berdasarkan riwayat tontonanmu?',
+        pilihan: ['Dekomposisi', 'Pengenalan Pola', 'Abstraksi', 'Algoritma'],
+        jawaban: 1
+      },
+      { 
+        soal: 'Saat menggunakan peta, kita hanya fokus pada jalan dan arah, bukan pada pohon atau bangunan. Ini contoh dari pilar...',
+        pilihan: ['Dekomposisi', 'Pengenalan Pola', 'Abstraksi', 'Algoritma'],
+        jawaban: 2
+      },
+      { 
+        soal: 'Resep memasak adalah contoh dari pilar berpikir komputasional yang disebut...',
+        pilihan: ['Dekomposisi', 'Pengenalan Pola', 'Abstraksi', 'Algoritma'],
+        jawaban: 3
+      },
+      { 
+        soal: 'Menyadari bahwa setiap hari Senin pagi lalu lintas lebih macet adalah contoh dari pilar...',
+        pilihan: ['Dekomposisi', 'Pengenalan Pola', 'Abstraksi', 'Algoritma'],
+        jawaban: 1
+      },
+      { 
+        soal: 'Merencanakan acara ulang tahun dengan membagi tugas ke dalam beberapa bagian adalah contoh dari pilar...',
+        pilihan: ['Dekomposisi', 'Pengenalan Pola', 'Abstraksi', 'Algoritma'],
+        jawaban: 0
+      },
+      { 
+        soal: 'Filter wajah di media sosial hanya mendeteksi fitur penting seperti mata dan hidung. Ini contoh dari pilar...',
+        pilihan: ['Dekomposisi', 'Pengenalan Pola', 'Abstraksi', 'Algoritma'],
+        jawaban: 2
+      },
+      { 
+        soal: 'Aplikasi navigasi menggunakan perhitungan matematis untuk menemukan rute tercepat. Ini contoh dari pilar...',
+        pilihan: ['Dekomposisi', 'Pengenalan Pola', 'Abstraksi', 'Algoritma'],
+        jawaban: 3
+      }
+    ];
+
+    // ===== ELEMEN DOM =====
+    const scenes = {
+      0: document.getElementById('scene-0'),
+      1: document.getElementById('scene-1'),
+      2: document.getElementById('scene-2'),
+      3: document.getElementById('scene-3'),
+      4: document.getElementById('scene-4'),
+      5: document.getElementById('scene-5'),
+      6: document.getElementById('scene-6')
+    };
+
+    const progressText = document.getElementById('progress-text');
+    const skorAngka = document.getElementById('skor-angka');
+    const btnKembali = document.getElementById('btn-kembali');
+
+    // ===== FUNGSI BANTU =====
+    function updateSkor() {
+      if (skorAngka) skorAngka.textContent = skor;
+    }
+
+    function tampilkanScene(n) {
+      // Sembunyikan semua
+      for (let key in scenes) {
+        if (scenes[key]) scenes[key].classList.remove('active');
+      }
+      // Tampilkan scene yang diminta
+      if (scenes[n]) {
+        scenes[n].classList.add('active');
+      }
+      sceneAktif = n;
+
+      // Update progress
+      const total = 6;
+      let label = '';
+      if (n === 0) label = 'Skenario 0 / ' + total;
+      else if (n === 6) label = '🏁 Selesai!';
+      else label = 'Skenario ' + n + ' / ' + total;
+      if (progressText) progressText.textContent = label;
+
+      // Tampilkan tombol kembali jika bukan scene 0 dan bukan scene 6
+      if (btnKembali) {
+        btnKembali.style.display = (n > 0 && n < 6) ? 'inline-block' : 'none';
+        if (n === 6) btnKembali.style.display = 'none';
+      }
+    }
+
+    // ===== FUNGSI NAVIGASI =====
+    function mulaiPetualangan() {
+      // Reset semua status
+      skor = 0;
+      updateSkor();
+      jawabanBenarScene1 = false;
+      jawabanBenarScene2 = false;
+      jawabanBenarScene4 = false;
+      urutanKopiBenar = false;
+      tantanganDimulai = false;
+      jawabanTantanganTerpilih = null;
+      jawabanTantanganDikunci = false;
+      indeksSoalTantangan = 0;
+
+      // Reset UI
+      resetFeedback();
+      
+      const lanjut1 = document.getElementById('lanjut-1');
+      const lanjut2 = document.getElementById('lanjut-2');
+      const lanjut3 = document.getElementById('lanjut-3');
+      const lanjut4 = document.getElementById('lanjut-4');
+      const jawabTantangan = document.getElementById('jawab-tantangan');
+      
+      if (lanjut1) lanjut1.style.display = 'none';
+      if (lanjut2) lanjut2.style.display = 'none';
+      if (lanjut3) lanjut3.style.display = 'none';
+      if (lanjut4) lanjut4.style.display = 'none';
+      if (jawabTantangan) {
+        jawabTantangan.style.display = 'inline-block';
+        jawabTantangan.disabled = false;
+        jawabTantangan.textContent = 'Kirim Jawaban';
+        jawabTantangan.onclick = function() { jawabTantangan(); };
+      }
+
+      // Reset pilihan
+      document.querySelectorAll('.pilihan-jawaban button').forEach(b => {
+        b.classList.remove('benar', 'salah');
+        b.disabled = false;
+      });
+
+      // Reset drag-drop kopi
+      resetUrutanKopi();
+
+      // Ambil 5 soal acak untuk tantangan
+      const shuffled = [...bankSoalTantangan].sort(() => Math.random() - 0.5);
+      soalTantangan = shuffled.slice(0, 5);
+      indeksSoalTantangan = 0;
+
+      tampilkanScene(1);
+      
+      // Scroll ke game container
+      const container = document.getElementById('game-container');
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function lanjutScene(n) {
+      if (n === 5) {
+        // Persiapan tantangan
+        tampilkanScene(5);
+        tampilkanSoalTantangan();
+      } else if (n === 6) {
+        tampilkanScene(6);
+        tampilkanHasilAkhir();
+      } else {
+        tampilkanScene(n);
+      }
+      
+      // Scroll ke game container
+      const container = document.getElementById('game-container');
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function kembaliScene() {
+      if (sceneAktif > 1 && sceneAktif < 6) {
+        tampilkanScene(sceneAktif - 1);
+      } else if (sceneAktif === 1) {
+        tampilkanScene(0);
+      }
+    }
+
+    // ===== FUNGSI FEEDBACK =====
+    function resetFeedback() {
+      document.querySelectorAll('.feedback').forEach(el => {
+        el.classList.remove('tampil', 'benar', 'salah');
+        el.textContent = '';
+      });
+    }
+
+    function showFeedback(id, isBenar, pesan) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = pesan;
+      el.classList.add('tampil');
+      el.classList.remove('benar', 'salah');
+      el.classList.add(isBenar ? 'benar' : 'salah');
+    }
+
+    // ===== SCENE 1 =====
+    function jawabScene1(btn, pilihan) {
+      if (jawabanBenarScene1) return;
+      const benar = (pilihan === 'B');
+      const buttons = document.querySelectorAll('#pilihan-scene1 button');
+      buttons.forEach(b => b.disabled = true);
+
+      if (benar) {
+        btn.classList.add('benar');
+        skor += 10;
+        updateSkor();
+        jawabanBenarScene1 = true;
+        showFeedback('feedback-1', true, '✅ Benar! YouTube menggunakan Pengenalan Pola dari riwayat tontonanmu untuk memberikan rekomendasi.');
+        const lanjut = document.getElementById('lanjut-1');
+        if (lanjut) lanjut.style.display = 'inline-block';
+      } else {
+        btn.classList.add('salah');
+        let pesan = '❌ Coba lagi. Konsep yang tepat adalah Pengenalan Pola, karena sistem melihat kesamaan dari tontonan sebelumnya.';
+        if (pilihan === 'A') pesan = '❌ Dekomposisi adalah memecah masalah, bukan yang digunakan di sini. Jawaban yang tepat: Pengenalan Pola.';
+        else if (pilihan === 'C') pesan = '❌ Abstraksi adalah mengabaikan detail, sementara di sini sistem mencari pola dari data. Jawaban: Pengenalan Pola.';
+        else if (pilihan === 'D') pesan = '❌ Algoritma adalah langkah-langkah, tapi yang digunakan di sini adalah Pengenalan Pola dari data tontonan.';
+        showFeedback('feedback-1', false, pesan);
+        const lanjut = document.getElementById('lanjut-1');
+        if (lanjut) lanjut.style.display = 'inline-block';
+      }
+    }
+
+    // ===== SCENE 2 =====
+    function jawabScene2(btn, pilihan) {
+      if (jawabanBenarScene2) return;
+      const benar = (pilihan === 'C');
+      const buttons = document.querySelectorAll('#pilihan-scene2 button');
+      buttons.forEach(b => b.disabled = true);
+
+      if (benar) {
+        btn.classList.add('benar');
+        skor += 10;
+        updateSkor();
+        jawabanBenarScene2 = true;
+        showFeedback('feedback-2', true, '✅ Benar! Filter menggunakan Abstraksi dengan hanya fokus pada fitur penting wajah seperti mata, hidung, dan mulut.');
+        const lanjut = document.getElementById('lanjut-2');
+        if (lanjut) lanjut.style.display = 'inline-block';
+      } else {
+        btn.classList.add('salah');
+        let pesan = '❌ Coba lagi. Konsep yang tepat adalah Abstraksi, karena sistem hanya mendeteksi fitur penting wajah.';
+        if (pilihan === 'A') pesan = '❌ Dekomposisi adalah memecah masalah, bukan yang digunakan di sini. Jawaban: Abstraksi.';
+        else if (pilihan === 'B') pesan = '❌ Pengenalan Pola memang digunakan, tapi lebih tepat disebut Abstraksi karena hanya fitur penting yang dideteksi.';
+        else if (pilihan === 'D') pesan = '❌ Algoritma adalah langkah-langkah, tapi di sini konsep yang diterapkan adalah Abstraksi.';
+        showFeedback('feedback-2', false, pesan);
+        const lanjut = document.getElementById('lanjut-2');
+        if (lanjut) lanjut.style.display = 'inline-block';
+      }
+    }
+
+    // ===== SCENE 3: KOPI (DRAG & DROP SEDERHANA) =====
+    const langkahKopiBenar = [
+      'Siapkan gelas',
+      'Buka sachet kopi',
+      'Tuang kopi ke gelas',
+      'Panaskan air',
+      'Tuang air panas ke gelas',
+      'Aduk hingga rata',
+      'Sajikan'
+    ];
+
+    let langkahKopiSaatIni = [...langkahKopiBenar];
+
+    function renderLangkahKopi() {
+      const container = document.getElementById('daftar-langkah-kopi');
+      if (!container) return;
+      container.innerHTML = '';
+      langkahKopiSaatIni.forEach((teks, idx) => {
+        const div = document.createElement('div');
+        div.className = 'item-langkah';
+        div.innerHTML = `
+          <span class="nomor">${idx + 1}.</span>
+          <span class="teks">${teks}</span>
+          <button class="tombol-geser" onclick="geserLangkah(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>↑</button>
+          <button class="tombol-geser" onclick="geserLangkah(${idx}, 1)" ${idx === langkahKopiSaatIni.length - 1 ? 'disabled' : ''}>↓</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function geserLangkah(idx, arah) {
+      const newIdx = idx + arah;
+      if (newIdx < 0 || newIdx >= langkahKopiSaatIni.length) return;
+      [langkahKopiSaatIni[idx], langkahKopiSaatIni[newIdx]] = [langkahKopiSaatIni[newIdx], langkahKopiSaatIni[idx]];
+      renderLangkahKopi();
+      urutanKopiBenar = false;
+      const lanjut = document.getElementById('lanjut-3');
+      if (lanjut) lanjut.style.display = 'none';
+      const feedback = document.getElementById('feedback-3');
+      if (feedback) feedback.classList.remove('tampil', 'benar', 'salah');
+    }
+
+    function resetUrutanKopi() {
+      langkahKopiSaatIni = [...langkahKopiBenar];
+      renderLangkahKopi();
+      urutanKopiBenar = false;
+      const lanjut = document.getElementById('lanjut-3');
+      if (lanjut) lanjut.style.display = 'none';
+      const feedback = document.getElementById('feedback-3');
+      if (feedback) feedback.classList.remove('tampil', 'benar', 'salah');
+    }
+
+    function periksaUrutanKopi() {
+      if (urutanKopiBenar) return;
+      let benar = true;
+      for (let i = 0; i < langkahKopiSaatIni.length; i++) {
+        if (langkahKopiSaatIni[i] !== langkahKopiBenar[i]) {
+          benar = false;
+          break;
+        }
+      }
+      if (benar) {
+        urutanKopiBenar = true;
+        skor += 15;
+        updateSkor();
+        showFeedback('feedback-3', true, '✅ Benar! Urutan langkah membuat kopi sudah tepat. Kopi siap! ☕');
+        const lanjut = document.getElementById('lanjut-3');
+        if (lanjut) lanjut.style.display = 'inline-block';
+      } else {
+        showFeedback('feedback-3', false, '❌ Urutan masih salah. Coba perhatikan langkah mana yang perlu ditukar. Ingat: air harus dipanaskan sebelum dituang.');
+      }
+    }
+
+    // ===== SCENE 4 =====
+    function jawabScene4(btn, pilihan) {
+      if (jawabanBenarScene4) return;
+      const benar = (pilihan === 'B');
+      const buttons = document.querySelectorAll('#pilihan-scene4 button');
+      buttons.forEach(b => b.disabled = true);
+
+      if (benar) {
+        btn.classList.add('benar');
+        skor += 10;
+        updateSkor();
+        jawabanBenarScene4 = true;
+        showFeedback('feedback-4', true, '✅ Benar! Dekomposisi berarti memecah masalah besar menjadi tugas-tugas kecil. Dengan begitu perencanaan liburan lebih teratur.');
+        const lanjut = document.getElementById('lanjut-4');
+        if (lanjut) lanjut.style.display = 'inline-block';
+      } else {
+        btn.classList.add('salah');
+        let pesan = '❌ Coba lagi. Langkah pertama dengan dekomposisi adalah memecah perencanaan menjadi tugas-tugas kecil.';
+        if (pilihan === 'A') pesan = '❌ Memesan tiket adalah bagian dari perencanaan, tapi langkah dekomposisi adalah memecah masalah terlebih dahulu. Jawaban: B.';
+        else if (pilihan === 'C') pesan = '❌ Mencari tahu cuaca adalah detail, bukan langkah dekomposisi. Jawaban yang tepat: B.';
+        else if (pilihan === 'D') pesan = '❌ Menentukan tanggal adalah satu bagian, tapi dekomposisi berarti memecah semua tugas. Jawaban: B.';
+        showFeedback('feedback-4', false, pesan);
+        const lanjut = document.getElementById('lanjut-4');
+        if (lanjut) lanjut.style.display = 'inline-block';
+      }
+    }
+
+    // ===== SCENE 5: TANTANGAN =====
+    function tampilkanSoalTantangan() {
+      const container = document.getElementById('soal-tantangan');
+      if (!container) return;
+
+      if (indeksSoalTantangan >= soalTantangan.length) {
+        container.innerHTML = '<p style="font-weight:600; color:#2d8f6f;">✅ Semua pertanyaan terjawab! Klik tombol di bawah untuk melihat hasil.</p>';
+        const jawabBtn = document.getElementById('jawab-tantangan');
+        if (jawabBtn) {
+          jawabBtn.style.display = 'inline-block';
+          jawabBtn.disabled = false;
+          jawabBtn.textContent = '🏁 Lihat Hasil Akhir';
+          jawabBtn.onclick = function() { lanjutScene(6); };
+        }
+        return;
+      }
+
+      const soal = soalTantangan[indeksSoalTantangan];
+      let html = `<p style="font-weight:600; margin:0.5rem 0 0.8rem 0;">Soal ${indeksSoalTantangan + 1} dari ${soalTantangan.length}</p>`;
+      html += `<p style="font-size:1.05rem;">${soal.soal}</p>`;
+      html += `<div class="pilihan-jawaban" id="pilihan-tantangan">`;
+      const labels = ['A', 'B', 'C', 'D'];
+      soal.pilihan.forEach((p, idx) => {
+        html += `<button onclick="pilihTantangan(this, ${idx})">${labels[idx]}. ${p}</button>`;
+      });
+      html += `</div>`;
+      html += `<div id="feedback-tantangan" class="feedback"></div>`;
+      container.innerHTML = html;
+
+      jawabanTantanganTerpilih = null;
+      jawabanTantanganDikunci = false;
+
+      const jawabBtn = document.getElementById('jawab-tantangan');
+      if (jawabBtn) {
+        jawabBtn.disabled = false;
+        jawabBtn.style.display = 'inline-block';
+        jawabBtn.textContent = 'Kirim Jawaban';
+        jawabBtn.onclick = function() { jawabTantangan(); };
+      }
+    }
+
+    function pilihTantangan(btn, idx) {
+      if (jawabanTantanganDikunci) return;
+      const buttons = document.querySelectorAll('#pilihan-tantangan button');
+      buttons.forEach(b => b.classList.remove('benar', 'salah'));
+      btn.classList.add('benar');
+      jawabanTantanganTerpilih = idx;
+      
+      const feedback = document.getElementById('feedback-tantangan');
+      if (feedback) {
+        feedback.classList.remove('tampil', 'benar', 'salah');
+        feedback.textContent = 'Klik "Kirim Jawaban" untuk memeriksa.';
+        feedback.classList.add('tampil');
+      }
+      
+      const jawabBtn = document.getElementById('jawab-tantangan');
+      if (jawabBtn) jawabBtn.disabled = false;
+    }
+
+    function jawabTantangan() {
+      if (indeksSoalTantangan >= soalTantangan.length) {
+        lanjutScene(6);
+        return;
+      }
+
+      if (jawabanTantanganTerpilih === null) {
+        showFeedback('feedback-tantangan', false, '⚠️ Pilih salah satu jawaban terlebih dahulu!');
+        return;
+      }
+
+      if (jawabanTantanganDikunci) return;
+      jawabanTantanganDikunci = true;
+
+      const soal = soalTantangan[indeksSoalTantangan];
+      const benar = (jawabanTantanganTerpilih === soal.jawaban);
+      const feedback = document.getElementById('feedback-tantangan');
+
+      // Tandai jawaban benar pada pilihan
+      const buttons = document.querySelectorAll('#pilihan-tantangan button');
+      buttons.forEach((b, i) => {
+        if (i === soal.jawaban) b.classList.add('benar');
+        if (i === jawabanTantanganTerpilih && !benar) b.classList.add('salah');
+      });
+
+      if (benar) {
+        skor += 10;
+        updateSkor();
+        if (feedback) {
+          feedback.classList.remove('salah');
+          feedback.classList.add('benar', 'tampil');
+          feedback.textContent = '✅ Benar! +10 poin.';
+        }
+      } else {
+        if (feedback) {
+          feedback.classList.remove('benar');
+          feedback.classList.add('salah', 'tampil');
+          const jawabanBenar = soal.pilihan[soal.jawaban];
+          feedback.textContent = `❌ Kurang tepat. Jawaban yang benar: ${jawabanBenar}.`;
+        }
+      }
+
+      const jawabBtn = document.getElementById('jawab-tantangan');
+      if (jawabBtn) jawabBtn.disabled = true;
+
+      // Lanjut ke soal berikutnya setelah jeda
+      setTimeout(() => {
+        indeksSoalTantangan++;
+        jawabanTantanganTerpilih = null;
+        jawabanTantanganDikunci = false;
+        if (indeksSoalTantangan >= soalTantangan.length) {
+          tampilkanSoalTantangan();
+        } else {
+          tampilkanSoalTantangan();
+        }
+      }, 1500);
+    }
+
+    // ===== SCENE 6: HASIL AKHIR =====
+    function tampilkanHasilAkhir() {
+      const levelDiv = document.getElementById('hasil-level');
+      const skorAkhir = document.getElementById('skor-akhir');
+      const levelSertifikat = document.getElementById('level-sertifikat');
+
+      if (skorAkhir) skorAkhir.textContent = skor;
+
+      let level = 'Bronze';
+      let badgeClass = '';
+      if (skor >= 70) { level = 'Platinum'; badgeClass = 'platinum'; }
+      else if (skor >= 50) { level = 'Gold'; badgeClass = 'emas'; }
+      else if (skor >= 30) { level = 'Silver'; badgeClass = 'perak'; }
+      else { level = 'Bronze'; badgeClass = ''; }
+
+      if (levelDiv) {
+        levelDiv.innerHTML = `
+          <div class="level-badge ${badgeClass}">${level}</div>
+          <p style="margin-top:0.5rem; color:#4d3829;">Skor total: <strong>${skor}</strong></p>
+          <p style="font-size:0.9rem; color:#7a6656;">
+            ${level === 'Platinum' ? '🌟 Agen CT Terbaik! Penguasaan luar biasa!' :
+              level === 'Gold' ? '⭐ Agen CT Handal! Pemahaman yang kuat!' :
+              level === 'Silver' ? '🥈 Agen CT yang baik! Terus asah kemampuanmu!' :
+              '🥉 Agen CT Pemula. Ayo terus belajar dan berlatih!'}
+          </p>
+        `;
+      }
+      if (levelSertifikat) levelSertifikat.textContent = 'Level: ' + level;
+    }
+
+    // ===== RESET GAME =====
+    function resetGame() {
+      mulaiPetualangan();
+    }
+
+    // ===== INISIALISASI =====
+    // Render langkah kopi
+    renderLangkahKopi();
+
+    // Tampilkan scene 0
+    tampilkanScene(0);
+
+    // Ekspos fungsi ke global scope agar bisa dipanggil dari HTML
+    window.mulaiPetualangan = mulaiPetualangan;
+    window.lanjutScene = lanjutScene;
+    window.kembaliScene = kembaliScene;
+    window.jawabScene1 = jawabScene1;
+    window.jawabScene2 = jawabScene2;
+    window.jawabScene4 = jawabScene4;
+    window.geserLangkah = geserLangkah;
+    window.resetUrutanKopi = resetUrutanKopi;
+    window.periksaUrutanKopi = periksaUrutanKopi;
+    window.pilihTantangan = pilihTantangan;
+    window.jawabTantangan = jawabTantangan;
+    window.resetGame = resetGame;
+  </script>
+
+</body>
+</html>
