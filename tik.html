@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>TIK · Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* gaya tambahan khusus untuk halaman tik — kartu grid */
+    .grid-kartu {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.8rem;
+      margin: 1.8rem 0 0.5rem;
+    }
+    .kartu-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+      border-radius: 24px;
+      background: #fffffffa;
+      border: 1px solid #e5dbd0;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.02);
+      overflow: hidden;
+      height: 100%;
+    }
+    .kartu-link:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.06);
+      border-color: #cbb5a2;
+    }
+    .kartu-link:focus-visible {
+      outline: 3px solid #a3836a;
+      outline-offset: 4px;
+    }
+    .kartu-gambar {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      background: #ede4db;
+      display: block;
+      border-bottom: 1px solid #e5dbd0;
+    }
+    .kartu-judul {
+      padding: 1rem 1.2rem 1.2rem 1.2rem;
+      font-weight: 600;
+      font-size: 1.05rem;
+      line-height: 1.4;
+      color: #2f241b;
+      background: #fcf9f6;
+      border-radius: 0 0 24px 24px;
+    }
+    .kartu-judul small {
+      font-weight: 400;
+      font-size: 0.7rem;
+      display: block;
+      color: #7a6656;
+      margin-top: 0.3rem;
+      letter-spacing: 0.02em;
+    }
+    /* responsif menyesuaikan */
+    @media (max-width: 560px) {
+      .grid-kartu {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      .kartu-judul {
+        font-size: 0.9rem;
+        padding: 0.7rem 0.8rem 0.9rem;
+      }
+    }
+    @media (max-width: 400px) {
+      .grid-kartu {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER (dinamis dari script.js) -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <!-- diisi oleh script.js secara dinamis -->
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA: 12 KARTU GRID -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <h1>🖥️ Teknologi Informasi &amp; Komunikasi</h1>
+      <p>Jelajahi dua belas topik seru seputar TIK. Klik kartu untuk mempelajari lebih dalam.</p>
+
+      <div class="grid-kartu">
+        <!-- kartu 1 -->
+        <a href="tik1.html" class="kartu-link" aria-label="Mengenal Antarmuka Grafis &amp; Komponennya">
+          <img class="kartu-gambar" src="gambar/tik-kartu1.jpg" alt="Ilustrasi antarmuka grafis" loading="lazy">
+          <div class="kartu-judul">Mengenal Antarmuka Grafis &amp; Komponennya <small>#1</small></div>
+        </a>
+        <!-- kartu 2 -->
+        <a href="tik2.html" class="kartu-link" aria-label="Berkirim Surel dengan Santun &amp; Efektif">
+          <img class="kartu-gambar" src="gambar/tik-kartu2.jpg" alt="Ilustrasi berkirim surel" loading="lazy">
+          <div class="kartu-judul">Berkirim Surel dengan Santun &amp; Efektif <small>#2</small></div>
+        </a>
+        <!-- kartu 3 -->
+        <a href="tik3.html" class="kartu-link" aria-label="Cari &amp; Saring Informasi Pakai Peramban">
+          <img class="kartu-gambar" src="gambar/tik-kartu3.jpg" alt="Ilustrasi mencari informasi di peramban" loading="lazy">
+          <div class="kartu-judul">Cari &amp; Saring Informasi Pakai Peramban <small>#3</small></div>
+        </a>
+        <!-- kartu 4 -->
+        <a href="tik4.html" class="kartu-link" aria-label="Rapikan File &amp; Folder biar Gampang Dicari">
+          <img class="kartu-gambar" src="gambar/tik-kartu4.jpg" alt="Ilustrasi file dan folder" loading="lazy">
+          <div class="kartu-judul">Rapikan File &amp; Folder biar Gampang Dicari <small>#4</small></div>
+        </a>
+        <!-- kartu 5 -->
+        <a href="tik5.html" class="kartu-link" aria-label="Dasar-dasar Aplikasi Perkantoran (Dokumen &amp; Presentasi)">
+          <img class="kartu-gambar" src="gambar/tik-kartu5.jpg" alt="Ilustrasi aplikasi perkantoran" loading="lazy">
+          <div class="kartu-judul">Dasar-dasar Aplikasi Perkantoran (Dokumen &amp; Presentasi) <small>#5</small></div>
+        </a>
+        <!-- kartu 6 -->
+        <a href="tik6.html" class="kartu-link" aria-label="Mengulik Fitur Utama Pengolah Kata, Angka, &amp; Slide">
+          <img class="kartu-gambar" src="gambar/tik-kartu6.jpg" alt="Ilustrasi pengolah kata, angka, slide" loading="lazy">
+          <div class="kartu-judul">Mengulik Fitur Utama Pengolah Kata, Angka, &amp; Slide <small>#6</small></div>
+        </a>
+        <!-- kartu 7 -->
+        <a href="tik7.html" class="kartu-link" aria-label="Kolaborasi Antar-aplikasi dalam Satu Paket Perkantoran">
+          <img class="kartu-gambar" src="gambar/tik-kartu7.jpg" alt="Ilustrasi kolaborasi antar-aplikasi" loading="lazy">
+          <div class="kartu-judul">Kolaborasi Antar-aplikasi dalam Satu Paket Perkantoran <small>#7</small></div>
+        </a>
+        <!-- kartu 8 -->
+        <a href="tik8.html" class="kartu-link" aria-label="Baca, Ringkas, &amp; Refleksikan Berbagai File Digital">
+          <img class="kartu-gambar" src="gambar/tik-kartu8.jpg" alt="Ilustrasi membaca dan merangkum file digital" loading="lazy">
+          <div class="kartu-judul">Baca, Ringkas, &amp; Refleksikan Berbagai File Digital <small>#8</small></div>
+        </a>
+        <!-- kartu 9 -->
+        <a href="tik9.html" class="kartu-link" aria-label="Eksplorasi &amp; Belajar Mandiri dengan Lab Maya">
+          <img class="kartu-gambar" src="gambar/tik-kartu9.jpg" alt="Ilustrasi lab maya" loading="lazy">
+          <div class="kartu-judul">Eksplorasi &amp; Belajar Mandiri dengan Lab Maya <small>#9</small></div>
+        </a>
+        <!-- kartu 10 -->
+        <a href="tik10.html" class="kartu-link" aria-label="Pilih Aplikasi Tepat untuk Teks, Gambar, Grafik, Tabel &amp; Audio">
+          <img class="kartu-gambar" src="gambar/tik-kartu10.jpg" alt="Ilustrasi memilih aplikasi untuk teks, gambar, grafik, tabel, audio" loading="lazy">
+          <div class="kartu-judul">Pilih Aplikasi Tepat untuk Teks, Gambar, Grafik, Tabel &amp; Audio <small>#10</small></div>
+        </a>
+        <!-- kartu 11 -->
+        <a href="tik11.html" class="kartu-link" aria-label="Buat Laporan &amp; Presentasi Keren dengan Tools Perkantoran">
+          <img class="kartu-gambar" src="gambar/tik-kartu11.jpg" alt="Ilustrasi membuat laporan dan presentasi" loading="lazy">
+          <div class="kartu-judul">Buat Laporan &amp; Presentasi Keren dengan Tools Perkantoran <small>#11</small></div>
+        </a>
+        <!-- kartu 12 -->
+        <a href="tik12.html" class="kartu-link" aria-label="Bikin Blog &amp; Vlog Sederhana sebagai Portofolio Digital">
+          <img class="kartu-gambar" src="gambar/tik-kartu12.jpg" alt="Ilustrasi blog dan vlog" loading="lazy">
+          <div class="kartu-judul">Bikin Blog &amp; Vlog Sederhana sebagai Portofolio Digital <small>#12</small></div>
+        </a>
+      </div>
+
+      <!-- 
+        ============================================================
+        CATATAN UNTUK AI (tidak tampil di halaman)
+        ============================================================
+        1. FORMAT PENAMAAN HALAMAN KARTU:
+           Format: [kode-halaman][nomor].html
+           - [kode-halaman] = kode unik halaman induk
+             (tik, sk, jki, dsi, ad, bk, ap)
+           - [nomor] = nomor urut kartu (1, 2, 3, ...)
+           
+           Contoh:
+           - halaman tik.html: tik1.html, tik2.html, ..., tik12.html
+           - halaman bk.html: bk1.html, bk2.html, ..., bk9.html
+           - halaman dsi.html: dsi1.html, dsi2.html, ..., dsi9.html
+           
+           LOKASI: semua file HTML kartu berada di folder yang sama 
+           dengan file utama (root folder).
+
+        2. POLA PENAMAAN GAMBAR:
+           Format: [kode-halaman]-kartu[nomor].jpg
+           LOKASI: semua gambar disimpan di folder /gambar/
+
+        3. KONSISTENSI:
+           Pola ini harus digunakan di SEMUA halaman konten 
+           (tik.html, sk.html, jki.html, dsi.html, ad.html, bk.html, ap.html)
+           dengan kode halaman masing-masing.
+
+        4. BREADCRUMB:
+           Script.js akan secara otomatis mendeteksi halaman kartu
+           dan menampilkan breadcrumb yang sesuai.
+        ============================================================
+      -->
+
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js (header, footer, breadcrumb, scroll) -->
+  <script src="script.js"></script>
+
+</body>
+</html>
