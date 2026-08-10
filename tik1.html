@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Antarmuka GUI · TIK · Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* gaya tambahan untuk halaman materi tik1 */
+    .materi-container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .materi-container h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin: 2rem 0 0.8rem 0;
+      color: #3b2b1e;
+      border-left: 6px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 1.6rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.2rem 0 0.3rem 0;
+      color: #5a4232;
+    }
+
+    .materi-container p {
+      margin-bottom: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.3rem 0 1rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.3rem;
+      line-height: 1.6;
+    }
+
+    /* tabel */
+    .tabel-materi {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem 0;
+      font-size: 0.95rem;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .tabel-materi thead {
+      background: #e8dcd0;
+    }
+    .tabel-materi th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #3b2b1e;
+      border-bottom: 2px solid #d9cdbf;
+    }
+    .tabel-materi td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid #ede4db;
+      background: #fffdfa;
+      vertical-align: top;
+    }
+    .tabel-materi tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* kotak analogi */
+    .kotak-analogi {
+      background: #f5ede6;
+      border-radius: 20px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.5rem 0;
+      border-left: 6px solid #cbb5a2;
+    }
+    .kotak-analogi h4 {
+      margin-top: 0;
+      color: #4d3829;
+    }
+    .kotak-analogi ul {
+      margin-bottom: 0;
+    }
+
+    /* latihan */
+    .kotak-latihan {
+      background: #eef4e8;
+      border-radius: 20px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.5rem 0;
+      border-left: 6px solid #a8b99a;
+    }
+    .kotak-latihan h4 {
+      margin-top: 0;
+      color: #3d5230;
+    }
+    .kotak-latihan ul {
+      margin-bottom: 0;
+    }
+
+    /* tombol aktivitas */
+    .tombol-aktivitas-wrapper {
+      text-align: center;
+      margin: 2.5rem 0 1rem 0;
+      padding: 1.5rem 0 0.5rem 0;
+      border-top: 3px solid #e5dbd0;
+    }
+
+    .tombol-aktivitas {
+      display: inline-block;
+      padding: 0.9rem 2.8rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: linear-gradient(135deg, #6b8c5e, #4d7a3b);
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 20px rgba(70, 110, 50, 0.25);
+      border: none;
+      letter-spacing: 0.02em;
+    }
+    .tombol-aktivitas:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(70, 110, 50, 0.3);
+      background: linear-gradient(135deg, #5a7a4e, #3d6b2c);
+    }
+    .tombol-aktivitas:focus-visible {
+      outline: 3px solid #4d7a3b;
+      outline-offset: 4px;
+    }
+
+    .tombol-aktivitas .ikon {
+      margin-right: 0.5rem;
+    }
+
+    /* responsif */
+    @media (max-width: 720px) {
+      .materi-container h2 { font-size: 1.3rem; }
+      .materi-container h3 { font-size: 1.1rem; }
+      .tabel-materi { font-size: 0.85rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.5rem 0.7rem; }
+      .kotak-analogi, .kotak-latihan { padding: 1rem 1.2rem; }
+      .tombol-aktivitas {
+        padding: 0.7rem 1.8rem;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 320px;
+      }
+    }
+    @media (max-width: 480px) {
+      .tabel-materi { font-size: 0.75rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.4rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER (dinamis dari script.js) -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <!-- diisi oleh script.js secara dinamis -->
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA: MATERI TIK 1 -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <h1>🖱️ Antarmuka Berbasis Grafis (GUI) dan Komponen-Komponennya</h1>
+
+        <!-- A. Pendahuluan -->
+        <h2>A. Pendahuluan: Apa Itu Antarmuka Pengguna?</h2>
+        <p>Pernahkah kamu memperhatikan bagaimana cara kamu "berbicara" dengan ponsel atau komputermu? Kamu tidak perlu mengetik perintah rumit seperti "buka file gambar di folder dokumen" — kamu cukup mengklik ikon atau menyentuh layar. Inilah yang disebut dengan <strong>antarmuka pengguna</strong> (user interface).</p>
+        <p>Antarmuka pengguna adalah jembatan yang menghubungkan pengguna dengan perangkat digital. Saat ini, ada beberapa jenis antarmuka pengguna:</p>
+
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Jenis Antarmuka</th>
+              <th>Penjelasan</th>
+              <th>Contoh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>GUI</strong> (Graphical User Interface)</td>
+              <td>Menggunakan ikon, tombol grafis, dan elemen visual</td>
+              <td>Desktop Windows, layar ponsel Android/iOS</td>
+            </tr>
+            <tr>
+              <td><strong>CLI</strong> (Command Line Interface)</td>
+              <td>Menggunakan perintah teks yang harus diketik</td>
+              <td>Terminal di Linux, Command Prompt</td>
+            </tr>
+            <tr>
+              <td><strong>VUI</strong> (Voice User Interface)</td>
+              <td>Menggunakan suara sebagai perintah</td>
+              <td>Siri, Google Assistant, Alexa</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p><strong>Mengapa GUI lebih populer?</strong> Karena GUI lebih intuitif dan mudah dipelajari — pengguna cukup memilih perintah yang sudah tersedia dalam bentuk ikon atau tombol, tanpa harus menghafal perintah teks yang rumit. Bayangkan jika setiap kali ingin membuka kamera di ponsel, kamu harus mengetik perintah panjang! GUI menyederhanakan semuanya.</p>
+
+        <!-- B. Memahami GUI -->
+        <h2>B. Memahami GUI: Graphical User Interface</h2>
+        <p><strong>GUI</strong> adalah bentuk antarmuka pengguna yang menggunakan ikon dan elemen grafis sebagai pengganti perintah berbasis teks yang diketik. Konsep ini pertama kali dikembangkan secara komersial pada tahun 1984 oleh Apple Computer, dan kini menjadi standar di hampir semua sistem operasi dan aplikasi yang kita gunakan sehari-hari.</p>
+        <p>Bayangkan GUI seperti <strong>papan tanda di jalan raya</strong>. Tanpa tanda, kita akan bingung arah; dengan tanda, kita tahu harus belok kiri, kanan, atau terus. GUI berfungsi sama: ia memberi "tanda" visual yang membantu kita memahami apa yang bisa dilakukan dalam sebuah program.</p>
+
+        <!-- C. Komponen-Komponen GUI (WIMP System) -->
+        <h2>C. Komponen-Komponen GUI (WIMP System)</h2>
+        <p>Sebagian besar antarmuka berbasis grafis menggunakan sistem yang disebut <strong>WIMP</strong>:</p>
+        <p style="font-size:1.2rem; font-weight:600; color:#4d3829; text-align:center; background:#f5ede6; padding:0.5rem; border-radius:40px; margin:0.5rem 0 1.2rem 0;">
+          WIMP = Windows, Icons, Menus, Pointing (Pointer/Click)
+        </p>
+
+        <h3>1. Window (Jendela)</h3>
+        <p><strong>Window</strong> adalah area berbentuk persegi panjang di layar yang menampilkan konten dari sebuah program atau folder.</p>
+        <p><strong>Contoh dalam kehidupan sehari-hari:</strong></p>
+        <ul>
+          <li>Saat kamu membuka aplikasi Kalkulator, muncul kotak persegi panjang berisi tombol angka — itulah window.</li>
+          <li>Saat kamu membuka File Explorer, ada jendela besar yang menampilkan daftar file dan folder di komputermu.</li>
+        </ul>
+        <p><strong>Fungsi penting window:</strong></p>
+        <ul>
+          <li>Dapat dipindahkan (drag), diperbesar, diperkecil, dan ditutup</li>
+          <li>Memungkinkan kita membuka banyak program sekaligus dalam window yang berbeda</li>
+        </ul>
+
+        <h3>2. Icon (Ikon)</h3>
+        <p><strong>Ikon</strong> adalah simbol atau gambar kecil di layar yang mewakili sebuah program, file, folder, atau perintah.</p>
+        <p><strong>Contoh ikon yang kamu kenal:</strong></p>
+        <ul>
+          <li>Ikon tempat sampah (Recycle Bin): melambangkan tempat file yang dihapus</li>
+          <li>Ikon folder berwarna kuning: mewakili folder penyimpanan file</li>
+          <li>Ikon roda gigi: biasanya melambangkan pengaturan (settings)</li>
+        </ul>
+        <p><strong>Mengapa menggunakan ikon?</strong> Ikon membantu pengguna mengenali fungsi dengan cepat tanpa harus membaca teks. Sebuah gambar sering lebih mudah diingat daripada kata-kata.</p>
+
+        <h3>3. Menu</h3>
+        <p><strong>Menu</strong> adalah daftar pilihan perintah yang dapat dipilih pengguna. Ada berbagai jenis menu:</p>
+
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Jenis Menu</th>
+              <th>Penjelasan</th>
+              <th>Contoh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Menu Bar</strong></td>
+              <td>Menu utama yang biasanya terletak di bagian atas window</td>
+              <td>File, Edit, View di aplikasi</td>
+            </tr>
+            <tr>
+              <td><strong>Drop-down Menu</strong></td>
+              <td>Menu yang muncul saat diklik, berisi daftar pilihan</td>
+              <td>Klik "File" → muncul pilihan "New", "Open", "Save"</td>
+            </tr>
+            <tr>
+              <td><strong>Context Menu</strong></td>
+              <td>Menu yang muncul saat klik kanan, sesuai dengan konteks</td>
+              <td>Klik kanan di desktop → menu "New Folder", "Refresh"</td>
+            </tr>
+            <tr>
+              <td><strong>Start Menu</strong></td>
+              <td>Menu utama di Windows yang berisi semua aplikasi</td>
+              <td>Tombol Windows di pojok kiri bawah</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>4. Pointer (Penunjuk) dan Click</h3>
+        <p><strong>Pointer</strong> adalah penunjuk di layar (biasanya berbentuk panah) yang dikendalikan oleh mouse atau sentuhan jari. <strong>Click</strong> adalah tindakan menekan tombol mouse atau menyentuh layar untuk memilih atau menjalankan perintah.</p>
+        <p><strong>Interaksi dasar dengan Pointer:</strong></p>
+        <ul>
+          <li><strong>Klik:</strong> memilih atau menjalankan</li>
+          <li><strong>Klik kanan:</strong> membuka menu konteks</li>
+          <li><strong>Drag and drop:</strong> menyeret dan meletakkan objek</li>
+          <li><strong>Double-click:</strong> membuka file atau program</li>
+        </ul>
+
+        <!-- D. Komponen Pendukung Lainnya -->
+        <h2>D. Komponen Pendukung Lainnya pada GUI</h2>
+        <p>Selain empat komponen utama WIMP, ada beberapa elemen penting lain yang sering kita temui:</p>
+
+        <h4>1. Title Bar (Bilah Judul)</h4>
+        <p>Bagian paling atas dari sebuah window yang menampilkan nama program atau file yang sedang dibuka.</p>
+
+        <h4>2. Address Bar (Bilah Alamat)</h4>
+        <p>Biasanya ditemukan di File Explorer atau peramban web, menunjukkan lokasi atau alamat yang sedang diakses.</p>
+
+        <h4>3. Navigation Pane (Panel Navigasi)</h4>
+        <p>Area di sisi kiri window yang memudahkan akses ke folder-folder penting seperti "Documents", "Downloads", atau "This PC".</p>
+
+        <h4>4. Toolbar (Bilah Alat)</h4>
+        <p>Kumpulan ikon tombol untuk akses cepat ke perintah-perintah yang sering digunakan (misalnya: Save, Undo, Print).</p>
+
+        <h4>5. Button (Tombol)</h4>
+        <p>Elemen yang dapat diklik untuk menjalankan suatu perintah. Tombol biasanya memiliki label teks atau ikon.</p>
+
+        <h4>6. Text Field (Kotak Teks)</h4>
+        <p>Area tempat pengguna dapat mengetikkan teks atau angka.</p>
+
+        <h4>7. Label</h4>
+        <p>Teks statis yang memberi informasi atau petunjuk kepada pengguna.</p>
+
+        <h4>8. Slider</h4>
+        <p>Penggeser yang memungkinkan pengguna memilih nilai dalam rentang tertentu.</p>
+
+        <h4>9. Checkbox dan Radio Button</h4>
+        <ul>
+          <li><strong>Checkbox:</strong> kotak centang untuk memilih satu atau lebih opsi</li>
+          <li><strong>Radio Button:</strong> tombol bundar untuk memilih satu opsi dari beberapa pilihan</li>
+        </ul>
+
+        <!-- E. Analogi GUI -->
+        <h2>E. Analogi GUI dalam Kehidupan Sehari-hari</h2>
+        <p>Untuk memahami GUI dengan lebih baik, perhatikan analogi berikut:</p>
+
+        <div class="kotak-analogi">
+          <h4>📁 GUI itu seperti Map atau Folder di Dunia Nyata</h4>
+          <ul>
+            <li>Folder di komputer analog dengan map kertas yang menyimpan dokumen</li>
+            <li>Ikon folder memudahkan kita mengenali fungsi tanpa membaca keterangan panjang</li>
+          </ul>
+        </div>
+
+        <div class="kotak-analogi">
+          <h4>🚦 GUI itu seperti Tanda Lalu Lintas</h4>
+          <ul>
+            <li>Ikon di layar seperti rambu lalu lintas: memberi petunjuk visual yang cepat dipahami</li>
+            <li>Kita tidak perlu membaca buku peraturan setiap kali ingin menyeberang jalan; cukup lihat tanda "pejalan kaki" atau lampu merah</li>
+          </ul>
+        </div>
+
+        <div class="kotak-analogi">
+          <h4>🚗 GUI itu seperti Antarmuka Mobil</h4>
+          <ul>
+            <li>Mobil berbagai merek memiliki fungsi yang sama (setir, pedal gas, rem) meski tampilannya berbeda</li>
+            <li>GUI juga: setiap aplikasi mungkin berbeda tampilan, tapi komponen dasarnya mirip (tombol, menu, ikon)</li>
+          </ul>
+        </div>
+
+        <!-- F. Latihan -->
+        <h2>F. Latihan: Mengenali Komponen GUI</h2>
+        <p>Coba perhatikan aplikasi-aplikasi di komputermu! Bisakah kamu menemukan komponen-komponen GUI berikut di masing-masing aplikasi?</p>
+
+        <div class="kotak-latihan">
+          <h4>🧮 Kalkulator</h4>
+          <ul>
+            <li>Identifikasi: tombol angka, tombol operasi (+, -, ×, ÷), layar tampilan hasil</li>
+          </ul>
+        </div>
+
+        <div class="kotak-latihan">
+          <h4>📅 Kalender (Calendar)</h4>
+          <ul>
+            <li>Identifikasi: tombol navigasi bulan, tombol "New Event", tampilan tanggal</li>
+          </ul>
+        </div>
+
+        <div class="kotak-latihan">
+          <h4>📂 File Explorer</h4>
+          <ul>
+            <li>Identifikasi: Address Bar, Navigation Pane, ikon folder, tombol "New Folder"</li>
+          </ul>
+        </div>
+
+        <!-- TOMBOL AKTIVITAS -->
+        <div class="tombol-aktivitas-wrapper">
+          <a href="aktivitastik1.html" class="tombol-aktivitas">
+            <span class="ikon">🧪</span> Aktivitas: Lab GUI — Jelajahi Antarmuka
+          </a>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js (header, footer, breadcrumb, scroll) -->
+  <script src="script.js"></script>
+
+</body>
+</html>
