@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Jaringan Komputer dan Internet · Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* gaya tambahan untuk halaman materi */
+    .materi-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .materi-container h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .materi-container .sub-judul {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+      font-style: italic;
+    }
+
+    .materi-container h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 0.8rem 0;
+      color: #4d3829;
+      border-left: 6px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container p {
+      margin-bottom: 1rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.5rem 0 1.2rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.4rem;
+      color: #2f2822;
+    }
+
+    .materi-container .highlight-box {
+      background: #f5ede6;
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+      margin: 1.5rem 0;
+    }
+
+    .materi-container .highlight-box strong {
+      color: #4d3829;
+    }
+
+    /* tabel perbandingan */
+    .tabel-perbandingan {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .tabel-perbandingan thead {
+      background: #e8d5c4;
+      color: #3b2b1e;
+    }
+
+    .tabel-perbandingan th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .tabel-perbandingan td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+    }
+
+    .tabel-perbandingan tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabel-perbandingan tr:hover td {
+      background: #f8f3ee;
+    }
+
+    /* tombol aktivitas */
+    .tombol-aktivitas {
+      display: inline-block;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+      padding: 0.9rem 2.2rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.25);
+      margin-top: 0.5rem;
+    }
+
+    .tombol-aktivitas:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(75, 46, 30, 0.35);
+      background: linear-gradient(135deg, #5c4638, #7a5f4c);
+    }
+
+    .tombol-aktivitas:focus-visible {
+      outline: 3px solid #a3836a;
+      outline-offset: 4px;
+    }
+
+    .aktivitas-wrapper {
+      background: #f5ede6;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      margin-top: 2.5rem;
+      border: 2px solid #e5dbd0;
+      text-align: center;
+    }
+
+    .aktivitas-wrapper h3 {
+      margin-top: 0;
+      color: #3b2b1e;
+      border-left: none;
+      padding-left: 0;
+    }
+
+    .aktivitas-wrapper p {
+      margin-bottom: 1.2rem;
+      font-size: 1.05rem;
+    }
+
+    /* navigasi kembali */
+    .nav-kembali {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: #5c4638;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 2px dotted #bfaa9a;
+      padding-bottom: 2px;
+      transition: border-color 0.2s;
+    }
+
+    .nav-kembali:hover {
+      border-bottom-color: #7a5f4c;
+    }
+
+    /* responsif */
+    @media (max-width: 720px) {
+      .materi-container h1 {
+        font-size: 1.7rem;
+      }
+      .materi-container h2 {
+        font-size: 1.3rem;
+      }
+      .materi-container h3 {
+        font-size: 1.05rem;
+      }
+      .tabel-perbandingan {
+        font-size: 0.8rem;
+      }
+      .tabel-perbandingan th,
+      .tabel-perbandingan td {
+        padding: 0.5rem 0.6rem;
+      }
+      .aktivitas-wrapper {
+        padding: 1.5rem 1.2rem;
+      }
+      .tombol-aktivitas {
+        padding: 0.7rem 1.6rem;
+        font-size: 0.95rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tabel-perbandingan {
+        font-size: 0.7rem;
+      }
+      .tabel-perbandingan th,
+      .tabel-perbandingan td {
+        padding: 0.4rem 0.4rem;
+      }
+      .materi-container ul, 
+      .materi-container ol {
+        margin-left: 1.2rem;
+      }
+      .aktivitas-wrapper {
+        padding: 1rem 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER (dinamis dari script.js) -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <!-- diisi oleh script.js -->
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA: MATERI -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <!-- Judul Utama -->
+        <h1>🌐 Jaringan Komputer dan Internet serta Manfaatnya</h1>
+        <p class="sub-judul">Materi Pembelajaran Informatika · SMPN 2 Talegong</p>
+
+        <!-- A. Pendahuluan -->
+        <h2>A. Pendahuluan: Dunia yang Terhubung</h2>
+        <p>Bayangkan jika kamu ingin mengirim pesan ke teman yang tinggal di kota lain, tetapi tidak ada ponsel atau internet. Kamu harus mengirim surat yang butuh waktu berhari-hari. Sekarang, dengan internet, pesan bisa sampai dalam hitungan detik! Inilah kekuatan dari jaringan komputer dan internet.</p>
+        <p><strong>Jaringan komputer</strong> adalah sekumpulan komputer dan perangkat lain yang terhubung satu sama lain untuk berbagi data dan sumber daya. Sementara itu, <strong>internet</strong> adalah jaringan komputer global raksasa yang menghubungkan jutaan jaringan di seluruh dunia. Bayangkan internet seperti "jalan raya digital" yang menghubungkan semua perangkat di dunia, sementara jaringan lokal seperti "jalan lingkungan" di sekolah atau rumahmu.</p>
+
+        <!-- B. Jenis-Jenis Jaringan -->
+        <h2>B. Jenis-Jenis Jaringan Komputer Berdasarkan Jangkauan</h2>
+        <p>Jaringan komputer dikelompokkan berdasarkan luas wilayah yang dicakupnya:</p>
+
+        <h3>1. LAN (Local Area Network) — Jaringan Lokal</h3>
+        <p><strong>LAN</strong> adalah jaringan yang mencakup area terbatas, seperti dalam satu ruangan, satu gedung sekolah, atau satu rumah.</p>
+        <p><strong>Contoh dalam kehidupan sehari-hari:</strong></p>
+        <ul>
+          <li>Jaringan Wi-Fi di rumah yang menghubungkan laptop, ponsel, dan printer.</li>
+          <li>Jaringan komputer di laboratorium sekolah yang memungkinkan semua komputer terhubung ke satu printer.</li>
+          <li>Jaringan kantor yang menghubungkan komputer karyawan dalam satu gedung.</li>
+        </ul>
+        <div class="highlight-box">
+          <strong>✅ Manfaat LAN:</strong>
+          <ul style="margin-bottom:0;">
+            <li>Berbagi printer dan scanner tanpa harus memindahkan file.</li>
+            <li>Berbagi file antar komputer dengan cepat.</li>
+            <li>Bermain game bersama dalam satu ruangan.</li>
+          </ul>
+        </div>
+
+        <h3>2. MAN (Metropolitan Area Network) — Jaringan Antar Kota</h3>
+        <p><strong>MAN</strong> mencakup area yang lebih luas dari LAN, biasanya dalam satu kota atau wilayah metropolitan.</p>
+        <p><strong>Contoh:</strong></p>
+        <ul>
+          <li>Jaringan kantor pusat di pusat kota dengan cabang di pinggiran kota.</li>
+          <li>Jaringan kampus universitas yang terhubung antar gedung yang berbeda lokasi.</li>
+        </ul>
+
+        <h3>3. WAN (Wide Area Network) — Jaringan Global</h3>
+        <p><strong>WAN</strong> mencakup wilayah geografis yang sangat luas, bisa antar kota, antar provinsi, bahkan antar negara dan benua.</p>
+        <p><strong>Contoh:</strong></p>
+        <ul>
+          <li>Jaringan bank yang menghubungkan seluruh cabang di Indonesia.</li>
+          <li>Jaringan perusahaan multinasional yang menghubungkan kantor di berbagai negara.</li>
+        </ul>
+
+        <h3>4. Internet — Jaringan Segala Jaringan</h3>
+        <p><strong>Internet</strong> adalah kumpulan jaringan komputer global yang menghubungkan jaringan-jaringan di seluruh dunia menggunakan protokol TCP/IP.</p>
+        <div class="highlight-box">
+          <strong>📌 Fakta menarik:</strong> Internet mulai dikenal pada tahun 1849 dengan istilah "internetted" yang berarti saling terhubung. Sekarang, internet bahkan termasuk dalam "tujuh keajaiban dunia" modern!
+        </div>
+
+        <!-- C. Perbedaan -->
+        <h2>C. Perbedaan Jaringan Lokal dan Internet</h2>
+        <table class="tabel-perbandingan">
+          <thead>
+            <tr>
+              <th>Aspek</th>
+              <th>Jaringan Lokal (LAN)</th>
+              <th>Internet</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Jangkauan</strong></td>
+              <td>Terbatas (ruangan/gedung)</td>
+              <td>Seluruh dunia</td>
+            </tr>
+            <tr>
+              <td><strong>Kepemilikan</strong></td>
+              <td>Pribadi/instansi</td>
+              <td>Global, tidak dimiliki siapa pun</td>
+            </tr>
+            <tr>
+              <td><strong>Kecepatan</strong></td>
+              <td>Sangat cepat (hingga 1000 Mbps)</td>
+              <td>Bervariasi tergantung koneksi</td>
+            </tr>
+            <tr>
+              <td><strong>Biaya</strong></td>
+              <td>Gratis setelah terpasang</td>
+              <td>Berlangganan ISP/paket data</td>
+            </tr>
+            <tr>
+              <td><strong>Contoh</strong></td>
+              <td>Wi-Fi rumah, lab sekolah</td>
+              <td>Akses Google, YouTube, media sosial</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:0.9rem; color:#7a6656;">Internet dapat diakses melalui ISP (Internet Service Provider) seperti IndiHome, Biznet, Telkomsel, XL, dan lainnya.</p>
+
+        <!-- D. Manfaat -->
+        <h2>D. Manfaat Jaringan Komputer dan Internet dalam Kehidupan</h2>
+
+        <h3>1. Komunikasi Tanpa Batas</h3>
+        <p>Internet mengubah cara kita berkomunikasi. Dulu orang mengirim surat, sekarang ada surel (email) dan pesan instan.</p>
+        <p><strong>Contoh:</strong> Kamu bisa mengirim pesan ke teman di luar negeri melalui WhatsApp atau email.</p>
+
+        <h3>2. Belajar dan Mencari Informasi (e-Learning)</h3>
+        <p>Internet membuka akses ke pengetahuan tanpa batas.</p>
+        <p><strong>Contoh:</strong> Kamu bisa belajar dari video YouTube, mengakses buku digital, atau mengikuti kursus online dari universitas ternama.</p>
+
+        <h3>3. Belanja Online (e-Commerce)</h3>
+        <p>Jaringan internet memungkinkan transaksi jual beli secara elektronik.</p>
+        <p><strong>Contoh:</strong> Memesan makanan, membeli pakaian, atau membayar tagihan lewat aplikasi.</p>
+
+        <h3>4. Perbankan Digital (e-Banking)</h3>
+        <p>Transaksi perbankan kini bisa dilakukan dari mana saja.</p>
+        <p><strong>Contoh:</strong> Transfer uang, cek saldo, atau bayar listrik lewat mobile banking.</p>
+
+        <h3>5. Pemerintahan Digital (e-Government)</h3>
+        <p>Pelayanan publik berbasis elektronik memudahkan masyarakat.</p>
+        <p><strong>Contoh:</strong> Mengurus KTP, KK, atau perizinan secara online.</p>
+
+        <h3>6. Berbagi Sumber Daya (Sharing Resources)</h3>
+        <p>Jaringan memungkinkan berbagi perangkat seperti printer, scanner, atau penyimpanan data.</p>
+        <p><strong>Contoh:</strong> Di lab komputer, semua komputer bisa mencetak dokumen ke satu printer yang sama.</p>
+
+        <h3>7. Hiburan dan Media Sosial</h3>
+        <p>Internet menghadirkan hiburan seperti video streaming, musik online, dan game online.</p>
+        <p><strong>Contoh:</strong> Menonton film di Netflix, mendengar musik di Spotify, atau bermain game dengan teman dari kota lain.</p>
+
+        <!-- E. Bagaimana Internet Bekerja -->
+        <h2>E. Bagaimana Internet Bekerja?</h2>
+        <p>Internet bekerja berdasarkan protokol <strong>TCP/IP (Transmission Control Protocol/Internet Protocol)</strong>. "Protokol" adalah aturan yang mengatur bagaimana perangkat berkomunikasi dalam jaringan.</p>
+        <p>Setiap perangkat yang terhubung ke internet memiliki <strong>alamat IP</strong> unik sebagai identitasnya.</p>
+        <div class="highlight-box">
+          <strong>📦 Analogi sederhana:</strong>
+          <ul style="margin-bottom:0;">
+            <li>Internet seperti sistem pos dunia.</li>
+            <li>Alamat IP seperti alamat rumah yang unik.</li>
+            <li>Data yang dikirim seperti paket surat.</li>
+            <li>Router seperti kantor pos yang mengatur pengiriman ke tujuan yang tepat.</li>
+          </ul>
+        </div>
+
+        <!-- Referensi -->
+        <h2>📚 Referensi Materi</h2>
+        <ul>
+          <li>Buku Informatika SMP Kelas VII Kurikulum Merdeka, Bab 5 Jaringan Komputer dan Internet (Maresha Caroline Wijanto, dkk, 2021)</li>
+          <li>Buku Informatika SMP Kelas VIII Kurikulum Merdeka, Bab 5 Jaringan Komputer dan Internet (Vania Natali, dkk, 2021)</li>
+          <li>Konsep LAN, MAN, WAN, dan Internet berdasarkan cakupan area</li>
+          <li>Manfaat internet: e-Learning, e-Commerce, e-Banking, e-Government, surel, dan berbagi sumber daya</li>
+          <li>Protokol TCP/IP dan konsep dasar pengiriman data</li>
+          <li>Penggunaan simulator jaringan virtual untuk pembelajaran interaktif</li>
+        </ul>
+
+        <!-- TOMBOL AKTIVITAS -->
+        <div class="aktivitas-wrapper">
+          <h3>🚀 Aktivitas Pembelajaran</h3>
+          <p><strong>"Jelajah Jaringan: Virtual Network Explorer"</strong></p>
+          <p>Ikuti aktivitas interaktif untuk memahami bagaimana data berpindah dalam jaringan komputer dan internet melalui simulator virtual.</p>
+          <a href="aktivitasjki1.html" class="tombol-aktivitas">
+            🖱️ Mulai Jelajah Jaringan
+          </a>
+        </div>
+
+        <!-- Tombol Kembali -->
+        <a href="jki.html" class="nav-kembali">← Kembali ke Daftar Materi Jaringan Komputer</a>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- perbarui breadcrumb untuk halaman jki1 -->
+  <script>
+    (function() {
+      const bcContainer = document.getElementById('breadcrumb-container');
+      if (bcContainer) {
+        bcContainer.innerHTML = `
+          <li><a href="index.html">Beranda</a></li>
+          <li><a href="jki.html">Jaringan Komputer &amp; Internet</a></li>
+          <li>Jaringan Komputer dan Internet serta Manfaatnya</li>
+        `;
+      }
+    })();
+  </script>
+
+</body>
+</html>

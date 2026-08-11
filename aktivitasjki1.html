@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Jelajah Jaringan · Virtual Network Explorer</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA AKTIVITAS ===== */
+    .aktivitas-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .aktivitas-wrapper h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3rem;
+    }
+
+    .aktivitas-wrapper .sub-judul-aktivitas {
+      font-size: 1rem;
+      color: #5c4638;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    /* ===== STEP INDICATOR ===== */
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.5rem 0 2rem 0;
+      position: relative;
+      padding: 0 0.5rem;
+    }
+
+    .step-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      right: 30px;
+      height: 3px;
+      background: #e5dbd0;
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .step-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+    }
+
+    .step-dot .circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #f5ede6;
+      border: 3px solid #d9cdbf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active .circle {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    .step-dot.completed .circle {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .step-dot .label {
+      font-size: 0.65rem;
+      margin-top: 0.3rem;
+      color: #7a6656;
+      text-align: center;
+      max-width: 70px;
+      font-weight: 500;
+    }
+
+    .step-dot.active .label {
+      color: #3b2b1e;
+      font-weight: 600;
+    }
+
+    /* ===== PANEL SKENARIO ===== */
+    .scenario-panel {
+      background: #fffffffa;
+      border-radius: 24px;
+      border: 2px solid #e5dbd0;
+      padding: 2rem;
+      min-height: 400px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem;
+      color: #5c4638;
+      background: #f5ede6;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #dbb9a6;
+    }
+
+    /* ===== TOPOLOGY BUILDER (Drag & Drop Simulasi) ===== */
+    .topology-canvas {
+      background: #f8f4ef;
+      border-radius: 16px;
+      border: 2px dashed #d9cdbf;
+      min-height: 250px;
+      padding: 1.5rem;
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .device-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      background: #fff;
+      border-radius: 12px;
+      border: 2px solid #d9cdbf;
+      cursor: grab;
+      transition: all 0.2s ease;
+      min-width: 70px;
+      user-select: none;
+    }
+
+    .device-icon:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+      border-color: #b09b88;
+    }
+
+    .device-icon .icon {
+      font-size: 2rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .device-icon .name {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #3b2b1e;
+      text-align: center;
+    }
+
+    .device-icon.droppable {
+      border-color: #8aaa7a;
+      background: #f0f7eb;
+      cursor: pointer;
+    }
+
+    .device-icon.placed {
+      border-color: #4d3829;
+      background: #f5ede6;
+      cursor: default;
+      opacity: 0.8;
+    }
+
+    .connection-line {
+      width: 40px;
+      height: 3px;
+      background: #4d3829;
+      position: relative;
+    }
+
+    .connection-line::after {
+      content: '⚡';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+    }
+
+    /* ===== ANIMASI PAKET DATA ===== */
+    .packet-animation {
+      position: relative;
+      height: 80px;
+      background: #f0ece6;
+      border-radius: 12px;
+      margin: 1rem 0;
+      overflow: hidden;
+      border: 1px solid #e5dbd0;
+    }
+
+    .packet-dot {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #4d3829;
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: left 0.5s ease;
+      box-shadow: 0 0 20px rgba(75, 46, 30, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.5rem;
+      font-weight: 700;
+    }
+
+    .packet-dot .pulse {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(75, 46, 30, 0.2);
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.8); opacity: 0; }
+    }
+
+    .packet-stops {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 0.5rem;
+      margin-top: 0.3rem;
+      font-size: 0.6rem;
+      color: #7a6656;
+    }
+
+    .packet-stops span {
+      background: #fff;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      border: 1px solid #e5dbd0;
+    }
+
+    /* ===== CONTROLS ===== */
+    .control-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1rem 0;
+      align-items: center;
+    }
+
+    .btn-control {
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-control:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-control.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-control.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-control.success {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .btn-control.success:hover {
+      background: #7a9a6a;
+      border-color: #7a9a6a;
+    }
+
+    .btn-control:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .slider-control {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #5c4638;
+    }
+
+    .slider-control input[type="range"] {
+      width: 100px;
+      accent-color: #4d3829;
+    }
+
+    /* ===== PERTANYAAN REFLEKTIF ===== */
+    .question-box {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #dbb9a6;
+    }
+
+    .question-box .q-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-box .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .question-box .options button {
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .question-box .options button:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .question-box .options button.correct {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .question-box .options button.wrong {
+      background: #d4a0a0;
+      border-color: #d4a0a0;
+      color: #fff;
+    }
+
+    .feedback-text {
+      margin-top: 0.8rem;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .feedback-text.show {
+      display: block;
+    }
+
+    .feedback-text.success {
+      background: #e8f5e0;
+      color: #2d5a1e;
+    }
+
+    .feedback-text.info {
+      background: #e3edf5;
+      color: #1a4a6b;
+    }
+
+    /* ===== LAYANAN MANFAAT ===== */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .service-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.2rem;
+      text-align: center;
+      border: 2px solid #e5dbd0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      border-color: #b09b88;
+    }
+
+    .service-card .icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .service-card .name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #3b2b1e;
+    }
+
+    .service-card .desc {
+      font-size: 0.7rem;
+      color: #7a6656;
+    }
+
+    .service-card.active-service {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    /* ===== KUIS ===== */
+    .quiz-question {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin: 1rem 0;
+    }
+
+    .quiz-question .q-number {
+      font-size: 0.8rem;
+      color: #7a6656;
+      font-weight: 600;
+    }
+
+    .quiz-question .q-text {
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin: 0.5rem 0;
+      color: #3b2b1e;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .quiz-options label {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #e5dbd0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .quiz-options label:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .quiz-options input[type="radio"] {
+      accent-color: #4d3829;
+      width: 18px;
+      height: 18px;
+    }
+
+    .quiz-options label.selected {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    .quiz-options label.correct-answer {
+      border-color: #8aaa7a;
+      background: #e8f5e0;
+    }
+
+    .quiz-options label.wrong-answer {
+      border-color: #d4a0a0;
+      background: #f5e0e0;
+    }
+
+    /* ===== HASIL ===== */
+    .result-box {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .result-box .big-icon {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-box .level-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #3b2b1e;
+    }
+
+    .result-box .score-display {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #4d3829;
+      margin: 0.5rem 0;
+    }
+
+    .result-box .certificate {
+      background: #f5ede6;
+      border: 3px double #dbb9a6;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: 'Georgia', serif;
+    }
+
+    .result-box .certificate h3 {
+      font-size: 1.3rem;
+      color: #3b2b1e;
+      border-left: none;
+      padding-left: 0;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scenario-panel {
+        padding: 1.2rem;
+      }
+      .step-dot .circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+      }
+      .step-dot .label {
+        font-size: 0.55rem;
+        max-width: 50px;
+      }
+      .step-indicator::before {
+        left: 20px;
+        right: 20px;
+      }
+      .topology-canvas {
+        min-height: 180px;
+        padding: 1rem;
+        gap: 0.6rem;
+      }
+      .device-icon {
+        padding: 0.5rem 0.7rem;
+        min-width: 55px;
+      }
+      .device-icon .icon {
+        font-size: 1.5rem;
+      }
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .quiz-options label {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+      .aktivitas-wrapper h1 {
+        font-size: 1.7rem;
+      }
+      .result-box .level-title {
+        font-size: 1.4rem;
+      }
+      .result-box .score-display {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .step-indicator {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+        justify-content: center;
+      }
+      .step-indicator::before {
+        display: none;
+      }
+      .step-dot .circle {
+        width: 28px;
+        height: 28px;
+        font-size: 0.65rem;
+      }
+      .scenario-panel {
+        padding: 0.8rem;
+      }
+      .scenario-panel .scenario-title {
+        font-size: 1.1rem;
+      }
+      .control-bar {
+        gap: 0.4rem;
+      }
+      .btn-control {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.75rem;
+      }
+      .slider-control input[type="range"] {
+        width: 60px;
+      }
+      .services-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+      }
+      .service-card {
+        padding: 0.8rem;
+      }
+      .service-card .icon {
+        font-size: 1.6rem;
+      }
+      .nav-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-nav {
+        justify-content: center;
+      }
+      .question-box .options {
+        flex-direction: column;
+      }
+      .question-box .options button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="jki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li><a href="jki1.html">Jaringan Komputer dan Internet</a></li>
+      <li>Virtual Network Explorer</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <h1>🌐 Jelajah Jaringan: Virtual Network Explorer</h1>
+        <p class="sub-judul-aktivitas">"Dari ruang lab hingga dunia! Pelajari bagaimana perangkat saling terhubung."</p>
+
+        <!-- ===== STEP INDICATOR ===== -->
+        <div class="step-indicator" id="stepIndicator">
+          <button class="step-dot active" data-step="0">
+            <span class="circle">1</span>
+            <span class="label">Pembuka</span>
+          </button>
+          <button class="step-dot" data-step="1">
+            <span class="circle">2</span>
+            <span class="label">Bangun LAN</span>
+          </button>
+          <button class="step-dot" data-step="2">
+            <span class="circle">3</span>
+            <span class="label">Sambung Internet</span>
+          </button>
+          <button class="step-dot" data-step="3">
+            <span class="circle">4</span>
+            <span class="label">Paket Data</span>
+          </button>
+          <button class="step-dot" data-step="4">
+            <span class="circle">5</span>
+            <span class="label">Rasakan Manfaat</span>
+          </button>
+          <button class="step-dot" data-step="5">
+            <span class="circle">6</span>
+            <span class="label">Kuis</span>
+          </button>
+          <button class="step-dot" data-step="6">
+            <span class="circle">🏆</span>
+            <span class="label">Hasil</span>
+          </button>
+        </div>
+
+        <!-- ===== PANEL SKENARIO ===== -->
+        <div class="scenario-panel" id="scenarioPanel">
+
+          <!-- SCENARIO 0: PEMBUKA -->
+          <div class="scenario-content" data-step="0">
+            <div class="scenario-title">🚀 Selamat Datang, Network Engineer!</div>
+            <div class="scenario-story">
+              Kamu akan berperan sebagai seorang insinyur jaringan. Tugasmu: membangun jaringan, menghubungkan ke internet, dan menjelajahi bagaimana data bergerak di dunia digital!
+            </div>
+            <div style="text-align:center; padding:1.5rem 0;">
+              <div style="font-size:4rem; margin-bottom:0.5rem;">🌍</div>
+              <p style="font-size:1.1rem; color:#4d3829; font-weight:500;">Siap menjadi arsitek dunia digital?</p>
+              <button class="btn-control primary" onclick="goToStep(1)" style="font-size:1.1rem; padding:0.7rem 2.5rem; margin-top:0.5rem;">
+                🚀 Mulai Eksplorasi
+              </button>
+            </div>
+          </div>
+
+          <!-- SCENARIO 1: BANGUN LAN -->
+          <div class="scenario-content" data-step="1" style="display:none;">
+            <div class="scenario-title">🏗️ Skenario 1: Bangun Jaringan Lokal (LAN)</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Kamu ditugaskan membangun jaringan di laboratorium komputer sekolah. Terdapat 6 komputer dan 1 printer yang harus terhubung.
+            </div>
+
+            <p style="font-weight:600; color:#3b2b1e; margin-bottom:0.5rem;">🖱️ Seret perangkat ke area LAN:</p>
+            <div class="topology-canvas" id="lanCanvas">
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span>
+                <span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span>
+                <span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span>
+                <span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span>
+                <span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span>
+                <span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span>
+                <span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="printer" onclick="placeDevice(this)">
+                <span class="icon">🖨️</span>
+                <span class="name">Printer</span>
+              </div>
+              <div class="device-icon droppable" data-device="switch" onclick="placeDevice(this)">
+                <span class="icon">🔀</span>
+                <span class="name">Switch</span>
+              </div>
+            </div>
+
+            <div id="lanStatus" style="text-align:center; padding:0.5rem; background:#f0ece6; border-radius:8px; margin:0.5rem 0; font-size:0.9rem; color:#5c4638;">
+              💡 Klik perangkat untuk menempatkannya di jaringan. Tambahkan Switch sebagai penghubung!
+            </div>
+
+            <div class="question-box">
+              <div class="q-title">💭 Pertanyaan Reflektif:</div>
+              <p style="margin-bottom:0.5rem;"><em>"Apa yang bisa dilakukan setelah jaringan ini terbangun?"</em></p>
+              <div class="options">
+                <button onclick="answerQuestion(this, true, 'lan')">📁 Berbagi file</button>
+                <button onclick="answerQuestion(this, false, 'lan')">📧 Mengirim email ke luar negeri</button>
+                <button onclick="answerQuestion(this, false, 'lan')">▶️ Mengakses YouTube</button>
+              </div>
+              <div class="feedback-text" id="lanFeedback"></div>
+            </div>
+          </div>
+
+          <!-- SCENARIO 2: SAMBUNG INTERNET -->
+          <div class="scenario-content" data-step="2" style="display:none;">
+            <div class="scenario-title">🌍 Skenario 2: Sambungkan ke Dunia (Internet)</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Sekolah sekarang ingin jaringan lab terhubung ke internet agar siswa bisa mencari materi belajar.
+            </div>
+
+            <div style="text-align:center; padding:1rem 0;">
+              <div style="display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:1rem; background:#f8f4ef; border-radius:16px; padding:1.5rem; border:2px dashed #d9cdbf;">
+                <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem; background:#fff; padding:0.8rem 1.2rem; border-radius:12px; border:2px solid #d9cdbf;">
+                  <span style="font-size:2.5rem;">🏢</span>
+                  <span style="font-weight:600; font-size:0.8rem;">Jaringan LAN</span>
+                </div>
+                <span style="font-size:1.5rem;">➕</span>
+                <div class="device-icon" onclick="addRouter()" style="cursor:pointer; border-color:#4d3829; background:#f5ede6;">
+                  <span class="icon">📡</span>
+                  <span class="name">Router</span>
+                  <span style="font-size:0.6rem; color:#7a6656;">(klik untuk tambah)</span>
+                </div>
+                <span style="font-size:1.5rem;">🔗</span>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem; background:#e8f0f8; padding:0.8rem 1.5rem; border-radius:12px; border:2px solid #8aaa7a;">
+                  <span style="font-size:2.5rem;">☁️</span>
+                  <span style="font-weight:600; font-size:0.8rem;">INTERNET</span>
+                </div>
+              </div>
+              <div id="internetStatus" style="margin-top:0.8rem; font-size:0.9rem; color:#5c4638;">
+                💡 Klik <strong>Router</strong> untuk menghubungkan LAN ke Internet!
+              </div>
+            </div>
+
+            <div class="question-box">
+              <div class="q-title">💭 Pertanyaan:</div>
+              <p style="margin-bottom:0.5rem;"><em>"Apa perbedaan setelah router dipasang?"</em></p>
+              <div class="options">
+                <button onclick="answerQuestion(this, true, 'internet')">🌐 Komputer bisa mengakses situs web</button>
+                <button onclick="answerQuestion(this, false, 'internet')">🖨️ Printer bisa dipakai</button>
+                <button onclick="answerQuestion(this, false, 'internet')">📁 Komputer tidak bisa saling kirim file</button>
+              </div>
+              <div class="feedback-text" id="internetFeedback"></div>
+            </div>
+          </div>
+
+          <!-- SCENARIO 3: PETUALANGAN PAKET DATA -->
+          <div class="scenario-content" data-step="3" style="display:none;">
+            <div class="scenario-title">📦 Skenario 3: Petualangan Paket Data</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Kamu mengirim email ke teman di kota lain. Ikuti perjalanan paket data!
+            </div>
+
+            <div style="background:#f0ece6; border-radius:12px; padding:1rem; margin:0.5rem 0;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; font-size:0.75rem; color:#5c4638;">
+                <span>💻 Pengirim<br><small>192.168.1.10</small></span>
+                <span>🔀 Switch</span>
+                <span>📡 Router</span>
+                <span>☁️ Internet</span>
+                <span>📡 Router</span>
+                <span>🔀 Switch</span>
+                <span>💻 Penerima<br><small>10.0.0.5</small></span>
+              </div>
+              <div class="packet-animation" id="packetAnimation">
+                <div class="packet-dot" id="packetDot" style="left:0%;">
+                  <div class="pulse"></div>
+                  📦
+                </div>
+              </div>
+              <div class="packet-stops">
+                <span>🚀 Mulai</span>
+                <span>🔀 Switch</span>
+                <span>📡 Router</span>
+                <span>☁️ Internet</span>
+                <span>📡 Router</span>
+                <span>🔀 Switch</span>
+                <span>🎯 Tiba!</span>
+              </div>
+            </div>
+
+            <div class="control-bar">
+              <button class="btn-control primary" onclick="playPacket()">▶️ Play</button>
+              <button class="btn-control" onclick="pausePacket()">⏸️ Pause</button>
+              <button class="btn-control" onclick="stepPacket()">⏭️ Step-by-Step</button>
+              <button class="btn-control" onclick="resetPacket()">🔄 Reset</button>
+              <div class="slider-control">
+                <span>🐢</span>
+                <input type="range" id="speedSlider" min="1" max="5" value="3" oninput="updateSpeed(this.value)">
+                <span>🐇</span>
+              </div>
+            </div>
+
+            <div id="packetLog" style="background:#fff; border-radius:8px; padding:0.8rem; border:1px solid #e5dbd0; max-height:80px; overflow-y:auto; font-size:0.85rem; color:#3b2b1e; margin:0.5rem 0;">
+              <div>📋 <strong>Log Aktivitas:</strong></div>
+              <div id="logEntries">⏳ Paket data siap dikirim...</div>
+            </div>
+          </div>
+
+          <!-- SCENARIO 4: MANFAAT -->
+          <div class="scenario-content" data-step="4" style="display:none;">
+            <div class="scenario-title">🎯 Skenario 4: Rasakan Manfaatnya</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Setelah jaringan terbangun, siswa bisa menikmati berbagai aktivitas. Pilih aktivitas yang ingin dicoba!
+            </div>
+
+            <div class="services-grid" id="servicesGrid">
+              <div class="service-card" onclick="activateService(this, 'email')">
+                <div class="icon">✉️</div>
+                <div class="name">Surel (Email)</div>
+                <div class="desc">Kirim pesan ke teman</div>
+              </div>
+              <div class="service-card" onclick="activateService(this, 'learning')">
+                <div class="icon">📚</div>
+                <div class="name">e-Learning</div>
+                <div class="desc">Akses materi belajar</div>
+              </div>
+              <div class="service-card" onclick="activateService(this, 'commerce')">
+                <div class="icon">🛒</div>
+                <div class="name">e-Commerce</div>
+                <div class="desc">Belanja online</div>
+              </div>
+              <div class="service-card" onclick="activateService(this, 'printer')">
+                <div class="icon">🖨️</div>
+                <div class="name">Berbagi Printer</div>
+                <div class="desc">Cetak dokumen</div>
+              </div>
+            </div>
+
+            <div id="serviceResult" style="background:#f5ede6; border-radius:12px; padding:1.2rem; margin:0.5rem 0; text-align:center; min-height:80px; display:flex; align-items:center; justify-content:center; border:2px dashed #d9cdbf;">
+              <span style="color:#7a6656;">💡 Klik salah satu layanan untuk melihat simulasi!</span>
+            </div>
+
+            <div class="question-box">
+              <div class="q-title">💭 Pertanyaan:</div>
+              <p style="margin-bottom:0.5rem;"><em>"Manfaat internet mana yang paling sering kamu gunakan?"</em></p>
+              <div class="options">
+                <button onclick="answerQuestion(this, true, 'benefit')">📚 Belajar/mencari informasi</button>
+                <button onclick="answerQuestion(this, false, 'benefit')">🛒 Belanja online</button>
+                <button onclick="answerQuestion(this, false, 'benefit')">📧 Email</button>
+                <button onclick="answerQuestion(this, false, 'benefit')">🎮 Game online</button>
+              </div>
+              <div class="feedback-text" id="benefitFeedback"></div>
+            </div>
+          </div>
+
+          <!-- SCENARIO 5: KUIS -->
+          <div class="scenario-content" data-step="5" style="display:none;">
+            <div class="scenario-title">🧠 Kuis Akhir: "Network Master"</div>
+            <div class="scenario-story">
+              Jawab pertanyaan berikut untuk menguji pemahamanmu tentang jaringan komputer dan internet!
+            </div>
+
+            <div id="quizContainer">
+              <!-- Soal akan diisi oleh JavaScript -->
+            </div>
+
+            <div style="text-align:center; margin-top:1rem;">
+              <button class="btn-control primary" id="quizSubmitBtn" onclick="submitQuiz()" style="font-size:1rem; padding:0.6rem 2rem;">
+                ✅ Selesai & Lihat Hasil
+              </button>
+            </div>
+          </div>
+
+          <!-- SCENARIO 6: HASIL -->
+          <div class="scenario-content" data-step="6" style="display:none;">
+            <div class="result-box" id="resultBox">
+              <div class="big-icon">🏆</div>
+              <div class="level-title" id="resultLevel">Network Explorer</div>
+              <div class="score-display" id="resultScore">0/10</div>
+              <p id="resultMessage" style="color:#5c4638;">Teruslah belajar dan jelajahi dunia jaringan!</p>
+
+              <div class="certificate" id="certificateBox">
+                <h3>📜 Sertifikat Digital</h3>
+                <p style="font-size:0.9rem;">Diberikan kepada:</p>
+                <p style="font-size:1.2rem; font-weight:700; color:#3b2b1e; font-family:Georgia, serif;">Network Explorer</p>
+                <p style="font-size:0.8rem; color:#7a6656;">Telah menyelesaikan "Jelajah Jaringan: Virtual Network Explorer"</p>
+                <p style="font-size:0.7rem; color:#7a6656; margin-top:0.5rem;">SMPN 2 Talegong · <span id="certDate"></span></p>
+              </div>
+
+              <div style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-top:1rem;">
+                <button class="btn-control" onclick="window.print()">🖨️ Cetak Sertifikat</button>
+                <button class="btn-control primary" onclick="resetAll()">🔄 Ulangi Aktivitas</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom">
+          <a href="jki1.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Materi
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav" id="prevBtn" onclick="prevStep()" disabled>← Sebelumnya</button>
+            <button class="btn-nav primary" id="nextBtn" onclick="nextStep()">Selanjutnya →</button>
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- ===== SCRIPT AKTIVITAS ===== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ===== STATE =====
+      let currentStep = 0;
+      const totalSteps = 7;
+      let packetInterval = null;
+      let packetPosition = 0;
+      let packetPaused = false;
+      let packetSpeed = 3;
+      let quizAnswers = {};
+      let quizSubmitted = false;
+      let lanComplete = false;
+      let internetComplete = false;
+      let benefitAnswered = false;
+      let selectedService = null;
+
+      // ===== DATA KUIS =====
+      const quizData = [
+        {
+          question: 'Apa perbedaan utama antara LAN dan Internet?',
+          options: [
+            'LAN lebih cepat dari Internet',
+            'LAN mencakup area terbatas, Internet global',
+            'Internet hanya untuk email',
+            'LAN menggunakan kabel, Internet menggunakan satelit'
+          ],
+          correct: 1
+        },
+        {
+          question: 'Perangkat apa yang menghubungkan jaringan lokal ke internet?',
+          options: ['Switch', 'Router', 'Printer', 'Monitor'],
+          correct: 1
+        },
+        {
+          question: 'Apa fungsi dari Switch dalam jaringan?',
+          options: [
+            'Menghubungkan ke internet',
+            'Menghubungkan perangkat dalam satu jaringan lokal',
+            'Mencetak dokumen',
+            'Menyimpan data'
+          ],
+          correct: 1
+        },
+        {
+          question: 'Manakah yang termasuk contoh LAN?',
+          options: [
+            'Wi-Fi di rumah',
+            'Jaringan antar kota',
+            'Internet global',
+            'Jaringan antar negara'
+          ],
+          correct: 0
+        },
+        {
+          question: 'Apa itu alamat IP?',
+          options: [
+            'Alamat rumah fisik',
+            'Identitas unik perangkat di jaringan',
+            'Nama pengguna email',
+            'Kode pos digital'
+          ],
+          correct: 1
+        },
+        {
+          question: 'Protokol apa yang digunakan internet untuk mengirim data?',
+          options: ['HTTP', 'TCP/IP', 'FTP', 'SMTP'],
+          correct: 1
+        },
+        {
+          question: 'Gambar ini termasuk jenis jaringan apa? [🏢 LAN]',
+          options: ['LAN', 'MAN', 'WAN', 'Internet'],
+          correct: 0
+        },
+        {
+          question: 'Manfaat internet yang memungkinkan transaksi jual beli adalah...',
+          options: ['e-Learning', 'e-Commerce', 'e-Banking', 'e-Government'],
+          correct: 1
+        },
+        {
+          question: 'Perangkat mana yang berfungsi sebagai "gerbang" ke internet?',
+          options: ['Switch', 'Router', 'Hub', 'Modem'],
+          correct: 1
+        },
+        {
+          question: 'Apa yang terjadi ketika kita mengirim email?',
+          options: [
+            'Data dikirim langsung ke tujuan',
+            'Data dipecah menjadi paket dan dikirim melalui router',
+            'Data disimpan di server selamanya',
+            'Data dikirim melalui satelit'
+          ],
+          correct: 1
+        }
+      ];
+
+      // ===== STEP NAVIGASI =====
+      window.goToStep = function(step) {
+        if (step < 0 || step >= totalSteps) return;
+        currentStep = step;
+        updateUI();
+      };
+
+      window.nextStep = function() {
+        if (currentStep < totalSteps - 1) {
+          // Validasi untuk beberapa step
+          if (currentStep === 1 && !lanComplete) {
+            alert('Selesaikan dulu aktivitas membangun LAN!');
+            return;
+          }
+          if (currentStep === 2 && !internetComplete) {
+            alert('Selesaikan dulu aktivitas menyambungkan ke internet!');
+            return;
+          }
+          if (currentStep === 4 && !benefitAnswered) {
+            alert('Jawab dulu pertanyaan reflektif!');
+            return;
+          }
+          if (currentStep === 5 && !quizSubmitted) {
+            alert('Selesaikan dulu kuisnya!');
+            return;
+          }
+          goToStep(currentStep + 1);
+        }
+      };
+
+      window.prevStep = function() {
+        if (currentStep > 0) {
+          goToStep(currentStep - 1);
+        }
+      };
+
+      function updateUI() {
+        // Sembunyikan semua konten
+        document.querySelectorAll('.scenario-content').forEach(el => {
+          el.style.display = 'none';
+        });
+
+        // Tampilkan konten step saat ini
+        const target = document.querySelector(`.scenario-content[data-step="${currentStep}"]`);
+        if (target) target.style.display = 'block';
+
+        // Update step indicator
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.classList.remove('active', 'completed');
+          if (index === currentStep) dot.classList.add('active');
+          else if (index < currentStep) dot.classList.add('completed');
+        });
+
+        // Update tombol navigasi
+        document.getElementById('prevBtn').disabled = (currentStep === 0);
+        const nextBtn = document.getElementById('nextBtn');
+        if (currentStep === totalSteps - 1) {
+          nextBtn.textContent = '🎉 Selesai';
+        } else {
+          nextBtn.textContent = 'Selanjutnya →';
+        }
+
+        // Scroll ke atas
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Inisialisasi konten tertentu
+        if (currentStep === 3) initPacketAnimation();
+        if (currentStep === 5) renderQuiz();
+        if (currentStep === 6) calculateResult();
+      }
+
+      // ===== STEP 1: BANGUN LAN =====
+      window.placeDevice = function(el) {
+        if (el.classList.contains('placed')) {
+          el.classList.remove('placed');
+          document.getElementById('lanStatus').innerHTML = '💡 Klik perangkat untuk menempatkannya di jaringan.';
+          lanComplete = false;
+          return;
+        }
+
+        el.classList.add('placed');
+        const deviceName = el.querySelector('.name').textContent;
+        document.getElementById('lanStatus').innerHTML = `✅ ${deviceName} telah terhubung ke jaringan!`;
+
+        // Cek semua perangkat sudah terhubung
+        const allDevices = document.querySelectorAll('#lanCanvas .device-icon.droppable');
+        const allPlaced = document.querySelectorAll('#lanCanvas .device-icon.placed');
+        if (allPlaced.length === allDevices.length) {
+          document.getElementById('lanStatus').innerHTML = '🎉 <strong>Semua perangkat terhubung!</strong> LAN berhasil dibangun.';
+          lanComplete = true;
+        }
+      };
+
+      window.answerQuestion = function(btn, isCorrect, type) {
+        const parent = btn.closest('.question-box');
+        const feedback = parent.querySelector('.feedback-text');
+
+        // Reset semua tombol
+        parent.querySelectorAll('.options button').forEach(b => {
+          b.classList.remove('correct', 'wrong');
+        });
+
+        if (isCorrect) {
+          btn.classList.add('correct');
+          feedback.className = 'feedback-text show success';
+          feedback.textContent = '✅ Jawaban tepat! ' + (type === 'lan' ? 'LAN memungkinkan berbagi sumber daya lokal (printer, file) tapi belum terhubung ke internet.' :
+            type === 'internet' ? 'Internet menghubungkan jaringan lokal ke jaringan global, membuka akses ke sumber daya dunia.' :
+            'Belajar/mencari informasi adalah salah satu manfaat utama internet!');
+        } else {
+          btn.classList.add('wrong');
+          feedback.className = 'feedback-text show info';
+          feedback.textContent = '💡 Coba pikirkan lagi. ' + (type === 'lan' ? 'LAN adalah jaringan lokal, belum terhubung ke internet.' :
+            type === 'internet' ? 'Router menghubungkan LAN ke internet, memungkinkan akses ke situs web.' :
+            'Semua jawaban benar, tetapi belajar adalah manfaat yang paling umum digunakan.');
+        }
+
+        if (type === 'lan') lanComplete = true;
+        if (type === 'internet') internetComplete = true;
+        if (type === 'benefit') benefitAnswered = true;
+      };
+
+      // ===== STEP 2: SAMBUNG INTERNET =====
+      let routerAdded = false;
+
+      window.addRouter = function() {
+        if (routerAdded) {
+          document.getElementById('internetStatus').innerHTML = '✅ Router sudah terpasang! Jaringan terhubung ke internet.';
+          internetComplete = true;
+          return;
+        }
+
+        routerAdded = true;
+        document.getElementById('internetStatus').innerHTML = `
+          ✅ Router berhasil ditambahkan! LAN sekarang terhubung ke Internet.
+          <br><span style="font-size:0.8rem; color:#4d3829;">🌐 Akses ke dunia terbuka!</span>
+        `;
+        internetComplete = true;
+      };
+
+      // ===== STEP 3: PAKET DATA =====
+      const packetStops = [0, 16, 33, 50, 66, 83, 100];
+      const stopLabels = ['💻 Pengirim', '🔀 Switch', '📡 Router', '☁️ Internet', '📡 Router', '🔀 Switch', '🎯 Penerima'];
+      let currentStopIndex = 0;
+
+      function initPacketAnimation() {
+        resetPacket();
+      }
+
+      window.playPacket = function() {
+        if (packetInterval) return;
+        packetPaused = false;
+
+        if (packetPosition >= 100) {
+          resetPacket();
+        }
+
+        packetInterval = setInterval(() => {
+          if (!packetPaused) {
+            packetPosition += 0.5 * (packetSpeed / 3);
+            if (packetPosition >= 100) {
+              packetPosition = 100;
+              clearInterval(packetInterval);
+              packetInterval = null;
+              addLogEntry('✅ Paket data berhasil sampai tujuan!');
+            }
+            updatePacketPosition();
+          }
+        }, 50);
+      };
+
+      window.pausePacket = function() {
+        packetPaused = true;
+        if (packetInterval) {
+          clearInterval(packetInterval);
+          packetInterval = null;
+        }
+        addLogEntry('⏸️ Animasi dijeda');
+      };
+
+      window.stepPacket = function() {
+        if (packetPosition >= 100) {
+          resetPacket();
+          return;
+        }
+
+        // Cari stop selanjutnya
+        for (let i = currentStopIndex + 1; i < packetStops.length; i++) {
+          if (packetStops[i] > packetPosition) {
+            packetPosition = packetStops[i];
+            currentStopIndex = i;
+            updatePacketPosition();
+            addLogEntry(`📍 Sampai di: ${stopLabels[i]}`);
+            if (packetPosition >= 100) {
+              addLogEntry('✅ Paket data berhasil sampai tujuan!');
+            }
+            return;
+          }
+        }
+      };
+
+      window.resetPacket = function() {
+        if (packetInterval) {
+          clearInterval(packetInterval);
+          packetInterval = null;
+        }
+        packetPosition = 0;
+        currentStopIndex = 0;
+        packetPaused = false;
+        updatePacketPosition();
+        document.getElementById('logEntries').innerHTML = '⏳ Paket data siap dikirim...';
+        addLogEntry('🔄 Reset animasi');
+      };
+
+      window.updateSpeed = function(val) {
+        packetSpeed = parseInt(val);
+        if (packetInterval) {
+          clearInterval(packetInterval);
+          packetInterval = null;
+          playPacket();
+        }
+      };
+
+      function updatePacketPosition() {
+        const dot = document.getElementById('packetDot');
+        if (dot) {
+          dot.style.left = packetPosition + '%';
+        }
+
+        // Update log secara otomatis saat melewati stop
+        for (let i = 0; i < packetStops.length; i++) {
+          if (Math.abs(packetPosition - packetStops[i]) < 1 && i > currentStopIndex) {
+            currentStopIndex = i;
+            addLogEntry(`📍 Sampai di: ${stopLabels[i]}`);
+            if (packetPosition >= 100) {
+              addLogEntry('✅ Paket data berhasil sampai tujuan!');
+            }
+          }
+        }
+      }
+
+      function addLogEntry(msg) {
+        const log = document.getElementById('logEntries');
+        if (log) {
+          log.innerHTML += `<br>▶️ ${msg}`;
+          log.parentElement.scrollTop = log.parentElement.scrollHeight;
+        }
+      }
+
+      // ===== STEP 4: MANFAAT =====
+      window.activateService = function(el, service) {
+        document.querySelectorAll('.service-card').forEach(c => c.classList.remove('active-service'));
+        el.classList.add('active-service');
+        selectedService = service;
+
+        const result = document.getElementById('serviceResult');
+        const messages = {
+          'email': '✉️ <strong>Surel (Email)</strong><br>📨 Mengirim pesan ke teman... Animasi amplop melintasi internet!<br><span style="font-size:0.8rem; color:#7a6656;">✅ Pesan berhasil terkirim!</span>',
+          'learning': '📚 <strong>e-Learning</strong><br>📖 Membuka halaman materi belajar...<br><span style="font-size:0.8rem; color:#7a6656;">✅ Materi "Jaringan Komputer" berhasil diakses!</span>',
+          'commerce': '🛒 <strong>e-Commerce</strong><br>🛍️ Membeli buku "Dasar Jaringan" secara online...<br><span style="font-size:0.8rem; color:#7a6656;">✅ Transaksi berhasil! Buku dikirim ke alamat tujuan.</span>',
+          'printer': '🖨️ <strong>Berbagi Printer</strong><br>🖨️ Mengirim perintah cetak... Printer di jaringan menyala!<br><span style="font-size:0.8rem; color:#7a6656;">✅ Dokumen berhasil dicetak!</span>'
+        };
+        result.innerHTML = messages[service] || '💡 Pilih layanan untuk melihat simulasi.';
+      };
+
+      // ===== STEP 5: KUIS =====
+      function renderQuiz() {
+        const container = document.getElementById('quizContainer');
+        if (!container) return;
+        if (container.dataset.rendered) return;
+
+        let html = '';
+        quizData.forEach((q, index) => {
+          html += `
+            <div class="quiz-question" data-q="${index}">
+              <div class="q-number">Soal ${index + 1} dari ${quizData.length}</div>
+              <div class="q-text">${q.question}</div>
+              <div class="quiz-options">
+          `;
+          q.options.forEach((opt, optIndex) => {
+            const id = `q${index}_opt${optIndex}`;
+            html += `
+              <label for="${id}" onclick="selectQuizOption(${index}, ${optIndex})">
+                <input type="radio" name="q${index}" id="${id}" value="${optIndex}">
+                ${opt}
+              </label>
+            `;
+          });
+          html += `
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+        container.dataset.rendered = 'true';
+      }
+
+      window.selectQuizOption = function(qIndex, optIndex) {
+        const labels = document.querySelectorAll(`.quiz-question[data-q="${qIndex}"] label`);
+        labels.forEach((label, idx) => {
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.classList.remove('selected');
+          }
+        });
+        quizAnswers[qIndex] = optIndex;
+      };
+
+      window.submitQuiz = function() {
+        if (quizSubmitted) return;
+
+        let correct = 0;
+        const total = quizData.length;
+
+        quizData.forEach((q, index) => {
+          const selected = quizAnswers[index];
+          const labels = document.querySelectorAll(`.quiz-question[data-q="${index}"] label`);
+
+          labels.forEach((label, idx) => {
+            if (idx === q.correct) {
+              label.classList.add('correct-answer');
+            }
+            if (idx === selected && selected !== q.correct) {
+              label.classList.add('wrong-answer');
+            }
+            if (idx === selected) {
+              label.querySelector('input').checked = true;
+            }
+          });
+
+          if (selected === q.correct) correct++;
+        });
+
+        quizSubmitted = true;
+        document.getElementById('quizSubmitBtn').disabled = true;
+        document.getElementById('quizSubmitBtn').textContent = '✅ Kuis Selesai!';
+
+        // Simpan hasil
+        window.quizResult = { correct, total };
+
+        // Lanjut ke hasil
+        setTimeout(() => goToStep(6), 800);
+      };
+
+      // ===== STEP 6: HASIL =====
+      function calculateResult() {
+        const result = window.quizResult || { correct: 0, total: quizData.length };
+        const score = result.correct;
+        const total = result.total;
+
+        let level, message;
+        if (score === total) {
+          level = '🌟 Network Master';
+          message = 'Sempurna! Kamu benar-benar menguasai jaringan komputer!';
+        } else if (score >= total * 0.8) {
+          level = '🏗️ Network Builder';
+          message = 'Hebat! Pemahamanmu sangat baik. Teruslah belajar!';
+        } else if (score >= total * 0.6) {
+          level = '🔍 Network Explorer';
+          message = 'Bagus! Kamu sudah memahami dasar-dasar jaringan.';
+        } else {
+          level = '📚 Network Learner';
+          message = 'Teruslah belajar dan jangan menyerah! Kamu pasti bisa.';
+        }
+
+        document.getElementById('resultLevel').textContent = level;
+        document.getElementById('resultScore').textContent = `${score}/${total}`;
+        document.getElementById('resultMessage').textContent = message;
+
+        // Update sertifikat
+        const date = new Date();
+        document.getElementById('certDate').textContent = date.toLocaleDateString('id-ID', {
+          day: 'numeric', month: 'long', year: 'numeric'
+        });
+        document.querySelector('#certificateBox p:nth-child(4)').textContent = level;
+
+        // Update icon
+        const icons = {
+          '🌟 Network Master': '🏆',
+          '🏗️ Network Builder': '🥇',
+          '🔍 Network Explorer': '🥈',
+          '📚 Network Learner': '📖'
+        };
+        document.querySelector('.result-box .big-icon').textContent = icons[level] || '🏆';
+      }
+
+      // ===== RESET =====
+      window.resetAll = function() {
+        location.reload();
+      };
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        updateUI();
+
+        // Klik pada step indicator
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.addEventListener('click', function() {
+            // Cek apakah step sudah bisa diakses
+            if (index === 0) { goToStep(0); return; }
+            if (index === 1 && !lanComplete && currentStep > 1) {
+              alert('Selesaikan dulu aktivitas membangun LAN!');
+              return;
+            }
+            if (index === 2 && !internetComplete && currentStep > 2) {
+              alert('Selesaikan dulu aktivitas menyambungkan ke internet!');
+              return;
+            }
+            if (index === 4 && !benefitAnswered && currentStep > 4) {
+              alert('Jawab dulu pertanyaan reflektif!');
+              return;
+            }
+            if (index === 5 && !quizSubmitted && currentStep > 5) {
+              alert('Selesaikan dulu kuisnya!');
+              return;
+            }
+            // Cek apakah step sudah dilewati
+            if (index <= currentStep + 1 || index === 0) {
+              goToStep(index);
+            } else {
+              alert('Selesaikan step sebelumnya terlebih dahulu!');
+            }
+          });
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
