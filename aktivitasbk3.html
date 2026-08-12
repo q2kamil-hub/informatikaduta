@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Function Factory · Aktivitas Interaktif</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA AKTIVITAS ===== */
+    .aktivitas-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .aktivitas-wrapper h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3rem;
+    }
+
+    .aktivitas-wrapper .sub-judul-aktivitas {
+      font-size: 1rem;
+      color: #5c4638;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    /* ===== STEP INDICATOR ===== */
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.5rem 0 2rem 0;
+      position: relative;
+      padding: 0 0.5rem;
+    }
+
+    .step-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      right: 30px;
+      height: 3px;
+      background: #e5dbd0;
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .step-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+    }
+
+    .step-dot .circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #f5ede6;
+      border: 3px solid #d9cdbf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active .circle {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    .step-dot.completed .circle {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .step-dot .label {
+      font-size: 0.6rem;
+      margin-top: 0.3rem;
+      color: #7a6656;
+      text-align: center;
+      max-width: 70px;
+      font-weight: 500;
+    }
+
+    .step-dot.active .label {
+      color: #3b2b1e;
+      font-weight: 600;
+    }
+
+    /* ===== PANEL SKENARIO ===== */
+    .scenario-panel {
+      background: #fffffffa;
+      border-radius: 24px;
+      border: 2px solid #e5dbd0;
+      padding: 2rem;
+      min-height: 400px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem;
+      color: #5c4638;
+      background: #f5ede6;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #dbb9a6;
+    }
+
+    /* ===== FUNCTION BOX ===== */
+    .function-box {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      padding: 1.5rem;
+      background: #f8f4ef;
+      border-radius: 16px;
+      border: 3px solid #d9cdbf;
+      margin: 1rem 0;
+      position: relative;
+      min-height: 100px;
+    }
+
+    .function-box .compartment {
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      min-width: 100px;
+      text-align: center;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .function-box .compartment .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.7;
+      display: block;
+      margin-top: 0.2rem;
+    }
+
+    .function-box .compartment .value {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .function-box .compartment.input-comp {
+      background: #fce4e4;
+      border: 3px solid #d4a0a0;
+      color: #5a2a2a;
+    }
+
+    .function-box .compartment.process-comp {
+      background: #e3edf5;
+      border: 3px solid #8ab4d4;
+      color: #1a4a6b;
+      min-width: 140px;
+    }
+
+    .function-box .compartment.process-comp .process-steps {
+      font-size: 0.7rem;
+      font-weight: 400;
+      margin-top: 0.3rem;
+      text-align: left;
+    }
+
+    .function-box .compartment.process-comp .process-steps div {
+      padding: 0.1rem 0;
+      border-bottom: 1px dashed rgba(26, 74, 107, 0.2);
+    }
+
+    .function-box .compartment.output-comp {
+      background: #e8f5e0;
+      border: 3px solid #8aaa7a;
+      color: #2d5a1e;
+    }
+
+    .function-box .arrow-symbol {
+      font-size: 2rem;
+      color: #7a6656;
+    }
+
+    .function-box .arrow-symbol.small {
+      font-size: 1.2rem;
+    }
+
+    /* ===== CONTROL ===== */
+    .control-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1rem 0;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-control {
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-control:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-control.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-control.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-control.success {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .btn-control.success:hover {
+      background: #7a9a6a;
+      border-color: #7a9a6a;
+    }
+
+    .btn-control.danger {
+      background: #d4a0a0;
+      border-color: #d4a0a0;
+      color: #fff;
+    }
+
+    .btn-control.danger:hover {
+      background: #c08a8a;
+      border-color: #c08a8a;
+    }
+
+    .btn-control:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ===== INPUT SIMULATOR ===== */
+    .input-simulator {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 12px;
+      border: 2px solid #e5dbd0;
+      margin: 0.5rem 0;
+    }
+
+    .input-simulator label {
+      font-weight: 600;
+      color: #3b2b1e;
+      font-size: 0.9rem;
+    }
+
+    .input-simulator input[type="number"],
+    .input-simulator input[type="text"] {
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      font-size: 1rem;
+      width: 120px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .input-simulator input:focus {
+      outline: none;
+      border-color: #4d3829;
+    }
+
+    .input-simulator select {
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .input-simulator select:focus {
+      outline: none;
+      border-color: #4d3829;
+    }
+
+    /* ===== DRAG AND DROP BUILDER ===== */
+    .builder-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .builder-palette {
+      flex: 1;
+      min-width: 200px;
+      background: #f5ede6;
+      border-radius: 12px;
+      padding: 1rem;
+      border: 2px dashed #d9cdbf;
+    }
+
+    .builder-palette .palette-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .builder-palette .block {
+      background: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 2px solid #d9cdbf;
+      margin: 0.3rem 0;
+      cursor: grab;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      user-select: none;
+      text-align: center;
+    }
+
+    .builder-palette .block:hover {
+      border-color: #4d3829;
+      transform: translateX(4px);
+    }
+
+    .builder-palette .block:active {
+      cursor: grabbing;
+    }
+
+    .builder-palette .block .block-icon {
+      margin-right: 0.3rem;
+    }
+
+    .builder-workspace {
+      flex: 2;
+      min-width: 250px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 1rem;
+      border: 3px solid #4d3829;
+      min-height: 150px;
+    }
+
+    .builder-workspace .workspace-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      border-bottom: 2px solid #e5dbd0;
+      padding-bottom: 0.3rem;
+    }
+
+    .builder-workspace .drop-zone {
+      min-height: 80px;
+      border: 2px dashed #d9cdbf;
+      border-radius: 8px;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      transition: all 0.2s ease;
+    }
+
+    .builder-workspace .drop-zone.drag-over {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    .builder-workspace .drop-zone .placed-block {
+      background: #e3edf5;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      border: 2px solid #8ab4d4;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .builder-workspace .drop-zone .placed-block .remove-btn {
+      background: none;
+      border: none;
+      color: #d4a0a0;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0 0.3rem;
+    }
+
+    .builder-workspace .drop-zone .placed-block .remove-btn:hover {
+      color: #c08a8a;
+    }
+
+    .builder-workspace .drop-zone .empty-hint {
+      color: #7a6656;
+      text-align: center;
+      padding: 1.5rem 0;
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+
+    /* ===== FUNCTION DETECTIVE ===== */
+    .detective-pairs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    .detective-pair {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      border: 2px solid #e5dbd0;
+      text-align: center;
+      min-width: 80px;
+    }
+
+    .detective-pair .arrow {
+      font-size: 1.5rem;
+      color: #4d3829;
+      margin: 0 0.3rem;
+    }
+
+    .detective-pair .input-val {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #5a2a2a;
+    }
+
+    .detective-pair .output-val {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2d5a1e;
+    }
+
+    .detective-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    .detective-options button {
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .detective-options button:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .detective-options button.correct {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .detective-options button.wrong {
+      background: #d4a0a0;
+      border-color: #d4a0a0;
+      color: #fff;
+    }
+
+    /* ===== SCENARIO CARDS ===== */
+    .scenario-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .scenario-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.2rem;
+      border: 2px solid #e5dbd0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .scenario-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      border-color: #b09b88;
+    }
+
+    .scenario-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .scenario-card .name {
+      font-weight: 600;
+      color: #3b2b1e;
+      font-size: 0.95rem;
+    }
+
+    .scenario-card .desc {
+      font-size: 0.75rem;
+      color: #7a6656;
+    }
+
+    .scenario-card.active-scenario {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    /* ===== TEMPLATE FUNCTION ===== */
+    .function-template {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid #d9cdbf;
+      margin: 1rem 0;
+    }
+
+    .function-template .template-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+      margin: 0.5rem 0;
+    }
+
+    .function-template .template-row label {
+      font-weight: 600;
+      color: #3b2b1e;
+      min-width: 80px;
+    }
+
+    .function-template .template-row input,
+    .function-template .template-row textarea {
+      flex: 1;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 2px solid #d9cdbf;
+      font-family: inherit;
+      font-size: 0.9rem;
+      min-width: 150px;
+    }
+
+    .function-template .template-row input:focus,
+    .function-template .template-row textarea:focus {
+      outline: none;
+      border-color: #4d3829;
+    }
+
+    .function-template .template-row textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    /* ===== KUIS ===== */
+    .quiz-question {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin: 1rem 0;
+    }
+
+    .quiz-question .q-number {
+      font-size: 0.8rem;
+      color: #7a6656;
+      font-weight: 600;
+    }
+
+    .quiz-question .q-text {
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin: 0.5rem 0;
+      color: #3b2b1e;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .quiz-options label {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #e5dbd0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .quiz-options label:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .quiz-options input[type="radio"] {
+      accent-color: #4d3829;
+      width: 18px;
+      height: 18px;
+    }
+
+    .quiz-options label.selected {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    .quiz-options label.correct-answer {
+      border-color: #8aaa7a;
+      background: #e8f5e0;
+    }
+
+    .quiz-options label.wrong-answer {
+      border-color: #d4a0a0;
+      background: #f5e0e0;
+    }
+
+    /* ===== HASIL ===== */
+    .result-box {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .result-box .big-icon {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-box .level-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #3b2b1e;
+    }
+
+    .result-box .score-display {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #4d3829;
+      margin: 0.5rem 0;
+    }
+
+    .result-box .certificate {
+      background: #f5ede6;
+      border: 3px double #dbb9a6;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: 'Georgia', serif;
+    }
+
+    .result-box .certificate h3 {
+      font-size: 1.3rem;
+      color: #3b2b1e;
+      border-left: none;
+      padding-left: 0;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scenario-panel {
+        padding: 1.2rem;
+      }
+      .step-dot .circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+      }
+      .step-dot .label {
+        font-size: 0.5rem;
+        max-width: 50px;
+      }
+      .step-indicator::before {
+        left: 20px;
+        right: 20px;
+      }
+      .function-box {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0.5rem;
+      }
+      .function-box .arrow-symbol {
+        transform: rotate(90deg);
+      }
+      .function-box .compartment {
+        min-width: 80px;
+        padding: 0.8rem 1rem;
+      }
+      .builder-container {
+        flex-direction: column;
+      }
+      .builder-palette {
+        min-width: unset;
+      }
+      .builder-workspace {
+        min-width: unset;
+      }
+      .scenario-cards {
+        grid-template-columns: 1fr 1fr;
+      }
+      .aktivitas-wrapper h1 {
+        font-size: 1.7rem;
+      }
+      .detective-pairs {
+        gap: 0.8rem;
+      }
+      .detective-pair {
+        padding: 0.6rem 1rem;
+        min-width: 60px;
+      }
+      .detective-pair .input-val,
+      .detective-pair .output-val {
+        font-size: 1.2rem;
+      }
+      .result-box .level-title {
+        font-size: 1.4rem;
+      }
+      .result-box .score-display {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .step-indicator {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+        justify-content: center;
+      }
+      .step-indicator::before {
+        display: none;
+      }
+      .step-dot .circle {
+        width: 28px;
+        height: 28px;
+        font-size: 0.65rem;
+      }
+      .scenario-panel {
+        padding: 0.8rem;
+      }
+      .scenario-panel .scenario-title {
+        font-size: 1.1rem;
+      }
+      .control-bar {
+        gap: 0.4rem;
+      }
+      .btn-control {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.75rem;
+      }
+      .input-simulator {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .input-simulator input[type="number"],
+      .input-simulator input[type="text"] {
+        width: 100%;
+      }
+      .scenario-cards {
+        grid-template-columns: 1fr;
+      }
+      .nav-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-nav {
+        justify-content: center;
+      }
+      .detective-options button {
+        padding: 0.4rem 1rem;
+        font-size: 0.8rem;
+      }
+      .function-template .template-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .function-template .template-row label {
+        min-width: unset;
+      }
+      .function-template .template-row input,
+      .function-template .template-row textarea {
+        min-width: unset;
+      }
+      .quiz-options label {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk3.html">Mesin Komputasi</a></li>
+      <li>Function Factory</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <h1>🏭 Function Factory: Bangun Mesin Komputasimu!</h1>
+        <p class="sub-judul-aktivitas">"Setiap masalah bisa dipecah menjadi Input, Proses, dan Output!"</p>
+
+        <!-- ===== STEP INDICATOR ===== -->
+        <div class="step-indicator" id="stepIndicator">
+          <button class="step-dot active" data-step="0">
+            <span class="circle">1</span>
+            <span class="label">Pembuka</span>
+          </button>
+          <button class="step-dot" data-step="1">
+            <span class="circle">2</span>
+            <span class="label">Kenali Mesin</span>
+          </button>
+          <button class="step-dot" data-step="2">
+            <span class="circle">3</span>
+            <span class="label">Bangun Fungsi</span>
+          </button>
+          <button class="step-dot" data-step="3">
+            <span class="circle">4</span>
+            <span class="label">Detektif</span>
+          </button>
+          <button class="step-dot" data-step="4">
+            <span class="circle">5</span>
+            <span class="label">Action</span>
+          </button>
+          <button class="step-dot" data-step="5">
+            <span class="circle">6</span>
+            <span class="label">Kuis</span>
+          </button>
+          <button class="step-dot" data-step="6">
+            <span class="circle">🏆</span>
+            <span class="label">Hasil</span>
+          </button>
+        </div>
+
+        <!-- ===== PANEL SKENARIO ===== -->
+        <div class="scenario-panel" id="scenarioPanel">
+
+          <!-- SCENARIO 0: PEMBUKA -->
+          <div class="scenario-content" data-step="0">
+            <div class="scenario-title">🚀 Selamat Datang di Function Factory!</div>
+            <div class="scenario-story">
+              Kamu akan berperan sebagai <strong>insinyur fungsi</strong> yang merancang mesin komputasi untuk berbagai keperluan. Di sini, setiap masalah bisa dipecah menjadi Input, Proses, dan Output!
+            </div>
+            <div style="text-align:center; padding:1.5rem 0;">
+              <div style="font-size:4rem; margin-bottom:0.5rem;">🏭</div>
+              <p style="font-size:1.1rem; color:#4d3829; font-weight:500;">Siap menjadi arsitek mesin komputasi?</p>
+              <button class="btn-control primary" onclick="goToStep(1)" style="font-size:1.1rem; padding:0.7rem 2.5rem; margin-top:0.5rem;">
+                ⚙️ Mulai Membangun Fungsi
+              </button>
+            </div>
+          </div>
+
+          <!-- SCENARIO 1: KENALI MESIN FUNGSI -->
+          <div class="scenario-content" data-step="1" style="display:none;">
+            <div class="scenario-title">🔧 Skenario 1: Kenali Mesin Fungsi</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Kamu diperkenalkan dengan "Mesin Fungsi" dasar. Pilih contoh fungsi, masukkan input, dan lihat bagaimana mesin bekerja!
+            </div>
+
+            <div style="display:flex; flex-wrap:wrap; gap:0.8rem; justify-content:center; margin-bottom:1rem;">
+              <button class="btn-control" onclick="selectExample('add')" id="ex-add">➕ Tambah Dua</button>
+              <button class="btn-control" onclick="selectExample('temp')" id="ex-temp">🌡️ Ubah Suhu</button>
+              <button class="btn-control" onclick="selectExample('odd')" id="ex-odd">🔢 Cek Ganjil/Genap</button>
+            </div>
+
+            <div class="function-box" id="exampleFunctionBox">
+              <div class="compartment input-comp">
+                <span class="label">📥 INPUT</span>
+                <span class="value" id="exInputValue">5</span>
+              </div>
+              <span class="arrow-symbol">➜</span>
+              <div class="compartment process-comp" id="exProcessBox">
+                <span class="label">⚙️ PROSES</span>
+                <span class="value" id="exProcessName">Tambah 2</span>
+                <div class="process-steps" id="exProcessSteps">
+                  <div>Input + 2 = Output</div>
+                </div>
+              </div>
+              <span class="arrow-symbol">➜</span>
+              <div class="compartment output-comp">
+                <span class="label">📤 OUTPUT</span>
+                <span class="value" id="exOutputValue">7</span>
+              </div>
+            </div>
+
+            <div class="input-simulator">
+              <label for="exInput">Masukkan Input:</label>
+              <input type="number" id="exInput" value="5" oninput="runExample()">
+              <button class="btn-control primary" onclick="runExample()">▶️ Jalankan Fungsi!</button>
+            </div>
+
+            <div id="exFeedback" style="text-align:center; padding:0.5rem; background:#f0ece6; border-radius:8px; margin:0.5rem 0; font-size:0.9rem; color:#5c4638;">
+              💡 Masukkan angka dan klik "Jalankan Fungsi!" untuk melihat hasilnya.
+            </div>
+          </div>
+
+          <!-- SCENARIO 2: BANGUN FUNGSI SENDIRI -->
+          <div class="scenario-content" data-step="2" style="display:none;">
+            <div class="scenario-title">🧩 Skenario 2: Bangun Fungsi Sendiri</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Sekarang giliranmu menjadi insinyur! Rakit fungsi dari komponen-komponen yang tersedia.
+            </div>
+
+            <div class="builder-container">
+              <div class="builder-palette">
+                <div class="palette-title">📦 Palet Blok Proses</div>
+                <div class="block" draggable="true" data-block="add5" onclick="addBlock('add5')">
+                  <span class="block-icon">➕</span> Tambahkan 5
+                </div>
+                <div class="block" draggable="true" data-block="mul2" onclick="addBlock('mul2')">
+                  <span class="block-icon">✖️</span> Kalikan dengan 2
+                </div>
+                <div class="block" draggable="true" data-block="sub3" onclick="addBlock('sub3')">
+                  <span class="block-icon">➖</span> Kurangi 3
+                </div>
+                <div class="block" draggable="true" data-block="if10" onclick="addBlock('if10')">
+                  <span class="block-icon">🔀</span> Jika &gt; 10, kurangi 5
+                </div>
+                <div class="block" draggable="true" data-block="square" onclick="addBlock('square')">
+                  <span class="block-icon">⬜</span> Kuadratkan
+                </div>
+                <div style="margin-top:0.8rem; font-size:0.8rem; color:#7a6656; text-align:center;">
+                  💡 Klik blok untuk menambahkannya ke workspace
+                </div>
+              </div>
+
+              <div class="builder-workspace">
+                <div class="workspace-title">🔧 Workspace - Susun Proses</div>
+                <div class="drop-zone" id="dropZone" ondrop="dropBlock(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+                  <div class="empty-hint" id="emptyHint">⬇️ Taruh blok proses di sini</div>
+                </div>
+                <div style="display:flex; gap:0.5rem; margin-top:0.5rem; flex-wrap:wrap;">
+                  <button class="btn-control danger" onclick="clearWorkspace()">🗑️ Kosongkan</button>
+                  <button class="btn-control success" onclick="testCustomFunction()">🧪 Uji Fungsi</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-simulator">
+              <label for="customInput">Input Uji:</label>
+              <input type="number" id="customInput" value="3" oninput="updateCustomPreview()">
+              <span style="font-weight:600; color:#3b2b1e;">➜ Output: <span id="customOutputPreview" style="color:#2d5a1e; font-size:1.2rem;">?</span></span>
+            </div>
+
+            <div id="customFeedback" style="text-align:center; padding:0.5rem; background:#f0ece6; border-radius:8px; margin:0.5rem 0; font-size:0.9rem; color:#5c4638;">
+              💡 Susun blok proses, lalu klik "Uji Fungsi" untuk melihat hasilnya!
+            </div>
+          </div>
+
+          <!-- SCENARIO 3: FUNCTION DETECTIVE -->
+          <div class="scenario-content" data-step="3" style="display:none;">
+            <div class="scenario-title">🔍 Skenario 3: Function Detective</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Ada fungsi yang sudah memiliki Input dan Output, tapi bagian Prosesnya tertutup (kotak hitam). Tebak proses apa yang terjadi!
+            </div>
+
+            <div id="detectiveContainer">
+              <div class="detective-pairs" id="detectivePairs">
+                <!-- diisi JS -->
+              </div>
+
+              <div style="text-align:center; margin:0.5rem 0;">
+                <p style="font-weight:600; color:#3b2b1e;">❓ Proses apa yang mengubah input menjadi output?</p>
+              </div>
+
+              <div class="detective-options" id="detectiveOptions">
+                <!-- diisi JS -->
+              </div>
+
+              <div id="detectiveFeedback" style="text-align:center; padding:0.5rem; background:#f0ece6; border-radius:8px; margin:0.5rem 0; font-size:0.9rem; color:#5c4638;">
+                💡 Pilih jawaban yang menurutmu benar!
+              </div>
+
+              <div style="text-align:center; margin-top:0.5rem;">
+                <button class="btn-control" onclick="nextDetectiveLevel()" id="nextDetectiveBtn" style="display:none;">➡️ Level Berikutnya</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SCENARIO 4: FUNCTION IN ACTION -->
+          <div class="scenario-content" data-step="4" style="display:none;">
+            <div class="scenario-title">🎯 Skenario 4: Function in Action</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Function Factory menerima pesanan dari berbagai pelanggan. Rancang fungsi untuk menyelesaikan masalah mereka!
+            </div>
+
+            <div class="scenario-cards" id="scenarioCards">
+              <div class="scenario-card" onclick="selectScenario('cashier')">
+                <div class="icon">💰</div>
+                <div class="name">Mesin Kasir</div>
+                <div class="desc">Hitung total belanja + diskon</div>
+              </div>
+              <div class="scenario-card" onclick="selectScenario('temperature')">
+                <div class="icon">🌡️</div>
+                <div class="name">Pengubah Suhu</div>
+                <div class="desc">Konversi Celcius ↔ Fahrenheit</div>
+              </div>
+              <div class="scenario-card" onclick="selectScenario('graduation')">
+                <div class="icon">🎓</div>
+                <div class="name">Penentu Kelulusan</div>
+                <div class="desc">Cek kelulusan berdasarkan nilai</div>
+              </div>
+            </div>
+
+            <div id="scenarioDetail" style="display:none;">
+              <div class="function-template" id="functionTemplate">
+                <div style="font-weight:700; color:#4d3829; margin-bottom:0.5rem;" id="scenarioTitle">📋 Rancang Fungsi</div>
+                <div class="template-row">
+                  <label>📥 Input:</label>
+                  <input type="text" id="scenarioInput" placeholder="Tentukan input..." oninput="updateScenarioPreview()">
+                </div>
+                <div class="template-row">
+                  <label>⚙️ Proses:</label>
+                  <textarea id="scenarioProcess" placeholder="Tuliskan langkah-langkah proses..." oninput="updateScenarioPreview()"></textarea>
+                </div>
+                <div class="template-row">
+                  <label>📤 Output:</label>
+                  <input type="text" id="scenarioOutput" placeholder="Tentukan output..." oninput="updateScenarioPreview()">
+                </div>
+                <div style="text-align:center; margin-top:0.5rem;">
+                  <button class="btn-control primary" onclick="runScenario()">▶️ Jalankan Simulasi</button>
+                </div>
+                <div id="scenarioResult" style="margin-top:0.8rem; padding:0.8rem; background:#f0ece6; border-radius:8px; font-size:0.9rem; color:#5c4638; text-align:center;">
+                  💡 Isi ketiga komponen di atas, lalu klik "Jalankan Simulasi"!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SCENARIO 5: KUIS -->
+          <div class="scenario-content" data-step="5" style="display:none;">
+            <div class="scenario-title">🧠 Kuis Akhir: "Function Master"</div>
+            <div class="scenario-story">
+              Jawab pertanyaan berikut untuk menguji pemahamanmu tentang fungsi komputasi!
+            </div>
+
+            <div id="quizContainer">
+              <!-- diisi JS -->
+            </div>
+
+            <div style="text-align:center; margin-top:1rem;">
+              <button class="btn-control primary" id="quizSubmitBtn" onclick="submitQuiz()" style="font-size:1rem; padding:0.6rem 2rem;">
+                ✅ Selesai & Lihat Hasil
+              </button>
+            </div>
+          </div>
+
+          <!-- SCENARIO 6: HASIL -->
+          <div class="scenario-content" data-step="6" style="display:none;">
+            <div class="result-box" id="resultBox">
+              <div class="big-icon">🏆</div>
+              <div class="level-title" id="resultLevel">Function Apprentice</div>
+              <div class="score-display" id="resultScore">0/10</div>
+              <p id="resultMessage" style="color:#5c4638;">Teruslah belajar dan bangun mesin komputasi!</p>
+
+              <div class="certificate" id="certificateBox">
+                <h3>📜 Sertifikat Digital</h3>
+                <p style="font-size:0.9rem;">Diberikan kepada:</p>
+                <p style="font-size:1.2rem; font-weight:700; color:#3b2b1e; font-family:Georgia, serif;">Function Builder</p>
+                <p style="font-size:0.8rem; color:#7a6656;">Telah menyelesaikan "Function Factory: Membangun dan Menjalankan Mesin Komputasi"</p>
+                <p style="font-size:0.7rem; color:#7a6656; margin-top:0.5rem;">SMPN 2 Talegong · <span id="certDate"></span></p>
+              </div>
+
+              <div style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-top:1rem;">
+                <button class="btn-control" onclick="window.print()">🖨️ Cetak Sertifikat</button>
+                <button class="btn-control primary" onclick="resetAll()">🔄 Ulangi Aktivitas</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom">
+          <a href="bk3.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Materi
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav" id="prevBtn" onclick="prevStep()" disabled>← Sebelumnya</button>
+            <button class="btn-nav primary" id="nextBtn" onclick="nextStep()">Selanjutnya →</button>
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- ===== SCRIPT AKTIVITAS ===== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ===== STATE =====
+      let currentStep = 0;
+      const totalSteps = 7;
+      let selectedExample = 'add';
+      let customBlocks = [];
+      let detectiveLevel = 0;
+      let detectiveAnswered = false;
+      let selectedScenario = null;
+      let scenarioDone = false;
+      let quizAnswers = {};
+      let quizSubmitted = false;
+
+      // ===== DATA DETEKTIF =====
+      const detectiveData = [
+        {
+          pairs: [{ input: 2, output: 4 }, { input: 3, output: 6 }, { input: 5, output: 10 }],
+          options: ['Kalikan dengan 2', 'Tambahkan 2', 'Kuadratkan'],
+          correct: 0,
+          process: 'Input × 2 = Output'
+        },
+        {
+          pairs: [{ input: 1, output: 1 }, { input: 2, output: 3 }, { input: 3, output: 6 }],
+          options: ['Tambahkan 1', 'Kalikan dengan angka sebelumnya', 'Kuadratkan'],
+          correct: 1,
+          process: 'Input + (Input - 1) = Output'
+        },
+        {
+          pairs: [{ input: 2, output: 8 }, { input: 3, output: 27 }, { input: 4, output: 64 }],
+          options: ['Kalikan dengan 4', 'Pangkat 3', 'Tambahkan 6'],
+          correct: 1,
+          process: 'Input³ = Output'
+        }
+      ];
+
+      // ===== DATA KUIS =====
+      const quizData = [
+        {
+          question: 'Apa yang dimaksud dengan Input dalam sebuah fungsi?',
+          options: ['Hasil akhir dari proses', 'Data yang diberikan ke fungsi untuk diolah', 'Langkah-langkah pengolahan', 'Mesin pemrosesan'],
+          correct: 1
+        },
+        {
+          question: 'Manakah yang merupakan contoh Output dari fungsi "Menghitung rata-rata"?',
+          options: ['Daftar nilai', 'Menjumlahkan semua nilai', 'Nilai rata-rata', 'Membagi dengan jumlah data'],
+          correct: 2
+        },
+        {
+          question: 'Jika fungsi memiliki proses "Tambahkan 5", input 10, maka outputnya adalah...',
+          options: ['5', '10', '15', '20'],
+          correct: 2
+        },
+        {
+          question: 'Apa fungsi dari CPU dalam komputer?',
+          options: ['Menyimpan data', 'Menampilkan output', 'Memproses input menjadi output', 'Mengirim data ke internet'],
+          correct: 2
+        },
+        {
+          question: 'Jika input = 4 dan output = 16, proses yang mungkin adalah...',
+          options: ['Tambahkan 12', 'Kalikan dengan 4', 'Kuadratkan', 'Kurangi 2'],
+          correct: 2
+        },
+        {
+          question: 'Resep masakan adalah analogi dari...',
+          options: ['Input', 'Proses', 'Output', 'Fungsi'],
+          correct: 3
+        },
+        {
+          question: 'Dalam konsep "kotak hitam", kita...',
+          options: ['Tidak perlu tahu detail proses', 'Harus tahu semua langkah proses', 'Hanya peduli dengan input', 'Hanya peduli dengan output'],
+          correct: 0
+        },
+        {
+          question: 'Jika input = 7 dan output = "Ganjil", fungsi apa yang digunakan?',
+          options: ['Penjumlahan', 'Pengurangan', 'Pengecekan ganjil-genap', 'Perkalian'],
+          correct: 2
+        },
+        {
+          question: 'Langkah "Mengubah Celcius ke Fahrenheit" termasuk dalam komponen...',
+          options: ['Input', 'Proses', 'Output', 'Storage'],
+          correct: 1
+        },
+        {
+          question: 'Contoh fungsi dalam kehidupan sehari-hari adalah...',
+          options: ['Mesin penjual otomatis', 'Buku pelajaran', 'Meja belajar', 'Seragam sekolah'],
+          correct: 0
+        }
+      ];
+
+      // ===== STEP NAVIGASI =====
+      window.goToStep = function(step) {
+        if (step < 0 || step >= totalSteps) return;
+        currentStep = step;
+        updateUI();
+      };
+
+      window.nextStep = function() {
+        if (currentStep < totalSteps - 1) {
+          // Validasi
+          if (currentStep === 1 && !selectedExample) {
+            alert('Pilih salah satu contoh fungsi!');
+            return;
+          }
+          if (currentStep === 3 && !detectiveAnswered) {
+            alert('Selesaikan dulu tantangan detektif!');
+            return;
+          }
+          if (currentStep === 4 && !scenarioDone) {
+            alert('Selesaikan dulu tantangan Function in Action!');
+            return;
+          }
+          if (currentStep === 5 && !quizSubmitted) {
+            alert('Selesaikan dulu kuisnya!');
+            return;
+          }
+          goToStep(currentStep + 1);
+        }
+      };
+
+      window.prevStep = function() {
+        if (currentStep > 0) {
+          goToStep(currentStep - 1);
+        }
+      };
+
+      function updateUI() {
+        document.querySelectorAll('.scenario-content').forEach(el => {
+          el.style.display = 'none';
+        });
+
+        const target = document.querySelector(`.scenario-content[data-step="${currentStep}"]`);
+        if (target) target.style.display = 'block';
+
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.classList.remove('active', 'completed');
+          if (index === currentStep) dot.classList.add('active');
+          else if (index < currentStep) dot.classList.add('completed');
+        });
+
+        document.getElementById('prevBtn').disabled = (currentStep === 0);
+        const nextBtn = document.getElementById('nextBtn');
+        if (currentStep === totalSteps - 1) {
+          nextBtn.textContent = '🎉 Selesai';
+        } else {
+          nextBtn.textContent = 'Selanjutnya →';
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (currentStep === 1) runExample();
+        if (currentStep === 2) updateCustomPreview();
+        if (currentStep === 3) renderDetective();
+        if (currentStep === 5) renderQuiz();
+        if (currentStep === 6) calculateResult();
+      }
+
+      // ===== STEP 1: KENALI MESIN FUNGSI =====
+      const exampleFunctions = {
+        add: {
+          name: 'Tambah 2',
+          steps: ['Input + 2 = Output'],
+          process: (n) => n + 2
+        },
+        temp: {
+          name: 'Celcius → Fahrenheit',
+          steps: ['(Input × 9/5) + 32'],
+          process: (n) => Math.round((n * 9 / 5) + 32)
+        },
+        odd: {
+          name: 'Cek Ganjil/Genap',
+          steps: ['Input % 2 == 0 ? "Genap" : "Ganjil"'],
+          process: (n) => n % 2 === 0 ? 'Genap' : 'Ganjil'
+        }
+      };
+
+      window.selectExample = function(type) {
+        selectedExample = type;
+        document.querySelectorAll('#ex-add, #ex-temp, #ex-odd').forEach(btn => {
+          btn.classList.remove('primary');
+        });
+        document.getElementById('ex-' + type).classList.add('primary');
+        runExample();
+      };
+
+      window.runExample = function() {
+        const input = parseInt(document.getElementById('exInput').value) || 0;
+        const func = exampleFunctions[selectedExample];
+        if (!func) return;
+
+        const output = func.process(input);
+
+        document.getElementById('exInputValue').textContent = input;
+        document.getElementById('exProcessName').textContent = func.name;
+        document.getElementById('exProcessSteps').innerHTML = func.steps.map(s => `<div>${s}</div>`).join('');
+        document.getElementById('exOutputValue').textContent = output;
+
+        // Animasi sederhana
+        const box = document.getElementById('exampleFunctionBox');
+        box.style.transition = 'all 0.1s';
+        box.style.transform = 'scale(1.02)';
+        setTimeout(() => { box.style.transform = 'scale(1)'; }, 200);
+
+        document.getElementById('exFeedback').innerHTML = `✅ Fungsi "${func.name}" berhasil dijalankan! Input ${input} → Output ${output}`;
+      };
+
+      // ===== STEP 2: BANGUN FUNGSI =====
+      const blockProcesses = {
+        add5: { label: 'Tambahkan 5', fn: (n) => n + 5 },
+        mul2: { label: 'Kalikan dengan 2', fn: (n) => n * 2 },
+        sub3: { label: 'Kurangi 3', fn: (n) => n - 3 },
+        if10: { label: 'Jika > 10, kurangi 5', fn: (n) => n > 10 ? n - 5 : n },
+        square: { label: 'Kuadratkan', fn: (n) => n * n }
+      };
+
+      window.addBlock = function(blockId) {
+        const zone = document.getElementById('dropZone');
+        const emptyHint = document.getElementById('emptyHint');
+        if (emptyHint) emptyHint.style.display = 'none';
+
+        const block = document.createElement('div');
+        block.className = 'placed-block';
+        block.dataset.blockId = blockId;
+        block.innerHTML = `
+          ${blockProcesses[blockId].label}
+          <button class="remove-btn" onclick="removeBlock(this)">✕</button>
+        `;
+        zone.appendChild(block);
+        customBlocks.push(blockId);
+        updateCustomPreview();
+      };
+
+      window.removeBlock = function(btn) {
+        const block = btn.parentElement;
+        const blockId = block.dataset.blockId;
+        customBlocks = customBlocks.filter(id => id !== blockId);
+        block.remove();
+        if (customBlocks.length === 0) {
+          document.getElementById('emptyHint').style.display = 'block';
+        }
+        updateCustomPreview();
+      };
+
+      window.clearWorkspace = function() {
+        const zone = document.getElementById('dropZone');
+        zone.querySelectorAll('.placed-block').forEach(el => el.remove());
+        customBlocks = [];
+        document.getElementById('emptyHint').style.display = 'block';
+        updateCustomPreview();
+      };
+
+      window.updateCustomPreview = function() {
+        const input = parseInt(document.getElementById('customInput').value) || 0;
+        let result = input;
+        for (const id of customBlocks) {
+          if (blockProcesses[id]) {
+            result = blockProcesses[id].fn(result);
+          }
+        }
+        document.getElementById('customOutputPreview').textContent = result;
+      };
+
+      window.testCustomFunction = function() {
+        if (customBlocks.length === 0) {
+          document.getElementById('customFeedback').innerHTML = '⚠️ Susun dulu blok proses di workspace!';
+          return;
+        }
+        const input = parseInt(document.getElementById('customInput').value) || 0;
+        let result = input;
+        let steps = [];
+        for (const id of customBlocks) {
+          if (blockProcesses[id]) {
+            const before = result;
+            result = blockProcesses[id].fn(result);
+            steps.push(`${before} → ${blockProcesses[id].label} → ${result}`);
+          }
+        }
+        document.getElementById('customFeedback').innerHTML = `
+          ✅ Fungsi berhasil diuji!<br>
+          <span style="font-size:0.8rem; color:#5c4638;">
+            Input ${input} → ${steps.join(' → ')} → Output ${result}
+          </span>
+        `;
+        document.getElementById('customOutputPreview').textContent = result;
+      };
+
+      // Drag and Drop
+      window.allowDrop = function(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('drag-over');
+      };
+
+      window.removeDragOver = function(e) {
+        e.currentTarget.classList.remove('drag-over');
+      };
+
+      window.dropBlock = function(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        const blockId = e.dataTransfer.getData('text/plain');
+        if (blockId && blockProcesses[blockId]) {
+          addBlock(blockId);
+        }
+      };
+
+      // Setup drag events
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.block').forEach(block => {
+          block.addEventListener('dragstart', function(e) {
+            e.dataTransfer.setData('text/plain', this.dataset.block);
+          });
+        });
+      });
+
+      // ===== STEP 3: DETEKTIF =====
+      window.renderDetective = function() {
+        const data = detectiveData[detectiveLevel];
+        if (!data) {
+          document.getElementById('detectiveFeedback').innerHTML = '🎉 Semua level selesai! Kamu detektif yang hebat!';
+          return;
+        }
+
+        const pairsHtml = data.pairs.map(p =>
+          `<div class="detective-pair">
+            <span class="input-val">${p.input}</span>
+            <span class="arrow">➜</span>
+            <span class="output-val">${p.output}</span>
+          </div>`
+        ).join('');
+        document.getElementById('detectivePairs').innerHTML = pairsHtml;
+
+        const optionsHtml = data.options.map((opt, idx) =>
+          `<button onclick="answerDetective(${idx})">${opt}</button>`
+        ).join('');
+        document.getElementById('detectiveOptions').innerHTML = optionsHtml;
+
+        document.getElementById('detectiveFeedback').innerHTML = '💡 Pilih jawaban yang menurutmu benar!';
+        document.getElementById('nextDetectiveBtn').style.display = 'none';
+        detectiveAnswered = false;
+      };
+
+      window.answerDetective = function(idx) {
+        if (detectiveAnswered) return;
+        const data = detectiveData[detectiveLevel];
+        if (!data) return;
+
+        const buttons = document.querySelectorAll('#detectiveOptions button');
+        buttons.forEach((btn, i) => {
+          btn.classList.remove('correct', 'wrong');
+          if (i === data.correct) btn.classList.add('correct');
+          if (i === idx && idx !== data.correct) btn.classList.add('wrong');
+          btn.disabled = true;
+        });
+
+        if (idx === data.correct) {
+          document.getElementById('detectiveFeedback').innerHTML = `
+            ✅ <strong>Benar!</strong> Prosesnya adalah: <strong>${data.process}</strong>
+            <br><span style="font-size:0.8rem; color:#5c4638;">🎉 Kotak hitam terbuka!</span>
+          `;
+        } else {
+          document.getElementById('detectiveFeedback').innerHTML = `
+            ❌ Belum tepat. Coba perhatikan pola dari pasangan input-output.
+            <br><span style="font-size:0.8rem; color:#5c4638;">💡 Petunjuk: ${data.pairs[0].input} → ${data.pairs[0].output}</span>
+          `;
+          // Allow retry
+          buttons.forEach(btn => btn.disabled = false);
+          return;
+        }
+
+        detectiveAnswered = true;
+        if (detectiveLevel < detectiveData.length - 1) {
+          document.getElementById('nextDetectiveBtn').style.display = 'inline-block';
+          document.getElementById('nextDetectiveBtn').textContent = '➡️ Level Berikutnya';
+        } else {
+          document.getElementById('nextDetectiveBtn').style.display = 'inline-block';
+          document.getElementById('nextDetectiveBtn').textContent = '🏆 Selesai!';
+        }
+      };
+
+      window.nextDetectiveLevel = function() {
+        detectiveLevel++;
+        if (detectiveLevel >= detectiveData.length) {
+          document.getElementById('detectiveFeedback').innerHTML = '🎉 <strong>Selamat!</strong> Kamu berhasil menyelesaikan semua level detektif!';
+          document.getElementById('nextDetectiveBtn').style.display = 'none';
+          detectiveAnswered = true;
+          return;
+        }
+        renderDetective();
+      };
+
+      // ===== STEP 4: FUNCTION IN ACTION =====
+      const scenarioData = {
+        cashier: {
+          title: '💰 Mesin Kasir',
+          description: 'Hitung total belanja dan berikan diskon 10% jika total > Rp 100.000',
+          inputPlaceholder: 'Daftar harga: 50000, 75000, 30000',
+          processPlaceholder: '1. Jumlahkan semua harga\n2. Jika total > 100000, diskon 10%\n3. Hitung total setelah diskon',
+          outputPlaceholder: 'Total yang harus dibayar',
+          simulate: (input, process, output) => {
+            const prices = input.split(',').map(s => parseInt(s.trim()) || 0);
+            const total = prices.reduce((a, b) => a + b, 0);
+            const discount = total > 100000 ? total * 0.1 : 0;
+            const finalTotal = total - discount;
+            return `💰 Total: Rp ${total.toLocaleString()}\n📉 Diskon: Rp ${discount.toLocaleString()}\n💳 Bayar: Rp ${finalTotal.toLocaleString()}`;
+          }
+        },
+        temperature: {
+          title: '🌡️ Pengubah Suhu',
+          description: 'Konversi suhu dari Celcius ke Fahrenheit',
+          inputPlaceholder: 'Suhu dalam Celcius (contoh: 30)',
+          processPlaceholder: '1. Ambil suhu Celcius\n2. Kalikan dengan 9/5\n3. Tambahkan 32',
+          outputPlaceholder: 'Suhu dalam Fahrenheit',
+          simulate: (input, process, output) => {
+            const c = parseFloat(input) || 0;
+            const f = Math.round((c * 9 / 5) + 32);
+            return `🌡️ ${c}°C = ${f}°F`;
+          }
+        },
+        graduation: {
+          title: '🎓 Penentu Kelulusan',
+          description: 'Tentukan apakah siswa lulus berdasarkan nilai rata-rata (≥ 75)',
+          inputPlaceholder: 'Nilai: 80, 70, 85, 90',
+          processPlaceholder: '1. Jumlahkan semua nilai\n2. Bagi dengan jumlah mata pelajaran\n3. Jika rata-rata ≥ 75 → Lulus, else → Tidak Lulus',
+          outputPlaceholder: 'Status kelulusan',
+          simulate: (input, process, output) => {
+            const grades = input.split(',').map(s => parseInt(s.trim()) || 0);
+            const avg = grades.reduce((a, b) => a + b, 0) / grades.length;
+            const status = avg >= 75 ? '✅ LULUS' : '❌ TIDAK LULUS';
+            return `📊 Rata-rata: ${avg.toFixed(1)}\n🎓 Status: ${status}`;
+          }
+        }
+      };
+
+      window.selectScenario = function(type) {
+        selectedScenario = type;
+        document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active-scenario'));
+        document.querySelector(`.scenario-card[onclick*="${type}"]`).classList.add('active-scenario');
+
+        const data = scenarioData[type];
+        document.getElementById('scenarioDetail').style.display = 'block';
+        document.getElementById('scenarioTitle').textContent = `📋 ${data.title}`;
+        document.getElementById('scenarioInput').placeholder = data.inputPlaceholder;
+        document.getElementById('scenarioProcess').placeholder = data.processPlaceholder;
+        document.getElementById('scenarioOutput').placeholder = data.outputPlaceholder;
+        document.getElementById('scenarioResult').innerHTML = '💡 Isi ketiga komponen di atas, lalu klik "Jalankan Simulasi"!';
+        scenarioDone = false;
+      };
+
+      window.updateScenarioPreview = function() {
+        // Just preview
+      };
+
+      window.runScenario = function() {
+        if (!selectedScenario) {
+          document.getElementById('scenarioResult').innerHTML = '⚠️ Pilih skenario terlebih dahulu!';
+          return;
+        }
+
+        const input = document.getElementById('scenarioInput').value.trim();
+        const process = document.getElementById('scenarioProcess').value.trim();
+        const output = document.getElementById('scenarioOutput').value.trim();
+
+        if (!input || !process || !output) {
+          document.getElementById('scenarioResult').innerHTML = '⚠️ Lengkapi semua komponen (Input, Proses, Output)!';
+          return;
+        }
+
+        const data = scenarioData[selectedScenario];
+        const result = data.simulate(input, process, output);
+
+        document.getElementById('scenarioResult').innerHTML = `
+          <div style="text-align:left; background:#fff; padding:1rem; border-radius:8px; border:2px solid #8aaa7a;">
+            <div style="font-weight:700; color:#4d3829;">📥 Input: <span style="font-weight:400;">${input}</span></div>
+            <div style="font-weight:700; color:#4d3829; margin-top:0.3rem;">⚙️ Proses: <span style="font-weight:400;">${process}</span></div>
+            <div style="font-weight:700; color:#4d3829; margin-top:0.3rem;">📤 Output: <span style="font-weight:400;">${output}</span></div>
+            <div style="margin-top:1rem; padding-top:1rem; border-top:2px dashed #e5dbd0;">
+              <div style="font-weight:700; color:#2d5a1e;">✅ Hasil Simulasi:</div>
+              <pre style="font-family:inherit; font-size:0.9rem; white-space:pre-wrap; margin-top:0.3rem;">${result}</pre>
+            </div>
+          </div>
+          <div style="margin-top:0.5rem; font-size:0.85rem; color:#5c4638;">
+            🎉 Fungsi berhasil dijalankan! Lanjutkan ke skenario berikutnya.
+          </div>
+        `;
+        scenarioDone = true;
+      };
+
+      // ===== STEP 5: KUIS =====
+      function renderQuiz() {
+        const container = document.getElementById('quizContainer');
+        if (!container) return;
+        if (container.dataset.rendered) return;
+
+        let html = '';
+        quizData.forEach((q, index) => {
+          html += `
+            <div class="quiz-question" data-q="${index}">
+              <div class="q-number">Soal ${index + 1} dari ${quizData.length}</div>
+              <div class="q-text">${q.question}</div>
+              <div class="quiz-options">
+          `;
+          q.options.forEach((opt, optIndex) => {
+            const id = `q${index}_opt${optIndex}`;
+            html += `
+              <label for="${id}" onclick="selectQuizOption(${index}, ${optIndex})">
+                <input type="radio" name="q${index}" id="${id}" value="${optIndex}">
+                ${opt}
+              </label>
+            `;
+          });
+          html += `
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+        container.dataset.rendered = 'true';
+      }
+
+      window.selectQuizOption = function(qIndex, optIndex) {
+        const labels = document.querySelectorAll(`.quiz-question[data-q="${qIndex}"] label`);
+        labels.forEach((label, idx) => {
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.classList.remove('selected');
+          }
+        });
+        quizAnswers[qIndex] = optIndex;
+      };
+
+      window.submitQuiz = function() {
+        if (quizSubmitted) return;
+
+        let correct = 0;
+        const total = quizData.length;
+
+        quizData.forEach((q, index) => {
+          const selected = quizAnswers[index];
+          const labels = document.querySelectorAll(`.quiz-question[data-q="${index}"] label`);
+
+          labels.forEach((label, idx) => {
+            if (idx === q.correct) {
+              label.classList.add('correct-answer');
+            }
+            if (idx === selected && selected !== q.correct) {
+              label.classList.add('wrong-answer');
+            }
+            if (idx === selected) {
+              label.querySelector('input').checked = true;
+            }
+          });
+
+          if (selected === q.correct) correct++;
+        });
+
+        quizSubmitted = true;
+        document.getElementById('quizSubmitBtn').disabled = true;
+        document.getElementById('quizSubmitBtn').textContent = '✅ Kuis Selesai!';
+
+        window.quizResult = { correct, total };
+        setTimeout(() => goToStep(6), 800);
+      };
+
+      // ===== STEP 6: HASIL =====
+      function calculateResult() {
+        const result = window.quizResult || { correct: 0, total: quizData.length };
+        const score = result.correct;
+        const total = result.total;
+
+        let level, message;
+        if (score === total) {
+          level = '🌟 Function Master';
+          message = 'Sempurna! Kamu benar-benar menguasai konsep fungsi!';
+        } else if (score >= total * 0.8) {
+          level = '🏗️ Function Builder';
+          message = 'Hebat! Pemahamanmu sangat baik. Teruslah berinovasi!';
+        } else if (score >= total * 0.6) {
+          level = '🔧 Function Apprentice';
+          message = 'Bagus! Kamu sudah memahami dasar-dasar fungsi komputasi.';
+        } else {
+          level = '📚 Function Learner';
+          message = 'Teruslah belajar dan bangun mesin komputasi! Kamu pasti bisa.';
+        }
+
+        document.getElementById('resultLevel').textContent = level;
+        document.getElementById('resultScore').textContent = `${score}/${total}`;
+        document.getElementById('resultMessage').textContent = message;
+
+        const date = new Date();
+        document.getElementById('certDate').textContent = date.toLocaleDateString('id-ID', {
+          day: 'numeric', month: 'long', year: 'numeric'
+        });
+        document.querySelector('#certificateBox p:nth-child(4)').textContent = level;
+
+        const icons = {
+          '🌟 Function Master': '🏆',
+          '🏗️ Function Builder': '🥇',
+          '🔧 Function Apprentice': '🥈',
+          '📚 Function Learner': '📖'
+        };
+        document.querySelector('.result-box .big-icon').textContent = icons[level] || '🏆';
+      }
+
+      // ===== RESET =====
+      window.resetAll = function() {
+        location.reload();
+      };
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        // Set default example
+        document.getElementById('ex-add').classList.add('primary');
+        updateUI();
+
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.addEventListener('click', function() {
+            if (index === 0) { goToStep(0); return; }
+            if (index === 1 && !selectedExample && currentStep > 1) {
+              alert('Pilih salah satu contoh fungsi!');
+              return;
+            }
+            if (index === 3 && !detectiveAnswered && currentStep > 3) {
+              alert('Selesaikan dulu tantangan detektif!');
+              return;
+            }
+            if (index === 4 && !scenarioDone && currentStep > 4) {
+              alert('Selesaikan dulu tantangan Function in Action!');
+              return;
+            }
+            if (index === 5 && !quizSubmitted && currentStep > 5) {
+              alert('Selesaikan dulu kuisnya!');
+              return;
+            }
+            if (index <= currentStep + 1 || index === 0) {
+              goToStep(index);
+            } else {
+              alert('Selesaikan step sebelumnya terlebih dahulu!');
+            }
+          });
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Mesin Komputasi: Input-Proses-Output · Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* gaya tambahan untuk halaman materi */
+    .materi-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .materi-container h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .materi-container .sub-judul {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+      font-style: italic;
+    }
+
+    .materi-container h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 0.8rem 0;
+      color: #4d3829;
+      border-left: 6px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.2rem 0 0.3rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container p {
+      margin-bottom: 1rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.5rem 0 1.2rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.4rem;
+      color: #2f2822;
+    }
+
+    .materi-container .highlight-box {
+      background: #f5ede6;
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+      margin: 1.5rem 0;
+    }
+
+    .materi-container .highlight-box strong {
+      color: #4d3829;
+    }
+
+    .materi-container .highlight-box ul {
+      margin-bottom: 0;
+    }
+
+    /* Kotak Hitam - Black Box */
+    .black-box {
+      background: #2f2822;
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      border: 3px solid #dbb9a6;
+      position: relative;
+    }
+
+    .black-box .box-title {
+      font-size: 0.8rem;
+      color: #dbb9a6;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .black-box .box-flow {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem 1.5rem;
+      font-size: 1.1rem;
+    }
+
+    .black-box .box-flow .arrow {
+      font-size: 1.8rem;
+      color: #dbb9a6;
+    }
+
+    .black-box .box-flow .input-box {
+      background: #4d3829;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      border: 2px solid #dbb9a6;
+      min-width: 100px;
+    }
+
+    .black-box .box-flow .process-box {
+      background: #3b2b1e;
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      border: 2px solid #dbb9a6;
+      min-width: 120px;
+      position: relative;
+    }
+
+    .black-box .box-flow .process-box::after {
+      content: '⚙️';
+      position: absolute;
+      right: -14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+    }
+
+    .black-box .box-flow .output-box {
+      background: #6b4f3a;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      border: 2px solid #dbb9a6;
+      min-width: 100px;
+    }
+
+    .black-box .box-flow .label {
+      font-size: 0.7rem;
+      color: #dbb9a6;
+      display: block;
+      margin-top: 0.2rem;
+    }
+
+    /* Tabel perbandingan */
+    .tabel-analogi {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .tabel-analogi thead {
+      background: #e8d5c4;
+      color: #3b2b1e;
+    }
+
+    .tabel-analogi th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .tabel-analogi td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+    }
+
+    .tabel-analogi tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabel-analogi tr:hover td {
+      background: #f8f3ee;
+    }
+
+    /* Tabel aktivitas sehari-hari */
+    .tabel-aktivitas {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .tabel-aktivitas thead {
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .tabel-aktivitas th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .tabel-aktivitas td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+    }
+
+    .tabel-aktivitas tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabel-aktivitas tr:hover td {
+      background: #f8f3ee;
+    }
+
+    .tabel-aktivitas .badge {
+      background: #e8d5c4;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #4d3829;
+    }
+
+    /* Tombol aktivitas */
+    .tombol-aktivitas {
+      display: inline-block;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+      padding: 0.9rem 2.2rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.25);
+      margin-top: 0.5rem;
+    }
+
+    .tombol-aktivitas:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(75, 46, 30, 0.35);
+      background: linear-gradient(135deg, #5c4638, #7a5f4c);
+    }
+
+    .tombol-aktivitas:focus-visible {
+      outline: 3px solid #a3836a;
+      outline-offset: 4px;
+    }
+
+    .aktivitas-wrapper {
+      background: #f5ede6;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      margin-top: 2.5rem;
+      border: 2px solid #e5dbd0;
+      text-align: center;
+    }
+
+    .aktivitas-wrapper h3 {
+      margin-top: 0;
+      color: #3b2b1e;
+      border-left: none;
+      padding-left: 0;
+    }
+
+    .aktivitas-wrapper p {
+      margin-bottom: 1.2rem;
+      font-size: 1.05rem;
+    }
+
+    /* Navigasi kembali */
+    .nav-kembali {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: #5c4638;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 2px dotted #bfaa9a;
+      padding-bottom: 2px;
+      transition: border-color 0.2s;
+    }
+
+    .nav-kembali:hover {
+      border-bottom-color: #7a5f4c;
+    }
+
+    /* Contoh eksekusi fungsi */
+    .fungsi-example {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.2rem 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin: 1rem 0;
+    }
+
+    .fungsi-example .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px dashed #e5dbd0;
+    }
+
+    .fungsi-example .step:last-child {
+      border-bottom: none;
+    }
+
+    .fungsi-example .step-num {
+      background: #4d3829;
+      color: #fff;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .fungsi-example .step-content {
+      font-size: 0.95rem;
+      color: #2f2822;
+    }
+
+    .fungsi-example .step-content strong {
+      color: #4d3829;
+    }
+
+    /* Responsif */
+    @media (max-width: 720px) {
+      .materi-container h1 {
+        font-size: 1.7rem;
+      }
+      .materi-container h2 {
+        font-size: 1.3rem;
+      }
+      .materi-container h3 {
+        font-size: 1.05rem;
+      }
+      .tabel-analogi, .tabel-aktivitas {
+        font-size: 0.8rem;
+      }
+      .tabel-analogi th, .tabel-analogi td,
+      .tabel-aktivitas th, .tabel-aktivitas td {
+        padding: 0.5rem 0.6rem;
+      }
+      .aktivitas-wrapper {
+        padding: 1.5rem 1.2rem;
+      }
+      .tombol-aktivitas {
+        padding: 0.7rem 1.6rem;
+        font-size: 0.95rem;
+      }
+      .black-box .box-flow {
+        font-size: 0.9rem;
+        gap: 0.5rem;
+      }
+      .black-box .box-flow .input-box,
+      .black-box .box-flow .process-box,
+      .black-box .box-flow .output-box {
+        padding: 0.5rem 1rem;
+        min-width: 70px;
+      }
+      .black-box .box-flow .arrow {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tabel-analogi, .tabel-aktivitas {
+        font-size: 0.7rem;
+      }
+      .tabel-analogi th, .tabel-analogi td,
+      .tabel-aktivitas th, .tabel-aktivitas td {
+        padding: 0.4rem 0.4rem;
+      }
+      .materi-container ul, 
+      .materi-container ol {
+        margin-left: 1.2rem;
+      }
+      .aktivitas-wrapper {
+        padding: 1rem 0.8rem;
+      }
+      .fungsi-example {
+        padding: 0.8rem 1rem;
+      }
+      .fungsi-example .step-content {
+        font-size: 0.85rem;
+      }
+      .black-box .box-flow {
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+      .black-box .box-flow .arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER (dinamis dari script.js) -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <!-- diisi oleh script.js secara dinamis -->
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA: MATERI -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <!-- Judul Utama -->
+        <h1>⚙️ Mesin Komputasi: Input → Proses → Output</h1>
+        <p class="sub-judul">Konsep Fungsi sebagai Mesin Komputasi · Berpikir Komputasional</p>
+
+        <!-- A. Pendahuluan -->
+        <h2>A. Pendahuluan: Apa Itu Fungsi dalam Berpikir Komputasional?</h2>
+        <p>Pernahkah kamu menggunakan mesin penjual minuman otomatis? Kamu memasukkan uang dan menekan tombol pilihan (ini adalah <strong>input</strong>), mesin memproses perintahmu (ini adalah <strong>proses</strong>), lalu minuman keluar (ini adalah <strong>output</strong>). Konsep sederhana inilah yang menjadi dasar dari fungsi sebagai mesin komputasi dalam berpikir komputasional.</p>
+        <p><strong>Fungsi</strong> dalam informatika adalah sebuah "mesin" yang menerima masukan (input), memprosesnya sesuai aturan tertentu, dan menghasilkan keluaran (output). Konsep ini menjadi fondasi penting dalam memahami bagaimana komputer bekerja dan bagaimana kita bisa memecahkan masalah dengan cara yang terstruktur.</p>
+
+        <!-- B. Anatomi Fungsi -->
+        <h2>B. Anatomi Fungsi: Input → Proses → Output</h2>
+        <p>Setiap fungsi memiliki tiga komponen utama yang saling terhubung:</p>
+
+        <h3>1. Input (Masukan)</h3>
+        <p><strong>Input</strong> adalah data atau informasi yang diberikan kepada fungsi untuk diolah. Dalam sistem komputer, input bisa berasal dari berbagai sumber:</p>
+        <ul>
+          <li><strong>Dari pengguna:</strong> melalui keyboard, mouse, touchscreen, atau suara</li>
+          <li><strong>Dari perangkat lain:</strong> seperti sensor, kamera, atau scanner</li>
+          <li><strong>Dari penyimpanan:</strong> data yang sudah tersimpan sebelumnya</li>
+        </ul>
+        <div class="highlight-box">
+          <strong>📌 Contoh dalam kehidupan sehari-hari:</strong>
+          <ul>
+            <li>Saat kamu mengetik pesan di WhatsApp, teks yang kamu ketik adalah <strong>input</strong></li>
+            <li>Saat kamu mengambil foto, cahaya yang masuk ke lensa kamera adalah <strong>input</strong></li>
+            <li>Saat kamu memasak, bahan-bahan makanan adalah <strong>input</strong></li>
+          </ul>
+        </div>
+
+        <h3>2. Proses (Pengolahan)</h3>
+        <p><strong>Proses</strong> adalah serangkaian langkah atau aturan yang mengubah input menjadi output. Di dalam komputer, proses ini dilakukan oleh CPU (Central Processing Unit) yang melakukan perhitungan dan pengambilan keputusan logis.</p>
+        <div class="highlight-box">
+          <strong>📌 Contoh dalam kehidupan sehari-hari:</strong>
+          <ul>
+            <li>Mesin kopi: memanaskan air, mencampur bubuk kopi, dan menuangkannya ke gelas</li>
+            <li>Kalkulator: menerima angka dan operator, lalu menghitung hasilnya</li>
+            <li>Tukang cukur rambut: menerima instruksi gaya rambut, lalu memotong sesuai permintaan</li>
+          </ul>
+        </div>
+
+        <h3>3. Output (Keluaran)</h3>
+        <p><strong>Output</strong> adalah hasil akhir dari proses yang telah dilakukan. Output bisa berupa informasi yang ditampilkan, dokumen yang dicetak, atau tindakan yang dilakukan oleh perangkat.</p>
+        <div class="highlight-box">
+          <strong>📌 Contoh dalam kehidupan sehari-hari:</strong>
+          <ul>
+            <li>Mesin ATM: output berupa uang tunai dan struk transaksi</li>
+            <li>Aplikasi navigasi: output berupa rute perjalanan dan petunjuk arah</li>
+            <li>Mesin cetak foto: output berupa foto cetak</li>
+          </ul>
+        </div>
+
+        <!-- C. Kotak Hitam -->
+        <h2>C. Fungsi sebagai "Kotak Hitam"</h2>
+        <p>Dalam berpikir komputasional, fungsi sering digambarkan sebagai <strong>"kotak hitam" (black box)</strong>. Kita tidak perlu tahu detail bagaimana proses di dalamnya bekerja—yang penting kita tahu apa yang masuk (input) dan apa yang keluar (output).</p>
+
+        <div class="black-box">
+          <div class="box-title">┌─────────────────────────────────────────────────┐</div>
+          <div style="font-size:0.9rem; color:#dbb9a6; margin-bottom:1rem;">KOTAK HITAM (BLACK BOX)</div>
+          <div class="box-flow">
+            <div class="input-box">
+              <span>📥 5 + 3</span>
+              <span class="label">INPUT</span>
+            </div>
+            <span class="arrow">➜</span>
+            <div class="process-box">
+              <span>⚙️ FUNGSI</span>
+              <span class="label">PROSES</span>
+            </div>
+            <span class="arrow">➜</span>
+            <div class="output-box">
+              <span>📤 8</span>
+              <span class="label">OUTPUT</span>
+            </div>
+          </div>
+          <div style="font-size:0.7rem; color:#7a6656; margin-top:1rem; border-top:1px solid #4d3829; padding-top:0.8rem;">
+            Kita tidak perlu tahu bagaimana CPU melakukan penjumlahan secara detail — cukup percaya bahwa jika kita memberi input yang benar, fungsi akan memberikan output yang benar.
+          </div>
+        </div>
+
+        <!-- D. Menjalankan Fungsi -->
+        <h2>D. Menjalankan (Mengeksekusi) Fungsi</h2>
+        <p><strong>Mengeksekusi fungsi</strong> berarti menjalankan langkah-langkah proses yang telah ditentukan untuk mengubah input menjadi output. Dalam pemrograman, mengeksekusi fungsi berarti memanggil fungsi dan memberikan nilai input yang diperlukan.</p>
+
+        <h4>Contoh eksekusi fungsi dalam kehidupan sehari-hari:</h4>
+
+        <div class="fungsi-example">
+          <div style="font-weight:700; color:#4d3829; margin-bottom:0.5rem;">1. Fungsi "Membuat Teh Manis"</div>
+          <div class="step">
+            <span class="step-num">I</span>
+            <span class="step-content"><strong>Input:</strong> air, teh, gula</span>
+          </div>
+          <div class="step">
+            <span class="step-num">P</span>
+            <span class="step-content"><strong>Proses:</strong></span>
+          </div>
+          <div style="padding-left:3.2rem; font-size:0.9rem; color:#5c4638;">
+            1. Rebus air hingga mendidih<br>
+            2. Seduh teh dalam air panas<br>
+            3. Tambahkan gula sesuai selera<br>
+            4. Aduk hingga rata
+          </div>
+          <div class="step">
+            <span class="step-num">O</span>
+            <span class="step-content"><strong>Output:</strong> teh manis siap minum ☕</span>
+          </div>
+        </div>
+
+        <div class="fungsi-example">
+          <div style="font-weight:700; color:#4d3829; margin-bottom:0.5rem;">2. Fungsi "Menghitung Nilai Rata-rata"</div>
+          <div class="step">
+            <span class="step-num">I</span>
+            <span class="step-content"><strong>Input:</strong> daftar nilai ujian [80, 85, 90, 75, 95]</span>
+          </div>
+          <div class="step">
+            <span class="step-num">P</span>
+            <span class="step-content"><strong>Proses:</strong></span>
+          </div>
+          <div style="padding-left:3.2rem; font-size:0.9rem; color:#5c4638;">
+            1. Jumlahkan semua nilai: 80+85+90+75+95 = 425<br>
+            2. Bagi dengan jumlah data: 425 ÷ 5 = 85
+          </div>
+          <div class="step">
+            <span class="step-num">O</span>
+            <span class="step-content"><strong>Output:</strong> nilai rata-rata = 85 ✅</span>
+          </div>
+        </div>
+
+        <div class="fungsi-example">
+          <div style="font-weight:700; color:#4d3829; margin-bottom:0.5rem;">3. Fungsi "Pengecekan Kelulusan"</div>
+          <div class="step">
+            <span class="step-num">I</span>
+            <span class="step-content"><strong>Input:</strong> nilai siswa = 80</span>
+          </div>
+          <div class="step">
+            <span class="step-num">P</span>
+            <span class="step-content"><strong>Proses:</strong></span>
+          </div>
+          <div style="padding-left:3.2rem; font-size:0.9rem; color:#5c4638;">
+            1. Jika nilai ≥ 75, maka "Lulus"<br>
+            2. Jika nilai &lt; 75, maka "Tidak Lulus"
+          </div>
+          <div class="step">
+            <span class="step-num">O</span>
+            <span class="step-content"><strong>Output:</strong> "Lulus" ✅</span>
+          </div>
+        </div>
+
+        <!-- E. Analogi -->
+        <h2>E. Analogi Fungsi dalam Kehidupan Sehari-hari</h2>
+        <p>Fungsi itu seperti...</p>
+
+        <table class="tabel-analogi">
+          <thead>
+            <tr>
+              <th>Analogi</th>
+              <th>Input</th>
+              <th>Proses</th>
+              <th>Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>🥤 Mesin Penjual Otomatis</strong></td>
+              <td>Uang + pilihan minuman</td>
+              <td>Menerima uang, membaca pilihan, mengambil minuman</td>
+              <td>Minuman keluar</td>
+            </tr>
+            <tr>
+              <td><strong>👨‍🍳 Koki di Restoran</strong></td>
+              <td>Pesanan makanan</td>
+              <td>Menyiapkan bahan, memasak, menghias</td>
+              <td>Makanan siap saji</td>
+            </tr>
+            <tr>
+              <td><strong>🧺 Mesin Cuci</strong></td>
+              <td>Pakaian kotor + deterjen</td>
+              <td>Mengisi air, mencuci, membilas, memeras</td>
+              <td>Pakaian bersih</td>
+            </tr>
+            <tr>
+              <td><strong>📖 Resep Masakan</strong></td>
+              <td>Bahan-bahan</td>
+              <td>Langkah-langkah memasak</td>
+              <td>Hidangan jadi</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- F. Mengenali Input-Proses-Output -->
+        <h2>F. Mengenali Input-Proses-Output di Sekitarmu</h2>
+        <p>Coba identifikasi komponen Input-Proses-Output dari aktivitas berikut:</p>
+
+        <table class="tabel-aktivitas">
+          <thead>
+            <tr>
+              <th>Aktivitas</th>
+              <th>Input</th>
+              <th>Proses</th>
+              <th>Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge">💰</span> Menghitung uang saku</td>
+              <td>Jumlah uang harian</td>
+              <td>Menjumlahkan semua uang</td>
+              <td>Total uang saku</td>
+            </tr>
+            <tr>
+              <td><span class="badge">✉️</span> Mengirim email</td>
+              <td>Teks pesan, alamat tujuan</td>
+              <td>Menyusun pesan, mengirim via server</td>
+              <td>Pesan terkirim</td>
+            </tr>
+            <tr>
+              <td><span class="badge">🎬</span> Menonton film di YouTube</td>
+              <td>Klik judul video</td>
+              <td>Streaming data video</td>
+              <td>Film diputar</td>
+            </tr>
+            <tr>
+              <td><span class="badge">📝</span> Mengerjakan soal matematika</td>
+              <td>Soal yang diberikan</td>
+              <td>Menghitung dengan rumus</td>
+              <td>Jawaban</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Referensi -->
+        <h2>📚 Referensi Materi</h2>
+        <ul>
+          <li>Buku Informatika SMP Kelas VIII Kurikulum Merdeka - Elemen Berpikir Komputasional (INF-D.BK1.1)</li>
+          <li>Konsep Input-Proses-Output dalam Sistem Komputer</li>
+          <li>Fungsi sebagai mesin komputasi (input → proses → output) dan eksekusi mesin</li>
+          <li>Konsep "Kotak Hitam" (Black Box) dalam fungsi komputasi</li>
+          <li>Aktivitas unplugged dan plugged untuk pembelajaran konsep fungsi</li>
+          <li>Penerapan konsep fungsi dalam kehidupan sehari-hari (resep masakan, mesin penjual otomatis, dll.)</li>
+          <li>Contoh berpikir komputasional dalam ilmu komputer</li>
+          <li>Cara kerja sistem komputer: input, pemrosesan, output, storage</li>
+        </ul>
+
+        <!-- TOMBOL AKTIVITAS -->
+        <div class="aktivitas-wrapper">
+          <h3>🔧 Aktivitas Pembelajaran</h3>
+          <p><strong>"Function Factory: Membangun dan Menjalankan Mesin Komputasi"</strong></p>
+          <p>Ikuti aktivitas interaktif untuk membangun dan menjalankan fungsi komputasi. Kamu akan merancang input, menentukan proses, dan menghasilkan output seperti seorang insinyur komputasi!</p>
+          <a href="aktivitasbk3.html" class="tombol-aktivitas">
+            ⚙️ Mulai Function Factory
+          </a>
+        </div>
+
+        <!-- Tombol Kembali -->
+        <a href="bk.html" class="nav-kembali">← Kembali ke Daftar Materi Berpikir Komputasional</a>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- perbarui breadcrumb untuk halaman bk3 -->
+  <script>
+    (function() {
+      const bcContainer = document.getElementById('breadcrumb-container');
+      if (bcContainer) {
+        bcContainer.innerHTML = `
+          <li><a href="index.html">Beranda</a></li>
+          <li><a href="bk.html">Berpikir Komputasional</a></li>
+          <li>Mesin Komputasi: Input → Proses → Output</li>
+        `;
+      }
+    })();
+  </script>
+
+</body>
+</html>
