@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Konektivitas Internet · Jaringan Kabel & Nirkabel</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* gaya tambahan untuk halaman materi */
+    .materi-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .materi-container h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .materi-container .sub-judul {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+      font-style: italic;
+    }
+
+    .materi-container h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 0.8rem 0;
+      color: #4d3829;
+      border-left: 6px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.2rem 0 0.3rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container p {
+      margin-bottom: 1rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.5rem 0 1.2rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.4rem;
+      color: #2f2822;
+    }
+
+    .materi-container .highlight-box {
+      background: #f5ede6;
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+      margin: 1.5rem 0;
+    }
+
+    .materi-container .highlight-box strong {
+      color: #4d3829;
+    }
+
+    .materi-container .highlight-box ul {
+      margin-bottom: 0;
+    }
+
+    .materi-container .icon-label {
+      font-size: 1.2rem;
+      margin-right: 0.3rem;
+    }
+
+    /* Kartu perbandingan */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .comparison-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      border: 2px solid #e5dbd0;
+      transition: all 0.2s ease;
+    }
+
+    .comparison-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+      border-color: #b09b88;
+    }
+
+    .comparison-card .title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .comparison-card ul {
+      margin: 0.3rem 0 0 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    .comparison-card ul li {
+      margin-bottom: 0.2rem;
+    }
+
+    .comparison-card .badge-pro {
+      background: #e8f5e0;
+      color: #2d5a1e;
+      padding: 0.1rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .comparison-card .badge-con {
+      background: #fce4e4;
+      color: #5a2a2a;
+      padding: 0.1rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .comparison-card.wired {
+      border-left: 6px solid #4d3829;
+    }
+
+    .comparison-card.wireless {
+      border-left: 6px solid #8ab4d4;
+    }
+
+    /* Tabel perbandingan */
+    .tabel-perbandingan {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .tabel-perbandingan thead {
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .tabel-perbandingan th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .tabel-perbandingan td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+    }
+
+    .tabel-perbandingan tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabel-perbandingan tr:hover td {
+      background: #f8f3ee;
+    }
+
+    /* Tabel Wi-Fi Standar */
+    .tabel-wifi {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.85rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .tabel-wifi thead {
+      background: #8ab4d4;
+      color: #fff;
+    }
+
+    .tabel-wifi th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .tabel-wifi td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+    }
+
+    .tabel-wifi tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabel-wifi tr:hover td {
+      background: #f0f7fb;
+    }
+
+    .tabel-wifi .badge-wifi {
+      background: #e3edf5;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #1a4a6b;
+    }
+
+    /* Perangkat jaringan */
+    .device-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .device-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      border: 2px solid #e5dbd0;
+      transition: all 0.2s ease;
+    }
+
+    .device-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+      border-color: #b09b88;
+    }
+
+    .device-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .device-card .name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+    }
+
+    .device-card .desc {
+      font-size: 0.75rem;
+      color: #7a6656;
+    }
+
+    /* Tombol aktivitas */
+    .tombol-aktivitas {
+      display: inline-block;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+      padding: 0.9rem 2.2rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.25);
+      margin-top: 0.5rem;
+    }
+
+    .tombol-aktivitas:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(75, 46, 30, 0.35);
+      background: linear-gradient(135deg, #5c4638, #7a5f4c);
+    }
+
+    .tombol-aktivitas:focus-visible {
+      outline: 3px solid #a3836a;
+      outline-offset: 4px;
+    }
+
+    .aktivitas-wrapper {
+      background: #f5ede6;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      margin-top: 2.5rem;
+      border: 2px solid #e5dbd0;
+      text-align: center;
+    }
+
+    .aktivitas-wrapper h3 {
+      margin-top: 0;
+      color: #3b2b1e;
+      border-left: none;
+      padding-left: 0;
+    }
+
+    .aktivitas-wrapper p {
+      margin-bottom: 1.2rem;
+      font-size: 1.05rem;
+    }
+
+    /* Navigasi kembali */
+    .nav-kembali {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: #5c4638;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 2px dotted #bfaa9a;
+      padding-bottom: 2px;
+      transition: border-color 0.2s;
+    }
+
+    .nav-kembali:hover {
+      border-bottom-color: #7a5f4c;
+    }
+
+    /* Kabel visualization */
+    .cable-types {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .cable-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.2rem;
+      border: 2px solid #e5dbd0;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .cable-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+      border-color: #b09b88;
+    }
+
+    .cable-card .cable-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .cable-card .cable-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #3b2b1e;
+    }
+
+    .cable-card .cable-desc {
+      font-size: 0.8rem;
+      color: #5c4638;
+    }
+
+    .cable-card .cable-speed {
+      background: #e8d5c4;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #3b2b1e;
+      display: inline-block;
+      margin-top: 0.3rem;
+    }
+
+    /* Responsif */
+    @media (max-width: 720px) {
+      .materi-container h1 {
+        font-size: 1.7rem;
+      }
+      .materi-container h2 {
+        font-size: 1.3rem;
+      }
+      .materi-container h3 {
+        font-size: 1.05rem;
+      }
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+      .tabel-perbandingan, .tabel-wifi {
+        font-size: 0.75rem;
+      }
+      .tabel-perbandingan th, .tabel-perbandingan td,
+      .tabel-wifi th, .tabel-wifi td {
+        padding: 0.4rem 0.6rem;
+      }
+      .aktivitas-wrapper {
+        padding: 1.5rem 1.2rem;
+      }
+      .tombol-aktivitas {
+        padding: 0.7rem 1.6rem;
+        font-size: 0.95rem;
+      }
+      .cable-types {
+        grid-template-columns: 1fr;
+      }
+      .device-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tabel-perbandingan, .tabel-wifi {
+        font-size: 0.65rem;
+      }
+      .tabel-perbandingan th, .tabel-perbandingan td,
+      .tabel-wifi th, .tabel-wifi td {
+        padding: 0.3rem 0.4rem;
+      }
+      .materi-container ul, 
+      .materi-container ol {
+        margin-left: 1.2rem;
+      }
+      .aktivitas-wrapper {
+        padding: 1rem 0.8rem;
+      }
+      .device-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+      }
+      .device-card {
+        padding: 0.6rem;
+      }
+      .device-card .icon {
+        font-size: 1.8rem;
+      }
+      .device-card .name {
+        font-size: 0.75rem;
+      }
+      .device-card .desc {
+        font-size: 0.65rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER (dinamis dari script.js) -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <!-- diisi oleh script.js secara dinamis -->
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA: MATERI -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <!-- Judul Utama -->
+        <h1>📶 Konektivitas Internet: Jaringan Kabel dan Nirkabel</h1>
+        <p class="sub-judul">Memahami Bluetooth, Wi-Fi, dan cara perangkat terhubung</p>
+
+        <!-- A. Pendahuluan -->
+        <h2>A. Pendahuluan: Bagaimana Perangkat Kita Terhubung?</h2>
+        <p>Pernahkah kamu bertanya-tanya bagaimana ponselmu bisa mengakses YouTube tanpa kabel? Atau bagaimana printer di rumah bisa menerima perintah cetak dari laptop tanpa dicolok? Jawabannya terletak pada <strong>konektivitas jaringan</strong>—cara perangkat saling terhubung dan bertukar data.</p>
+        <p>Bayangkan jaringan seperti jalan raya untuk data digital. Ada dua jenis "jalan" utama yang digunakan:</p>
+        <ul>
+          <li><strong>🚗 Jalan tol berkabel</strong> (jaringan kabel)—cepat, stabil, tapi terbatas geraknya</li>
+          <li><strong>✈️ Jalan layang nirkabel</strong> (jaringan nirkabel)—bebas bergerak, tapi kadang terganggu cuaca (gangguan sinyal)</li>
+        </ul>
+        <p>Keduanya memiliki peran penting dalam kehidupan digital kita sehari-hari.</p>
+
+        <!-- B. Jaringan Kabel -->
+        <h2>B. Jaringan Kabel (Wired Network)</h2>
+        <p><strong>Jaringan kabel</strong> menggunakan kabel fisik untuk menghubungkan perangkat dan mengirimkan data dalam bentuk sinyal listrik atau cahaya.</p>
+
+        <h3>1. Kabel Twisted Pair (UTP/STP)</h3>
+        <p><strong>Kabel UTP (Unshielded Twisted Pair)</strong> adalah jenis kabel yang paling umum digunakan untuk jaringan komputer. Kabel ini terdiri dari 8 kabel kecil yang dipilin berpasangan (4 pasang) untuk mengurangi gangguan sinyal.</p>
+        <div class="highlight-box">
+          <strong>📌 Ciri-ciri:</strong>
+          <ul>
+            <li>Ujung kabel menggunakan konektor <strong>RJ-45</strong> (mirip konektor telepon tapi lebih besar)</li>
+            <li>Digunakan untuk jaringan <strong>Ethernet</strong></li>
+            <li>Kecepatan: hingga <strong>10 Gbps</strong> (pada kategori terbaru)</li>
+          </ul>
+        </div>
+        <div class="highlight-box">
+          <strong>📌 Contoh penggunaan:</strong>
+          <ul>
+            <li>Menghubungkan komputer di laboratorium sekolah ke switch</li>
+            <li>Menghubungkan router Wi-Fi ke modem internet</li>
+            <li>Kabel LAN yang terlihat di belakang CPU</li>
+          </ul>
+        </div>
+
+        <h3>2. Kabel Koaksial (Coaxial)</h3>
+        <p><strong>Kabel koaksial</strong> memiliki inti tembaga di tengah yang dilapisi isolator, anyaman logam, dan jaket luar.</p>
+        <div class="highlight-box">
+          <strong>📌 Ciri-ciri:</strong>
+          <ul>
+            <li>Bentuknya lebih tebal dan kaku</li>
+            <li>Menggunakan konektor BNC atau F-type</li>
+          </ul>
+        </div>
+        <div class="highlight-box">
+          <strong>📌 Contoh penggunaan:</strong>
+          <ul>
+            <li>Menghubungkan antena TV ke televisi</li>
+            <li>Jaringan internet kabel (TV kabel)</li>
+            <li>Dulu digunakan untuk jaringan komputer (sekarang sudah jarang)</li>
+          </ul>
+        </div>
+
+        <h3>3. Kabel Serat Optik (Fiber Optic)</h3>
+        <p><strong>Kabel serat optik</strong> adalah kabel yang terbuat dari kaca atau plastik sangat tipis dan mentransmisikan data menggunakan <strong>cahaya</strong>.</p>
+        <div class="highlight-box">
+          <strong>📌 Ciri-ciri:</strong>
+          <ul>
+            <li>Kecepatan sangat tinggi (hingga <strong>100 Gbps</strong> atau lebih)</li>
+            <li>Jarak transmisi sangat jauh (puluhan kilometer)</li>
+            <li>Tahan terhadap gangguan elektromagnetik</li>
+          </ul>
+        </div>
+        <div class="highlight-box">
+          <strong>📌 Contoh penggunaan:</strong>
+          <ul>
+            <li>Jaringan internet berkecepatan tinggi (IndiHome Fiber, Biznet)</li>
+            <li>Koneksi antar gedung perkantoran</li>
+            <li>Tulang punggung internet global (kabel bawah laut)</li>
+          </ul>
+        </div>
+
+        <h3>Kelebihan dan Kekurangan Jaringan Kabel</h3>
+        <div class="comparison-grid">
+          <div class="comparison-card wired">
+            <div class="title">✅ Kelebihan</div>
+            <ul>
+              <li>Kecepatan tinggi dan stabil</li>
+              <li>Keamanan lebih baik (sulit disadap)</li>
+              <li>Tidak terpengaruh gangguan sinyal</li>
+              <li>Harga perangkat relatif murah</li>
+            </ul>
+          </div>
+          <div class="comparison-card wired">
+            <div class="title">❌ Kekurangan</div>
+            <ul>
+              <li>Terbatas oleh panjang kabel</li>
+              <li>Memerlukan instalasi fisik</li>
+              <li>Kurang fleksibel (perangkat harus dekat)</li>
+              <li>Membutuhkan kabel yang berantakan</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- C. Jaringan Nirkabel -->
+        <h2>C. Jaringan Nirkabel (Wireless Network)</h2>
+        <p><strong>Jaringan nirkabel</strong> menggunakan gelombang radio, inframerah, atau gelombang mikro untuk mengirimkan data tanpa kabel fisik.</p>
+
+        <h3>1. Bluetooth</h3>
+        <p><strong>Bluetooth</strong> adalah teknologi nirkabel jarak pendek yang digunakan untuk menghubungkan perangkat dalam jarak sekitar <strong>10 meter</strong> (kelas 2) atau hingga <strong>100 meter</strong> (kelas 1).</p>
+
+        <div class="highlight-box">
+          <strong>📌 Karakteristik Bluetooth:</strong>
+          <ul>
+            <li><strong>Jarak:</strong> Pendek (10-100 meter)</li>
+            <li><strong>Kecepatan:</strong> Hingga 24 Mbps (Bluetooth 5.0)</li>
+            <li><strong>Frekuensi:</strong> 2.4 GHz</li>
+            <li><strong>Koneksi:</strong> Point-to-point (perangkat ke perangkat)</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <strong>📌 Contoh penggunaan dalam kehidupan sehari-hari:</strong>
+          <ul>
+            <li>Menghubungkan headset nirkabel ke ponsel</li>
+            <li>Mentransfer foto antar ponsel</li>
+            <li>Menghubungkan mouse dan keyboard nirkabel ke laptop</li>
+            <li>Menghubungkan smartphone ke speaker Bluetooth</li>
+            <li>Berbagi koneksi internet (tethering) antar ponsel</li>
+            <li>Menghubungkan smartwatch ke ponsel</li>
+          </ul>
+        </div>
+
+        <div class="comparison-grid">
+          <div class="comparison-card wireless">
+            <div class="title">✅ Kelebihan Bluetooth</div>
+            <ul>
+              <li>Tidak memerlukan kabel</li>
+              <li>Konsumsi daya rendah</li>
+              <li>Mudah dipasangkan (pairing)</li>
+              <li>Tidak memerlukan hotspot atau jaringan internet</li>
+            </ul>
+          </div>
+          <div class="comparison-card wireless">
+            <div class="title">❌ Kekurangan Bluetooth</div>
+            <ul>
+              <li>Jarak sangat terbatas</li>
+              <li>Kecepatan lebih rendah dari Wi-Fi</li>
+              <li>Tidak cocok untuk transfer data besar</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>2. Wi-Fi (Wireless Fidelity)</h3>
+        <p><strong>Wi-Fi</strong> adalah teknologi nirkabel yang memungkinkan perangkat terhubung ke internet atau jaringan lokal tanpa kabel, dengan jangkauan lebih luas daripada Bluetooth.</p>
+
+        <div class="highlight-box">
+          <strong>📌 Karakteristik Wi-Fi:</strong>
+          <ul>
+            <li><strong>Jarak:</strong> 30-100 meter di dalam ruangan</li>
+            <li><strong>Kecepatan:</strong> Hingga beberapa Gbps (Wi-Fi 6/6E)</li>
+            <li><strong>Frekuensi:</strong> 2.4 GHz dan 5 GHz (sekarang juga 6 GHz)</li>
+            <li><strong>Koneksi:</strong> Point-to-multipoint (banyak perangkat ke satu router)</li>
+          </ul>
+        </div>
+
+        <h4>Standar Wi-Fi yang Perlu Diketahui:</h4>
+        <table class="tabel-wifi">
+          <thead>
+            <tr>
+              <th>Standar</th>
+              <th>Kecepatan Maks</th>
+              <th>Tahun</th>
+              <th>Jangkauan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge-wifi">Wi-Fi 4</span> (802.11n)</td>
+              <td>150-600 Mbps</td>
+              <td>2009</td>
+              <td>70 meter</td>
+            </tr>
+            <tr>
+              <td><span class="badge-wifi">Wi-Fi 5</span> (802.11ac)</td>
+              <td>1.3-3.5 Gbps</td>
+              <td>2013</td>
+              <td>35 meter (5 GHz)</td>
+            </tr>
+            <tr>
+              <td><span class="badge-wifi">Wi-Fi 6</span> (802.11ax)</td>
+              <td>9.6 Gbps</td>
+              <td>2019</td>
+              <td>Lebih baik dari Wi-Fi 5</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="highlight-box">
+          <strong>📌 Contoh penggunaan dalam kehidupan sehari-hari:</strong>
+          <ul>
+            <li><strong>Internet di rumah:</strong> Perangkat terhubung ke router Wi-Fi untuk mengakses internet</li>
+            <li><strong>Wi-Fi publik:</strong> Di kafe, sekolah, mal, dan bandara</li>
+            <li><strong>Hotspot pribadi:</strong> Berbagi koneksi internet dari ponsel ke perangkat lain</li>
+            <li><strong>Smart Home:</strong> Menghubungkan perangkat seperti smart TV, lampu pintar, kamera keamanan</li>
+          </ul>
+        </div>
+
+        <div class="comparison-grid">
+          <div class="comparison-card wireless">
+            <div class="title">✅ Kelebihan Wi-Fi</div>
+            <ul>
+              <li>Jangkauan lebih luas (hingga 100 meter)</li>
+              <li>Kecepatan tinggi</li>
+              <li>Banyak perangkat bisa terhubung sekaligus</li>
+              <li>Tidak perlu kabel fisik</li>
+            </ul>
+          </div>
+          <div class="comparison-card wireless">
+            <div class="title">❌ Kekurangan Wi-Fi</div>
+            <ul>
+              <li>Keamanan lebih rentan</li>
+              <li>Gangguan dari dinding dan perangkat elektronik lain</li>
+              <li>Konsumsi daya lebih besar</li>
+              <li>Sinyal tidak stabil jika banyak pengguna</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- D. Perbandingan -->
+        <h2>D. Perbandingan Bluetooth vs Wi-Fi</h2>
+        <table class="tabel-perbandingan">
+          <thead>
+            <tr>
+              <th>Karakteristik</th>
+              <th>Bluetooth</th>
+              <th>Wi-Fi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Jangkauan</strong></td>
+              <td>Pendek (10-100 m)</td>
+              <td>Lebih jauh (30-100 m)</td>
+            </tr>
+            <tr>
+              <td><strong>Kecepatan</strong></td>
+              <td>Lambat (hingga 24 Mbps)</td>
+              <td>Cepat (hingga 9.6 Gbps)</td>
+            </tr>
+            <tr>
+              <td><strong>Konsumsi Daya</strong></td>
+              <td>Rendah</td>
+              <td>Tinggi</td>
+            </tr>
+            <tr>
+              <td><strong>Keamanan</strong></td>
+              <td>Cukup aman (pairing)</td>
+              <td>Butuh password/enkripsi</td>
+            </tr>
+            <tr>
+              <td><strong>Biaya</strong></td>
+              <td>Murah</td>
+              <td>Lebih mahal</td>
+            </tr>
+            <tr>
+              <td><strong>Koneksi</strong></td>
+              <td>Point-to-point (1 ke 1)</td>
+              <td>Point-to-multipoint (1 ke banyak)</td>
+            </tr>
+            <tr>
+              <td><strong>Fungsi Utama</strong></td>
+              <td>Menghubungkan perangkat terdekat</td>
+              <td>Akses internet dan jaringan</td>
+            </tr>
+            <tr>
+              <td><strong>Contoh</strong></td>
+              <td>Headset, mouse, keyboard</td>
+              <td>Hotspot, internet rumah</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- E. Bagaimana Data Dikirim -->
+        <h2>E. Bagaimana Data Dikirim melalui Jaringan?</h2>
+
+        <h3>1. Melalui Kabel (Transmisi Terpandu)</h3>
+        <p>Data dikirim dalam bentuk sinyal listrik (kabel tembaga) atau cahaya (serat optik):</p>
+        <ul>
+          <li><strong>Sinyal listrik:</strong> Data diubah menjadi pulsa listrik yang merambat melalui kabel tembaga.</li>
+          <li><strong>Sinyal cahaya:</strong> Data diubah menjadi pulsa cahaya yang merambat melalui serat optik dengan kecepatan mendekati kecepatan cahaya!</li>
+        </ul>
+
+        <h3>2. Secara Nirkabel (Transmisi Tak Terpandu)</h3>
+        <p>Data dikirim melalui gelombang elektromagnetik (gelombang radio):</p>
+        <ul>
+          <li>Perangkat mengubah data menjadi gelombang radio</li>
+          <li>Gelombang merambat melalui udara</li>
+          <li>Perangkat penerima menangkap gelombang dan mengubahnya kembali menjadi data</li>
+          <li>Perangkat seperti <strong>access point</strong> atau <strong>router</strong> berfungsi sebagai pemancar dan penerima sinyal</li>
+        </ul>
+
+        <!-- F. Perangkat Jaringan -->
+        <h2>F. Perangkat yang Terlibat dalam Konektivitas</h2>
+        <div class="device-grid">
+          <div class="device-card">
+            <div class="icon">📡</div>
+            <div class="name">Modem</div>
+            <div class="desc">Mengubah sinyal dari ISP menjadi sinyal yang bisa dipahami komputer</div>
+          </div>
+          <div class="device-card">
+            <div class="icon">📶</div>
+            <div class="name">Router</div>
+            <div class="desc">Menghubungkan berbagai perangkat dalam satu jaringan dan mengatur lalu lintas data</div>
+          </div>
+          <div class="device-card">
+            <div class="icon">🔀</div>
+            <div class="name">Switch</div>
+            <div class="desc">Menghubungkan banyak perangkat dalam jaringan kabel</div>
+          </div>
+          <div class="device-card">
+            <div class="icon">📻</div>
+            <div class="name">Access Point</div>
+            <div class="desc">Memancarkan sinyal Wi-Fi agar perangkat nirkabel bisa terhubung</div>
+          </div>
+          <div class="device-card">
+            <div class="icon">💳</div>
+            <div class="name">NIC</div>
+            <div class="desc">Kartu jaringan yang memungkinkan perangkat terhubung ke jaringan (kabel/nirkabel)</div>
+          </div>
+        </div>
+
+        <!-- Referensi -->
+        <h2>📚 Referensi Materi</h2>
+        <ul>
+          <li>Buku Informatika SMP Kelas VII Kurikulum Merdeka - Elemen Jaringan Komputer dan Internet</li>
+          <li>Konsep kabel UTP, Coaxial, dan Fiber Optik serta fungsinya dalam jaringan</li>
+          <li>Teknologi Bluetooth: karakteristik, jangkauan, kecepatan, dan contoh penggunaan</li>
+          <li>Teknologi Wi-Fi: standar (802.11n/ac/ax), frekuensi (2.4 GHz vs 5 GHz), kecepatan, dan jangkauan</li>
+          <li>Perbedaan Bluetooth dan Wi-Fi (jangkauan, kecepatan, konsumsi daya, keamanan, biaya, koneksi)</li>
+          <li>Faktor yang mempengaruhi kualitas sinyal Wi-Fi (jarak, dinding, interferensi, jumlah pengguna)</li>
+          <li>Cara kerja transmisi data melalui kabel (sinyal listrik/cahaya) dan nirkabel (gelombang radio)</li>
+          <li>Perangkat jaringan: Modem, Router, Switch, Access Point, NIC</li>
+          <li>Aktivitas pembelajaran berbasis simulasi untuk materi jaringan komputer</li>
+        </ul>
+
+        <!-- TOMBOL AKTIVITAS -->
+        <div class="aktivitas-wrapper">
+          <h3>🔬 Aktivitas Pembelajaran</h3>
+          <p><strong>"Connectivity Lab: Eksplorasi Jaringan Kabel dan Nirkabel"</strong></p>
+          <p>Ikuti aktivitas interaktif untuk menjelajahi perbedaan jaringan kabel dan nirkabel. Kamu akan membandingkan kecepatan, jangkauan, dan penggunaan Bluetooth serta Wi-Fi dalam simulasi langsung!</p>
+          <a href="aktivitasjki2a.html" class="tombol-aktivitas">
+            📶 Mulai Connectivity Lab
+          </a>
+        </div>
+
+        <!-- Tombol Kembali -->
+        <a href="jki.html" class="nav-kembali">← Kembali ke Daftar Materi Jaringan Komputer</a>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- perbarui breadcrumb untuk halaman jki2 -->
+  <script>
+   

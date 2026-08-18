@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Connectivity Lab · Eksplorasi Jaringan Kabel</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA AKTIVITAS ===== */
+    .aktivitas-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .aktivitas-wrapper h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3rem;
+    }
+
+    .aktivitas-wrapper .sub-judul-aktivitas {
+      font-size: 1rem;
+      color: #5c4638;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    /* ===== STEP INDICATOR ===== */
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.5rem 0 2rem 0;
+      position: relative;
+      padding: 0 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .step-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      right: 30px;
+      height: 3px;
+      background: #e5dbd0;
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .step-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      flex: 1;
+      min-width: 50px;
+    }
+
+    .step-dot .circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #f5ede6;
+      border: 3px solid #d9cdbf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active .circle {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    .step-dot.completed .circle {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .step-dot .label {
+      font-size: 0.55rem;
+      margin-top: 0.3rem;
+      color: #7a6656;
+      text-align: center;
+      max-width: 60px;
+      font-weight: 500;
+    }
+
+    .step-dot.active .label {
+      color: #3b2b1e;
+      font-weight: 600;
+    }
+
+    .step-dot.locked .circle {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .step-dot.locked .label {
+      opacity: 0.4;
+    }
+
+    /* ===== PANEL SKENARIO ===== */
+    .scenario-panel {
+      background: #fffffffa;
+      border-radius: 24px;
+      border: 2px solid #e5dbd0;
+      padding: 2rem;
+      min-height: 400px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem;
+      color: #5c4638;
+      background: #f5ede6;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #dbb9a6;
+    }
+
+    /* ===== PEMBUKA ===== */
+    .hero-section {
+      text-align: center;
+      padding: 1.5rem 0;
+    }
+
+    .hero-section .hero-icon {
+      font-size: 5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-section .hero-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .hero-section .hero-sub {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .hero-section .hero-devices {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .hero-section .hero-devices span {
+      font-size: 2.5rem;
+      background: #f5ede6;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      border: 2px solid #e5dbd0;
+    }
+
+    .btn-start {
+      padding: 0.8rem 2.5rem;
+      border-radius: 40px;
+      border: none;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.25);
+    }
+
+    .btn-start:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(75, 46, 30, 0.35);
+    }
+
+    /* ===== SKENARIO 1: KABEL ===== */
+    .cable-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    .cable-btn {
+      padding: 0.6rem 1.5rem;
+      border-radius: 30px;
+      border: 3px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .cable-btn:hover {
+      border-color: #b09b88;
+      background: #f5ede6;
+    }
+
+    .cable-btn.selected {
+      border-color: #4d3829;
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .cable-btn .icon {
+      margin-right: 0.3rem;
+    }
+
+    .cable-info {
+      background: #f8f4ef;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin: 0.5rem 0 1rem 0;
+      border: 2px solid #e5dbd0;
+      min-height: 80px;
+    }
+
+    .cable-info .cable-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #3b2b1e;
+    }
+
+    .cable-info .cable-desc {
+      color: #5c4638;
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+
+    .cable-info .cable-pros {
+      color: #2d5a1e;
+      font-size: 0.85rem;
+    }
+
+    .cable-info .cable-cons {
+      color: #5a2a2a;
+      font-size: 0.85rem;
+    }
+
+    /* Topologi jaringan */
+    .topology-area {
+      background: #f0ece6;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px dashed #d9cdbf;
+      min-height: 200px;
+      margin: 1rem 0;
+      position: relative;
+    }
+
+    .topology-area .devices {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.8rem 1.5rem;
+    }
+
+    .topology-area .device-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.6rem 0.8rem;
+      background: #fff;
+      border-radius: 10px;
+      border: 2px solid #d9cdbf;
+      min-width: 60px;
+      transition: all 0.3s ease;
+    }
+
+    .topology-area .device-node .icon {
+      font-size: 1.8rem;
+    }
+
+    .topology-area .device-node .name {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #3b2b1e;
+      text-align: center;
+    }
+
+    .topology-area .device-node.connected {
+      border-color: #8aaa7a;
+      background: #e8f5e0;
+    }
+
+    .topology-area .device-node .status {
+      font-size: 0.6rem;
+      color: #7a6656;
+    }
+
+    .topology-area .device-node .status.online {
+      color: #2d5a1e;
+    }
+
+    .topology-area .connection-line {
+      width: 40px;
+      height: 3px;
+      background: #d9cdbf;
+      position: relative;
+    }
+
+    .topology-area .connection-line.active {
+      background: #4d3829;
+    }
+
+    .topology-area .connection-line.active::after {
+      content: '⚡';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Tombol hubungkan */
+    .btn-connect {
+      padding: 0.6rem 2rem;
+      border-radius: 30px;
+      border: none;
+      background: #8aaa7a;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-connect:hover {
+      background: #7a9a6a;
+      transform: translateY(-2px);
+    }
+
+    .btn-connect:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-connect.connected {
+      background: #4d3829;
+    }
+
+    .btn-connect.connected:hover {
+      background: #6b4f3a;
+    }
+
+    /* Pertanyaan */
+    .question-box {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #dbb9a6;
+    }
+
+    .question-box .q-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-box .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .question-box .options button {
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .question-box .options button:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .question-box .options button.correct {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .question-box .options button.wrong {
+      background: #d4a0a0;
+      border-color: #d4a0a0;
+      color: #fff;
+    }
+
+    .feedback-text {
+      margin-top: 0.8rem;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .feedback-text.show {
+      display: block;
+    }
+
+    .feedback-text.success {
+      background: #e8f5e0;
+      color: #2d5a1e;
+    }
+
+    .feedback-text.info {
+      background: #e3edf5;
+      color: #1a4a6b;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    .nav-hint {
+      font-size: 0.8rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scenario-panel {
+        padding: 1.2rem;
+      }
+      .step-dot .circle {
+        width: 30px;
+        height: 30px;
+        font-size: 0.7rem;
+      }
+      .step-dot .label {
+        font-size: 0.45rem;
+        max-width: 40px;
+      }
+      .step-indicator::before {
+        left: 15px;
+        right: 15px;
+      }
+      .aktivitas-wrapper h1 {
+        font-size: 1.7rem;
+      }
+      .hero-section .hero-icon {
+        font-size: 3.5rem;
+      }
+      .hero-section .hero-title {
+        font-size: 1.5rem;
+      }
+      .hero-section .hero-devices span {
+        font-size: 1.8rem;
+        padding: 0.3rem 0.6rem;
+      }
+      .topology-area .devices {
+        gap: 0.5rem;
+      }
+      .topology-area .device-node {
+        padding: 0.4rem 0.5rem;
+        min-width: 50px;
+      }
+      .topology-area .device-node .icon {
+        font-size: 1.3rem;
+      }
+      .cable-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.8rem;
+      }
+      .question-box .options {
+        flex-direction: column;
+      }
+      .question-box .options button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .step-indicator {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.2rem;
+      }
+      .step-indicator::before {
+        display: none;
+      }
+      .step-dot {
+        min-width: 35px;
+        flex: unset;
+      }
+      .step-dot .circle {
+        width: 26px;
+        height: 26px;
+        font-size: 0.6rem;
+      }
+      .step-dot .label {
+        display: none;
+      }
+      .scenario-panel {
+        padding: 0.8rem;
+      }
+      .scenario-panel .scenario-title {
+        font-size: 1.1rem;
+      }
+      .topology-area {
+        padding: 0.8rem;
+        min-height: 150px;
+      }
+      .topology-area .device-node .name {
+        font-size: 0.5rem;
+      }
+      .cable-info {
+        padding: 0.8rem 1rem;
+        font-size: 0.85rem;
+      }
+      .btn-connect {
+        padding: 0.4rem 1.2rem;
+        font-size: 0.8rem;
+      }
+      .nav-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-nav {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="jki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li><a href="jki2.html">Konektivitas Internet</a></li>
+      <li>Connectivity Lab · Part 1</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <h1>🔌 Connectivity Lab: Jelajahi Dunia Koneksi</h1>
+        <p class="sub-judul-aktivitas">"Dari kabel tembaga hingga gelombang radio—pelajari cara perangkatmu terhubung!"</p>
+
+        <!-- ===== STEP INDICATOR ===== -->
+        <div class="step-indicator" id="stepIndicator">
+          <button class="step-dot active" data-step="0">
+            <span class="circle">1</span>
+            <span class="label">Pembuka</span>
+          </button>
+          <button class="step-dot" data-step="1">
+            <span class="circle">2</span>
+            <span class="label">Instalasi Kabel</span>
+          </button>
+          <button class="step-dot locked" data-step="2">
+            <span class="circle">3</span>
+            <span class="label">Wi-Fi</span>
+          </button>
+          <button class="step-dot locked" data-step="3">
+            <span class="circle">4</span>
+            <span class="label">Bluetooth</span>
+          </button>
+          <button class="step-dot locked" data-step="4">
+            <span class="circle">5</span>
+            <span class="label">Bandingkan</span>
+          </button>
+          <button class="step-dot locked" data-step="5">
+            <span class="circle">6</span>
+            <span class="label">Troubleshoot</span>
+          </button>
+          <button class="step-dot locked" data-step="6">
+            <span class="circle">🏆</span>
+            <span class="label">Hasil</span>
+          </button>
+        </div>
+
+        <!-- ===== PANEL SKENARIO ===== -->
+        <div class="scenario-panel" id="scenarioPanel">
+
+          <!-- SCENARIO 0: PEMBUKA -->
+          <div class="scenario-content" data-step="0">
+            <div class="hero-section">
+              <div class="hero-icon">🌐</div>
+              <div class="hero-title">Selamat Datang di Connectivity Lab!</div>
+              <div class="hero-sub">Kamu akan berperan sebagai <strong>Network Technician</strong> yang memasang dan mengelola berbagai jenis koneksi jaringan.</div>
+
+              <div class="hero-devices">
+                <span>💻</span>
+                <span>📱</span>
+                <span>📡</span>
+                <span>🖨️</span>
+                <span>🎧</span>
+                <span>📶</span>
+              </div>
+
+              <p style="color:#5c4638; max-width:600px; margin:0 auto 1.5rem;">
+                Dari kabel tembaga hingga gelombang radio—pelajari cara perangkatmu terhubung!
+              </p>
+
+              <button class="btn-start" onclick="goToStep(1)">
+                🔌 Mulai Eksplorasi
+              </button>
+            </div>
+          </div>
+
+          <!-- SCENARIO 1: INSTALASI JARINGAN KABEL -->
+          <div class="scenario-content" data-step="1" style="display:none;">
+            <div class="scenario-title">🔧 Skenario 1: Instalasi Jaringan Kabel</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Kamu bertugas memasang jaringan di laboratorium komputer sekolah baru. Ada <strong>8 komputer</strong> yang harus terhubung ke internet.
+            </div>
+
+            <!-- Pilih Jenis Kabel -->
+            <p style="font-weight:600; color:#3b2b1e; margin-bottom:0.3rem;">1️⃣ Pilih jenis kabel yang akan digunakan:</p>
+            <div class="cable-selector">
+              <button class="cable-btn" data-cable="utp" onclick="selectCable('utp')">
+                <span class="icon">🔌</span> UTP (Twisted Pair)
+              </button>
+              <button class="cable-btn" data-cable="coaxial" onclick="selectCable('coaxial')">
+                <span class="icon">📺</span> Coaxial
+              </button>
+              <button class="cable-btn" data-cable="fiber" onclick="selectCable('fiber')">
+                <span class="icon">💡</span> Fiber Optic
+              </button>
+            </div>
+
+            <!-- Info Kabel -->
+            <div class="cable-info" id="cableInfo">
+              <div style="text-align:center; color:#7a6656; padding:0.5rem 0;">
+                💡 Pilih salah satu jenis kabel di atas untuk melihat informasinya.
+              </div>
+            </div>
+
+            <!-- Topologi Jaringan -->
+            <p style="font-weight:600; color:#3b2b1e; margin:1rem 0 0.3rem;">2️⃣ Hubungkan perangkat ke jaringan:</p>
+            <div class="topology-area" id="topologyArea">
+              <div class="devices">
+                <div class="device-node" id="dev-switch">
+                  <span class="icon">🔀</span>
+                  <span class="name">Switch</span>
+                  <span class="status" id="status-switch">⏳ Belum</span>
+                </div>
+                <span style="font-size:1.5rem; color:#7a6656;">⟷</span>
+                <div class="device-node" id="dev-router">
+                  <span class="icon">📡</span>
+                  <span class="name">Router</span>
+                  <span class="status" id="status-router">⏳ Belum</span>
+                </div>
+                <span style="font-size:1.5rem; color:#7a6656;">⟷</span>
+                <div class="device-node" id="dev-internet">
+                  <span class="icon">☁️</span>
+                  <span class="name">Internet</span>
+                  <span class="status" id="status-internet">⏳ Belum</span>
+                </div>
+              </div>
+              <div style="text-align:center; margin-top:0.8rem;">
+                <button class="btn-connect" id="connectBtn" onclick="connectCable()" disabled>
+                  🔗 Hubungkan dengan Kabel
+                </button>
+              </div>
+              <div style="text-align:center; margin-top:0.5rem; font-size:0.8rem; color:#7a6656;" id="connectionStatus">
+                💡 Pilih jenis kabel terlebih dahulu, lalu klik tombol di atas.
+              </div>
+            </div>
+
+            <!-- Pertanyaan Reflektif -->
+            <div class="question-box">
+              <div class="q-title">💭 Pertanyaan Reflektif:</div>
+              <p style="margin-bottom:0.5rem;"><em>"Kabel apa yang paling cocok untuk laboratorium ini? Mengapa?"</em></p>
+              <div class="options">
+                <button onclick="answerQuestion(this, 'utp')">🔌 UTP - Murah dan mudah</button>
+                <button onclick="answerQuestion(this, 'fiber')">💡 Fiber Optic - Kecepatan tinggi</button>
+                <button onclick="answerQuestion(this, 'coaxial')">📺 Coaxial - Tahan lama</button>
+              </div>
+              <div class="feedback-text" id="cableQuestionFeedback"></div>
+            </div>
+
+            <!-- Navigasi ke Skenario Berikutnya -->
+            <div style="text-align:center; margin-top:1rem;">
+              <p style="font-size:0.9rem; color:#7a6656;" id="nextHint">
+                ⏳ Selesaikan semua langkah di atas untuk melanjutkan ke skenario berikutnya.
+              </p>
+              <button class="btn-nav primary" id="nextScenarioBtn" onclick="goToStep(2)" style="display:none;">
+                ➡️ Lanjut ke Skenario 2: Wi-Fi
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom">
+          <a href="jki2.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Materi
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav" id="prevBtn" onclick="prevStep()" disabled>← Sebelumnya</button>
+            <button class="btn-nav primary" id="nextBtn" onclick="nextStep()">Selanjutnya →</button>
+          </div>
+          <div class="nav-hint">
+            💡 Part 1 dari 6 · Skenario 1: Instalasi Kabel
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- ===== SCRIPT AKTIVITAS ===== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ===== STATE =====
+      let currentStep = 0;
+      const totalSteps = 7;
+      let selectedCable = null;
+      let cableConnected = false;
+      let questionAnswered = false;
+
+      // ===== DATA KABEL =====
+      const cableData = {
+        utp: {
+          name: 'Kabel UTP (Unshielded Twisted Pair)',
+          icon: '🔌',
+          desc: 'Kabel yang paling umum digunakan untuk jaringan Ethernet. Terdiri dari 8 kabel kecil yang dipilin berpasangan.',
+          pros: '✅ Murah, mudah dipasang, kecepatan hingga 10 Gbps',
+          cons: '❌ Terbatas jarak (max 100m), rentan gangguan elektromagnetik'
+        },
+        coaxial: {
+          name: 'Kabel Coaxial',
+          icon: '📺',
+          desc: 'Kabel dengan inti tembaga yang dilapisi isolator dan anyaman logam. Sering digunakan untuk TV kabel.',
+          pros: '✅ Tahan lama, tahan gangguan, jarak cukup jauh',
+          cons: '❌ Lebih mahal dari UTP, kecepatan lebih rendah dari fiber'
+        },
+        fiber: {
+          name: 'Kabel Fiber Optic',
+          icon: '💡',
+          desc: 'Kabel berbahan kaca/plastik yang mentransmisikan data menggunakan cahaya. Kecepatan sangat tinggi.',
+          pros: '✅ Kecepatan hingga 100 Gbps, jarak puluhan km, tahan gangguan',
+          cons: '❌ Mahal, instalasi rumit, mudah patah'
+        }
+      };
+
+		// ===== STEP NAVIGASI =====
+		  window.goToStep = function(step) {
+			if (step < 0 || step >= totalSteps) return;
+
+			// Navigasi ke halaman lain untuk step tertentu
+			if (step === 2) {
+			  if (!cableConnected || !questionAnswered) {
+				alert('🔧 Selesaikan dulu Skenario 1: Instalasi Jaringan Kabel!');
+				return;
+			  }
+			  window.location.href = 'aktivitasjki2b.html';
+			  return;
+			}
+			if (step === 3) {
+			  window.location.href = 'aktivitasjki2c.html';
+			  return;
+			}
+			if (step === 4) {
+			  window.location.href = 'aktivitasjki2d.html';
+			  return;
+			}
+			if (step === 5) {
+			  window.location.href = 'aktivitasjki2e.html';
+			  return;
+			}
+			if (step === 6) {
+			  window.location.href = 'aktivitasjki2f.html';
+			  return;
+			}
+
+			// Untuk step 0 dan 1 tetap di halaman ini
+			currentStep = step;
+			updateUI();
+		  };
+
+		  window.nextStep = function() {
+			if (currentStep < totalSteps - 1) {
+			  if (currentStep === 1 && !cableConnected) {
+				alert('🔧 Selesaikan dulu semua langkah di Skenario 1!');
+				return;
+			  }
+			  if (currentStep === 1 && !questionAnswered) {
+				alert('💭 Jawab dulu pertanyaan reflektif!');
+				return;
+			  }
+			  // Untuk step 1, pindah ke halaman berikutnya
+			  if (currentStep === 1) {
+				window.location.href = 'aktivitasjki2b.html';
+				return;
+			  }
+			  goToStep(currentStep + 1);
+			}
+		  };
+
+		  window.prevStep = function() {
+			if (currentStep > 0) {
+			  if (currentStep === 1) {
+				currentStep = 0;
+				updateUI();
+				return;
+			  }
+			  goToStep(currentStep - 1);
+			}
+		  };
+
+      function updateUI() {
+        // Sembunyikan semua konten
+        document.querySelectorAll('.scenario-content').forEach(el => {
+          el.style.display = 'none';
+        });
+
+        // Tampilkan konten step saat ini
+        const target = document.querySelector(`.scenario-content[data-step="${currentStep}"]`);
+        if (target) target.style.display = 'block';
+
+        // Update step indicator
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.classList.remove('active', 'completed', 'locked');
+          if (index === currentStep) dot.classList.add('active');
+          else if (index < currentStep) dot.classList.add('completed');
+          else if (index > currentStep && (index > 1 || !cableConnected)) dot.classList.add('locked');
+        });
+
+        // Update tombol navigasi
+        document.getElementById('prevBtn').disabled = (currentStep === 0);
+        const nextBtn = document.getElementById('nextBtn');
+        if (currentStep === totalSteps - 1) {
+          nextBtn.textContent = '🎉 Selesai';
+        } else {
+          nextBtn.textContent = 'Selanjutnya →';
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // ===== SKENARIO 1: KABEL =====
+      window.selectCable = function(type) {
+        selectedCable = type;
+
+        // Update tombol
+        document.querySelectorAll('.cable-btn').forEach(btn => {
+          btn.classList.remove('selected');
+          if (btn.dataset.cable === type) btn.classList.add('selected');
+        });
+
+        // Tampilkan info
+        const data = cableData[type];
+        const info = document.getElementById('cableInfo');
+        info.innerHTML = `
+          <div class="cable-name">${data.icon} ${data.name}</div>
+          <div class="cable-desc">${data.desc}</div>
+          <div class="cable-pros">${data.pros}</div>
+          <div class="cable-cons">${data.cons}</div>
+        `;
+
+        // Aktifkan tombol connect
+        document.getElementById('connectBtn').disabled = false;
+        document.getElementById('connectionStatus').innerHTML = '✅ Kabel dipilih. Klik "Hubungkan" untuk memasang kabel!';
+        cableConnected = false;
+        questionAnswered = false;
+        document.getElementById('nextHint').style.display = 'block';
+        document.getElementById('nextScenarioBtn').style.display = 'none';
+
+        // Reset status perangkat
+        resetDeviceStatus();
+      };
+
+      function resetDeviceStatus() {
+        document.querySelectorAll('.device-node').forEach(el => {
+          el.classList.remove('connected');
+        });
+        document.getElementById('status-switch').textContent = '⏳ Belum';
+        document.getElementById('status-switch').className = 'status';
+        document.getElementById('status-router').textContent = '⏳ Belum';
+        document.getElementById('status-router').className = 'status';
+        document.getElementById('status-internet').textContent = '⏳ Belum';
+        document.getElementById('status-internet').className = 'status';
+        document.getElementById('connectBtn').textContent = '🔗 Hubungkan dengan Kabel';
+        document.getElementById('connectBtn').className = 'btn-connect';
+      }
+
+      window.connectCable = function() {
+        if (!selectedCable) {
+          alert('Pilih jenis kabel terlebih dahulu!');
+          return;
+        }
+
+        // Animasi koneksi
+        const btn = document.getElementById('connectBtn');
+        btn.textContent = '⏳ Menghubungkan...';
+        btn.disabled = true;
+
+        setTimeout(() => {
+          // Hubungkan semua perangkat
+          document.querySelectorAll('.device-node').forEach(el => {
+            el.classList.add('connected');
+          });
+
+          document.getElementById('status-switch').textContent = '✅ Terhubung';
+          document.getElementById('status-switch').className = 'status online';
+          document.getElementById('status-router').textContent = '✅ Terhubung';
+          document.getElementById('status-router').className = 'status online';
+          document.getElementById('status-internet').textContent = '✅ Terhubung';
+          document.getElementById('status-internet').className = 'status online';
+
+          btn.textContent = '✅ Terhubung!';
+          btn.className = 'btn-connect connected';
+          btn.disabled = true;
+
+          document.getElementById('connectionStatus').innerHTML = `
+            🎉 <strong>Semua perangkat terhubung!</strong> Data mengalir melalui kabel ${cableData[selectedCable].name}.
+            <br><span style="font-size:0.8rem; color:#5c4638;">⚡ Animasi data berjalan melalui kabel...</span>
+          `;
+
+          cableConnected = true;
+          checkComplete();
+        }, 1500);
+      };
+
+      // ===== PERTANYAAN =====
+      window.answerQuestion = function(btn, type) {
+        if (questionAnswered) return;
+        const parent = btn.closest('.question-box');
+        const feedback = parent.querySelector('.feedback-text');
+
+        // Reset semua tombol
+        parent.querySelectorAll('.options button').forEach(b => {
+          b.classList.remove('correct', 'wrong');
+        });
+
+        // Semua jawaban benar (reflektif)
+        btn.classList.add('correct');
+        feedback.className = 'feedback-text show success';
+        feedback.innerHTML = `
+          ✅ Jawaban bagus! Setiap kabel memiliki kelebihan masing-masing.
+          <br><span style="font-size:0.85rem; color:#5c4638;">
+            💡 <strong>UTP</strong> cocok untuk jarak dekat dan biaya murah.<br>
+            💡 <strong>Fiber Optic</strong> cocok untuk kecepatan tinggi dan jarak jauh.<br>
+            💡 <strong>Coaxial</strong> cocok untuk TV kabel dan tahan gangguan.
+          </span>
+          <br><br>
+          🎉 Untuk laboratorium sekolah, <strong>UTP</strong> adalah pilihan paling umum karena murah dan mudah dipasang.
+        `;
+
+        questionAnswered = true;
+        checkComplete();
+      };
+
+      function checkComplete() {
+        if (cableConnected && questionAnswered) {
+          document.getElementById('nextHint').style.display = 'none';
+          document.getElementById('nextScenarioBtn').style.display = 'inline-block';
+          document.getElementById('nextScenarioBtn').innerHTML = '➡️ Lanjut ke Skenario 2: Wi-Fi (Part 2)';
+        }
+      }
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        updateUI();
+
+        // Klik pada step indicator yang tidak terkunci
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.addEventListener('click', function() {
+            if (this.classList.contains('locked')) {
+              alert('🔒 Selesaikan skenario sebelumnya terlebih dahulu!');
+              return;
+            }
+            goToStep(index);
+          });
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

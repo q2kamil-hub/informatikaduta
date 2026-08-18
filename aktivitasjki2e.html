@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Connectivity Lab · Troubleshooting</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA AKTIVITAS ===== */
+    .aktivitas-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .aktivitas-wrapper h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3rem;
+    }
+
+    .aktivitas-wrapper .sub-judul-aktivitas {
+      font-size: 1rem;
+      color: #5c4638;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    /* ===== STEP INDICATOR ===== */
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.5rem 0 2rem 0;
+      position: relative;
+      padding: 0 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .step-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      right: 30px;
+      height: 3px;
+      background: #e5dbd0;
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .step-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      flex: 1;
+      min-width: 50px;
+    }
+
+    .step-dot .circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #f5ede6;
+      border: 3px solid #d9cdbf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active .circle {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    .step-dot.completed .circle {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .step-dot .label {
+      font-size: 0.55rem;
+      margin-top: 0.3rem;
+      color: #7a6656;
+      text-align: center;
+      max-width: 60px;
+      font-weight: 500;
+    }
+
+    .step-dot.active .label {
+      color: #3b2b1e;
+      font-weight: 600;
+    }
+
+    .step-dot.locked .circle {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .step-dot.locked .label {
+      opacity: 0.4;
+    }
+
+    /* ===== PANEL SKENARIO ===== */
+    .scenario-panel {
+      background: #fffffffa;
+      border-radius: 24px;
+      border: 2px solid #e5dbd0;
+      padding: 2rem;
+      min-height: 400px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem;
+      color: #5c4638;
+      background: #f5ede6;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #dbb9a6;
+    }
+
+    /* ===== PROBLEM CARDS ===== */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin: 1rem 0;
+    }
+
+    .problem-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.2rem;
+      border: 3px solid #e5dbd0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .problem-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .problem-card .problem-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .problem-card .problem-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #3b2b1e;
+      margin-bottom: 0.2rem;
+    }
+
+    .problem-card .problem-desc {
+      font-size: 0.85rem;
+      color: #5c4638;
+      margin-bottom: 0.5rem;
+    }
+
+    .problem-card .problem-status {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .problem-card .problem-status.pending {
+      background: #fce4e4;
+      color: #5a2a2a;
+    }
+
+    .problem-card .problem-status.solved {
+      background: #e8f5e0;
+      color: #2d5a1e;
+    }
+
+    .problem-card.selected {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    .problem-card.solved-card {
+      border-color: #8aaa7a;
+      background: #e8f5e0;
+    }
+
+    /* ===== TROUBLESHOOTING DETAIL ===== */
+    .troubleshoot-detail {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin: 1rem 0;
+      display: none;
+    }
+
+    .troubleshoot-detail.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .troubleshoot-detail .detail-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #3b2b1e;
+      margin-bottom: 0.5rem;
+    }
+
+    .troubleshoot-detail .detail-desc {
+      font-size: 0.95rem;
+      color: #5c4638;
+      margin-bottom: 1rem;
+    }
+
+    .troubleshoot-detail .solution-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin: 0.5rem 0;
+    }
+
+    .troubleshoot-detail .solution-options button {
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .troubleshoot-detail .solution-options button:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .troubleshoot-detail .solution-options button .opt-icon {
+      font-size: 1.2rem;
+    }
+
+    .troubleshoot-detail .solution-options button.correct {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .troubleshoot-detail .solution-options button.correct .opt-icon {
+      color: #fff;
+    }
+
+    .troubleshoot-detail .solution-options button.wrong {
+      background: #d4a0a0;
+      border-color: #d4a0a0;
+      color: #fff;
+    }
+
+    .troubleshoot-detail .solution-options button.wrong .opt-icon {
+      color: #fff;
+    }
+
+    .troubleshoot-detail .solution-feedback {
+      margin-top: 0.8rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .troubleshoot-detail .solution-feedback.show {
+      display: block;
+    }
+
+    .troubleshoot-detail .solution-feedback.success {
+      background: #e8f5e0;
+      color: #2d5a1e;
+      border-left: 4px solid #8aaa7a;
+    }
+
+    .troubleshoot-detail .solution-feedback.info {
+      background: #e3edf5;
+      color: #1a4a6b;
+      border-left: 4px solid #8ab4d4;
+    }
+
+    .troubleshoot-detail .solution-feedback .fb-icon {
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+    }
+
+    /* ===== PERTANYAAN REFLEKTIF ===== */
+    .question-box {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #dbb9a6;
+    }
+
+    .question-box .q-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-box .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .question-box .options button {
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .question-box .options button:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .question-box .options button.correct {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .question-box .options button.wrong {
+      background: #d4a0a0;
+      border-color: #d4a0a0;
+      color: #fff;
+    }
+
+    .feedback-text {
+      margin-top: 0.8rem;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .feedback-text.show {
+      display: block;
+    }
+
+    .feedback-text.success {
+      background: #e8f5e0;
+      color: #2d5a1e;
+    }
+
+    .feedback-text.info {
+      background: #e3edf5;
+      color: #1a4a6b;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    .nav-hint {
+      font-size: 0.8rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scenario-panel {
+        padding: 1.2rem;
+      }
+      .step-dot .circle {
+        width: 30px;
+        height: 30px;
+        font-size: 0.7rem;
+      }
+      .step-dot .label {
+        font-size: 0.45rem;
+        max-width: 40px;
+      }
+      .step-indicator::before {
+        left: 15px;
+        right: 15px;
+      }
+      .aktivitas-wrapper h1 {
+        font-size: 1.7rem;
+      }
+      .problem-grid {
+        grid-template-columns: 1fr;
+      }
+      .troubleshoot-detail .solution-options button {
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+      }
+      .question-box .options {
+        flex-direction: column;
+      }
+      .question-box .options button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .step-indicator {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.2rem;
+      }
+      .step-indicator::before {
+        display: none;
+      }
+      .step-dot {
+        min-width: 35px;
+        flex: unset;
+      }
+      .step-dot .circle {
+        width: 26px;
+        height: 26px;
+        font-size: 0.6rem;
+      }
+      .step-dot .label {
+        display: none;
+      }
+      .scenario-panel {
+        padding: 0.8rem;
+      }
+      .scenario-panel .scenario-title {
+        font-size: 1.1rem;
+      }
+      .problem-card {
+        padding: 0.8rem;
+      }
+      .problem-card .problem-icon {
+        font-size: 2rem;
+      }
+      .problem-card .problem-title {
+        font-size: 0.9rem;
+      }
+      .troubleshoot-detail {
+        padding: 1rem;
+      }
+      .troubleshoot-detail .detail-title {
+        font-size: 1rem;
+      }
+      .troubleshoot-detail .solution-options button {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+      }
+      .nav-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-nav {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="jki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li><a href="jki2.html">Konektivitas Internet</a></li>
+      <li>Connectivity Lab · Part 5</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <h1>🔧 Connectivity Lab: Troubleshooting</h1>
+        <p class="sub-judul-aktivitas">"Diagnosis dan perbaiki masalah jaringan seperti teknisi profesional!"</p>
+
+        <!-- ===== STEP INDICATOR ===== -->
+        <div class="step-indicator" id="stepIndicator">
+          <button class="step-dot completed" data-step="0">
+            <span class="circle">✓</span>
+            <span class="label">Pembuka</span>
+          </button>
+          <button class="step-dot completed" data-step="1">
+            <span class="circle">✓</span>
+            <span class="label">Instalasi Kabel</span>
+          </button>
+          <button class="step-dot completed" data-step="2">
+            <span class="circle">✓</span>
+            <span class="label">Wi-Fi</span>
+          </button>
+          <button class="step-dot completed" data-step="3">
+            <span class="circle">✓</span>
+            <span class="label">Bluetooth</span>
+          </button>
+          <button class="step-dot completed" data-step="4">
+            <span class="circle">✓</span>
+            <span class="label">Bandingkan</span>
+          </button>
+          <button class="step-dot active" data-step="5">
+            <span class="circle">6</span>
+            <span class="label">Troubleshoot</span>
+          </button>
+          <button class="step-dot locked" data-step="6">
+            <span class="circle">🏆</span>
+            <span class="label">Hasil</span>
+          </button>
+        </div>
+
+        <!-- ===== PANEL SKENARIO ===== -->
+        <div class="scenario-panel" id="scenarioPanel">
+
+          <!-- SCENARIO 5: TROUBLESHOOTING -->
+          <div class="scenario-content" data-step="5">
+            <div class="scenario-title">🔧 Skenario 5: Troubleshooting - Perbaiki Koneksi!</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Ada masalah di jaringan! Kamu berperan sebagai <strong>teknisi</strong> yang harus mendiagnosis dan memperbaiki masalah. Pilih kasus, cari solusi, dan perbaiki koneksi!
+            </div>
+
+            <!-- Problem List -->
+            <p style="font-weight:600; color:#3b2b1e; margin-bottom:0.3rem;">📋 Daftar Kasus Masalah:</p>
+            <div class="problem-grid" id="problemGrid">
+              <!-- diisi oleh JavaScript -->
+            </div>
+
+            <!-- Troubleshoot Detail -->
+            <div class="troubleshoot-detail" id="troubleshootDetail">
+              <div class="detail-title" id="detailTitle">📌 Judul Kasus</div>
+              <div class="detail-desc" id="detailDesc">Deskripsi masalah...</div>
+              <div class="solution-options" id="solutionOptions">
+                <!-- diisi oleh JavaScript -->
+              </div>
+              <div class="solution-feedback" id="solutionFeedback"></div>
+            </div>
+
+            <!-- Progress -->
+            <div style="text-align:center; padding:0.5rem; background:#f0ece6; border-radius:8px; margin:0.5rem 0; font-size:0.9rem; color:#5c4638;" id="troubleshootProgress">
+              💡 Klik salah satu kasus di atas untuk mulai mendiagnosis masalah.
+            </div>
+
+            <!-- Pertanyaan Reflektif -->
+            <div class="question-box">
+              <div class="q-title">💭 Pertanyaan Reflektif:</div>
+              <p style="margin-bottom:0.5rem;"><em>"Menurutmu, apa penyebab paling umum dari masalah jaringan?"</em></p>
+              <div class="options">
+                <button onclick="answerTroubleshootQuestion(this, true)">🔌 Kabel longgar atau sinyal lemah</button>
+                <button onclick="answerTroubleshootQuestion(this, false)">💻 Komputer terlalu tua</button>
+                <button onclick="answerTroubleshootQuestion(this, false)">🌧️ Cuaca buruk</button>
+              </div>
+              <div class="feedback-text" id="troubleshootQuestionFeedback"></div>
+            </div>
+
+            <!-- Navigasi -->
+            <div style="text-align:center; margin-top:1rem;">
+              <p style="font-size:0.9rem; color:#7a6656;" id="troubleshootNextHint">
+                ⏳ Selesaikan semua kasus di atas untuk melanjutkan ke skenario berikutnya.
+              </p>
+              <button class="btn-nav primary" id="troubleshootNextBtn" onclick="goToStep(6)" style="display:none;">
+                ➡️ Lanjut ke Kuis Akhir: Connectivity Expert (Part 6)
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom">
+          <a href="jki2.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Materi
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav" id="prevBtn" onclick="prevStep()">← Sebelumnya</button>
+            <button class="btn-nav primary" id="nextBtn" onclick="nextStep()" disabled>Selanjutnya →</button>
+          </div>
+          <div class="nav-hint">
+            💡 Part 5 dari 6 · Skenario 5: Troubleshooting
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- ===== SCRIPT AKTIVITAS ===== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ===== STATE =====
+      let currentStep = 5;
+      const totalSteps = 7;
+      let selectedProblem = null;
+      let solvedProblems = [];
+      let troubleshootQuestionAnswered = false;
+      let troubleshootComplete = false;
+
+      // ===== DATA PROBLEMS =====
+      const problemData = [
+        {
+          id: 'wifi-weak',
+          icon: '📶',
+          title: 'Wi-Fi di ruang belakang lemah',
+          desc: 'Sinyal Wi-Fi sangat lemah di ruang belakang rumah. Pengguna kesulitan mengakses internet.',
+          correctSolution: 1,
+          options: [
+            { icon: '📡', label: 'Tambah access point atau pindahkan router lebih dekat' },
+            { icon: '🔌', label: 'Ganti kabel internet' },
+            { icon: '📱', label: 'Restart ponsel' }
+          ],
+          explanation: '✅ <strong>Solusi tepat!</strong> Menambah access point atau memindahkan router lebih dekat ke area yang bermasalah akan memperkuat sinyal Wi-Fi. Dinding dan jarak adalah faktor utama yang mempengaruhi kekuatan sinyal.'
+        },
+        {
+          id: 'cable-off',
+          icon: '🔌',
+          title: 'Komputer tidak bisa terhubung ke internet',
+          desc: 'Sebuah komputer di lab tidak bisa mengakses internet, padahal komputer lain bisa.',
+          correctSolution: 0,
+          options: [
+            { icon: '🔌', label: 'Periksa kabel LAN apakah terlepas atau rusak' },
+            { icon: '📶', label: 'Ganti ke Wi-Fi' },
+            { icon: '💻', label: 'Ganti komputer baru' }
+          ],
+          explanation: '✅ <strong>Solusi tepat!</strong> Kabel LAN yang longgar atau rusak adalah penyebab paling umum komputer tidak bisa terhubung ke jaringan. Periksa koneksi fisik terlebih dahulu.'
+        },
+        {
+          id: 'bt-not-found',
+          icon: '🎧',
+          title: 'Bluetooth headset tidak terdeteksi',
+          desc: 'Pengguna mencoba menghubungkan headset Bluetooth ke laptop, tetapi perangkat tidak muncul di daftar.',
+          correctSolution: 0,
+          options: [
+            { icon: '🔗', label: 'Periksa jarak atau aktifkan pairing mode' },
+            { icon: '📶', label: 'Gunakan Wi-Fi saja' },
+            { icon: '🔌', label: 'Colokkan dengan kabel audio' }
+          ],
+          explanation: '✅ <strong>Solusi tepat!</strong> Pastikan headset dalam jarak yang cukup (10 meter) dan dalam mode pairing. Bluetooth membutuhkan kedua perangkat dalam mode pencarian untuk saling terdeteksi.'
+        },
+        {
+          id: 'wifi-slow',
+          icon: '🐢',
+          title: 'Internet lambat saat semua anak menonton video',
+          desc: 'Ketika semua anggota keluarga menonton video streaming, internet menjadi sangat lambat.',
+          correctSolution: 1,
+          options: [
+            { icon: '📶', label: 'Tambah paket internet' },
+            { icon: '📡', label: 'Ganti ke 5 GHz atau gunakan kabel untuk perangkat tertentu' },
+            { icon: '🔌', label: 'Matikan router' }
+          ],
+          explanation: '✅ <strong>Solusi tepat!</strong> Menggunakan frekuensi 5 GHz atau kabel untuk perangkat tertentu akan mengurangi kepadatan di jaringan 2.4 GHz. Bandwidth dibagi di antara semua pengguna—semakin banyak pengguna, semakin lambat kecepatan per perangkat.'
+        }
+      ];
+
+      // ===== STEP NAVIGASI =====
+      window.goToStep = function(step) {
+        if (step < 0 || step >= totalSteps) return;
+
+        // Navigasi ke halaman lain
+        if (step === 0) {
+          window.location.href = 'aktivitasjki2a.html';
+          return;
+        }
+        if (step === 1) {
+          window.location.href = 'aktivitasjki2a.html';
+          return;
+        }
+        if (step === 2) {
+          window.location.href = 'aktivitasjki2b.html';
+          return;
+        }
+        if (step === 3) {
+          window.location.href = 'aktivitasjki2c.html';
+          return;
+        }
+        if (step === 4) {
+          window.location.href = 'aktivitasjki2d.html';
+          return;
+        }
+        if (step === 6) {
+          if (!troubleshootComplete) {
+            alert('🔧 Selesaikan dulu Skenario 5!');
+            return;
+          }
+          window.location.href = 'aktivitasjki2f.html';
+          return;
+        }
+
+        currentStep = step;
+        updateUI();
+      };
+
+      window.nextStep = function() {
+        if (currentStep < totalSteps - 1) {
+          if (currentStep === 5 && !troubleshootComplete) {
+            alert('🔧 Selesaikan dulu semua kasus di Skenario 5!');
+            return;
+          }
+          if (currentStep === 5 && !troubleshootQuestionAnswered) {
+            alert('💭 Jawab dulu pertanyaan reflektif!');
+            return;
+          }
+          // Untuk step 5, pindah ke halaman berikutnya
+          if (currentStep === 5) {
+            window.location.href = 'aktivitasjki2f.html';
+            return;
+          }
+          goToStep(currentStep + 1);
+        }
+      };
+
+      window.prevStep = function() {
+        if (currentStep > 0) {
+          // Kembali ke halaman sebelumnya (aktivitasjki2d.html)
+          window.location.href = 'aktivitasjki2d.html';
+        }
+      };
+
+      function updateUI() {
+        // Update step indicator
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.classList.remove('active', 'completed', 'locked');
+          if (index === currentStep) dot.classList.add('active');
+          else if (index < currentStep) dot.classList.add('completed');
+          else if (index > currentStep) dot.classList.add('locked');
+        });
+
+        // Update tombol navigasi
+        document.getElementById('prevBtn').disabled = false;
+        const nextBtn = document.getElementById('nextBtn');
+        if (currentStep === totalSteps - 1) {
+          nextBtn.textContent = '🎉 Selesai';
+        } else {
+          nextBtn.textContent = 'Selanjutnya →';
+        }
+        nextBtn.disabled = !troubleshootComplete;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // ===== RENDER PROBLEMS =====
+      function renderProblems() {
+        const grid = document.getElementById('problemGrid');
+        grid.innerHTML = '';
+
+        problemData.forEach((problem, index) => {
+          const isSolved = solvedProblems.includes(problem.id);
+          const card = document.createElement('div');
+          card.className = `problem-card ${isSolved ? 'solved-card' : ''}`;
+          card.dataset.problemId = problem.id;
+          card.onclick = function() { selectProblem(problem.id); };
+
+          card.innerHTML = `
+            <div class="problem-icon">${problem.icon}</div>
+            <div class="problem-title">${problem.title}</div>
+            <div class="problem-desc">${problem.desc}</div>
+            <span class="problem-status ${isSolved ? 'solved' : 'pending'}">
+              ${isSolved ? '✅ Selesai' : '⏳ Perlu Perbaikan'}
+            </span>
+          `;
+
+          grid.appendChild(card);
+        });
+      }
+
+      // ===== SELECT PROBLEM =====
+      window.selectProblem = function(problemId) {
+        if (solvedProblems.includes(problemId)) {
+          alert('✅ Kasus ini sudah selesai! Pilih kasus lain.');
+          return;
+        }
+
+        selectedProblem = problemId;
+        const problem = problemData.find(p => p.id === problemId);
+
+        // Highlight selected card
+        document.querySelectorAll('.problem-card').forEach(card => {
+          card.classList.remove('selected');
+          if (card.dataset.problemId === problemId) {
+            card.classList.add('selected');
+          }
+        });
+
+        // Show detail
+        const detail = document.getElementById('troubleshootDetail');
+        detail.classList.add('active');
+
+        document.getElementById('detailTitle').textContent = `${problem.icon} ${problem.title}`;
+        document.getElementById('detailDesc').textContent = problem.desc;
+
+        // Render options
+        const optionsContainer = document.getElementById('solutionOptions');
+        optionsContainer.innerHTML = '';
+
+        problem.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.innerHTML = `<span class="opt-icon">${opt.icon}</span> ${opt.label}`;
+          btn.onclick = function() { answerSolution(idx); };
+          optionsContainer.appendChild(btn);
+        });
+
+        // Reset feedback
+        const feedback = document.getElementById('solutionFeedback');
+        feedback.className = 'solution-feedback';
+        feedback.textContent = '';
+        feedback.style.display = 'none';
+
+        document.getElementById('troubleshootProgress').innerHTML = `
+          🔧 Menganalisis kasus: <strong>${problem.title}</strong>
+          <br><span style="font-size:0.8rem; color:#7a6656;">Pilih solusi yang menurutmu paling tepat.</span>
+        `;
+      };
+
+      // ===== ANSWER SOLUTION =====
+      window.answerSolution = function(selectedIdx) {
+        if (!selectedProblem) return;
+        const problem = problemData.find(p => p.id === selectedProblem);
+        if (solvedProblems.includes(problem.id)) return;
+
+        const buttons = document.querySelectorAll('#solutionOptions button');
+        const feedback = document.getElementById('solutionFeedback');
+
+        // Disable all buttons
+        buttons.forEach((btn, idx) => {
+          btn.disabled = true;
+          if (idx === problem.correctSolution) {
+            btn.classList.add('correct');
+          }
+          if (idx === selectedIdx && idx !== problem.correctSolution) {
+            btn.classList.add('wrong');
+          }
+        });
+
+        feedback.style.display = 'block';
+
+        if (selectedIdx === problem.correctSolution) {
+          feedback.className = 'solution-feedback show success';
+          feedback.innerHTML = `
+            <span class="fb-icon">🎉</span>
+            ${problem.explanation}
+            <br><br>
+            <span style="font-size:0.85rem; color:#2d5a1e;">
+              ✅ Kasus "${problem.title}" berhasil diperbaiki!
+            </span>
+          `;
+
+          // Mark as solved
+          solvedProblems.push(problem.id);
+
+          // Update card
+          const card = document.querySelector(`.problem-card[data-problem-id="${problem.id}"]`);
+          if (card) {
+            card.classList.remove('selected');
+            card.classList.add('solved-card');
+            const status = card.querySelector('.problem-status');
+            status.className = 'problem-status solved';
+            status.textContent = '✅ Selesai';
+          }
+
+          // Update progress
+          const total = problemData.length;
+          const done = solvedProblems.length;
+          document.getElementById('troubleshootProgress').innerHTML = `
+            ✅ Kasus "${problem.title}" selesai! (${done}/${total} kasus selesai)
+            <br><span style="font-size:0.8rem; color:#2d5a1e;">
+              ${done === total ? '🎉 Semua kasus selesai! Jawab pertanyaan reflektif di bawah.' : '💡 Pilih kasus berikutnya untuk melanjutkan.'}
+            </span>
+          `;
+
+          if (done === total) {
+            document.getElementById('troubleshootNextHint').style.display = 'none';
+            document.getElementById('troubleshootNextBtn').style.display = 'inline-block';
+            document.getElementById('troubleshootNextBtn').innerHTML = '➡️ Lanjut ke Kuis Akhir: Connectivity Expert (Part 6)';
+            document.getElementById('nextBtn').disabled = false;
+
+            // Update step indicator
+            document.querySelectorAll('.step-dot').forEach((dot, index) => {
+              if (index === 5) {
+                dot.classList.add('completed');
+                dot.classList.remove('active');
+              }
+            });
+
+            // Check if question also answered
+            if (troubleshootQuestionAnswered) {
+              troubleshootComplete = true;
+            }
+          }
+
+        } else {
+          feedback.className = 'solution-feedback show info';
+          feedback.innerHTML = `
+            <span class="fb-icon">💡</span>
+            <strong>Belum tepat.</strong> Coba pikirkan lagi penyebab masalah ini.
+            <br><span style="font-size:0.85rem; color:#1a4a6b;">
+              🔑 Petunjuk: Pikirkan tentang <strong>akar masalah</strong>—apa yang sebenarnya menyebabkan gangguan?
+            </span>
+          `;
+
+          // Re-enable buttons after 2 seconds for retry
+          setTimeout(() => {
+            buttons.forEach((btn, idx) => {
+              btn.disabled = false;
+              btn.classList.remove('correct', 'wrong');
+            });
+            feedback.className = 'solution-feedback';
+            feedback.style.display = 'none';
+          }, 2500);
+        }
+      };
+
+      // ===== PERTANYAAN REFLEKTIF =====
+      window.answerTroubleshootQuestion = function(btn, isCorrect) {
+        if (troubleshootQuestionAnswered) return;
+        const parent = btn.closest('.question-box');
+        const feedback = parent.querySelector('.feedback-text');
+
+        // Reset semua tombol
+        parent.querySelectorAll('.options button').forEach(b => {
+          b.classList.remove('correct', 'wrong');
+        });
+
+        if (isCorrect) {
+          btn.classList.add('correct');
+          feedback.className = 'feedback-text show success';
+          feedback.innerHTML = `
+            ✅ <strong>Jawaban tepat!</strong>
+            <br><br>
+            Penyebab paling umum masalah jaringan adalah:
+            <br><br>
+            <strong>🔌 Kabel longgar atau rusak</strong>
+            <br>• Kabel LAN yang tidak terpasang dengan baik
+            <br>• Kabel yang putus atau rusak
+            <br><br>
+            <strong>📶 Sinyal Wi-Fi lemah</strong>
+            <br>• Jarak terlalu jauh dari router
+            <br>• Terhalang dinding tebal
+            <br>• Terlalu banyak perangkat terhubung
+            <br><br>
+            <strong>🔗 Masalah Bluetooth</strong>
+            <br>• Jarak terlalu jauh
+            <br>• Perangkat tidak dalam mode pairing
+            <br>• Interferensi dari perangkat lain
+            <br><br>
+            <span style="font-size:0.85rem; color:#5c4638;">
+              💡 <strong>Tips:</strong> Selalu periksa koneksi fisik terlebih dahulu sebelum mencari masalah yang lebih kompleks!
+            </span>
+          `;
+        } else {
+          btn.classList.add('wrong');
+          feedback.className = 'feedback-text show info';
+          feedback.innerHTML = `
+            💡 <strong>Belum tepat.</strong> Pikirkan tentang masalah yang paling sering terjadi di jaringan sehari-hari.
+            <br><span style="font-size:0.85rem; color:#5c4638;">
+              🔑 Petunjuk: Masalah jaringan biasanya terkait dengan <strong>koneksi fisik</strong> atau <strong>sinyal</strong>.
+            </span>
+          `;
+          // Allow retry
+          setTimeout(() => {
+            parent.querySelectorAll('.options button').forEach(b => {
+              b.classList.remove('wrong');
+            });
+            feedback.className = 'feedback-text';
+          }, 2000);
+          return;
+        }
+
+        troubleshootQuestionAnswered = true;
+
+        // Check if all problems solved and question answered
+        if (solvedProblems.length === problemData.length) {
+          troubleshootComplete = true;
+        }
+
+        document.getElementById('troubleshootProgress').innerHTML = `
+          ✅ Pertanyaan reflektif terjawab!
+          <br><span style="font-size:0.8rem; color:#2d5a1e;">
+            ${solvedProblems.length === problemData.length ? '🎉 Semua selesai! Lanjut ke skenario berikutnya.' : '💡 Selesaikan semua kasus untuk melanjutkan.'}
+          </span>
+        `;
+
+        // Update next button if all done
+        if (solvedProblems.length === problemData.length) {
+          document.getElementById('troubleshootNextHint').style.display = 'none';
+          document.getElementById('troubleshootNextBtn').style.display = 'inline-block';
+          document.getElementById('nextBtn').disabled = false;
+          troubleshootComplete = true;
+        }
+      };
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        renderProblems();
+        updateUI();
+
+        // Klik pada step indicator
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.addEventListener('click', function() {
+            if (this.classList.contains('locked')) {
+              alert('🔒 Selesaikan skenario sebelumnya terlebih dahulu!');
+              return;
+            }
+            if (index === 0 || index === 1) {
+              window.location.href = 'aktivitasjki2a.html';
+              return;
+            }
+            if (index === 2) {
+              window.location.href = 'aktivitasjki2b.html';
+              return;
+            }
+            if (index === 3) {
+              window.location.href = 'aktivitasjki2c.html';
+              return;
+            }
+            if (index === 4) {
+              window.location.href = 'aktivitasjki2d.html';
+              return;
+            }
+            if (index === 6) {
+              if (!troubleshootComplete) {
+                alert('🔧 Selesaikan dulu Skenario 5!');
+                return;
+              }
+              window.location.href = 'aktivitasjki2f.html';
+              return;
+            }
+            goToStep(index);
+          });
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

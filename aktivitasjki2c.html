@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Connectivity Lab · Eksplorasi Bluetooth</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA AKTIVITAS ===== */
+    .aktivitas-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .aktivitas-wrapper h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3rem;
+    }
+
+    .aktivitas-wrapper .sub-judul-aktivitas {
+      font-size: 1rem;
+      color: #5c4638;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    /* ===== STEP INDICATOR ===== */
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.5rem 0 2rem 0;
+      position: relative;
+      padding: 0 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .step-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      right: 30px;
+      height: 3px;
+      background: #e5dbd0;
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .step-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      flex: 1;
+      min-width: 50px;
+    }
+
+    .step-dot .circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #f5ede6;
+      border: 3px solid #d9cdbf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active .circle {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    .step-dot.completed .circle {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .step-dot .label {
+      font-size: 0.55rem;
+      margin-top: 0.3rem;
+      color: #7a6656;
+      text-align: center;
+      max-width: 60px;
+      font-weight: 500;
+    }
+
+    .step-dot.active .label {
+      color: #3b2b1e;
+      font-weight: 600;
+    }
+
+    .step-dot.locked .circle {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .step-dot.locked .label {
+      opacity: 0.4;
+    }
+
+    /* ===== PANEL SKENARIO ===== */
+    .scenario-panel {
+      background: #fffffffa;
+      border-radius: 24px;
+      border: 2px solid #e5dbd0;
+      padding: 2rem;
+      min-height: 400px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem;
+      color: #5c4638;
+      background: #f5ede6;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #dbb9a6;
+    }
+
+    /* ===== BLUETOOTH DEVICES ===== */
+    .bluetooth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .bt-device {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.2rem;
+      text-align: center;
+      border: 3px solid #e5dbd0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .bt-device:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .bt-device .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .bt-device .name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+    }
+
+    .bt-device .status {
+      font-size: 0.7rem;
+      color: #7a6656;
+      margin-top: 0.2rem;
+    }
+
+    .bt-device .status.paired {
+      color: #2d5a1e;
+      font-weight: 600;
+    }
+
+    .bt-device .status.paired::before {
+      content: '✅ ';
+    }
+
+    .bt-device .status.waiting {
+      color: #d4a040;
+      font-weight: 600;
+      animation: blink 1s ease-in-out infinite;
+    }
+
+    .bt-device .status.waiting::before {
+      content: '⏳ ';
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .bt-device.selected {
+      border-color: #4d3829;
+      background: #f5ede6;
+      transform: scale(1.05);
+    }
+
+    .bt-device.paired {
+      border-color: #8aaa7a;
+      background: #e8f5e0;
+    }
+
+    .bt-device .pair-animation {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      font-size: 1.5rem;
+      animation: pulse-icon 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse-icon {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+
+    /* ===== PAIRING CONTROLS ===== */
+    .pairing-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem 0;
+      padding: 1rem;
+      background: #f8f4ef;
+      border-radius: 12px;
+      border: 2px solid #e5dbd0;
+    }
+
+    .pairing-controls .info-text {
+      font-size: 0.9rem;
+      color: #5c4638;
+      text-align: center;
+    }
+
+    .pairing-controls .info-text strong {
+      color: #3b2b1e;
+    }
+
+    .btn-pair {
+      padding: 0.6rem 2rem;
+      border-radius: 30px;
+      border: none;
+      background: #4d3829;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-pair:hover {
+      background: #6b4f3a;
+      transform: translateY(-2px);
+    }
+
+    .btn-pair:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-pair.success {
+      background: #8aaa7a;
+    }
+
+    .btn-pair.success:hover {
+      background: #7a9a6a;
+    }
+
+    .btn-reset-pair {
+      padding: 0.6rem 1.5rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      color: #3b2b1e;
+    }
+
+    .btn-reset-pair:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    /* ===== PERTANYAAN ===== */
+    .question-box {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #dbb9a6;
+    }
+
+    .question-box .q-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-box .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .question-box .options button {
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .question-box .options button:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .question-box .options button.correct {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .question-box .options button.wrong {
+      background: #d4a0a0;
+      border-color: #d4a0a0;
+      color: #fff;
+    }
+
+    .feedback-text {
+      margin-top: 0.8rem;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .feedback-text.show {
+      display: block;
+    }
+
+    .feedback-text.success {
+      background: #e8f5e0;
+      color: #2d5a1e;
+    }
+
+    .feedback-text.info {
+      background: #e3edf5;
+      color: #1a4a6b;
+    }
+
+    /* ===== TANTANGAN ===== */
+    .challenge-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin: 1rem 0;
+    }
+
+    .challenge-box .challenge-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 0.95rem;
+    }
+
+    .challenge-box .challenge-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .challenge-box .challenge-options button {
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .challenge-box .challenge-options button:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .challenge-box .challenge-options button.correct {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .challenge-box .challenge-options button.wrong {
+      background: #d4a0a0;
+      border-color: #d4a0a0;
+      color: #fff;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    .nav-hint {
+      font-size: 0.8rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scenario-panel {
+        padding: 1.2rem;
+      }
+      .step-dot .circle {
+        width: 30px;
+        height: 30px;
+        font-size: 0.7rem;
+      }
+      .step-dot .label {
+        font-size: 0.45rem;
+        max-width: 40px;
+      }
+      .step-indicator::before {
+        left: 15px;
+        right: 15px;
+      }
+      .aktivitas-wrapper h1 {
+        font-size: 1.7rem;
+      }
+      .bluetooth-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
+      }
+      .bt-device {
+        padding: 0.8rem;
+      }
+      .bt-device .icon {
+        font-size: 1.8rem;
+      }
+      .bt-device .name {
+        font-size: 0.75rem;
+      }
+      .pairing-controls {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+      .question-box .options {
+        flex-direction: column;
+      }
+      .question-box .options button {
+        width: 100%;
+      }
+      .challenge-box .challenge-options {
+        flex-direction: column;
+      }
+      .challenge-box .challenge-options button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .step-indicator {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.2rem;
+      }
+      .step-indicator::before {
+        display: none;
+      }
+      .step-dot {
+        min-width: 35px;
+        flex: unset;
+      }
+      .step-dot .circle {
+        width: 26px;
+        height: 26px;
+        font-size: 0.6rem;
+      }
+      .step-dot .label {
+        display: none;
+      }
+      .scenario-panel {
+        padding: 0.8rem;
+      }
+      .scenario-panel .scenario-title {
+        font-size: 1.1rem;
+      }
+      .bluetooth-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+      }
+      .bt-device {
+        padding: 0.6rem;
+      }
+      .bt-device .icon {
+        font-size: 1.5rem;
+      }
+      .bt-device .name {
+        font-size: 0.65rem;
+      }
+      .bt-device .status {
+        font-size: 0.6rem;
+      }
+      .btn-pair {
+        padding: 0.4rem 1.2rem;
+        font-size: 0.8rem;
+      }
+      .nav-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-nav {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="jki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li><a href="jki2.html">Konektivitas Internet</a></li>
+      <li>Connectivity Lab · Part 3</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <h1>🔗 Connectivity Lab: Eksplorasi Bluetooth</h1>
+        <p class="sub-judul-aktivitas">"Pasangkan perangkat dan jelajahi koneksi nirkabel jarak pendek!"</p>
+
+        <!-- ===== STEP INDICATOR ===== -->
+        <div class="step-indicator" id="stepIndicator">
+          <button class="step-dot completed" data-step="0">
+            <span class="circle">✓</span>
+            <span class="label">Pembuka</span>
+          </button>
+          <button class="step-dot completed" data-step="1">
+            <span class="circle">✓</span>
+            <span class="label">Instalasi Kabel</span>
+          </button>
+          <button class="step-dot completed" data-step="2">
+            <span class="circle">✓</span>
+            <span class="label">Wi-Fi</span>
+          </button>
+          <button class="step-dot active" data-step="3">
+            <span class="circle">4</span>
+            <span class="label">Bluetooth</span>
+          </button>
+          <button class="step-dot locked" data-step="4">
+            <span class="circle">5</span>
+            <span class="label">Bandingkan</span>
+          </button>
+          <button class="step-dot locked" data-step="5">
+            <span class="circle">6</span>
+            <span class="label">Troubleshoot</span>
+          </button>
+          <button class="step-dot locked" data-step="6">
+            <span class="circle">🏆</span>
+            <span class="label">Hasil</span>
+          </button>
+        </div>
+
+        <!-- ===== PANEL SKENARIO ===== -->
+        <div class="scenario-panel" id="scenarioPanel">
+
+          <!-- SCENARIO 3: BLUETOOTH -->
+          <div class="scenario-content" data-step="3">
+            <div class="scenario-title">🎧 Skenario 3: Pasangkan Perangkat dengan Bluetooth</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Seorang siswa ingin menghubungkan beberapa perangkat nirkabel: headset, mouse, keyboard, smartwatch, dan speaker. Bantu mereka memasangkan perangkat!
+            </div>
+
+            <!-- Daftar Perangkat Bluetooth -->
+            <p style="font-weight:600; color:#3b2b1e; margin-bottom:0.3rem;">📱 Perangkat yang tersedia:</p>
+            <div class="bluetooth-grid" id="btGrid">
+              <div class="bt-device" data-device="headset" onclick="selectDevice('headset')">
+                <div class="icon">🎧</div>
+                <div class="name">Headset</div>
+                <div class="status" id="status-headset">Belum terhubung</div>
+              </div>
+              <div class="bt-device" data-device="mouse" onclick="selectDevice('mouse')">
+                <div class="icon">🖱️</div>
+                <div class="name">Mouse</div>
+                <div class="status" id="status-mouse">Belum terhubung</div>
+              </div>
+              <div class="bt-device" data-device="keyboard" onclick="selectDevice('keyboard')">
+                <div class="icon">⌨️</div>
+                <div class="name">Keyboard</div>
+                <div class="status" id="status-keyboard">Belum terhubung</div>
+              </div>
+              <div class="bt-device" data-device="watch" onclick="selectDevice('watch')">
+                <div class="icon">⌚</div>
+                <div class="name">Smartwatch</div>
+                <div class="status" id="status-watch">Belum terhubung</div>
+              </div>
+              <div class="bt-device" data-device="speaker" onclick="selectDevice('speaker')">
+                <div class="icon">🔊</div>
+                <div class="name">Speaker</div>
+                <div class="status" id="status-speaker">Belum terhubung</div>
+              </div>
+            </div>
+
+            <!-- Pairing Controls -->
+            <div class="pairing-controls">
+              <div class="info-text" id="pairingInfo">
+                💡 <strong>Klik satu perangkat</strong> untuk memilihnya, lalu klik <strong>"Pasangkan"</strong> untuk menghubungkan.
+              </div>
+              <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+                <button class="btn-pair" id="pairBtn" onclick="pairDevice()" disabled>
+                  🔗 Pasangkan
+                </button>
+                <button class="btn-reset-pair" onclick="resetPairing()">
+                  🔄 Reset Semua
+                </button>
+              </div>
+            </div>
+
+            <div id="pairingStatus" style="text-align:center; padding:0.5rem; background:#f0ece6; border-radius:8px; margin:0.5rem 0; font-size:0.9rem; color:#5c4638;">
+              📌 Pilih perangkat yang ingin dipasangkan.
+            </div>
+
+            <!-- Tantangan -->
+            <div class="challenge-box">
+              <div class="challenge-title">🎯 Tantangan: Perangkat mana yang paling cocok menggunakan Bluetooth?</div>
+              <p style="font-size:0.85rem; color:#5c4638; margin:0.3rem 0 0.5rem 0;">
+                Pilih perangkat yang <strong>paling cocok</strong> menggunakan Bluetooth dibandingkan Wi-Fi:
+              </p>
+              <div class="challenge-options">
+                <button onclick="answerChallenge(this, true)">🎧 Headset nirkabel</button>
+                <button onclick="answerChallenge(this, false)">📺 Smart TV</button>
+                <button onclick="answerChallenge(this, false)">💻 PC Gaming</button>
+              </div>
+              <div class="feedback-text" id="challengeFeedback"></div>
+            </div>
+
+            <!-- Pertanyaan Reflektif -->
+            <div class="question-box">
+              <div class="q-title">💭 Pertanyaan Reflektif:</div>
+              <p style="margin-bottom:0.5rem;"><em>"Berapa jarak maksimal untuk menghubungkan perangkat ini dengan Bluetooth?"</em></p>
+              <div class="options">
+                <button onclick="answerBTQuestion(this, true)">📏 10-100 meter</button>
+                <button onclick="answerBTQuestion(this, false)">📏 1-5 meter</button>
+                <button onclick="answerBTQuestion(this, false)">📏 500 meter</button>
+              </div>
+              <div class="feedback-text" id="btQuestionFeedback"></div>
+            </div>
+
+            <!-- Navigasi -->
+            <div style="text-align:center; margin-top:1rem;">
+              <p style="font-size:0.9rem; color:#7a6656;" id="btNextHint">
+                ⏳ Selesaikan semua langkah di atas untuk melanjutkan ke skenario berikutnya.
+              </p>
+              <button class="btn-nav primary" id="btNextBtn" onclick="goToStep(4)" style="display:none;">
+                ➡️ Lanjut ke Skenario 4: Membandingkan Koneksi (Part 4)
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom">
+          <a href="jki2.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Materi
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav" id="prevBtn" onclick="prevStep()">← Sebelumnya</button>
+            <button class="btn-nav primary" id="nextBtn" onclick="nextStep()" disabled>Selanjutnya →</button>
+          </div>
+          <div class="nav-hint">
+            💡 Part 3 dari 6 · Skenario 3: Bluetooth
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- ===== SCRIPT AKTIVITAS ===== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ===== STATE =====
+      let currentStep = 3;
+      const totalSteps = 7;
+      let selectedDevice = null;
+      let pairedDevices = [];
+      let challengeAnswered = false;
+      let btQuestionAnswered = false;
+      let btComplete = false;
+
+      // ===== DEVICE DATA =====
+      const deviceNames = {
+        headset: 'Headset',
+        mouse: 'Mouse',
+        keyboard: 'Keyboard',
+        watch: 'Smartwatch',
+        speaker: 'Speaker'
+      };
+
+      const deviceIcons = {
+        headset: '🎧',
+        mouse: '🖱️',
+        keyboard: '⌨️',
+        watch: '⌚',
+        speaker: '🔊'
+      };
+
+      // ===== STEP NAVIGASI =====
+      window.goToStep = function(step) {
+        if (step < 0 || step >= totalSteps) return;
+
+        // Navigasi ke halaman lain
+        if (step === 0) {
+          window.location.href = 'aktivitasjki2a.html';
+          return;
+        }
+        if (step === 1) {
+          window.location.href = 'aktivitasjki2a.html';
+          return;
+        }
+        if (step === 2) {
+          window.location.href = 'aktivitasjki2b.html';
+          return;
+        }
+        if (step === 4) {
+          if (!btComplete) {
+            alert('🔗 Selesaikan dulu Skenario 3!');
+            return;
+          }
+          window.location.href = 'aktivitasjki2d.html';
+          return;
+        }
+        if (step === 5) {
+          window.location.href = 'aktivitasjki2e.html';
+          return;
+        }
+        if (step === 6) {
+          window.location.href = 'aktivitasjki2f.html';
+          return;
+        }
+
+        currentStep = step;
+        updateUI();
+      };
+
+      window.nextStep = function() {
+        if (currentStep < totalSteps - 1) {
+          if (currentStep === 3 && !btComplete) {
+            alert('🔗 Selesaikan dulu semua langkah di Skenario 3!');
+            return;
+          }
+          if (currentStep === 3 && !btQuestionAnswered) {
+            alert('💭 Jawab dulu pertanyaan reflektif!');
+            return;
+          }
+          if (currentStep === 3 && !challengeAnswered) {
+            alert('🎯 Jawab dulu tantangan!');
+            return;
+          }
+          // Untuk step 3, pindah ke halaman berikutnya
+          if (currentStep === 3) {
+            window.location.href = 'aktivitasjki2d.html';
+            return;
+          }
+          goToStep(currentStep + 1);
+        }
+      };
+
+      window.prevStep = function() {
+        if (currentStep > 0) {
+          // Kembali ke halaman sebelumnya (aktivitasjki2b.html)
+          window.location.href = 'aktivitasjki2b.html';
+        }
+      };
+
+      function updateUI() {
+        // Update step indicator
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.classList.remove('active', 'completed', 'locked');
+          if (index === currentStep) dot.classList.add('active');
+          else if (index < currentStep) dot.classList.add('completed');
+          else if (index > currentStep) dot.classList.add('locked');
+        });
+
+        // Update tombol navigasi
+        document.getElementById('prevBtn').disabled = false;
+        const nextBtn = document.getElementById('nextBtn');
+        if (currentStep === totalSteps - 1) {
+          nextBtn.textContent = '🎉 Selesai';
+        } else {
+          nextBtn.textContent = 'Selanjutnya →';
+        }
+        nextBtn.disabled = !btComplete;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // ===== SELECT DEVICE =====
+      window.selectDevice = function(device) {
+        if (pairedDevices.includes(device)) {
+          alert(`✅ ${deviceNames[device]} sudah terhubung!`);
+          return;
+        }
+
+        // Reset selection
+        document.querySelectorAll('.bt-device').forEach(el => {
+          el.classList.remove('selected');
+        });
+
+        selectedDevice = device;
+        const el = document.querySelector(`.bt-device[data-device="${device}"]`);
+        el.classList.add('selected');
+
+        document.getElementById('pairingInfo').innerHTML = `
+          📌 Perangkat terpilih: <strong>${deviceIcons[device]} ${deviceNames[device]}</strong>
+          <br><span style="font-size:0.8rem; color:#7a6656;">Klik "Pasangkan" untuk menghubungkan.</span>
+        `;
+        document.getElementById('pairBtn').disabled = false;
+        document.getElementById('pairingStatus').innerHTML = `
+          🔵 Menunggu pairing dengan <strong>${deviceNames[device]}</strong>...
+        `;
+      };
+
+      // ===== PAIR DEVICE =====
+      window.pairDevice = function() {
+        if (!selectedDevice) {
+          alert('Pilih perangkat terlebih dahulu!');
+          return;
+        }
+
+        if (pairedDevices.includes(selectedDevice)) {
+          alert(`✅ ${deviceNames[selectedDevice]} sudah terhubung!`);
+          return;
+        }
+
+        const btn = document.getElementById('pairBtn');
+        btn.textContent = '⏳ Memasangkan...';
+        btn.disabled = true;
+
+        document.getElementById('pairingStatus').innerHTML = `
+          🔄 <strong>${deviceIcons[selectedDevice]} ${deviceNames[selectedDevice]}</strong> sedang dipasangkan...
+          <br><span style="font-size:0.8rem; color:#7a6656;">🤝 Perangkat saling berkenalan...</span>
+        `;
+
+        // Simulasi pairing dengan animasi
+        setTimeout(() => {
+          // Tandai sebagai paired
+          pairedDevices.push(selectedDevice);
+
+          const el = document.querySelector(`.bt-device[data-device="${selectedDevice}"]`);
+          el.classList.remove('selected');
+          el.classList.add('paired');
+
+          const statusEl = document.getElementById(`status-${selectedDevice}`);
+          statusEl.textContent = '✅ Terhubung!';
+          statusEl.className = 'status paired';
+
+          // Tambahkan animasi
+          const pairAnim = document.createElement('span');
+          pairAnim.className = 'pair-animation';
+          pairAnim.textContent = '🔗';
+          el.appendChild(pairAnim);
+
+          setTimeout(() => {
+            pairAnim.remove();
+          }, 2000);
+
+          document.getElementById('pairingStatus').innerHTML = `
+            ✅ <strong>${deviceIcons[selectedDevice]} ${deviceNames[selectedDevice]}</strong> berhasil dipasangkan!
+            <br><span style="font-size:0.8rem; color:#2d5a1e;">🎉 Perangkat siap digunakan!</span>
+          `;
+
+          document.getElementById('pairingInfo').innerHTML = `
+            💡 <strong>${pairedDevices.length} dari 5</strong> perangkat terhubung.
+            <br><span style="font-size:0.8rem; color:#7a6656;">Pilih perangkat lain untuk dipasangkan.</span>
+          `;
+
+          btn.textContent = '🔗 Pasangkan';
+          btn.disabled = true;
+          selectedDevice = null;
+
+          // Reset selection
+          document.querySelectorAll('.bt-device').forEach(el => {
+            el.classList.remove('selected');
+          });
+
+          // Cek apakah semua perangkat sudah terhubung
+          if (pairedDevices.length === 5) {
+            document.getElementById('pairingStatus').innerHTML = `
+              🎉 <strong>Semua perangkat berhasil terhubung!</strong>
+              <br><span style="font-size:0.8rem; color:#2d5a1e;">✅ 5 dari 5 perangkat terhubung melalui Bluetooth!</span>
+            `;
+            document.getElementById('pairingInfo').innerHTML = `
+              🎉 <strong>Semua perangkat terhubung!</strong> Lanjutkan ke tantangan berikutnya.
+            `;
+            checkBTComplete();
+          }
+
+          btn.disabled = false;
+
+        }, 2000);
+      };
+
+      // ===== RESET PAIRING =====
+      window.resetPairing = function() {
+        if (pairedDevices.length === 0) {
+          alert('Belum ada perangkat yang terhubung.');
+          return;
+        }
+
+        if (!confirm('Yakin ingin mereset semua koneksi Bluetooth?')) return;
+
+        pairedDevices = [];
+        document.querySelectorAll('.bt-device').forEach(el => {
+          el.classList.remove('paired', 'selected');
+        });
+
+        document.querySelectorAll('.bt-device .status').forEach(el => {
+          el.textContent = 'Belum terhubung';
+          el.className = 'status';
+        });
+
+        document.querySelectorAll('.bt-device .pair-animation').forEach(el => {
+          el.remove();
+        });
+
+        document.getElementById('pairingStatus').innerHTML = `
+          🔄 Semua koneksi Bluetooth telah direset.
+          <br><span style="font-size:0.8rem; color:#7a6656;">💡 Pilih perangkat untuk memulai pairing.</span>
+        `;
+        document.getElementById('pairingInfo').innerHTML = `
+          💡 <strong>Klik satu perangkat</strong> untuk memilihnya, lalu klik <strong>"Pasangkan"</strong>.
+        `;
+        document.getElementById('pairBtn').disabled = true;
+
+        btComplete = false;
+        challengeAnswered = false;
+        btQuestionAnswered = false;
+        document.getElementById('btNextHint').style.display = 'block';
+        document.getElementById('btNextBtn').style.display = 'none';
+        document.getElementById('nextBtn').disabled = true;
+      };
+
+      // ===== CHALLENGE =====
+      window.answerChallenge = function(btn, isCorrect) {
+        if (challengeAnswered) return;
+        const parent = btn.closest('.challenge-box');
+        const feedback = parent.querySelector('.feedback-text');
+
+        // Reset semua tombol
+        parent.querySelectorAll('.challenge-options button').forEach(b => {
+          b.classList.remove('correct', 'wrong');
+        });
+
+        if (isCorrect) {
+          btn.classList.add('correct');
+          feedback.className = 'feedback-text show success';
+          feedback.innerHTML = `
+            ✅ <strong>Jawaban tepat!</strong> Headset nirkabel paling cocok menggunakan Bluetooth.
+            <br><span style="font-size:0.85rem; color:#5c4638;">
+              💡 Bluetooth memiliki <strong>konsumsi daya rendah</strong> dan <strong>jarak pendek</strong>, 
+              cocok untuk perangkat yang ditempelkan ke tubuh seperti headset, mouse, dan keyboard.
+              <br>📺 Smart TV dan PC Gaming lebih cocok menggunakan <strong>Wi-Fi</strong> karena membutuhkan kecepatan tinggi.
+            </span>
+          `;
+        } else {
+          btn.classList.add('wrong');
+          feedback.className = 'feedback-text show info';
+          feedback.innerHTML = `
+            💡 <strong>Belum tepat.</strong> Perhatikan karakteristik Bluetooth: <strong>daya rendah, jarak pendek</strong>.
+            <br><span style="font-size:0.85rem; color:#5c4638;">
+              🔑 Petunjuk: Perangkat mana yang biasanya <strong>dipakai dekat dengan tubuh</strong> dan 
+              <strong>tidak membutuhkan kecepatan tinggi</strong>?
+            </span>
+          `;
+          // Allow retry
+          setTimeout(() => {
+            parent.querySelectorAll('.challenge-options button').forEach(b => {
+              b.classList.remove('wrong');
+            });
+            feedback.className = 'feedback-text';
+          }, 2000);
+          return;
+        }
+
+        challengeAnswered = true;
+        checkBTComplete();
+      };
+
+      // ===== PERTANYAAN =====
+      window.answerBTQuestion = function(btn, isCorrect) {
+        if (btQuestionAnswered) return;
+        const parent = btn.closest('.question-box');
+        const feedback = parent.querySelector('.feedback-text');
+
+        // Reset semua tombol
+        parent.querySelectorAll('.options button').forEach(b => {
+          b.classList.remove('correct', 'wrong');
+        });
+
+        if (isCorrect) {
+          btn.classList.add('correct');
+          feedback.className = 'feedback-text show success';
+          feedback.innerHTML = `
+            ✅ <strong>Jawaban tepat!</strong> Bluetooth memiliki jangkauan <strong>10-100 meter</strong>.
+            <br><span style="font-size:0.85rem; color:#5c4638;">
+              💡 Bluetooth Kelas 2: <strong>10 meter</strong> (paling umum)<br>
+              💡 Bluetooth Kelas 1: <strong>100 meter</strong> (jarang digunakan)
+              <br><br>🔑 Jarak ini cukup untuk menghubungkan perangkat dalam satu ruangan.
+            </span>
+          `;
+        } else {
+          btn.classList.add('wrong');
+          feedback.className = 'feedback-text show info';
+          feedback.innerHTML = `
+            💡 <strong>Belum tepat.</strong> Coba ingat jarak maksimal Bluetooth untuk penggunaan sehari-hari.
+            <br><span style="font-size:0.85rem; color:#5c4638;">
+              🔑 Petunjuk: Bluetooth biasanya digunakan dalam <strong>satu ruangan</strong> atau <strong>jarak dekat</strong>.
+            </span>
+          `;
+          // Allow retry
+          setTimeout(() => {
+            parent.querySelectorAll('.options button').forEach(b => {
+              b.classList.remove('wrong');
+            });
+            feedback.className = 'feedback-text';
+          }, 2000);
+          return;
+        }
+
+        btQuestionAnswered = true;
+        checkBTComplete();
+      };
+
+      // ===== CHECK COMPLETE =====
+      function checkBTComplete() {
+        // Minimal 3 perangkat terhubung untuk dianggap selesai
+        if (pairedDevices.length >= 3 && challengeAnswered && btQuestionAnswered) {
+          btComplete = true;
+          document.getElementById('btNextHint').style.display = 'none';
+          document.getElementById('btNextBtn').style.display = 'inline-block';
+          document.getElementById('btNextBtn').innerHTML = '➡️ Lanjut ke Skenario 4: Membandingkan Koneksi (Part 4)';
+          document.getElementById('nextBtn').disabled = false;
+
+          // Update step indicator
+          document.querySelectorAll('.step-dot').forEach((dot, index) => {
+            if (index === 3) {
+              dot.classList.add('completed');
+              dot.classList.remove('active');
+            }
+          });
+
+          document.getElementById('pairingStatus').innerHTML = `
+            🎉 <strong>Hebat!</strong> Kamu berhasil menghubungkan ${pairedDevices.length} perangkat!
+            <br><span style="font-size:0.85rem; color:#2d5a1e;">✅ Skenario Bluetooth selesai! Lanjut ke skenario berikutnya.</span>
+          `;
+        } else if (pairedDevices.length >= 3) {
+          // Informasi progress
+          document.getElementById('pairingStatus').innerHTML = `
+            ✅ ${pairedDevices.length} perangkat terhubung. 
+            ${!challengeAnswered ? '🎯 Selesaikan tantangan!' : ''}
+            ${!btQuestionAnswered ? '💭 Jawab pertanyaan reflektif!' : ''}
+            <br><span style="font-size:0.8rem; color:#7a6656;">
+              ${pairedDevices.length < 5 ? '💡 Hubungkan minimal 3 perangkat untuk menyelesaikan skenario ini.' : ''}
+            </span>
+          `;
+        }
+      }
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        updateUI();
+
+        // Klik pada step indicator
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.addEventListener('click', function() {
+            if (this.classList.contains('locked')) {
+              alert('🔒 Selesaikan skenario sebelumnya terlebih dahulu!');
+              return;
+            }
+            if (index === 0 || index === 1) {
+              window.location.href = 'aktivitasjki2a.html';
+              return;
+            }
+            if (index === 2) {
+              window.location.href = 'aktivitasjki2b.html';
+              return;
+            }
+            if (index === 4) {
+              if (!btComplete) {
+                alert('🔗 Selesaikan dulu Skenario 3!');
+                return;
+              }
+              window.location.href = 'aktivitasjki2d.html';
+              return;
+            }
+            goToStep(index);
+          });
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

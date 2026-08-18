@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Connectivity Lab · Kuis & Sertifikat</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    .aktivitas-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .aktivitas-wrapper h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3rem;
+    }
+
+    .aktivitas-wrapper .sub-judul-aktivitas {
+      font-size: 1rem;
+      color: #5c4638;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.5rem 0 2rem 0;
+      position: relative;
+      padding: 0 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .step-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      right: 30px;
+      height: 3px;
+      background: #e5dbd0;
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .step-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      flex: 1;
+      min-width: 50px;
+    }
+
+    .step-dot .circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #f5ede6;
+      border: 3px solid #d9cdbf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active .circle {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    .step-dot.completed .circle {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .step-dot .label {
+      font-size: 0.55rem;
+      margin-top: 0.3rem;
+      color: #7a6656;
+      text-align: center;
+      max-width: 60px;
+      font-weight: 500;
+    }
+
+    .step-dot.active .label {
+      color: #3b2b1e;
+      font-weight: 600;
+    }
+
+    .step-dot.locked .circle {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .step-dot.locked .label {
+      opacity: 0.4;
+    }
+
+    .scenario-panel {
+      background: #fffffffa;
+      border-radius: 24px;
+      border: 2px solid #e5dbd0;
+      padding: 2rem;
+      min-height: 400px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem;
+      color: #5c4638;
+      background: #f5ede6;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #dbb9a6;
+    }
+
+    /* ===== KUIS ===== */
+    .quiz-container {
+      margin: 1rem 0;
+    }
+
+    .quiz-question {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .quiz-question.correct {
+      border-color: #8aaa7a;
+      background: #f0f8eb;
+    }
+
+    .quiz-question.wrong {
+      border-color: #d4a0a0;
+      background: #fdf0f0;
+    }
+
+    .quiz-question .q-number {
+      font-size: 0.8rem;
+      color: #7a6656;
+      font-weight: 600;
+    }
+
+    .quiz-question .q-text {
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin: 0.3rem 0 0.8rem 0;
+      color: #3b2b1e;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .quiz-options label {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #e5dbd0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .quiz-options label:hover:not(.disabled) {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .quiz-options label.disabled {
+      cursor: default;
+      opacity: 0.8;
+    }
+
+    .quiz-options label.selected {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    .quiz-options label.correct-answer {
+      border-color: #8aaa7a;
+      background: #e8f5e0;
+    }
+
+    .quiz-options label.wrong-answer {
+      border-color: #d4a0a0;
+      background: #f5e0e0;
+    }
+
+    .quiz-options input[type="radio"] {
+      accent-color: #4d3829;
+      width: 18px;
+      height: 18px;
+    }
+
+    .quiz-options .answer-indicator {
+      margin-left: auto;
+      font-size: 1.1rem;
+    }
+
+    .quiz-progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      padding: 0.8rem 1.2rem;
+      background: #f8f4ef;
+      border-radius: 12px;
+      border: 2px solid #e5dbd0;
+    }
+
+    .quiz-progress .progress-text {
+      font-weight: 600;
+      color: #3b2b1e;
+      font-size: 0.9rem;
+    }
+
+    .quiz-progress .progress-bar {
+      flex: 1;
+      height: 8px;
+      background: #e5dbd0;
+      border-radius: 4px;
+      overflow: hidden;
+      min-width: 100px;
+    }
+
+    .quiz-progress .progress-bar .fill {
+      height: 100%;
+      background: #4d3829;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* ===== HASIL ===== */
+    .result-box {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .result-box .big-icon {
+      font-size: 5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-box .level-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .result-box .score-display {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #4d3829;
+      margin: 0.5rem 0;
+    }
+
+    .result-box .score-detail {
+      font-size: 1rem;
+      color: #5c4638;
+      margin-bottom: 1rem;
+    }
+
+    .result-box .result-message {
+      font-size: 1.05rem;
+      color: #5c4638;
+      max-width: 500px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .result-box .certificate {
+      background: #f5ede6;
+      border: 3px double #dbb9a6;
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 1.5rem auto;
+      max-width: 500px;
+      font-family: 'Georgia', serif;
+      position: relative;
+    }
+
+    .result-box .certificate::before {
+      content: '🏅';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.5rem;
+      background: #fff;
+      padding: 0 0.5rem;
+      border-radius: 50%;
+    }
+
+    .result-box .certificate .cert-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-top: 0.5rem;
+      letter-spacing: 2px;
+    }
+
+    .result-box .certificate .cert-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #4d3829;
+      margin: 0.5rem 0;
+      font-family: 'Georgia', serif;
+    }
+
+    .result-box .certificate .cert-desc {
+      font-size: 0.85rem;
+      color: #5c4638;
+    }
+
+    .result-box .certificate .cert-date {
+      font-size: 0.75rem;
+      color: #7a6656;
+      margin-top: 0.5rem;
+      border-top: 1px solid #d9cdbf;
+      padding-top: 0.5rem;
+    }
+
+    .result-box .certificate .cert-level {
+      display: inline-block;
+      background: #4d3829;
+      color: #fff;
+      padding: 0.2rem 1.2rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+      letter-spacing: 1px;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .result-actions .btn-action {
+      padding: 0.7rem 2rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .result-actions .btn-action:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .result-actions .btn-action.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .result-actions .btn-action.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .result-actions .btn-action.success {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .result-actions .btn-action.success:hover {
+      background: #7a9a6a;
+      border-color: #7a9a6a;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    .nav-hint {
+      font-size: 0.8rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scenario-panel { padding: 1.2rem; }
+      .step-dot .circle { width: 30px; height: 30px; font-size: 0.7rem; }
+      .step-dot .label { font-size: 0.45rem; max-width: 40px; }
+      .step-indicator::before { left: 15px; right: 15px; }
+      .aktivitas-wrapper h1 { font-size: 1.7rem; }
+      .quiz-question { padding: 1rem; }
+      .quiz-question .q-text { font-size: 0.95rem; }
+      .quiz-options label { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
+      .result-box .level-title { font-size: 1.5rem; }
+      .result-box .score-display { font-size: 2.2rem; }
+      .result-box .certificate { padding: 1.2rem; margin: 0.5rem; }
+      .result-box .certificate .cert-name { font-size: 1.1rem; }
+      .result-actions .btn-action { padding: 0.5rem 1.2rem; font-size: 0.85rem; }
+    }
+
+    @media (max-width: 480px) {
+      .step-indicator { flex-wrap: wrap; justify-content: center; gap: 0.2rem; }
+      .step-indicator::before { display: none; }
+      .step-dot { min-width: 35px; flex: unset; }
+      .step-dot .circle { width: 26px; height: 26px; font-size: 0.6rem; }
+      .step-dot .label { display: none; }
+      .scenario-panel { padding: 0.8rem; }
+      .scenario-panel .scenario-title { font-size: 1.1rem; }
+      .quiz-progress { flex-direction: column; align-items: stretch; text-align: center; }
+      .quiz-progress .progress-bar { min-width: unset; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+      .result-actions { flex-direction: column; align-items: stretch; }
+      .result-actions .btn-action { justify-content: center; }
+    }
+
+    /* ===== PRINT STYLE ===== */
+    @media print {
+      .nav-bottom, .step-indicator, #scrollTopBtn, #header-utama, #footer-utama, .btn-nav {
+        display: none !important;
+      }
+      .scenario-panel {
+        border: none !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+      }
+      .result-box .certificate {
+        border: 2px solid #4d3829 !important;
+        box-shadow: none !important;
+      }
+      body {
+        background: #fff !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="jki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li><a href="jki2.html">Konektivitas Internet</a></li>
+      <li>Connectivity Lab · Part 6</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <h1>🏆 Connectivity Lab: Kuis & Sertifikat</h1>
+        <p class="sub-judul-aktivitas">"Buktikan keahlianmu sebagai Connectivity Expert!"</p>
+
+        <div class="step-indicator" id="stepIndicator">
+          <button class="step-dot completed" data-step="0"><span class="circle">✓</span><span class="label">Pembuka</span></button>
+          <button class="step-dot completed" data-step="1"><span class="circle">✓</span><span class="label">Instalasi Kabel</span></button>
+          <button class="step-dot completed" data-step="2"><span class="circle">✓</span><span class="label">Wi-Fi</span></button>
+          <button class="step-dot completed" data-step="3"><span class="circle">✓</span><span class="label">Bluetooth</span></button>
+          <button class="step-dot completed" data-step="4"><span class="circle">✓</span><span class="label">Bandingkan</span></button>
+          <button class="step-dot completed" data-step="5"><span class="circle">✓</span><span class="label">Troubleshoot</span></button>
+          <button class="step-dot active" data-step="6"><span class="circle">🏆</span><span class="label">Hasil</span></button>
+        </div>
+
+        <div class="scenario-panel" id="scenarioPanel">
+
+          <!-- SCENARIO 6: KUIS & HASIL -->
+          <div class="scenario-content" data-step="6">
+            <div class="scenario-title">🧠 Kuis Akhir: "Connectivity Expert"</div>
+            <div class="scenario-story">
+              📖 Jawab pertanyaan berikut untuk menguji pemahamanmu tentang jaringan kabel dan nirkabel!
+            </div>
+
+            <!-- Kuis -->
+            <div id="quizSection">
+              <div class="quiz-progress">
+                <span class="progress-text" id="progressText">Soal 0 dari 10</span>
+                <div class="progress-bar">
+                  <div class="fill" id="progressFill"></div>
+                </div>
+                <span style="font-size:0.8rem; color:#7a6656;" id="scoreText">Skor: 0</span>
+              </div>
+
+              <div class="quiz-container" id="quizContainer">
+                <!-- diisi JavaScript -->
+              </div>
+
+              <div style="text-align:center; margin-top:1rem;">
+                <button class="btn-nav primary" id="quizSubmitBtn" onclick="submitQuiz()" style="font-size:1rem; padding:0.7rem 2.5rem;">
+                  ✅ Selesai & Lihat Hasil
+                </button>
+              </div>
+            </div>
+
+            <!-- Hasil (awalnya tersembunyi) -->
+            <div id="resultSection" style="display:none;">
+              <div class="result-box" id="resultBox">
+                <div class="big-icon" id="resultIcon">🏆</div>
+                <div class="level-title" id="resultLevel">Connectivity Explorer</div>
+                <div class="score-display" id="resultScore">0/10</div>
+                <div class="score-detail" id="resultDetail">Jawaban benar: 0 dari 10</div>
+                <div class="result-message" id="resultMessage">Teruslah belajar dan jelajahi dunia konektivitas!</div>
+
+                <div class="certificate" id="certificateBox">
+                  <div class="cert-title">📜 SERTIFIKAT KELULUSAN</div>
+                  <div class="cert-level" id="certLevel">Connectivity Explorer</div>
+                  <div class="cert-name">Network Technician</div>
+                  <div class="cert-desc">Telah menyelesaikan seluruh rangkaian aktivitas</div>
+                  <div class="cert-desc" style="font-size:0.8rem; margin-top:0.3rem;">
+                    <strong>"Connectivity Lab: Eksplorasi Jaringan Kabel dan Nirkabel"</strong>
+                  </div>
+                  <div class="cert-date" id="certDate">SMPN 2 Talegong · 2026</div>
+                </div>
+
+                <div class="result-actions">
+                  <button class="btn-action" onclick="window.print()">🖨️ Cetak Sertifikat</button>
+                  <button class="btn-action primary" onclick="resetAll()">🔄 Ulangi Kuis</button>
+                  <a href="jki2.html" class="btn-action success">📚 Kembali ke Materi</a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom">
+          <a href="jki2.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Materi
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav" id="prevBtn" onclick="prevStep()">← Sebelumnya</button>
+            <button class="btn-nav primary" id="nextBtn" onclick="nextStep()" disabled>🎉 Selesai</button>
+          </div>
+          <div class="nav-hint">
+            💡 Part 6 dari 6 · Kuis & Sertifikat
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="script.js"></script>
+
+  <script>
+    (function() {
+      'use strict';
+
+      let currentStep = 6;
+      const totalSteps = 7;
+      let quizAnswers = {};
+      let quizSubmitted = false;
+      let quizResult = null;
+
+      // ===== DATA KUIS (10 SOAL) =====
+      const quizData = [
+        {
+          question: 'Apa perbedaan utama antara jaringan kabel dan nirkabel?',
+          options: [
+            'Kabel lebih cepat dari nirkabel',
+            'Kabel menggunakan kabel fisik, nirkabel menggunakan gelombang radio',
+            'Nirkabel lebih aman dari kabel',
+            'Kabel tidak bisa digunakan untuk internet'
+          ],
+          correct: 1
+        },
+        {
+          question: 'Jenis kabel apa yang paling umum digunakan untuk jaringan Ethernet?',
+          options: [
+            'Kabel Coaxial',
+            'Kabel Fiber Optic',
+            'Kabel UTP (Twisted Pair)',
+            'Kabel HDMI'
+          ],
+          correct: 2
+        },
+        {
+          question: 'Apa kelebihan utama dari kabel Fiber Optic?',
+          options: [
+            'Harga murah',
+            'Kecepatan sangat tinggi dan jarak jauh',
+            'Mudah dipasang',
+            'Tahan terhadap air'
+          ],
+          correct: 1
+        },
+        {
+          question: 'Berapa jangkauan maksimal Bluetooth Kelas 2 yang paling umum digunakan?',
+          options: [
+            '1 meter',
+            '10 meter',
+            '100 meter',
+            '1000 meter'
+          ],
+          correct: 1
+        },
+        {
+          question: 'Frekuensi mana yang memiliki jangkauan lebih luas pada Wi-Fi?',
+          options: [
+            '2.4 GHz',
+            '5 GHz',
+            '6 GHz',
+            'Semua sama'
+          ],
+          correct: 0
+        },
+        {
+          question: 'Perangkat apa yang berfungsi menghubungkan jaringan lokal ke internet?',
+          options: ['Switch', 'Router', 'Modem', 'Access Point'],
+          correct: 1
+        },
+        {
+          question: 'Apa yang terjadi jika terlalu banyak perangkat terhubung ke satu Wi-Fi?',
+          options: [
+            'Kecepatan internet meningkat',
+            'Kecepatan internet menurun karena bandwidth dibagi',
+            'Tidak ada perubahan',
+            'Wi-Fi menjadi lebih aman'
+          ],
+          correct: 1
+        },
+        {
+          question: 'Perangkat mana yang PALING COCOK menggunakan Bluetooth?',
+          options: [
+            'PC Gaming',
+            'Smart TV',
+            'Headset nirkabel',
+            'Server komputer'
+          ],
+          correct: 2
+        },
+        {
+          question: 'Apa penyebab paling umum Wi-Fi lemah di ruang belakang?',
+          options: [
+            'Komputer terlalu tua',
+            'Jarak terlalu jauh dari router atau terhalang dinding',
+            'Listrik padam',
+            'Kabel internet putus'
+          ],
+          correct: 1
+        },
+        {
+          question: 'Apa fungsi dari Access Point dalam jaringan nirkabel?',
+          options: [
+            'Menghubungkan perangkat dengan kabel',
+            'Memancarkan sinyal Wi-Fi',
+            'Menyimpan data',
+            'Mencetak dokumen'
+          ],
+          correct: 1
+        }
+      ];
+
+      // ===== NAVIGASI =====
+      window.goToStep = function(step) {
+        if (step < 0 || step >= totalSteps) return;
+        if (step === 0 || step === 1) { window.location.href = 'aktivitasjki2a.html'; return; }
+        if (step === 2) { window.location.href = 'aktivitasjki2b.html'; return; }
+        if (step === 3) { window.location.href = 'aktivitasjki2c.html'; return; }
+        if (step === 4) { window.location.href = 'aktivitasjki2d.html'; return; }
+        if (step === 5) { window.location.href = 'aktivitasjki2e.html'; return; }
+        if (step === 6) {
+          currentStep = step;
+          updateUI();
+          return;
+        }
+        currentStep = step;
+        updateUI();
+      };
+
+      window.nextStep = function() {
+        // Tidak ada next step setelah ini
+        alert('🎉 Selamat! Kamu telah menyelesaikan semua aktivitas!');
+      };
+
+      window.prevStep = function() {
+        if (currentStep > 0) {
+          window.location.href = 'aktivitasjki2e.html';
+        }
+      };
+
+      function updateUI() {
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.classList.remove('active', 'completed', 'locked');
+          if (index === currentStep) dot.classList.add('active');
+          else if (index < currentStep) dot.classList.add('completed');
+          else if (index > currentStep) dot.classList.add('locked');
+        });
+        document.getElementById('nextBtn').disabled = true;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // ===== RENDER KUIS =====
+      function renderQuiz() {
+        const container = document.getElementById('quizContainer');
+        if (!container) return;
+
+        let html = '';
+        quizData.forEach((q, index) => {
+          html += `
+            <div class="quiz-question" data-q="${index}">
+              <div class="q-number">Soal ${index + 1} dari ${quizData.length}</div>
+              <div class="q-text">${q.question}</div>
+              <div class="quiz-options">
+          `;
+          q.options.forEach((opt, optIndex) => {
+            const id = `q${index}_opt${optIndex}`;
+            html += `
+              <label for="${id}" onclick="selectQuizOption(${index}, ${optIndex})">
+                <input type="radio" name="q${index}" id="${id}" value="${optIndex}">
+                ${opt}
+                <span class="answer-indicator"></span>
+              </label>
+            `;
+          });
+          html += `
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+        updateProgress();
+      }
+
+      // ===== SELECT QUIZ OPTION =====
+      window.selectQuizOption = function(qIndex, optIndex) {
+        if (quizSubmitted) return;
+
+        const question = document.querySelector(`.quiz-question[data-q="${qIndex}"]`);
+        const labels = question.querySelectorAll('label');
+        
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+
+        quizAnswers[qIndex] = optIndex;
+        updateProgress();
+      };
+
+      // ===== UPDATE PROGRESS =====
+      function updateProgress() {
+        const total = quizData.length;
+        const answered = Object.keys(quizAnswers).length;
+        const progress = (answered / total) * 100;
+
+        document.getElementById('progressText').textContent = `Soal ${answered} dari ${total}`;
+        document.getElementById('progressFill').style.width = progress + '%';
+
+        // Hitung skor sementara (hanya yang sudah dijawab)
+        let correct = 0;
+        for (const [index, answer] of Object.entries(quizAnswers)) {
+          if (answer === quizData[parseInt(index)].correct) {
+            correct++;
+          }
+        }
+        document.getElementById('scoreText').textContent = `Skor: ${correct}`;
+      }
+
+      // ===== SUBMIT KUIS =====
+      window.submitQuiz = function() {
+        if (quizSubmitted) return;
+
+        const total = quizData.length;
+        const answered = Object.keys(quizAnswers).length;
+
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
+          return;
+        }
+
+        // Hitung hasil
+        let correct = 0;
+        quizData.forEach((q, index) => {
+          const selected = quizAnswers[index];
+          const question = document.querySelector(`.quiz-question[data-q="${index}"]`);
+          const labels = question.querySelectorAll('label');
+
+          labels.forEach((label, idx) => {
+            label.classList.add('disabled');
+            if (idx === q.correct) {
+              label.classList.add('correct-answer');
+            }
+            if (idx === selected && selected !== q.correct) {
+              label.classList.add('wrong-answer');
+            }
+            if (idx === selected) {
+              label.querySelector('input').checked = true;
+            }
+          });
+
+          if (selected === q.correct) {
+            question.classList.add('correct');
+            correct++;
+          } else {
+            question.classList.add('wrong');
+          }
+        });
+
+        quizSubmitted = true;
+        quizResult = { correct, total };
+
+        document.getElementById('quizSubmitBtn').disabled = true;
+        document.getElementById('quizSubmitBtn').textContent = '✅ Kuis Selesai!';
+
+        // Tampilkan hasil setelah delay
+        setTimeout(() => {
+          document.getElementById('quizSection').style.display = 'none';
+          document.getElementById('resultSection').style.display = 'block';
+          showResult(correct, total);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 800);
+      };
+
+      // ===== SHOW RESULT =====
+      function showResult(correct, total) {
+        const score = correct;
+        const percentage = (score / total) * 100;
+
+        let level, icon, message;
+        if (score === total) {
+          level = '🌟 Connectivity Master';
+          icon = '🏆';
+          message = 'Sempurna! Kamu benar-benar menguasai semua materi konektivitas jaringan!';
+        } else if (score >= total * 0.8) {
+          level = '🏗️ Network Builder';
+          icon = '🥇';
+          message = 'Hebat! Pemahamanmu sangat baik. Teruslah eksplorasi dunia jaringan!';
+        } else if (score >= total * 0.6) {
+          level = '🔍 Connectivity Explorer';
+          icon = '🥈';
+          message = 'Bagus! Kamu sudah memahami dasar-dasar konektivitas. Terus belajar!';
+        } else {
+          level = '📚 Connectivity Learner';
+          icon = '📖';
+          message = 'Teruslah belajar dan jangan menyerah! Kamu pasti bisa menjadi ahli jaringan.';
+        }
+
+        document.getElementById('resultIcon').textContent = icon;
+        document.getElementById('resultLevel').textContent = level;
+        document.getElementById('resultScore').textContent = `${score}/${total}`;
+        document.getElementById('resultDetail').textContent = `Jawaban benar: ${score} dari ${total} (${Math.round(percentage)}%)`;
+        document.getElementById('resultMessage').textContent = message;
+        document.getElementById('certLevel').textContent = level;
+
+        // Update sertifikat
+        const date = new Date();
+        document.getElementById('certDate').textContent = `SMPN 2 Talegong · ${date.toLocaleDateString('id-ID', {
+          day: 'numeric', month: 'long', year: 'numeric'
+        })}`;
+
+        // Update step indicator
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          if (index === 6) {
+            dot.classList.add('completed');
+            dot.classList.remove('active');
+          }
+        });
+      }
+
+      // ===== RESET =====
+      window.resetAll = function() {
+        if (confirm('Yakin ingin mengulangi kuis?')) {
+          location.reload();
+        }
+      };
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        renderQuiz();
+        updateUI();
+
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.addEventListener('click', function() {
+            if (this.classList.contains('locked')) {
+              alert('🔒 Selesaikan skenario sebelumnya!');
+              return;
+            }
+            if (index === 0 || index === 1) { window.location.href = 'aktivitasjki2a.html'; return; }
+            if (index === 2) { window.location.href = 'aktivitasjki2b.html'; return; }
+            if (index === 3) { window.location.href = 'aktivitasjki2c.html'; return; }
+            if (index === 4) { window.location.href = 'aktivitasjki2d.html'; return; }
+            if (index === 5) { window.location.href = 'aktivitasjki2e.html'; return; }
+            if (index === 6) { goToStep(6); return; }
+            goToStep(index);
+          });
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

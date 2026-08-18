@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Connectivity Lab · Membandingkan Koneksi</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    .aktivitas-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .aktivitas-wrapper h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3rem;
+    }
+
+    .aktivitas-wrapper .sub-judul-aktivitas {
+      font-size: 1rem;
+      color: #5c4638;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.5rem 0 2rem 0;
+      position: relative;
+      padding: 0 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .step-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      right: 30px;
+      height: 3px;
+      background: #e5dbd0;
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .step-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      flex: 1;
+      min-width: 50px;
+    }
+
+    .step-dot .circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #f5ede6;
+      border: 3px solid #d9cdbf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active .circle {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    .step-dot.completed .circle {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .step-dot .label {
+      font-size: 0.55rem;
+      margin-top: 0.3rem;
+      color: #7a6656;
+      text-align: center;
+      max-width: 60px;
+      font-weight: 500;
+    }
+
+    .step-dot.active .label {
+      color: #3b2b1e;
+      font-weight: 600;
+    }
+
+    .step-dot.locked .circle {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .step-dot.locked .label {
+      opacity: 0.4;
+    }
+
+    .scenario-panel {
+      background: #fffffffa;
+      border-radius: 24px;
+      border: 2px solid #e5dbd0;
+      padding: 2rem;
+      min-height: 400px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem;
+      color: #5c4638;
+      background: #f5ede6;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #dbb9a6;
+    }
+
+    .comparison-table-wrapper {
+      overflow-x: auto;
+      margin: 1rem 0;
+      border-radius: 12px;
+      border: 2px solid #e5dbd0;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      min-width: 500px;
+    }
+
+    .comparison-table thead {
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .comparison-table th {
+      padding: 0.8rem 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .comparison-table th:first-child {
+      text-align: left;
+    }
+
+    .comparison-table td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      vertical-align: middle;
+    }
+
+    .comparison-table td:first-child {
+      text-align: left;
+      font-weight: 600;
+      color: #3b2b1e;
+      cursor: default;
+    }
+
+    .comparison-table td:hover:not(:first-child) {
+      background: #f0ece6;
+    }
+
+    .comparison-table td .option-icon {
+      font-size: 1.2rem;
+      display: block;
+    }
+
+    .comparison-table td .option-label {
+      font-size: 0.7rem;
+      display: block;
+      margin-top: 0.1rem;
+    }
+
+    .comparison-table td.selected-cable {
+      background: #4d3829;
+      color: #fff;
+      border-radius: 8px;
+    }
+
+    .comparison-table td.selected-wifi {
+      background: #8ab4d4;
+      color: #fff;
+      border-radius: 8px;
+    }
+
+    .comparison-table td.selected-bt {
+      background: #8aaa7a;
+      color: #fff;
+      border-radius: 8px;
+    }
+
+    .comparison-table td.correct-choice {
+      outline: 3px solid #2d5a1e;
+      outline-offset: -3px;
+      border-radius: 4px;
+    }
+
+    .comparison-table td.wrong-choice {
+      outline: 3px solid #d4a0a0;
+      outline-offset: -3px;
+      border-radius: 4px;
+    }
+
+    .scenario-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      margin: 0.5rem 0 1rem 0;
+    }
+
+    .scenario-selector .scene-btn {
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+      border: 3px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .scenario-selector .scene-btn:hover {
+      border-color: #b09b88;
+      background: #f5ede6;
+    }
+
+    .scenario-selector .scene-btn.active {
+      border-color: #4d3829;
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .feedback-panel {
+      background: #f8f4ef;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      border: 2px solid #e5dbd0;
+      min-height: 50px;
+    }
+
+    .feedback-panel .fb-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .feedback-panel .fb-content {
+      font-size: 0.9rem;
+      color: #5c4638;
+    }
+
+    .feedback-panel .fb-content .highlight {
+      color: #4d3829;
+      font-weight: 600;
+    }
+
+    .completion-status {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin: 0.5rem 0;
+    }
+
+    .completion-status .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      background: #f0ece6;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .completion-status .status-item.done {
+      background: #e8f5e0;
+      color: #2d5a1e;
+    }
+
+    .completion-status .status-item.pending {
+      background: #fce4e4;
+      color: #5a2a2a;
+    }
+
+    .question-box {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #dbb9a6;
+    }
+
+    .question-box .q-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-box .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .question-box .options button {
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .question-box .options button:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .question-box .options button.correct {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .question-box .options button.wrong {
+      background: #d4a0a0;
+      border-color: #d4a0a0;
+      color: #fff;
+    }
+
+    .feedback-text {
+      margin-top: 0.8rem;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .feedback-text.show {
+      display: block;
+    }
+
+    .feedback-text.success {
+      background: #e8f5e0;
+      color: #2d5a1e;
+    }
+
+    .feedback-text.info {
+      background: #e3edf5;
+      color: #1a4a6b;
+    }
+
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    .nav-hint {
+      font-size: 0.8rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+
+    @media (max-width: 720px) {
+      .scenario-panel { padding: 1.2rem; }
+      .step-dot .circle { width: 30px; height: 30px; font-size: 0.7rem; }
+      .step-dot .label { font-size: 0.45rem; max-width: 40px; }
+      .step-indicator::before { left: 15px; right: 15px; }
+      .aktivitas-wrapper h1 { font-size: 1.7rem; }
+      .comparison-table { font-size: 0.75rem; min-width: 350px; }
+      .comparison-table th, .comparison-table td { padding: 0.4rem 0.5rem; }
+      .comparison-table td .option-icon { font-size: 1rem; }
+      .comparison-table td .option-label { font-size: 0.6rem; }
+      .question-box .options { flex-direction: column; }
+      .question-box .options button { width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      .step-indicator { flex-wrap: wrap; justify-content: center; gap: 0.2rem; }
+      .step-indicator::before { display: none; }
+      .step-dot { min-width: 35px; flex: unset; }
+      .step-dot .circle { width: 26px; height: 26px; font-size: 0.6rem; }
+      .step-dot .label { display: none; }
+      .scenario-panel { padding: 0.8rem; }
+      .scenario-panel .scenario-title { font-size: 1.1rem; }
+      .comparison-table { font-size: 0.6rem; min-width: 280px; }
+      .comparison-table th, .comparison-table td { padding: 0.2rem 0.2rem; }
+      .comparison-table td .option-icon { font-size: 0.7rem; }
+      .comparison-table td .option-label { font-size: 0.45rem; }
+      .scenario-selector { flex-direction: column; align-items: stretch; }
+      .scenario-selector .scene-btn { text-align: center; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="jki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li><a href="jki2.html">Konektivitas Internet</a></li>
+      <li>Connectivity Lab · Part 4</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <h1>📊 Connectivity Lab: Membandingkan Koneksi</h1>
+        <p class="sub-judul-aktivitas">"Pilih koneksi terbaik untuk setiap situasi!"</p>
+
+        <div class="step-indicator" id="stepIndicator">
+          <button class="step-dot completed" data-step="0"><span class="circle">✓</span><span class="label">Pembuka</span></button>
+          <button class="step-dot completed" data-step="1"><span class="circle">✓</span><span class="label">Instalasi Kabel</span></button>
+          <button class="step-dot completed" data-step="2"><span class="circle">✓</span><span class="label">Wi-Fi</span></button>
+          <button class="step-dot completed" data-step="3"><span class="circle">✓</span><span class="label">Bluetooth</span></button>
+          <button class="step-dot active" data-step="4"><span class="circle">5</span><span class="label">Bandingkan</span></button>
+          <button class="step-dot locked" data-step="5"><span class="circle">6</span><span class="label">Troubleshoot</span></button>
+          <button class="step-dot locked" data-step="6"><span class="circle">🏆</span><span class="label">Hasil</span></button>
+        </div>
+
+        <div class="scenario-panel" id="scenarioPanel">
+
+          <div class="scenario-content" data-step="4">
+            <div class="scenario-title">📊 Skenario 4: Membandingkan Koneksi</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Ada 3 skenario berbeda di rumah: 
+              <strong>(A) Kamar tidur</strong>, <strong>(B) Ruang tamu</strong>, <strong>(C) Halaman belakang</strong>. 
+              Pilih jenis koneksi terbaik untuk setiap perangkat!
+            </div>
+
+            <div class="completion-status" id="completionStatus">
+              <span class="status-item pending" id="status-bedroom">🛏️ Kamar Tidur: ⏳</span>
+              <span class="status-item pending" id="status-livingroom">🛋️ Ruang Tamu: ⏳</span>
+              <span class="status-item pending" id="status-backyard">🌳 Halaman Belakang: ⏳</span>
+            </div>
+
+            <div class="scenario-selector">
+              <button class="scene-btn active" data-scene="bedroom" onclick="selectScene('bedroom')">🛏️ Kamar Tidur</button>
+              <button class="scene-btn" data-scene="livingroom" onclick="selectScene('livingroom')">🛋️ Ruang Tamu</button>
+              <button class="scene-btn" data-scene="backyard" onclick="selectScene('backyard')">🌳 Halaman Belakang</button>
+            </div>
+
+            <div class="comparison-table-wrapper">
+              <table class="comparison-table" id="comparisonTable">
+                <thead>
+                  <tr>
+                    <th>Perangkat</th>
+                    <th>🔌 Kabel</th>
+                    <th>📶 Wi-Fi</th>
+                    <th>🔗 Bluetooth</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="feedback-panel" id="feedbackPanel">
+              <div class="fb-title">💡 Informasi Koneksi</div>
+              <div class="fb-content" id="feedbackContent">
+                Klik salah satu sel pada tabel di atas untuk memilih jenis koneksi.
+              </div>
+            </div>
+
+            <div class="question-box">
+              <div class="q-title">💭 Pertanyaan Reflektif:</div>
+              <p style="margin-bottom:0.5rem;"><em>"Kapan sebaiknya menggunakan kabel daripada Wi-Fi? Kapan Bluetooth lebih baik?"</em></p>
+              <div class="options">
+                <button onclick="answerCompareQuestion(this, true)">🔌 Kabel untuk stabilitas, Bluetooth untuk perangkat dekat</button>
+                <button onclick="answerCompareQuestion(this, false)">📶 Wi-Fi selalu lebih baik dari kabel</button>
+                <button onclick="answerCompareQuestion(this, false)">🔗 Bluetooth lebih cepat dari Wi-Fi</button>
+              </div>
+              <div class="feedback-text" id="compareQuestionFeedback"></div>
+            </div>
+
+            <div style="text-align:center; margin-top:1rem;">
+              <p style="font-size:0.9rem; color:#7a6656;" id="compareNextHint">
+                ⏳ Selesaikan semua ruangan dan jawab pertanyaan reflektif.
+              </p>
+              <button class="btn-nav primary" id="compareNextBtn" onclick="goToStep(5)" style="display:none;">
+                ➡️ Lanjut ke Skenario 5: Troubleshooting
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="nav-bottom">
+          <a href="jki2.html" class="btn-nav"><span class="back-arrow">←</span> Kembali ke Materi</a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav" id="prevBtn" onclick="prevStep()">← Sebelumnya</button>
+            <button class="btn-nav primary" id="nextBtn" onclick="nextStep()" disabled>Selanjutnya →</button>
+          </div>
+          <div class="nav-hint">💡 Part 4 dari 6 · Skenario 4: Membandingkan Koneksi</div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="script.js"></script>
+
+  <script>
+    (function() {
+      'use strict';
+
+      let currentStep = 4;
+      const totalSteps = 7;
+      let currentScene = 'bedroom';
+      
+      // Data pilihan: per perangkat (index) -> jenis koneksi
+      let selections = {
+        bedroom: {},
+        livingroom: {},
+        backyard: {}
+      };
+      
+      let sceneCompleted = {
+        bedroom: false,
+        livingroom: false,
+        backyard: false
+      };
+      let compareQuestionAnswered = false;
+      let compareComplete = false;
+
+      const sceneData = {
+        bedroom: {
+          title: '🛏️ Kamar Tidur',
+          devices: [
+            { name: 'PC Gaming', icon: '🎮', correct: 'cable' },
+            { name: 'Cetak ke Printer', icon: '🖨️', correct: 'bt' },
+            { name: 'Smart TV', icon: '📺', correct: 'wifi' }
+          ]
+        },
+        livingroom: {
+          title: '🛋️ Ruang Tamu',
+          devices: [
+            { name: 'Smart TV', icon: '📺', correct: 'wifi' },
+            { name: 'Soundbar', icon: '🔊', correct: 'bt' },
+            { name: 'Laptop Kerja', icon: '💻', correct: 'wifi' }
+          ]
+        },
+        backyard: {
+          title: '🌳 Halaman Belakang',
+          devices: [
+            { name: 'Speaker Outdoor', icon: '🔊', correct: 'bt' },
+            { name: 'Kamera Keamanan', icon: '📹', correct: 'wifi' },
+            { name: 'Streaming Game', icon: '🎮', correct: 'wifi' }
+          ]
+        }
+      };
+
+      // ===== NAVIGASI =====
+      window.goToStep = function(step) {
+        if (step < 0 || step >= totalSteps) return;
+        if (step === 0 || step === 1) { window.location.href = 'aktivitasjki2a.html'; return; }
+        if (step === 2) { window.location.href = 'aktivitasjki2b.html'; return; }
+        if (step === 3) { window.location.href = 'aktivitasjki2c.html'; return; }
+        if (step === 5) {
+          if (!compareComplete) { alert('📊 Selesaikan dulu Skenario 4!'); return; }
+          window.location.href = 'aktivitasjki2e.html';
+          return;
+        }
+        if (step === 6) { window.location.href = 'aktivitasjki2f.html'; return; }
+        currentStep = step;
+        updateUI();
+      };
+
+      window.nextStep = function() {
+        if (currentStep < totalSteps - 1) {
+          if (currentStep === 4 && !compareComplete) {
+            alert('📊 Selesaikan dulu semua langkah di Skenario 4!');
+            return;
+          }
+          if (currentStep === 4) {
+            window.location.href = 'aktivitasjki2e.html';
+            return;
+          }
+          goToStep(currentStep + 1);
+        }
+      };
+
+      window.prevStep = function() {
+        if (currentStep > 0) {
+          window.location.href = 'aktivitasjki2c.html';
+        }
+      };
+
+      function updateUI() {
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.classList.remove('active', 'completed', 'locked');
+          if (index === currentStep) dot.classList.add('active');
+          else if (index < currentStep) dot.classList.add('completed');
+          else if (index > currentStep) dot.classList.add('locked');
+        });
+        document.getElementById('nextBtn').disabled = !compareComplete;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // ===== SELECT SCENE =====
+      window.selectScene = function(scene) {
+        currentScene = scene;
+        document.querySelectorAll('.scene-btn').forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.dataset.scene === scene) btn.classList.add('active');
+        });
+        renderTable();
+      };
+
+      // ===== RENDER TABLE =====
+      function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        const data = sceneData[currentScene];
+        const sel = selections[currentScene] || {};
+        tbody.innerHTML = '';
+
+        data.devices.forEach((device, index) => {
+          const tr = document.createElement('tr');
+          const selected = sel[index] || null;
+
+          // Nama perangkat
+          const tdName = document.createElement('td');
+          tdName.textContent = device.icon + ' ' + device.name;
+          tr.appendChild(tdName);
+
+          // Kabel
+          const tdCable = document.createElement('td');
+          tdCable.innerHTML = '<span class="option-icon">🔌</span><span class="option-label">Kabel</span>';
+          tdCable.style.cursor = 'pointer';
+          tdCable.onclick = function(e) { 
+            e.stopPropagation();
+            selectConnection('cable', index); 
+          };
+          if (selected === 'cable') tdCable.classList.add('selected-cable');
+          if (selected === 'cable' && device.correct === 'cable') tdCable.classList.add('correct-choice');
+          if (selected === 'cable' && device.correct !== 'cable') tdCable.classList.add('wrong-choice');
+          tr.appendChild(tdCable);
+
+          // Wi-Fi
+          const tdWifi = document.createElement('td');
+          tdWifi.innerHTML = '<span class="option-icon">📶</span><span class="option-label">Wi-Fi</span>';
+          tdWifi.style.cursor = 'pointer';
+          tdWifi.onclick = function(e) { 
+            e.stopPropagation();
+            selectConnection('wifi', index); 
+          };
+          if (selected === 'wifi') tdWifi.classList.add('selected-wifi');
+          if (selected === 'wifi' && device.correct === 'wifi') tdWifi.classList.add('correct-choice');
+          if (selected === 'wifi' && device.correct !== 'wifi') tdWifi.classList.add('wrong-choice');
+          tr.appendChild(tdWifi);
+
+          // Bluetooth
+          const tdBt = document.createElement('td');
+          tdBt.innerHTML = '<span class="option-icon">🔗</span><span class="option-label">Bluetooth</span>';
+          tdBt.style.cursor = 'pointer';
+          tdBt.onclick = function(e) { 
+            e.stopPropagation();
+            selectConnection('bt', index); 
+          };
+          if (selected === 'bt') tdBt.classList.add('selected-bt');
+          if (selected === 'bt' && device.correct === 'bt') tdBt.classList.add('correct-choice');
+          if (selected === 'bt' && device.correct !== 'bt') tdBt.classList.add('wrong-choice');
+          tr.appendChild(tdBt);
+
+          tbody.appendChild(tr);
+        });
+
+        checkSceneComplete();
+      }
+
+      // ===== SELECT CONNECTION =====
+      window.selectConnection = function(type, deviceIndex) {
+        if (!selections[currentScene]) selections[currentScene] = {};
+        selections[currentScene][deviceIndex] = type;
+        renderTable();
+        checkSceneComplete();
+      };
+
+      // ===== CHECK SCENE COMPLETE =====
+      function checkSceneComplete() {
+        const data = sceneData[currentScene];
+        const sel = selections[currentScene] || {};
+        let allCorrect = true;
+        let allSelected = true;
+        let totalDevices = data.devices.length;
+        let selectedCount = Object.keys(sel).length;
+
+        data.devices.forEach((device, index) => {
+          const selected = sel[index];
+          if (!selected) {
+            allSelected = false;
+            allCorrect = false;
+          } else if (selected !== device.correct) {
+            allCorrect = false;
+          }
+        });
+
+        if (allCorrect && allSelected) {
+          sceneCompleted[currentScene] = true;
+          document.getElementById(`status-${currentScene}`).className = 'status-item done';
+          document.getElementById(`status-${currentScene}`).textContent = sceneData[currentScene].title + ': ✅ Selesai!';
+          document.getElementById('feedbackContent').innerHTML = '✅ <span class="highlight">Sempurna!</span> Semua pilihan tepat! 🎉';
+        } else {
+          sceneCompleted[currentScene] = false;
+          document.getElementById(`status-${currentScene}`).className = 'status-item pending';
+          document.getElementById(`status-${currentScene}`).textContent = sceneData[currentScene].title + ': ' + selectedCount + '/' + totalDevices;
+          
+          if (allSelected && !allCorrect) {
+            document.getElementById('feedbackContent').innerHTML = '⚠️ Ada pilihan yang belum tepat. Perhatikan kebutuhan setiap perangkat.';
+          } else {
+            document.getElementById('feedbackContent').innerHTML = '💡 Pilih koneksi untuk setiap perangkat (' + selectedCount + '/' + totalDevices + ').';
+          }
+        }
+
+        checkAllComplete();
+      }
+
+      // ===== CHECK ALL COMPLETE =====
+      function checkAllComplete() {
+        const allDone = sceneCompleted.bedroom && sceneCompleted.livingroom && sceneCompleted.backyard;
+
+        if (allDone && compareQuestionAnswered) {
+          compareComplete = true;
+          document.getElementById('compareNextHint').style.display = 'none';
+          document.getElementById('compareNextBtn').style.display = 'inline-block';
+          document.getElementById('nextBtn').disabled = false;
+          document.getElementById('feedbackContent').innerHTML = '🎉 <span class="highlight">Selamat!</span> Semua ruangan selesai!';
+          
+          document.querySelectorAll('.step-dot').forEach((dot, index) => {
+            if (index === 4) { dot.classList.add('completed'); dot.classList.remove('active'); }
+          });
+        } else if (allDone) {
+          document.getElementById('feedbackContent').innerHTML = '✅ Semua ruangan selesai! Jawab pertanyaan reflektif di bawah.';
+        }
+      }
+
+      // ===== PERTANYAAN REFLEKTIF =====
+      window.answerCompareQuestion = function(btn, isCorrect) {
+        if (compareQuestionAnswered) return;
+        const parent = btn.closest('.question-box');
+        const feedback = parent.querySelector('.feedback-text');
+
+        parent.querySelectorAll('.options button').forEach(b => {
+          b.classList.remove('correct', 'wrong');
+        });
+
+        if (isCorrect) {
+          btn.classList.add('correct');
+          feedback.className = 'feedback-text show success';
+          feedback.innerHTML = `
+            ✅ <strong>Jawaban tepat!</strong>
+            <br><br>
+            <strong>🔌 Kabel:</strong> stabil, cepat, aman → PC gaming, server
+            <br><br>
+            <strong>📶 Wi-Fi:</strong> fleksibel, praktis → laptop, smartphone, TV
+            <br><br>
+            <strong>🔗 Bluetooth:</strong> hemat daya, jarak dekat → headset, mouse, speaker
+          `;
+        } else {
+          btn.classList.add('wrong');
+          feedback.className = 'feedback-text show info';
+          feedback.innerHTML = '💡 Belum tepat. Ingat: Kabel untuk stabilitas, Wi-Fi untuk mobilitas, Bluetooth untuk perangkat dekat.';
+          setTimeout(() => {
+            parent.querySelectorAll('.options button').forEach(b => b.classList.remove('wrong'));
+            feedback.className = 'feedback-text';
+          }, 2000);
+          return;
+        }
+
+        compareQuestionAnswered = true;
+        checkAllComplete();
+      };
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        renderTable();
+        updateUI();
+
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.addEventListener('click', function() {
+            if (this.classList.contains('locked')) {
+              alert('🔒 Selesaikan skenario sebelumnya!');
+              return;
+            }
+            if (index === 0 || index === 1) { window.location.href = 'aktivitasjki2a.html'; return; }
+            if (index === 2) { window.location.href = 'aktivitasjki2b.html'; return; }
+            if (index === 3) { window.location.href = 'aktivitasjki2c.html'; return; }
+            if (index === 5) {
+              if (!compareComplete) { alert('📊 Selesaikan Skenario 4!'); return; }
+              window.location.href = 'aktivitasjki2e.html';
+              return;
+            }
+            goToStep(index);
+          });
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

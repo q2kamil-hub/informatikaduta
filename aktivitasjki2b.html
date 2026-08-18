@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Connectivity Lab · Eksplorasi Wi-Fi</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA AKTIVITAS ===== */
+    .aktivitas-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .aktivitas-wrapper h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3rem;
+    }
+
+    .aktivitas-wrapper .sub-judul-aktivitas {
+      font-size: 1rem;
+      color: #5c4638;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    /* ===== STEP INDICATOR ===== */
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.5rem 0 2rem 0;
+      position: relative;
+      padding: 0 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .step-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      right: 30px;
+      height: 3px;
+      background: #e5dbd0;
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .step-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      flex: 1;
+      min-width: 50px;
+    }
+
+    .step-dot .circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #f5ede6;
+      border: 3px solid #d9cdbf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active .circle {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    .step-dot.completed .circle {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .step-dot .label {
+      font-size: 0.55rem;
+      margin-top: 0.3rem;
+      color: #7a6656;
+      text-align: center;
+      max-width: 60px;
+      font-weight: 500;
+    }
+
+    .step-dot.active .label {
+      color: #3b2b1e;
+      font-weight: 600;
+    }
+
+    .step-dot.locked .circle {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .step-dot.locked .label {
+      opacity: 0.4;
+    }
+
+    /* ===== PANEL SKENARIO ===== */
+    .scenario-panel {
+      background: #fffffffa;
+      border-radius: 24px;
+      border: 2px solid #e5dbd0;
+      padding: 2rem;
+      min-height: 400px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem;
+      color: #5c4638;
+      background: #f5ede6;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #dbb9a6;
+    }
+
+    /* ===== HEATMAP ===== */
+    .heatmap-container {
+      position: relative;
+      background: #f0ece6;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid #d9cdbf;
+      margin: 1rem 0;
+      min-height: 250px;
+      overflow: hidden;
+    }
+
+    .heatmap-container .room-label {
+      position: absolute;
+      font-size: 0.7rem;
+      color: #7a6656;
+      font-weight: 600;
+      background: rgba(255,255,255,0.8);
+      padding: 0.1rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 4px;
+      width: 100%;
+      aspect-ratio: 3/2;
+      min-height: 200px;
+    }
+
+    .heatmap-cell {
+      border-radius: 4px;
+      transition: all 0.5s ease;
+      position: relative;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .heatmap-cell .signal-indicator {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      font-size: 0.5rem;
+    }
+
+    .heatmap-cell.weak {
+      background: #fce4e4;
+    }
+
+    .heatmap-cell.medium {
+      background: #f5e6c8;
+    }
+
+    .heatmap-cell.strong {
+      background: #c8e6c8;
+    }
+
+    .heatmap-cell.no-signal {
+      background: #e8e0d8;
+    }
+
+    .heatmap-cell .device-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.2rem;
+      opacity: 0.7;
+    }
+
+    .heatmap-cell .device-icon.connected {
+      opacity: 1;
+      animation: pulse-icon 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-icon {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.15); }
+    }
+
+    .heatmap-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin: 0.5rem 0;
+      font-size: 0.8rem;
+    }
+
+    .heatmap-legend .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .heatmap-legend .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1px solid #d9cdbf;
+    }
+
+    .heatmap-legend .legend-color.strong {
+      background: #c8e6c8;
+    }
+    .heatmap-legend .legend-color.medium {
+      background: #f5e6c8;
+    }
+    .heatmap-legend .legend-color.weak {
+      background: #fce4e4;
+    }
+    .heatmap-legend .legend-color.no-signal {
+      background: #e8e0d8;
+    }
+
+    /* ===== AP PLACEMENT ===== */
+    .ap-placement {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin: 0.5rem 0;
+    }
+
+    .ap-btn {
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+      border: 3px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .ap-btn:hover {
+      border-color: #b09b88;
+      background: #f5ede6;
+    }
+
+    .ap-btn.selected {
+      border-color: #4d3829;
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .ap-btn .icon {
+      margin-right: 0.3rem;
+    }
+
+    /* ===== FREQUENCY SELECTOR ===== */
+    .freq-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin: 0.5rem 0;
+    }
+
+    .freq-btn {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 3px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .freq-btn:hover {
+      border-color: #b09b88;
+      background: #f5ede6;
+    }
+
+    .freq-btn.selected {
+      border-color: #4d3829;
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .freq-btn .icon {
+      margin-right: 0.3rem;
+    }
+
+    .freq-info {
+      background: #f8f4ef;
+      border-radius: 12px;
+      padding: 0.8rem 1.2rem;
+      margin: 0.5rem 0;
+      border: 2px solid #e5dbd0;
+      font-size: 0.9rem;
+      color: #5c4638;
+    }
+
+    /* ===== PERTANYAAN ===== */
+    .question-box {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #dbb9a6;
+    }
+
+    .question-box .q-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-box .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .question-box .options button {
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .question-box .options button:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .question-box .options button.correct {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .question-box .options button.wrong {
+      background: #d4a0a0;
+      border-color: #d4a0a0;
+      color: #fff;
+    }
+
+    .feedback-text {
+      margin-top: 0.8rem;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .feedback-text.show {
+      display: block;
+    }
+
+    .feedback-text.success {
+      background: #e8f5e0;
+      color: #2d5a1e;
+    }
+
+    .feedback-text.info {
+      background: #e3edf5;
+      color: #1a4a6b;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    .nav-hint {
+      font-size: 0.8rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scenario-panel {
+        padding: 1.2rem;
+      }
+      .step-dot .circle {
+        width: 30px;
+        height: 30px;
+        font-size: 0.7rem;
+      }
+      .step-dot .label {
+        font-size: 0.45rem;
+        max-width: 40px;
+      }
+      .step-indicator::before {
+        left: 15px;
+        right: 15px;
+      }
+      .aktivitas-wrapper h1 {
+        font-size: 1.7rem;
+      }
+      .heatmap-grid {
+        min-height: 150px;
+      }
+      .heatmap-cell .device-icon {
+        font-size: 0.9rem;
+      }
+      .freq-btn {
+        padding: 0.4rem 1.2rem;
+        font-size: 0.8rem;
+      }
+      .ap-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.75rem;
+      }
+      .question-box .options {
+        flex-direction: column;
+      }
+      .question-box .options button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .step-indicator {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.2rem;
+      }
+      .step-indicator::before {
+        display: none;
+      }
+      .step-dot {
+        min-width: 35px;
+        flex: unset;
+      }
+      .step-dot .circle {
+        width: 26px;
+        height: 26px;
+        font-size: 0.6rem;
+      }
+      .step-dot .label {
+        display: none;
+      }
+      .scenario-panel {
+        padding: 0.8rem;
+      }
+      .scenario-panel .scenario-title {
+        font-size: 1.1rem;
+      }
+      .heatmap-container {
+        padding: 0.8rem;
+      }
+      .heatmap-grid {
+        min-height: 120px;
+        gap: 2px;
+      }
+      .heatmap-cell .device-icon {
+        font-size: 0.7rem;
+      }
+      .heatmap-legend {
+        font-size: 0.65rem;
+        gap: 0.5rem;
+      }
+      .heatmap-legend .legend-color {
+        width: 14px;
+        height: 14px;
+      }
+      .freq-selector {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .freq-btn {
+        text-align: center;
+      }
+      .ap-placement {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .ap-btn {
+        text-align: center;
+      }
+      .nav-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-nav {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="jki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li><a href="jki2.html">Konektivitas Internet</a></li>
+      <li>Connectivity Lab · Part 2</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <h1>📶 Connectivity Lab: Eksplorasi Wi-Fi</h1>
+        <p class="sub-judul-aktivitas">"Rancang jaringan nirkabel yang sempurna untuk ruang kelas!"</p>
+
+        <!-- ===== STEP INDICATOR ===== -->
+        <div class="step-indicator" id="stepIndicator">
+          <button class="step-dot completed" data-step="0">
+            <span class="circle">✓</span>
+            <span class="label">Pembuka</span>
+          </button>
+          <button class="step-dot completed" data-step="1">
+            <span class="circle">✓</span>
+            <span class="label">Instalasi Kabel</span>
+          </button>
+          <button class="step-dot active" data-step="2">
+            <span class="circle">3</span>
+            <span class="label">Wi-Fi</span>
+          </button>
+          <button class="step-dot locked" data-step="3">
+            <span class="circle">4</span>
+            <span class="label">Bluetooth</span>
+          </button>
+          <button class="step-dot locked" data-step="4">
+            <span class="circle">5</span>
+            <span class="label">Bandingkan</span>
+          </button>
+          <button class="step-dot locked" data-step="5">
+            <span class="circle">6</span>
+            <span class="label">Troubleshoot</span>
+          </button>
+          <button class="step-dot locked" data-step="6">
+            <span class="circle">🏆</span>
+            <span class="label">Hasil</span>
+          </button>
+        </div>
+
+        <!-- ===== PANEL SKENARIO ===== -->
+        <div class="scenario-panel" id="scenarioPanel">
+
+          <!-- SCENARIO 2: RUANG KELAS NIRKABEL -->
+          <div class="scenario-content" data-step="2">
+            <div class="scenario-title">📶 Skenario 2: Ruang Kelas Nirkabel (Wi-Fi)</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Sekolah ingin ruang kelas dilengkapi Wi-Fi agar siswa bisa belajar dengan tablet. Tugasmu: tempatkan Access Point dan pilih frekuensi yang tepat!
+            </div>
+
+            <!-- 1. Tempatkan Access Point -->
+            <p style="font-weight:600; color:#3b2b1e; margin-bottom:0.3rem;">1️⃣ Tempatkan Access Point (AP) di posisi yang tepat:</p>
+            <div class="ap-placement">
+              <button class="ap-btn" data-pos="center" onclick="placeAP('center')">
+                <span class="icon">📍</span> Tengah Ruangan
+              </button>
+              <button class="ap-btn" data-pos="corner" onclick="placeAP('corner')">
+                <span class="icon">📍</span> Pojok Ruangan
+              </button>
+              <button class="ap-btn" data-pos="side" onclick="placeAP('side')">
+                <span class="icon">📍</span> Samping Dinding
+              </button>
+            </div>
+
+            <!-- Heatmap -->
+            <div class="heatmap-container">
+              <div class="room-label" style="top:5px; left:5px;">🏫 Ruang Kelas</div>
+              <div class="heatmap-grid" id="heatmapGrid">
+                <!-- 6x4 grid akan diisi oleh JS -->
+              </div>
+            </div>
+
+            <div class="heatmap-legend">
+              <span class="legend-item">
+                <span class="legend-color strong"></span> Sinyal Kuat
+              </span>
+              <span class="legend-item">
+                <span class="legend-color medium"></span> Sinyal Sedang
+              </span>
+              <span class="legend-item">
+                <span class="legend-color weak"></span> Sinyal Lemah
+              </span>
+              <span class="legend-item">
+                <span class="legend-color no-signal"></span> Tanpa Sinyal
+              </span>
+            </div>
+
+            <div id="apStatus" style="text-align:center; padding:0.5rem; background:#f0ece6; border-radius:8px; margin:0.5rem 0; font-size:0.9rem; color:#5c4638;">
+              💡 Pilih posisi Access Point di atas untuk melihat heatmap sinyal.
+            </div>
+
+            <!-- 2. Pilih Frekuensi -->
+            <p style="font-weight:600; color:#3b2b1e; margin:1rem 0 0.3rem;">2️⃣ Pilih frekuensi Wi-Fi yang akan digunakan:</p>
+            <div class="freq-selector">
+              <button class="freq-btn" data-freq="24" onclick="selectFrequency('24')">
+                <span class="icon">📻</span> 2.4 GHz
+              </button>
+              <button class="freq-btn" data-freq="5" onclick="selectFrequency('5')">
+                <span class="icon">📻</span> 5 GHz
+              </button>
+            </div>
+
+            <div class="freq-info" id="freqInfo">
+              💡 Pilih frekuensi untuk melihat informasi dan rekomendasi.
+            </div>
+
+            <!-- Pertanyaan Reflektif -->
+            <div class="question-box">
+              <div class="q-title">💭 Pertanyaan Reflektif:</div>
+              <p style="margin-bottom:0.5rem;"><em>"Jika ada banyak perangkat yang terhubung, apa yang terjadi dengan kecepatan internet?"</em></p>
+              <div class="options">
+                <button onclick="answerWiFiQuestion(this, true)">📉 Kecepatan menurun karena bandwidth dibagi</button>
+                <button onclick="answerWiFiQuestion(this, false)">📈 Kecepatan meningkat karena lebih banyak perangkat</button>
+                <button onclick="answerWiFiQuestion(this, false)">⚡ Kecepatan tetap sama</button>
+              </div>
+              <div class="feedback-text" id="wifiQuestionFeedback"></div>
+            </div>
+
+            <!-- Navigasi -->
+            <div style="text-align:center; margin-top:1rem;">
+              <p style="font-size:0.9rem; color:#7a6656;" id="wifiNextHint">
+                ⏳ Selesaikan semua langkah di atas untuk melanjutkan ke skenario berikutnya.
+              </p>
+              <button class="btn-nav primary" id="wifiNextBtn" onclick="goToStep(3)" style="display:none;">
+                ➡️ Lanjut ke Skenario 3: Bluetooth (Part 3)
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom">
+          <a href="jki2.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Materi
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav" id="prevBtn" onclick="prevStep()">← Sebelumnya</button>
+            <button class="btn-nav primary" id="nextBtn" onclick="nextStep()" disabled>Selanjutnya →</button>
+          </div>
+          <div class="nav-hint">
+            💡 Part 2 dari 6 · Skenario 2: Wi-Fi
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- ===== SCRIPT AKTIVITAS ===== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ===== STATE =====
+      let currentStep = 2;
+      const totalSteps = 7;
+      let apPlaced = false;
+      let apPosition = null;
+      let freqSelected = null;
+      let wifiQuestionAnswered = false;
+      let wifiComplete = false;
+
+      // ===== HEATMAP DATA =====
+      // 6x4 grid: [row][col]
+      // 0 = no signal, 1 = weak, 2 = medium, 3 = strong
+      const heatmapTemplates = {
+        center: [
+          [0, 1, 2, 2, 1, 0],
+          [1, 2, 3, 3, 2, 1],
+          [1, 2, 3, 3, 2, 1],
+          [0, 1, 2, 2, 1, 0]
+        ],
+        corner: [
+          [3, 2, 1, 0, 0, 0],
+          [2, 1, 1, 0, 0, 0],
+          [1, 1, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0]
+        ],
+        side: [
+          [2, 3, 2, 1, 0, 0],
+          [2, 2, 1, 1, 0, 0],
+          [1, 1, 1, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0]
+        ]
+      };
+
+      // ===== STEP NAVIGASI =====
+		window.goToStep = function(step) {
+		  if (step < 0 || step >= totalSteps) return;
+
+		  // Navigasi ke halaman lain
+		  if (step === 0) {
+			window.location.href = 'aktivitasjki2a.html';
+			return;
+		  }
+		  if (step === 1) {
+			window.location.href = 'aktivitasjki2a.html';
+			return;
+		  }
+		  if (step === 3) {
+			if (!wifiComplete) {
+			  alert('📶 Selesaikan dulu Skenario 2!');
+			  return;
+			}
+			window.location.href = 'aktivitasjki2c.html';
+			return;
+		  }
+		  if (step === 4) {
+			window.location.href = 'aktivitasjki2d.html';
+			return;
+		  }
+		  if (step === 5) {
+			window.location.href = 'aktivitasjki2e.html';
+			return;
+		  }
+		  if (step === 6) {
+			window.location.href = 'aktivitasjki2f.html';
+			return;
+		  }
+
+		  currentStep = step;
+		  updateUI();
+		};
+
+		window.nextStep = function() {
+		  if (currentStep < totalSteps - 1) {
+			if (currentStep === 2 && !wifiComplete) {
+			  alert('📶 Selesaikan dulu semua langkah di Skenario 2!');
+			  return;
+			}
+			if (currentStep === 2 && !wifiQuestionAnswered) {
+			  alert('💭 Jawab dulu pertanyaan reflektif!');
+			  return;
+			}
+			// Untuk step 2, pindah ke halaman berikutnya
+			if (currentStep === 2) {
+			  window.location.href = 'aktivitasjki2c.html';
+			  return;
+			}
+			goToStep(currentStep + 1);
+		  }
+		};
+
+		window.prevStep = function() {
+		  if (currentStep > 0) {
+			// Kembali ke halaman sebelumnya (aktivitasjki2a.html)
+			window.location.href = 'aktivitasjki2a.html';
+		  }
+		};
+
+      function updateUI() {
+        // Update step indicator
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.classList.remove('active', 'completed', 'locked');
+          if (index === currentStep) dot.classList.add('active');
+          else if (index < currentStep) dot.classList.add('completed');
+          else if (index > currentStep) dot.classList.add('locked');
+        });
+
+        // Update tombol navigasi
+        document.getElementById('prevBtn').disabled = false;
+        const nextBtn = document.getElementById('nextBtn');
+        if (currentStep === totalSteps - 1) {
+          nextBtn.textContent = '🎉 Selesai';
+        } else {
+          nextBtn.textContent = 'Selanjutnya →';
+        }
+        nextBtn.disabled = !wifiComplete;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // ===== HEATMAP =====
+      function renderHeatmap(template) {
+        const grid = document.getElementById('heatmapGrid');
+        grid.innerHTML = '';
+
+        const signalLabels = {
+          0: 'no-signal',
+          1: 'weak',
+          2: 'medium',
+          3: 'strong'
+        };
+
+        const signalIcons = {
+          0: '📴',
+          1: '📶',
+          2: '📶',
+          3: '📶'
+        };
+
+        const signalText = {
+          0: 'Tidak ada',
+          1: 'Lemah',
+          2: 'Sedang',
+          3: 'Kuat'
+        };
+
+        for (let row = 0; row < 4; row++) {
+          for (let col = 0; col < 6; col++) {
+            const cell = document.createElement('div');
+            const value = template[row][col];
+            cell.className = `heatmap-cell ${signalLabels[value]}`;
+            cell.title = `Sinyal: ${signalText[value]}`;
+
+            // Tambahkan ikon perangkat di beberapa sel
+            if ((row === 1 && col === 0) || (row === 2 && col === 5) || (row === 0 && col === 3)) {
+              const icon = document.createElement('span');
+              icon.className = 'device-icon' + (value >= 2 ? ' connected' : '');
+              icon.textContent = value >= 2 ? '📱' : '📱';
+              cell.appendChild(icon);
+            }
+
+            // Tambahkan indikator sinyal
+            const indicator = document.createElement('span');
+            indicator.className = 'signal-indicator';
+            indicator.textContent = signalIcons[value];
+            cell.appendChild(indicator);
+
+            grid.appendChild(cell);
+          }
+        }
+      }
+
+      // ===== PLACE AP =====
+      window.placeAP = function(position) {
+        apPosition = position;
+        apPlaced = true;
+
+        // Update tombol
+        document.querySelectorAll('.ap-btn').forEach(btn => {
+          btn.classList.remove('selected');
+          if (btn.dataset.pos === position) btn.classList.add('selected');
+        });
+
+        // Render heatmap
+        const template = heatmapTemplates[position];
+        renderHeatmap(template);
+
+        // Update status
+        const statusMessages = {
+          center: '✅ AP di tengah ruangan memberikan sinyal merata ke seluruh area!',
+          corner: '✅ AP di pojok ruangan memberikan sinyal kuat di area dekat, tapi lemah di sisi lain.',
+          side: '✅ AP di samping dinding memberikan sinyal yang cukup baik di setengah ruangan.'
+        };
+
+        document.getElementById('apStatus').innerHTML = statusMessages[position] + 
+          ' <span style="font-size:0.8rem; color:#7a6656;">(Hijau = kuat, Kuning = sedang, Merah = lemah)</span>';
+
+        checkWiFiComplete();
+      };
+
+      // ===== SELECT FREQUENCY =====
+      window.selectFrequency = function(freq) {
+        freqSelected = freq;
+
+        // Update tombol
+        document.querySelectorAll('.freq-btn').forEach(btn => {
+          btn.classList.remove('selected');
+          if (btn.dataset.freq === freq) btn.classList.add('selected');
+        });
+
+        // Update info
+        const info = document.getElementById('freqInfo');
+        if (freq === '24') {
+          info.innerHTML = `
+            <strong>📻 2.4 GHz</strong>
+            <ul style="margin:0.3rem 0 0 1.2rem; font-size:0.85rem;">
+              <li>✅ Jangkauan lebih luas (hingga 100 meter)</li>
+              <li>✅ Lebih tembus dinding</li>
+              <li>❌ Kecepatan lebih rendah (hingga 600 Mbps)</li>
+              <li>❌ Sering terganggu perangkat lain (microwave, Bluetooth)</li>
+            </ul>
+            <div style="margin-top:0.3rem; padding:0.3rem 0.8rem; background:#e8f5e0; border-radius:6px; font-size:0.85rem;">
+              💡 <strong>Rekomendasi:</strong> Cocok untuk ruangan luas dengan banyak dinding.
+            </div>
+          `;
+        } else {
+          info.innerHTML = `
+            <strong>📻 5 GHz</strong>
+            <ul style="margin:0.3rem 0 0 1.2rem; font-size:0.85rem;">
+              <li>✅ Kecepatan sangat tinggi (hingga 3.5 Gbps)</li>
+              <li>✅ Lebih sedikit gangguan</li>
+              <li>❌ Jangkauan lebih pendek (30-50 meter)</li>
+              <li>❌ Kurang tembus dinding</li>
+            </ul>
+            <div style="margin-top:0.3rem; padding:0.3rem 0.8rem; background:#e8f5e0; border-radius:6px; font-size:0.85rem;">
+              💡 <strong>Rekomendasi:</strong> Cocok untuk ruangan kecil dengan banyak perangkat.
+            </div>
+          `;
+        }
+
+        checkWiFiComplete();
+      };
+
+      // ===== PERTANYAAN =====
+      window.answerWiFiQuestion = function(btn, isCorrect) {
+        if (wifiQuestionAnswered) return;
+        const parent = btn.closest('.question-box');
+        const feedback = parent.querySelector('.feedback-text');
+
+        // Reset semua tombol
+        parent.querySelectorAll('.options button').forEach(b => {
+          b.classList.remove('correct', 'wrong');
+        });
+
+        if (isCorrect) {
+          btn.classList.add('correct');
+          feedback.className = 'feedback-text show success';
+          feedback.innerHTML = `
+            ✅ <strong>Jawaban tepat!</strong> Ketika banyak perangkat terhubung ke Wi-Fi, <strong>bandwidth dibagi</strong> sehingga kecepatan internet menurun.
+            <br><span style="font-size:0.85rem; color:#5c4638;">
+              💡 Ini disebut <strong>bandwidth sharing</strong>. Semakin banyak pengguna, semakin lambat kecepatan per perangkat.
+            </span>
+          `;
+        } else {
+          btn.classList.add('wrong');
+          feedback.className = 'feedback-text show info';
+          feedback.innerHTML = `
+            💡 <strong>Belum tepat.</strong> Coba pikirkan: Jika 10 orang menggunakan Wi-Fi yang sama, apakah kecepatannya tetap sama?
+            <br><span style="font-size:0.85rem; color:#5c4638;">
+              🔑 Petunjuk: Bandwidth dibagi untuk semua perangkat yang terhubung.
+            </span>
+          `;
+          // Allow retry
+          setTimeout(() => {
+            parent.querySelectorAll('.options button').forEach(b => {
+              b.classList.remove('wrong');
+            });
+            feedback.className = 'feedback-text';
+          }, 2000);
+          return;
+        }
+
+        wifiQuestionAnswered = true;
+        checkWiFiComplete();
+      };
+
+      // ===== CHECK COMPLETE =====
+      function checkWiFiComplete() {
+        if (apPlaced && freqSelected && wifiQuestionAnswered) {
+          wifiComplete = true;
+          document.getElementById('wifiNextHint').style.display = 'none';
+          document.getElementById('wifiNextBtn').style.display = 'inline-block';
+          document.getElementById('wifiNextBtn').innerHTML = '➡️ Lanjut ke Skenario 3: Bluetooth (Part 3)';
+          document.getElementById('nextBtn').disabled = false;
+
+          // Update step indicator
+          document.querySelectorAll('.step-dot').forEach((dot, index) => {
+            if (index === 2) {
+              dot.classList.add('completed');
+              dot.classList.remove('active');
+            }
+          });
+        }
+      }
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        // Render default heatmap (kosong)
+        const emptyTemplate = [
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0]
+        ];
+        renderHeatmap(emptyTemplate);
+
+        updateUI();
+
+        // Klik pada step indicator
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.addEventListener('click', function() {
+            if (this.classList.contains('locked')) {
+              alert('🔒 Selesaikan skenario sebelumnya terlebih dahulu!');
+              return;
+            }
+            if (index === 0 || index === 1) {
+              window.location.href = 'aktivitasjki2a.html';
+              return;
+            }
+            if (index === 3) {
+              if (!wifiComplete) {
+                alert('📶 Selesaikan dulu Skenario 2!');
+                return;
+              }
+              window.location.href = 'aktivitasjki2c.html';
+              return;
+            }
+            goToStep(index);
+          });
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
