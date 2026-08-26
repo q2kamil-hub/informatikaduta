@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Set Logic Lab · Visualisasi Diagram Venn</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA KHUSUS SKENARIO 2 ===== */
+    .aktivitas-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding: 0.5rem 1rem;
+      background: #f8f3ee;
+      border-radius: 40px;
+      border: 2px solid #e5dbd0;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #7a6656;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .progress-step.active {
+      background: #4d3829;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .progress-step.done {
+      color: #2d7d46;
+    }
+
+    .progress-step .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e5dbd0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #4d3829;
+    }
+
+    .progress-step.active .step-num {
+      background: #dbb9a6;
+      color: #3b2b1e;
+    }
+
+    .progress-step.done .step-num {
+      background: #2d7d46;
+      color: #fff;
+    }
+
+    .progress-line {
+      flex: 1;
+      height: 3px;
+      background: #e5dbd0;
+      min-width: 20px;
+      border-radius: 4px;
+    }
+
+    .progress-line.done {
+      background: #2d7d46;
+    }
+
+    /* ===== SCENE HEADER ===== */
+    .scene-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.5rem;
+      background: #f5ede6;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+    }
+
+    .scene-header .avatar {
+      font-size: 2.8rem;
+      flex-shrink: 0;
+    }
+
+    .scene-header .story {
+      font-size: 1rem;
+      color: #2f2822;
+      line-height: 1.6;
+    }
+
+    .scene-header .story strong {
+      color: #4d3829;
+    }
+
+    /* ===== VENN DIAGRAM ===== */
+    .venn-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 1.5rem 0;
+    }
+
+    .venn-diagram-interactive {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      aspect-ratio: 1 / 0.85;
+      margin: 0 auto;
+    }
+
+    .venn-diagram-interactive svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .venn-diagram-interactive .venn-circle {
+      cursor: pointer;
+      transition: opacity 0.3s ease, fill 0.3s ease;
+    }
+
+    .venn-diagram-interactive .venn-circle:hover {
+      opacity: 0.8;
+    }
+
+    .venn-diagram-interactive .venn-circle.active {
+      stroke-width: 4;
+      stroke: #4d3829;
+    }
+
+    .venn-diagram-interactive .venn-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      fill: #2f2822;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .venn-diagram-interactive .venn-label-small {
+      font-size: 0.7rem;
+      fill: #4d3829;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .venn-diagram-interactive .venn-highlight {
+      animation: pulse-glow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    /* ===== KONTROL VENN ===== */
+    .venn-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    @media (max-width: 600px) {
+      .venn-controls {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    .venn-control-group {
+      background: #fffffffa;
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      border: 2px solid #e5dbd0;
+    }
+
+    .venn-control-group .group-title {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .venn-control-group .group-title .color-badge {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #4d3829;
+    }
+
+    .venn-control-group .input-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .venn-control-group .input-row input {
+      flex: 1;
+      min-width: 80px;
+      padding: 0.4rem 0.6rem;
+      border: 2px solid #e5dbd0;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      color: #2f2822;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    .venn-control-group .input-row input:focus {
+      outline: none;
+      border-color: #6b4f3a;
+    }
+
+    .venn-control-group .input-row input::placeholder {
+      color: #bfaa9a;
+    }
+
+    .venn-control-group .input-row button {
+      padding: 0.4rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .venn-control-group .input-row button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(75, 46, 30, 0.25);
+    }
+
+    .venn-control-group .input-row button.btn-danger {
+      background: #b33c3c;
+    }
+
+    .venn-control-group .input-row button.btn-danger:hover {
+      background: #992e2e;
+    }
+
+    .venn-control-group .items-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+      min-height: 30px;
+      padding: 0.3rem;
+      background: #f8f3ee;
+      border-radius: 8px;
+    }
+
+    .venn-control-group .items-list .tag {
+      background: #4d3829;
+      color: #fff;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      animation: popIn 0.3s ease;
+    }
+
+    .venn-control-group .items-list .tag .remove-btn {
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      font-size: 0.8rem;
+    }
+
+    .venn-control-group .items-list .tag .remove-btn:hover {
+      opacity: 1;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ===== STATISTIK ===== */
+    .venn-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.8rem;
+      margin: 1rem 0;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    .venn-stats .stat-item {
+      background: #fffffffa;
+      border-radius: 12px;
+      padding: 0.6rem 1rem;
+      text-align: center;
+      border: 2px solid #e5dbd0;
+    }
+
+    .venn-stats .stat-item .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      display: block;
+    }
+
+    .venn-stats .stat-item .stat-label {
+      font-size: 0.7rem;
+      color: #7a6656;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .venn-stats .stat-item.highlight-a {
+      border-color: #e8a87c;
+      background: #fdf6f0;
+    }
+
+    .venn-stats .stat-item.highlight-b {
+      border-color: #7cb8e8;
+      background: #f0f6fd;
+    }
+
+    .venn-stats .stat-item.highlight-intersect {
+      border-color: #7ce8c4;
+      background: #f0fdf8;
+    }
+
+    /* ===== MODE TANTANGAN ===== */
+    .challenge-box {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0;
+      border: 2px solid #e5dbd0;
+      text-align: center;
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .challenge-box .challenge-title {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .challenge-box .challenge-text {
+      color: #2f2822;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .challenge-box .challenge-input {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .challenge-box .challenge-input input {
+      padding: 0.5rem 1rem;
+      border: 2px solid #dbb9a6;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      width: 200px;
+      max-width: 100%;
+    }
+
+    .challenge-box .challenge-input input:focus {
+      outline: none;
+      border-color: #6b4f3a;
+    }
+
+    .challenge-box .challenge-input button {
+      padding: 0.5rem 1.8rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+    }
+
+    .challenge-box .challenge-input button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    .challenge-box .challenge-feedback {
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      color: #2d7d46;
+      font-weight: 600;
+      min-height: 1.5rem;
+    }
+
+    .challenge-box .challenge-feedback.error {
+      color: #b33c3c;
+    }
+
+    /* ===== TOMBOL ===== */
+    .btn-next {
+      display: inline-block;
+      background: linear-gradient(135deg, #2d7d46, #3a9d5a);
+      color: #fff;
+      padding: 0.8rem 2.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 125, 70, 0.3);
+    }
+
+    .btn-next:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(45, 125, 70, 0.4);
+      background: linear-gradient(135deg, #3a9d5a, #4db86e);
+    }
+
+    .btn-back {
+      display: inline-block;
+      background: #e8d5c4;
+      color: #4d3829;
+      padding: 0.8rem 2.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      border: 2px solid #dbb9a6;
+      cursor: pointer;
+    }
+
+    .btn-back:hover {
+      background: #dac5b2;
+      transform: translateY(-2px);
+    }
+
+    .btn-toggle-mode {
+      display: inline-block;
+      background: #6b4f3a;
+      color: #fff;
+      padding: 0.5rem 1.8rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-toggle-mode:hover {
+      transform: translateY(-2px);
+      background: #7a5f4c;
+    }
+
+    .btn-toggle-mode.active-mode {
+      background: #2d7d46;
+    }
+
+    .nav-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scene-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .venn-controls {
+        grid-template-columns: 1fr;
+      }
+      .venn-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .progress-step .step-label {
+        display: none;
+      }
+      .challenge-box {
+        padding: 1rem 1.2rem;
+      }
+      .venn-diagram-interactive .venn-label {
+        font-size: 0.7rem;
+      }
+      .venn-diagram-interactive .venn-label-small {
+        font-size: 0.55rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .venn-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+      }
+      .venn-stats .stat-item .stat-value {
+        font-size: 1.2rem;
+      }
+      .venn-control-group {
+        padding: 0.8rem;
+      }
+      .venn-control-group .input-row input {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.5rem;
+      }
+      .nav-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      .nav-buttons .btn-next,
+      .nav-buttons .btn-back {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    #scrollTopBtn {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk4.html">Memodelkan Persoalan Logika</a></li>
+      <li>Set Logic Lab · Venn</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-container">
+
+        <!-- ===== PROGRESS TRACKER ===== -->
+        <div class="progress-tracker" id="progressTracker">
+          <div class="progress-step done" data-step="0">
+            <span class="step-num">🏠</span>
+            <span class="step-label">Mulai</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="1">
+            <span class="step-num">1</span>
+            <span class="step-label">Anggota</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step active" data-step="2">
+            <span class="step-num">2</span>
+            <span class="step-label">Venn</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="3">
+            <span class="step-num">3</span>
+            <span class="step-label">Operasi</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="4">
+            <span class="step-num">4</span>
+            <span class="step-label">Model</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="5">
+            <span class="step-num">5</span>
+            <span class="step-label">Boolean</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="6">
+            <span class="step-num">🏆</span>
+            <span class="step-label">Kuis</span>
+          </div>
+        </div>
+
+        <!-- ===== SCENE HEADER ===== -->
+        <div class="scene-header">
+          <span class="avatar">🧑‍🏫</span>
+          <div class="story">
+            <strong>Professor Set</strong> berkata:<br>
+            "Sekarang kita akan bermain dengan <strong>Diagram Venn</strong>! 
+            Masukkan angka ke dalam himpunan A dan B, lalu lihat bagaimana diagram berubah secara otomatis.
+            <br>📌 Kamu bisa memakai <strong>Mode Eksplorasi</strong> (bebas) atau <strong>Mode Tantangan</strong> (diberi target)!"
+          </div>
+        </div>
+
+        <!-- ===== VENN DIAGRAM ===== -->
+        <div class="venn-container">
+          <div class="venn-diagram-interactive" id="vennDiagram">
+            <svg viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg">
+              <!-- Definisi -->
+              <defs>
+                <filter id="shadow-venn">
+                  <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.15"/>
+                </filter>
+                <radialGradient id="gradA" cx="35%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#f5d4b8" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#e8a87c" stop-opacity="0.5"/>
+                </radialGradient>
+                <radialGradient id="gradB" cx="65%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#b8d4f5" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#7cb8e8" stop-opacity="0.5"/>
+                </radialGradient>
+                <radialGradient id="gradIntersect" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#7ce8c4" stop-opacity="0.9"/>
+                  <stop offset="100%" stop-color="#4dbd8f" stop-opacity="0.5"/>
+                </radialGradient>
+              </defs>
+
+              <!-- Lingkaran A -->
+              <ellipse 
+                id="circleA"
+                class="venn-circle" 
+                cx="220" cy="250" 
+                rx="160" ry="160" 
+                fill="url(#gradA)" 
+                stroke="#dbb9a6" 
+                stroke-width="3"
+                filter="url(#shadow-venn)"
+                data-set="A"
+              />
+              <!-- Lingkaran B -->
+              <ellipse 
+                id="circleB"
+                class="venn-circle" 
+                cx="380" cy="250" 
+                rx="160" ry="160" 
+                fill="url(#gradB)" 
+                stroke="#b8cfde" 
+                stroke-width="3"
+                filter="url(#shadow-venn)"
+                data-set="B"
+              />
+
+              <!-- Area irisan (overlay) -->
+              <ellipse 
+                id="intersectOverlay"
+                cx="300" cy="250" 
+                rx="100" ry="150" 
+                fill="url(#gradIntersect)" 
+                opacity="0.6"
+                pointer-events="none"
+              />
+
+              <!-- Label himpunan -->
+              <text class="venn-label" x="140" y="120" text-anchor="middle">A</text>
+              <text class="venn-label" x="460" y="120" text-anchor="middle">B</text>
+              
+              <!-- Label area -->
+              <text class="venn-label-small" x="160" y="300" text-anchor="middle">A saja</text>
+              <text class="venn-label-small" x="440" y="300" text-anchor="middle">B saja</text>
+              <text class="venn-label-small" x="300" y="180" text-anchor="middle">A ∩ B</text>
+              <text class="venn-label-small" x="300" y="420" text-anchor="middle">Di luar A ∪ B</text>
+
+              <!-- Anggota himpunan (akan diupdate oleh JS) -->
+              <g id="vennItems">
+                <!-- A saja -->
+                <g id="itemsAOnly"></g>
+                <!-- B saja -->
+                <g id="itemsBOnly"></g>
+                <!-- Irisan -->
+                <g id="itemsIntersect"></g>
+                <!-- Di luar -->
+                <g id="itemsOutside"></g>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- ===== STATISTIK ===== -->
+        <div class="venn-stats" id="vennStats">
+          <div class="stat-item highlight-a">
+            <span class="stat-value" id="statA">0</span>
+            <span class="stat-label">|A|</span>
+          </div>
+          <div class="stat-item highlight-b">
+            <span class="stat-value" id="statB">0</span>
+            <span class="stat-label">|B|</span>
+          </div>
+          <div class="stat-item highlight-intersect">
+            <span class="stat-value" id="statIntersect">0</span>
+            <span class="stat-label">|A ∩ B|</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="statUnion">0</span>
+            <span class="stat-label">|A ∪ B|</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="statDiffAB">0</span>
+            <span class="stat-label">|A − B|</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="statDiffBA">0</span>
+            <span class="stat-label">|B − A|</span>
+          </div>
+        </div>
+
+        <!-- ===== KONTROL ===== -->
+        <div class="venn-controls">
+          <!-- Himpunan A -->
+          <div class="venn-control-group">
+            <div class="group-title">
+              <span class="color-badge" style="background:#e8a87c;"></span>
+              Himpunan A
+            </div>
+            <div class="input-row">
+              <input type="text" id="inputA" placeholder="Contoh: 1,2,3" />
+              <button id="btnAddA">+ Tambah</button>
+              <button class="btn-danger" id="btnClearA">✕ Kosongkan</button>
+            </div>
+            <div class="items-list" id="listA"></div>
+          </div>
+
+          <!-- Himpunan B -->
+          <div class="venn-control-group">
+            <div class="group-title">
+              <span class="color-badge" style="background:#7cb8e8;"></span>
+              Himpunan B
+            </div>
+            <div class="input-row">
+              <input type="text" id="inputB" placeholder="Contoh: 3,4,5" />
+              <button id="btnAddB">+ Tambah</button>
+              <button class="btn-danger" id="btnClearB">✕ Kosongkan</button>
+            </div>
+            <div class="items-list" id="listB"></div>
+          </div>
+        </div>
+
+        <!-- ===== MODE TANTANGAN ===== -->
+        <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; margin:0.5rem 0;">
+          <button class="btn-toggle-mode" id="btnChallengeMode">🎯 Mode Tantangan</button>
+        </div>
+
+        <div class="challenge-box" id="challengeBox" style="display:none;">
+          <div class="challenge-title">🎯 Tantangan Venn</div>
+          <div class="challenge-text" id="challengeText">
+            Lengkapi himpunan A dan B sehingga:
+            <br>
+            <strong>|A ∩ B| = 2</strong> dan <strong>|A ∪ B| = 5</strong>
+          </div>
+          <div class="challenge-input">
+            <input type="text" id="challengeInput" placeholder="Masukkan angka, pisahkan koma" />
+            <button id="btnCheckChallenge">Periksa</button>
+          </div>
+          <div class="challenge-feedback" id="challengeFeedback"></div>
+        </div>
+
+        <!-- ===== NAVIGASI ===== -->
+        <div class="nav-buttons">
+          <a href="aktivitasbk4a.html" class="btn-back">← Kembali</a>
+          <button class="btn-next" id="btnNextScene">➜ Lanjut ke Operasi Himpunan</button>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- SCRIPT.JS -->
+  <script src="script.js"></script>
+
+  <!-- ============================================================ -->
+  <!-- ===== SCRIPT KHUSUS SKENARIO 2 ===== -->
+  <!-- ============================================================ -->
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================================
+      // STATE
+      // ============================================================
+      let setA = new Set();
+      let setB = new Set();
+      let challengeMode = false;
+      let challengeSolved = false;
+
+      // ============================================================
+      // DOM REFS
+      // ============================================================
+      const listA = document.getElementById('listA');
+      const listB = document.getElementById('listB');
+      const inputA = document.getElementById('inputA');
+      const inputB = document.getElementById('inputB');
+      const btnAddA = document.getElementById('btnAddA');
+      const btnAddB = document.getElementById('btnAddB');
+      const btnClearA = document.getElementById('btnClearA');
+      const btnClearB = document.getElementById('btnClearB');
+      const btnChallengeMode = document.getElementById('btnChallengeMode');
+      const challengeBox = document.getElementById('challengeBox');
+      const challengeText = document.getElementById('challengeText');
+      const challengeInput = document.getElementById('challengeInput');
+      const btnCheckChallenge = document.getElementById('btnCheckChallenge');
+      const challengeFeedback = document.getElementById('challengeFeedback');
+
+      const statA = document.getElementById('statA');
+      const statB = document.getElementById('statB');
+      const statIntersect = document.getElementById('statIntersect');
+      const statUnion = document.getElementById('statUnion');
+      const statDiffAB = document.getElementById('statDiffAB');
+      const statDiffBA = document.getElementById('statDiffBA');
+
+      const btnNext = document.getElementById('btnNextScene');
+
+      // ============================================================
+      // FUNGSI UTAMA
+      // ============================================================
+
+      // Parse input string menjadi array
+      function parseInput(str) {
+        return str.split(',').map(s => s.trim()).filter(s => s !== '');
+      }
+
+      // Update semua tampilan
+      function updateVenn() {
+        // Update list tampilan
+        renderList(listA, setA);
+        renderList(listB, setB);
+
+        // Hitung statistik
+        const intersect = new Set([...setA].filter(x => setB.has(x)));
+        const union = new Set([...setA, ...setB]);
+        const diffAB = new Set([...setA].filter(x => !setB.has(x)));
+        const diffBA = new Set([...setB].filter(x => !setA.has(x)));
+
+        // Update statistik
+        statA.textContent = setA.size;
+        statB.textContent = setB.size;
+        statIntersect.textContent = intersect.size;
+        statUnion.textContent = union.size;
+        statDiffAB.textContent = diffAB.size;
+        statDiffBA.textContent = diffBA.size;
+
+        // Update diagram Venn (anggota di posisi)
+        updateVennItems(setA, setB, intersect, diffAB, diffBA);
+
+        // Cek challenge
+        if (challengeMode && !challengeSolved) {
+          checkChallengeAuto();
+        }
+
+        // Aktifkan tombol lanjut jika ada anggota
+        btnNext.disabled = (setA.size === 0 && setB.size === 0);
+      }
+
+      // Render list anggota
+      function renderList(container, set) {
+        container.innerHTML = '';
+        const sorted = [...set].sort((a, b) => {
+          // Sortir angka dulu, lalu string
+          const aNum = parseFloat(a);
+          const bNum = parseFloat(b);
+          if (!isNaN(aNum) && !isNaN(bNum)) return aNum - bNum;
+          if (!isNaN(aNum)) return -1;
+          if (!isNaN(bNum)) return 1;
+          return String(a).localeCompare(String(b));
+        });
+        sorted.forEach(item => {
+          const tag = document.createElement('span');
+          tag.className = 'tag';
+          tag.innerHTML = `${item} <span class="remove-btn" data-item="${item}">✕</span>`;
+          container.appendChild(tag);
+        });
+
+        // Event remove
+        container.querySelectorAll('.remove-btn').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            const item = this.dataset.item;
+            const parent = this.closest('.venn-control-group');
+            const isA = parent.querySelector('.group-title')?.textContent.includes('A');
+            if (isA) {
+              setA.delete(item);
+            } else {
+              setB.delete(item);
+            }
+            updateVenn();
+          });
+        });
+      }
+
+      // Update posisi item di diagram Venn
+      function updateVennItems(setA, setB, intersect, diffAB, diffBA) {
+        const posA = [
+          [160, 200], [180, 230], [150, 260], [190, 290], [170, 320],
+          [130, 220], [200, 180], [140, 280], [210, 310], [160, 340]
+        ];
+        const posB = [
+          [440, 200], [420, 230], [450, 260], [410, 290], [430, 320],
+          [470, 220], [400, 180], [460, 280], [390, 310], [440, 340]
+        ];
+        const posIntersect = [
+          [300, 220], [280, 250], [320, 250], [300, 280], [290, 300],
+          [310, 300], [270, 270], [330, 270], [300, 200], [300, 310]
+        ];
+        const posOutside = [
+          [70, 420], [140, 430], [210, 440], [390, 440], [460, 430],
+          [530, 420], [100, 450], [500, 450], [180, 460], [420, 460]
+        ];
+
+        const itemsAOnly = [...diffAB];
+        const itemsBOnly = [...diffBA];
+        const itemsIntersect = [...intersect];
+        const itemsOutside = [];
+
+        // Generate posisi
+        function createItemElements(items, positions, color) {
+          let html = '';
+          items.slice(0, positions.length).forEach((item, i) => {
+            const pos = positions[i] || positions[positions.length - 1];
+            html += `
+              <text x="${pos[0]}" y="${pos[1]}" 
+                    text-anchor="middle" dominant-baseline="central"
+                    font-size="0.8rem" font-weight="600" fill="${color}"
+                    style="pointer-events:none; user-select:none;">
+                ${item}
+              </text>
+            `;
+          });
+          return html;
+        }
+
+        document.getElementById('itemsAOnly').innerHTML = createItemElements(itemsAOnly, posA, '#8a5a3a');
+        document.getElementById('itemsBOnly').innerHTML = createItemElements(itemsBOnly, posB, '#3a6a8a');
+        document.getElementById('itemsIntersect').innerHTML = createItemElements(itemsIntersect, posIntersect, '#2d7d46');
+        document.getElementById('itemsOutside').innerHTML = createItemElements(itemsOutside, posOutside, '#7a6656');
+
+        // Highlight lingkaran jika ada anggota
+        document.getElementById('circleA').classList.toggle('active', setA.size > 0);
+        document.getElementById('circleB').classList.toggle('active', setB.size > 0);
+      }
+
+      // ============================================================
+      // TAMBAH / HAPUS ANGGOTA
+      // ============================================================
+
+      function addToSet(set, input, targetSet) {
+        const items = parseInput(input.value);
+        if (items.length === 0) {
+          input.focus();
+          return;
+        }
+        items.forEach(item => {
+          targetSet.add(item);
+        });
+        input.value = '';
+        input.focus();
+        updateVenn();
+      }
+
+      btnAddA.addEventListener('click', () => addToSet(setA, inputA, setA));
+      btnAddB.addEventListener('click', () => addToSet(setB, inputB, setB));
+
+      inputA.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') addToSet(setA, inputA, setA);
+      });
+      inputB.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') addToSet(setB, inputB, setB);
+      });
+
+      btnClearA.addEventListener('click', () => {
+        setA.clear();
+        updateVenn();
+      });
+      btnClearB.addEventListener('click', () => {
+        setB.clear();
+        updateVenn();
+      });
+
+      // ============================================================
+      // MODE TANTANGAN
+      // ============================================================
+
+      const challenges = [
+        {
+          text: 'Lengkapi himpunan A dan B sehingga: <br><strong>|A ∩ B| = 2</strong> dan <strong>|A ∪ B| = 5</strong>',
+          check: (a, b) => {
+            const intersect = new Set([...a].filter(x => b.has(x)));
+            const union = new Set([...a, ...b]);
+            return intersect.size === 2 && union.size === 5;
+          }
+        },
+        {
+          text: 'Lengkapi himpunan A dan B sehingga: <br><strong>|A − B| = 3</strong> dan <strong>|B − A| = 2</strong>',
+          check: (a, b) => {
+            const diffAB = new Set([...a].filter(x => !b.has(x)));
+            const diffBA = new Set([...b].filter(x => !a.has(x)));
+            return diffAB.size === 3 && diffBA.size === 2;
+          }
+        },
+        {
+          text: 'Lengkapi himpunan A dan B sehingga: <br><strong>|A| = 4</strong>, <strong>|B| = 3</strong>, dan <strong>|A ∩ B| = 1</strong>',
+          check: (a, b) => {
+            const intersect = new Set([...a].filter(x => b.has(x)));
+            return a.size === 4 && b.size === 3 && intersect.size === 1;
+          }
+        }
+      ];
+
+      let currentChallengeIndex = 0;
+
+      btnChallengeMode.addEventListener('click', function() {
+        challengeMode = !challengeMode;
+        this.textContent = challengeMode ? '🔓 Mode Eksplorasi' : '🎯 Mode Tantangan';
+        this.classList.toggle('active-mode', challengeMode);
+        challengeBox.style.display = challengeMode ? 'block' : 'none';
+        challengeSolved = false;
+        if (challengeMode) {
+          loadChallenge();
+        } else {
+          challengeFeedback.textContent = '';
+          challengeFeedback.className = 'challenge-feedback';
+        }
+      });
+
+      function loadChallenge() {
+        const challenge = challenges[currentChallengeIndex % challenges.length];
+        challengeText.innerHTML = challenge.text;
+        challengeInput.value = '';
+        challengeFeedback.textContent = '';
+        challengeFeedback.className = 'challenge-feedback';
+        challengeSolved = false;
+        // Bersihkan himpunan
+        setA.clear();
+        setB.clear();
+        updateVenn();
+      }
+
+      function checkChallengeAuto() {
+        const challenge = challenges[currentChallengeIndex % challenges.length];
+        if (challenge.check(setA, setB)) {
+          challengeSolved = true;
+          challengeFeedback.textContent = '✅ Bagus! Tantangan selesai! Klik "Mode Eksplorasi" untuk kembali bermain bebas.';
+          challengeFeedback.className = 'challenge-feedback';
+        }
+      }
+
+      btnCheckChallenge.addEventListener('click', function() {
+        if (!challengeMode) return;
+        const challenge = challenges[currentChallengeIndex % challenges.length];
+        const items = parseInput(challengeInput.value);
+        if (items.length === 0) {
+          challengeFeedback.textContent = '⚠️ Masukkan angka terlebih dahulu!';
+          challengeFeedback.className = 'challenge-feedback error';
+          return;
+        }
+        // Tambahkan ke himpunan yang sesuai (jika mengandung angka genap -> A, ganjil -> B)
+        const tempA = new Set(setA);
+        const tempB = new Set(setB);
+        items.forEach(item => {
+          const num = parseFloat(item);
+          if (!isNaN(num)) {
+            if (num % 2 === 0) {
+              tempA.add(item);
+            } else {
+              tempB.add(item);
+            }
+          } else {
+            // String: tambahkan ke A
+            tempA.add(item);
+          }
+        });
+
+        if (challenge.check(tempA, tempB)) {
+          challengeSolved = true;
+          // Terapkan perubahan
+          setA = tempA;
+          setB = tempB;
+          updateVenn();
+          challengeFeedback.textContent = '✅ Perfect! Tantangan selesai! 🎉';
+          challengeFeedback.className = 'challenge-feedback';
+          challengeInput.value = '';
+        } else {
+          challengeFeedback.textContent = '❌ Belum tepat. Coba periksa kembali jumlah anggota!';
+          challengeFeedback.className = 'challenge-feedback error';
+        }
+      });
+
+      challengeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') btnCheckChallenge.click();
+      });
+
+      // ============================================================
+      // NAVIGASI
+      // ============================================================
+
+      btnNext.addEventListener('click', function() {
+        window.location.href = 'aktivitasbk4c.html';
+      });
+
+      // ============================================================
+      // INISIALISASI
+      // ============================================================
+
+      // Contoh data awal
+      setA = new Set(['1', '2', '3', '4']);
+      setB = new Set(['3', '4', '5', '6']);
+      updateVenn();
+
+      console.log('🧩 Set Logic Lab - Skenario 2 (Venn) siap!');
+    })();
+  </script>
+
+</body>
+</html>

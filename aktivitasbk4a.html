@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Set Logic Lab · Mengenal Anggota Himpunan</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA KHUSUS AKTIVITAS ===== */
+    .aktivitas-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding: 0.5rem 1rem;
+      background: #f8f3ee;
+      border-radius: 40px;
+      border: 2px solid #e5dbd0;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #7a6656;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .progress-step.active {
+      background: #4d3829;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .progress-step.done {
+      color: #2d7d46;
+    }
+
+    .progress-step .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e5dbd0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #4d3829;
+    }
+
+    .progress-step.active .step-num {
+      background: #dbb9a6;
+      color: #3b2b1e;
+    }
+
+    .progress-step.done .step-num {
+      background: #2d7d46;
+      color: #fff;
+    }
+
+    .progress-line {
+      flex: 1;
+      height: 3px;
+      background: #e5dbd0;
+      min-width: 20px;
+      border-radius: 4px;
+    }
+
+    .progress-line.done {
+      background: #2d7d46;
+    }
+
+    /* ===== HALAMAN PEMBUKA ===== */
+    .welcome-screen {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .welcome-screen .professor {
+      font-size: 4rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .welcome-screen h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .welcome-screen .slogan {
+      font-size: 1.2rem;
+      color: #5c4638;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .welcome-screen .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .welcome-screen .features .feat {
+      background: #fffffffa;
+      padding: 1rem 1.2rem;
+      border-radius: 16px;
+      border: 2px solid #e5dbd0;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .welcome-screen .features .feat:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .welcome-screen .features .feat .icon {
+      font-size: 1.8rem;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .welcome-screen .features .feat .label {
+      font-weight: 600;
+      color: #4d3829;
+      font-size: 0.95rem;
+    }
+
+    .welcome-screen .features .feat .desc {
+      font-size: 0.8rem;
+      color: #7a6656;
+    }
+
+    .btn-start {
+      display: inline-block;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+      padding: 1rem 3rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(75, 46, 30, 0.3);
+      margin-top: 0.5rem;
+    }
+
+    .btn-start:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 10px 32px rgba(75, 46, 30, 0.4);
+      background: linear-gradient(135deg, #5c4638, #7a5f4c);
+    }
+
+    .btn-start:focus-visible {
+      outline: 3px solid #a3836a;
+      outline-offset: 4px;
+    }
+
+    .btn-next {
+      display: inline-block;
+      background: linear-gradient(135deg, #2d7d46, #3a9d5a);
+      color: #fff;
+      padding: 0.8rem 2.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 125, 70, 0.3);
+    }
+
+    .btn-next:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(45, 125, 70, 0.4);
+      background: linear-gradient(135deg, #3a9d5a, #4db86e);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-reset {
+      display: inline-block;
+      background: #e8d5c4;
+      color: #4d3829;
+      padding: 0.6rem 1.8rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      border: 2px solid #dbb9a6;
+      cursor: pointer;
+    }
+
+    .btn-reset:hover {
+      background: #dac5b2;
+      transform: translateY(-2px);
+    }
+
+    /* ===== SKENARIO 1: DRAG AND DROP ===== */
+    .scene-container {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .scene-container.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .scene-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.5rem;
+      background: #f5ede6;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+    }
+
+    .scene-header .avatar {
+      font-size: 2.8rem;
+      flex-shrink: 0;
+    }
+
+    .scene-header .story {
+      font-size: 1rem;
+      color: #2f2822;
+      line-height: 1.6;
+    }
+
+    .scene-header .story strong {
+      color: #4d3829;
+    }
+
+    /* Drop Zones */
+    .drop-zones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 680px) {
+      .drop-zones {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .drop-zone {
+      background: #fffffffa;
+      border: 3px dashed #dbb9a6;
+      border-radius: 20px;
+      padding: 1.5rem 1rem;
+      min-height: 220px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .drop-zone.drag-over {
+      border-color: #6b4f3a;
+      background: #f5ede6;
+      transform: scale(1.02);
+    }
+
+    .drop-zone.correct {
+      border-color: #2d7d46;
+      background: #e8f5ee;
+    }
+
+    .drop-zone.wrong {
+      border-color: #b33c3c;
+      background: #fde8e8;
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-12px); }
+      40% { transform: translateX(12px); }
+      60% { transform: translateX(-8px); }
+      80% { transform: translateX(8px); }
+    }
+
+    .drop-zone .zone-title {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 1.1rem;
+      text-align: center;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e5dbd0;
+    }
+
+    .drop-zone .zone-title .badge {
+      background: #4d3829;
+      color: #fff;
+      padding: 0.1rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-left: 0.3rem;
+    }
+
+    .drop-zone .zone-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      min-height: 80px;
+      padding: 0.5rem;
+      align-content: flex-start;
+    }
+
+    .drop-zone .zone-items .item-placed {
+      background: #4d3829;
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      animation: popIn 0.3s ease;
+      cursor: default;
+      user-select: none;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .drop-zone .zone-hint {
+      font-size: 0.8rem;
+      color: #a08674;
+      text-align: center;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* Items Container */
+    .items-pool {
+      background: #f8f3ee;
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin: 1rem 0 1.5rem 0;
+      border: 2px solid #e5dbd0;
+    }
+
+    .items-pool .pool-title {
+      font-weight: 600;
+      color: #4d3829;
+      margin-bottom: 0.8rem;
+      font-size: 0.95rem;
+    }
+
+    .items-pool .pool-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .item-draggable {
+      background: #fff;
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid #dbb9a6;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #2f2822;
+      cursor: grab;
+      transition: all 0.2s ease;
+      user-select: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .item-draggable:hover {
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      border-color: #6b4f3a;
+    }
+
+    .item-draggable:active {
+      cursor: grabbing;
+      transform: scale(0.95);
+    }
+
+    .item-draggable.dragging {
+      opacity: 0.4;
+      transform: scale(0.9);
+    }
+
+    .item-draggable.placed {
+      display: none;
+    }
+
+    /* ===== FEEDBACK ===== */
+    .feedback-box {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      border-left: 8px solid #dbb9a6;
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .feedback-box.show {
+      display: block;
+    }
+
+    .feedback-box.success {
+      border-color: #2d7d46;
+      background: #e8f5ee;
+    }
+
+    .feedback-box.error {
+      border-color: #b33c3c;
+      background: #fde8e8;
+    }
+
+    .feedback-box .fb-icon {
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
+    }
+
+    .feedback-box .fb-text {
+      color: #2f2822;
+      line-height: 1.6;
+    }
+
+    .feedback-box .fb-text strong {
+      color: #4d3829;
+    }
+
+    /* ===== SCORE & PROGRESS ===== */
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1.2rem;
+      background: #fff;
+      border-radius: 16px;
+      border: 2px solid #e5dbd0;
+      margin-bottom: 1.5rem;
+    }
+
+    .stats-bar .stat {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      color: #4d3829;
+    }
+
+    .stats-bar .stat .num {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #3b2b1e;
+    }
+
+    .stats-bar .stat .label {
+      color: #7a6656;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: #e5dbd0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 0.5rem 0 1rem 0;
+    }
+
+    .progress-bar-container .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4d3829, #6b4f3a);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .welcome-screen h1 {
+        font-size: 1.8rem;
+      }
+      .welcome-screen .features {
+        grid-template-columns: 1fr 1fr;
+      }
+      .drop-zone {
+        min-height: 160px;
+        padding: 1rem;
+      }
+      .stats-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+      .scene-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .progress-step .step-label {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .welcome-screen h1 {
+        font-size: 1.4rem;
+      }
+      .welcome-screen .features {
+        grid-template-columns: 1fr;
+      }
+      .welcome-screen .features .feat {
+        padding: 0.8rem;
+      }
+      .item-draggable {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.9rem;
+      }
+      .drop-zone .zone-items .item-placed {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.8rem;
+      }
+      .btn-start {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+      }
+      .btn-next {
+        padding: 0.6rem 1.8rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Sembunyikan tombol scroll ke atas di halaman aktivitas */
+    #scrollTopBtn {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk4.html">Memodelkan Persoalan Logika</a></li>
+      <li>Set Logic Lab</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-container">
+
+        <!-- ===== PROGRESS TRACKER ===== -->
+        <div class="progress-tracker" id="progressTracker">
+          <div class="progress-step active" data-step="0">
+            <span class="step-num">🏠</span>
+            <span class="step-label">Mulai</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="1">
+            <span class="step-num">1</span>
+            <span class="step-label">Anggota</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="2">
+            <span class="step-num">2</span>
+            <span class="step-label">Venn</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="3">
+            <span class="step-num">3</span>
+            <span class="step-label">Operasi</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="4">
+            <span class="step-num">4</span>
+            <span class="step-label">Model</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="5">
+            <span class="step-num">5</span>
+            <span class="step-label">Boolean</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="6">
+            <span class="step-num">🏆</span>
+            <span class="step-label">Kuis</span>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- ===== HALAMAN PEMBUKA ===== -->
+        <!-- ============================================================ -->
+        <div class="scene-container active" id="welcomeScene">
+          <div class="welcome-screen">
+            <span class="professor">🧑‍🏫</span>
+            <h1>🧩 Set Logic Lab</h1>
+            <p class="slogan">"Kelompokkan, operasikan, dan pecahkan masalah dengan himpunan!"</p>
+
+            <div class="features">
+              <div class="feat">
+                <span class="icon">🎯</span>
+                <div class="label">Belajar Himpunan</div>
+                <div class="desc">Kenali anggota, operasi, dan model himpunan</div>
+              </div>
+              <div class="feat">
+                <span class="icon">🔄</span>
+                <div class="label">Interaktif</div>
+                <div class="desc">Drag-and-drop, Venn dinamis, dan simulasi</div>
+              </div>
+              <div class="feat">
+                <span class="icon">🧠</span>
+                <div class="label">Berpikir Logis</div>
+                <div class="desc">Hubungkan himpunan dengan logika Boolean</div>
+              </div>
+              <div class="feat">
+                <span class="icon">🏆</span>
+                <div class="label">Kuis & Sertifikat</div>
+                <div class="desc">Uji pemahaman dan dapatkan sertifikat</div>
+              </div>
+            </div>
+
+            <p style="color:#7a6656; font-size:0.9rem; margin-bottom:1.5rem;">
+              Dipandu oleh <strong>Professor Set</strong> 🧑‍🏫
+            </p>
+
+            <button class="btn-start" id="btnStartLab">
+              🚀 Mulai Petualangan Himpunan
+            </button>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- ===== SKENARIO 1: MENGENAL ANGGOTA HIMPUNAN ===== -->
+        <!-- ============================================================ -->
+        <div class="scene-container" id="scene1">
+          <div class="scene-header">
+            <span class="avatar">🧑‍🏫</span>
+            <div class="story">
+              <strong>Professor Set</strong> berkata:<br>
+              "Selamat datang di laboratorium himpunan! Lihatlah benda-benda di bawah ini.
+              Tugasmu adalah <strong>menyeret</strong> setiap benda ke dalam himpunan yang tepat.
+              <br>📌 <strong>Himpunan A</strong> untuk <strong>buah</strong>, dan <strong>Himpunan B</strong> untuk <strong>hewan</strong>!"
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats-bar">
+            <div class="stat">
+              <span>✅</span>
+              <span class="label">Tepat:</span>
+              <span class="num" id="correctCount">0</span>
+              <span class="label">/</span>
+              <span class="num" id="totalItems">0</span>
+            </div>
+            <div class="stat">
+              <span>❌</span>
+              <span class="label">Salah:</span>
+              <span class="num" id="wrongCount">0</span>
+            </div>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+              <button class="btn-reset" id="btnReset">🔄 Ulangi</button>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="progress-bar-container">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+
+          <!-- Drop Zones -->
+          <div class="drop-zones">
+            <!-- Himpunan A (Buah) -->
+            <div class="drop-zone" id="dropZoneA" data-zone="A">
+              <div class="zone-title">
+                🍎 Himpunan A <span class="badge">Buah</span>
+              </div>
+              <div class="zone-items" id="zoneAItems"></div>
+              <div class="zone-hint">⬇️ Seret buah ke sini</div>
+            </div>
+
+            <!-- Himpunan B (Hewan) -->
+            <div class="drop-zone" id="dropZoneB" data-zone="B">
+              <div class="zone-title">
+                🐾 Himpunan B <span class="badge">Hewan</span>
+              </div>
+              <div class="zone-items" id="zoneBItems"></div>
+              <div class="zone-hint">⬇️ Seret hewan ke sini</div>
+            </div>
+          </div>
+
+          <!-- Items Pool -->
+          <div class="items-pool">
+            <div class="pool-title">📦 Kumpulan Benda (seret ke himpunan yang tepat)</div>
+            <div class="pool-items" id="itemsPool">
+              <!-- Akan diisi oleh JavaScript -->
+            </div>
+          </div>
+
+          <!-- Feedback -->
+          <div class="feedback-box" id="feedbackBox">
+            <span class="fb-icon" id="fbIcon">💡</span>
+            <span class="fb-text" id="fbText">Klik dan seret benda ke himpunan yang tepat!</span>
+          </div>
+
+          <!-- Tombol Lanjut -->
+          <div style="text-align:center; margin-top:1.5rem;">
+            <button class="btn-next" id="btnNextScene" disabled>
+              ➜ Lanjut ke Diagram Venn
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- SCRIPT.JS -->
+  <script src="script.js"></script>
+
+  <!-- ============================================================ -->
+  <!-- ===== SCRIPT KHUSUS AKTIVITAS ===== -->
+  <!-- ============================================================ -->
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================================
+      // DATA
+      // ============================================================
+      const itemsData = [
+        { id: 'item1', label: '🍎 Apel', type: 'buah' },
+        { id: 'item2', label: '🍌 Pisang', type: 'buah' },
+        { id: 'item3', label: '🍇 Anggur', type: 'buah' },
+        { id: 'item4', label: '🍊 Jeruk', type: 'buah' },
+        { id: 'item5', label: '🐱 Kucing', type: 'hewan' },
+        { id: 'item6', label: '🐶 Anjing', type: 'hewan' },
+        { id: 'item7', label: '🐦 Burung', type: 'hewan' },
+        { id: 'item8', label: '🐟 Ikan', type: 'hewan' },
+      ];
+
+      // ============================================================
+      // DOM REFS
+      // ============================================================
+      const welcomeScene = document.getElementById('welcomeScene');
+      const scene1 = document.getElementById('scene1');
+      const btnStart = document.getElementById('btnStartLab');
+      const itemsPool = document.getElementById('itemsPool');
+      const zoneAItems = document.getElementById('zoneAItems');
+      const zoneBItems = document.getElementById('zoneBItems');
+      const dropZoneA = document.getElementById('dropZoneA');
+      const dropZoneB = document.getElementById('dropZoneB');
+      const correctCountEl = document.getElementById('correctCount');
+      const wrongCountEl = document.getElementById('wrongCount');
+      const totalItemsEl = document.getElementById('totalItems');
+      const progressFill = document.getElementById('progressFill');
+      const feedbackBox = document.getElementById('feedbackBox');
+      const fbIcon = document.getElementById('fbIcon');
+      const fbText = document.getElementById('fbText');
+      const btnReset = document.getElementById('btnReset');
+      const btnNext = document.getElementById('btnNextScene');
+
+      // ============================================================
+      // STATE
+      // ============================================================
+      let correctCount = 0;
+      let wrongCount = 0;
+      let totalItems = itemsData.length;
+      let placedItems = new Set(); // id item yang sudah ditempatkan
+
+      // ============================================================
+      // FUNGSI UTAMA
+      // ============================================================
+
+      // Render item di pool
+      function renderPool() {
+        itemsPool.innerHTML = '';
+        itemsData.forEach(item => {
+          if (placedItems.has(item.id)) return;
+          const el = document.createElement('div');
+          el.className = 'item-draggable';
+          el.id = item.id;
+          el.textContent = item.label;
+          el.draggable = true;
+          el.dataset.type = item.type;
+          el.dataset.id = item.id;
+
+          // Event drag
+          el.addEventListener('dragstart', handleDragStart);
+          el.addEventListener('dragend', handleDragEnd);
+
+          // Touch events untuk mobile
+          el.addEventListener('touchstart', handleTouchStart, { passive: true });
+          el.addEventListener('touchmove', handleTouchMove, { passive: false });
+          el.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+          itemsPool.appendChild(el);
+        });
+        updateTotal();
+      }
+
+      // Update counter
+      function updateTotal() {
+        totalItemsEl.textContent = totalItems;
+        const placed = placedItems.size;
+        const progress = totalItems > 0 ? (placed / totalItems) * 100 : 0;
+        progressFill.style.width = progress + '%';
+        correctCountEl.textContent = correctCount;
+        wrongCountEl.textContent = wrongCount;
+
+        // Cek apakah semua sudah selesai
+        if (placed === totalItems && totalItems > 0) {
+          btnNext.disabled = false;
+          showFeedback('success', '🎉', 'Semua benda sudah dikelompokkan dengan benar! Kamu hebat! Klik "Lanjut" untuk ke tahap berikutnya.');
+        } else {
+          btnNext.disabled = true;
+        }
+      }
+
+      // Tampilkan feedback
+      function showFeedback(type, icon, text) {
+        feedbackBox.className = 'feedback-box show ' + type;
+        fbIcon.textContent = icon || '💡';
+        fbText.innerHTML = text;
+      }
+
+      // Reset permainan
+      function resetGame() {
+        placedItems.clear();
+        correctCount = 0;
+        wrongCount = 0;
+        zoneAItems.innerHTML = '';
+        zoneBItems.innerHTML = '';
+        dropZoneA.className = 'drop-zone';
+        dropZoneB.className = 'drop-zone';
+        feedbackBox.className = 'feedback-box';
+        btnNext.disabled = true;
+        renderPool();
+        showFeedback('', '💡', 'Klik dan seret benda ke himpunan yang tepat!');
+        updateTotal();
+      }
+
+      // Tempatkan item ke zone
+      function placeItem(itemId, zone) {
+        const item = itemsData.find(i => i.id === itemId);
+        if (!item) return false;
+        if (placedItems.has(itemId)) return false;
+
+        const isCorrect = (zone === 'A' && item.type === 'buah') ||
+                          (zone === 'B' && item.type === 'hewan');
+
+        // Cek apakah sudah ada di zone lain
+        const existingInA = zoneAItems.querySelector(`[data-id="${itemId}"]`);
+        const existingInB = zoneBItems.querySelector(`[data-id="${itemId}"]`);
+        if (existingInA || existingInB) return false;
+
+        // Buat elemen di zone
+        const el = document.createElement('div');
+        el.className = 'item-placed';
+        el.textContent = item.label;
+        el.dataset.id = itemId;
+
+        if (zone === 'A') {
+          zoneAItems.appendChild(el);
+        } else {
+          zoneBItems.appendChild(el);
+        }
+
+        placedItems.add(itemId);
+
+        if (isCorrect) {
+          correctCount++;
+          const zoneEl = zone === 'A' ? dropZoneA : dropZoneB;
+          zoneEl.classList.add('correct');
+          setTimeout(() => zoneEl.classList.remove('correct'), 600);
+          showFeedback('success', '✅', `<strong>Benar!</strong> "${item.label}" adalah ${item.type === 'buah' ? 'buah' : 'hewan'}. Masuk ke himpunan yang tepat!`);
+        } else {
+          wrongCount++;
+          const zoneEl = zone === 'A' ? dropZoneA : dropZoneB;
+          zoneEl.classList.add('wrong');
+          setTimeout(() => zoneEl.classList.remove('wrong'), 600);
+
+          // Kembalikan item ke pool
+          placedItems.delete(itemId);
+          const placedEl = zone === 'A' ? zoneAItems : zoneBItems;
+          const child = placedEl.querySelector(`[data-id="${itemId}"]`);
+          if (child) child.remove();
+
+          showFeedback('error', '❌', `<strong>Ups!</strong> "${item.label}" bukan ${zone === 'A' ? 'buah' : 'hewan'}. Coba seret ke himpunan yang lain!`);
+
+          renderPool();
+          updateTotal();
+          return false;
+        }
+
+        // Hapus dari pool (sembunyikan)
+        const poolEl = document.getElementById(itemId);
+        if (poolEl) {
+          poolEl.classList.add('placed');
+          poolEl.draggable = false;
+        }
+
+        updateTotal();
+        return true;
+      }
+
+      // ============================================================
+      // DRAG & DROP EVENTS
+      // ============================================================
+
+      let draggedItem = null;
+
+      function handleDragStart(e) {
+        const el = e.target.closest('.item-draggable');
+        if (!el) return;
+        if (el.classList.contains('placed')) return;
+        draggedItem = el;
+        el.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', el.id);
+        // Untuk mobile
+        e.dataTransfer.setData('text', el.id);
+      }
+
+      function handleDragEnd(e) {
+        const el = e.target.closest('.item-draggable');
+        if (el) el.classList.remove('dragging');
+        dropZoneA.classList.remove('drag-over');
+        dropZoneB.classList.remove('drag-over');
+      }
+
+      // Drop zone events
+      function setupDropZone(zoneEl, zoneName) {
+        zoneEl.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          this.classList.add('drag-over');
+        });
+
+        zoneEl.addEventListener('dragleave', function(e) {
+          this.classList.remove('drag-over');
+        });
+
+        zoneEl.addEventListener('drop', function(e) {
+          e.preventDefault();
+          this.classList.remove('drag-over');
+          const id = e.dataTransfer.getData('text/plain');
+          if (!id) return;
+          const itemEl = document.getElementById(id);
+          if (!itemEl) return;
+          if (itemEl.classList.contains('placed')) return;
+
+          // Cek apakah item sudah di zone lain
+          const inA = zoneAItems.querySelector(`[data-id="${id}"]`);
+          const inB = zoneBItems.querySelector(`[data-id="${id}"]`);
+          if (inA || inB) return;
+
+          placeItem(id, zoneName);
+        });
+      }
+
+      setupDropZone(dropZoneA, 'A');
+      setupDropZone(dropZoneB, 'B');
+
+      // ============================================================
+      // TOUCH EVENTS (Mobile)
+      // ============================================================
+
+      let touchDragData = null;
+      let touchClone = null;
+
+      function handleTouchStart(e) {
+        const el = e.target.closest('.item-draggable');
+        if (!el) return;
+        if (el.classList.contains('placed')) return;
+        const touch = e.touches[0];
+        touchDragData = {
+          el: el,
+          id: el.id,
+          startX: touch.clientX,
+          startY: touch.clientY,
+          offsetX: touch.clientX - el.getBoundingClientRect().left,
+          offsetY: touch.clientY - el.getBoundingClientRect().top,
+        };
+        // Buat clone untuk visual
+        touchClone = el.cloneNode(true);
+        touchClone.style.position = 'fixed';
+        touchClone.style.pointerEvents = 'none';
+        touchClone.style.opacity = '0.7';
+        touchClone.style.zIndex = '9999';
+        touchClone.style.transform = 'scale(1.05)';
+        touchClone.style.width = el.offsetWidth + 'px';
+        document.body.appendChild(touchClone);
+        el.classList.add('dragging');
+      }
+
+      function handleTouchMove(e) {
+        if (!touchDragData || !touchClone) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        touchClone.style.left = (touch.clientX - touchDragData.offsetX) + 'px';
+        touchClone.style.top = (touch.clientY - touchDragData.offsetY) + 'px';
+
+        // Cek posisi terhadap drop zones
+        const rectA = dropZoneA.getBoundingClientRect();
+        const rectB = dropZoneB.getBoundingClientRect();
+
+        dropZoneA.classList.toggle('drag-over', 
+          touch.clientX >= rectA.left && touch.clientX <= rectA.right &&
+          touch.clientY >= rectA.top && touch.clientY <= rectA.bottom
+        );
+        dropZoneB.classList.toggle('drag-over',
+          touch.clientX >= rectB.left && touch.clientX <= rectB.right &&
+          touch.clientY >= rectB.top && touch.clientY <= rectB.bottom
+        );
+      }
+
+      function handleTouchEnd(e) {
+        if (!touchDragData || !touchClone) {
+          cleanupTouch();
+          return;
+        }
+
+        const touch = e.changedTouches[0];
+        const el = touchDragData.el;
+        const id = touchDragData.id;
+
+        // Cek apakah di atas drop zone
+        const rectA = dropZoneA.getBoundingClientRect();
+        const rectB = dropZoneB.getBoundingClientRect();
+
+        let targetZone = null;
+        if (touch.clientX >= rectA.left && touch.clientX <= rectA.right &&
+            touch.clientY >= rectA.top && touch.clientY <= rectA.bottom) {
+          targetZone = 'A';
+        } else if (touch.clientX >= rectB.left && touch.clientX <= rectB.right &&
+                   touch.clientY >= rectB.top && touch.clientY <= rectB.bottom) {
+          targetZone = 'B';
+        }
+
+        // Cek apakah item sudah di zone lain
+        const inA = zoneAItems.querySelector(`[data-id="${id}"]`);
+        const inB = zoneBItems.querySelector(`[data-id="${id}"]`);
+        const alreadyPlaced = inA || inB;
+
+        if (targetZone && !alreadyPlaced && !el.classList.contains('placed')) {
+          placeItem(id, targetZone);
+        } else if (!targetZone && !alreadyPlaced) {
+          // Kembali ke posisi awal
+          el.classList.remove('dragging');
+        }
+
+        dropZoneA.classList.remove('drag-over');
+        dropZoneB.classList.remove('drag-over');
+        cleanupTouch();
+      }
+
+      function cleanupTouch() {
+        if (touchClone && touchClone.parentNode) {
+          touchClone.parentNode.removeChild(touchClone);
+        }
+        if (touchDragData && touchDragData.el) {
+          touchDragData.el.classList.remove('dragging');
+        }
+        touchDragData = null;
+        touchClone = null;
+      }
+
+      // ============================================================
+      // NAVIGASI
+      // ============================================================
+
+      // Tombol Mulai
+      btnStart.addEventListener('click', function() {
+        welcomeScene.classList.remove('active');
+        scene1.classList.add('active');
+        renderPool();
+        updateTotal();
+        // Update progress tracker
+        updateProgress(1);
+        showFeedback('', '💡', 'Klik dan seret benda ke himpunan yang tepat!');
+      });
+
+      // Tombol Reset
+      btnReset.addEventListener('click', resetGame);
+
+      // Tombol Lanjut
+      btnNext.addEventListener('click', function() {
+        // Pindah ke halaman berikutnya
+        window.location.href = 'aktivitasbk4b.html';
+      });
+
+      // ============================================================
+      // PROGRESS TRACKER
+      // ============================================================
+
+      function updateProgress(step) {
+        const steps = document.querySelectorAll('.progress-step');
+        const lines = document.querySelectorAll('.progress-line');
+        steps.forEach((s, i) => {
+          s.classList.remove('active', 'done');
+          if (i < step) s.classList.add('done');
+          if (i === step) s.classList.add('active');
+        });
+        lines.forEach((line, i) => {
+          line.classList.toggle('done', i < step);
+        });
+      }
+
+      // ============================================================
+      // INISIALISASI
+      // ============================================================
+
+      // Tampilkan welcome screen, sembunyikan scene1
+      welcomeScene.classList.add('active');
+      scene1.classList.remove('active');
+      totalItemsEl.textContent = totalItems;
+
+      // Cegah default drag pada body
+      document.addEventListener('dragover', e => e.preventDefault());
+      document.addEventListener('drop', e => e.preventDefault());
+
+      console.log('🧩 Set Logic Lab - Skenario 1 siap!');
+    })();
+  </script>
+
+</body>
+</html>

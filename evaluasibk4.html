@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Evaluasi · Set Logic Lab</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA KHUSUS EVALUASI ===== */
+    .eval-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .eval-container h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      text-align: center;
+      margin-bottom: 0.3rem;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .eval-container .sub-title {
+      text-align: center;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    /* ===== BIODATA ===== */
+    .biodata-section {
+      background: #fffffffa;
+      border-radius: 20px;
+      padding: 2rem;
+      border: 2px solid #e5dbd0;
+      margin-bottom: 2rem;
+      display: block;
+    }
+
+    .biodata-section.hidden {
+      display: none;
+    }
+
+    .biodata-section .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .biodata-section .form-group label {
+      display: block;
+      font-weight: 600;
+      color: #4d3829;
+      margin-bottom: 0.3rem;
+      font-size: 0.95rem;
+    }
+
+    .biodata-section .form-group input,
+    .biodata-section .form-group select {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      border: 2px solid #e5dbd0;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: #2f2822;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    .biodata-section .form-group input:focus,
+    .biodata-section .form-group select:focus {
+      outline: none;
+      border-color: #6b4f3a;
+    }
+
+    .biodata-section .form-group input.error {
+      border-color: #b33c3c;
+      background: #fde8e8;
+    }
+
+    .biodata-section .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .biodata-section .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .nama-siswa-container {
+      margin-top: 0.5rem;
+    }
+
+    .nama-siswa-container .nama-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      align-items: center;
+    }
+
+    .nama-siswa-container .nama-row input {
+      flex: 1;
+      padding: 0.5rem 0.8rem;
+      border: 2px solid #e5dbd0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+
+    .nama-siswa-container .nama-row input:focus {
+      outline: none;
+      border-color: #6b4f3a;
+    }
+
+    .nama-siswa-container .nama-row input.error {
+      border-color: #b33c3c;
+      background: #fde8e8;
+    }
+
+    .nama-siswa-container .nama-row .nomor {
+      font-weight: 700;
+      color: #4d3829;
+      min-width: 30px;
+      font-size: 0.9rem;
+    }
+
+    .btn-submit-biodata {
+      display: inline-block;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+      padding: 0.8rem 3rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .btn-submit-biodata:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(75, 46, 30, 0.3);
+    }
+
+    .btn-submit-biodata:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ===== KUIS ===== */
+    .kuis-section {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .kuis-section.active {
+      display: block;
+    }
+
+    .soal-card {
+      background: #fffffffa;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin-bottom: 1.5rem;
+    }
+
+    .soal-card .soal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e5dbd0;
+    }
+
+    .soal-card .soal-header .soal-nomor {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 1rem;
+    }
+
+    .soal-card .soal-header .soal-tag {
+      font-size: 0.7rem;
+      color: #7a6656;
+      background: #f5ede6;
+      padding: 0.15rem 0.8rem;
+      border-radius: 20px;
+    }
+
+    .soal-card .soal-header .soal-tag.answered {
+      color: #2d7d46;
+    }
+
+    .soal-card .soal-text {
+      font-size: 1rem;
+      color: #2f2822;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .soal-card .soal-text .highlight {
+      background: #f5ede6;
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      font-weight: 600;
+      color: #4d3829;
+    }
+
+    .soal-card .pilihan {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+
+    @media (max-width: 600px) {
+      .soal-card .pilihan {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .soal-card .pilihan label {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 1rem;
+      border: 2px solid #e5dbd0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #fff;
+      font-size: 0.95rem;
+      color: #2f2822;
+    }
+
+    .soal-card .pilihan label:hover {
+      border-color: #b09b88;
+      background: #f8f3ee;
+    }
+
+    .soal-card .pilihan label input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #4d3829;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .soal-card .pilihan label.selected {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    /* ===== TIMER & PROGRESS ===== */
+    .quiz-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border-radius: 16px;
+      padding: 0.8rem 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin-bottom: 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+    }
+
+    .quiz-header .info-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      color: #5c4638;
+    }
+
+    .quiz-header .info-item .num {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #3b2b1e;
+    }
+
+    .quiz-header .info-item .num.done {
+      color: #2d7d46;
+    }
+
+    .progress-bar-eval {
+      width: 100%;
+      height: 6px;
+      background: #e5dbd0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 0.3rem;
+    }
+
+    .progress-bar-eval .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4d3829, #6b4f3a);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* ===== TOMBOL SUBMIT ===== */
+    .btn-submit-kuis {
+      display: inline-block;
+      background: linear-gradient(135deg, #2d7d46, #3a9d5a);
+      color: #fff;
+      padding: 0.8rem 3rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .btn-submit-kuis:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(45, 125, 70, 0.3);
+    }
+
+    .btn-submit-kuis:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ===== HASIL ===== */
+    .hasil-section {
+      display: none;
+      animation: fadeIn 0.5s ease;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .hasil-section.active {
+      display: block;
+    }
+
+    .hasil-section .qr-container {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 16px;
+      border: 2px solid #e5dbd0;
+      display: inline-block;
+      margin: 1rem 0;
+    }
+
+    .hasil-section .qr-container #qrcode {
+      display: inline-block;
+    }
+
+    .hasil-section .qr-container #qrcode img,
+    .hasil-section .qr-container #qrcode canvas {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+    }
+
+    .hasil-section .qr-container .qr-label {
+      font-size: 0.85rem;
+      color: #4d3829;
+      margin-top: 0.5rem;
+      font-weight: 500;
+      max-width: 250px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-email {
+      display: inline-block;
+      background: linear-gradient(135deg, #d93025, #c62828);
+      color: #fff;
+      padding: 0.8rem 3rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .btn-email:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(201, 40, 40, 0.3);
+    }
+
+    .btn-email:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-back-eval {
+      display: inline-block;
+      background: #e8d5c4;
+      color: #4d3829;
+      padding: 0.7rem 2rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      border: 2px solid #dbb9a6;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .btn-back-eval:hover {
+      background: #dac5b2;
+      transform: translateY(-2px);
+    }
+
+    /* ===== MODAL KONFIRMASI ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-box .modal-icon {
+      font-size: 3.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-box .modal-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .modal-box .modal-text {
+      color: #5c4638;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-box .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .modal-box .modal-actions button {
+      padding: 0.6rem 2rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal-box .modal-actions .btn-confirm {
+      background: #2d7d46;
+      color: #fff;
+    }
+
+    .modal-box .modal-actions .btn-confirm:hover {
+      background: #3a9d5a;
+      transform: translateY(-2px);
+    }
+
+    .modal-box .modal-actions .btn-cancel {
+      background: #e8d5c4;
+      color: #4d3829;
+    }
+
+    .modal-box .modal-actions .btn-cancel:hover {
+      background: #dac5b2;
+      transform: translateY(-2px);
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .biodata-section {
+        padding: 1.2rem;
+      }
+      .eval-container h1 {
+        font-size: 1.6rem;
+      }
+      .quiz-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
+        padding: 0.8rem 1rem;
+      }
+      .quiz-header .info-item {
+        font-size: 0.8rem;
+      }
+      .soal-card {
+        padding: 1rem;
+      }
+      .soal-card .soal-text {
+        font-size: 0.95rem;
+      }
+      .modal-box {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .soal-card .pilihan label {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.8rem;
+      }
+      .biodata-section .form-row {
+        grid-template-columns: 1fr;
+      }
+      .modal-box .modal-actions {
+        flex-direction: column;
+      }
+      .modal-box .modal-actions button {
+        width: 100%;
+      }
+    }
+
+    #scrollTopBtn {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk4.html">Memodelkan Persoalan Logika</a></li>
+      <li>Evaluasi</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="eval-container">
+
+        <h1>📝 Evaluasi Set Logic Lab</h1>
+        <p class="sub-title">Uji pemahamanmu tentang himpunan dan logika</p>
+
+        <!-- ===== BIODATA ===== -->
+        <div class="biodata-section" id="biodataSection">
+          <div class="form-group">
+            <label for="jumlahSiswa">📊 Jumlah Siswa yang Mengerjakan</label>
+            <select id="jumlahSiswa">
+              <option value="">-- Pilih jumlah --</option>
+              <option value="1">1 Siswa</option>
+              <option value="2">2 Siswa</option>
+              <option value="3">3 Siswa</option>
+              <option value="4">4 Siswa</option>
+              <option value="5">5 Siswa</option>
+              <option value="6">6 Siswa</option>
+              <option value="7">7 Siswa</option>
+              <option value="8">8 Siswa</option>
+              <option value="9">9 Siswa</option>
+              <option value="10">10 Siswa</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="kelasInput">🏫 Kelas</label>
+              <input type="text" id="kelasInput" placeholder="Contoh: 8A, 8B, 8C" />
+            </div>
+            <div class="form-group">
+              <label for="mapelInput">📚 Mata Pelajaran</label>
+              <input type="text" id="mapelInput" value="Informatika" readonly style="background:#f5ede6;" />
+            </div>
+          </div>
+
+          <div class="nama-siswa-container" id="namaSiswaContainer">
+            <!-- Akan diisi oleh JS -->
+          </div>
+
+          <button class="btn-submit-biodata" id="btnSubmitBiodata">🚀 Mulai Evaluasi</button>
+        </div>
+
+        <!-- ===== KUIS ===== -->
+        <div class="kuis-section" id="kuisSection">
+
+          <div class="quiz-header" id="quizHeader">
+            <div class="info-item">
+              <span>📝</span>
+              <span class="num" id="soalTerjawab">0</span>
+              <span>/</span>
+              <span class="num">20</span>
+              <span style="color:#7a6656;">terjawab</span>
+            </div>
+            <div class="info-item">
+              <span>⏱️</span>
+              <span class="num" id="timerDisplay">00:00</span>
+            </div>
+            <div class="info-item">
+              <span>👥</span>
+              <span id="siswaAktifDisplay" style="font-weight:600;color:#4d3829;">-</span>
+            </div>
+            <div class="progress-bar-eval">
+              <div class="progress-fill" id="progressFillKuis"></div>
+            </div>
+          </div>
+
+          <div id="soalContainer">
+            <!-- Akan diisi oleh JS -->
+          </div>
+
+          <button class="btn-submit-kuis" id="btnSubmitKuis" disabled>📤 Kumpulkan Jawaban</button>
+        </div>
+
+        <!-- ===== HASIL ===== -->
+        <div class="hasil-section" id="hasilSection">
+          <div style="font-size:3rem; margin-bottom:0.3rem;">🎉</div>
+          <h2 style="color:#3b2b1e; margin-bottom:0.3rem;">Evaluasi Selesai!</h2>
+          <p style="color:#5c4638; margin-bottom:1rem;">Terima kasih telah mengerjakan evaluasi.</p>
+
+          <div class="qr-container">
+            <div id="qrcode"></div>
+            <div class="qr-label">📧 Kirim QR Code ini ke email untuk bukti telah mengerjakan evaluasi</div>
+          </div>
+
+          <button class="btn-email" id="btnEmail">📧 Kirim ke Email</button>
+          <br>
+          <a href="bk4.html" class="btn-back-eval">📚 Kembali ke Materi</a>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- ===== MODAL KONFIRMASI ===== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <div class="modal-icon">⚠️</div>
+      <div class="modal-title">Konfirmasi Pengumpulan</div>
+      <div class="modal-text" id="modalText">
+        Apakah kamu yakin ingin mengumpulkan jawaban?<br>
+        <strong id="modalJawabanCount">0</strong> dari 20 soal telah dijawab.
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="modalCancel">❌ Batal</button>
+        <button class="btn-confirm" id="modalConfirm">✅ Ya, Kumpulkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- SCRIPT.JS -->
+  <script src="script.js"></script>
+
+  <!-- ============================================================ -->
+  <!-- ===== SCRIPT KHUSUS EVALUASI ===== -->
+  <!-- ============================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js">
+  </script>
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================================
+      // DATA SOAL (20 SOAL)
+      // ============================================================
+      const allSoal = [{
+        soal: 'Manakah yang merupakan anggota dari himpunan A = {2, 4, 6, 8, 10}?',
+        pilihan: ['3', '5', '6', '9'],
+        jawaban: 2
+      }, {
+        soal: 'Jika A = {1, 2, 3, 4, 5} dan B = {4, 5, 6, 7, 8}, maka A ∩ B = ...',
+        pilihan: ['{1, 2, 3, 4, 5, 6, 7, 8}', '{4, 5}', '{1, 2, 3}', '{6, 7, 8}'],
+        jawaban: 1
+      }, {
+        soal: 'Jika A = {a, b, c, d} dan B = {c, d, e, f}, maka A ∪ B = ...',
+        pilihan: ['{a, b, c, d}', '{c, d, e, f}', '{a, b, c, d, e, f}', '{a, b, e, f}'],
+        jawaban: 2
+      }, {
+        soal: 'Jika A = {1, 2, 3, 4, 5} dan B = {3, 4, 5, 6}, maka A − B = ...',
+        pilihan: ['{1, 2}', '{3, 4, 5}', '{6}', '{1, 2, 3, 4, 5, 6}'],
+        jawaban: 0
+      }, {
+        soal: 'Jika S = {1, 2, 3, 4, 5, 6, 7, 8} dan A = {2, 4, 6, 8}, maka A\' = ...',
+        pilihan: ['{1, 3, 5, 7}', '{2, 4, 6, 8}', '{1, 2, 3, 4, 5, 6, 7, 8}', '∅'],
+        jawaban: 0
+      }, {
+        soal: 'Di sebuah kelas, 25 siswa suka matematika, 18 suka IPA, dan 10 suka keduanya. Berapa siswa yang suka matematika atau IPA?',
+        pilihan: ['25', '33', '43', '53'],
+        jawaban: 1
+      }, {
+        soal: 'Di toko buku, 35 orang membeli novel, 20 membeli komik, dan 8 membeli keduanya. Berapa yang hanya membeli novel?',
+        pilihan: ['8', '27', '35', '43'],
+        jawaban: 1
+      }, {
+        soal: 'Manakah yang merupakan himpunan bagian dari A = {1, 2, 3, 4, 5}?',
+        pilihan: ['{1, 2, 6}', '{1, 2, 3}', '{5, 6, 7}', '{0, 1, 2}'],
+        jawaban: 1
+      }, {
+        soal: 'Dalam logika Boolean, operasi "A DAN B" (A AND B) setara dengan operasi himpunan ...',
+        pilihan: ['A ∪ B', 'A ∩ B', 'A − B', 'A\''],
+        jawaban: 1
+      }, {
+        soal: 'Dalam logika Boolean, operasi "TIDAK A" (NOT A) setara dengan operasi himpunan ...',
+        pilihan: ['A ∪ B', 'A ∩ B', 'A − B', 'A\''],
+        jawaban: 3
+      }, {
+        soal: 'Jika A = {x | x adalah bilangan genap kurang dari 10}, maka anggota A adalah ...',
+        pilihan: ['{1, 3, 5, 7, 9}', '{2, 4, 6, 8}', '{1, 2, 3, 4, 5, 6, 7, 8, 9}', '{0, 2, 4, 6, 8}'],
+        jawaban: 1
+      }, {
+        soal: 'Jika A = {1, 2, 3, 4} dan B = {3, 4, 5, 6}, maka B − A = ...',
+        pilihan: ['{1, 2}', '{3, 4}', '{5, 6}', '{1, 2, 3, 4, 5, 6}'],
+        jawaban: 2
+      }, {
+        soal: 'Di sebuah kantin, 30 siswa membeli nasi goreng, 22 membeli mie goreng, dan 12 membeli keduanya. Berapa siswa yang hanya membeli mie goreng?',
+        pilihan: ['10', '12', '22', '40'],
+        jawaban: 0
+      }, {
+        soal: 'Jika S = {huruf alfabet} dan A = {huruf vokal}, maka A\' adalah ...',
+        pilihan: ['{a, i, u, e, o}', '{b, c, d, f, g, ... z}', '{a, b, c, ... z}', '∅'],
+        jawaban: 1
+      }, {
+        soal: 'Jika A = {1, 2, 3, 4} dan B = {2, 4, 6, 8}, maka A ∩ B = ...',
+        pilihan: ['{1, 2, 3, 4, 6, 8}', '{2, 4}', '{1, 3}', '{6, 8}'],
+        jawaban: 1
+      }, {
+        soal: 'Aplikasi streaming memiliki 200 film. 80 film komedi, 70 film aksi, 50 film drama, 20 film komedi dan aksi, 10 film ketiganya. Berapa film yang hanya komedi?',
+        pilihan: ['30', '40', '50', '60'],
+        jawaban: 1
+      }, {
+        soal: 'Jika A ⊆ B, maka pernyataan yang benar adalah ...',
+        pilihan: ['Semua anggota A ada di B', 'Semua anggota B ada di A', 'A dan B sama', 'A dan B tidak beririsan'],
+        jawaban: 0
+      }, {
+        soal: 'Dalam logika Boolean, operasi "A ATAU B" (A OR B) setara dengan operasi himpunan ...',
+        pilihan: ['A ∪ B', 'A ∩ B', 'A − B', 'A\''],
+        jawaban: 0
+      }, {
+        soal: 'Jika A = {1, 2, 3, 4, 5} dan B = {4, 5, 6, 7}, maka (A ∪ B) − A = ...',
+        pilihan: ['{1, 2, 3}', '{4, 5}', '{6, 7}', '{1, 2, 3, 4, 5, 6, 7}'],
+        jawaban: 2
+      }, {
+        soal: 'Di sebuah desa, 50 orang memiliki sepeda, 35 memiliki motor, 15 memiliki keduanya, dan 10 tidak memiliki keduanya. Berapa total penduduk yang memiliki kendaraan?',
+        pilihan: ['50', '70', '80', '100'],
+        jawaban: 2
+      }];
+
+      // ============================================================
+      // STATE
+      // ============================================================
+      let currentSoal = [];
+      let jawabanSiswa = {};
+      let siswaList = [];
+      let kelas = '';
+      let timerInterval = null;
+      let seconds = 0;
+      let isSubmitted = false;
+      let nilaiAkhir = 0;
+      let qrCodeInstance = null;
+      let qrImageData = null;
+
+      const totalSoal = 20;
+
+      // ============================================================
+      // DOM REFS
+      // ============================================================
+      const biodataSection = document.getElementById('biodataSection');
+      const kuisSection = document.getElementById('kuisSection');
+      const hasilSection = document.getElementById('hasilSection');
+      const jumlahSiswa = document.getElementById('jumlahSiswa');
+      const kelasInput = document.getElementById('kelasInput');
+      const namaContainer = document.getElementById('namaSiswaContainer');
+      const btnSubmitBiodata = document.getElementById('btnSubmitBiodata');
+      const soalContainer = document.getElementById('soalContainer');
+      const soalTerjawab = document.getElementById('soalTerjawab');
+      const progressFill = document.getElementById('progressFillKuis');
+      const timerDisplay = document.getElementById('timerDisplay');
+      const siswaAktifDisplay = document.getElementById('siswaAktifDisplay');
+      const btnSubmitKuis = document.getElementById('btnSubmitKuis');
+      const modalOverlay = document.getElementById('modalOverlay');
+      const modalText = document.getElementById('modalText');
+      const modalJawabanCount = document.getElementById('modalJawabanCount');
+      const modalCancel = document.getElementById('modalCancel');
+      const modalConfirm = document.getElementById('modalConfirm');
+      const qrContainer = document.getElementById('qrcode');
+
+      // ============================================================
+      // FUNGSI BIODATA
+      // ============================================================
+
+      // Generate input nama siswa
+      jumlahSiswa.addEventListener('change', function() {
+        const count = parseInt(this.value) || 0;
+        let html = '';
+        for (let i = 1; i <= count; i++) {
+          html += `
+            <div class="nama-row">
+              <span class="nomor">${i}.</span>
+              <input type="text" class="nama-input" placeholder="Nama lengkap siswa ${i}" data-index="${i}" />
+            </div>
+          `;
+        }
+        namaContainer.innerHTML = html;
+      });
+
+      // Submit biodata
+      btnSubmitBiodata.addEventListener('click', function() {
+        const count = parseInt(jumlahSiswa.value) || 0;
+        kelas = kelasInput.value.trim();
+
+        if (count === 0) {
+          alert('Silakan pilih jumlah siswa terlebih dahulu!');
+          return;
+        }
+
+        if (!kelas) {
+          kelasInput.classList.add('error');
+          alert('Silakan masukkan kelas!');
+          return;
+        } else {
+          kelasInput.classList.remove('error');
+        }
+
+        // Kumpulkan nama siswa
+        const inputs = document.querySelectorAll('.nama-input');
+        siswaList = [];
+        let valid = true;
+        inputs.forEach((inp, i) => {
+          const nama = inp.value.trim();
+          if (!nama) {
+            inp.classList.add('error');
+            valid = false;
+          } else {
+            inp.classList.remove('error');
+            siswaList.push(nama);
+          }
+        });
+
+        if (!valid || siswaList.length !== count) {
+          alert('Silakan isi semua nama siswa dengan lengkap!');
+          return;
+        }
+
+        // Mulai kuis
+        startQuiz();
+      });
+
+      // ============================================================
+      // FUNGSI KUIS
+      // ============================================================
+
+      function startQuiz() {
+        biodataSection.classList.add('hidden');
+        kuisSection.classList.add('active');
+
+        // Acak soal
+        const shuffled = [...allSoal].sort(() => Math.random() - 0.5);
+        currentSoal = shuffled.slice(0, totalSoal);
+
+        // Siapkan jawaban siswa (semua siswa mengerjakan bersama)
+        jawabanSiswa = {};
+        siswaList.forEach(nama => {
+          jawabanSiswa[nama] = {};
+        });
+
+        // Tampilkan daftar siswa yang mengerjakan
+        siswaAktifDisplay.textContent = siswaList.join(', ');
+
+        // Render soal
+        renderSoal();
+
+        // Mulai timer
+        startTimer();
+
+        // Update progress
+        updateProgress();
+
+        // Aktifkan tombol submit jika semua terjawab
+        checkAllAnswered();
+      }
+
+      function renderSoal() {
+        let html = '';
+        // Ambil jawaban dari siswa pertama sebagai referensi (semua siswa sama)
+        const firstStudent = siswaList[0] || '';
+        const jawabanRef = jawabanSiswa[firstStudent] || {};
+
+        currentSoal.forEach((soal, index) => {
+          const nomor = index + 1;
+          const jawaban = jawabanRef[index] ?? -1;
+          const optionLabels = ['A', 'B', 'C', 'D'];
+
+          html += `
+            <div class="soal-card" data-index="${index}">
+              <div class="soal-header">
+                <span class="soal-nomor">Soal ${nomor}</span>
+                <span class="soal-tag ${jawaban >= 0 ? 'answered' : ''}">${jawaban >= 0 ? '✅ Terjawab' : '⏳ Belum'}</span>
+              </div>
+              <div class="soal-text">${soal.soal}</div>
+              <div class="pilihan">
+          `;
+
+          soal.pilihan.forEach((pilihan, i) => {
+            const checked = jawaban === i ? 'checked' : '';
+            html += `
+              <label class="${checked ? 'selected' : ''}">
+                <input type="radio" name="soal_${index}" value="${i}" ${checked} data-index="${index}" />
+                <span><strong>${optionLabels[i]}.</strong> ${pilihan}</span>
+              </label>
+            `;
+          });
+
+          html += `
+              </div>
+            </div>
+          `;
+        });
+
+        soalContainer.innerHTML = html;
+
+        // Event listener untuk radio
+        document.querySelectorAll('.soal-card input[type="radio"]').forEach(radio => {
+          radio.addEventListener('change', function() {
+            const index = parseInt(this.dataset.index);
+            const value = parseInt(this.value);
+
+            // Simpan jawaban untuk semua siswa (nilai sama)
+            siswaList.forEach(nama => {
+              jawabanSiswa[nama][index] = value;
+            });
+
+            // Update tampilan
+            const card = this.closest('.soal-card');
+            const tag = card.querySelector('.soal-tag');
+            tag.textContent = '✅ Terjawab';
+            tag.classList.add('answered');
+
+            // Highlight label
+            card.querySelectorAll('.pilihan label').forEach(label => {
+              label.classList.remove('selected');
+            });
+            this.closest('label').classList.add('selected');
+
+            updateProgress();
+            checkAllAnswered();
+          });
+        });
+      }
+
+      function updateProgress() {
+        const firstStudent = siswaList[0] || '';
+        const answered = Object.keys(jawabanSiswa[firstStudent] || {}).length;
+        soalTerjawab.textContent = answered;
+        const progress = (answered / totalSoal) * 100;
+        progressFill.style.width = progress + '%';
+      }
+
+      function checkAllAnswered() {
+        const firstStudent = siswaList[0] || '';
+        const answered = Object.keys(jawabanSiswa[firstStudent] || {}).length;
+        btnSubmitKuis.disabled = answered < totalSoal;
+      }
+
+      // ============================================================
+      // TIMER
+      // ============================================================
+
+      function startTimer() {
+        seconds = 0;
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          seconds++;
+          const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+          const secs = String(seconds % 60).padStart(2, '0');
+          timerDisplay.textContent = `${mins}:${secs}`;
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      // ============================================================
+      // SUBMIT KUIS
+      // ============================================================
+
+      btnSubmitKuis.addEventListener('click', function() {
+        const firstStudent = siswaList[0] || '';
+        const answered = Object.keys(jawabanSiswa[firstStudent] || {}).length;
+        modalJawabanCount.textContent = answered;
+        modalText.innerHTML = `
+          Apakah kamu yakin ingin mengumpulkan jawaban?<br>
+          <strong>${answered}</strong> dari ${totalSoal} soal telah dijawab.
+        `;
+        modalOverlay.classList.add('active');
+      });
+
+      modalCancel.addEventListener('click', function() {
+        modalOverlay.classList.remove('active');
+      });
+
+      modalConfirm.addEventListener('click', function() {
+        modalOverlay.classList.remove('active');
+        submitQuiz();
+      });
+
+      // Tutup modal dengan klik di luar
+      modalOverlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('active');
+        }
+      });
+
+      function submitQuiz() {
+        if (isSubmitted) return;
+        isSubmitted = true;
+
+        stopTimer();
+
+        // Hitung nilai dari siswa pertama (semua sama)
+        const firstStudent = siswaList[0] || '';
+        const jawaban = jawabanSiswa[firstStudent] || {};
+
+        let benar = 0;
+        let salah = 0;
+        currentSoal.forEach((soal, index) => {
+          if (jawaban[index] === soal.jawaban) {
+            benar++;
+          } else if (jawaban[index] !== undefined) {
+            salah++;
+          }
+        });
+
+        const total = benar + salah;
+        nilaiAkhir = total > 0 ? Math.round((benar / total) * 100) : 0;
+
+        // Tampilkan hasil
+        kuisSection.classList.remove('active');
+        hasilSection.classList.add('active');
+
+        // Generate QR Code dan simpan sebagai gambar
+        generateQRCode(nilaiAkhir);
+      }
+
+      // ============================================================
+      // QR CODE
+      // ============================================================
+
+      function generateQRCode(nilai) {
+        // Bersihkan container
+        qrContainer.innerHTML = '';
+
+        try {
+          // Buat QR Code
+          qrCodeInstance = new QRCode(qrContainer, {
+            text: String(nilai),
+            width: 200,
+            height: 200,
+            colorDark: "#2f2822",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+          });
+
+          // Tunggu sampai QR Code selesai dirender, lalu ambil gambarnya
+          setTimeout(function() {
+            captureQRImage();
+          }, 300);
+        } catch (e) {
+          console.warn('QR Code error:', e);
+          qrContainer.innerHTML = `
+            <div style="padding:1rem; background:#f5ede6; border-radius:8px; color:#4d3829; font-size:0.9rem;">
+              ⚠️ Gagal membuat QR Code. Nilai: ${nilai}
+            </div>
+          `;
+          qrImageData = null;
+        }
+      }
+
+      function captureQRImage() {
+        try {
+          // Cari canvas atau img di dalam qrContainer
+          const canvas = qrContainer.querySelector('canvas');
+          const img = qrContainer.querySelector('img');
+
+          if (canvas) {
+            // Konversi canvas ke data URL (base64)
+            qrImageData = canvas.toDataURL('image/png');
+            console.log('QR Code image captured successfully');
+          } else if (img) {
+            // Jika menggunakan img, ambil src-nya
+            qrImageData = img.src;
+          } else {
+            console.warn('No canvas or img found in QR container');
+            qrImageData = null;
+          }
+        } catch (e) {
+          console.warn('Failed to capture QR image:', e);
+          qrImageData = null;
+        }
+      }
+
+      // ============================================================
+      // EMAIL (dengan QR Code sebagai gambar base64)
+      // ============================================================
+
+      document.getElementById('btnEmail').addEventListener('click', function() {
+        // Buat daftar nama siswa
+        const daftarNama = siswaList.map((nama, i) => `${i+1}. ${nama}`).join('\n');
+
+        // Ambil QR Code sebagai gambar base64
+        let qrImageTag = '';
+        if (qrImageData) {
+          qrImageTag = `<img src="${qrImageData}" alt="QR Code" style="max-width:200px; height:auto;" />`;
+        } else {
+          // Jika QR Code belum siap, coba capture ulang
+          captureQRImage();
+          if (qrImageData) {
+            qrImageTag = `<img src="${qrImageData}" alt="QR Code" style="max-width:200px; height:auto;" />`;
+          } else {
+            qrImageTag = `<p style="color:#b33c3c;">QR Code tidak tersedia</p>`;
+          }
+        }
+
+        // Buat body email dengan HTML (termasuk gambar base64)
+        const subject = `Hasil Evaluasi Set Logic Lab - ${siswaList.join(', ')}`;
+
+        // Body email dalam format HTML (Gmail mendukung HTML)
+        const bodyHtml = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #2f2822;">
+            <h2 style="color: #4d3829; border-bottom: 3px solid #dbb9a6; padding-bottom: 10px;">
+              📝 Hasil Evaluasi Set Logic Lab
+            </h2>
+
+            <div style="background: #f8f3ee; padding: 15px; border-radius: 10px; margin: 15px 0;">
+              <h3 style="color: #4d3829; margin-top: 0;">📋 Biodata Peserta</h3>
+              <p><strong>Kelas:</strong> ${kelas}</p>
+              <p><strong>Mata Pelajaran:</strong> Informatika</p>
+              <p><strong>Jumlah Siswa:</strong> ${siswaList.length} orang</p>
+              <p><strong>Daftar Nama Siswa:</strong></p>
+              <ul>
+                ${siswaList.map((nama, i) => `<li>${i+1}. ${nama}</li>`).join('')}
+              </ul>
+            </div>
+
+            <div style="background: #ffffff; padding: 15px; border-radius: 10px; border: 2px solid #e5dbd0; text-align: center; margin: 15px 0;">
+              <h3 style="color: #4d3829; margin-top: 0;">📱 QR Code Bukti Pengerjaan</h3>
+              ${qrImageTag}
+              <p style="color: #7a6656; font-size: 0.85rem; margin-top: 5px;">
+                Scan QR Code ini untuk verifikasi hasil evaluasi
+              </p>
+            </div>
+
+            <div style="font-size: 0.8rem; color: #7a6656; border-top: 2px solid #e5dbd0; padding-top: 15px; margin-top: 15px; text-align: center;">
+              Dikirim dari Set Logic Lab - SMPN 2 Talegong<br>
+              ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </div>
+          </div>
+        `;
+
+        // Buat URL Gmail dengan parameter
+        const emailUrl =
+          `https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyHtml)}`;
+
+        // Buka Gmail
+        window.open(emailUrl, '_blank');
+      });
+
+      // ============================================================
+      // KEYBOARD SHORTCUT: Enter untuk submit
+      // ============================================================
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey) {
+          const active = document.activeElement;
+          if (active && active.tagName === 'INPUT' && active.type === 'text') {
+            return;
+          }
+          if (!btnSubmitKuis.disabled && kuisSection.classList.contains('active')) {
+            btnSubmitKuis.click();
+          }
+        }
+      });
+
+      console.log('📝 Evaluasi Set Logic Lab siap!');
+    })();
+  </script>
+
+</body>
+</html>

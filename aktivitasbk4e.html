@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Set Logic Lab · Logika Himpunan & Boolean</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA KHUSUS SKENARIO 5 ===== */
+    .aktivitas-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding: 0.5rem 1rem;
+      background: #f8f3ee;
+      border-radius: 40px;
+      border: 2px solid #e5dbd0;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #7a6656;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .progress-step.active {
+      background: #4d3829;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .progress-step.done {
+      color: #2d7d46;
+    }
+
+    .progress-step .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e5dbd0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #4d3829;
+    }
+
+    .progress-step.active .step-num {
+      background: #dbb9a6;
+      color: #3b2b1e;
+    }
+
+    .progress-step.done .step-num {
+      background: #2d7d46;
+      color: #fff;
+    }
+
+    .progress-line {
+      flex: 1;
+      height: 3px;
+      background: #e5dbd0;
+      min-width: 20px;
+      border-radius: 4px;
+    }
+
+    .progress-line.done {
+      background: #2d7d46;
+    }
+
+    /* ===== SCENE HEADER ===== */
+    .scene-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.5rem;
+      background: #f5ede6;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+    }
+
+    .scene-header .avatar {
+      font-size: 2.8rem;
+      flex-shrink: 0;
+    }
+
+    .scene-header .story {
+      font-size: 1rem;
+      color: #2f2822;
+      line-height: 1.6;
+    }
+
+    .scene-header .story strong {
+      color: #4d3829;
+    }
+
+    /* ===== TABEL KEBENARAN ===== */
+    .truth-table-container {
+      background: #fffffffa;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+
+    .truth-table-container .table-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #4d3829;
+      margin-bottom: 0.8rem;
+      text-align: center;
+    }
+
+    .truth-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      min-width: 400px;
+    }
+
+    .truth-table thead {
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .truth-table th {
+      padding: 0.7rem 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .truth-table td {
+      padding: 0.6rem 1rem;
+      text-align: center;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fff;
+    }
+
+    .truth-table tr:hover td {
+      background: #f8f3ee;
+    }
+
+    .truth-table .truth-true {
+      color: #2d7d46;
+      font-weight: 700;
+    }
+
+    .truth-table .truth-false {
+      color: #b33c3c;
+      font-weight: 700;
+    }
+
+    .truth-table .highlight-row {
+      background: #f5ede6 !important;
+    }
+
+    .truth-table .highlight-row td {
+      background: #f5ede6 !important;
+      font-weight: 600;
+    }
+
+    /* ===== KONVERSI LOGIKA → HIMPUNAN ===== */
+    .konversi-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 720px) {
+      .konversi-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .konversi-box {
+      background: #fffffffa;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid #e5dbd0;
+    }
+
+    .konversi-box .box-title {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 1.05rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .konversi-box .box-title .badge {
+      background: #4d3829;
+      color: #fff;
+      padding: 0.1rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+    }
+
+    .konversi-box .logic-statement {
+      background: #f5ede6;
+      padding: 0.8rem 1.2rem;
+      border-radius: 10px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #3b2b1e;
+      text-align: center;
+      margin-bottom: 0.8rem;
+      border-left: 6px solid #dbb9a6;
+    }
+
+    .konversi-box .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+
+    @media (max-width: 480px) {
+      .konversi-box .options {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .konversi-box .options .opt-btn {
+      padding: 0.6rem 1rem;
+      border: 3px solid #e5dbd0;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #2f2822;
+      text-align: center;
+    }
+
+    .konversi-box .options .opt-btn:hover {
+      transform: translateY(-2px);
+      border-color: #b09b88;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .konversi-box .options .opt-btn.selected-correct {
+      border-color: #2d7d46;
+      background: #e8f5ee;
+    }
+
+    .konversi-box .options .opt-btn.selected-wrong {
+      border-color: #b33c3c;
+      background: #fde8e8;
+    }
+
+    .konversi-box .options .opt-btn.reveal-correct {
+      border-color: #2d7d46;
+      background: #e8f5ee;
+    }
+
+    .konversi-box .options .opt-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .konversi-box .feedback-konversi {
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      color: #2f2822;
+      min-height: 1.5rem;
+      padding: 0.5rem;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .konversi-box .feedback-konversi.show {
+      display: block;
+    }
+
+    .konversi-box .feedback-konversi.success {
+      background: #e8f5ee;
+      color: #2d7d46;
+      border-left: 4px solid #2d7d46;
+    }
+
+    .konversi-box .feedback-konversi.error {
+      background: #fde8e8;
+      color: #b33c3c;
+      border-left: 4px solid #b33c3c;
+    }
+
+    /* ===== VENN MINI ===== */
+    .venn-mini-container {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    .venn-mini {
+      position: relative;
+      width: 180px;
+      height: 140px;
+    }
+
+    .venn-mini svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ===== TOMBOL ===== */
+    .btn-next {
+      display: inline-block;
+      background: linear-gradient(135deg, #2d7d46, #3a9d5a);
+      color: #fff;
+      padding: 0.8rem 2.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 125, 70, 0.3);
+    }
+
+    .btn-next:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(45, 125, 70, 0.4);
+      background: linear-gradient(135deg, #3a9d5a, #4db86e);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-back {
+      display: inline-block;
+      background: #e8d5c4;
+      color: #4d3829;
+      padding: 0.8rem 2.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      border: 2px solid #dbb9a6;
+      cursor: pointer;
+    }
+
+    .btn-back:hover {
+      background: #dac5b2;
+      transform: translateY(-2px);
+    }
+
+    .nav-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    /* ===== SKOR ===== */
+    .skor-boolean {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      padding: 0.8rem 1.2rem;
+      background: #fff;
+      border-radius: 16px;
+      border: 2px solid #e5dbd0;
+      margin-bottom: 1.5rem;
+    }
+
+    .skor-boolean .skor-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      color: #5c4638;
+    }
+
+    .skor-boolean .skor-item .num {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #3b2b1e;
+    }
+
+    .skor-boolean .skor-item .num.correct {
+      color: #2d7d46;
+    }
+
+    .skor-boolean .skor-item .num.wrong {
+      color: #b33c3c;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scene-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .progress-step .step-label {
+        display: none;
+      }
+      .truth-table {
+        font-size: 0.8rem;
+        min-width: 300px;
+      }
+      .truth-table th,
+      .truth-table td {
+        padding: 0.4rem 0.6rem;
+      }
+      .konversi-box {
+        padding: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .truth-table {
+        font-size: 0.7rem;
+        min-width: 250px;
+      }
+      .truth-table th,
+      .truth-table td {
+        padding: 0.3rem 0.4rem;
+      }
+      .konversi-box .logic-statement {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+      }
+      .konversi-box .options .opt-btn {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+      }
+      .nav-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      .nav-buttons .btn-next,
+      .nav-buttons .btn-back {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    #scrollTopBtn {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk4.html">Memodelkan Persoalan Logika</a></li>
+      <li>Set Logic Lab · Boolean</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-container">
+
+        <!-- ===== PROGRESS TRACKER ===== -->
+        <div class="progress-tracker" id="progressTracker">
+          <div class="progress-step done" data-step="0">
+            <span class="step-num">🏠</span>
+            <span class="step-label">Mulai</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="1">
+            <span class="step-num">1</span>
+            <span class="step-label">Anggota</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="2">
+            <span class="step-num">2</span>
+            <span class="step-label">Venn</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="3">
+            <span class="step-num">3</span>
+            <span class="step-label">Operasi</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="4">
+            <span class="step-num">4</span>
+            <span class="step-label">Model</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step active" data-step="5">
+            <span class="step-num">5</span>
+            <span class="step-label">Boolean</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="6">
+            <span class="step-num">🏆</span>
+            <span class="step-label">Kuis</span>
+          </div>
+        </div>
+
+        <!-- ===== SCENE HEADER ===== -->
+        <div class="scene-header">
+          <span class="avatar">🧑‍🏫</span>
+          <div class="story">
+            <strong>Professor Set</strong> berkata:<br>
+            "Himpunan dan logika itu <strong>bersaudara</strong>! Operasi himpunan memiliki padanan 
+            dalam logika Boolean. Perhatikan tabel kebenaran di bawah ini, lalu coba 
+            konversikan pernyataan logika ke dalam bentuk himpunan!
+            <br>📌 <strong>A ∩ B</strong> = <strong>A AND B</strong> &nbsp;|&nbsp; <strong>A ∪ B</strong> = <strong>A OR B</strong> &nbsp;|&nbsp; <strong>A'</strong> = <strong>NOT A</strong>"
+          </div>
+        </div>
+
+        <!-- ===== TABEL KEBENARAN ===== -->
+        <div class="truth-table-container">
+          <div class="table-title">📊 Tabel Kebenaran: Himpunan ↔ Logika Boolean</div>
+          <table class="truth-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>A ∩ B<br><small>(AND)</small></th>
+                <th>A ∪ B<br><small>(OR)</small></th>
+                <th>A'<br><small>(NOT A)</small></th>
+                <th>B'<br><small>(NOT B)</small></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="truth-true">✓</td>
+                <td class="truth-true">✓</td>
+                <td class="truth-true">✓</td>
+                <td class="truth-true">✓</td>
+                <td class="truth-false">✗</td>
+                <td class="truth-false">✗</td>
+              </tr>
+              <tr>
+                <td class="truth-true">✓</td>
+                <td class="truth-false">✗</td>
+                <td class="truth-false">✗</td>
+                <td class="truth-true">✓</td>
+                <td class="truth-false">✗</td>
+                <td class="truth-true">✓</td>
+              </tr>
+              <tr>
+                <td class="truth-false">✗</td>
+                <td class="truth-true">✓</td>
+                <td class="truth-false">✗</td>
+                <td class="truth-true">✓</td>
+                <td class="truth-true">✓</td>
+                <td class="truth-false">✗</td>
+              </tr>
+              <tr class="highlight-row">
+                <td class="truth-false">✗</td>
+                <td class="truth-false">✗</td>
+                <td class="truth-false">✗</td>
+                <td class="truth-false">✗</td>
+                <td class="truth-true">✓</td>
+                <td class="truth-true">✓</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="text-align:center; font-size:0.8rem; color:#7a6656; margin-top:0.5rem;">
+            ✓ = Benar (True / 1) &nbsp;|&nbsp; ✗ = Salah (False / 0)
+          </div>
+        </div>
+
+        <!-- ===== KONVERSI LOGIKA → HIMPUNAN ===== -->
+        <div class="skor-boolean" id="skorBoolean">
+          <div class="skor-item">
+            <span>✅</span>
+            <span class="num correct" id="boolCorrect">0</span>
+            <span style="color:#7a6656;">benar</span>
+          </div>
+          <div class="skor-item">
+            <span>❌</span>
+            <span class="num wrong" id="boolWrong">0</span>
+            <span style="color:#7a6656;">salah</span>
+          </div>
+          <div class="skor-item">
+            <span>📊</span>
+            <span class="num" id="boolSoalKe">1</span>
+            <span style="color:#7a6656;">/ <span id="boolTotalSoal">6</span></span>
+          </div>
+        </div>
+
+        <div id="konversiArea">
+          <!-- Akan diisi oleh JS -->
+        </div>
+
+        <!-- ===== NAVIGASI ===== -->
+        <div class="nav-buttons">
+          <a href="aktivitasbk4d.html" class="btn-back">← Kembali</a>
+          <button class="btn-next" id="btnNextScene" disabled>➜ Lanjut ke Kuis Akhir</button>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- SCRIPT.JS -->
+  <script src="script.js"></script>
+
+  <!-- ============================================================ -->
+  <!-- ===== SCRIPT KHUSUS SKENARIO 5 ===== -->
+  <!-- ============================================================ -->
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================================
+      // DATA SOAL KONVERSI
+      // ============================================================
+      const soalKonversi = [
+        {
+          pernyataan: 'Siswa yang memakai kacamata DAN topi',
+          operasi: 'A ∩ B',
+          jawaban: 'A ∩ B'
+        },
+        {
+          pernyataan: 'Siswa yang memakai kacamata ATAU topi',
+          operasi: 'A ∪ B',
+          jawaban: 'A ∪ B'
+        },
+        {
+          pernyataan: 'Siswa yang TIDAK memakai kacamata',
+          operasi: "A'",
+          jawaban: "A'"
+        },
+        {
+          pernyataan: 'Siswa yang memakai kacamata TAPI TIDAK topi',
+          operasi: 'A − B',
+          jawaban: 'A − B'
+        },
+        {
+          pernyataan: 'Siswa yang memakai topi TAPI TIDAK kacamata',
+          operasi: 'B − A',
+          jawaban: 'B − A'
+        },
+        {
+          pernyataan: 'Siswa yang TIDAK memakai kacamata DAN TIDAK memakai topi',
+          operasi: "A' ∩ B'",
+          jawaban: "A' ∩ B'"
+        }
+      ];
+
+      // ============================================================
+      // STATE
+      // ============================================================
+      let currentSoalIndex = 0;
+      let boolCorrect = 0;
+      let boolWrong = 0;
+      let isAnswered = false;
+      const totalSoal = soalKonversi.length;
+
+      // ============================================================
+      // DOM REFS
+      // ============================================================
+      const konversiArea = document.getElementById('konversiArea');
+      const boolCorrectEl = document.getElementById('boolCorrect');
+      const boolWrongEl = document.getElementById('boolWrong');
+      const boolSoalKeEl = document.getElementById('boolSoalKe');
+      const boolTotalSoalEl = document.getElementById('boolTotalSoal');
+      const btnNextScene = document.getElementById('btnNextScene');
+
+      // ============================================================
+      // FUNGSI UTAMA
+      // ============================================================
+
+      function loadSoal(index) {
+        const soal = soalKonversi[index];
+        if (!soal) {
+          showComplete();
+          return;
+        }
+
+        isAnswered = false;
+        boolTotalSoalEl.textContent = totalSoal;
+
+        // HTML untuk soal
+        const html = `
+          <div class="konversi-container">
+            <!-- Pernyataan Logika -->
+            <div class="konversi-box">
+              <div class="box-title">
+                🧠 Pernyataan Logika
+                <span class="badge">Soal ${index + 1}/${totalSoal}</span>
+              </div>
+              <div class="logic-statement">
+                "${soal.pernyataan}"
+              </div>
+              <div style="font-size:0.85rem; color:#7a6656; text-align:center; margin-top:0.3rem;">
+                Klik area Diagram Venn yang sesuai
+              </div>
+              <!-- Venn Mini -->
+              <div class="venn-mini-container">
+                <div class="venn-mini">
+                  <svg viewBox="0 0 180 140" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <radialGradient id="gradVennA" cx="35%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#f5d4b8" stop-opacity="0.5"/>
+                        <stop offset="100%" stop-color="#e8a87c" stop-opacity="0.2"/>
+                      </radialGradient>
+                      <radialGradient id="gradVennB" cx="65%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#b8d4f5" stop-opacity="0.5"/>
+                        <stop offset="100%" stop-color="#7cb8e8" stop-opacity="0.2"/>
+                      </radialGradient>
+                    </defs>
+                    <!-- Lingkaran A -->
+                    <ellipse cx="65" cy="70" rx="48" ry="48" fill="url(#gradVennA)" stroke="#dbb9a6" stroke-width="2"/>
+                    <!-- Lingkaran B -->
+                    <ellipse cx="115" cy="70" rx="48" ry="48" fill="url(#gradVennB)" stroke="#b8cfde" stroke-width="2"/>
+                    <!-- Area interaktif (akan di-highlight) -->
+                    <ellipse id="vennHighlightBool" cx="90" cy="70" rx="35" ry="40" fill="#7ce8c4" opacity="0" pointer-events="none"/>
+                    <!-- Label -->
+                    <text x="55" y="35" font-size="11" font-weight="700" fill="#4d3829" text-anchor="middle">A</text>
+                    <text x="125" y="35" font-size="11" font-weight="700" fill="#4d3829" text-anchor="middle">B</text>
+                    <!-- Area yang bisa diklik -->
+                    <rect x="0" y="0" width="70" height="70" fill="transparent" stroke="none" class="click-area" data-area="A_only" style="cursor:pointer;"/>
+                    <rect x="110" y="0" width="70" height="70" fill="transparent" stroke="none" class="click-area" data-area="B_only" style="cursor:pointer;"/>
+                    <rect x="60" y="35" width="60" height="70" fill="transparent" stroke="none" class="click-area" data-area="intersect" style="cursor:pointer;"/>
+                    <rect x="0" y="70" width="180" height="70" fill="transparent" stroke="none" class="click-area" data-area="outside" style="cursor:pointer;"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pilihan Jawaban -->
+            <div class="konversi-box">
+              <div class="box-title">
+                🎯 Pilih Representasi Himpunan
+                <span class="badge">Pilih salah satu</span>
+              </div>
+              <div class="options" id="pilihanOptions">
+                <button class="opt-btn" data-value="A ∩ B">A ∩ B (Irisan)</button>
+                <button class="opt-btn" data-value="A ∪ B">A ∪ B (Gabungan)</button>
+                <button class="opt-btn" data-value="A − B">A − B (Selisih)</button>
+                <button class="opt-btn" data-value="B − A">B − A (Selisih)</button>
+                <button class="opt-btn" data-value="A'">A' (Komplemen A)</button>
+                <button class="opt-btn" data-value="B'">B' (Komplemen B)</button>
+                <button class="opt-btn" data-value="A' ∩ B'">A' ∩ B' (Komplemen gabungan)</button>
+              </div>
+              <div class="feedback-konversi" id="feedbackKonversi"></div>
+            </div>
+          </div>
+          <div style="text-align:center; margin-top:0.5rem;">
+            <button class="btn-next" id="btnNextSoalBool" disabled style="background:linear-gradient(135deg,#4d3829,#6b4f3a);">
+              ➜ Soal Berikutnya
+            </button>
+          </div>
+        `;
+
+        konversiArea.innerHTML = html;
+
+        // Update skor
+        boolCorrectEl.textContent = boolCorrect;
+        boolWrongEl.textContent = boolWrong;
+        boolSoalKeEl.textContent = index + 1;
+
+        // Event listener untuk pilihan
+        const optionBtns = document.querySelectorAll('#pilihanOptions .opt-btn');
+        optionBtns.forEach(btn => {
+          btn.addEventListener('click', function() {
+            handlePilihanBool(this);
+          });
+        });
+
+        // Event listener untuk area Venn (klik)
+        const clickAreas = document.querySelectorAll('.click-area');
+        clickAreas.forEach(area => {
+          area.addEventListener('click', function() {
+            const areaName = this.dataset.area;
+            const mapping = {
+              'A_only': 'A − B',
+              'B_only': 'B − A',
+              'intersect': 'A ∩ B',
+              'outside': "A' ∩ B'"
+            };
+            const value = mapping[areaName];
+            if (value) {
+              // Cari tombol dengan value yang sesuai
+              const btn = document.querySelector(`#pilihanOptions .opt-btn[data-value="${value}"]`);
+              if (btn) btn.click();
+            }
+          });
+        });
+
+        // Reset highlight Venn
+        const highlight = document.getElementById('vennHighlightBool');
+        if (highlight) highlight.setAttribute('opacity', '0');
+      }
+
+      // Handle pilihan
+      function handlePilihanBool(btn) {
+        if (isAnswered) return;
+        const soal = soalKonversi[currentSoalIndex];
+        const selected = btn.dataset.value;
+        const isCorrect = selected === soal.jawaban;
+
+        isAnswered = true;
+
+        // Disable semua tombol
+        document.querySelectorAll('#pilihanOptions .opt-btn').forEach(b => b.disabled = true);
+
+        // Highlight pilihan
+        if (isCorrect) {
+          btn.classList.add('selected-correct');
+          boolCorrect++;
+          showFeedbackBool('success', '✅', `Benar! "${soal.pernyataan}" = ${soal.jawaban}`);
+          // Highlight Venn
+          highlightVennBool(soal.jawaban);
+        } else {
+          btn.classList.add('selected-wrong');
+          boolWrong++;
+          // Tampilkan jawaban benar
+          document.querySelectorAll('#pilihanOptions .opt-btn').forEach(b => {
+            if (b.dataset.value === soal.jawaban) {
+              b.classList.add('reveal-correct');
+            }
+          });
+          showFeedbackBool('error', '❌', `Kurang tepat. Jawaban yang benar adalah ${soal.jawaban}`);
+          // Highlight Venn dengan jawaban benar
+          highlightVennBool(soal.jawaban);
+        }
+
+        // Update skor
+        boolCorrectEl.textContent = boolCorrect;
+        boolWrongEl.textContent = boolWrong;
+
+        // Aktifkan tombol next
+        document.getElementById('btnNextSoalBool').disabled = false;
+
+        // Cek jika soal terakhir
+        if (currentSoalIndex >= totalSoal - 1) {
+          document.getElementById('btnNextSoalBool').textContent = '🏆 Lihat Hasil';
+        }
+      }
+
+      // Highlight Venn
+      function highlightVennBool(jawaban) {
+        const highlight = document.getElementById('vennHighlightBool');
+        if (!highlight) return;
+
+        let cx = '90', cy = '70', rx = '35', ry = '40', opacity = '0.6';
+
+        switch(jawaban) {
+          case 'A ∩ B':
+            cx = '90'; cy = '70'; rx = '30'; ry = '35';
+            break;
+          case 'A ∪ B':
+            cx = '90'; cy = '70'; rx = '50'; ry = '45';
+            break;
+          case 'A − B':
+            cx = '65'; cy = '70'; rx = '40'; ry = '42';
+            break;
+          case 'B − A':
+            cx = '115'; cy = '70'; rx = '40'; ry = '42';
+            break;
+          case "A'":
+            cx = '90'; cy = '70'; rx = '70'; ry = '55';
+            opacity = '0.4';
+            break;
+          case "B'":
+            cx = '90'; cy = '70'; rx = '70'; ry = '55';
+            opacity = '0.4';
+            break;
+          case "A' ∩ B'":
+            cx = '90'; cy = '110'; rx = '60'; ry = '20';
+            break;
+          default:
+            opacity = '0';
+        }
+
+        highlight.setAttribute('cx', cx);
+        highlight.setAttribute('cy', cy);
+        highlight.setAttribute('rx', rx);
+        highlight.setAttribute('ry', ry);
+        highlight.setAttribute('opacity', opacity);
+        highlight.setAttribute('class', opacity !== '0' ? 'highlight-area' : '');
+      }
+
+      // Show feedback
+      function showFeedbackBool(type, icon, text) {
+        const feedback = document.getElementById('feedbackKonversi');
+        if (!feedback) return;
+        feedback.className = `feedback-konversi show ${type}`;
+        feedback.innerHTML = `${icon} ${text}`;
+      }
+
+      // Next soal
+      function nextSoalBool() {
+        currentSoalIndex++;
+        if (currentSoalIndex >= totalSoal) {
+          showComplete();
+        } else {
+          loadSoal(currentSoalIndex);
+        }
+      }
+
+      // Selesai semua soal
+      function showComplete() {
+        konversiArea.innerHTML = `
+          <div style="text-align:center; padding:2rem 1rem;">
+            <div style="font-size:4rem; margin-bottom:0.5rem;">🧠</div>
+            <h2 style="color:#3b2b1e; margin-bottom:0.5rem;">Semua Soal Konversi Selesai!</h2>
+            <p style="font-size:1.1rem; color:#5c4638; margin-bottom:0.5rem;">
+              Kamu menjawab <strong style="color:#2d7d46;">${boolCorrect}</strong> benar
+              dan <strong style="color:#b33c3c;">${boolWrong}</strong> salah.
+            </p>
+            <p style="font-size:0.95rem; color:#7a6656;">
+              ${boolCorrect >= 5 ? '🌟 Hebat! Kamu sudah menguasai hubungan himpunan dan logika Boolean!' :
+                boolCorrect >= 3 ? '👍 Bagus! Terus latih pemahamanmu!' :
+                '💪 Jangan menyerah! Pelajari kembali tabel kebenaran di atas!'}
+            </p>
+            <div style="margin-top:1.5rem;">
+              <button id="btnGoToKuis" class="btn-next" style="background:linear-gradient(135deg,#4d3829,#6b4f3a);">
+                🏆 Lanjut ke Kuis Akhir
+              </button>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('btnGoToKuis').addEventListener('click', function() {
+          window.location.href = 'aktivitasbk4f.html';
+        });
+
+        btnNextScene.disabled = false;
+        btnNextScene.textContent = '🏆 Lanjut ke Kuis Akhir';
+        btnNextScene.style.display = 'inline-block';
+      }
+
+      // ============================================================
+      // NAVIGASI
+      // ============================================================
+
+      // Event delegation untuk tombol next (karena dibuat dinamis)
+      document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'btnNextSoalBool') {
+          nextSoalBool();
+        }
+      });
+
+      btnNextScene.addEventListener('click', function() {
+        if (currentSoalIndex >= totalSoal) {
+          window.location.href = 'aktivitasbk4f.html';
+        }
+      });
+
+      // ============================================================
+      // INISIALISASI
+      // ============================================================
+
+      // Acak urutan soal
+      const shuffledSoal = [...soalKonversi].sort(() => Math.random() - 0.5);
+      soalKonversi.splice(0, soalKonversi.length, ...shuffledSoal);
+
+      // Load soal pertama
+      loadSoal(0);
+
+      console.log('🧩 Set Logic Lab - Skenario 5 (Boolean) siap!');
+    })();
+  </script>
+
+</body>
+</html>

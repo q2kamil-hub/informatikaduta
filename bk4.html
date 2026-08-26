@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Memodelkan Persoalan Logika dalam Bentuk Himpunan · Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* gaya tambahan untuk halaman materi himpunan */
+    .materi-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .materi-container h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .materi-container .sub-judul {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+      font-style: italic;
+    }
+
+    .materi-container h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 0.8rem 0;
+      color: #4d3829;
+      border-left: 6px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.2rem 0 0.3rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container p {
+      margin-bottom: 1rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.5rem 0 1.2rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.4rem;
+      color: #2f2822;
+    }
+
+    .materi-container .highlight-box {
+      background: #f5ede6;
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+      margin: 1.5rem 0;
+    }
+
+    .materi-container .highlight-box strong {
+      color: #4d3829;
+    }
+
+    .materi-container .highlight-box ul {
+      margin-bottom: 0;
+    }
+
+    .materi-container .highlight-box ul li {
+      margin-bottom: 0.2rem;
+    }
+
+    /* Kotak himpunan */
+    .set-box {
+      background: #fffffffa;
+      border: 2px solid #dbb9a6;
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      margin: 1.2rem 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .set-box .set-title {
+      font-weight: 700;
+      color: #4d3829;
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    .set-box .set-content {
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      color: #2f2822;
+      background: #f8f3ee;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .set-box .set-desc {
+      font-size: 0.9rem;
+      color: #5c4638;
+      margin-top: 0.4rem;
+    }
+
+    /* Diagram Venn ASCII */
+    .venn-diagram {
+      background: #2f2822;
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      border: 3px solid #dbb9a6;
+      overflow-x: auto;
+    }
+
+    .venn-diagram .venn-title {
+      font-size: 0.8rem;
+      color: #dbb9a6;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .venn-diagram pre {
+      font-family: 'Courier New', monospace;
+      color: #e5dbd0;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      text-align: left;
+      display: inline-block;
+      margin: 0 auto;
+    }
+
+    .venn-diagram .highlight-set {
+      color: #f5d4b8;
+      font-weight: bold;
+    }
+
+    .venn-diagram .highlight-intersect {
+      color: #b8d4f5;
+      font-weight: bold;
+    }
+
+    /* Tabel operasi himpunan */
+    .tabel-operasi {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .tabel-operasi thead {
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .tabel-operasi th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .tabel-operasi td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+    }
+
+    .tabel-operasi tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabel-operasi tr:hover td {
+      background: #f8f3ee;
+    }
+
+    .tabel-operasi .badge-op {
+      background: #e8d5c4;
+      padding: 0.15rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #4d3829;
+      display: inline-block;
+    }
+
+    /* Tabel logika boolean */
+    .tabel-boolean {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .tabel-boolean thead {
+      background: #dbb9a6;
+      color: #3b2b1e;
+    }
+
+    .tabel-boolean th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .tabel-boolean td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+    }
+
+    .tabel-boolean tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabel-boolean tr:hover td {
+      background: #f8f3ee;
+    }
+
+    .tabel-boolean .logic-true {
+      color: #2d7d46;
+      font-weight: 700;
+    }
+
+    .tabel-boolean .logic-false {
+      color: #b33c3c;
+      font-weight: 700;
+    }
+
+    /* Contoh soal */
+    .contoh-soal {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0;
+      border-left: 8px solid #dbb9a6;
+    }
+
+    .contoh-soal .soal-title {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .contoh-soal .soal-text {
+      color: #2f2822;
+      margin-bottom: 0.8rem;
+    }
+
+    .contoh-soal .soal-solusi {
+      background: #fff;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      border: 2px solid #e5dbd0;
+      font-size: 0.95rem;
+    }
+
+    .contoh-soal .soal-solusi strong {
+      color: #4d3829;
+    }
+
+    /* Tombol aktivitas */
+    .tombol-aktivitas {
+      display: inline-block;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+      padding: 0.9rem 2.2rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.25);
+      margin-top: 0.5rem;
+    }
+
+    .tombol-aktivitas:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(75, 46, 30, 0.35);
+      background: linear-gradient(135deg, #5c4638, #7a5f4c);
+    }
+
+    .tombol-aktivitas:focus-visible {
+      outline: 3px solid #a3836a;
+      outline-offset: 4px;
+    }
+
+    .tombol-aktivitas i {
+      margin-right: 0.4rem;
+    }
+
+    .aktivitas-wrapper {
+      background: #f5ede6;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      margin-top: 2.5rem;
+      border: 2px solid #e5dbd0;
+      text-align: center;
+    }
+
+    .aktivitas-wrapper h3 {
+      margin-top: 0;
+      color: #3b2b1e;
+      border-left: none;
+      padding-left: 0;
+    }
+
+    .aktivitas-wrapper p {
+      margin-bottom: 1.2rem;
+      font-size: 1.05rem;
+    }
+
+    /* Navigasi kembali */
+    .nav-kembali {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: #5c4638;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 2px dotted #bfaa9a;
+      padding-bottom: 2px;
+      transition: border-color 0.2s;
+    }
+
+    .nav-kembali:hover {
+      border-bottom-color: #7a5f4c;
+    }
+
+    /* Tombol navigasi ganda */
+    .nav-dua {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    /* Responsif */
+    @media (max-width: 720px) {
+      .materi-container h1 {
+        font-size: 1.7rem;
+      }
+      .materi-container h2 {
+        font-size: 1.3rem;
+      }
+      .materi-container h3 {
+        font-size: 1.05rem;
+      }
+      .tabel-operasi, .tabel-boolean {
+        font-size: 0.8rem;
+      }
+      .tabel-operasi th, .tabel-operasi td,
+      .tabel-boolean th, .tabel-boolean td {
+        padding: 0.5rem 0.6rem;
+      }
+      .aktivitas-wrapper {
+        padding: 1.5rem 1.2rem;
+      }
+      .tombol-aktivitas {
+        padding: 0.7rem 1.6rem;
+        font-size: 0.95rem;
+      }
+      .set-box {
+        padding: 1rem 1.2rem;
+      }
+      .contoh-soal {
+        padding: 1.2rem 1.2rem;
+      }
+      .venn-diagram {
+        padding: 1rem;
+      }
+      .venn-diagram pre {
+        font-size: 0.65rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tabel-operasi, .tabel-boolean {
+        font-size: 0.7rem;
+      }
+      .tabel-operasi th, .tabel-operasi td,
+      .tabel-boolean th, .tabel-boolean td {
+        padding: 0.4rem 0.4rem;
+      }
+      .materi-container ul, 
+      .materi-container ol {
+        margin-left: 1.2rem;
+      }
+      .aktivitas-wrapper {
+        padding: 1rem 0.8rem;
+      }
+      .set-box .set-content {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+      .contoh-soal .soal-solusi {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+      .nav-dua {
+        flex-direction: column;
+        align-items: center;
+      }
+      .nav-dua .tombol-aktivitas {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER (dinamis dari script.js) -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <!-- diisi oleh script.js secara dinamis -->
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA: MATERI -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <!-- Judul Utama -->
+        <h1>🧩 Memodelkan Persoalan Logika dalam Bentuk Himpunan</h1>
+        <p class="sub-judul">Mengubah masalah nyata menjadi model himpunan · Berpikir Komputasional</p>
+
+        <!-- A. Pendahuluan -->
+        <h2>A. Pendahuluan: Apa Itu Himpunan?</h2>
+        <p>Pernahkah kamu mengelompokkan barang-barang di kamarmu? Buku-buku diletakkan di rak, pakaian dimasukkan ke lemari, dan mainan disimpan dalam kotak. Dalam matematika dan informatika, kegiatan mengelompokkan ini disebut <strong>himpunan (set)</strong>.</p>
+        <p><strong>Himpunan</strong> adalah kumpulan objek-objek yang terdefinisi dengan jelas dan memiliki sifat atau karakteristik yang sama. Objek-objek di dalam himpunan disebut <strong>anggota</strong> atau <strong>elemen</strong> himpunan.</p>
+
+        <div class="highlight-box">
+          <strong>💡 Mengapa himpunan penting dalam informatika?</strong>
+          <p style="margin-top:0.3rem;">Himpunan adalah fondasi dari banyak konsep dalam ilmu komputer, seperti:</p>
+          <ul>
+            <li><strong>Basis data:</strong> Data disimpan dan dikelompokkan dalam tabel-tabel yang saling berhubungan</li>
+            <li><strong>Pencarian informasi:</strong> Mesin pencari mengelompokkan hasil pencarian berdasarkan kategori</li>
+            <li><strong>Kecerdasan buatan:</strong> Sistem rekomendasi mengelompokkan preferensi pengguna</li>
+            <li><strong>Pemrograman:</strong> Struktur data seperti array dan list menggunakan prinsip himpunan</li>
+          </ul>
+        </div>
+
+        <!-- B. Konsep Dasar Himpunan -->
+        <h2>B. Konsep Dasar Himpunan</h2>
+
+        <h3>1. Notasi Himpunan</h3>
+        <p>Himpunan biasanya ditulis dengan <strong>huruf kapital</strong> dan anggotanya diapit <strong>kurung kurawal {}</strong>.</p>
+
+        <div class="set-box">
+          <div class="set-title">📌 Contoh:</div>
+          <div class="set-content">A = {1, 2, 3, 4, 5}</div>
+          <div class="set-desc">Himpunan A berisi angka 1 sampai 5</div>
+          <div class="set-content" style="margin-top:0.5rem;">B = {apel, jeruk, mangga}</div>
+          <div class="set-desc">Himpunan B berisi nama buah</div>
+          <div class="set-content" style="margin-top:0.5rem;">C = {2, 4, 6, 8, ...}</div>
+          <div class="set-desc">Himpunan C berisi bilangan genap</div>
+        </div>
+
+        <h3>2. Keanggotaan Himpunan</h3>
+        <p>Simbol <strong>∈</strong> berarti "anggota dari", sedangkan <strong>∉</strong> berarti "bukan anggota dari".</p>
+
+        <div class="set-box">
+          <div class="set-title">📌 Contoh:</div>
+          <div>3 ∈ A <span style="color:#5c4638; font-size:0.9rem;">→ 3 adalah anggota himpunan A</span></div>
+          <div style="margin-top:0.3rem;">7 ∉ A <span style="color:#5c4638; font-size:0.9rem;">→ 7 bukan anggota himpunan A</span></div>
+        </div>
+
+        <h3>3. Himpunan Semesta (Universal Set)</h3>
+        <p><strong>Himpunan semesta</strong> adalah himpunan yang memuat semua objek yang sedang dibicarakan. Biasanya dilambangkan dengan <strong>S</strong> atau <strong>U</strong>.</p>
+
+        <div class="set-box">
+          <div class="set-title">📌 Contoh:</div>
+          <div>Jika kita membahas tentang warna, maka himpunan semestanya adalah:</div>
+          <div class="set-content" style="margin-top:0.3rem;">S = {merah, biru, hijau, kuning, putih, hitam}</div>
+        </div>
+
+        <h3>4. Himpunan Kosong (Empty Set)</h3>
+        <p><strong>Himpunan kosong</strong> adalah himpunan yang tidak memiliki anggota sama sekali, dilambangkan dengan <strong>∅</strong> atau <strong>{}</strong>.</p>
+
+        <div class="set-box">
+          <div class="set-title">📌 Contoh:</div>
+          <div>H = {bilangan ganjil yang habis dibagi 2} → H = ∅</div>
+        </div>
+
+        <!-- C. Operasi pada Himpunan -->
+        <h2>C. Operasi pada Himpunan</h2>
+        <p>Sama seperti kita bisa menjumlahkan dan mengurangkan angka, kita juga bisa mengoperasikan himpunan.</p>
+
+        <h3>1. Irisan (Intersection) — ∩</h3>
+        <p><strong>Irisan</strong> adalah himpunan yang berisi anggota yang sama-sama dimiliki oleh dua himpunan atau lebih.</p>
+
+        <div class="set-box">
+          <div class="set-title">📌 Contoh:</div>
+          <div>A = {1, 2, 3, 4}</div>
+          <div>B = {3, 4, 5, 6}</div>
+          <div style="margin-top:0.5rem; font-weight:700; color:#4d3829;">A ∩ B = {3, 4}</div>
+          <div class="set-desc">→ angka yang ada di kedua himpunan</div>
+        </div>
+
+        <h3>2. Gabungan (Union) — ∪</h3>
+        <p><strong>Gabungan</strong> adalah himpunan yang berisi semua anggota dari dua himpunan atau lebih.</p>
+
+        <div class="set-box">
+          <div class="set-title">📌 Contoh:</div>
+          <div>A = {1, 2, 3, 4}</div>
+          <div>B = {3, 4, 5, 6}</div>
+          <div style="margin-top:0.5rem; font-weight:700; color:#4d3829;">A ∪ B = {1, 2, 3, 4, 5, 6}</div>
+          <div class="set-desc">→ semua angka dari A dan B (tanpa duplikat)</div>
+        </div>
+
+        <!-- Diagram Venn -->
+        <div class="venn-diagram">
+          <div class="venn-title">┌─────────────────────────────────────────┐</div>
+          <div style="font-size:0.9rem; color:#dbb9a6; margin-bottom:0.8rem;">DIAGRAM VENN — IRISAN &amp; GABUNGAN</div>
+          <pre>
+                  ┌─────────────────────────────┐
+                  │         A ∪ B               │
+                  │  ┌──────────┐  ┌──────────┐ │
+                  │  │   A       │  │   B      │ │
+                  │  │ 1   2     │  │ 5   6    │ │
+                  │  │   ┌───────┼──┼───────┐ │ │
+                  │  │   │ <span class="highlight-intersect">3 , 4</span> │  │       │ │ │
+                  │  └───┼───────┘  └───────┼─┘ │
+                  └──────┴──────────────────┴───┘
+          </pre>
+          <div style="font-size:0.7rem; color:#7a6656; border-top:1px solid #4d3829; padding-top:0.8rem; margin-top:0.5rem;">
+            <span style="color:#f5d4b8;">■ A</span> &nbsp; <span style="color:#b8d4f5;">■ B</span> &nbsp; <span style="color:#b8f5d4;">■ A ∩ B (irisan)</span> &nbsp; <span style="color:#e5dbd0;">■ A ∪ B (gabungan)</span>
+          </div>
+        </div>
+
+        <h3>3. Selisih (Difference) — −</h3>
+        <p><strong>Selisih</strong> A - B adalah himpunan yang berisi anggota A yang <strong>tidak</strong> menjadi anggota B.</p>
+
+        <div class="set-box">
+          <div class="set-title">📌 Contoh:</div>
+          <div>A = {1, 2, 3, 4}</div>
+          <div>B = {3, 4, 5, 6}</div>
+          <div style="margin-top:0.5rem; font-weight:700; color:#4d3829;">A − B = {1, 2}</div>
+          <div class="set-desc">→ anggota A yang tidak ada di B</div>
+          <div style="margin-top:0.3rem; font-weight:700; color:#4d3829;">B − A = {5, 6}</div>
+          <div class="set-desc">→ anggota B yang tidak ada di A</div>
+        </div>
+
+        <h3>4. Komplemen (Complement) — A' atau ¬A</h3>
+        <p><strong>Komplemen</strong> dari himpunan A adalah anggota himpunan semesta yang <strong>tidak</strong> menjadi anggota A.</p>
+
+        <div class="set-box">
+          <div class="set-title">📌 Contoh:</div>
+          <div>S = {1, 2, 3, 4, 5, 6}</div>
+          <div>A = {1, 2, 3}</div>
+          <div style="margin-top:0.5rem; font-weight:700; color:#4d3829;">A' = {4, 5, 6}</div>
+          <div class="set-desc">→ anggota S yang tidak ada di A</div>
+        </div>
+
+        <h3>5. Himpunan Bagian (Subset) — ⊆</h3>
+        <p>A adalah <strong>himpunan bagian</strong> dari B jika semua anggota A juga merupakan anggota B.</p>
+
+        <div class="set-box">
+          <div class="set-title">📌 Contoh:</div>
+          <div>A = {1, 2}</div>
+          <div>B = {1, 2, 3, 4}</div>
+          <div style="margin-top:0.5rem; font-weight:700; color:#4d3829;">A ⊆ B</div>
+          <div class="set-desc">→ semua anggota A ada di B</div>
+        </div>
+
+        <!-- D. Memodelkan Persoalan Logika -->
+        <h2>D. Memodelkan Persoalan Logika dengan Himpunan</h2>
+        <p><strong>Memodelkan</strong> berarti menerjemahkan masalah nyata ke dalam bahasa himpunan agar lebih mudah dipahami dan dipecahkan.</p>
+
+        <!-- Contoh 1 -->
+        <div class="contoh-soal">
+          <div class="soal-title">📘 Contoh 1: Preferensi Makanan</div>
+          <div class="soal-text">
+            <strong>Masalah:</strong> Di sebuah kelas, 15 siswa suka nasi goreng, 12 siswa suka mie goreng, dan 6 siswa suka keduanya. Berapa siswa yang suka minimal salah satu dari keduanya?
+          </div>
+          <div class="soal-solusi">
+            <strong>Model Himpunan:</strong><br>
+            S = {semua siswa di kelas}<br>
+            A = {siswa suka nasi goreng}, |A| = 15<br>
+            B = {siswa suka mie goreng}, |B| = 12<br>
+            A ∩ B = {siswa suka keduanya}, |A ∩ B| = 6<br><br>
+            <strong>Penyelesaian:</strong><br>
+            |A ∪ B| = |A| + |B| − |A ∩ B|<br>
+            |A ∪ B| = 15 + 12 − 6 = <strong>21</strong><br><br>
+            ✅ Jadi, ada <strong>21 siswa</strong> yang suka minimal salah satu dari kedua makanan tersebut.
+          </div>
+        </div>
+
+        <!-- Contoh 2 -->
+        <div class="contoh-soal">
+          <div class="soal-title">📘 Contoh 2: Logika Peminjaman Buku</div>
+          <div class="soal-text">
+            <strong>Masalah:</strong> Di perpustakaan, buku yang dipinjam harus dikembalikan dalam 7 hari. Jika buku dikembalikan terlambat, peminjam dikenai denda. Bagaimana memodelkan aturan ini?
+          </div>
+          <div class="soal-solusi">
+            <strong>Model Himpunan:</strong><br>
+            P = {semua buku yang dipinjam}<br>
+            T = {buku yang dikembalikan tepat waktu}<br>
+            L = {buku yang dikembalikan terlambat}<br>
+            D = {buku yang dikenai denda}<br><br>
+            <strong>Relasi Logika:</strong><br>
+            Jika buku ∈ L, maka buku ∈ D (semua buku terlambat kena denda)<br>
+            L = P − T (buku terlambat adalah buku yang tidak tepat waktu)
+          </div>
+        </div>
+
+        <!-- Contoh 3 -->
+        <div class="contoh-soal">
+          <div class="soal-title">📘 Contoh 3: Rekomendasi Film</div>
+          <div class="soal-text">
+            <strong>Masalah:</strong> Aplikasi streaming ingin merekomendasikan film berdasarkan genre yang disukai dan sudah ditonton.
+          </div>
+          <div class="soal-solusi">
+            <strong>Model Himpunan:</strong><br>
+            G = {genre film yang ada}<br>
+            S = {genre yang disukai pengguna}<br>
+            T = {genre yang sudah ditonton pengguna}<br>
+            R = {genre yang akan direkomendasikan}<br><br>
+            <strong>Logika:</strong><br>
+            R = S − T (rekomendasi genre yang disukai tapi belum ditonton)
+          </div>
+        </div>
+
+        <!-- E. Himpunan dan Logika Boolean -->
+        <h2>E. Himpunan dan Logika Boolean</h2>
+        <p>Himpunan sangat erat kaitannya dengan <strong>logika Boolean</strong> (logika yang hanya memiliki dua nilai: benar/salah atau 1/0). Operasi himpunan memiliki padanan dalam logika:</p>
+
+        <table class="tabel-boolean">
+          <thead>
+            <tr>
+              <th>Operasi Himpunan</th>
+              <th>Padanan Logika</th>
+              <th>Contoh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge-op">∩</span> Irisan (A ∩ B)</td>
+              <td><span class="logic-true">AND</span> (A ∧ B)</td>
+              <td>"Suka nasi goreng <strong>dan</strong> mie goreng"</td>
+            </tr>
+            <tr>
+              <td><span class="badge-op">∪</span> Gabungan (A ∪ B)</td>
+              <td><span class="logic-true">OR</span> (A ∨ B)</td>
+              <td>"Suka nasi goreng <strong>atau</strong> mie goreng"</td>
+            </tr>
+            <tr>
+              <td><span class="badge-op">'</span> Komplemen (A')</td>
+              <td><span class="logic-true">NOT</span> (¬A)</td>
+              <td>"<strong>Tidak</strong> suka nasi goreng"</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="highlight-box">
+          <strong>💡 Contoh penerapan:</strong>
+          <p>Aturan akses: <em>"Siswa boleh masuk laboratorium jika sudah mendapat izin <strong>AND</strong> memakai sepatu"</em></p>
+          <p style="margin-top:0.3rem;">Dalam himpunan: Akses = Izin ∩ Sepatu</p>
+        </div>
+
+        <!-- F. Manfaat Memodelkan -->
+        <h2>F. Manfaat Memodelkan dengan Himpunan</h2>
+        <ul>
+          <li><strong>Memudahkan Pemahaman:</strong> Masalah kompleks menjadi lebih sederhana dan terstruktur</li>
+          <li><strong>Mempermudah Penyelesaian:</strong> Operasi himpunan membantu menemukan solusi dengan cepat</li>
+          <li><strong>Dasar Pemrograman:</strong> Banyak algoritma menggunakan prinsip himpunan</li>
+          <li><strong>Penyelesaian Masalah Nyata:</strong> Dari rekomendasi produk hingga sistem keamanan</li>
+        </ul>
+
+        <!-- Referensi -->
+        <h2>📚 Referensi Materi</h2>
+        <ul>
+          <li>Kurikulum Merdeka Informatika SMP Fase D - Elemen Berpikir Komputasional: "Memodelkan persoalan logika ke bentuk himpunan" (INF-D.BK1.3)</li>
+          <li>Buku "Sets, Logic and Maths for Computing" oleh David Makinson - Konsep dasar himpunan dan operasinya</li>
+          <li>Modul Pembelajaran Himpunan dengan GeoGebra - Visualisasi himpunan dan operasinya secara interaktif</li>
+          <li>Konsep Boolean Models dan hubungan himpunan dengan logika proposisional</li>
+          <li>Materi Himpunan dalam Informatika Kelas 8 SMP Kurikulum Merdeka</li>
+          <li>Inclusion-Exclusion Principle Visualizer - Contoh visualisasi interaktif operasi himpunan</li>
+        </ul>
+
+        <!-- TOMBOL AKTIVITAS -->
+        <div class="aktivitas-wrapper">
+          <h3>🔬 Set Logic Lab: Menjelajahi Himpunan dan Logika</h3>
+          <p>Ikuti aktivitas interaktif untuk menjelajahi konsep himpunan dan logika Boolean. Kamu akan memodelkan berbagai persoalan logika dan melihat visualisasi operasi himpunan secara langsung!</p>
+          <div class="nav-dua">
+            <a href="aktivitasbk4a.html" class="tombol-aktivitas">
+              🧪 Mulai Set Logic Lab
+            </a>
+            <a href="bk.html" class="tombol-aktivitas" style="background: linear-gradient(135deg, #6b4f3a, #8a6b55);">
+              📚 Kembali ke Materi BK
+            </a>
+          </div>
+        </div>
+
+        <!-- Tombol Kembali -->
+        <a href="bk.html" class="nav-kembali">← Kembali ke Daftar Materi Berpikir Komputasional</a>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- perbarui breadcrumb untuk halaman bk4 -->
+  <script>
+    (function() {
+      const bcContainer = document.getElementById('breadcrumb-container');
+      if (bcContainer) {
+        bcContainer.innerHTML = `
+          <li><a href="index.html">Beranda</a></li>
+          <li><a href="bk.html">Berpikir Komputasional</a></li>
+          <li>Memodelkan Persoalan Logika dalam Bentuk Himpunan</li>
+        `;
+      }
+    })();
+  </script>
+
+</body>
+</html>

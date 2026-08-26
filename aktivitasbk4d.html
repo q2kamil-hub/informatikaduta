@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Set Logic Lab · Pemodelan Masalah Nyata</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA KHUSUS SKENARIO 4 ===== */
+    .aktivitas-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding: 0.5rem 1rem;
+      background: #f8f3ee;
+      border-radius: 40px;
+      border: 2px solid #e5dbd0;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #7a6656;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .progress-step.active {
+      background: #4d3829;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .progress-step.done {
+      color: #2d7d46;
+    }
+
+    .progress-step .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e5dbd0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #4d3829;
+    }
+
+    .progress-step.active .step-num {
+      background: #dbb9a6;
+      color: #3b2b1e;
+    }
+
+    .progress-step.done .step-num {
+      background: #2d7d46;
+      color: #fff;
+    }
+
+    .progress-line {
+      flex: 1;
+      height: 3px;
+      background: #e5dbd0;
+      min-width: 20px;
+      border-radius: 4px;
+    }
+
+    .progress-line.done {
+      background: #2d7d46;
+    }
+
+    /* ===== SCENE HEADER ===== */
+    .scene-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.5rem;
+      background: #f5ede6;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+    }
+
+    .scene-header .avatar {
+      font-size: 2.8rem;
+      flex-shrink: 0;
+    }
+
+    .scene-header .story {
+      font-size: 1rem;
+      color: #2f2822;
+      line-height: 1.6;
+    }
+
+    .scene-header .story strong {
+      color: #4d3829;
+    }
+
+    /* ===== SKENARIO PILIHAN ===== */
+    .skenario-pilihan {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin: 1.5rem 0;
+    }
+
+    .skenario-card {
+      background: #fffffffa;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 3px solid #e5dbd0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+
+    .skenario-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      border-color: #b09b88;
+    }
+
+    .skenario-card.selected {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    .skenario-card .skenario-icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .skenario-card .skenario-judul {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .skenario-card .skenario-desc {
+      font-size: 0.9rem;
+      color: #5c4638;
+      line-height: 1.5;
+    }
+
+    .skenario-card .skenario-badge {
+      display: inline-block;
+      background: #e8d5c4;
+      padding: 0.15rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #4d3829;
+      margin-top: 0.5rem;
+    }
+
+    /* ===== TEMPLATE MODEL ===== */
+    .template-container {
+      display: none;
+      animation: fadeIn 0.5s ease;
+      margin-top: 1.5rem;
+    }
+
+    .template-container.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .template-box {
+      background: #fffffffa;
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      border: 2px solid #e5dbd0;
+      margin-bottom: 1.5rem;
+    }
+
+    .template-box .template-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #4d3829;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .template-box .template-desc {
+      font-size: 0.95rem;
+      color: #2f2822;
+      margin-bottom: 1rem;
+      padding: 0.8rem 1.2rem;
+      background: #f5ede6;
+      border-radius: 12px;
+      border-left: 6px solid #dbb9a6;
+    }
+
+    .template-box .template-desc strong {
+      color: #4d3829;
+    }
+
+    .template-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
+      align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      .template-row {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+      }
+    }
+
+    .template-row .label {
+      font-weight: 600;
+      color: #4d3829;
+      font-size: 0.95rem;
+    }
+
+    .template-row .label .hint {
+      font-weight: 400;
+      color: #7a6656;
+      font-size: 0.8rem;
+      display: block;
+    }
+
+    .template-row input {
+      padding: 0.5rem 0.8rem;
+      border: 2px solid #e5dbd0;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: #2f2822;
+      background: #fff;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .template-row input:focus {
+      outline: none;
+      border-color: #6b4f3a;
+    }
+
+    .template-row input.correct-input {
+      border-color: #2d7d46;
+      background: #e8f5ee;
+    }
+
+    .template-row input.wrong-input {
+      border-color: #b33c3c;
+      background: #fde8e8;
+    }
+
+    .template-row .result-display {
+      padding: 0.5rem 0.8rem;
+      background: #f8f3ee;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      min-height: 45px;
+      display: flex;
+      align-items: center;
+    }
+
+    .template-row .result-display .result-value {
+      color: #2d7d46;
+      font-size: 1.3rem;
+    }
+
+    .template-row .result-display .result-error {
+      color: #b33c3c;
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+
+    /* ===== TOMBOL ===== */
+    .btn-check {
+      display: inline-block;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+      padding: 0.7rem 2rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-check:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    .btn-check:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-next {
+      display: inline-block;
+      background: linear-gradient(135deg, #2d7d46, #3a9d5a);
+      color: #fff;
+      padding: 0.8rem 2.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 125, 70, 0.3);
+    }
+
+    .btn-next:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(45, 125, 70, 0.4);
+      background: linear-gradient(135deg, #3a9d5a, #4db86e);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-back {
+      display: inline-block;
+      background: #e8d5c4;
+      color: #4d3829;
+      padding: 0.8rem 2.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      border: 2px solid #dbb9a6;
+      cursor: pointer;
+    }
+
+    .btn-back:hover {
+      background: #dac5b2;
+      transform: translateY(-2px);
+    }
+
+    .btn-reset-skenario {
+      display: inline-block;
+      background: #e8d5c4;
+      color: #4d3829;
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      border: 2px solid #dbb9a6;
+      cursor: pointer;
+    }
+
+    .btn-reset-skenario:hover {
+      background: #dac5b2;
+    }
+
+    .nav-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+
+    /* ===== FEEDBACK ===== */
+    .feedback-model {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      border-left: 8px solid #dbb9a6;
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .feedback-model.show {
+      display: block;
+    }
+
+    .feedback-model.success {
+      border-color: #2d7d46;
+      background: #e8f5ee;
+    }
+
+    .feedback-model.error {
+      border-color: #b33c3c;
+      background: #fde8e8;
+    }
+
+    .feedback-model .fb-icon {
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
+    }
+
+    .feedback-model .fb-text {
+      color: #2f2822;
+      line-height: 1.6;
+    }
+
+    .feedback-model .fb-text strong {
+      color: #4d3829;
+    }
+
+    /* ===== STEP BY STEP ===== */
+    .step-indicator {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0.5rem 0 1rem 0;
+      flex-wrap: wrap;
+    }
+
+    .step-indicator .step-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #e5dbd0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .step-indicator .step-dot.active {
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .step-indicator .step-dot.done {
+      background: #2d7d46;
+      color: #fff;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scene-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .skenario-pilihan {
+        grid-template-columns: 1fr;
+      }
+      .template-box {
+        padding: 1rem 1.2rem;
+      }
+      .progress-step .step-label {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .template-row {
+        grid-template-columns: 1fr;
+      }
+      .template-row .label .hint {
+        display: inline;
+      }
+      .nav-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      .nav-buttons .btn-next,
+      .nav-buttons .btn-back {
+        width: 100%;
+        text-align: center;
+      }
+      .action-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      .action-buttons .btn-check,
+      .action-buttons .btn-reset-skenario {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    #scrollTopBtn {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk4.html">Memodelkan Persoalan Logika</a></li>
+      <li>Set Logic Lab · Pemodelan</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-container">
+
+        <!-- ===== PROGRESS TRACKER ===== -->
+        <div class="progress-tracker" id="progressTracker">
+          <div class="progress-step done" data-step="0">
+            <span class="step-num">🏠</span>
+            <span class="step-label">Mulai</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="1">
+            <span class="step-num">1</span>
+            <span class="step-label">Anggota</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="2">
+            <span class="step-num">2</span>
+            <span class="step-label">Venn</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="3">
+            <span class="step-num">3</span>
+            <span class="step-label">Operasi</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step active" data-step="4">
+            <span class="step-num">4</span>
+            <span class="step-label">Model</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="5">
+            <span class="step-num">5</span>
+            <span class="step-label">Boolean</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="6">
+            <span class="step-num">🏆</span>
+            <span class="step-label">Kuis</span>
+          </div>
+        </div>
+
+        <!-- ===== SCENE HEADER ===== -->
+        <div class="scene-header">
+          <span class="avatar">🕵️</span>
+          <div class="story">
+            <strong>Professor Set</strong> berkata:<br>
+            "Sekarang kamu menjadi <strong>Detektif Himpunan</strong>! 
+            Tugasmu adalah memodelkan masalah sehari-hari ke dalam bentuk himpunan 
+            dan menyelesaikannya. Pilih salah satu skenario di bawah ini,
+            lalu isi template model himpunannya!
+            <br>📌 Ikuti langkah-langkahnya satu per satu."
+          </div>
+        </div>
+
+        <!-- ===== SKENARIO PILIHAN ===== -->
+        <div class="skenario-pilihan" id="skenarioPilihan">
+          <div class="skenario-card" data-skenario="0">
+            <span class="skenario-icon">📚</span>
+            <div class="skenario-judul">Skenario A: Preferensi Mata Pelajaran</div>
+            <div class="skenario-desc">
+              Di sebuah kelas, 20 siswa suka matematika, 15 suka IPA, 
+              dan 8 suka keduanya. Berapa siswa yang suka matematika atau IPA?
+            </div>
+            <span class="skenario-badge">⭐ Mudah</span>
+          </div>
+          <div class="skenario-card" data-skenario="1">
+            <span class="skenario-icon">📖</span>
+            <div class="skenario-judul">Skenario B: Pembelian Buku</div>
+            <div class="skenario-desc">
+              Di toko buku, 30 orang membeli novel, 25 membeli komik, 
+              10 membeli keduanya, dan 5 tidak membeli keduanya. 
+              Berapa total pengunjung?
+            </div>
+            <span class="skenario-badge">⭐ Sedang</span>
+          </div>
+          <div class="skenario-card" data-skenario="2">
+            <span class="skenario-icon">🎵</span>
+            <div class="skenario-judul">Skenario C: Aplikasi Musik</div>
+            <div class="skenario-desc">
+              Aplikasi musik memiliki 100 lagu. 40 lagu pop, 30 lagu rock, 
+              20 lagu jazz, 10 lagu pop dan rock, 5 lagu ketiganya. 
+              Berapa lagu yang hanya pop?
+            </div>
+            <span class="skenario-badge">⭐⭐ Sulit</span>
+          </div>
+        </div>
+
+        <!-- ===== TEMPLATE MODEL ===== -->
+        <div class="template-container" id="templateContainer">
+          
+          <!-- Template Box -->
+          <div class="template-box">
+            <div class="template-title">
+              📋 Template Model Himpunan
+              <span style="font-size:0.8rem; font-weight:400; color:#7a6656; margin-left:auto;">
+                Skenario <span id="skenarioNomor">A</span>
+              </span>
+            </div>
+
+            <!-- Deskripsi Skenario -->
+            <div class="template-desc" id="skenarioDeskripsi">
+              <!-- diisi JS -->
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="step-indicator" id="stepIndicator">
+              <div class="step-dot active" data-step="0">1</div>
+              <div class="step-dot" data-step="1">2</div>
+              <div class="step-dot" data-step="2">3</div>
+              <div class="step-dot" data-step="3">4</div>
+              <div class="step-dot" data-step="4">5</div>
+            </div>
+
+            <!-- Form Input -->
+            <div id="templateForm">
+              <!-- Step 1: Himpunan Semesta -->
+              <div class="template-row" data-step="0">
+                <div class="label">
+                  Himpunan Semesta (S)
+                  <span class="hint">semua objek yang dibicarakan</span>
+                </div>
+                <input type="text" id="inputS" placeholder="Contoh: semua siswa di kelas" />
+              </div>
+
+              <!-- Step 2: Himpunan A -->
+              <div class="template-row" data-step="1">
+                <div class="label">
+                  Himpunan A
+                  <span class="hint">himpunan pertama yang terlibat</span>
+                </div>
+                <input type="text" id="inputA" placeholder="Contoh: siswa suka matematika" />
+              </div>
+
+              <!-- Step 3: Himpunan B -->
+              <div class="template-row" data-step="2">
+                <div class="label">
+                  Himpunan B
+                  <span class="hint">himpunan kedua yang terlibat</span>
+                </div>
+                <input type="text" id="inputB" placeholder="Contoh: siswa suka IPA" />
+              </div>
+
+              <!-- Step 4: Nilai yang Diketahui -->
+              <div class="template-row" data-step="3">
+                <div class="label">
+                  Nilai yang Diketahui
+                  <span class="hint">masukkan nilai-nilai yang diketahui (misal: |A|=20)</span>
+                </div>
+                <input type="text" id="inputDiketahui" placeholder="|A|=20, |B|=15, |A∩B|=8" />
+              </div>
+
+              <!-- Step 5: Nilai yang Ditanyakan -->
+              <div class="template-row" data-step="4">
+                <div class="label">
+                  Nilai yang Ditanyakan
+                  <span class="hint">apa yang ingin kamu cari?</span>
+                </div>
+                <input type="text" id="inputDitanyakan" placeholder="|A∪B| = ?" />
+              </div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="action-buttons">
+              <button class="btn-check" id="btnCheckModel">🔍 Periksa Model</button>
+              <button class="btn-reset-skenario" id="btnResetModel">🔄 Reset</button>
+            </div>
+
+            <!-- Feedback -->
+            <div class="feedback-model" id="feedbackModel">
+              <span class="fb-icon" id="fbIconModel">💡</span>
+              <span class="fb-text" id="fbTextModel">Isi semua langkah di atas, lalu klik Periksa Model.</span>
+            </div>
+          </div>
+
+          <!-- Hasil -->
+          <div style="text-align:center; margin-top:0.5rem;">
+            <button class="btn-next" id="btnNextScene" disabled>➜ Lanjut ke Logika Himpunan</button>
+          </div>
+        </div>
+
+        <!-- ===== NAVIGASI ===== -->
+        <div class="nav-buttons">
+          <a href="aktivitasbk4c.html" class="btn-back">← Kembali</a>
+          <button class="btn-next" id="btnNextSceneAlt" disabled style="display:none;">➜ Lanjut ke Logika Himpunan</button>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- SCRIPT.JS -->
+  <script src="script.js"></script>
+
+  <!-- ============================================================ -->
+  <!-- ===== SCRIPT KHUSUS SKENARIO 4 ===== -->
+  <!-- ============================================================ -->
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================================
+      // DATA SKENARIO
+      // ============================================================
+      const skenarioData = [
+        {
+          id: 'A',
+          judul: 'Preferensi Mata Pelajaran',
+          deskripsi: 'Di sebuah kelas, <strong>20 siswa suka matematika</strong>, <strong>15 suka IPA</strong>, dan <strong>8 suka keduanya</strong>. Berapa siswa yang suka matematika atau IPA?',
+          expected: {
+            S: 'semua siswa di kelas',
+            A: 'siswa suka matematika',
+            B: 'siswa suka IPA',
+            diketahui: ['|A|=20', '|B|=15', '|A∩B|=8'],
+            ditanyakan: '|A∪B|'
+          },
+          jawaban: 27,
+          rumus: '|A∪B| = |A| + |B| - |A∩B| = 20 + 15 - 8 = 27'
+        },
+        {
+          id: 'B',
+          judul: 'Pembelian Buku',
+          deskripsi: 'Di toko buku, <strong>30 orang membeli novel</strong>, <strong>25 membeli komik</strong>, <strong>10 membeli keduanya</strong>, dan <strong>5 tidak membeli keduanya</strong>. Berapa total pengunjung?',
+          expected: {
+            S: 'semua pengunjung toko buku',
+            A: 'orang membeli novel',
+            B: 'orang membeli komik',
+            diketahui: ['|A|=30', '|B|=25', '|A∩B|=10', 'di luar A∪B = 5'],
+            ditanyakan: '|S|'
+          },
+          jawaban: 50,
+          rumus: '|S| = |A∪B| + 5 = (30 + 25 - 10) + 5 = 50'
+        },
+        {
+          id: 'C',
+          judul: 'Aplikasi Musik',
+          deskripsi: 'Aplikasi musik memiliki <strong>100 lagu</strong>. <strong>40 lagu pop</strong>, <strong>30 lagu rock</strong>, <strong>20 lagu jazz</strong>, <strong>10 lagu pop dan rock</strong>, <strong>5 lagu ketiganya</strong>. Berapa lagu yang <strong>hanya pop</strong>?',
+          expected: {
+            S: 'semua lagu di aplikasi',
+            A: 'lagu pop',
+            B: 'lagu rock',
+            C: 'lagu jazz',
+            diketahui: ['|S|=100', '|A|=40', '|B|=30', '|C|=20', '|A∩B|=10', '|A∩B∩C|=5'],
+            ditanyakan: '|A - (B∪C)|'
+          },
+          jawaban: 25,
+          rumus: 'Hanya pop = |A| - |A∩B| - |A∩C| + |A∩B∩C| = 40 - 10 - (0) + 5 = 35'
+        }
+      ];
+
+      // ============================================================
+      // STATE
+      // ============================================================
+      let currentSkenario = null;
+      let currentStep = 0;
+      let isModelCorrect = false;
+      const totalSteps = 5;
+
+      // ============================================================
+      // DOM REFS
+      // ============================================================
+      const skenarioCards = document.querySelectorAll('.skenario-card');
+      const templateContainer = document.getElementById('templateContainer');
+      const skenarioNomor = document.getElementById('skenarioNomor');
+      const skenarioDeskripsi = document.getElementById('skenarioDeskripsi');
+      const stepIndicator = document.getElementById('stepIndicator');
+      const inputS = document.getElementById('inputS');
+      const inputA = document.getElementById('inputA');
+      const inputB = document.getElementById('inputB');
+      const inputDiketahui = document.getElementById('inputDiketahui');
+      const inputDitanyakan = document.getElementById('inputDitanyakan');
+      const btnCheckModel = document.getElementById('btnCheckModel');
+      const btnResetModel = document.getElementById('btnResetModel');
+      const feedbackModel = document.getElementById('feedbackModel');
+      const fbIconModel = document.getElementById('fbIconModel');
+      const fbTextModel = document.getElementById('fbTextModel');
+      const btnNextScene = document.getElementById('btnNextScene');
+      const btnNextSceneAlt = document.getElementById('btnNextSceneAlt');
+
+      // ============================================================
+      // FUNGSI UTAMA
+      // ============================================================
+
+      // Pilih skenario
+      function selectSkenario(index) {
+        currentSkenario = skenarioData[index];
+        currentStep = 0;
+        isModelCorrect = false;
+
+        // Update tampilan
+        skenarioCards.forEach((card, i) => {
+          card.classList.toggle('selected', i === index);
+        });
+
+        templateContainer.classList.add('active');
+        skenarioNomor.textContent = currentSkenario.id;
+        skenarioDeskripsi.innerHTML = currentSkenario.deskripsi;
+
+        // Reset form
+        resetForm();
+
+        // Reset step indicator
+        updateStepIndicator(0);
+
+        // Reset feedback
+        feedbackModel.className = 'feedback-model';
+        fbTextModel.textContent = 'Ikuti langkah-langkah di atas, isi semua field, lalu klik Periksa Model.';
+
+        // Disable tombol lanjut
+        btnNextScene.disabled = true;
+        btnNextSceneAlt.disabled = true;
+
+        // Scroll ke template
+        templateContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // Reset form
+      function resetForm() {
+        inputS.value = '';
+        inputA.value = '';
+        inputB.value = '';
+        inputDiketahui.value = '';
+        inputDitanyakan.value = '';
+        document.querySelectorAll('.template-row input').forEach(inp => {
+          inp.classList.remove('correct-input', 'wrong-input');
+        });
+      }
+
+      // Update step indicator
+      function updateStepIndicator(step) {
+        const dots = stepIndicator.querySelectorAll('.step-dot');
+        dots.forEach((dot, i) => {
+          dot.classList.remove('active', 'done');
+          if (i < step) dot.classList.add('done');
+          if (i === step) dot.classList.add('active');
+        });
+        currentStep = step;
+      }
+
+      // Normalisasi string (hilangkan spasi berlebih, lowercase)
+      function normalize(str) {
+        return str.toLowerCase().trim().replace(/\s+/g, ' ');
+      }
+
+      // Cek apakah string cocok (dengan fleksibilitas)
+      function isMatch(input, expected) {
+        if (!input || !expected) return false;
+        const normInput = normalize(input);
+        const normExpected = normalize(expected);
+        // Cek apakah input mengandung kata kunci dari expected
+        const keywords = normExpected.split(' ');
+        const matchCount = keywords.filter(kw => kw.length > 2 && normInput.includes(kw)).length;
+        return matchCount >= Math.min(keywords.length, 2);
+      }
+
+      // Periksa model
+      function checkModel() {
+        if (!currentSkenario) return;
+
+        const expected = currentSkenario.expected;
+        let allCorrect = true;
+        let errors = [];
+
+        // Periksa setiap field
+        const checks = [
+          { input: inputS, expected: expected.S, label: 'Himpunan Semesta' },
+          { input: inputA, expected: expected.A, label: 'Himpunan A' },
+          { input: inputB, expected: expected.B, label: 'Himpunan B' },
+          { input: inputDiketahui, expected: expected.diketahui.join(', '), label: 'Nilai yang Diketahui' },
+          { input: inputDitanyakan, expected: expected.ditanyakan, label: 'Nilai yang Ditanyakan' }
+        ];
+
+        checks.forEach(check => {
+          const val = check.input.value.trim();
+          if (!val) {
+            allCorrect = false;
+            errors.push(`${check.label} masih kosong`);
+            check.input.classList.add('wrong-input');
+            return;
+          }
+
+          if (isMatch(val, check.expected)) {
+            check.input.classList.add('correct-input');
+            check.input.classList.remove('wrong-input');
+          } else {
+            allCorrect = false;
+            errors.push(`${check.label} kurang tepat`);
+            check.input.classList.add('wrong-input');
+            check.input.classList.remove('correct-input');
+          }
+        });
+
+        if (allCorrect) {
+          isModelCorrect = true;
+          feedbackModel.className = 'feedback-model show success';
+          fbIconModel.textContent = '✅';
+          fbTextModel.innerHTML = `
+            <strong>Model yang bagus!</strong> 🎉<br>
+            Kamu berhasil memodelkan skenario dengan tepat.<br>
+            <br>
+            <strong>Rumus:</strong> ${currentSkenario.rumus}<br>
+            <strong>Jawaban:</strong> ${currentSkenario.jawaban}
+          `;
+          btnNextScene.disabled = false;
+          btnNextSceneAlt.disabled = false;
+          btnNextSceneAlt.style.display = 'inline-block';
+
+          // Tandai semua step selesai
+          updateStepIndicator(totalSteps);
+        } else {
+          isModelCorrect = false;
+          feedbackModel.className = 'feedback-model show error';
+          fbIconModel.textContent = '💡';
+          fbTextModel.innerHTML = `
+            <strong>Periksa kembali modelmu:</strong><br>
+            ${errors.map(e => `• ${e}`).join('<br>')}
+            <br><br>
+            <em>Petunjuk:</em> Perhatikan kata kunci dalam deskripsi skenario.
+          `;
+          btnNextScene.disabled = true;
+          btnNextSceneAlt.disabled = true;
+        }
+      }
+
+      // ============================================================
+      // EVENT LISTENERS
+      // ============================================================
+
+      // Pilih skenario
+      skenarioCards.forEach((card, index) => {
+        card.addEventListener('click', function() {
+          selectSkenario(index);
+        });
+      });
+
+      // Check model
+      btnCheckModel.addEventListener('click', checkModel);
+
+      // Reset model
+      btnResetModel.addEventListener('click', function() {
+        if (currentSkenario) {
+          resetForm();
+          feedbackModel.className = 'feedback-model';
+          fbTextModel.textContent = 'Form telah direset. Isi ulang modelmu!';
+          btnNextScene.disabled = true;
+          btnNextSceneAlt.disabled = true;
+          isModelCorrect = false;
+          updateStepIndicator(0);
+          document.querySelectorAll('.template-row input').forEach(inp => {
+            inp.classList.remove('correct-input', 'wrong-input');
+          });
+        }
+      });
+
+      // Auto-check saat input berubah (untuk feedback real-time)
+      document.querySelectorAll('.template-row input').forEach(inp => {
+        inp.addEventListener('input', function() {
+          if (this.value.trim()) {
+            this.classList.remove('wrong-input');
+          }
+          // Reset feedback jika sudah pernah diperiksa
+          if (feedbackModel.className.includes('show')) {
+            feedbackModel.className = 'feedback-model';
+          }
+          btnNextScene.disabled = true;
+          btnNextSceneAlt.disabled = true;
+          isModelCorrect = false;
+        });
+
+        // Fokus otomatis ke input berikutnya
+        inp.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const inputs = document.querySelectorAll('.template-row input');
+            const currentIndex = Array.from(inputs).indexOf(this);
+            if (currentIndex < inputs.length - 1) {
+              inputs[currentIndex + 1].focus();
+            } else {
+              btnCheckModel.click();
+            }
+          }
+        });
+      });
+
+      // Navigasi
+      btnNextScene.addEventListener('click', function() {
+        if (isModelCorrect) {
+          window.location.href = 'aktivitasbk4e.html';
+        }
+      });
+
+      btnNextSceneAlt.addEventListener('click', function() {
+        if (isModelCorrect) {
+          window.location.href = 'aktivitasbk4e.html';
+        }
+      });
+
+      // ============================================================
+      // INISIALISASI
+      // ============================================================
+
+      // Pilih skenario pertama secara default (opsional)
+      // Biarkan user memilih sendiri
+
+      console.log('🧩 Set Logic Lab - Skenario 4 (Pemodelan) siap!');
+    })();
+  </script>
+
+</body>
+</html>

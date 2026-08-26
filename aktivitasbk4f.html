@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Set Logic Lab · Kuis Akhir & Sertifikat</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA KHUSUS KUIS AKHIR ===== */
+    .aktivitas-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding: 0.5rem 1rem;
+      background: #f8f3ee;
+      border-radius: 40px;
+      border: 2px solid #e5dbd0;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #7a6656;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .progress-step.active {
+      background: #4d3829;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .progress-step.done {
+      color: #2d7d46;
+    }
+
+    .progress-step .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e5dbd0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #4d3829;
+    }
+
+    .progress-step.active .step-num {
+      background: #dbb9a6;
+      color: #3b2b1e;
+    }
+
+    .progress-step.done .step-num {
+      background: #2d7d46;
+      color: #fff;
+    }
+
+    .progress-line {
+      flex: 1;
+      height: 3px;
+      background: #e5dbd0;
+      min-width: 20px;
+      border-radius: 4px;
+    }
+
+    .progress-line.done {
+      background: #2d7d46;
+    }
+
+    /* ===== SCENE HEADER ===== */
+    .scene-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.5rem;
+      background: #f5ede6;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+    }
+
+    .scene-header .avatar {
+      font-size: 2.8rem;
+      flex-shrink: 0;
+    }
+
+    .scene-header .story {
+      font-size: 1rem;
+      color: #2f2822;
+      line-height: 1.6;
+    }
+
+    .scene-header .story strong {
+      color: #4d3829;
+    }
+
+    /* ===== KUIS ===== */
+    .kuis-container {
+      background: #fffffffa;
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      border: 2px solid #e5dbd0;
+      margin: 1.5rem 0;
+    }
+
+    .kuis-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid #e5dbd0;
+    }
+
+    .kuis-header .kuis-judul {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #3b2b1e;
+    }
+
+    .kuis-header .kuis-progress {
+      font-size: 0.95rem;
+      color: #5c4638;
+    }
+
+    .kuis-header .kuis-progress strong {
+      color: #3b2b1e;
+    }
+
+    .kuis-soal {
+      margin-bottom: 1.5rem;
+    }
+
+    .kuis-soal .soal-nomor {
+      display: inline-block;
+      background: #4d3829;
+      color: #fff;
+      padding: 0.15rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .kuis-soal .soal-text {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #2f2822;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .kuis-soal .soal-text .highlight {
+      background: #f5ede6;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-weight: 700;
+      color: #4d3829;
+    }
+
+    .kuis-pilihan {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+
+    @media (max-width: 600px) {
+      .kuis-pilihan {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .kuis-pilihan .pilih-btn {
+      padding: 0.7rem 1.2rem;
+      border: 3px solid #e5dbd0;
+      border-radius: 12px;
+      background: #fff;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #2f2822;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .kuis-pilihan .pilih-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      border-color: #b09b88;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .kuis-pilihan .pilih-btn .option-label {
+      display: inline-block;
+      font-weight: 700;
+      color: #4d3829;
+      min-width: 24px;
+    }
+
+    .kuis-pilihan .pilih-btn.selected-correct {
+      border-color: #2d7d46;
+      background: #e8f5ee;
+    }
+
+    .kuis-pilihan .pilih-btn.selected-wrong {
+      border-color: #b33c3c;
+      background: #fde8e8;
+    }
+
+    .kuis-pilihan .pilih-btn.reveal-correct {
+      border-color: #2d7d46;
+      background: #e8f5ee;
+    }
+
+    .kuis-pilihan .pilih-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .kuis-feedback {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .kuis-feedback.show {
+      display: block;
+    }
+
+    .kuis-feedback.success {
+      background: #e8f5ee;
+      border-left: 6px solid #2d7d46;
+      color: #1a5c32;
+    }
+
+    .kuis-feedback.error {
+      background: #fde8e8;
+      border-left: 6px solid #b33c3c;
+      color: #7a2a2a;
+    }
+
+    .kuis-feedback .fb-icon {
+      font-size: 1.3rem;
+      margin-right: 0.5rem;
+    }
+
+    /* ===== TOMBOL ===== */
+    .btn-next-soal {
+      display: inline-block;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+      padding: 0.7rem 2.5rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-next-soal:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    .btn-next-soal:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-next {
+      display: inline-block;
+      background: linear-gradient(135deg, #2d7d46, #3a9d5a);
+      color: #fff;
+      padding: 0.8rem 2.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 125, 70, 0.3);
+    }
+
+    .btn-next:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(45, 125, 70, 0.4);
+      background: linear-gradient(135deg, #3a9d5a, #4db86e);
+    }
+
+    .btn-back {
+      display: inline-block;
+      background: #e8d5c4;
+      color: #4d3829;
+      padding: 0.8rem 2.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      border: 2px solid #dbb9a6;
+      cursor: pointer;
+    }
+
+    .btn-back:hover {
+      background: #dac5b2;
+      transform: translateY(-2px);
+    }
+
+    .nav-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    /* ===== SKOR ===== */
+    .skor-kuis {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      padding: 0.8rem 1.2rem;
+      background: #fff;
+      border-radius: 16px;
+      border: 2px solid #e5dbd0;
+      margin-bottom: 1.5rem;
+    }
+
+    .skor-kuis .skor-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      color: #5c4638;
+    }
+
+    .skor-kuis .skor-item .num {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #3b2b1e;
+    }
+
+    .skor-kuis .skor-item .num.correct {
+      color: #2d7d46;
+    }
+
+    .skor-kuis .skor-item .num.wrong {
+      color: #b33c3c;
+    }
+
+    /* ===== HASIL & SERTIFIKAT ===== */
+    .hasil-container {
+      display: none;
+      animation: fadeIn 0.6s ease;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .hasil-container.show {
+      display: block;
+    }
+
+    .hasil-container .trophy {
+      font-size: 5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hasil-container .level-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .hasil-container .level-subtitle {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 1.5rem;
+    }
+
+    .hasil-container .skor-akhir {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    .hasil-container .skor-akhir .skor-box {
+      background: #fffffffa;
+      border-radius: 16px;
+      padding: 1rem 2rem;
+      border: 2px solid #e5dbd0;
+      min-width: 120px;
+    }
+
+    .hasil-container .skor-akhir .skor-box .nilai {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #3b2b1e;
+    }
+
+    .hasil-container .skor-akhir .skor-box .label {
+      font-size: 0.8rem;
+      color: #7a6656;
+    }
+
+    .hasil-container .skor-akhir .skor-box.benar .nilai {
+      color: #2d7d46;
+    }
+
+    .hasil-container .skor-akhir .skor-box.salah .nilai {
+      color: #b33c3c;
+    }
+
+    /* Sertifikat */
+    .sertifikat {
+      background: linear-gradient(135deg, #fdf8f3, #f5ede6);
+      border: 4px double #dbb9a6;
+      border-radius: 20px;
+      padding: 2rem 2.5rem;
+      margin: 1.5rem auto;
+      max-width: 550px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+      position: relative;
+    }
+
+    .sertifikat .cert-badge {
+      font-size: 3rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .sertifikat .cert-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4d3829;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .sertifikat .cert-subtitle {
+      font-size: 0.9rem;
+      color: #7a6656;
+      margin: 0.3rem 0 0.8rem 0;
+    }
+
+    .sertifikat .cert-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      padding: 0.3rem 1rem;
+      border-bottom: 3px solid #dbb9a6;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    .sertifikat .cert-desc {
+      font-size: 0.95rem;
+      color: #2f2822;
+      line-height: 1.6;
+    }
+
+    .sertifikat .cert-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 2px solid #e5dbd0;
+      font-size: 0.8rem;
+      color: #7a6656;
+    }
+
+    .sertifikat .cert-footer .cert-sign {
+      text-align: right;
+    }
+
+    .sertifikat .cert-footer .cert-sign .name {
+      font-weight: 600;
+      color: #4d3829;
+      font-size: 0.9rem;
+    }
+
+    .btn-download {
+      display: inline-block;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+      padding: 0.7rem 2rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scene-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .kuis-container {
+        padding: 1rem 1.2rem;
+      }
+      .kuis-soal .soal-text {
+        font-size: 0.95rem;
+      }
+      .progress-step .step-label {
+        display: none;
+      }
+      .sertifikat {
+        padding: 1.5rem 1.2rem;
+      }
+      .sertifikat .cert-name {
+        font-size: 1.3rem;
+      }
+      .sertifikat .cert-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+      }
+      .sertifikat .cert-footer .cert-sign {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .kuis-pilihan .pilih-btn {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.8rem;
+      }
+      .skor-kuis {
+        gap: 0.8rem;
+      }
+      .skor-kuis .skor-item {
+        font-size: 0.8rem;
+      }
+      .hasil-container .skor-akhir .skor-box {
+        padding: 0.8rem 1.2rem;
+        min-width: 80px;
+      }
+      .hasil-container .skor-akhir .skor-box .nilai {
+        font-size: 1.8rem;
+      }
+      .nav-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      .nav-buttons .btn-next,
+      .nav-buttons .btn-back {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    #scrollTopBtn {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk4.html">Memodelkan Persoalan Logika</a></li>
+      <li>Set Logic Lab · Kuis Akhir</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-container">
+
+        <!-- ===== PROGRESS TRACKER ===== -->
+        <div class="progress-tracker" id="progressTracker">
+          <div class="progress-step done" data-step="0">
+            <span class="step-num">🏠</span>
+            <span class="step-label">Mulai</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="1">
+            <span class="step-num">1</span>
+            <span class="step-label">Anggota</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="2">
+            <span class="step-num">2</span>
+            <span class="step-label">Venn</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="3">
+            <span class="step-num">3</span>
+            <span class="step-label">Operasi</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="4">
+            <span class="step-num">4</span>
+            <span class="step-label">Model</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step done" data-step="5">
+            <span class="step-num">5</span>
+            <span class="step-label">Boolean</span>
+          </div>
+          <div class="progress-line done"></div>
+          <div class="progress-step active" data-step="6">
+            <span class="step-num">🏆</span>
+            <span class="step-label">Kuis</span>
+          </div>
+        </div>
+
+        <!-- ===== SCENE HEADER ===== -->
+        <div class="scene-header">
+          <span class="avatar">🏆</span>
+          <div class="story">
+            <strong>Professor Set</strong> berkata:<br>
+            "Selamat! Kamu telah sampai di <strong>tahap akhir</strong> petualanganmu di Set Logic Lab.
+            Saatnya menguji semua pemahamanmu tentang himpunan dan logika!
+            <br>📌 Jawab <strong>10 soal</strong> dengan fokus. Semakin tinggi skormu, semakin keren sertifikatmu!"
+          </div>
+        </div>
+
+        <!-- ===== SKOR ===== -->
+        <div class="skor-kuis" id="skorKuis">
+          <div class="skor-item">
+            <span>✅</span>
+            <span class="num correct" id="kuisCorrect">0</span>
+            <span style="color:#7a6656;">benar</span>
+          </div>
+          <div class="skor-item">
+            <span>❌</span>
+            <span class="num wrong" id="kuisWrong">0</span>
+            <span style="color:#7a6656;">salah</span>
+          </div>
+          <div class="skor-item">
+            <span>📊</span>
+            <span class="num" id="kuisSoalKe">1</span>
+            <span style="color:#7a6656;">/ <span id="kuisTotalSoal">10</span></span>
+          </div>
+        </div>
+
+        <!-- ===== KUIS ===== -->
+        <div class="kuis-container" id="kuisContainer">
+          <!-- Akan diisi oleh JS -->
+        </div>
+
+        <!-- ===== HASIL ===== -->
+        <div class="hasil-container" id="hasilContainer">
+          <div class="trophy" id="trophyIcon">🏆</div>
+          <div class="level-title" id="levelTitle">Set Logic Master</div>
+          <div class="level-subtitle" id="levelSubtitle">Kamu telah menguasai himpunan dan logika!</div>
+
+          <div class="skor-akhir">
+            <div class="skor-box benar">
+              <div class="nilai" id="finalBenar">0</div>
+              <div class="label">✅ Benar</div>
+            </div>
+            <div class="skor-box salah">
+              <div class="nilai" id="finalSalah">0</div>
+              <div class="label">❌ Salah</div>
+            </div>
+            <div class="skor-box">
+              <div class="nilai" id="finalNilai">0%</div>
+              <div class="label">📊 Nilai</div>
+            </div>
+          </div>
+
+          <!-- Sertifikat -->
+          <div class="sertifikat" id="sertifikat">
+            <div class="cert-badge">📜</div>
+            <div class="cert-title">Sertifikat Kelulusan</div>
+            <div class="cert-subtitle">Set Logic Lab · Informatika DUTA</div>
+            <div class="cert-name" id="certName">[Nama Siswa]</div>
+            <div class="cert-desc" id="certDesc">
+              Telah berhasil menyelesaikan seluruh rangkaian aktivitas
+              <strong>Set Logic Lab</strong> dengan predikat
+              <strong id="certPredikat">Set Logic Master</strong>.
+            </div>
+            <div class="cert-footer">
+              <div>
+                <div>SMPN 2 Talegong</div>
+                <div style="font-size:0.7rem; opacity:0.7;">2026</div>
+              </div>
+              <div class="cert-sign">
+                <div class="name">Kiki Husni Kamil, S.Pd.</div>
+                <div style="font-size:0.7rem; opacity:0.7;">Guru Informatika</div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-download" id="btnDownload">⬇️ Unduh Sertifikat</button>
+
+          <div style="margin-top:1.5rem;">
+            <a href="bk4.html" class="btn-back">📚 Kembali ke Materi</a>
+            <a href="index.html" class="btn-next" style="margin-left:0.5rem;">🏠 Ke Beranda</a>
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- SCRIPT.JS -->
+  <script src="script.js"></script>
+
+  <!-- ============================================================ -->
+  <!-- ===== SCRIPT KHUSUS KUIS AKHIR (FIXED) ===== -->
+  <!-- ============================================================ -->
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================================
+      // DATA SOAL KUIS (10 Soal)
+      // ============================================================
+      const kuisSoal = [
+        // 1. Identifikasi anggota himpunan
+        {
+          soal: 'Manakah yang merupakan anggota dari himpunan A = {1, 3, 5, 7, 9}?',
+          pilihan: ['2', '4', '5', '10'],
+          jawaban: 2 // indeks 0-based
+        },
+        // 2. Operasi irisan
+        {
+          soal: 'Jika A = {1, 2, 3, 4} dan B = {3, 4, 5, 6}, maka A ∩ B = ...',
+          pilihan: ['{1, 2, 3, 4, 5, 6}', '{3, 4}', '{1, 2}', '{5, 6}'],
+          jawaban: 1
+        },
+        // 3. Operasi gabungan
+        {
+          soal: 'Jika A = {a, b, c} dan B = {c, d, e}, maka A ∪ B = ...',
+          pilihan: ['{a, b, c}', '{c, d, e}', '{a, b, c, d, e}', '{a, b, d, e}'],
+          jawaban: 2
+        },
+        // 4. Selisih
+        {
+          soal: 'Jika A = {1, 2, 3, 4, 5} dan B = {4, 5, 6, 7}, maka A − B = ...',
+          pilihan: ['{1, 2, 3}', '{4, 5}', '{6, 7}', '{1, 2, 3, 4, 5, 6, 7}'],
+          jawaban: 0
+        },
+        // 5. Komplemen
+        {
+          soal: 'Jika S = {1, 2, 3, 4, 5, 6, 7, 8} dan A = {1, 2, 3, 4}, maka A\' = ...',
+          pilihan: ['{1, 2, 3, 4}', '{5, 6, 7, 8}', '{1, 2, 3, 4, 5, 6, 7, 8}', '∅'],
+          jawaban: 1
+        },
+        // 6. Pemodelan masalah nyata 1
+        {
+          soal: 'Di sebuah kelas, 18 siswa suka matematika, 12 suka IPA, dan 5 suka keduanya. Berapa siswa yang suka matematika atau IPA?',
+          pilihan: ['18', '25', '30', '35'],
+          jawaban: 1 // 18 + 12 - 5 = 25
+        },
+        // 7. Pemodelan masalah nyata 2
+        {
+          soal: 'Di toko buku, 40 orang membeli novel, 30 membeli komik, dan 15 membeli keduanya. Berapa yang hanya membeli novel?',
+          pilihan: ['15', '25', '40', '55'],
+          jawaban: 1 // 40 - 15 = 25
+        },
+        // 8. Himpunan bagian
+        {
+          soal: 'Manakah yang merupakan himpunan bagian dari A = {1, 2, 3, 4}?',
+          pilihan: ['{1, 2, 5}', '{1, 2, 3}', '{5, 6}', '{0, 1, 2}'],
+          jawaban: 1
+        },
+        // 9. Logika Boolean - AND
+        {
+          soal: 'Dalam logika Boolean, operasi "A DAN B" (A AND B) setara dengan operasi himpunan ...',
+          pilihan: ['A ∪ B', 'A ∩ B', 'A − B', 'A\''],
+          jawaban: 1
+        },
+        // 10. Logika Boolean - NOT
+        {
+          soal: 'Dalam logika Boolean, operasi "TIDAK A" (NOT A) setara dengan operasi himpunan ...',
+          pilihan: ['A ∪ B', 'A ∩ B', 'A − B', 'A\''],
+          jawaban: 3
+        }
+      ];
+
+      // ============================================================
+      // STATE
+      // ============================================================
+      let currentIndex = 0;
+      let kuisCorrect = 0;
+      let kuisWrong = 0;
+      let isAnswered = false;
+      const totalSoal = kuisSoal.length;
+      let isQuizFinished = false;
+
+      // ============================================================
+      // DOM REFS
+      // ============================================================
+      const kuisContainer = document.getElementById('kuisContainer');
+      const hasilContainer = document.getElementById('hasilContainer');
+      const kuisCorrectEl = document.getElementById('kuisCorrect');
+      const kuisWrongEl = document.getElementById('kuisWrong');
+      const kuisSoalKeEl = document.getElementById('kuisSoalKe');
+      const kuisTotalSoalEl = document.getElementById('kuisTotalSoal');
+
+      // ============================================================
+      // FUNGSI UTAMA
+      // ============================================================
+
+      function loadSoal(index) {
+        if (index >= totalSoal) {
+          showHasil();
+          return;
+        }
+
+        const soal = kuisSoal[index];
+        isAnswered = false;
+        kuisTotalSoalEl.textContent = totalSoal;
+        kuisSoalKeEl.textContent = index + 1;
+
+        const optionLabels = ['A', 'B', 'C', 'D'];
+
+        let html = `
+          <div class="kuis-header">
+            <div class="kuis-judul">📝 Soal ${index + 1}</div>
+            <div class="kuis-progress">
+              <strong>${index + 1}</strong> dari <strong>${totalSoal}</strong>
+            </div>
+          </div>
+          <div class="kuis-soal">
+            <div class="soal-nomor">Soal ${index + 1}</div>
+            <div class="soal-text">${soal.soal}</div>
+            <div class="kuis-pilihan">
+        `;
+
+        soal.pilihan.forEach((pilihan, i) => {
+          html += `
+            <button class="pilih-btn" data-index="${i}" data-jawaban="${soal.jawaban}">
+              <span class="option-label">${optionLabels[i]}.</span>
+              ${pilihan}
+            </button>
+          `;
+        });
+
+        html += `
+            </div>
+            <div class="kuis-feedback" id="kuisFeedback">
+              <span class="fb-icon" id="fbIconKuis">💡</span>
+              <span id="fbTextKuis">Pilih salah satu jawaban di atas.</span>
+            </div>
+          </div>
+          <div style="text-align:center;">
+            <button class="btn-next-soal" id="btnNextKuis" disabled>
+              ${index === totalSoal - 1 ? '🏆 Lihat Hasil' : '➜ Soal Berikutnya'}
+            </button>
+          </div>
+        `;
+
+        kuisContainer.innerHTML = html;
+
+        // Event listener untuk pilihan
+        document.querySelectorAll('.pilih-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            handlePilihanKuis(this);
+          });
+        });
+
+        // Event listener untuk tombol next - menggunakan event listener langsung
+        const btnNext = document.getElementById('btnNextKuis');
+        if (btnNext) {
+          btnNext.addEventListener('click', function() {
+            if (isQuizFinished) return;
+            const text = this.textContent;
+            if (text.includes('Hasil') || text.includes('🏆')) {
+              showHasil();
+            } else {
+              currentIndex++;
+              loadSoal(currentIndex);
+            }
+          });
+        }
+
+        // Update skor
+        kuisCorrectEl.textContent = kuisCorrect;
+        kuisWrongEl.textContent = kuisWrong;
+      }
+
+      function handlePilihanKuis(btn) {
+        if (isAnswered) return;
+        isAnswered = true;
+
+        const selected = parseInt(btn.dataset.index);
+        const jawabanBenar = parseInt(btn.dataset.jawaban);
+        const isCorrect = selected === jawabanBenar;
+
+        // Disable semua tombol
+        document.querySelectorAll('.pilih-btn').forEach(b => b.disabled = true);
+
+        if (isCorrect) {
+          btn.classList.add('selected-correct');
+          kuisCorrect++;
+          showFeedbackKuis('success', '✅', 'Jawaban benar! 🎉');
+        } else {
+          btn.classList.add('selected-wrong');
+          kuisWrong++;
+          // Tampilkan jawaban benar
+          document.querySelectorAll('.pilih-btn').forEach(b => {
+            if (parseInt(b.dataset.index) === jawabanBenar) {
+              b.classList.add('reveal-correct');
+            }
+          });
+          showFeedbackKuis('error', '❌', `Jawaban kurang tepat. Jawaban yang benar adalah ${['A', 'B', 'C', 'D'][jawabanBenar]}.`);
+        }
+
+        // Update skor
+        kuisCorrectEl.textContent = kuisCorrect;
+        kuisWrongEl.textContent = kuisWrong;
+
+        // Aktifkan tombol next
+        const btnNext = document.getElementById('btnNextKuis');
+        if (btnNext) {
+          btnNext.disabled = false;
+        }
+      }
+
+      function showFeedbackKuis(type, icon, text) {
+        const feedback = document.getElementById('kuisFeedback');
+        const iconEl = document.getElementById('fbIconKuis');
+        const textEl = document.getElementById('fbTextKuis');
+        if (!feedback) return;
+        feedback.className = `kuis-feedback show ${type}`;
+        iconEl.textContent = icon;
+        textEl.textContent = text;
+      }
+
+      // ============================================================
+      // HASIL & SERTIFIKAT
+      // ============================================================
+
+      function showHasil() {
+        isQuizFinished = true;
+        kuisContainer.style.display = 'none';
+        hasilContainer.classList.add('show');
+
+        const total = kuisCorrect + kuisWrong;
+        const nilai = total > 0 ? Math.round((kuisCorrect / total) * 100) : 0;
+
+        document.getElementById('finalBenar').textContent = kuisCorrect;
+        document.getElementById('finalSalah').textContent = kuisWrong;
+        document.getElementById('finalNilai').textContent = nilai + '%';
+
+        // Tentukan level
+        let level, icon, predikat, desc;
+        if (nilai >= 90) {
+          level = 'Set Logic Master';
+          icon = '👑';
+          predikat = 'Set Logic Master';
+          desc = 'Luar biasa! Kamu benar-benar menguasai himpunan dan logika!';
+        } else if (nilai >= 70) {
+          level = 'Set Builder';
+          icon = '🌟';
+          predikat = 'Set Builder';
+          desc = 'Bagus! Kamu memiliki pemahaman yang kuat tentang himpunan!';
+        } else if (nilai >= 50) {
+          level = 'Set Explorer';
+          icon = '🔍';
+          predikat = 'Set Explorer';
+          desc = 'Terus berlatih! Kamu sudah memiliki dasar yang baik!';
+        } else {
+          level = 'Set Learner';
+          icon = '📚';
+          predikat = 'Set Learner';
+          desc = 'Jangan menyerah! Pelajari kembali materi dan coba lagi!';
+        }
+
+        document.getElementById('trophyIcon').textContent = icon;
+        document.getElementById('levelTitle').textContent = level;
+        document.getElementById('levelSubtitle').textContent = desc;
+        document.getElementById('certPredikat').textContent = predikat;
+
+        // Nama siswa (bisa diisi di sini)
+        document.getElementById('certName').textContent = 'Set Logic Explorer';
+
+        // Update progress tracker
+        document.querySelectorAll('.progress-step').forEach(s => s.classList.add('done'));
+        document.querySelectorAll('.progress-line').forEach(l => l.classList.add('done'));
+      }
+
+      // ============================================================
+      // DOWNLOAD SERTIFIKAT (Print to PDF)
+      // ============================================================
+
+      document.getElementById('btnDownload').addEventListener('click', function() {
+        const cert = document.getElementById('sertifikat');
+        const win = window.open('', '_blank', 'width=800,height=600');
+        if (win) {
+          win.document.write(`
+            <html>
+              <head>
+                <title>Sertifikat Set Logic Lab</title>
+                <style>
+                  body { 
+                    margin: 0; 
+                    padding: 40px; 
+                    display: flex; 
+                    justify-content: center; 
+                    align-items: center; 
+                    min-height: 100vh;
+                    background: #f5f0eb;
+                    font-family: 'Segoe UI', system-ui, sans-serif;
+                  }
+                  .sertifikat {
+                    background: linear-gradient(135deg, #fdf8f3, #f5ede6);
+                    border: 4px double #dbb9a6;
+                    border-radius: 20px;
+                    padding: 2rem 2.5rem;
+                    max-width: 550px;
+                    width: 100%;
+                    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+                    text-align: center;
+                  }
+                  .cert-badge { font-size: 3rem; margin-bottom: 0.3rem; }
+                  .cert-title { font-size: 1.5rem; font-weight: 700; color: #4d3829; letter-spacing: 2px; text-transform: uppercase; }
+                  .cert-subtitle { font-size: 0.9rem; color: #7a6656; margin: 0.3rem 0 0.8rem 0; }
+                  .cert-name { font-size: 1.8rem; font-weight: 700; color: #3b2b1e; padding: 0.3rem 1rem; border-bottom: 3px solid #dbb9a6; display: inline-block; margin-bottom: 0.5rem; }
+                  .cert-desc { font-size: 0.95rem; color: #2f2822; line-height: 1.6; }
+                  .cert-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e5dbd0; font-size: 0.8rem; color: #7a6656; }
+                  .cert-footer .cert-sign { text-align: right; }
+                  .cert-footer .cert-sign .name { font-weight: 600; color: #4d3829; font-size: 0.9rem; }
+                </style>
+              </head>
+              <body>
+                ${cert.outerHTML}
+                <script>
+                  window.onload = function() {
+                    window.print();
+                    setTimeout(function() { window.close(); }, 1000);
+                  };
+                <\/script>
+              </body>
+            </html>
+          `);
+          win.document.close();
+        } else {
+          alert('Mohon izinkan popup untuk mengunduh sertifikat.');
+        }
+      });
+
+      // ============================================================
+      // INISIALISASI
+      // ============================================================
+
+      // Acak urutan soal
+      const shuffled = [...kuisSoal].sort(() => Math.random() - 0.5);
+      kuisSoal.splice(0, kuisSoal.length, ...shuffled);
+
+      // Load soal pertama
+      loadSoal(0);
+
+      console.log('🧩 Set Logic Lab - Kuis Akhir siap!');
+    })();
+  </script>
+
+</body>
+</html>
