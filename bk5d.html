@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Representasi Data · Bagian 5: Penerapan</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA MATERI ===== */
+    .materi-container { max-width: 900px; margin: 0 auto; }
+    .materi-container h1 {
+      font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem; color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .materi-container .sub-judul {
+      font-size: 1.1rem; color: #5c4638; margin-bottom: 2rem;
+      border-left: 4px solid #dbb9a6; padding-left: 1rem; font-style: italic;
+    }
+    .materi-container h2 {
+      font-size: 1.5rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: #4d3829;
+      border-left: 6px solid #dbb9a6; padding-left: 1rem;
+    }
+    .materi-container h3 { font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.5rem 0; color: #4d3829; }
+    .materi-container p { margin-bottom: 1rem; color: #2f2822; line-height: 1.8; }
+    .materi-container ul, .materi-container ol { margin: 0.5rem 0 1.2rem 1.8rem; }
+    .materi-container li { margin-bottom: 0.4rem; color: #2f2822; }
+    .materi-container .highlight-box {
+      background: #f5ede6; padding: 1.2rem 1.8rem; border-radius: 16px;
+      border-left: 8px solid #dbb9a6; margin: 1.5rem 0;
+    }
+    .materi-container .highlight-box strong { color: #4d3829; }
+    .materi-container .highlight-box ul { margin-bottom: 0; }
+    .materi-container code {
+      background: #f0ece6; padding: 0.1rem 0.4rem; border-radius: 4px;
+      font-family: 'Courier New', monospace; font-size: 0.95rem; color: #4d3829;
+    }
+    /* Progress */
+    .bagian-progress { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin: 1rem 0 2rem 0; }
+    .bagian-progress .step {
+      display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 1rem;
+      border-radius: 30px; background: #f5ede6; border: 2px solid #e5dbd0;
+      font-size: 0.8rem; font-weight: 600; color: #7a6656; transition: all 0.3s ease;
+    }
+    .bagian-progress .step.active { background: #4d3829; border-color: #4d3829; color: #fff; }
+    .bagian-progress .step.completed { background: #8aaa7a; border-color: #8aaa7a; color: #fff; }
+    .bagian-progress .step .num {
+      width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center; font-size: 0.7rem;
+    }
+    /* Misi Container */
+    .misi-container {
+      background: #1a1a2e; border-radius: 24px; padding: 2rem; margin: 1.5rem 0;
+      text-align: center; border: 4px solid #dbb9a6;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3); position: relative; overflow: hidden;
+      color: #e0e0e0; font-family: 'Courier New', monospace;
+    }
+    .misi-container::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+      background: linear-gradient(90deg, #dbb9a6, #8ab4d4, #8aaa7a, #dbb9a6);
+      background-size: 200% 100%; animation: gradientMove 3s linear infinite;
+    }
+    @keyframes gradientMove { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+    .misi-container .misi-title {
+      font-size: 1.3rem; font-weight: 700; color: #dbb9a6; margin-bottom: 0.3rem;
+      letter-spacing: 3px; text-transform: uppercase;
+    }
+    .misi-container .misi-sub { font-size: 0.85rem; color: #a89688; margin-bottom: 1.5rem; }
+    /* Komandan message */
+    .komandan-msg {
+      background: rgba(138, 180, 212, 0.1); border: 1px solid #8ab4d4;
+      border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 1.5rem;
+      color: #c8e0f0; font-size: 0.9rem; text-align: left;
+    }
+    .komandan-msg .komandan-label {
+      color: #8ab4d4; font-weight: 700; font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 0.3rem;
+    }
+    /* Misi Progress */
+    .misi-progress { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin: 1rem 0; }
+    .misi-progress .misi-item {
+      display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 1rem;
+      border-radius: 20px; background: rgba(219, 185, 166, 0.1);
+      border: 2px solid rgba(219, 185, 166, 0.2); font-size: 0.75rem;
+      color: #a89688; font-weight: 600;
+    }
+    .misi-progress .misi-item.active { background: rgba(245, 200, 66, 0.15); border-color: #f5c842; color: #f5c842; }
+    .misi-progress .misi-item.completed { background: rgba(138, 170, 122, 0.2); border-color: #8aaa7a; color: #c8e6c8; }
+    /* Misi Content */
+    .misi-content { display: none; }
+    .misi-content.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    /* Misi Box */
+    .misi-box {
+      background: rgba(219, 185, 166, 0.08); border-radius: 16px; padding: 1.5rem;
+      margin: 1rem 0; border: 1px solid rgba(219, 185, 166, 0.2);
+    }
+    .misi-box .misi-soal-title {
+      color: #dbb9a6; font-weight: 700; font-size: 1rem; margin-bottom: 0.8rem;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    /* Pesan Terenkripsi */
+    .pesan-enkripsi {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
+      margin: 1rem 0;
+    }
+    .pesan-enkripsi .bit-group {
+      display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+      padding: 0.6rem 0.8rem; background: rgba(47, 40, 34, 0.5); border-radius: 10px;
+      border: 1px solid rgba(219, 185, 166, 0.2);
+    }
+    .pesan-enkripsi .bit-value {
+      font-family: 'Courier New', monospace; font-size: 1rem; font-weight: 700;
+      color: #f5c842; letter-spacing: 2px;
+    }
+    .pesan-enkripsi .bit-arrow { color: #a89688; font-size: 0.7rem; }
+    .pesan-enkripsi .bit-desimal { font-family: 'Courier New', monospace; font-size: 0.9rem; color: #8ab4d4; }
+    .pesan-enkripsi .bit-huruf {
+      font-family: 'Courier New', monospace; font-size: 1.3rem; font-weight: 700; color: #8aaa7a;
+      background: rgba(138, 170, 122, 0.15); border-radius: 6px; padding: 0.1rem 0.6rem; min-width: 30px;
+    }
+    /* ASCII Table */
+    .ascii-table-wrapper { max-height: 200px; overflow-y: auto; border-radius: 10px; margin: 1rem 0; }
+    .ascii-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; font-family: 'Courier New', monospace; }
+    .ascii-table th { background: rgba(219, 185, 166, 0.15); color: #dbb9a6; padding: 0.4rem; position: sticky; top: 0; }
+    .ascii-table td { padding: 0.3rem 0.5rem; text-align: center; border-bottom: 1px solid rgba(219, 185, 166, 0.1); color: #e0e0e0; }
+    .ascii-table tr:hover td { background: rgba(219, 185, 166, 0.08); }
+    /* Input fields */
+    .input-group { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; align-items: center; margin: 1rem 0; }
+    .input-group label { color: #dbb9a6; font-weight: 600; font-size: 0.85rem; }
+    .input-group input[type="text"],
+    .input-group input[type="number"] {
+      padding: 0.6rem 1rem; border-radius: 10px; border: 2px solid rgba(219, 185, 166, 0.3);
+      background: rgba(47, 40, 34, 0.5); color: #f5c842; font-family: 'Courier New', monospace;
+      font-size: 1rem; font-weight: 700; text-align: center; letter-spacing: 1px; min-width: 100px;
+    }
+    .input-group input:focus { outline: none; border-color: #f5c842; }
+    .input-group input.correct { border-color: #8aaa7a; background: rgba(138, 170, 122, 0.2); color: #c8e6c8; }
+    .input-group input.wrong { border-color: #d4a0a0; background: rgba(212, 160, 160, 0.2); color: #e0c8c8; }
+    /* Buttons */
+    .btn-misi {
+      padding: 0.6rem 1.8rem; border-radius: 30px; border: none; font-weight: 700;
+      font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; font-family: inherit; margin: 0.3rem;
+    }
+    .btn-misi.primary {
+      background: linear-gradient(135deg, #f5c842, #d4a030); color: #1a1a2e;
+      box-shadow: 0 4px 14px rgba(245, 200, 66, 0.3);
+    }
+    .btn-misi.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245, 200, 66, 0.5); }
+    .btn-misi.secondary { background: rgba(219, 185, 166, 0.15); color: #dbb9a6; border: 2px solid rgba(219, 185, 166, 0.3); }
+    .btn-misi.secondary:hover { background: rgba(219, 185, 166, 0.25); border-color: #dbb9a6; }
+    .btn-misi:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+    /* Feedback */
+    .feedback-misi {
+      margin-top: 1rem; padding: 1rem 1.5rem; border-radius: 12px;
+      font-weight: 600; display: none; font-size: 0.9rem; text-align: left;
+    }
+    .feedback-misi.show { display: block; animation: fadeIn 0.4s ease; }
+    .feedback-misi.success { background: rgba(138, 170, 122, 0.15); border: 2px solid #8aaa7a; color: #c8e6c8; }
+    .feedback-misi.info { background: rgba(138, 180, 212, 0.1); border: 2px solid #8ab4d4; color: #c8e0f0; }
+    .feedback-misi.error { background: rgba(212, 160, 160, 0.1); border: 2px solid #d4a0a0; color: #e0c8c8; }
+    /* Parity visualization */
+    .parity-visual {
+      display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin: 1rem 0;
+    }
+    .parity-box {
+      padding: 0.8rem 1.2rem; border-radius: 12px; border: 2px solid rgba(219, 185, 166, 0.3);
+      background: rgba(47, 40, 34, 0.5);
+    }
+    .parity-box .parity-label { font-size: 0.7rem; color: #a89688; margin-bottom: 0.3rem; text-transform: uppercase; }
+    .parity-box .parity-bits {
+      font-family: 'Courier New', monospace; font-size: 1.2rem; font-weight: 700;
+      color: #f5c842; letter-spacing: 3px;
+    }
+    .parity-box .parity-status { font-size: 0.8rem; margin-top: 0.3rem; font-weight: 700; }
+    .parity-box.ok .parity-status { color: #8aaa7a; }
+    .parity-box.rusak .parity-status { color: #d4a0a0; }
+    /* Sertifikat */
+    .sertifikat-box {
+      background: linear-gradient(135deg, #1a1a2e, #2f2822); border: 3px double #dbb9a6;
+      border-radius: 16px; padding: 2rem; margin: 1.5rem 0; text-align: center;
+      position: relative;
+    }
+    .sertifikat-box .cert-icon { font-size: 4rem; margin-bottom: 0.5rem; }
+    .sertifikat-box .cert-title { font-size: 1.2rem; color: #dbb9a6; letter-spacing: 3px; font-weight: 700; }
+    .sertifikat-box .cert-subtitle { font-size: 0.8rem; color: #a89688; margin-bottom: 1rem; }
+    .sertifikat-box .cert-level {
+      display: inline-block; background: linear-gradient(135deg, #f5c842, #d4a030);
+      color: #1a1a2e; padding: 0.4rem 1.8rem; border-radius: 30px; font-weight: 700;
+      font-size: 1rem; letter-spacing: 2px; margin: 0.5rem 0;
+    }
+    .sertifikat-box .cert-name {
+      font-family: 'Georgia', serif; font-size: 1.3rem; color: #e0e0e0; font-weight: 700;
+      margin: 0.5rem 0;
+    }
+    .sertifikat-box .cert-desc { font-size: 0.8rem; color: #a89688; margin-bottom: 0.5rem; }
+    .sertifikat-box .cert-date { font-size: 0.75rem; color: #7a6656; border-top: 1px solid rgba(219, 185, 166, 0.2); padding-top: 0.5rem; margin-top: 0.5rem; }
+    /* Soal PG */
+    .soal-section { margin: 1.5rem 0; }
+    .soal-item {
+      background: #fff; border-radius: 16px; padding: 1.5rem; border: 2px solid #e5dbd0;
+      margin-bottom: 1rem; transition: all 0.3s ease;
+    }
+    .soal-item.correct { border-color: #8aaa7a; background: #f0f8eb; }
+    .soal-item.wrong { border-color: #d4a0a0; background: #fdf0f0; }
+    .soal-item .soal-text {
+      font-weight: 600; color: #3b2b1e; font-size: 1rem; margin-bottom: 0.8rem;
+      display: flex; align-items: flex-start; gap: 0.5rem;
+    }
+    .soal-item .soal-number {
+      display: inline-block; background: #4d3829; color: #fff; width: 28px; height: 28px;
+      border-radius: 50%; text-align: center; line-height: 28px; font-size: 0.8rem;
+      font-weight: 700; flex-shrink: 0;
+    }
+    .soal-options { display: flex; flex-direction: column; gap: 0.5rem; }
+    .soal-options label {
+      display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.6rem 1rem;
+      border-radius: 10px; border: 2px solid #e5dbd0; cursor: pointer;
+      transition: all 0.2s ease; font-size: 0.9rem; color: #2f2822;
+    }
+    .soal-options label:hover:not(.disabled) { background: #f5ede6; border-color: #b09b88; }
+    .soal-options label.disabled { cursor: default; }
+    .soal-options label.selected { border-color: #4d3829; background: #f5ede6; }
+    .soal-options label.correct-answer { border-color: #8aaa7a; background: #e8f5e0; }
+    .soal-options label.wrong-answer { border-color: #d4a0a0; background: #f5e0e0; }
+    .soal-options input[type="radio"] { accent-color: #4d3829; width: 18px; height: 18px; margin-top: 0.15rem; flex-shrink: 0; }
+    .soal-options .check-icon { margin-left: auto; font-size: 1rem; flex-shrink: 0; }
+    .soal-progress {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+      gap: 0.5rem; margin: 1rem 0; padding: 0.8rem 1.2rem; background: #f8f4ef;
+      border-radius: 12px; border: 2px solid #e5dbd0;
+    }
+    .soal-progress .progress-text { font-weight: 600; color: #3b2b1e; font-size: 0.9rem; }
+    .soal-progress .progress-bar { flex: 1; height: 8px; background: #e5dbd0; border-radius: 4px; overflow: hidden; min-width: 100px; }
+    .soal-progress .progress-bar .fill { height: 100%; background: #4d3829; border-radius: 4px; transition: width 0.5s ease; width: 0%; }
+    .soal-progress .score-text { font-size: 0.8rem; color: #7a6656; font-weight: 600; }
+    .btn-submit-soal {
+      display: block; margin: 1.5rem auto 0; padding: 0.8rem 2.5rem; border-radius: 30px;
+      border: none; background: #4d3829; color: #fff; font-weight: 700; font-size: 1rem;
+      cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+    }
+    .btn-submit-soal:hover { background: #6b4f3a; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(75, 46, 30, 0.3); }
+    .btn-submit-soal:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+    .syarat-kelulusan {
+      background: #f8f4ef; border-radius: 12px; padding: 1rem 1.5rem;
+      margin: 1rem 0; border: 2px solid #e5dbd0;
+    }
+    .syarat-kelulusan .syarat-title { font-weight: 700; color: #3b2b1e; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .syarat-kelulusan .syarat-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.85rem; color: #5c4638; }
+    .syarat-kelulusan .syarat-item .status-icon { font-size: 1rem; }
+    .syarat-kelulusan .syarat-item.done { color: #2d5a1e; font-weight: 600; }
+    .syarat-kelulusan .syarat-item.pending { color: #d4a040; }
+    /* Navigasi */
+    .nav-bottom {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+      gap: 1rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid #e5dbd0;
+    }
+    .btn-nav {
+      padding: 0.6rem 1.8rem; border-radius: 30px; border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 600; font-size: 0.9rem; color: #3b2b1e; cursor: pointer;
+      transition: all 0.2s ease; font-family: inherit; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-nav:hover { background: #f5ede6; border-color: #b09b88; transform: translateY(-2px); }
+    .btn-nav.primary { background: #4d3829; border-color: #4d3829; color: #fff; }
+    .btn-nav.primary:hover { background: #6b4f3a; border-color: #6b4f3a; }
+    .btn-nav.success { background: #8aaa7a; border-color: #8aaa7a; color: #fff; }
+    .btn-nav.success:hover { background: #7a9a6a; border-color: #7a9a6a; }
+    .btn-nav:disabled, .btn-nav.locked { opacity: 0.4; cursor: not-allowed; transform: none !important; pointer-events: none; }
+    .btn-nav .back-arrow { font-size: 1.2rem; }
+    .nav-hint { font-size: 0.8rem; color: #7a6656; text-align: center; width: 100%; margin-top: 0.3rem; }
+    .nav-hint.locked { color: #d4a0a0; }
+    .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+    /* Print */
+    @media print {
+      .nav-bottom, .bagian-progress, #scrollTopBtn, #header-utama, #footer-utama, .misi-progress, .soal-progress, .btn-nav, .btn-misi, .btn-submit-soal { display: none !important; }
+      .sertifikat-box { border: 2px solid #4d3829 !important; page-break-inside: avoid; }
+      body { background: #fff !important; }
+    }
+    /* Responsif */
+    @media (max-width: 720px) {
+      .materi-container h1 { font-size: 1.7rem; }
+      .materi-container h2 { font-size: 1.3rem; }
+      .misi-container { padding: 1.2rem; }
+      .pesan-enkripsi { gap: 0.3rem; }
+      .pesan-enkripsi .bit-group { padding: 0.4rem 0.5rem; }
+      .pesan-enkripsi .bit-value { font-size: 0.8rem; letter-spacing: 1px; }
+      .soal-item { padding: 1rem; }
+      .soal-options label { font-size: 0.8rem; padding: 0.5rem 0.8rem; }
+    }
+    @media (max-width: 480px) {
+      .misi-progress { gap: 0.3rem; }
+      .misi-progress .misi-item { padding: 0.3rem 0.6rem; font-size: 0.65rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+      .soal-progress { flex-direction: column; align-items: stretch; text-align: center; }
+      .parity-visual { flex-direction: column; align-items: center; }
+      .pesan-enkripsi .bit-group { padding: 0.3rem 0.4rem; }
+      .pesan-enkripsi .bit-huruf { font-size: 1rem; min-width: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk5.html">Representasi Data</a></li>
+      <li>Bagian 5: Penerapan</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <h1>🔢 Representasi Data dan Konversi Bilangan</h1>
+        <p class="sub-judul">Bagian 5: Penerapan dalam Kehidupan Sehari-hari</p>
+
+        <div class="bagian-progress">
+          <span class="step completed"><span class="num">✓</span> Pendahuluan</span>
+          <span class="step completed"><span class="num">✓</span> Sistem Bilangan</span>
+          <span class="step completed"><span class="num">✓</span> Biner ↔ Desimal</span>
+          <span class="step completed"><span class="num">✓</span> Biner ↔ Oktal</span>
+          <span class="step active"><span class="num">5</span> Penerapan</span>
+        </div>
+
+        <!-- ===== MATERI ===== -->
+        <h2>📖 Penerapan dalam Kehidupan Sehari-hari</h2>
+        <p>Setelah menguasai konversi bilangan, sekarang saatnya melihat bagaimana konsep ini diterapkan dalam kehidupan nyata.</p>
+
+        <h3>1. Kode Warna dalam Desain Web</h3>
+        <p>Warna di halaman web direpresentasikan dengan kode heksadesimal (basis 16) yang merupakan "kerabat dekat" biner. Contoh: warna putih = <code>#FFFFFF</code>, yang dalam biner adalah <code>11111111 11111111 11111111</code>.</p>
+
+        <h3>2. Kapasitas Penyimpanan</h3>
+        <p>Memahami bit dan byte membantu kita mengelola penyimpanan. <strong>1 byte = 8 bit.</strong> File video 500 MB = sekitar 4.000.000.000 bit.</p>
+
+        <h3>3. Kode ASCII untuk Teks</h3>
+        <p>Setiap huruf dan simbol di keyboard memiliki kode biner. Contoh: huruf "A" = <code>01000001</code> (65 desimal), huruf "a" = <code>01100001</code> (97 desimal).</p>
+
+        <h3>4. Parity Bit untuk Deteksi Kesalahan</h3>
+        <p>Saat data dikirim melalui jaringan, bit tambahan (parity bit) ditambahkan untuk mendeteksi kesalahan. Jika jumlah bit 1 ganjil/genap tidak sesuai, data dianggap rusak.</p>
+
+        <h3>5. Sandi dan Keamanan Digital</h3>
+        <p>Konsep biner digunakan dalam enkripsi dan sandi digital, termasuk pengaturan jaringan Wi-Fi.</p>
+
+        <!-- ===== AKTIVITAS INTERAKTIF ===== -->
+        <h2>🎮 Aktivitas: "Misi Rahasia Agen Biner"</h2>
+        <p><strong>Tujuan:</strong> Menerapkan konsep konversi bilangan untuk memecahkan masalah nyata dalam skenario yang menyenangkan.</p>
+
+        <!-- Misi Progress -->
+        <div class="misi-progress" id="misiProgress">
+          <span class="misi-item active" id="misi1Item">🎯 Misi 1: Pecahkan Kode</span>
+          <span class="misi-item" id="misi2Item">💾 Misi 2: Kapasitas HD</span>
+          <span class="misi-item" id="misi3Item">🔍 Misi 3: Perbaiki Data</span>
+          <span class="misi-item" id="misi4Item">✉️ Misi 4: Buat Sandi</span>
+        </div>
+
+        <!-- Misi Container -->
+        <div class="misi-container">
+          <div class="misi-title">🕵️ MARKAS AGEN BINER</div>
+          <div class="misi-sub">TOP SECRET · CLASSIFIED</div>
+
+          <!-- Misi 1: Pecahkan Kode Pesan -->
+          <div class="misi-content active" id="misi1Content">
+            <div class="komandan-msg">
+              <div class="komandan-label">📡 PESAN DARI KOMANDAN:</div>
+              "Agen, kita mendapat pesan terenkripsi! Kamu harus memecahkan kodenya menggunakan pengetahuan biner-mu. Setiap kelompok 8-bit mewakili satu huruf dalam kode ASCII."
+            </div>
+
+            <div class="misi-box">
+              <div class="misi-soal-title">🎯 Misi 1: Pecahkan Kode Pesan</div>
+              <p style="font-size:0.85rem; color:#a89688; margin-bottom:0.8rem;">
+                Konversikan setiap kelompok biner ke desimal, lalu cocokkan dengan tabel ASCII untuk menemukan hurufnya.
+              </p>
+
+              <div class="pesan-enkripsi" id="pesanEnkripsi">
+                <!-- diisi JS -->
+              </div>
+
+              <div style="margin-top:1rem; color:#dbb9a6; font-size:0.85rem; font-weight:700;">
+                🔎 TABEL ASCII (Huruf Besar):
+              </div>
+              <div class="ascii-table-wrapper">
+                <table class="ascii-table">
+                  <thead>
+                    <tr><th>Desimal</th><th>Biner</th><th>Huruf</th></tr>
+                  </thead>
+                  <tbody id="asciiTableBody">
+                    <!-- diisi JS -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="input-group" style="margin-top:1rem;">
+                <label>Pesan Rahasia:</label>
+                <input type="text" id="inputPesan" placeholder="Ketik pesan..." style="min-width:200px; text-transform:uppercase;">
+              </div>
+
+              <button class="btn-misi primary" onclick="periksaMisi1()">🔓 Pecahkan Kode</button>
+              <div class="feedback-misi" id="feedback1"></div>
+            </div>
+          </div>
+
+          <!-- Misi 2: Hitung Kapasitas HD -->
+          <div class="misi-content" id="misi2Content">
+            <div class="komandan-msg">
+              <div class="komandan-label">📡 PESAN DARI KOMANDAN:</div>
+              "Agen, kita perlu menyimpan data rahasia. Hard disk kita memiliki kapasitas 8 GB. Jika satu file rahasia berukuran 2.000.000 bit, berapa file yang bisa disimpan?"
+            </div>
+
+            <div class="misi-box">
+              <div class="misi-soal-title">💾 Misi 2: Hitung Kapasitas Hard Disk</div>
+              <div class="highlight-box" style="background: rgba(138, 180, 212, 0.1); border-left-color: #8ab4d4;">
+                <strong style="color:#8ab4d4;">💡 Petunjuk:</strong>
+                <ul style="color:#c8e0f0; font-size:0.85rem;">
+                  <li>1 GB = 1024 MB</li>
+                  <li>1 MB = 1024 KB</li>
+                  <li>1 KB = 1024 byte</li>
+                  <li>1 byte = 8 bit</li>
+                </ul>
+              </div>
+
+              <div class="input-group">
+                <label>Kapasitas 8 GB = ... bit</label>
+                <input type="number" id="inputKapasitas" placeholder="dalam bit">
+              </div>
+
+              <div class="input-group">
+                <label>Jumlah file yang bisa disimpan:</label>
+                <input type="number" id="inputJumlahFile" placeholder="jumlah file">
+              </div>
+
+              <button class="btn-misi primary" onclick="periksaMisi2()">📊 Hitung</button>
+              <div class="feedback-misi" id="feedback2"></div>
+            </div>
+          </div>
+
+          <!-- Misi 3: Perbaiki Data Rusak -->
+          <div class="misi-content" id="misi3Content">
+            <div class="komandan-msg">
+              <div class="komandan-label">📡 PESAN DARI KOMANDAN:</div>
+              "Data terkirim dengan parity bit genap. Periksa apakah data yang diterima masih valid atau sudah rusak!"
+            </div>
+
+            <div class="misi-box">
+              <div class="misi-soal-title">🔍 Misi 3: Perbaiki Data yang Rusak</div>
+              <p style="font-size:0.85rem; color:#a89688;">
+                Parity bit <strong>genap</strong> berarti jumlah bit 1 (termasuk parity) harus <strong>genap</strong>.
+              </p>
+
+              <div class="parity-visual">
+                <div class="parity-box ok">
+                  <div class="parity-label">✅ Data Dikirim</div>
+                  <div class="parity-bits" id="parityKirim">10110011</div>
+                  <div class="parity-status" id="statusKirim"></div>
+                </div>
+                <div class="parity-box rusak">
+                  <div class="parity-label">⚠️ Data Diterima</div>
+                  <div class="parity-bits" id="parityTerima">10110111</div>
+                  <div class="parity-status" id="statusTerima"></div>
+                </div>
+              </div>
+
+              <p style="font-size:0.9rem; color:#dbb9a6; margin-top:1rem;">
+                <strong>Pertanyaan:</strong> Apakah data yang diterima valid?
+              </p>
+
+              <div style="display:flex; gap:0.6rem; justify-content:center; flex-wrap:wrap; margin-top:0.5rem;">
+                <button class="btn-misi primary" onclick="periksaMisi3(true)">✅ Valid</button>
+                <button class="btn-misi secondary" onclick="periksaMisi3(false)">❌ Rusak</button>
+              </div>
+
+              <div class="feedback-misi" id="feedback3"></div>
+            </div>
+          </div>
+
+          <!-- Misi 4: Buat Sandi -->
+          <div class="misi-content" id="misi4Content">
+            <div class="komandan-msg">
+              <div class="komandan-label">📡 PESAN DARI KOMANDAN:</div>
+              "Sekarang giliranmu! Buat pesan rahasia sendiri dalam biner (minimal 5 huruf). Sistem akan mengkonversinya untukmu."
+            </div>
+
+            <div class="misi-box">
+              <div class="misi-soal-title">✉️ Misi 4: Buat Sandi Rahasia</div>
+              <p style="font-size:0.85rem; color:#a89688;">
+                Ketik pesan rahasia (hanya huruf A-Z, tanpa spasi). Sistem akan mengkonversi setiap huruf ke biner 8-bit.
+              </p>
+
+              <div class="input-group">
+                <label>Pesan Rahasia:</label>
+                <input type="text" id="inputSandi" placeholder="Minimal 5 huruf..." style="min-width:250px; text-transform:uppercase;" oninput="updateSandi()">
+              </div>
+
+              <div id="hasilSandi" style="margin-top:1rem;">
+                <!-- diisi JS -->
+              </div>
+
+              <button class="btn-misi primary" onclick="selesaikanMisi4()">✅ Selesai & Buat Sertifikat</button>
+              <div class="feedback-misi" id="feedback4"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ===== SERTIFIKAT (muncul setelah semua misi selesai) ===== -->
+        <div id="sertifikatSection" style="display:none;">
+          <h2>🏆 Sertifikat Digital</h2>
+          <div class="sertifikat-box" id="sertifikatBox">
+            <div class="cert-icon">🎖️</div>
+            <div class="cert-title">AGEN BINER</div>
+            <div class="cert-subtitle">SERTIFIKAT KELULUSAN</div>
+            <div class="cert-level" id="certLevel">EXPERT</div>
+            <div class="cert-name">Network Technician</div>
+            <div class="cert-desc">Telah menyelesaikan seluruh rangkaian aktivitas</div>
+            <div class="cert-desc" style="font-size:0.85rem;">
+              <strong>"Representasi Data dan Konversi Bilangan"</strong>
+            </div>
+            <div class="cert-date" id="certDate">SMPN 2 Talegong · 2026</div>
+          </div>
+          <div style="text-align:center; margin-top:1rem;">
+            <button class="btn-misi primary" onclick="window.print()">🖨️ Cetak Sertifikat</button>
+          </div>
+        </div>
+
+        <!-- ===== SOAL TES PEMAHAMAN ===== -->
+        <h2>📝 Soal Tes Pemahaman</h2>
+        <p>Jawablah pertanyaan berikut dengan memilih satu jawaban yang paling tepat. Kamu harus menjawab <strong>semua soal dengan benar</strong> untuk menyelesaikan seluruh modul.</p>
+
+        <div class="soal-progress">
+          <span class="progress-text" id="soalProgressText">Soal 0 dari 3</span>
+          <div class="progress-bar">
+            <div class="fill" id="soalProgressFill"></div>
+          </div>
+          <span class="score-text" id="soalScoreText">Benar: 0</span>
+        </div>
+
+        <div class="soal-section" id="soalContainer"></div>
+
+        <button class="btn-submit-soal" id="submitSoalBtn" onclick="submitSoal()">
+          ✅ Periksa Jawaban
+        </button>
+
+        <!-- ===== SYARAT ===== -->
+        <div class="syarat-kelulusan">
+          <div class="syarat-title">📋 Syarat untuk Menyelesaikan Modul Representasi Data:</div>
+          <div class="syarat-item" id="syaratMisi">
+            <span class="status-icon">⏳</span> Menyelesaikan 4 misi "Agen Biner"
+          </div>
+          <div class="syarat-item" id="syaratSoal">
+            <span class="status-icon">⏳</span> Menjawab semua soal pemahaman dengan benar
+          </div>
+        </div>
+
+        <!-- ===== NAVIGASI ===== -->
+        <div class="nav-bottom">
+          <a href="bk5c.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Bagian 4
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <a href="bk5.html" class="btn-nav primary locked" id="selesaiBtn" onclick="return cekSelesai(event)">
+              🎉 Selesai & Kembali ke Awal
+            </a>
+          </div>
+          <div class="nav-hint locked" id="selesaiHint">
+            🔒 Selesaikan semua misi dan soal pemahaman untuk menyelesaikan modul
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="script.js"></script>
+
+  <script>
+    (function() {
+      'use strict';
+
+      let currentMisi = 1;
+      let misiSelesai = { 1: false, 2: false, 3: false, 4: false };
+      let semuaMisiSelesai = false;
+
+      let soalAnswers = {};
+      let soalSubmitted = false;
+      let semuaSoalBenar = false;
+      let kodeSelesai = false;
+
+      // ===== DATA =====
+      const pesanEnkripsi = [
+        { biner: '01001000', desimal: 72, huruf: 'H' },
+        { biner: '01000101', desimal: 69, huruf: 'E' },
+        { biner: '01001100', desimal: 76, huruf: 'L' },
+        { biner: '01001100', desimal: 76, huruf: 'L' },
+        { biner: '01001111', desimal: 79, huruf: 'O' }
+      ];
+
+      const asciiData = [];
+      for (let i = 65; i <= 90; i++) {
+        asciiData.push({ desimal: i, biner: i.toString(2).padStart(8, '0'), huruf: String.fromCharCode(i) });
+      }
+
+      const soalData = [
+        {
+          question: 'Huruf "S" memiliki kode ASCII 83. Bagaimana representasi binernya dalam 8-bit?',
+          options: ['01010011', '01010010', '01010100', '01010001'],
+          correct: 0,
+          explanation: '83 dalam biner: 83 = 64 + 16 + 2 + 1 = 01010011.'
+        },
+        {
+          question: 'Jika satu file berukuran 4.000 bit, berapa byte ukuran file tersebut?',
+          options: ['400 byte', '500 byte', '800 byte', '4.000 byte'],
+          correct: 1,
+          explanation: '1 byte = 8 bit. Jadi 4.000 ÷ 8 = 500 byte.'
+        },
+        {
+          question: 'Dalam skenario parity bit genap, jika data yang dikirim adalah 110011 (jumlah bit 1 = 4, genap), berapa nilai parity bit yang harus ditambahkan?',
+          options: ['0', '1', '2', 'Tidak perlu parity bit'],
+          correct: 0,
+          explanation: 'Parity bit genap berarti total bit 1 harus genap. Karena data sudah memiliki 4 bit 1 (genap), parity bit = 0 agar tetap genap.'
+        }
+      ];
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        renderPesanEnkripsi();
+        renderAsciiTable();
+        renderSoal();
+        updateSyarat();
+      });
+
+      // ===== MISI 1 =====
+      function renderPesanEnkripsi() {
+        const container = document.getElementById('pesanEnkripsi');
+        container.innerHTML = '';
+        pesanEnkripsi.forEach((item, index) => {
+          const div = document.createElement('div');
+          div.className = 'bit-group';
+          div.innerHTML = `
+            <div class="bit-value">${item.biner}</div>
+            <div class="bit-arrow">↓</div>
+            <div class="bit-desimal">${item.desimal}</div>
+            <div class="bit-arrow">↓</div>
+            <div class="bit-huruf">?</div>
+          `;
+          container.appendChild(div);
+        });
+      }
+
+      function renderAsciiTable() {
+        const tbody = document.getElementById('asciiTableBody');
+        tbody.innerHTML = '';
+        asciiData.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${item.desimal}</td>
+            <td>${item.biner}</td>
+            <td><strong>${item.huruf}</strong></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      window.periksaMisi1 = function() {
+        const input = document.getElementById('inputPesan').value.trim().toUpperCase();
+        const feedback = document.getElementById('feedback1');
+
+        if (input === 'HELLO') {
+          feedback.className = 'feedback-misi show success';
+          feedback.innerHTML = '🎉 <strong>Benar!</strong> Pesan rahasianya adalah <strong>HELLO</strong>!<br><span style="font-size:0.85rem;">Kamu berhasil memecahkan kode enkripsi pertama!</span>';
+
+          // Tampilkan huruf di visual
+          document.querySelectorAll('#pesanEnkripsi .bit-huruf').forEach((el, index) => {
+            el.textContent = pesanEnkripsi[index].huruf;
+            el.style.background = 'rgba(138, 170, 122, 0.3)';
+          });
+
+          misiSelesai[1] = true;
+          updateMisiProgress();
+          updateSyarat();
+
+          setTimeout(() => {
+            currentMisi = 2;
+            switchMisi(2);
+          }, 2000);
+        } else {
+          feedback.className = 'feedback-misi show error';
+          feedback.innerHTML = '❌ Belum tepat. Petunjuk: 72=H, 69=E, 76=L, 76=L, 79=O. Coba susun hurufnya!';
+        }
+      };
+
+      // ===== MISI 2 =====
+      window.periksaMisi2 = function() {
+        const kapasitas = parseInt(document.getElementById('inputKapasitas').value);
+        const jumlahFile = parseInt(document.getElementById('inputJumlahFile').value);
+        const feedback = document.getElementById('feedback2');
+
+        // 8 GB = 8 × 1024 × 1024 × 1024 × 8 bit = 68,719,476,736 bit
+        const kapasitasBenar = 8 * 1024 * 1024 * 1024 * 8;
+        // Jumlah file = kapasitas / 2.000.000 ≈ 34.359
+        const jumlahBenar = Math.floor(kapasitasBenar / 2000000);
+
+        const inputKapasitas = document.getElementById('inputKapasitas');
+        const inputJumlah = document.getElementById('inputJumlahFile');
+
+        let benar = true;
+
+        if (kapasitas === kapasitasBenar) {
+          inputKapasitas.classList.add('correct');
+          inputKapasitas.classList.remove('wrong');
+        } else {
+          inputKapasitas.classList.add('wrong');
+          benar = false;
+        }
+
+        if (jumlahFile === jumlahBenar) {
+          inputJumlah.classList.add('correct');
+          inputJumlah.classList.remove('wrong');
+        } else {
+          inputJumlah.classList.add('wrong');
+          benar = false;
+        }
+
+        if (benar) {
+          feedback.className = 'feedback-misi show success';
+          feedback.innerHTML = `🎉 <strong>Benar!</strong> Kapasitas 8 GB = <strong>68.719.476.736 bit</strong>. Jumlah file = <strong>${jumlahBenar.toLocaleString('id-ID')} file</strong>.`;
+          misiSelesai[2] = true;
+          updateMisiProgress();
+          updateSyarat();
+          setTimeout(() => {
+            currentMisi = 3;
+            switchMisi(3);
+          }, 2000);
+        } else {
+          feedback.className = 'feedback-misi show error';
+          feedback.innerHTML = `❌ Belum tepat. Petunjuk: 1 GB = 1024 MB = 1024 × 1024 KB = 1024³ byte = 1024³ × 8 bit.`;
+        }
+      };
+
+      // ===== MISI 3 =====
+      window.periksaMisi3 = function(pilihValid) {
+        const feedback = document.getElementById('feedback3');
+
+        // Data dikirim: 10110011 → jumlah bit 1 = 5 (ganjil)
+        // Tapi parity genap seharusnya jumlah bit 1 genap
+        // Data diterima: 10110111 → jumlah bit 1 = 6 (genap)
+
+        const kirim = '10110011';
+        const terima = '10110111';
+        const countKirim = (kirim.match(/1/g) || []).length;
+        const countTerima = (terima.match(/1/g) || []).length;
+
+        document.getElementById('statusKirim').innerHTML = `Jumlah bit 1: ${countKirim} (${countKirim % 2 === 0 ? 'genap' : 'ganjil'})`;
+        document.getElementById('statusTerima').innerHTML = `Jumlah bit 1: ${countTerima} (${countTerima % 2 === 0 ? 'genap' : 'ganjil'})`;
+
+        // Data yang dikirim tidak sesuai parity genap (5 ganjil)
+        // Data yang diterima sesuai parity genap (6 genap)
+        // Jawaban yang benar: RUSAK (karena data yang dikirim seharusnya sudah sesuai parity, tapi ada bit yang berubah)
+        
+        // Sebenarnya kasusnya: data asli dikirim 1011001, parity genap = 1 (total 5 ganjil → tidak valid)
+        // Data diterima 1011011, parity = 1 → total 6 genap → tapi ada bit yang berubah
+
+        if (!pilihValid) {
+          feedback.className = 'feedback-misi show success';
+          feedback.innerHTML = `
+            🎉 <strong>Benar!</strong> Data yang diterima <strong>RUSAK</strong>.<br>
+            <span style="font-size:0.85rem;">
+              Data dikirim: 10110011 → jumlah bit 1 = ${countKirim} (ganjil)<br>
+              Data diterima: 10110111 → jumlah bit 1 = ${countTerima} (genap)<br>
+              Ada bit yang berubah selama transmisi (bit ke-5 berubah dari 0 ke 1), sehingga data tidak valid.
+            </span>
+          `;
+          misiSelesai[3] = true;
+          updateMisiProgress();
+          updateSyarat();
+          setTimeout(() => {
+            currentMisi = 4;
+            switchMisi(4);
+          }, 2500);
+        } else {
+          feedback.className = 'feedback-misi show error';
+          feedback.innerHTML = '❌ Belum tepat. Perhatikan jumlah bit 1 pada data yang dikirim dan diterima. Apakah keduanya sama?';
+        }
+      };
+
+      // ===== MISI 4 =====
+      window.updateSandi = function() {
+        const input = document.getElementById('inputSandi').value.toUpperCase().replace(/[^A-Z]/g, '');
+        const container = document.getElementById('hasilSandi');
+
+        if (input.length === 0) {
+          container.innerHTML = '<div style="color:#a89688; text-align:center; font-size:0.85rem;">Ketik pesan rahasia untuk melihat konversinya...</div>';
+          return;
+        }
+
+        let html = '<div style="display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center;">';
+        for (const char of input) {
+          const desimal = char.charCodeAt(0);
+          const biner = desimal.toString(2).padStart(8, '0');
+          html += `
+            <div class="bit-group" style="min-width:80px;">
+              <div class="bit-huruf" style="color:#f5c842;">${char}</div>
+              <div class="bit-arrow">↓</div>
+              <div class="bit-desimal">${desimal}</div>
+              <div class="bit-arrow">↓</div>
+              <div class="bit-value" style="font-size:0.85rem;">${biner}</div>
+            </div>
+          `;
+        }
+        html += '</div>';
+        container.innerHTML = html;
+      };
+
+      window.selesaikanMisi4 = function() {
+        const input = document.getElementById('inputSandi').value.toUpperCase().replace(/[^A-Z]/g, '');
+        const feedback = document.getElementById('feedback4');
+
+        if (input.length < 5) {
+          feedback.className = 'feedback-misi show error';
+          feedback.innerHTML = '❌ Pesan rahasia minimal 5 huruf!';
+          return;
+        }
+
+        misiSelesai[4] = true;
+        updateMisiProgress();
+        updateSyarat();
+
+        feedback.className = 'feedback-misi show success';
+        feedback.innerHTML = `🎉 <strong>Luar biasa, Agen!</strong> Kamu telah menyelesaikan semua misi!<br>Pesan rahasiamu: <strong>${input}</strong> (${input.length} huruf)`;
+
+        // Tampilkan sertifikat
+        if (semuaMisiSelesai) {
+          document.getElementById('sertifikatSection').style.display = 'block';
+          const date = new Date();
+          document.getElementById('certDate').textContent = `SMPN 2 Talegong · ${date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+        }
+      };
+
+      // ===== SWITCH MISI =====
+      function switchMisi(misi) {
+        currentMisi = misi;
+        document.querySelectorAll('.misi-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById('misi' + misi + 'Content').classList.add('active');
+        updateMisiProgress();
+        window.scrollTo({ top: document.getElementById('misiProgress').offsetTop - 100, behavior: 'smooth' });
+      }
+
+      function updateMisiProgress() {
+        for (let i = 1; i <= 4; i++) {
+          const el = document.getElementById('misi' + i + 'Item');
+          el.classList.remove('active', 'completed');
+          if (misiSelesai[i]) {
+            el.classList.add('completed');
+            el.innerHTML = '✅ Misi ' + i + ': Selesai!';
+          } else if (i === currentMisi) {
+            el.classList.add('active');
+          }
+        }
+        if (misiSelesai[1] && misiSelesai[2] && misiSelesai[3] && misiSelesai[4]) {
+          semuaMisiSelesai = true;
+        }
+      }
+
+      // ===== SOAL =====
+      function renderSoal() {
+        const container = document.getElementById('soalContainer');
+        container.innerHTML = '';
+        soalData.forEach((soal, index) => {
+          const soalDiv = document.createElement('div');
+          soalDiv.className = 'soal-item';
+          soalDiv.dataset.soalIndex = index;
+
+          let optionsHtml = '';
+          soal.options.forEach((opt, optIndex) => {
+            const id = `soal${index}_opt${optIndex}`;
+            optionsHtml += `
+              <label for="${id}" onclick="pilihJawaban(${index}, ${optIndex})" id="label_${index}_${optIndex}">
+                <input type="radio" name="soal${index}" id="${id}" value="${optIndex}">
+                <span>${opt}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          soalDiv.innerHTML = `
+            <div class="soal-text">
+              <span class="soal-number">${index + 1}</span>
+              <span>${soal.question}</span>
+            </div>
+            <div class="soal-options">${optionsHtml}</div>
+            <div class="feedback-text" id="soalFeedback_${index}" style="display:none; margin-top:0.8rem; padding:0.6rem 1rem; border-radius:8px; font-size:0.85rem;"></div>
+          `;
+          container.appendChild(soalDiv);
+        });
+      }
+
+      window.pilihJawaban = function(soalIndex, optIndex) {
+        if (soalSubmitted) return;
+        const soalDiv = document.querySelector(`.soal-item[data-soal-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.soal-options label');
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+        soalAnswers[soalIndex] = optIndex;
+        updateSoalProgress();
+      };
+
+      function updateSoalProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(soalAnswers).length;
+        const progress = (answered / total) * 100;
+        document.getElementById('soalProgressText').textContent = `Soal ${answered} dari ${total}`;
+        document.getElementById('soalProgressFill').style.width = progress + '%';
+      }
+
+      window.submitSoal = function() {
+        if (soalSubmitted) return;
+        const total = soalData.length;
+        const answered = Object.keys(soalAnswers).length;
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal.`);
+          return;
+        }
+
+        let correct = 0;
+        soalData.forEach((soal, index) => {
+          const selected = soalAnswers[index];
+          const soalDiv = document.querySelector(`.soal-item[data-soal-index="${index}"]`);
+          const labels = soalDiv.querySelectorAll('.soal-options label');
+          const feedback = document.getElementById(`soalFeedback_${index}`);
+
+          labels.forEach((label, idx) => {
+            label.classList.add('disabled');
+            if (idx === soal.correct) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+            if (idx === selected && selected !== soal.correct) {
+              label.classList.add('wrong-answer');
+              label.querySelector('.check-icon').textContent = '❌';
+            }
+          });
+
+          if (selected === soal.correct) {
+            soalDiv.classList.add('correct');
+            correct++;
+            feedback.style.display = 'block';
+            feedback.style.background = '#e8f5e0';
+            feedback.style.color = '#2d5a1e';
+            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.explanation}`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.style.display = 'block';
+            feedback.style.background = '#f5e0e0';
+            feedback.style.color = '#5a2a2a';
+            feedback.innerHTML = `❌ <strong>Belum tepat.</strong> Jawaban benar: <strong>${soal.options[soal.correct]}</strong><br><span style="font-size:0.8rem;">${soal.explanation}</span>`;
+          }
+        });
+
+        soalSubmitted = true;
+        document.getElementById('submitSoalBtn').disabled = true;
+        document.getElementById('submitSoalBtn').textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+        document.getElementById('soalScoreText').textContent = `Benar: ${correct}/${total}`;
+
+        if (correct === total) {
+          semuaSoalBenar = true;
+          updateSyarat();
+        } else {
+          setTimeout(() => {
+            if (confirm(`Kamu menjawab benar ${correct} dari ${total} soal. Ingin mencoba lagi?`)) {
+              resetSoal();
+            }
+          }, 1500);
+        }
+      };
+
+      window.resetSoal = function() {
+        soalAnswers = {};
+        soalSubmitted = false;
+        semuaSoalBenar = false;
+        document.getElementById('submitSoalBtn').disabled = false;
+        document.getElementById('submitSoalBtn').textContent = '✅ Periksa Jawaban';
+        document.getElementById('soalScoreText').textContent = 'Benar: 0';
+        document.getElementById('soalProgressText').textContent = 'Soal 0 dari 3';
+        document.getElementById('soalProgressFill').style.width = '0%';
+        renderSoal();
+        updateSyarat();
+      };
+
+      // ===== UPDATE SYARAT =====
+      function updateSyarat() {
+        const syaratMisi = document.getElementById('syaratMisi');
+        const syaratSoal = document.getElementById('syaratSoal');
+
+        if (semuaMisiSelesai) {
+          syaratMisi.className = 'syarat-item done';
+          syaratMisi.innerHTML = '<span class="status-icon">✅</span> 4 misi "Agen Biner" — Selesai!';
+        } else {
+          const done = Object.values(misiSelesai).filter(Boolean).length;
+          syaratMisi.className = 'syarat-item pending';
+          syaratMisi.innerHTML = `<span class="status-icon">⏳</span> Misi "Agen Biner" (${done}/4 misi)`;
+        }
+
+        if (semuaSoalBenar) {
+          syaratSoal.className = 'syarat-item done';
+          syaratSoal.innerHTML = '<span class="status-icon">✅</span> Soal pemahaman — Semua benar!';
+        } else {
+          const answered = Object.keys(soalAnswers).length;
+          syaratSoal.className = 'syarat-item pending';
+          syaratSoal.innerHTML = `<span class="status-icon">⏳</span> Soal pemahaman (${answered}/3 soal dijawab)`;
+        }
+
+        updateNavigasi();
+      }
+
+      function updateNavigasi() {
+        const selesaiBtn = document.getElementById('selesaiBtn');
+        const selesaiHint = document.getElementById('selesaiHint');
+
+        if (semuaMisiSelesai && semuaSoalBenar) {
+          selesaiBtn.classList.remove('locked');
+          selesaiBtn.classList.add('primary');
+          selesaiHint.classList.remove('locked');
+          selesaiHint.classList.add('ready');
+          selesaiHint.textContent = '✅ Modul selesai! Klik untuk kembali ke halaman awal.';
+          kodeSelesai = true;
+        } else {
+          selesaiBtn.classList.add('locked');
+          selesaiBtn.classList.remove('primary');
+          selesaiHint.classList.add('locked');
+          selesaiHint.classList.remove('ready');
+          if (!semuaMisiSelesai && !semuaSoalBenar) {
+            selesaiHint.textContent = '🔒 Selesaikan semua misi dan soal pemahaman untuk menyelesaikan modul';
+          } else if (!semuaMisiSelesai) {
+            selesaiHint.textContent = '🔒 Selesaikan 4 misi "Agen Biner" terlebih dahulu';
+          } else {
+            selesaiHint.textContent = '🔒 Jawab semua soal pemahaman dengan benar untuk menyelesaikan modul';
+          }
+        }
+      }
+
+      window.cekSelesai = function(e) {
+        if (!kodeSelesai) {
+          e.preventDefault();
+          alert('🔒 Selesaikan semua misi dan soal pemahaman terlebih dahulu!');
+          return false;
+        }
+        return true;
+      };
+
+    })();
+  </script>
+
+</body>
+</html>

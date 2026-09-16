@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Representasi Data · Bagian 1: Pendahuluan</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA MATERI ===== */
+    .materi-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .materi-container h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .materi-container .sub-judul {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+      font-style: italic;
+    }
+
+    .materi-container h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 0.8rem 0;
+      color: #4d3829;
+      border-left: 6px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container p {
+      margin-bottom: 1rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.5rem 0 1.2rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.4rem;
+      color: #2f2822;
+    }
+
+    .materi-container .highlight-box {
+      background: #f5ede6;
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+      margin: 1.5rem 0;
+    }
+
+    .materi-container .highlight-box strong {
+      color: #4d3829;
+    }
+
+    .materi-container .highlight-box ul {
+      margin-bottom: 0;
+    }
+
+    /* ===== PROGRESS BAGIAN ===== */
+    .bagian-progress {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin: 1rem 0 2rem 0;
+    }
+
+    .bagian-progress .step {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      background: #f5ede6;
+      border: 2px solid #e5dbd0;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .bagian-progress .step.active {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .bagian-progress .step.completed {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .bagian-progress .step .num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+    }
+
+    /* ===== MESIN RAHASIA ===== */
+    .mesin-container {
+      background: #2f2822;
+      border-radius: 24px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      border: 4px solid #dbb9a6;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mesin-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #dbb9a6, #8aaa7a, #8ab4d4, #dbb9a6);
+      background-size: 200% 100%;
+      animation: gradientMove 3s linear infinite;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .mesin-container .mesin-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #dbb9a6;
+      margin-bottom: 0.3rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .mesin-container .mesin-sub {
+      font-size: 0.85rem;
+      color: #a89688;
+      margin-bottom: 1.5rem;
+    }
+
+    .mesin-container .mesin-misi {
+      background: rgba(219, 185, 166, 0.1);
+      border: 1px solid rgba(219, 185, 166, 0.3);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      color: #f5ede6;
+      font-size: 0.95rem;
+    }
+
+    .mesin-container .mesin-misi strong {
+      color: #dbb9a6;
+    }
+
+    /* ===== LAMPU BIT ===== */
+    .lampu-bit-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1rem 0;
+    }
+
+    .lampu-bit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .lampu-bit .lampu {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: #4a3f38;
+      border: 4px solid #6b5f56;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      box-shadow: inset 0 4px 8px rgba(0,0,0,0.4);
+    }
+
+    .lampu-bit .lampu:hover {
+      transform: scale(1.08);
+      border-color: #a89688;
+    }
+
+    .lampu-bit .lampu.on {
+      background: radial-gradient(circle at 30% 30%, #ffe9a8, #f5c842, #d4a030);
+      border-color: #f5c842;
+      box-shadow: 0 0 20px rgba(245, 200, 66, 0.7), inset 0 4px 8px rgba(255,255,255,0.3);
+    }
+
+    .lampu-bit .lampu.off {
+      background: #4a3f38;
+      border-color: #6b5f56;
+      box-shadow: inset 0 4px 8px rgba(0,0,0,0.4);
+    }
+
+    .lampu-bit .nilai-posisi {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #dbb9a6;
+      background: rgba(219, 185, 166, 0.15);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    .lampu-bit .bit-status {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #a89688;
+      font-family: 'Courier New', monospace;
+    }
+
+    .lampu-bit .bit-status.on {
+      color: #f5c842;
+    }
+
+    /* ===== HASIL HITUNG ===== */
+    .hasil-hitung {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: rgba(219, 185, 166, 0.1);
+      border-radius: 12px;
+      border: 1px solid rgba(219, 185, 166, 0.2);
+    }
+
+    .hasil-hitung .kombinasi {
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      color: #dbb9a6;
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+
+    .hasil-hitung .sama-dengan {
+      font-size: 1.2rem;
+      color: #a89688;
+    }
+
+    .hasil-hitung .nilai-desimal {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #f5c842;
+      min-width: 60px;
+    }
+
+    /* ===== TOMBOL MESIN ===== */
+    .btn-mesin {
+      padding: 0.7rem 2rem;
+      border-radius: 30px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      margin: 0.3rem;
+    }
+
+    .btn-mesin.primary {
+      background: linear-gradient(135deg, #f5c842, #d4a030);
+      color: #2f2822;
+      box-shadow: 0 4px 14px rgba(245, 200, 66, 0.3);
+    }
+
+    .btn-mesin.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(245, 200, 66, 0.5);
+    }
+
+    .btn-mesin.secondary {
+      background: rgba(219, 185, 166, 0.2);
+      color: #dbb9a6;
+      border: 2px solid rgba(219, 185, 166, 0.3);
+    }
+
+    .btn-mesin.secondary:hover {
+      background: rgba(219, 185, 166, 0.3);
+      border-color: #dbb9a6;
+    }
+
+    .btn-mesin:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ===== FEEDBACK ===== */
+    .feedback-mesin {
+      margin-top: 1rem;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      display: none;
+      font-size: 0.95rem;
+    }
+
+    .feedback-mesin.show {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feedback-mesin.success {
+      background: rgba(138, 170, 122, 0.2);
+      border: 2px solid #8aaa7a;
+      color: #c8e6c8;
+    }
+
+    .feedback-mesin.info {
+      background: rgba(138, 180, 212, 0.15);
+      border: 2px solid #8ab4d4;
+      color: #c8e0f0;
+    }
+
+    .feedback-mesin .fb-icon {
+      font-size: 1.3rem;
+      margin-right: 0.5rem;
+    }
+
+    /* ===== LEVEL PROGRESS ===== */
+    .level-progress {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+
+    .level-progress .level-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      background: rgba(219, 185, 166, 0.1);
+      border: 2px solid rgba(219, 185, 166, 0.2);
+      font-size: 0.8rem;
+      color: #a89688;
+      font-weight: 600;
+    }
+
+    .level-progress .level-item.active {
+      background: rgba(245, 200, 66, 0.15);
+      border-color: #f5c842;
+      color: #f5c842;
+    }
+
+    .level-progress .level-item.completed {
+      background: rgba(138, 170, 122, 0.2);
+      border-color: #8aaa7a;
+      color: #c8e6c8;
+    }
+
+    /* ===== SOAL PILIHAN GANDA ===== */
+    .soal-section {
+      margin: 1.5rem 0;
+    }
+
+    .soal-item {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .soal-item.correct {
+      border-color: #8aaa7a;
+      background: #f0f8eb;
+    }
+
+    .soal-item.wrong {
+      border-color: #d4a0a0;
+      background: #fdf0f0;
+    }
+
+    .soal-item .soal-number {
+      display: inline-block;
+      background: #4d3829;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 28px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-right: 0.5rem;
+    }
+
+    .soal-item .soal-text {
+      font-weight: 600;
+      color: #3b2b1e;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.3rem;
+    }
+
+    .soal-item .soal-text span {
+      flex: 1;
+    }
+
+    .soal-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .soal-options label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #e5dbd0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      color: #2f2822;
+    }
+
+    .soal-options label:hover:not(.disabled) {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .soal-options label.disabled {
+      cursor: default;
+    }
+
+    .soal-options label.selected {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    .soal-options label.correct-answer {
+      border-color: #8aaa7a;
+      background: #e8f5e0;
+    }
+
+    .soal-options label.wrong-answer {
+      border-color: #d4a0a0;
+      background: #f5e0e0;
+    }
+
+    .soal-options input[type="radio"] {
+      accent-color: #4d3829;
+      width: 18px;
+      height: 18px;
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+    }
+
+    .soal-options .check-icon {
+      margin-left: auto;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* ===== SOAL PROGRESS ===== */
+    .soal-progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      padding: 0.8rem 1.2rem;
+      background: #f8f4ef;
+      border-radius: 12px;
+      border: 2px solid #e5dbd0;
+    }
+
+    .soal-progress .progress-text {
+      font-weight: 600;
+      color: #3b2b1e;
+      font-size: 0.9rem;
+    }
+
+    .soal-progress .progress-bar {
+      flex: 1;
+      height: 8px;
+      background: #e5dbd0;
+      border-radius: 4px;
+      overflow: hidden;
+      min-width: 100px;
+    }
+
+    .soal-progress .progress-bar .fill {
+      height: 100%;
+      background: #4d3829;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    .soal-progress .score-text {
+      font-size: 0.8rem;
+      color: #7a6656;
+      font-weight: 600;
+    }
+
+    /* ===== TOMBOL SUBMIT SOAL ===== */
+    .btn-submit-soal {
+      display: block;
+      margin: 1.5rem auto 0;
+      padding: 0.8rem 2.5rem;
+      border-radius: 30px;
+      border: none;
+      background: #4d3829;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-submit-soal:hover {
+      background: #6b4f3a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(75, 46, 30, 0.3);
+    }
+
+    .btn-submit-soal:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ===== SYARAT KELULUSAN ===== */
+    .syarat-kelulusan {
+      background: #f8f4ef;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      border: 2px solid #e5dbd0;
+    }
+
+    .syarat-kelulusan .syarat-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .syarat-kelulusan .syarat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 0;
+      font-size: 0.85rem;
+      color: #5c4638;
+    }
+
+    .syarat-kelulusan .syarat-item .status-icon {
+      font-size: 1rem;
+    }
+
+    .syarat-kelulusan .syarat-item.done {
+      color: #2d5a1e;
+      font-weight: 600;
+    }
+
+    .syarat-kelulusan .syarat-item.pending {
+      color: #d4a040;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav:disabled,
+    .btn-nav.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      pointer-events: none;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    .nav-hint {
+      font-size: 0.8rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+
+    .nav-hint.locked {
+      color: #d4a0a0;
+    }
+
+    .nav-hint.ready {
+      color: #2d5a1e;
+      font-weight: 600;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .materi-container h1 { font-size: 1.7rem; }
+      .materi-container h2 { font-size: 1.3rem; }
+      .materi-container h3 { font-size: 1.05rem; }
+      .lampu-bit .lampu { width: 42px; height: 42px; }
+      .lampu-bit .nilai-posisi { font-size: 0.6rem; }
+      .lampu-bit .bit-status { font-size: 0.65rem; }
+      .mesin-container { padding: 1.2rem; }
+      .hasil-hitung .nilai-desimal { font-size: 1.4rem; }
+      .soal-item { padding: 1rem; }
+      .soal-item .soal-text { font-size: 0.9rem; }
+      .soal-options label { font-size: 0.8rem; padding: 0.5rem 0.8rem; }
+    }
+
+    @media (max-width: 480px) {
+      .lampu-bit-container { gap: 0.3rem; }
+      .lampu-bit .lampu { width: 34px; height: 34px; border-width: 3px; }
+      .lampu-bit .nilai-posisi { font-size: 0.5rem; padding: 0.1rem 0.2rem; }
+      .lampu-bit .bit-status { font-size: 0.55rem; }
+      .mesin-container { padding: 0.8rem; }
+      .mesin-container .mesin-title { font-size: 0.9rem; }
+      .btn-mesin { padding: 0.5rem 1.2rem; font-size: 0.8rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+      .soal-progress { flex-direction: column; align-items: stretch; text-align: center; }
+      .soal-progress .progress-bar { min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk5.html">Representasi Data</a></li>
+      <li>Bagian 1: Pendahuluan</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <h1>🔢 Representasi Data dan Konversi Bilangan</h1>
+        <p class="sub-judul">Bagian 1: Pendahuluan — Mengapa Komputer "Berbicara" dengan Angka?</p>
+
+        <!-- Progress Bagian -->
+        <div class="bagian-progress">
+          <span class="step active"><span class="num">1</span> Pendahuluan</span>
+          <span class="step"><span class="num">2</span> Sistem Bilangan</span>
+          <span class="step"><span class="num">3</span> Biner ↔ Desimal</span>
+          <span class="step"><span class="num">4</span> Biner ↔ Oktal</span>
+          <span class="step"><span class="num">5</span> Penerapan</span>
+        </div>
+
+        <!-- ===== MATERI ===== -->
+        <h2>📖 Mengapa Komputer "Berbicara" dengan Angka?</h2>
+        <p>Pernahkah kamu memperhatikan bahwa lampu di rumahmu hanya bisa menyala atau mati? Tidak ada "setengah menyala" atau "seperempat mati". Nah, komputer pada dasarnya bekerja dengan prinsip yang sama. Di dalam komputer, semua data—teks, gambar, video, musik—direpresentasikan sebagai rangkaian angka <strong>0</strong> dan <strong>1</strong>.</p>
+
+        <div class="highlight-box">
+          <strong>💡 Mengapa demikian?</strong>
+          <p>Karena komputer dibangun dari <strong>transistor</strong> yang hanya memiliki dua keadaan: <strong>on</strong> (menyala) dan <strong>off</strong> (mati). Keadaan "on" diwakili angka <strong>1</strong>, dan "off" diwakili angka <strong>0</strong>. Inilah yang disebut <strong>representasi data digital</strong>.</p>
+        </div>
+
+        <p>Setiap angka 0 atau 1 disebut <strong>bit</strong> (binary digit). Ketika 8 bit dikelompokkan bersama, mereka membentuk <strong>byte</strong>, yang bisa mewakili angka dari 0 hingga 255. Jadi, ketika kamu mengetik huruf "A" di keyboard, komputer menyimpannya sebagai pola bit tertentu—misalnya <code>01000001</code> dalam kode ASCII.</p>
+
+        <div class="highlight-box">
+          <strong>❓ Pertanyaan Besar:</strong>
+          <p>Jika komputer hanya mengenal 0 dan 1, bagaimana ia bisa menampilkan angka 100, warna merah, atau suara musik? Bagaimana manusia bisa "berbicara" dengan komputer menggunakan sistem bilangan yang berbeda?</p>
+        </div>
+
+        <p>Di sinilah konsep <strong>sistem bilangan</strong> menjadi penting. Manusia terbiasa dengan <strong>desimal</strong> (basis 10, angka 0-9), tetapi komputer menggunakan <strong>biner</strong> (basis 2, angka 0-1). Ada juga sistem <strong>oktal</strong> (basis 8, angka 0-7) yang sering digunakan sebagai "jalan pintas" untuk menuliskan bilangan biner yang panjang.</p>
+
+        <p>Memahami bagaimana mengubah representasi data dari satu sistem bilangan ke sistem lainnya adalah keterampilan fundamental dalam informatika. Tanpa pemahaman ini, kita tidak akan pernah benar-benar memahami bagaimana komputer bekerja.</p>
+
+        <!-- ===== AKTIVITAS INTERAKTIF ===== -->
+        <h2>🎮 Aktivitas: "Tebak Angka Rahasia"</h2>
+        <p><strong>Tujuan:</strong> Mengenali bahwa komputer merepresentasikan data dengan pola 0 dan 1, serta menyadari pentingnya konversi bilangan.</p>
+
+        <!-- Level Progress -->
+        <div class="level-progress" id="levelProgress">
+          <span class="level-item active" id="level1">🎯 Level 1: Angka 5</span>
+          <span class="level-item" id="level2">🎯 Level 2: Angka 13</span>
+          <span class="level-item" id="level3">🎯 Level 3: Angka 20</span>
+        </div>
+
+        <!-- Mesin Rahasia -->
+        <div class="mesin-container">
+          <div class="mesin-title">🤖 MESIN RAHASIA</div>
+          <div class="mesin-sub">8-Bit Binary Machine</div>
+
+          <div class="mesin-misi" id="mesinMisi">
+            <strong>📜 Misi:</strong> Nyalakan lampu untuk merepresentasikan angka <strong>5</strong>!
+            <br><span style="font-size:0.8rem; color:#a89688;">Setiap lampu yang menyala mewakili nilai posisi tertentu.</span>
+          </div>
+
+          <!-- Lampu Bit -->
+          <div class="lampu-bit-container" id="lampuContainer">
+            <!-- diisi JavaScript -->
+          </div>
+
+          <!-- Hasil Hitung -->
+          <div class="hasil-hitung">
+            <span class="kombinasi" id="kombinasiBiner">00000000</span>
+            <span class="sama-dengan">=</span>
+            <span class="nilai-desimal" id="nilaiDesimal">0</span>
+          </div>
+
+          <!-- Tombol -->
+          <div>
+            <button class="btn-mesin primary" onclick="hitungAngka()">🔢 Hitung</button>
+            <button class="btn-mesin secondary" onclick="resetLampu()">🔄 Reset</button>
+          </div>
+
+          <!-- Feedback -->
+          <div class="feedback-mesin" id="feedbackMesin"></div>
+        </div>
+
+        <!-- ===== SOAL TES PEMAHAMAN (PILIHAN GANDA) ===== -->
+        <h2>📝 Soal Tes Pemahaman</h2>
+        <p>Jawablah pertanyaan berikut dengan memilih satu jawaban yang paling tepat. Kamu harus menjawab <strong>semua soal dengan benar</strong> untuk membuka Bagian 2.</p>
+
+        <!-- Soal Progress -->
+        <div class="soal-progress">
+          <span class="progress-text" id="soalProgressText">Soal 0 dari 3</span>
+          <div class="progress-bar">
+            <div class="fill" id="soalProgressFill"></div>
+          </div>
+          <span class="score-text" id="soalScoreText">Benar: 0</span>
+        </div>
+
+        <!-- Soal Container -->
+        <div class="soal-section" id="soalContainer">
+          <!-- diisi JavaScript -->
+        </div>
+
+        <!-- Tombol Submit -->
+        <button class="btn-submit-soal" id="submitSoalBtn" onclick="submitSoal()">
+          ✅ Periksa Jawaban
+        </button>
+
+        <!-- ===== SYARAT KELULUSAN ===== -->
+        <div class="syarat-kelulusan">
+          <div class="syarat-title">📋 Syarat untuk Lanjut ke Bagian 2:</div>
+          <div class="syarat-item" id="syaratSimulasi">
+            <span class="status-icon">⏳</span> Menyelesaikan simulasi "Tebak Angka Rahasia" (3 level)
+          </div>
+          <div class="syarat-item" id="syaratSoal">
+            <span class="status-icon">⏳</span> Menjawab semua soal pemahaman dengan benar
+          </div>
+        </div>
+
+        <!-- ===== NAVIGASI ===== -->
+        <div class="nav-bottom">
+          <a href="bk.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Daftar Materi
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav primary locked" id="nextBtn" onclick="lanjutKeBagian2()">
+              Lanjut ke Bagian 2 →
+            </button>
+          </div>
+          <div class="nav-hint locked" id="nextHint">
+            🔒 Selesaikan simulasi dan semua soal pemahaman untuk membuka Bagian 2
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- ===== SCRIPT AKTIVITAS ===== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ===== STATE SIMULASI =====
+      let currentLevel = 1;
+      const targetAngka = { 1: 5, 2: 13, 3: 20 };
+      let lampuStates = [0, 0, 0, 0, 0, 0, 0, 0];
+      const nilaiPosisi = [128, 64, 32, 16, 8, 4, 2, 1];
+      let levelSelesai = { 1: false, 2: false, 3: false };
+      let simulasiSelesai = false;
+
+      // ===== STATE SOAL =====
+      let soalAnswers = {};
+      let soalSubmitted = false;
+      let soalBenar = 0;
+      let semuaSoalBenar = false;
+
+      // ===== DATA SOAL PILIHAN GANDA =====
+      const soalData = [
+        {
+          question: 'Mengapa komputer menggunakan sistem biner (0 dan 1) untuk merepresentasikan data?',
+          options: [
+            'Karena manusia hanya bisa menghitung sampai 2',
+            'Karena komputer dibangun dari transistor yang hanya memiliki dua keadaan: on (1) dan off (0)',
+            'Karena angka 0 dan 1 lebih mudah dihafal',
+            'Karena biner lebih cepat dari desimal'
+          ],
+          correct: 1,
+          explanation: 'Komputer menggunakan biner karena transistor hanya memiliki dua keadaan: on (menyala) dan off (mati). Keadaan ini direpresentasikan sebagai 1 dan 0.'
+        },
+        {
+          question: 'Apa yang dimaksud dengan "bit"? Berapa bit dalam satu byte?',
+          options: [
+            'Bit adalah byte terkecil; 1 byte = 4 bit',
+            'Bit adalah binary digit (angka 0 atau 1); 1 byte = 8 bit',
+            'Bit adalah kode ASCII; 1 byte = 16 bit',
+            'Bit adalah satuan kecepatan internet; 1 byte = 10 bit'
+          ],
+          correct: 1,
+          explanation: 'Bit adalah singkatan dari binary digit, yaitu angka 0 atau 1. Satu byte terdiri dari 8 bit.'
+        },
+        {
+          question: 'Jika lampu dengan nilai posisi 4 dan 1 menyala, angka desimal berapa yang direpresentasikan?',
+          options: [
+            '3',
+            '5',
+            '6',
+            '4'
+          ],
+          correct: 1,
+          explanation: 'Nilai posisi 4 + 1 = 5. Dalam biner: 00000101. Jadi angka desimalnya adalah 5.'
+        }
+      ];
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        renderLampu();
+        updateMesinMisi();
+        updateLevelProgress();
+        renderSoal();
+        updateSyarat();
+      });
+
+      // ===== RENDER LAMPU =====
+      function renderLampu() {
+        const container = document.getElementById('lampuContainer');
+        container.innerHTML = '';
+
+        for (let i = 0; i < 8; i++) {
+          const lampuDiv = document.createElement('div');
+          lampuDiv.className = 'lampu-bit';
+
+          const lampu = document.createElement('div');
+          lampu.className = 'lampu ' + (lampuStates[i] === 1 ? 'on' : 'off');
+          lampu.onclick = function() { toggleLampu(i); };
+
+          const nilai = document.createElement('div');
+          nilai.className = 'nilai-posisi';
+          nilai.textContent = nilaiPosisi[i];
+
+          const status = document.createElement('div');
+          status.className = 'bit-status ' + (lampuStates[i] === 1 ? 'on' : '');
+          status.textContent = lampuStates[i];
+
+          lampuDiv.appendChild(lampu);
+          lampuDiv.appendChild(nilai);
+          lampuDiv.appendChild(status);
+          container.appendChild(lampuDiv);
+        }
+      }
+
+      // ===== TOGGLE LAMPU =====
+      window.toggleLampu = function(index) {
+        lampuStates[index] = lampuStates[index] === 0 ? 1 : 0;
+        renderLampu();
+        updateKombinasi();
+      };
+
+      // ===== UPDATE KOMBINASI =====
+      function updateKombinasi() {
+        const biner = lampuStates.join('');
+        const desimal = hitungDesimal();
+        document.getElementById('kombinasiBiner').textContent = biner;
+        document.getElementById('nilaiDesimal').textContent = desimal;
+      }
+
+      // ===== HITUNG DESIMAL =====
+      function hitungDesimal() {
+        let total = 0;
+        for (let i = 0; i < 8; i++) {
+          if (lampuStates[i] === 1) {
+            total += nilaiPosisi[i];
+          }
+        }
+        return total;
+      }
+
+      // ===== HITUNG ANGKA (VALIDASI SIMULASI) =====
+      window.hitungAngka = function() {
+        const desimal = hitungDesimal();
+        const target = targetAngka[currentLevel];
+        const feedback = document.getElementById('feedbackMesin');
+
+        if (desimal === target) {
+          // BENAR
+          levelSelesai[currentLevel] = true;
+
+          const biner = lampuStates.join('');
+
+          feedback.className = 'feedback-mesin show success';
+          feedback.innerHTML = `
+            <span class="fb-icon">🎉</span>
+            <strong>Benar!</strong> <code>${biner}</code> dalam biner sama dengan <strong>${target}</strong> dalam desimal.
+            <br><span style="font-size:0.85rem; color:#a8d4a8;">
+              Ini adalah cara komputer menyimpan angka ${target}!
+            </span>
+          `;
+
+          updateLevelProgress();
+          updateSyarat();
+
+          setTimeout(() => {
+            if (currentLevel < 3) {
+              currentLevel++;
+              resetLampu();
+              updateMesinMisi();
+              updateLevelProgress();
+            } else {
+              simulasiSelesai = true;
+              updateSyarat();
+              feedback.className = 'feedback-mesin show success';
+              feedback.innerHTML = `
+                <span class="fb-icon">🏆</span>
+                <strong>Selamat! Kamu telah menyelesaikan semua level simulasi!</strong>
+                <br><span style="font-size:0.85rem; color:#a8d4a8;">
+                  🎉 Sekarang jawab soal pemahaman di bawah untuk membuka Bagian 2.
+                </span>
+              `;
+              document.getElementById('mesinMisi').innerHTML = `
+                <strong>🏆 Semua Level Selesai!</strong>
+                <br><span style="font-size:0.8rem; color:#a89688;">
+                  Lanjutkan ke soal pemahaman di bawah.
+                </span>
+              `;
+            }
+          }, 2500);
+
+        } else {
+          // SALAH
+          feedback.className = 'feedback-mesin show info';
+          const selisih = Math.abs(desimal - target);
+          feedback.innerHTML = `
+            <span class="fb-icon">💡</span>
+            <strong>Belum tepat.</strong> Angka yang kamu bentuk adalah <strong>${desimal}</strong>, 
+            sedangkan target adalah <strong>${target}</strong>.
+            <br><span style="font-size:0.85rem; color:#a8c8e0;">
+              ${desimal < target ? `📈 Kamu perlu menambah ${selisih} lagi.` : `📉 Kamu perlu mengurangi ${selisih}.`}
+            </span>
+          `;
+        }
+      };
+
+      // ===== RESET LAMPU =====
+      window.resetLampu = function() {
+        lampuStates = [0, 0, 0, 0, 0, 0, 0, 0];
+        renderLampu();
+        updateKombinasi();
+        document.getElementById('feedbackMesin').className = 'feedback-mesin';
+      };
+
+      // ===== UPDATE MISI =====
+      function updateMesinMisi() {
+        const misi = document.getElementById('mesinMisi');
+        
+        const misiText = {
+          1: 'Nyalakan lampu untuk merepresentasikan angka <strong>5</strong>!',
+          2: 'Nyalakan lampu untuk merepresentasikan angka <strong>13</strong>!',
+          3: 'Mesin menyimpan angka <strong>20</strong>. Lampu mana saja yang menyala?'
+        };
+
+        misi.innerHTML = `
+          <strong>📜 Misi Level ${currentLevel}:</strong> ${misiText[currentLevel]}
+          <br><span style="font-size:0.8rem; color:#a89688;">Setiap lampu yang menyala mewakili nilai posisi tertentu.</span>
+        `;
+
+        updateKombinasi();
+      }
+
+      // ===== UPDATE LEVEL PROGRESS =====
+      function updateLevelProgress() {
+        for (let i = 1; i <= 3; i++) {
+          const el = document.getElementById('level' + i);
+          el.classList.remove('active', 'completed');
+          
+          if (levelSelesai[i]) {
+            el.classList.add('completed');
+            el.innerHTML = '✅ Level ' + i + ': Selesai!';
+          } else if (i === currentLevel) {
+            el.classList.add('active');
+          }
+        }
+      }
+
+      // ===== RENDER SOAL =====
+      function renderSoal() {
+        const container = document.getElementById('soalContainer');
+        container.innerHTML = '';
+
+        soalData.forEach((soal, index) => {
+          const soalDiv = document.createElement('div');
+          soalDiv.className = 'soal-item';
+          soalDiv.dataset.soalIndex = index;
+
+          let optionsHtml = '';
+          soal.options.forEach((opt, optIndex) => {
+            const id = `soal${index}_opt${optIndex}`;
+            optionsHtml += `
+              <label for="${id}" onclick="pilihJawaban(${index}, ${optIndex})" id="label_${index}_${optIndex}">
+                <input type="radio" name="soal${index}" id="${id}" value="${optIndex}">
+                <span>${opt}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          soalDiv.innerHTML = `
+            <div class="soal-text">
+              <span class="soal-number">${index + 1}</span>
+              <span>${soal.question}</span>
+            </div>
+            <div class="soal-options">
+              ${optionsHtml}
+            </div>
+            <div class="feedback-text" id="soalFeedback_${index}" style="display:none; margin-top:0.8rem; padding:0.6rem 1rem; border-radius:8px; font-size:0.85rem;"></div>
+          `;
+
+          container.appendChild(soalDiv);
+        });
+      }
+
+      // ===== PILIH JAWABAN =====
+      window.pilihJawaban = function(soalIndex, optIndex) {
+        if (soalSubmitted) return;
+
+        const soalDiv = document.querySelector(`.soal-item[data-soal-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.soal-options label');
+
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+
+        soalAnswers[soalIndex] = optIndex;
+        updateSoalProgress();
+      };
+
+      // ===== UPDATE SOAL PROGRESS =====
+      function updateSoalProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(soalAnswers).length;
+        const progress = (answered / total) * 100;
+
+        document.getElementById('soalProgressText').textContent = `Soal ${answered} dari ${total}`;
+        document.getElementById('soalProgressFill').style.width = progress + '%';
+      }
+
+      // ===== SUBMIT SOAL =====
+      window.submitSoal = function() {
+        if (soalSubmitted) return;
+
+        const total = soalData.length;
+        const answered = Object.keys(soalAnswers).length;
+
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
+          return;
+        }
+
+        // Validasi jawaban
+        let correct = 0;
+        soalData.forEach((soal, index) => {
+          const selected = soalAnswers[index];
+          const soalDiv = document.querySelector(`.soal-item[data-soal-index="${index}"]`);
+          const labels = soalDiv.querySelectorAll('.soal-options label');
+          const feedback = document.getElementById(`soalFeedback_${index}`);
+
+          labels.forEach((label, idx) => {
+            label.classList.add('disabled');
+            if (idx === soal.correct) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+            if (idx === selected && selected !== soal.correct) {
+              label.classList.add('wrong-answer');
+              label.querySelector('.check-icon').textContent = '❌';
+            }
+          });
+
+          if (selected === soal.correct) {
+            soalDiv.classList.add('correct');
+            correct++;
+            feedback.style.display = 'block';
+            feedback.style.background = '#e8f5e0';
+            feedback.style.color = '#2d5a1e';
+            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.explanation}`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.style.display = 'block';
+            feedback.style.background = '#f5e0e0';
+            feedback.style.color = '#5a2a2a';
+            feedback.innerHTML = `❌ <strong>Belum tepat.</strong> Jawaban yang benar adalah: <strong>${soal.options[soal.correct]}</strong><br><span style="font-size:0.8rem;">${soal.explanation}</span>`;
+          }
+        });
+
+        soalBenar = correct;
+        soalSubmitted = true;
+
+        document.getElementById('submitSoalBtn').disabled = true;
+        document.getElementById('submitSoalBtn').textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+        document.getElementById('soalScoreText').textContent = `Benar: ${correct}/${total}`;
+
+        if (correct === total) {
+          semuaSoalBenar = true;
+          updateSyarat();
+        } else {
+          // Beri kesempatan mengulang
+          setTimeout(() => {
+            if (confirm(`Kamu menjawab benar ${correct} dari ${total} soal. Ingin mencoba lagi?`)) {
+              resetSoal();
+            }
+          }, 1500);
+        }
+      };
+
+      // ===== RESET SOAL =====
+      window.resetSoal = function() {
+        soalAnswers = {};
+        soalSubmitted = false;
+        soalBenar = 0;
+        semuaSoalBenar = false;
+
+        document.getElementById('submitSoalBtn').disabled = false;
+        document.getElementById('submitSoalBtn').textContent = '✅ Periksa Jawaban';
+        document.getElementById('soalScoreText').textContent = 'Benar: 0';
+        document.getElementById('soalProgressText').textContent = 'Soal 0 dari 3';
+        document.getElementById('soalProgressFill').style.width = '0%';
+
+        renderSoal();
+        updateSyarat();
+      };
+
+      // ===== UPDATE SYARAT =====
+      function updateSyarat() {
+        const syaratSimulasi = document.getElementById('syaratSimulasi');
+        const syaratSoal = document.getElementById('syaratSoal');
+
+        // Syarat 1: Simulasi
+        if (simulasiSelesai) {
+          syaratSimulasi.className = 'syarat-item done';
+          syaratSimulasi.innerHTML = '<span class="status-icon">✅</span> Simulasi "Tebak Angka Rahasia" — Selesai!';
+        } else {
+          const done = Object.values(levelSelesai).filter(Boolean).length;
+          syaratSimulasi.className = 'syarat-item pending';
+          syaratSimulasi.innerHTML = `<span class="status-icon">⏳</span> Simulasi "Tebak Angka Rahasia" (${done}/3 level)`;
+        }
+
+        // Syarat 2: Soal
+        if (semuaSoalBenar) {
+          syaratSoal.className = 'syarat-item done';
+          syaratSoal.innerHTML = '<span class="status-icon">✅</span> Soal pemahaman — Semua benar!';
+        } else {
+          const answered = Object.keys(soalAnswers).length;
+          syaratSoal.className = 'syarat-item pending';
+          syaratSoal.innerHTML = `<span class="status-icon">⏳</span> Soal pemahaman (${answered}/3 soal dijawab)`;
+        }
+
+        // Update navigasi
+        updateNavigasi();
+      }
+
+      // ===== UPDATE NAVIGASI =====
+      function updateNavigasi() {
+        const nextBtn = document.getElementById('nextBtn');
+        const nextHint = document.getElementById('nextHint');
+
+        if (simulasiSelesai && semuaSoalBenar) {
+          nextBtn.classList.remove('locked');
+          nextBtn.classList.add('primary');
+          nextHint.classList.remove('locked');
+          nextHint.classList.add('ready');
+          nextHint.textContent = '✅ Bagian 2 sudah terbuka! Klik untuk melanjutkan.';
+        } else {
+          nextBtn.classList.add('locked');
+          nextBtn.classList.remove('primary');
+          nextHint.classList.add('locked');
+          nextHint.classList.remove('ready');
+          
+          if (!simulasiSelesai && !semuaSoalBenar) {
+            nextHint.textContent = '🔒 Selesaikan simulasi dan semua soal pemahaman untuk membuka Bagian 2';
+          } else if (!simulasiSelesai) {
+            nextHint.textContent = '🔒 Selesaikan simulasi "Tebak Angka Rahasia" terlebih dahulu';
+          } else {
+            nextHint.textContent = '🔒 Jawab semua soal pemahaman dengan benar untuk membuka Bagian 2';
+          }
+        }
+      }
+
+      // ===== LANJUT KE BAGIAN 2 =====
+      window.lanjutKeBagian2 = function() {
+        if (!simulasiSelesai || !semuaSoalBenar) {
+          alert('🔒 Selesaikan dulu simulasi dan semua soal pemahaman!');
+          return;
+        }
+        window.location.href = 'bk5a.html';
+      };
+
+    })();
+  </script>
+
+</body>
+</html>

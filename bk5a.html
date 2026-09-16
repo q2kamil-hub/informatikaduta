@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Representasi Data · Bagian 2: Sistem Bilangan</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA MATERI ===== */
+    .materi-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .materi-container h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .materi-container .sub-judul {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+      font-style: italic;
+    }
+
+    .materi-container h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 0.8rem 0;
+      color: #4d3829;
+      border-left: 6px solid #dbb9a6;
+      padding-left: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container p {
+      margin-bottom: 1rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.5rem 0 1.2rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.4rem;
+      color: #2f2822;
+    }
+
+    .materi-container .highlight-box {
+      background: #f5ede6;
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+      margin: 1.5rem 0;
+    }
+
+    .materi-container .highlight-box strong {
+      color: #4d3829;
+    }
+
+    .materi-container .highlight-box ul {
+      margin-bottom: 0;
+    }
+
+    .materi-container code {
+      background: #f0ece6;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      color: #4d3829;
+    }
+
+    /* ===== PROGRESS BAGIAN ===== */
+    .bagian-progress {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin: 1rem 0 2rem 0;
+    }
+
+    .bagian-progress .step {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      background: #f5ede6;
+      border: 2px solid #e5dbd0;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .bagian-progress .step.active {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .bagian-progress .step.completed {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .bagian-progress .step .num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+    }
+
+    /* ===== TABEL HUBUNGAN ===== */
+    .tabel-hubungan {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .tabel-hubungan thead {
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .tabel-hubungan th {
+      padding: 0.8rem 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .tabel-hubungan td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #3b2b1e;
+    }
+
+    .tabel-hubungan tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabel-hubungan tr:hover td {
+      background: #f8f3ee;
+    }
+
+    .tabel-hubungan .desimal-col {
+      color: #4d3829;
+    }
+
+    .tabel-hubungan .biner-col {
+      color: #1a4a6b;
+    }
+
+    .tabel-hubungan .oktal-col {
+      color: #2d5a1e;
+    }
+
+    /* ===== KARTU BINER AJAIB ===== */
+    .kartu-container {
+      background: #2f2822;
+      border-radius: 24px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      border: 4px solid #dbb9a6;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kartu-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #8ab4d4, #8aaa7a, #f5c842, #8ab4d4);
+      background-size: 200% 100%;
+      animation: gradientMove 3s linear infinite;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .kartu-container .kartu-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #dbb9a6;
+      margin-bottom: 0.3rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .kartu-container .kartu-sub {
+      font-size: 0.85rem;
+      color: #a89688;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Mode Selector */
+    .mode-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .mode-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid rgba(219, 185, 166, 0.3);
+      background: rgba(219, 185, 166, 0.1);
+      color: #dbb9a6;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .mode-btn:hover {
+      background: rgba(219, 185, 166, 0.2);
+      border-color: #dbb9a6;
+    }
+
+    .mode-btn.active {
+      background: #dbb9a6;
+      border-color: #dbb9a6;
+      color: #2f2822;
+    }
+
+    /* Mode Content */
+    .mode-content {
+      display: none;
+    }
+
+    .mode-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== MODE 1: JELAJAHI KARTU ===== */
+    .kartu-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+
+    .kartu-item {
+      perspective: 1000px;
+      height: 120px;
+      cursor: pointer;
+    }
+
+    .kartu-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .kartu-item.flipped .kartu-inner {
+      transform: rotateY(180deg);
+    }
+
+    .kartu-front, .kartu-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+      font-weight: 700;
+    }
+
+    .kartu-front {
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      color: #fff;
+      border: 2px solid #dbb9a6;
+    }
+
+    .kartu-front .angka {
+      font-size: 2rem;
+      color: #f5c842;
+    }
+
+    .kartu-front .label {
+      font-size: 0.65rem;
+      color: #dbb9a6;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .kartu-back {
+      background: linear-gradient(135deg, #1a4a6b, #2d6a8b);
+      color: #fff;
+      border: 2px solid #8ab4d4;
+      transform: rotateY(180deg);
+    }
+
+    .kartu-back .biner {
+      font-size: 1.6rem;
+      font-family: 'Courier New', monospace;
+      color: #8ab4d4;
+      letter-spacing: 3px;
+    }
+
+    .kartu-back .label {
+      font-size: 0.65rem;
+      color: #a8c8e0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ===== MODE 2: COCOKKAN KARTU ===== */
+    .cocokkan-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem 0;
+    }
+
+    .cocokkan-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: rgba(219, 185, 166, 0.1);
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      border: 2px solid rgba(219, 185, 166, 0.2);
+    }
+
+    .cocokkan-item .soal-desimal {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f5c842;
+      min-width: 60px;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+    }
+
+    .cocokkan-item .jawaban-slot {
+      width: 90px;
+      height: 60px;
+      border: 3px dashed rgba(219, 185, 166, 0.4);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier New', monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #a89688;
+      transition: all 0.2s ease;
+    }
+
+    .cocokkan-item .jawaban-slot.filled {
+      border-style: solid;
+      border-color: #8ab4d4;
+      background: rgba(138, 180, 212, 0.2);
+      color: #8ab4d4;
+    }
+
+    .cocokkan-item .jawaban-slot.correct {
+      border-color: #8aaa7a;
+      background: rgba(138, 170, 122, 0.3);
+      color: #c8e6c8;
+    }
+
+    .cocokkan-item .jawaban-slot.wrong {
+      border-color: #d4a0a0;
+      background: rgba(212, 160, 160, 0.3);
+      color: #e0c8c8;
+    }
+
+    .pilihan-biner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    .pilihan-biner .biner-btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      border: 3px solid #8ab4d4;
+      background: rgba(138, 180, 212, 0.15);
+      color: #8ab4d4;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 2px;
+    }
+
+    .pilihan-biner .biner-btn:hover {
+      background: rgba(138, 180, 212, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .pilihan-biner .biner-btn.selected {
+      background: #8ab4d4;
+      color: #2f2822;
+    }
+
+    .pilihan-biner .biner-btn.used {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ===== MODE 3: TANTANGAN OKTAL ===== */
+    .oktal-container {
+      margin: 1rem 0;
+    }
+
+    .oktal-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .oktal-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: rgba(219, 185, 166, 0.1);
+      border-radius: 12px;
+      border: 2px solid rgba(219, 185, 166, 0.2);
+      min-width: 100px;
+    }
+
+    .oktal-item .oktal-angka {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #8aaa7a;
+      font-family: 'Courier New', monospace;
+    }
+
+    .oktal-item .oktal-label {
+      font-size: 0.65rem;
+      color: #a89688;
+      text-transform: uppercase;
+    }
+
+    .oktal-item .oktal-input {
+      width: 80px;
+      padding: 0.4rem;
+      border-radius: 8px;
+      border: 2px solid rgba(219, 185, 166, 0.3);
+      background: rgba(47, 40, 34, 0.5);
+      color: #8ab4d4;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .oktal-item .oktal-input:focus {
+      outline: none;
+      border-color: #8ab4d4;
+    }
+
+    .oktal-item .oktal-input.correct {
+      border-color: #8aaa7a;
+      background: rgba(138, 170, 122, 0.2);
+      color: #c8e6c8;
+    }
+
+    .oktal-item .oktal-input.wrong {
+      border-color: #d4a0a0;
+      background: rgba(212, 160, 160, 0.2);
+      color: #e0c8c8;
+    }
+
+    /* ===== TOMBOL MESIN ===== */
+    .btn-mesin {
+      padding: 0.7rem 2rem;
+      border-radius: 30px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      margin: 0.3rem;
+    }
+
+    .btn-mesin.primary {
+      background: linear-gradient(135deg, #f5c842, #d4a030);
+      color: #2f2822;
+      box-shadow: 0 4px 14px rgba(245, 200, 66, 0.3);
+    }
+
+    .btn-mesin.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(245, 200, 66, 0.5);
+    }
+
+    .btn-mesin.secondary {
+      background: rgba(219, 185, 166, 0.2);
+      color: #dbb9a6;
+      border: 2px solid rgba(219, 185, 166, 0.3);
+    }
+
+    .btn-mesin.secondary:hover {
+      background: rgba(219, 185, 166, 0.3);
+      border-color: #dbb9a6;
+    }
+
+    .btn-mesin.success {
+      background: linear-gradient(135deg, #8aaa7a, #6a8a5a);
+      color: #fff;
+    }
+
+    .btn-mesin.success:hover {
+      background: linear-gradient(135deg, #7a9a6a, #5a7a4a);
+    }
+
+    /* ===== FEEDBACK ===== */
+    .feedback-mesin {
+      margin-top: 1rem;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      display: none;
+      font-size: 0.95rem;
+    }
+
+    .feedback-mesin.show {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .feedback-mesin.success {
+      background: rgba(138, 170, 122, 0.2);
+      border: 2px solid #8aaa7a;
+      color: #c8e6c8;
+    }
+
+    .feedback-mesin.info {
+      background: rgba(138, 180, 212, 0.15);
+      border: 2px solid #8ab4d4;
+      color: #c8e0f0;
+    }
+
+    /* ===== PROGRESS MODE ===== */
+    .mode-progress {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+
+    .mode-progress .mode-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      background: rgba(219, 185, 166, 0.1);
+      border: 2px solid rgba(219, 185, 166, 0.2);
+      font-size: 0.75rem;
+      color: #a89688;
+      font-weight: 600;
+    }
+
+    .mode-progress .mode-item.active {
+      background: rgba(245, 200, 66, 0.15);
+      border-color: #f5c842;
+      color: #f5c842;
+    }
+
+    .mode-progress .mode-item.completed {
+      background: rgba(138, 170, 122, 0.2);
+      border-color: #8aaa7a;
+      color: #c8e6c8;
+    }
+
+    /* ===== SOAL PILIHAN GANDA ===== */
+    .soal-section {
+      margin: 1.5rem 0;
+    }
+
+    .soal-item {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .soal-item.correct {
+      border-color: #8aaa7a;
+      background: #f0f8eb;
+    }
+
+    .soal-item.wrong {
+      border-color: #d4a0a0;
+      background: #fdf0f0;
+    }
+
+    .soal-item .soal-text {
+      font-weight: 600;
+      color: #3b2b1e;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .soal-item .soal-number {
+      display: inline-block;
+      background: #4d3829;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 28px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .soal-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .soal-options label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #e5dbd0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      color: #2f2822;
+    }
+
+    .soal-options label:hover:not(.disabled) {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .soal-options label.disabled {
+      cursor: default;
+    }
+
+    .soal-options label.selected {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    .soal-options label.correct-answer {
+      border-color: #8aaa7a;
+      background: #e8f5e0;
+    }
+
+    .soal-options label.wrong-answer {
+      border-color: #d4a0a0;
+      background: #f5e0e0;
+    }
+
+    .soal-options input[type="radio"] {
+      accent-color: #4d3829;
+      width: 18px;
+      height: 18px;
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+    }
+
+    .soal-options .check-icon {
+      margin-left: auto;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* ===== SOAL PROGRESS ===== */
+    .soal-progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      padding: 0.8rem 1.2rem;
+      background: #f8f4ef;
+      border-radius: 12px;
+      border: 2px solid #e5dbd0;
+    }
+
+    .soal-progress .progress-text {
+      font-weight: 600;
+      color: #3b2b1e;
+      font-size: 0.9rem;
+    }
+
+    .soal-progress .progress-bar {
+      flex: 1;
+      height: 8px;
+      background: #e5dbd0;
+      border-radius: 4px;
+      overflow: hidden;
+      min-width: 100px;
+    }
+
+    .soal-progress .progress-bar .fill {
+      height: 100%;
+      background: #4d3829;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    .soal-progress .score-text {
+      font-size: 0.8rem;
+      color: #7a6656;
+      font-weight: 600;
+    }
+
+    /* ===== TOMBOL SUBMIT SOAL ===== */
+    .btn-submit-soal {
+      display: block;
+      margin: 1.5rem auto 0;
+      padding: 0.8rem 2.5rem;
+      border-radius: 30px;
+      border: none;
+      background: #4d3829;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-submit-soal:hover {
+      background: #6b4f3a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(75, 46, 30, 0.3);
+    }
+
+    .btn-submit-soal:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ===== SYARAT KELULUSAN ===== */
+    .syarat-kelulusan {
+      background: #f8f4ef;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      border: 2px solid #e5dbd0;
+    }
+
+    .syarat-kelulusan .syarat-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .syarat-kelulusan .syarat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 0;
+      font-size: 0.85rem;
+      color: #5c4638;
+    }
+
+    .syarat-kelulusan .syarat-item .status-icon {
+      font-size: 1rem;
+    }
+
+    .syarat-kelulusan .syarat-item.done {
+      color: #2d5a1e;
+      font-weight: 600;
+    }
+
+    .syarat-kelulusan .syarat-item.pending {
+      color: #d4a040;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav:disabled,
+    .btn-nav.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      pointer-events: none;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    .nav-hint {
+      font-size: 0.8rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+
+    .nav-hint.locked {
+      color: #d4a0a0;
+    }
+
+    .nav-hint.ready {
+      color: #2d5a1e;
+      font-weight: 600;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .materi-container h1 { font-size: 1.7rem; }
+      .materi-container h2 { font-size: 1.3rem; }
+      .materi-container h3 { font-size: 1.05rem; }
+      .kartu-container { padding: 1.2rem; }
+      .kartu-grid { grid-template-columns: repeat(4, 1fr); gap: 0.4rem; }
+      .kartu-item { height: 90px; }
+      .kartu-front .angka { font-size: 1.4rem; }
+      .kartu-back .biner { font-size: 1rem; letter-spacing: 1px; }
+      .cocokkan-item .soal-desimal { font-size: 1.5rem; min-width: 40px; }
+      .cocokkan-item .jawaban-slot { width: 70px; height: 50px; font-size: 1rem; }
+      .pilihan-biner .biner-btn { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+      .soal-item { padding: 1rem; }
+      .soal-item .soal-text { font-size: 0.9rem; }
+      .soal-options label { font-size: 0.8rem; padding: 0.5rem 0.8rem; }
+    }
+
+    @media (max-width: 480px) {
+      .kartu-grid { grid-template-columns: repeat(4, 1fr); gap: 0.3rem; }
+      .kartu-item { height: 70px; }
+      .kartu-front .angka { font-size: 1.1rem; }
+      .kartu-front .label { font-size: 0.5rem; }
+      .kartu-back .biner { font-size: 0.8rem; letter-spacing: 0; }
+      .kartu-back .label { font-size: 0.5rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+      .soal-progress { flex-direction: column; align-items: stretch; text-align: center; }
+      .soal-progress .progress-bar { min-width: unset; }
+      .cocokkan-item { flex-direction: column; gap: 0.3rem; padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk5.html">Representasi Data</a></li>
+      <li>Bagian 2: Sistem Bilangan</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <h1>🔢 Representasi Data dan Konversi Bilangan</h1>
+        <p class="sub-judul">Bagian 2: Mengenal Sistem Bilangan Biner, Oktal, dan Desimal</p>
+
+        <!-- Progress Bagian -->
+        <div class="bagian-progress">
+          <span class="step completed"><span class="num">✓</span> Pendahuluan</span>
+          <span class="step active"><span class="num">2</span> Sistem Bilangan</span>
+          <span class="step"><span class="num">3</span> Biner ↔ Desimal</span>
+          <span class="step"><span class="num">4</span> Biner ↔ Oktal</span>
+          <span class="step"><span class="num">5</span> Penerapan</span>
+        </div>
+
+        <!-- ===== MATERI ===== -->
+        <h2>📖 Mengenal Sistem Bilangan</h2>
+        <p>Setelah memahami mengapa komputer menggunakan biner, sekarang saatnya mengenal tiga sistem bilangan yang akan kita pelajari: <strong>desimal</strong>, <strong>biner</strong>, dan <strong>oktal</strong>.</p>
+
+        <h3>1. Sistem Desimal (Basis 10)</h3>
+        <p>Sistem yang kita gunakan sehari-hari. Menggunakan <strong>10 simbol</strong>: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9. Setiap posisi dalam bilangan desimal mewakili pangkat 10.</p>
+        <div class="highlight-box">
+          <strong>Contoh:</strong>
+          <p><code>234 = (2 × 100) + (3 × 10) + (4 × 1) = 200 + 30 + 4</code></p>
+        </div>
+
+        <h3>2. Sistem Biner (Basis 2)</h3>
+        <p>Sistem yang digunakan komputer. Hanya menggunakan <strong>2 simbol</strong>: 0 dan 1. Setiap posisi mewakili pangkat 2.</p>
+        <div class="highlight-box">
+          <strong>Contoh:</strong>
+          <p><code>1101 (biner) = (1 × 8) + (1 × 4) + (0 × 2) + (1 × 1) = 8 + 4 + 0 + 1 = 13 (desimal)</code></p>
+        </div>
+
+        <h3>3. Sistem Oktal (Basis 8)</h3>
+        <p>Sistem yang menggunakan <strong>8 simbol</strong>: 0, 1, 2, 3, 4, 5, 6, 7. Sistem ini sering digunakan sebagai cara singkat untuk menuliskan bilangan biner.</p>
+        <div class="highlight-box">
+          <strong>💡 Keistimewaan oktal:</strong>
+          <p><strong>1 digit oktal = 3 digit biner.</strong></p>
+          <p>Contoh: <code>5 (oktal) = 101 (biner)</code></p>
+        </div>
+
+        <h3>Tabel Hubungan Biner-Oktal-Desimal</h3>
+        <table class="tabel-hubungan">
+          <thead>
+            <tr>
+              <th>Desimal</th>
+              <th>Biner (3-bit)</th>
+              <th>Oktal</th>
+            </tr>
+          </thead>
+          <tbody id="tabelHubungan">
+            <!-- diisi JavaScript -->
+          </tbody>
+        </table>
+
+        <!-- ===== AKTIVITAS INTERAKTIF ===== -->
+        <h2>🎮 Aktivitas: "Kartu Biner Ajaib"</h2>
+        <p><strong>Tujuan:</strong> Memahami hubungan antara desimal, biner, dan oktal melalui manipulasi kartu visual.</p>
+
+        <!-- Mode Progress -->
+        <div class="mode-progress" id="modeProgress">
+          <span class="mode-item active" id="mode1Item">🔍 Mode 1: Jelajahi Kartu</span>
+          <span class="mode-item" id="mode2Item">🎯 Mode 2: Cocokkan Kartu</span>
+          <span class="mode-item" id="mode3Item">🚀 Mode 3: Tantangan Oktal</span>
+        </div>
+
+        <!-- Kartu Container -->
+        <div class="kartu-container">
+          <div class="kartu-title">🃏 KARTU BINER AJAIB</div>
+          <div class="kartu-sub">Klik kartu untuk membalik dan melihat kode binernya</div>
+
+          <!-- Mode Selector -->
+          <div class="mode-selector">
+            <button class="mode-btn active" data-mode="1" onclick="switchMode(1)">🔍 Jelajahi</button>
+            <button class="mode-btn" data-mode="2" onclick="switchMode(2)">🎯 Cocokkan</button>
+            <button class="mode-btn" data-mode="3" onclick="switchMode(3)">🚀 Tantangan</button>
+          </div>
+
+          <!-- MODE 1: JELAJAHI KARTU -->
+          <div class="mode-content active" id="mode1Content">
+            <p style="color:#a89688; font-size:0.85rem; margin-bottom:0.5rem;">
+              💡 Klik setiap kartu untuk membalik dan melihat hubungan antara angka desimal dengan kode biner 3-bit.
+            </p>
+            <div class="kartu-grid" id="kartuGrid">
+              <!-- diisi JavaScript -->
+            </div>
+            <div style="margin-top:0.5rem;">
+              <button class="btn-mesin secondary" onclick="resetKartu()">🔄 Reset Semua Kartu</button>
+            </div>
+          </div>
+
+          <!-- MODE 2: COCOKKAN KARTU -->
+          <div class="mode-content" id="mode2Content">
+            <p style="color:#a89688; font-size:0.85rem; margin-bottom:0.5rem;">
+              🎯 Seret atau klik kode biner yang tepat untuk setiap angka desimal!
+            </p>
+            <div class="cocokkan-container" id="cocokkanContainer">
+              <!-- diisi JavaScript -->
+            </div>
+            <div class="pilihan-biner" id="pilihanBiner">
+              <!-- diisi JavaScript -->
+            </div>
+            <div style="margin-top:0.5rem;">
+              <button class="btn-mesin primary" onclick="periksaCocokkan()">✅ Periksa Jawaban</button>
+              <button class="btn-mesin secondary" onclick="resetCocokkan()">🔄 Reset</button>
+            </div>
+            <div class="feedback-mesin" id="feedbackCocokkan"></div>
+          </div>
+
+          <!-- MODE 3: TANTANGAN OKTAL -->
+          <div class="mode-content" id="mode3Content">
+            <p style="color:#a89688; font-size:0.85rem; margin-bottom:0.5rem;">
+              🚀 Isi kode biner 3-bit untuk setiap angka oktal. Ingat: <strong>1 digit oktal = 3 digit biner</strong>.
+            </p>
+            <div class="oktal-container" id="oktalContainer">
+              <!-- diisi JavaScript -->
+            </div>
+            <div style="margin-top:0.5rem;">
+              <button class="btn-mesin primary" onclick="periksaOktal()">✅ Periksa Jawaban</button>
+              <button class="btn-mesin secondary" onclick="resetOktal()">🔄 Reset</button>
+            </div>
+            <div class="feedback-mesin" id="feedbackOktal"></div>
+          </div>
+
+        </div>
+
+        <!-- ===== SOAL TES PEMAHAMAN (PILIHAN GANDA) ===== -->
+        <h2>📝 Soal Tes Pemahaman</h2>
+        <p>Jawablah pertanyaan berikut dengan memilih satu jawaban yang paling tepat. Kamu harus menjawab <strong>semua soal dengan benar</strong> untuk membuka Bagian 3.</p>
+
+        <!-- Soal Progress -->
+        <div class="soal-progress">
+          <span class="progress-text" id="soalProgressText">Soal 0 dari 3</span>
+          <div class="progress-bar">
+            <div class="fill" id="soalProgressFill"></div>
+          </div>
+          <span class="score-text" id="soalScoreText">Benar: 0</span>
+        </div>
+
+        <!-- Soal Container -->
+        <div class="soal-section" id="soalContainer">
+          <!-- diisi JavaScript -->
+        </div>
+
+        <!-- Tombol Submit -->
+        <button class="btn-submit-soal" id="submitSoalBtn" onclick="submitSoal()">
+          ✅ Periksa Jawaban
+        </button>
+
+        <!-- ===== SYARAT KELULUSAN ===== -->
+        <div class="syarat-kelulusan">
+          <div class="syarat-title">📋 Syarat untuk Lanjut ke Bagian 3:</div>
+          <div class="syarat-item" id="syaratSimulasi">
+            <span class="status-icon">⏳</span> Menyelesaikan aktivitas "Kartu Biner Ajaib" (3 mode)
+          </div>
+          <div class="syarat-item" id="syaratSoal">
+            <span class="status-icon">⏳</span> Menjawab semua soal pemahaman dengan benar
+          </div>
+        </div>
+
+        <!-- ===== NAVIGASI ===== -->
+        <div class="nav-bottom">
+          <a href="bk5.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Bagian 1
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav primary locked" id="nextBtn" onclick="lanjutKeBagian3()">
+              Lanjut ke Bagian 3 →
+            </button>
+          </div>
+          <div class="nav-hint locked" id="nextHint">
+            🔒 Selesaikan aktivitas dan semua soal pemahaman untuk membuka Bagian 3
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js -->
+  <script src="script.js"></script>
+
+  <!-- ===== SCRIPT AKTIVITAS ===== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ===== STATE =====
+      let currentMode = 1;
+      let modeSelesai = { 1: false, 2: false, 3: false };
+      let aktivitasSelesai = false;
+
+      // State Mode 2
+      let cocokkanData = [];
+      let cocokkanAnswers = {};
+
+      // State Mode 3
+      let oktalData = [];
+
+      // State Soal
+      let soalAnswers = {};
+      let soalSubmitted = false;
+      let soalBenar = 0;
+      let semuaSoalBenar = false;
+
+      // ===== DATA =====
+      const kartuData = [
+        { desimal: 0, biner: '000' },
+        { desimal: 1, biner: '001' },
+        { desimal: 2, biner: '010' },
+        { desimal: 3, biner: '011' },
+        { desimal: 4, biner: '100' },
+        { desimal: 5, biner: '101' },
+        { desimal: 6, biner: '110' },
+        { desimal: 7, biner: '111' }
+      ];
+
+      const soalData = [
+        {
+          question: 'Berapa nilai desimal dari bilangan biner 1011?',
+          options: [
+            '9',
+            '10',
+            '11',
+            '12'
+          ],
+          correct: 2,
+          explanation: '1011 (biner) = (1×8) + (0×4) + (1×2) + (1×1) = 8 + 0 + 2 + 1 = 11.'
+        },
+        {
+          question: 'Konversikan bilangan desimal 9 ke biner dan oktal!',
+          options: [
+            'Biner: 1001, Oktal: 11',
+            'Biner: 1010, Oktal: 12',
+            'Biner: 1000, Oktal: 10',
+            'Biner: 1011, Oktal: 13'
+          ],
+          correct: 0,
+          explanation: '9 (desimal) = 1001 (biner) = 11 (oktal). Karena 1001 dikelompokkan menjadi 001|001 = 1|1 = 11 (oktal).'
+        },
+        {
+          question: 'Mengapa sistem oktal dianggap sebagai "jalan pintas" untuk biner? Jelaskan!',
+          options: [
+            'Karena oktal lebih mudah dihitung dari desimal',
+            'Karena 1 digit oktal = 3 digit biner, sehingga bilangan biner panjang bisa ditulis lebih singkat',
+            'Karena oktal menggunakan angka 0-7 yang lebih sedikit dari desimal',
+            'Karena oktal adalah sistem bilangan tertua'
+          ],
+          correct: 1,
+          explanation: 'Oktal disebut "jalan pintas" karena 1 digit oktal tepat sama dengan 3 digit biner. Contoh: 11010110 (biner) = 326 (oktal) — lebih singkat ditulis.'
+        }
+      ];
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        renderTabelHubungan();
+        renderKartu();
+        renderCocokkan();
+        renderOktal();
+        renderSoal();
+        updateSyarat();
+      });
+
+      // ===== TABEL HUBUNGAN =====
+      function renderTabelHubungan() {
+        const tbody = document.getElementById('tabelHubungan');
+        tbody.innerHTML = '';
+        kartuData.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="desimal-col">${item.desimal}</td>
+            <td class="biner-col">${item.biner}</td>
+            <td class="oktal-col">${item.desimal}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // ===== MODE 1: KARTU =====
+      function renderKartu() {
+        const grid = document.getElementById('kartuGrid');
+        grid.innerHTML = '';
+
+        kartuData.forEach((item, index) => {
+          const kartu = document.createElement('div');
+          kartu.className = 'kartu-item';
+          kartu.onclick = function() { flipKartu(this); };
+          kartu.innerHTML = `
+            <div class="kartu-inner">
+              <div class="kartu-front">
+                <div class="angka">${item.desimal}</div>
+                <div class="label">Desimal</div>
+              </div>
+              <div class="kartu-back">
+                <div class="biner">${item.biner}</div>
+                <div class="label">Biner</div>
+              </div>
+            </div>
+          `;
+          grid.appendChild(kartu);
+        });
+      }
+
+      window.flipKartu = function(el) {
+        el.classList.toggle('flipped');
+        // Cek jika semua kartu sudah dibalik
+        const allKartu = document.querySelectorAll('.kartu-item');
+        const flipped = document.querySelectorAll('.kartu-item.flipped');
+        if (flipped.length === allKartu.length) {
+          modeSelesai[1] = true;
+          updateModeProgress();
+          updateSyarat();
+        }
+      };
+
+      window.resetKartu = function() {
+        document.querySelectorAll('.kartu-item').forEach(el => {
+          el.classList.remove('flipped');
+        });
+        modeSelesai[1] = false;
+        updateModeProgress();
+        updateSyarat();
+      };
+
+      // ===== MODE 2: COCOKKAN =====
+      function renderCocokkan() {
+        // Buat 4 soal acak
+        const shuffled = [...kartuData].sort(() => Math.random() - 0.5);
+        cocokkanData = shuffled.slice(0, 4);
+
+        const container = document.getElementById('cocokkanContainer');
+        container.innerHTML = '';
+        cocokkanAnswers = {};
+
+        cocokkanData.forEach((item, index) => {
+          const div = document.createElement('div');
+          div.className = 'cocokkan-item';
+          div.innerHTML = `
+            <div class="soal-desimal">${item.desimal}</div>
+            <div style="color:#a89688;">→</div>
+            <div class="jawaban-slot" id="slot_${index}" data-index="${index}">?</div>
+          `;
+          container.appendChild(div);
+        });
+
+        // Pilihan biner
+        const pilihan = document.getElementById('pilihanBiner');
+        pilihan.innerHTML = '';
+        const binerOptions = cocokkanData.map(item => item.biner).sort(() => Math.random() - 0.5);
+        
+        binerOptions.forEach((biner, index) => {
+          const btn = document.createElement('button');
+          btn.className = 'biner-btn';
+          btn.textContent = biner;
+          btn.dataset.biner = biner;
+          btn.onclick = function() { pilihBiner(this, biner); };
+          pilihan.appendChild(btn);
+        });
+
+        document.getElementById('feedbackCocokkan').className = 'feedback-mesin';
+      }
+
+      let selectedBiner = null;
+      let selectedBinerBtn = null;
+
+      window.pilihBiner = function(btn, biner) {
+        if (btn.classList.contains('used')) return;
+        
+        // Jika sudah ada yang dipilih, kembalikan
+        if (selectedBinerBtn) {
+          selectedBinerBtn.classList.remove('selected');
+        }
+
+        selectedBiner = biner;
+        selectedBinerBtn = btn;
+        btn.classList.add('selected');
+      };
+
+      // Override: klik slot untuk mengisi dengan biner terpilih
+      document.addEventListener('click', function(e) {
+        const slot = e.target.closest('.jawaban-slot');
+        if (slot && selectedBiner) {
+          const index = parseInt(slot.dataset.index);
+          const correctBiner = cocokkanData[index].biner;
+
+          // Isi slot
+          slot.textContent = selectedBiner;
+          slot.classList.add('filled');
+          cocokkanAnswers[index] = selectedBiner;
+
+          // Tandai tombol sebagai used
+          if (selectedBinerBtn) {
+            selectedBinerBtn.classList.add('used');
+            selectedBinerBtn.classList.remove('selected');
+          }
+
+          selectedBiner = null;
+          selectedBinerBtn = null;
+
+          // Cek jika semua slot terisi
+          const allSlots = document.querySelectorAll('.jawaban-slot');
+          const filled = document.querySelectorAll('.jawaban-slot.filled');
+          if (filled.length === allSlots.length) {
+            // Auto-check
+            setTimeout(periksaCocokkan, 300);
+          }
+        }
+      });
+
+      window.periksaCocokkan = function() {
+        const feedback = document.getElementById('feedbackCocokkan');
+        let correct = 0;
+
+        cocokkanData.forEach((item, index) => {
+          const slot = document.getElementById(`slot_${index}`);
+          const answer = cocokkanAnswers[index];
+          
+          if (answer === item.biner) {
+            slot.classList.add('correct');
+            correct++;
+          } else if (answer) {
+            slot.classList.add('wrong');
+          }
+        });
+
+        if (correct === cocokkanData.length) {
+          feedback.className = 'feedback-mesin show success';
+          feedback.innerHTML = '🎉 <strong>Semua benar!</strong> Kamu telah menguasai hubungan Desimal ↔ Biner untuk angka 0-7!';
+          modeSelesai[2] = true;
+          updateModeProgress();
+          updateSyarat();
+        } else {
+          feedback.className = 'feedback-mesin show info';
+          feedback.innerHTML = `💡 <strong>${correct} dari ${cocokkanData.length}</strong> benar. Periksa kembali pasangan yang salah (merah).`;
+        }
+      };
+
+      window.resetCocokkan = function() {
+        renderCocokkan();
+        modeSelesai[2] = false;
+        updateModeProgress();
+        updateSyarat();
+        selectedBiner = null;
+        selectedBinerBtn = null;
+      };
+
+      // ===== MODE 3: OKTAL =====
+      function renderOktal() {
+        const container = document.getElementById('oktalContainer');
+        container.innerHTML = '';
+
+        // Buat 5 soal acak oktal
+        const shuffled = [...kartuData].sort(() => Math.random() - 0.5);
+        oktalData = shuffled.slice(0, 5);
+
+        const row = document.createElement('div');
+        row.className = 'oktal-row';
+
+        oktalData.forEach((item, index) => {
+          const div = document.createElement('div');
+          div.className = 'oktal-item';
+          div.innerHTML = `
+            <div class="oktal-label">Oktal</div>
+            <div class="oktal-angka">${item.desimal}</div>
+            <div class="oktal-label">Biner 3-bit</div>
+            <input type="text" class="oktal-input" id="oktal_${index}" maxlength="3" placeholder="000" data-index="${index}">
+          `;
+          row.appendChild(div);
+        });
+
+        container.appendChild(row);
+        document.getElementById('feedbackOktal').className = 'feedback-mesin';
+      }
+
+      window.periksaOktal = function() {
+        const feedback = document.getElementById('feedbackOktal');
+        let correct = 0;
+        let filled = 0;
+
+        oktalData.forEach((item, index) => {
+          const input = document.getElementById(`oktal_${index}`);
+          const answer = input.value.trim();
+          
+          if (answer) filled++;
+          
+          if (answer === item.biner) {
+            input.classList.add('correct');
+            input.classList.remove('wrong');
+            correct++;
+          } else if (answer) {
+            input.classList.add('wrong');
+            input.classList.remove('correct');
+          }
+        });
+
+        if (correct === oktalData.length) {
+          feedback.className = 'feedback-mesin show success';
+          feedback.innerHTML = '🎉 <strong>Semua benar!</strong> Kamu telah menguasai hubungan Oktal ↔ Biner!';
+          modeSelesai[3] = true;
+          updateModeProgress();
+          updateSyarat();
+        } else {
+          feedback.className = 'feedback-mesin show info';
+          feedback.innerHTML = `💡 <strong>${correct} dari ${oktalData.length}</strong> benar. Ingat: 1 digit oktal = 3 digit biner (contoh: 5 = 101).`;
+        }
+      };
+
+      window.resetOktal = function() {
+        renderOktal();
+        modeSelesai[3] = false;
+        updateModeProgress();
+        updateSyarat();
+      };
+
+      // ===== SWITCH MODE =====
+      window.switchMode = function(mode) {
+        currentMode = mode;
+
+        // Update button
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+          btn.classList.remove('active');
+          if (parseInt(btn.dataset.mode) === mode) btn.classList.add('active');
+        });
+
+        // Update content
+        document.querySelectorAll('.mode-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById('mode' + mode + 'Content').classList.add('active');
+      };
+
+      // ===== UPDATE MODE PROGRESS =====
+      function updateModeProgress() {
+        for (let i = 1; i <= 3; i++) {
+          const el = document.getElementById('mode' + i + 'Item');
+          el.classList.remove('active', 'completed');
+          
+          if (modeSelesai[i]) {
+            el.classList.add('completed');
+            el.innerHTML = '✅ Mode ' + i + ': Selesai!';
+          } else if (i === currentMode) {
+            el.classList.add('active');
+          }
+        }
+
+        // Cek apakah semua mode selesai
+        if (modeSelesai[1] && modeSelesai[2] && modeSelesai[3]) {
+          aktivitasSelesai = true;
+        }
+      }
+
+      // ===== RENDER SOAL =====
+      function renderSoal() {
+        const container = document.getElementById('soalContainer');
+        container.innerHTML = '';
+
+        soalData.forEach((soal, index) => {
+          const soalDiv = document.createElement('div');
+          soalDiv.className = 'soal-item';
+          soalDiv.dataset.soalIndex = index;
+
+          let optionsHtml = '';
+          soal.options.forEach((opt, optIndex) => {
+            const id = `soal${index}_opt${optIndex}`;
+            optionsHtml += `
+              <label for="${id}" onclick="pilihJawaban(${index}, ${optIndex})" id="label_${index}_${optIndex}">
+                <input type="radio" name="soal${index}" id="${id}" value="${optIndex}">
+                <span>${opt}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          soalDiv.innerHTML = `
+            <div class="soal-text">
+              <span class="soal-number">${index + 1}</span>
+              <span>${soal.question}</span>
+            </div>
+            <div class="soal-options">
+              ${optionsHtml}
+            </div>
+            <div class="feedback-text" id="soalFeedback_${index}" style="display:none; margin-top:0.8rem; padding:0.6rem 1rem; border-radius:8px; font-size:0.85rem;"></div>
+          `;
+
+          container.appendChild(soalDiv);
+        });
+      }
+
+      // ===== PILIH JAWABAN =====
+      window.pilihJawaban = function(soalIndex, optIndex) {
+        if (soalSubmitted) return;
+
+        const soalDiv = document.querySelector(`.soal-item[data-soal-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.soal-options label');
+
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+
+        soalAnswers[soalIndex] = optIndex;
+        updateSoalProgress();
+      };
+
+      // ===== UPDATE SOAL PROGRESS =====
+      function updateSoalProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(soalAnswers).length;
+        const progress = (answered / total) * 100;
+
+        document.getElementById('soalProgressText').textContent = `Soal ${answered} dari ${total}`;
+        document.getElementById('soalProgressFill').style.width = progress + '%';
+      }
+
+      // ===== SUBMIT SOAL =====
+      window.submitSoal = function() {
+        if (soalSubmitted) return;
+
+        const total = soalData.length;
+        const answered = Object.keys(soalAnswers).length;
+
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
+          return;
+        }
+
+        let correct = 0;
+        soalData.forEach((soal, index) => {
+          const selected = soalAnswers[index];
+          const soalDiv = document.querySelector(`.soal-item[data-soal-index="${index}"]`);
+          const labels = soalDiv.querySelectorAll('.soal-options label');
+          const feedback = document.getElementById(`soalFeedback_${index}`);
+
+          labels.forEach((label, idx) => {
+            label.classList.add('disabled');
+            if (idx === soal.correct) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+            if (idx === selected && selected !== soal.correct) {
+              label.classList.add('wrong-answer');
+              label.querySelector('.check-icon').textContent = '❌';
+            }
+          });
+
+          if (selected === soal.correct) {
+            soalDiv.classList.add('correct');
+            correct++;
+            feedback.style.display = 'block';
+            feedback.style.background = '#e8f5e0';
+            feedback.style.color = '#2d5a1e';
+            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.explanation}`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.style.display = 'block';
+            feedback.style.background = '#f5e0e0';
+            feedback.style.color = '#5a2a2a';
+            feedback.innerHTML = `❌ <strong>Belum tepat.</strong> Jawaban yang benar adalah: <strong>${soal.options[soal.correct]}</strong><br><span style="font-size:0.8rem;">${soal.explanation}</span>`;
+          }
+        });
+
+        soalBenar = correct;
+        soalSubmitted = true;
+
+        document.getElementById('submitSoalBtn').disabled = true;
+        document.getElementById('submitSoalBtn').textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+        document.getElementById('soalScoreText').textContent = `Benar: ${correct}/${total}`;
+
+        if (correct === total) {
+          semuaSoalBenar = true;
+          updateSyarat();
+        } else {
+          setTimeout(() => {
+            if (confirm(`Kamu menjawab benar ${correct} dari ${total} soal. Ingin mencoba lagi?`)) {
+              resetSoal();
+            }
+          }, 1500);
+        }
+      };
+
+      // ===== RESET SOAL =====
+      window.resetSoal = function() {
+        soalAnswers = {};
+        soalSubmitted = false;
+        soalBenar = 0;
+        semuaSoalBenar = false;
+
+        document.getElementById('submitSoalBtn').disabled = false;
+        document.getElementById('submitSoalBtn').textContent = '✅ Periksa Jawaban';
+        document.getElementById('soalScoreText').textContent = 'Benar: 0';
+        document.getElementById('soalProgressText').textContent = 'Soal 0 dari 3';
+        document.getElementById('soalProgressFill').style.width = '0%';
+
+        renderSoal();
+        updateSyarat();
+      };
+
+      // ===== UPDATE SYARAT =====
+      function updateSyarat() {
+        const syaratSimulasi = document.getElementById('syaratSimulasi');
+        const syaratSoal = document.getElementById('syaratSoal');
+
+        // Syarat 1: Aktivitas
+        if (aktivitasSelesai) {
+          syaratSimulasi.className = 'syarat-item done';
+          syaratSimulasi.innerHTML = '<span class="status-icon">✅</span> Aktivitas "Kartu Biner Ajaib" — Selesai!';
+        } else {
+          const done = Object.values(modeSelesai).filter(Boolean).length;
+          syaratSimulasi.className = 'syarat-item pending';
+          syaratSimulasi.innerHTML = `<span class="status-icon">⏳</span> Aktivitas "Kartu Biner Ajaib" (${done}/3 mode)`;
+        }
+
+        // Syarat 2: Soal
+        if (semuaSoalBenar) {
+          syaratSoal.className = 'syarat-item done';
+          syaratSoal.innerHTML = '<span class="status-icon">✅</span> Soal pemahaman — Semua benar!';
+        } else {
+          const answered = Object.keys(soalAnswers).length;
+          syaratSoal.className = 'syarat-item pending';
+          syaratSoal.innerHTML = `<span class="status-icon">⏳</span> Soal pemahaman (${answered}/3 soal dijawab)`;
+        }
+
+        updateNavigasi();
+      }
+
+      // ===== UPDATE NAVIGASI =====
+      function updateNavigasi() {
+        const nextBtn = document.getElementById('nextBtn');
+        const nextHint = document.getElementById('nextHint');
+
+        if (aktivitasSelesai && semuaSoalBenar) {
+          nextBtn.classList.remove('locked');
+          nextBtn.classList.add('primary');
+          nextHint.classList.remove('locked');
+          nextHint.classList.add('ready');
+          nextHint.textContent = '✅ Bagian 3 sudah terbuka! Klik untuk melanjutkan.';
+        } else {
+          nextBtn.classList.add('locked');
+          nextBtn.classList.remove('primary');
+          nextHint.classList.add('locked');
+          nextHint.classList.remove('ready');
+          
+          if (!aktivitasSelesai && !semuaSoalBenar) {
+            nextHint.textContent = '🔒 Selesaikan aktivitas dan semua soal pemahaman untuk membuka Bagian 3';
+          } else if (!aktivitasSelesai) {
+            nextHint.textContent = '🔒 Selesaikan aktivitas "Kartu Biner Ajaib" terlebih dahulu';
+          } else {
+            nextHint.textContent = '🔒 Jawab semua soal pemahaman dengan benar untuk membuka Bagian 3';
+          }
+        }
+      }
+
+      // ===== LANJUT KE BAGIAN 3 =====
+      window.lanjutKeBagian3 = function() {
+        if (!aktivitasSelesai || !semuaSoalBenar) {
+          alert('🔒 Selesaikan dulu aktivitas dan semua soal pemahaman!');
+          return;
+        }
+        window.location.href = 'bk5b.html';
+      };
+
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Representasi Data · Bagian 4: Biner ↔ Oktal</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* (CSS sama seperti sebelumnya - tidak berubah) */
+    .materi-container { max-width: 900px; margin: 0 auto; }
+    .materi-container h1 {
+      font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem; color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .materi-container .sub-judul {
+      font-size: 1.1rem; color: #5c4638; margin-bottom: 2rem;
+      border-left: 4px solid #dbb9a6; padding-left: 1rem; font-style: italic;
+    }
+    .materi-container h2 {
+      font-size: 1.5rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: #4d3829;
+      border-left: 6px solid #dbb9a6; padding-left: 1rem;
+    }
+    .materi-container h3 { font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.5rem 0; color: #4d3829; }
+    .materi-container p { margin-bottom: 1rem; color: #2f2822; line-height: 1.8; }
+    .materi-container ul, .materi-container ol { margin: 0.5rem 0 1.2rem 1.8rem; }
+    .materi-container li { margin-bottom: 0.4rem; color: #2f2822; }
+    .materi-container .highlight-box {
+      background: #f5ede6; padding: 1.2rem 1.8rem; border-radius: 16px;
+      border-left: 8px solid #dbb9a6; margin: 1.5rem 0;
+    }
+    .materi-container .highlight-box strong { color: #4d3829; }
+    .materi-container .highlight-box ul { margin-bottom: 0; }
+    .materi-container code {
+      background: #f0ece6; padding: 0.1rem 0.4rem; border-radius: 4px;
+      font-family: 'Courier New', monospace; font-size: 0.95rem; color: #4d3829;
+    }
+    .bagian-progress { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin: 1rem 0 2rem 0; }
+    .bagian-progress .step {
+      display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 1rem;
+      border-radius: 30px; background: #f5ede6; border: 2px solid #e5dbd0;
+      font-size: 0.8rem; font-weight: 600; color: #7a6656; transition: all 0.3s ease;
+    }
+    .bagian-progress .step.active { background: #4d3829; border-color: #4d3829; color: #fff; }
+    .bagian-progress .step.completed { background: #8aaa7a; border-color: #8aaa7a; color: #fff; }
+    .bagian-progress .step .num {
+      width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center; font-size: 0.7rem;
+    }
+    .tabel-referensi {
+      width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem;
+      border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .tabel-referensi thead { background: #4d3829; color: #fff; }
+    .tabel-referensi th { padding: 0.8rem 1rem; text-align: center; font-weight: 600; }
+    .tabel-referensi td {
+      padding: 0.7rem 1rem; border-bottom: 1px solid #e5dbd0; background: #fffffffa;
+      text-align: center; font-family: 'Courier New', monospace; font-size: 1rem;
+      font-weight: 600; color: #3b2b1e;
+    }
+    .tabel-referensi tr:last-child td { border-bottom: none; }
+    .tabel-referensi tr:hover td { background: #f8f3ee; }
+    .tabel-referensi .oktal-col { color: #2d5a1e; }
+    .tabel-referensi .biner-col { color: #1a4a6b; }
+    .kelompok-container {
+      background: #2f2822; border-radius: 24px; padding: 2rem; margin: 1.5rem 0;
+      text-align: center; border: 4px solid #dbb9a6;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15); position: relative; overflow: hidden;
+    }
+    .kelompok-container::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+      background: linear-gradient(90deg, #8aaa7a, #8ab4d4, #f5c842, #8aaa7a);
+      background-size: 200% 100%; animation: gradientMove 3s linear infinite;
+    }
+    @keyframes gradientMove { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+    .kelompok-container .kelompok-title {
+      font-size: 1.2rem; font-weight: 700; color: #dbb9a6; margin-bottom: 0.3rem;
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .kelompok-container .kelompok-sub { font-size: 0.85rem; color: #a89688; margin-bottom: 1.5rem; }
+    .ref-tabel-mini {
+      display: flex; flex-wrap: wrap; gap: 0.3rem; justify-content: center;
+      margin-bottom: 1.5rem; padding: 0.8rem; background: rgba(219, 185, 166, 0.08);
+      border-radius: 12px; border: 1px solid rgba(219, 185, 166, 0.15);
+    }
+    .ref-tabel-mini .ref-item {
+      display: flex; flex-direction: column; align-items: center; padding: 0.4rem 0.6rem;
+      background: rgba(47, 40, 34, 0.5); border-radius: 8px;
+      border: 1px solid rgba(219, 185, 166, 0.2); min-width: 50px;
+    }
+    .ref-tabel-mini .ref-item .oktal-val { color: #8aaa7a; font-family: 'Courier New', monospace; font-size: 1rem; font-weight: 700; }
+    .ref-tabel-mini .ref-item .arrow-val { color: #a89688; font-size: 0.7rem; }
+    .ref-tabel-mini .ref-item .biner-val { color: #8ab4d4; font-family: 'Courier New', monospace; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; }
+    .mode-selector { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem; }
+    .mode-btn {
+      padding: 0.5rem 1.2rem; border-radius: 30px; border: 2px solid rgba(219, 185, 166, 0.3);
+      background: rgba(219, 185, 166, 0.1); color: #dbb9a6; font-weight: 600;
+      font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+    }
+    .mode-btn:hover { background: rgba(219, 185, 166, 0.2); border-color: #dbb9a6; }
+    .mode-btn.active { background: #dbb9a6; border-color: #dbb9a6; color: #2f2822; }
+    .mode-content { display: none; }
+    .mode-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .input-group { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; align-items: center; margin: 1rem 0; }
+    .input-group label { color: #dbb9a6; font-weight: 600; font-size: 0.9rem; }
+    .input-group input[type="text"] {
+      padding: 0.7rem 1.2rem; border-radius: 12px; border: 2px solid rgba(219, 185, 166, 0.3);
+      background: rgba(47, 40, 34, 0.5); color: #f5c842; font-family: 'Courier New', monospace;
+      font-size: 1.2rem; font-weight: 700; text-align: center; letter-spacing: 2px; width: 200px;
+    }
+    .input-group input:focus { outline: none; border-color: #f5c842; box-shadow: 0 0 15px rgba(245, 200, 66, 0.3); }
+    .step-visual {
+      margin: 1.5rem 0; padding: 1.5rem; background: rgba(219, 185, 166, 0.08);
+      border-radius: 16px; border: 1px solid rgba(219, 185, 166, 0.2);
+      min-height: 100px; display: none;
+    }
+    .step-visual.show { display: block; animation: fadeIn 0.4s ease; }
+    .step-visual .step-title {
+      color: #dbb9a6; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .bit-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.3rem; margin-bottom: 1rem; }
+    .bit-card {
+      width: 40px; height: 40px; border-radius: 8px; display: flex;
+      align-items: center; justify-content: center; font-family: 'Courier New', monospace;
+      font-size: 1.1rem; font-weight: 700; background: rgba(219, 185, 166, 0.15);
+      color: #a89688; border: 2px solid rgba(219, 185, 166, 0.2); transition: all 0.3s ease;
+    }
+    .bit-card.bit-1 { background: linear-gradient(135deg, #f5c842, #d4a030); color: #2f2822; box-shadow: 0 0 10px rgba(245, 200, 66, 0.4); }
+    .bit-card.group-separator { margin-left: 0.6rem; border-left: 3px solid #dbb9a6; }
+    .grup-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 1rem 0; }
+    .grup-box {
+      display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+      padding: 0.8rem 1rem; background: rgba(138, 180, 212, 0.1);
+      border: 2px solid #8ab4d4; border-radius: 12px;
+    }
+    .grup-box .grup-biner { font-family: 'Courier New', monospace; font-size: 1.2rem; font-weight: 700; color: #8ab4d4; letter-spacing: 2px; }
+    .grup-box .grup-arrow { color: #a89688; font-size: 0.9rem; }
+    .grup-box .grup-oktal { font-family: 'Courier New', monospace; font-size: 1.5rem; font-weight: 700; color: #8aaa7a; }
+    .grup-box .grup-label { font-size: 0.6rem; color: #a89688; text-transform: uppercase; letter-spacing: 1px; }
+    .hasil-box {
+      margin-top: 1rem; padding: 0.8rem 1.5rem; background: rgba(138, 170, 122, 0.15);
+      border: 2px solid #8aaa7a; border-radius: 12px; color: #c8e6c8;
+      font-family: 'Courier New', monospace; font-size: 1.3rem; font-weight: 700;
+      letter-spacing: 3px; text-align: center;
+    }
+    .hasil-box .label {
+      font-size: 0.7rem; color: #a8d4a8; letter-spacing: 1px; display: block;
+      margin-bottom: 0.3rem; font-family: system-ui, sans-serif;
+    }
+    .oktal-row-input { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 1rem 0; }
+    .oktal-digit-box {
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      padding: 1rem; background: rgba(138, 170, 122, 0.1);
+      border: 2px solid #8aaa7a; border-radius: 12px; min-width: 80px;
+    }
+    .oktal-digit-box .oktal-digit { font-family: 'Courier New', monospace; font-size: 2rem; font-weight: 700; color: #8aaa7a; }
+    .oktal-digit-box .oktal-label { font-size: 0.65rem; color: #a89688; text-transform: uppercase; }
+    .oktal-digit-box .biner-hasil { font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 700; color: #8ab4d4; letter-spacing: 2px; }
+    .tantangan-container { max-width: 500px; margin: 0 auto; }
+    .tantangan-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1rem; padding: 0.6rem 1rem;
+      background: rgba(219, 185, 166, 0.08); border-radius: 10px;
+    }
+    .tantangan-header .timer { color: #f5c842; font-family: 'Courier New', monospace; font-size: 1.3rem; font-weight: 700; }
+    .tantangan-header .skor { color: #8aaa7a; font-weight: 700; font-size: 0.9rem; }
+    .tantangan-soal {
+      background: rgba(219, 185, 166, 0.08); border-radius: 16px; padding: 1.5rem;
+      margin-bottom: 1rem; border: 1px solid rgba(219, 185, 166, 0.2); text-align: center;
+    }
+    .tantangan-soal .soal-label {
+      color: #a89688; font-size: 0.8rem; margin-bottom: 0.5rem;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .tantangan-soal .soal-value {
+      color: #f5c842; font-family: 'Courier New', monospace; font-size: 2rem;
+      font-weight: 700; letter-spacing: 3px; margin-bottom: 1rem;
+    }
+    .tantangan-soal input {
+      width: 100%; padding: 0.8rem 1.2rem; border-radius: 12px;
+      border: 2px solid rgba(219, 185, 166, 0.3); background: rgba(47, 40, 34, 0.5);
+      color: #f5c842; font-family: 'Courier New', monospace; font-size: 1.2rem;
+      font-weight: 700; text-align: center; letter-spacing: 3px; box-sizing: border-box;
+    }
+    .tantangan-soal input:focus { outline: none; border-color: #f5c842; }
+    .tantangan-soal input.correct { border-color: #8aaa7a; background: rgba(138, 170, 122, 0.2); color: #c8e6c8; }
+    .tantangan-soal input.wrong { border-color: #d4a0a0; background: rgba(212, 160, 160, 0.2); color: #e0c8c8; }
+    .tantangan-soal .btn-kirim {
+      margin-top: 0.8rem; padding: 0.6rem 2rem; border-radius: 30px; border: none;
+      background: linear-gradient(135deg, #8ab4d4, #6a94b4); color: #fff;
+      font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+    }
+    .tantangan-soal .btn-kirim:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(138, 180, 212, 0.4); }
+    .btn-konversi {
+      padding: 0.7rem 2rem; border-radius: 30px; border: none; font-weight: 700;
+      font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease; font-family: inherit; margin: 0.3rem;
+    }
+    .btn-konversi.primary {
+      background: linear-gradient(135deg, #f5c842, #d4a030); color: #2f2822;
+      box-shadow: 0 4px 14px rgba(245, 200, 66, 0.3);
+    }
+    .btn-konversi.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245, 200, 66, 0.5); }
+    .btn-konversi.secondary { background: rgba(219, 185, 166, 0.2); color: #dbb9a6; border: 2px solid rgba(219, 185, 166, 0.3); }
+    .btn-konversi.secondary:hover { background: rgba(219, 185, 166, 0.3); border-color: #dbb9a6; }
+    .btn-konversi:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+    .feedback-konversi {
+      margin-top: 1rem; padding: 1rem 1.5rem; border-radius: 12px;
+      font-weight: 600; display: none; font-size: 0.95rem;
+    }
+    .feedback-konversi.show { display: block; animation: fadeIn 0.4s ease; }
+    .feedback-konversi.success { background: rgba(138, 170, 122, 0.2); border: 2px solid #8aaa7a; color: #c8e6c8; }
+    .feedback-konversi.info { background: rgba(138, 180, 212, 0.15); border: 2px solid #8ab4d4; color: #c8e0f0; }
+    .feedback-konversi.error { background: rgba(212, 160, 160, 0.15); border: 2px solid #d4a0a0; color: #e0c8c8; }
+    .mode-progress { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin: 1rem 0; }
+    .mode-progress .mode-item {
+      display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 1rem;
+      border-radius: 20px; background: rgba(219, 185, 166, 0.1);
+      border: 2px solid rgba(219, 185, 166, 0.2); font-size: 0.75rem;
+      color: #a89688; font-weight: 600;
+    }
+    .mode-progress .mode-item.active { background: rgba(245, 200, 66, 0.15); border-color: #f5c842; color: #f5c842; }
+    .mode-progress .mode-item.completed { background: rgba(138, 170, 122, 0.2); border-color: #8aaa7a; color: #c8e6c8; }
+    .soal-section { margin: 1.5rem 0; }
+    .soal-item {
+      background: #fff; border-radius: 16px; padding: 1.5rem; border: 2px solid #e5dbd0;
+      margin-bottom: 1rem; transition: all 0.3s ease;
+    }
+    .soal-item.correct { border-color: #8aaa7a; background: #f0f8eb; }
+    .soal-item.wrong { border-color: #d4a0a0; background: #fdf0f0; }
+    .soal-item .soal-text {
+      font-weight: 600; color: #3b2b1e; font-size: 1rem; margin-bottom: 0.8rem;
+      display: flex; align-items: flex-start; gap: 0.5rem;
+    }
+    .soal-item .soal-number {
+      display: inline-block; background: #4d3829; color: #fff; width: 28px;
+      height: 28px; border-radius: 50%; text-align: center; line-height: 28px;
+      font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+    }
+    .soal-options { display: flex; flex-direction: column; gap: 0.5rem; }
+    .soal-options label {
+      display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.6rem 1rem;
+      border-radius: 10px; border: 2px solid #e5dbd0; cursor: pointer;
+      transition: all 0.2s ease; font-size: 0.9rem; color: #2f2822;
+    }
+    .soal-options label:hover:not(.disabled) { background: #f5ede6; border-color: #b09b88; }
+    .soal-options label.disabled { cursor: default; }
+    .soal-options label.selected { border-color: #4d3829; background: #f5ede6; }
+    .soal-options label.correct-answer { border-color: #8aaa7a; background: #e8f5e0; }
+    .soal-options label.wrong-answer { border-color: #d4a0a0; background: #f5e0e0; }
+    .soal-options input[type="radio"] { accent-color: #4d3829; width: 18px; height: 18px; margin-top: 0.15rem; flex-shrink: 0; }
+    .soal-options .check-icon { margin-left: auto; font-size: 1rem; flex-shrink: 0; }
+    .soal-progress {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+      gap: 0.5rem; margin: 1rem 0; padding: 0.8rem 1.2rem;
+      background: #f8f4ef; border-radius: 12px; border: 2px solid #e5dbd0;
+    }
+    .soal-progress .progress-text { font-weight: 600; color: #3b2b1e; font-size: 0.9rem; }
+    .soal-progress .progress-bar { flex: 1; height: 8px; background: #e5dbd0; border-radius: 4px; overflow: hidden; min-width: 100px; }
+    .soal-progress .progress-bar .fill { height: 100%; background: #4d3829; border-radius: 4px; transition: width 0.5s ease; width: 0%; }
+    .soal-progress .score-text { font-size: 0.8rem; color: #7a6656; font-weight: 600; }
+    .btn-submit-soal {
+      display: block; margin: 1.5rem auto 0; padding: 0.8rem 2.5rem;
+      border-radius: 30px; border: none; background: #4d3829; color: #fff;
+      font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+    }
+    .btn-submit-soal:hover { background: #6b4f3a; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(75, 46, 30, 0.3); }
+    .btn-submit-soal:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+    .syarat-kelulusan {
+      background: #f8f4ef; border-radius: 12px; padding: 1rem 1.5rem;
+      margin: 1rem 0; border: 2px solid #e5dbd0;
+    }
+    .syarat-kelulusan .syarat-title { font-weight: 700; color: #3b2b1e; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .syarat-kelulusan .syarat-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.85rem; color: #5c4638; }
+    .syarat-kelulusan .syarat-item .status-icon { font-size: 1rem; }
+    .syarat-kelulusan .syarat-item.done { color: #2d5a1e; font-weight: 600; }
+    .syarat-kelulusan .syarat-item.pending { color: #d4a040; }
+    .nav-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid #e5dbd0;
+    }
+    .btn-nav {
+      padding: 0.6rem 1.8rem; border-radius: 30px; border: 2px solid #d9cdbf;
+      background: #fff; font-weight: 600; font-size: 0.9rem; color: #3b2b1e;
+      cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-nav:hover { background: #f5ede6; border-color: #b09b88; transform: translateY(-2px); }
+    .btn-nav.primary { background: #4d3829; border-color: #4d3829; color: #fff; }
+    .btn-nav.primary:hover { background: #6b4f3a; border-color: #6b4f3a; }
+    .btn-nav:disabled, .btn-nav.locked { opacity: 0.4; cursor: not-allowed; transform: none !important; pointer-events: none; }
+    .btn-nav .back-arrow { font-size: 1.2rem; }
+    .nav-hint { font-size: 0.8rem; color: #7a6656; text-align: center; width: 100%; margin-top: 0.3rem; }
+    .nav-hint.locked { color: #d4a0a0; }
+    .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+    @media (max-width: 720px) {
+      .materi-container h1 { font-size: 1.7rem; }
+      .materi-container h2 { font-size: 1.3rem; }
+      .kelompok-container { padding: 1.2rem; }
+      .bit-card { width: 32px; height: 32px; font-size: 0.9rem; }
+      .input-group input[type="text"] { width: 160px; font-size: 1rem; }
+      .soal-item { padding: 1rem; }
+      .soal-options label { font-size: 0.8rem; padding: 0.5rem 0.8rem; }
+    }
+    @media (max-width: 480px) {
+      .bit-card { width: 26px; height: 26px; font-size: 0.75rem; border-radius: 5px; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+      .soal-progress { flex-direction: column; align-items: stretch; text-align: center; }
+      .mode-selector { flex-direction: column; align-items: stretch; }
+      .mode-btn { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk5.html">Representasi Data</a></li>
+      <li>Bagian 4: Biner ↔ Oktal</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <h1>🔢 Representasi Data dan Konversi Bilangan</h1>
+        <p class="sub-judul">Bagian 4: Konversi Biner ke Oktal dan Sebaliknya</p>
+
+        <div class="bagian-progress">
+          <span class="step completed"><span class="num">✓</span> Pendahuluan</span>
+          <span class="step completed"><span class="num">✓</span> Sistem Bilangan</span>
+          <span class="step completed"><span class="num">✓</span> Biner ↔ Desimal</span>
+          <span class="step active"><span class="num">4</span> Biner ↔ Oktal</span>
+          <span class="step"><span class="num">5</span> Penerapan</span>
+        </div>
+
+        <h2>📖 Konversi Biner ↔ Oktal</h2>
+        <p>Selain desimal, kita juga perlu memahami konversi ke oktal. Mengapa? Karena oktal sering digunakan sebagai cara singkat untuk menuliskan bilangan biner yang panjang.</p>
+
+        <div class="highlight-box">
+          <strong>🔑 Kunci utama:</strong>
+          <p><strong>1 digit oktal = 3 digit biner.</strong></p>
+        </div>
+
+        <h3>A. Biner ke Oktal</h3>
+        <p>Kelompokkan digit biner menjadi kelompok 3-bit, mulai dari kanan (LSB). Jika kelompok terakhir kurang dari 3 bit, tambahkan 0 di depan.</p>
+        <div class="highlight-box">
+          <strong>📌 Contoh: 1011101 (biner)</strong>
+          <ul>
+            <li>Kelompokkan dari kanan: <code>1 | 011 | 101</code></li>
+            <li>Kelompok pertama kurang 3 bit, tambahkan 0: <code>001 | 011 | 101</code></li>
+            <li>Konversi setiap kelompok: <code>001 = 1</code>, <code>011 = 3</code>, <code>101 = 5</code></li>
+          </ul>
+          <p><strong>Hasil: 135 (oktal)</strong></p>
+        </div>
+
+        <h3>B. Oktal ke Biner</h3>
+        <p>Setiap digit oktal dikonversi menjadi 3 digit biner, lalu digabungkan.</p>
+        <div class="highlight-box">
+          <strong>📌 Contoh: 27 (oktal)</strong>
+          <ul>
+            <li><code>2 = 010</code></li>
+            <li><code>7 = 111</code></li>
+            <li>Gabungkan: <code>010111</code> (biner)</li>
+          </ul>
+        </div>
+
+        <h3>Tabel Konversi Cepat</h3>
+        <table class="tabel-referensi">
+          <thead>
+            <tr>
+              <th>Oktal</th>
+              <th>Biner</th>
+            </tr>
+          </thead>
+          <tbody id="tabelReferensi"></tbody>
+        </table>
+
+        <h2>🎮 Aktivitas: "Kelompok 3-Bit"</h2>
+        <p><strong>Tujuan:</strong> Melakukan konversi biner ↔ oktal dengan metode pengelompokan 3-bit.</p>
+
+        <div class="mode-progress" id="modeProgress">
+          <span class="mode-item active" id="mode1Item">🔵 Mode 1: Biner → Oktal</span>
+          <span class="mode-item" id="mode2Item">🟢 Mode 2: Oktal → Biner</span>
+          <span class="mode-item" id="mode3Item">⚡ Mode 3: Tantangan Kilat</span>
+        </div>
+
+        <div class="kelompok-container">
+          <div class="kelompok-title">📦 KELOMPOK 3-BIT</div>
+          <div class="kelompok-sub">Metode pengelompokan 3-bit untuk konversi biner ↔ oktal</div>
+
+          <div class="ref-tabel-mini" id="refTabelMini"></div>
+
+          <div class="mode-selector">
+            <button class="mode-btn active" data-mode="1" onclick="switchMode(1)">🔵 Biner → Oktal</button>
+            <button class="mode-btn" data-mode="2" onclick="switchMode(2)">🟢 Oktal → Biner</button>
+            <button class="mode-btn" data-mode="3" onclick="switchMode(3)">⚡ Tantangan Kilat</button>
+          </div>
+
+          <div class="mode-content active" id="mode1Content">
+            <div class="input-group">
+              <label>Biner:</label>
+              <input type="text" id="inputBiner" placeholder="contoh: 1011101" maxlength="12" pattern="[01]*">
+              <button class="btn-konversi primary" onclick="konversiBinerKeOktal()">Konversi!</button>
+            </div>
+            <div class="step-visual" id="stepVisual1">
+              <div class="step-title">📊 Langkah-langkah Konversi</div>
+              <div class="bit-row" id="bitRow1"></div>
+              <div class="grup-container" id="grupContainer1"></div>
+              <div class="hasil-box" id="hasilOktal1" style="display:none;">
+                <span class="label">HASIL OKTAL</span>
+                <span id="hasilOktal1Text"></span>
+              </div>
+            </div>
+            <div class="feedback-konversi" id="feedback1"></div>
+          </div>
+
+          <div class="mode-content" id="mode2Content">
+            <div class="input-group">
+              <label>Oktal:</label>
+              <input type="text" id="inputOktal" placeholder="contoh: 135" maxlength="4" pattern="[0-7]*">
+              <button class="btn-konversi primary" onclick="konversiOktalKeBiner()">Konversi!</button>
+            </div>
+            <div class="step-visual" id="stepVisual2">
+              <div class="step-title">📊 Langkah-langkah Konversi</div>
+              <div class="oktal-row-input" id="oktalRowInput"></div>
+              <div class="hasil-box" id="hasilBiner2" style="display:none;">
+                <span class="label">HASIL BINER</span>
+                <span id="hasilBiner2Text"></span>
+              </div>
+            </div>
+            <div class="feedback-konversi" id="feedback2"></div>
+          </div>
+
+          <div class="mode-content" id="mode3Content">
+            <div class="tantangan-container">
+              <div class="tantangan-header">
+                <div class="timer" id="timerDisplay">⏱️ 60s</div>
+                <div class="skor" id="skorDisplay">Skor: 0</div>
+              </div>
+              <div class="tantangan-soal" id="tantanganSoal"></div>
+              <div>
+                <button class="btn-konversi primary" id="btnMulaiTantangan" onclick="mulaiTantangan()">🚀 Mulai Tantangan</button>
+                <button class="btn-konversi secondary" id="btnUlangTantangan" onclick="resetTantangan()" style="display:none;">🔄 Ulangi</button>
+              </div>
+              <div class="feedback-konversi" id="feedback3"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <h2>📝 Soal Tes Pemahaman</h2>
+        <p>Jawablah pertanyaan berikut dengan memilih satu jawaban yang paling tepat. Kamu harus menjawab <strong>semua soal dengan benar</strong> untuk membuka Bagian 5.</p>
+
+        <div class="soal-progress">
+          <span class="progress-text" id="soalProgressText">Soal 0 dari 3</span>
+          <div class="progress-bar">
+            <div class="fill" id="soalProgressFill"></div>
+          </div>
+          <span class="score-text" id="soalScoreText">Benar: 0</span>
+        </div>
+
+        <div class="soal-section" id="soalContainer"></div>
+
+        <button class="btn-submit-soal" id="submitSoalBtn" onclick="submitSoal()">
+          ✅ Periksa Jawaban
+        </button>
+
+        <div class="syarat-kelulusan">
+          <div class="syarat-title">📋 Syarat untuk Lanjut ke Bagian 5:</div>
+          <div class="syarat-item" id="syaratSimulasi">
+            <span class="status-icon">⏳</span> Menyelesaikan aktivitas "Kelompok 3-Bit" (3 mode)
+          </div>
+          <div class="syarat-item" id="syaratSoal">
+            <span class="status-icon">⏳</span> Menjawab semua soal pemahaman dengan benar
+          </div>
+        </div>
+
+        <div class="nav-bottom">
+          <a href="bk5b.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Bagian 3
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav primary locked" id="nextBtn" onclick="lanjutKeBagian5()">
+              Lanjut ke Bagian 5 →
+            </button>
+          </div>
+          <div class="nav-hint locked" id="nextHint">
+            🔒 Selesaikan aktivitas dan semua soal pemahaman untuk membuka Bagian 5
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="script.js"></script>
+
+  <script>
+    (function() {
+      'use strict';
+
+      let currentMode = 1;
+      let modeSelesai = { 1: false, 2: false, 3: false };
+      let aktivitasSelesai = false;
+
+      let tantanganAktif = false;
+      let tantanganTimer = null;
+      let tantanganWaktu = 60;
+      let tantanganSkor = 0;
+      let tantanganSoalSekarang = null;
+      let tantanganTotal = 0;
+      let tantanganMenunggu = false;
+
+      let soalAnswers = {};
+      let soalSubmitted = false;
+      let soalBenar = 0;
+      let semuaSoalBenar = false;
+
+      const oktalBinerMap = {
+        '0': '000', '1': '001', '2': '010', '3': '011',
+        '4': '100', '5': '101', '6': '110', '7': '111'
+      };
+
+      const binerOktalMap = {
+        '000': '0', '001': '1', '010': '2', '011': '3',
+        '100': '4', '101': '5', '110': '6', '111': '7'
+      };
+
+      const soalData = [
+        {
+          question: 'Konversikan bilangan biner 101101 ke oktal! Tunjukkan pengelompokannya!',
+          options: ['45', '55', '65', '75'],
+          correct: 1,
+          explanation: '101101 dikelompokkan dari kanan menjadi 101|101. 101 = 5, 101 = 5. Jadi hasilnya 55 (oktal).'
+        },
+        {
+          question: 'Konversikan bilangan oktal 47 ke biner!',
+          options: ['100111', '100011', '110111', '101111'],
+          correct: 0,
+          explanation: '4 = 100, 7 = 111. Digabungkan menjadi 100111.'
+        },
+        {
+          question: 'Mengapa pengelompokan biner ke oktal dimulai dari kanan, bukan dari kiri? Jelaskan!',
+          options: [
+            'Karena angka paling kanan adalah digit paling penting',
+            'Karena nilai posisi biner meningkat dari kanan ke kiri, dan kelompok 3-bit mewakili nilai oktal',
+            'Karena komputer membaca dari kanan',
+            'Karena tidak ada alasan khusus, hanya kebiasaan'
+          ],
+          correct: 1,
+          explanation: 'Pengelompokan dimulai dari kanan karena nilai posisi biner meningkat dari kanan ke kiri (1, 2, 4, 8, ...). Setiap kelompok 3-bit mewakili satu digit oktal.'
+        }
+      ];
+
+      document.addEventListener('DOMContentLoaded', function() {
+        renderTabelReferensi();
+        renderRefTabelMini();
+        renderSoal();
+        updateSyarat();
+      });
+
+      function renderTabelReferensi() {
+        const tbody = document.getElementById('tabelReferensi');
+        tbody.innerHTML = '';
+        for (let i = 0; i <= 7; i++) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="oktal-col">${i}</td>
+            <td class="biner-col">${oktalBinerMap[i.toString()]}</td>
+          `;
+          tbody.appendChild(tr);
+        }
+      }
+
+      function renderRefTabelMini() {
+        const container = document.getElementById('refTabelMini');
+        container.innerHTML = '';
+        for (let i = 0; i <= 7; i++) {
+          const item = document.createElement('div');
+          item.className = 'ref-item';
+          item.innerHTML = `
+            <span class="oktal-val">${i}</span>
+            <span class="arrow-val">↔</span>
+            <span class="biner-val">${oktalBinerMap[i.toString()]}</span>
+          `;
+          container.appendChild(item);
+        }
+      }
+
+      window.switchMode = function(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+          btn.classList.remove('active');
+          if (parseInt(btn.dataset.mode) === mode) btn.classList.add('active');
+        });
+        document.querySelectorAll('.mode-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById('mode' + mode + 'Content').classList.add('active');
+        updateModeProgress();
+      };
+
+      window.konversiBinerKeOktal = function() {
+        const input = document.getElementById('inputBiner').value.trim();
+        const feedback = document.getElementById('feedback1');
+        const stepVisual = document.getElementById('stepVisual1');
+
+        if (!input || !/^[01]+$/.test(input)) {
+          feedback.className = 'feedback-konversi show error';
+          feedback.innerHTML = '❌ Input tidak valid! Masukkan hanya angka 0 dan 1.';
+          stepVisual.classList.remove('show');
+          return;
+        }
+
+        if (input.length > 12) {
+          feedback.className = 'feedback-konversi show error';
+          feedback.innerHTML = '❌ Maksimal 12 digit biner.';
+          return;
+        }
+
+        let biner = input;
+        let tambahNol = 0;
+        while (biner.length % 3 !== 0) {
+          biner = '0' + biner;
+          tambahNol++;
+        }
+
+        const groups = [];
+        for (let i = 0; i < biner.length; i += 3) {
+          groups.push(biner.substring(i, i + 3));
+        }
+
+        const bitRow = document.getElementById('bitRow1');
+        bitRow.innerHTML = '';
+        biner.split('').forEach((bit, index) => {
+          const card = document.createElement('div');
+          card.className = 'bit-card ' + (bit === '1' ? 'bit-1' : '');
+          if (index > 0 && index % 3 === 0) card.classList.add('group-separator');
+          card.textContent = bit;
+          bitRow.appendChild(card);
+        });
+
+        const grupContainer = document.getElementById('grupContainer1');
+        grupContainer.innerHTML = '';
+        let hasilOktal = '';
+        groups.forEach(grup => {
+          const oktalDigit = binerOktalMap[grup];
+          hasilOktal += oktalDigit;
+          const box = document.createElement('div');
+          box.className = 'grup-box';
+          box.innerHTML = `
+            <div class="grup-label">Biner</div>
+            <div class="grup-biner">${grup}</div>
+            <div class="grup-arrow">↓</div>
+            <div class="grup-label">Oktal</div>
+            <div class="grup-oktal">${oktalDigit}</div>
+          `;
+          grupContainer.appendChild(box);
+        });
+
+        document.getElementById('hasilOktal1').style.display = 'block';
+        document.getElementById('hasilOktal1Text').textContent = hasilOktal;
+
+        stepVisual.classList.add('show');
+
+        let catatan = tambahNol > 0 ? ` (ditambahkan ${tambahNol} angka 0 di depan)` : '';
+        feedback.className = 'feedback-konversi show success';
+        feedback.innerHTML = `🎉 <strong>Berhasil dikonversi!</strong> ${input} (biner) = <strong>${hasilOktal}</strong> (oktal)${catatan}.`;
+
+        modeSelesai[1] = true;
+        updateModeProgress();
+        updateSyarat();
+      };
+
+      window.konversiOktalKeBiner = function() {
+        const input = document.getElementById('inputOktal').value.trim();
+        const feedback = document.getElementById('feedback2');
+        const stepVisual = document.getElementById('stepVisual2');
+
+        if (!input || !/^[0-7]+$/.test(input)) {
+          feedback.className = 'feedback-konversi show error';
+          feedback.innerHTML = '❌ Input tidak valid! Masukkan hanya angka 0-7.';
+          stepVisual.classList.remove('show');
+          return;
+        }
+
+        if (input.length > 4) {
+          feedback.className = 'feedback-konversi show error';
+          feedback.innerHTML = '❌ Maksimal 4 digit oktal.';
+          return;
+        }
+
+        const container = document.getElementById('oktalRowInput');
+        container.innerHTML = '';
+        let hasilBiner = '';
+
+        input.split('').forEach(digit => {
+          const binerDigit = oktalBinerMap[digit];
+          hasilBiner += binerDigit;
+          const box = document.createElement('div');
+          box.className = 'oktal-digit-box';
+          box.innerHTML = `
+            <div class="oktal-label">Oktal</div>
+            <div class="oktal-digit">${digit}</div>
+            <div class="grup-arrow">↓</div>
+            <div class="oktal-label">Biner</div>
+            <div class="biner-hasil">${binerDigit}</div>
+          `;
+          container.appendChild(box);
+        });
+
+        document.getElementById('hasilBiner2').style.display = 'block';
+        document.getElementById('hasilBiner2Text').textContent = hasilBiner;
+
+        stepVisual.classList.add('show');
+
+        feedback.className = 'feedback-konversi show success';
+        feedback.innerHTML = `🎉 <strong>Berhasil dikonversi!</strong> ${input} (oktal) = <strong>${hasilBiner}</strong> (biner).`;
+
+        modeSelesai[2] = true;
+        updateModeProgress();
+        updateSyarat();
+      };
+
+      // ===== MODE 3: TANTANGAN KILAT (DIPERBAIKI TOTAL) =====
+      window.mulaiTantangan = function() {
+        tantanganAktif = true;
+        tantanganWaktu = 60;
+        tantanganSkor = 0;
+        tantanganTotal = 0;
+        tantanganMenunggu = false;
+
+        document.getElementById('btnMulaiTantangan').style.display = 'none';
+        document.getElementById('btnUlangTantangan').style.display = 'inline-block';
+
+        updateTimerDisplay();
+        updateSkorDisplay();
+
+        generateTantanganSoal();
+
+        if (tantanganTimer) clearInterval(tantanganTimer);
+        tantanganTimer = setInterval(() => {
+          tantanganWaktu--;
+          updateTimerDisplay();
+          if (tantanganWaktu <= 0) {
+            selesaiTantangan();
+          }
+        }, 1000);
+      };
+
+      function generateTantanganSoal() {
+        if (!tantanganAktif) return;
+        tantanganMenunggu = false;
+        
+        const tipe = Math.random() < 0.5 ? 'biner-ke-oktal' : 'oktal-ke-biner';
+        let soal, jawaban, label;
+
+        if (tipe === 'biner-ke-oktal') {
+          // Pilih angka desimal 1-64 → tampilkan biner → jawaban oktal
+          const desimal = Math.floor(Math.random() * 64) + 1;
+          soal = desimal.toString(2);     // biner
+          jawaban = desimal.toString(8);  // oktal
+          label = 'Biner → Oktal';
+        } else {
+          // Pilih angka OKTAL asli (digit 0-7) → tampilkan oktal → jawaban biner
+          const jumlahDigit = Math.random() < 0.5 ? 1 : 2;
+          let oktalStr = '';
+          for (let i = 0; i < jumlahDigit; i++) {
+            if (i === 0) {
+              oktalStr += Math.floor(Math.random() * 7) + 1; // digit pertama 1-7
+            } else {
+              oktalStr += Math.floor(Math.random() * 8); // digit berikutnya 0-7
+            }
+          }
+          soal = oktalStr;
+          // Konversi oktal ke biner: setiap digit oktal → 3 bit
+          jawaban = oktalStr.split('').map(d => oktalBinerMap[d]).join('');
+          label = 'Oktal → Biner';
+        }
+
+        tantanganSoalSekarang = { soal, jawaban, label, tipe };
+
+        const container = document.getElementById('tantanganSoal');
+        container.innerHTML = `
+          <div class="soal-label">${label}</div>
+          <div class="soal-value">${soal}</div>
+          <input type="text" id="tantanganInput" placeholder="Jawaban..." autocomplete="off">
+          <button class="btn-kirim" id="btnKirimTantangan" onclick="periksaTantangan()">➡️ Kirim</button>
+        `;
+
+        setTimeout(() => {
+          const inp = document.getElementById('tantanganInput');
+          if (inp) {
+            inp.focus();
+            inp.onkeydown = function(e) {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                periksaTantangan();
+              }
+            };
+          }
+        }, 100);
+      }
+
+      window.periksaTantangan = function() {
+        if (!tantanganAktif || !tantanganSoalSekarang) return;
+        if (tantanganMenunggu) return;
+        tantanganMenunggu = true;
+
+        const input = document.getElementById('tantanganInput');
+        if (!input) return;
+        
+        const jawaban = input.value.trim();
+        if (!jawaban) {
+          tantanganMenunggu = false;
+          return;
+        }
+
+        const benar = jawaban === tantanganSoalSekarang.jawaban;
+        tantanganTotal++;
+
+        const btnKirim = document.getElementById('btnKirimTantangan');
+        if (btnKirim) btnKirim.disabled = true;
+        input.disabled = true;
+
+        if (benar) {
+          tantanganSkor++;
+          input.classList.add('correct');
+        } else {
+          input.classList.add('wrong');
+        }
+
+        updateSkorDisplay();
+
+        const container = document.getElementById('tantanganSoal');
+        const feedbackIcon = document.createElement('div');
+        feedbackIcon.style.marginTop = '0.5rem';
+        feedbackIcon.style.fontSize = '1.2rem';
+        feedbackIcon.textContent = benar ? '✅ Benar!' : `❌ Jawaban: ${tantanganSoalSekarang.jawaban}`;
+        feedbackIcon.style.color = benar ? '#8aaa7a' : '#d4a0a0';
+        feedbackIcon.style.fontWeight = '700';
+        container.appendChild(feedbackIcon);
+
+        setTimeout(() => {
+          if (tantanganAktif && tantanganWaktu > 0) {
+            generateTantanganSoal();
+          }
+        }, 1200);
+      };
+
+      function updateTimerDisplay() {
+        const timer = document.getElementById('timerDisplay');
+        timer.textContent = `⏱️ ${tantanganWaktu}s`;
+        timer.style.color = tantanganWaktu <= 10 ? '#d4a0a0' : '#f5c842';
+      }
+
+      function updateSkorDisplay() {
+        document.getElementById('skorDisplay').textContent = `Skor: ${tantanganSkor}`;
+      }
+
+      function selesaiTantangan() {
+        if (tantanganTimer) {
+          clearInterval(tantanganTimer);
+          tantanganTimer = null;
+        }
+        tantanganAktif = false;
+        tantanganMenunggu = true;
+
+        const container = document.getElementById('tantanganSoal');
+        const feedback = document.getElementById('feedback3');
+        const persentase = tantanganTotal > 0 ? Math.round((tantanganSkor / tantanganTotal) * 100) : 0;
+
+        container.innerHTML = `
+          <div class="soal-label">⏰ Waktu Habis!</div>
+          <div class="soal-value" style="color:#8aaa7a;">${tantanganSkor}</div>
+          <div style="color:#a89688; font-size:0.9rem;">
+            Jawaban benar: ${tantanganSkor} dari ${tantanganTotal} soal (${persentase}%)
+          </div>
+        `;
+
+        if (tantanganSkor >= 5) {
+          feedback.className = 'feedback-konversi show success';
+          feedback.innerHTML = `🎉 <strong>Luar biasa!</strong> Kamu berhasil menjawab ${tantanganSkor} soal dengan benar!`;
+          modeSelesai[3] = true;
+          updateModeProgress();
+          updateSyarat();
+        } else {
+          feedback.className = 'feedback-konversi show info';
+          feedback.innerHTML = `💡 Kamu menjawab ${tantanganSkor} soal dengan benar. Minimal 5 soal untuk menyelesaikan mode ini. Klik "Ulangi" untuk mencoba lagi!`;
+        }
+
+        document.getElementById('btnMulaiTantangan').style.display = 'none';
+        document.getElementById('btnUlangTantangan').style.display = 'inline-block';
+      }
+
+      window.resetTantangan = function() {
+        if (tantanganTimer) {
+          clearInterval(tantanganTimer);
+          tantanganTimer = null;
+        }
+        tantanganAktif = false;
+        tantanganMenunggu = false;
+        tantanganWaktu = 60;
+        tantanganSkor = 0;
+        tantanganTotal = 0;
+
+        updateTimerDisplay();
+        updateSkorDisplay();
+
+        document.getElementById('tantanganSoal').innerHTML = `
+          <div class="soal-label">Siap?</div>
+          <div class="soal-value">?</div>
+          <div style="color:#a89688; font-size:0.9rem;">Klik "Mulai Tantangan" untuk memulai!</div>
+        `;
+
+        document.getElementById('btnMulaiTantangan').style.display = 'inline-block';
+        document.getElementById('btnUlangTantangan').style.display = 'none';
+        document.getElementById('feedback3').className = 'feedback-konversi';
+        modeSelesai[3] = false;
+        updateModeProgress();
+        updateSyarat();
+      };
+
+      function updateModeProgress() {
+        for (let i = 1; i <= 3; i++) {
+          const el = document.getElementById('mode' + i + 'Item');
+          el.classList.remove('active', 'completed');
+          if (modeSelesai[i]) {
+            el.classList.add('completed');
+            el.innerHTML = '✅ Mode ' + i + ': Selesai!';
+          } else if (i === currentMode) {
+            el.classList.add('active');
+          }
+        }
+        if (modeSelesai[1] && modeSelesai[2] && modeSelesai[3]) {
+          aktivitasSelesai = true;
+        }
+      }
+
+      function renderSoal() {
+        const container = document.getElementById('soalContainer');
+        container.innerHTML = '';
+        soalData.forEach((soal, index) => {
+          const soalDiv = document.createElement('div');
+          soalDiv.className = 'soal-item';
+          soalDiv.dataset.soalIndex = index;
+
+          let optionsHtml = '';
+          soal.options.forEach((opt, optIndex) => {
+            const id = `soal${index}_opt${optIndex}`;
+            optionsHtml += `
+              <label for="${id}" onclick="pilihJawaban(${index}, ${optIndex})" id="label_${index}_${optIndex}">
+                <input type="radio" name="soal${index}" id="${id}" value="${optIndex}">
+                <span>${opt}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          soalDiv.innerHTML = `
+            <div class="soal-text">
+              <span class="soal-number">${index + 1}</span>
+              <span>${soal.question}</span>
+            </div>
+            <div class="soal-options">${optionsHtml}</div>
+            <div class="feedback-text" id="soalFeedback_${index}" style="display:none; margin-top:0.8rem; padding:0.6rem 1rem; border-radius:8px; font-size:0.85rem;"></div>
+          `;
+          container.appendChild(soalDiv);
+        });
+      }
+
+      window.pilihJawaban = function(soalIndex, optIndex) {
+        if (soalSubmitted) return;
+        const soalDiv = document.querySelector(`.soal-item[data-soal-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.soal-options label');
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+        soalAnswers[soalIndex] = optIndex;
+        updateSoalProgress();
+      };
+
+      function updateSoalProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(soalAnswers).length;
+        const progress = (answered / total) * 100;
+        document.getElementById('soalProgressText').textContent = `Soal ${answered} dari ${total}`;
+        document.getElementById('soalProgressFill').style.width = progress + '%';
+      }
+
+      window.submitSoal = function() {
+        if (soalSubmitted) return;
+        const total = soalData.length;
+        const answered = Object.keys(soalAnswers).length;
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal.`);
+          return;
+        }
+
+        let correct = 0;
+        soalData.forEach((soal, index) => {
+          const selected = soalAnswers[index];
+          const soalDiv = document.querySelector(`.soal-item[data-soal-index="${index}"]`);
+          const labels = soalDiv.querySelectorAll('.soal-options label');
+          const feedback = document.getElementById(`soalFeedback_${index}`);
+
+          labels.forEach((label, idx) => {
+            label.classList.add('disabled');
+            if (idx === soal.correct) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+            if (idx === selected && selected !== soal.correct) {
+              label.classList.add('wrong-answer');
+              label.querySelector('.check-icon').textContent = '❌';
+            }
+          });
+
+          if (selected === soal.correct) {
+            soalDiv.classList.add('correct');
+            correct++;
+            feedback.style.display = 'block';
+            feedback.style.background = '#e8f5e0';
+            feedback.style.color = '#2d5a1e';
+            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.explanation}`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.style.display = 'block';
+            feedback.style.background = '#f5e0e0';
+            feedback.style.color = '#5a2a2a';
+            feedback.innerHTML = `❌ <strong>Belum tepat.</strong> Jawaban benar: <strong>${soal.options[soal.correct]}</strong><br><span style="font-size:0.8rem;">${soal.explanation}</span>`;
+          }
+        });
+
+        soalBenar = correct;
+        soalSubmitted = true;
+        document.getElementById('submitSoalBtn').disabled = true;
+        document.getElementById('submitSoalBtn').textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+        document.getElementById('soalScoreText').textContent = `Benar: ${correct}/${total}`;
+
+        if (correct === total) {
+          semuaSoalBenar = true;
+          updateSyarat();
+        } else {
+          setTimeout(() => {
+            if (confirm(`Kamu menjawab benar ${correct} dari ${total} soal. Ingin mencoba lagi?`)) {
+              resetSoal();
+            }
+          }, 1500);
+        }
+      };
+
+      window.resetSoal = function() {
+        soalAnswers = {};
+        soalSubmitted = false;
+        soalBenar = 0;
+        semuaSoalBenar = false;
+        document.getElementById('submitSoalBtn').disabled = false;
+        document.getElementById('submitSoalBtn').textContent = '✅ Periksa Jawaban';
+        document.getElementById('soalScoreText').textContent = 'Benar: 0';
+        document.getElementById('soalProgressText').textContent = 'Soal 0 dari 3';
+        document.getElementById('soalProgressFill').style.width = '0%';
+        renderSoal();
+        updateSyarat();
+      };
+
+      function updateSyarat() {
+        const syaratSimulasi = document.getElementById('syaratSimulasi');
+        const syaratSoal = document.getElementById('syaratSoal');
+
+        if (aktivitasSelesai) {
+          syaratSimulasi.className = 'syarat-item done';
+          syaratSimulasi.innerHTML = '<span class="status-icon">✅</span> Aktivitas "Kelompok 3-Bit" — Selesai!';
+        } else {
+          const done = Object.values(modeSelesai).filter(Boolean).length;
+          syaratSimulasi.className = 'syarat-item pending';
+          syaratSimulasi.innerHTML = `<span class="status-icon">⏳</span> Aktivitas "Kelompok 3-Bit" (${done}/3 mode)`;
+        }
+
+        if (semuaSoalBenar) {
+          syaratSoal.className = 'syarat-item done';
+          syaratSoal.innerHTML = '<span class="status-icon">✅</span> Soal pemahaman — Semua benar!';
+        } else {
+          const answered = Object.keys(soalAnswers).length;
+          syaratSoal.className = 'syarat-item pending';
+          syaratSoal.innerHTML = `<span class="status-icon">⏳</span> Soal pemahaman (${answered}/3 soal dijawab)`;
+        }
+
+        updateNavigasi();
+      }
+
+      function updateNavigasi() {
+        const nextBtn = document.getElementById('nextBtn');
+        const nextHint = document.getElementById('nextHint');
+
+        if (aktivitasSelesai && semuaSoalBenar) {
+          nextBtn.classList.remove('locked');
+          nextBtn.classList.add('primary');
+          nextHint.classList.remove('locked');
+          nextHint.classList.add('ready');
+          nextHint.textContent = '✅ Bagian 5 sudah terbuka! Klik untuk melanjutkan.';
+        } else {
+          nextBtn.classList.add('locked');
+          nextBtn.classList.remove('primary');
+          nextHint.classList.add('locked');
+          nextHint.classList.remove('ready');
+          if (!aktivitasSelesai && !semuaSoalBenar) {
+            nextHint.textContent = '🔒 Selesaikan aktivitas dan semua soal pemahaman untuk membuka Bagian 5';
+          } else if (!aktivitasSelesai) {
+            nextHint.textContent = '🔒 Selesaikan aktivitas "Kelompok 3-Bit" terlebih dahulu';
+          } else {
+            nextHint.textContent = '🔒 Jawab semua soal pemahaman dengan benar untuk membuka Bagian 5';
+          }
+        }
+      }
+
+      window.lanjutKeBagian5 = function() {
+        if (!aktivitasSelesai || !semuaSoalBenar) {
+          alert('🔒 Selesaikan dulu aktivitas dan semua soal pemahaman!');
+          return;
+        }
+        window.location.href = 'bk5d.html';
+      };
+
+    })();
+  </script>
+
+</body>
+</html>
