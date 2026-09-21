@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Materi Representasi Data · Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA MATERI ===== */
+    .materi-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .materi-container h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .materi-container .sub-judul {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      border-left: 4px solid #dbb9a6;
+      padding-left: 1rem;
+      font-style: italic;
+    }
+
+    .materi-container h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2.5rem 0 0.8rem 0;
+      color: #4d3829;
+      border-left: 6px solid #dbb9a6;
+      padding-left: 1rem;
+      scroll-margin-top: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.2rem 0 0.3rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container p {
+      margin-bottom: 1rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.5rem 0 1.2rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.4rem;
+      color: #2f2822;
+      line-height: 1.7;
+    }
+
+    .materi-container .highlight-box {
+      background: #f5ede6;
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 8px solid #dbb9a6;
+      margin: 1.5rem 0;
+    }
+
+    .materi-container .highlight-box strong {
+      color: #4d3829;
+    }
+
+    .materi-container .highlight-box ul {
+      margin-bottom: 0;
+    }
+
+    .materi-container code {
+      background: #f0ece6;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      color: #4d3829;
+    }
+
+    /* ===== DAFTAR ISI ===== */
+    .toc-box {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0 2rem 0;
+      border: 2px solid #e5dbd0;
+    }
+
+    .toc-box .toc-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 1.05rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toc-box ol {
+      margin: 0 0 0 1.2rem;
+      padding: 0;
+    }
+
+    .toc-box li {
+      margin-bottom: 0.4rem;
+    }
+
+    .toc-box a {
+      color: #4d3829;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dotted #bfaa9a;
+      transition: all 0.2s ease;
+    }
+
+    .toc-box a:hover {
+      color: #6b4f3a;
+      border-bottom: 2px solid #7a5f4c;
+    }
+
+    /* ===== TABEL ===== */
+    .tabel-materi {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .tabel-materi thead {
+      background: #4d3829;
+      color: #fff;
+    }
+
+    .tabel-materi th {
+      padding: 0.8rem 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .tabel-materi td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #3b2b1e;
+    }
+
+    .tabel-materi tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabel-materi tr:hover td {
+      background: #f8f3ee;
+    }
+
+    .tabel-materi .label-col {
+      text-align: left;
+      font-family: system-ui, sans-serif;
+      font-weight: 600;
+      color: #3b2b1e;
+    }
+
+    /* ===== CONTOH BOX ===== */
+    .contoh-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin: 1rem 0;
+    }
+
+    .contoh-box .contoh-title {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .contoh-box .contoh-isi {
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .contoh-box .contoh-isi .arrow {
+      color: #8aaa7a;
+      font-weight: 700;
+    }
+
+    /* ===== SATUAN BOX ===== */
+    .satuan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.6rem;
+      margin: 1rem 0;
+    }
+
+    .satuan-item {
+      background: #fff;
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      border: 2px solid #e5dbd0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .satuan-item .satuan-label {
+      font-weight: 600;
+      color: #4d3829;
+    }
+
+    .satuan-item .satuan-value {
+      font-family: 'Courier New', monospace;
+      color: #2d5a1e;
+      font-weight: 700;
+    }
+
+    /* ===== BIT POSITION TABLE ===== */
+    .bit-position-wrapper {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-radius: 12px;
+      border: 2px solid #e5dbd0;
+    }
+
+    .bit-position-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 500px;
+      font-size: 0.85rem;
+    }
+
+    .bit-position-table th {
+      background: #4d3829;
+      color: #fff;
+      padding: 0.6rem 0.4rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .bit-position-table td {
+      padding: 0.6rem 0.4rem;
+      text-align: center;
+      border-bottom: 1px solid #e5dbd0;
+      font-family: 'Courier New', monospace;
+      font-weight: 600;
+      color: #3b2b1e;
+    }
+
+    .bit-position-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .bit-position-table .posisi-row {
+      background: #f5ede6;
+      color: #4d3829;
+    }
+
+    .bit-position-table .nilai-row {
+      background: #f0f8eb;
+      color: #2d5a1e;
+      font-size: 1rem;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    .nav-hint {
+      font-size: 0.85rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* ===== TOMBOL FLOATING DAFTAR ISI ===== */
+    #tocBtn {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 1.5rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #f5ede6;
+      border: 2px solid #dbb9a6;
+      font-size: 1.3rem;
+      color: #4d3829;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 998;
+    }
+
+    #tocBtn:hover {
+      background: #dbb9a6;
+      color: #fff;
+      transform: scale(1.08);
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .materi-container h1 { font-size: 1.7rem; }
+      .materi-container h2 { font-size: 1.3rem; }
+      .materi-container h3 { font-size: 1.05rem; }
+      .tabel-materi { font-size: 0.8rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.5rem 0.6rem; }
+      .toc-box { padding: 1.2rem 1.4rem; }
+      #tocBtn { width: 40px; height: 40px; font-size: 1.1rem; left: 1rem; bottom: 1.8rem; }
+    }
+
+    @media (max-width: 480px) {
+      .tabel-materi { font-size: 0.7rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.4rem 0.4rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+      .satuan-grid { grid-template-columns: 1fr; }
+      .bit-position-table { font-size: 0.7rem; }
+    }
+
+    /* ===== PRINT ===== */
+    @media print {
+      #tocBtn, #scrollTopBtn, .nav-bottom, .toc-box { display: none !important; }
+      body { background: #fff !important; }
+      .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="bk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk5.html">Representasi Data</a></li>
+      <li>Materi Lengkap</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <h1>📖 Materi: Representasi Data dan Konversi Bilangan</h1>
+        <p class="sub-judul">Biner · Oktal · Desimal — Materi Lengkap Bagian 1-5</p>
+
+        <!-- ===== DAFTAR ISI ===== -->
+        <div class="toc-box" id="daftarIsi">
+          <div class="toc-title">📑 Daftar Isi</div>
+          <ol>
+            <li><a href="#bagian1">Pendahuluan — Mengapa Komputer "Berbicara" dengan Angka?</a></li>
+            <li><a href="#bagian2">Mengenal Sistem Bilangan Biner, Oktal, dan Desimal</a></li>
+            <li><a href="#bagian3">Konversi Bilangan Biner ke Desimal (dan Sebaliknya)</a></li>
+            <li><a href="#bagian4">Konversi Biner ke Oktal dan Sebaliknya</a></li>
+            <li><a href="#bagian5">Penerapan dalam Kehidupan Sehari-hari</a></li>
+            <li><a href="#referensi">Referensi Materi</a></li>
+          </ol>
+        </div>
+
+        <!-- ===== BAGIAN 1 ===== -->
+        <h2 id="bagian1">Bagian 1: Pendahuluan — Mengapa Komputer "Berbicara" dengan Angka?</h2>
+        <p>Komputer adalah mesin elektronik yang dibangun dari komponen bernama <strong>transistor</strong>. Transistor hanya memiliki dua keadaan: <strong>on</strong> (menyala) dan <strong>off</strong> (mati). Karena itu, komputer tidak bisa langsung memahami angka 0 sampai 9 seperti manusia. Ia hanya mengenal dua simbol: <strong>0</strong> dan <strong>1</strong>.</p>
+
+        <p>Semua data yang kita simpan dan olah di komputer—teks, gambar, video, musik—direpresentasikan sebagai kombinasi angka 0 dan 1. Inilah yang disebut <strong>representasi data digital</strong>.</p>
+
+        <p>Setiap angka 0 atau 1 disebut <strong>bit</strong> (binary digit). Bit adalah unit penyimpanan terkecil dalam komputer. Ketika 8 bit dikelompokkan bersama, mereka membentuk <strong>byte</strong>. Satu byte cukup untuk mewakili satu karakter (huruf, angka, atau simbol).</p>
+
+        <h4>Satuan Penyimpanan Data:</h4>
+        <div class="satuan-grid">
+          <div class="satuan-item">
+            <span class="satuan-label">1 bit</span>
+            <span class="satuan-value">0 atau 1</span>
+          </div>
+          <div class="satuan-item">
+            <span class="satuan-label">1 byte</span>
+            <span class="satuan-value">8 bit</span>
+          </div>
+          <div class="satuan-item">
+            <span class="satuan-label">1 kilobyte (KB)</span>
+            <span class="satuan-value">1.024 byte</span>
+          </div>
+          <div class="satuan-item">
+            <span class="satuan-label">1 megabyte (MB)</span>
+            <span class="satuan-value">1.024 KB</span>
+          </div>
+          <div class="satuan-item">
+            <span class="satuan-label">1 gigabyte (GB)</span>
+            <span class="satuan-value">1.024 MB</span>
+          </div>
+          <div class="satuan-item">
+            <span class="satuan-label">1 terabyte (TB)</span>
+            <span class="satuan-value">1.024 GB</span>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <strong>💡 Fakta Penting:</strong>
+          <p>Dengan n bit, komputer dapat merepresentasikan <strong>2ⁿ nilai yang berbeda</strong>.</p>
+          <ul>
+            <li>3 bit → 2³ = 8 nilai (0–7)</li>
+            <li>8 bit → 2⁸ = 256 nilai (0–255)</li>
+          </ul>
+        </div>
+
+        <!-- ===== BAGIAN 2 ===== -->
+        <h2 id="bagian2">Bagian 2: Mengenal Sistem Bilangan Biner, Oktal, dan Desimal</h2>
+
+        <h3>1. Sistem Desimal (Basis 10)</h3>
+        <p>Sistem yang kita gunakan sehari-hari. Menggunakan 10 simbol: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9. Setiap posisi dalam bilangan desimal mewakili pangkat 10.</p>
+        <div class="contoh-box">
+          <div class="contoh-title">📌 Contoh:</div>
+          <div class="contoh-isi">
+            <code>234</code> = (2 × 10²) + (3 × 10¹) + (4 × 10⁰) = 200 + 30 + 4
+          </div>
+        </div>
+
+        <h3>2. Sistem Biner (Basis 2)</h3>
+        <p>Sistem yang digunakan komputer. Hanya menggunakan 2 simbol: 0 dan 1. Setiap posisi mewakili pangkat 2.</p>
+
+        <h4>Nilai posisi 8-bit biner (dari kiri ke kanan):</h4>
+        <div class="bit-position-wrapper">
+          <table class="bit-position-table">
+            <thead>
+              <tr>
+                <th>2⁷</th>
+                <th>2⁶</th>
+                <th>2⁵</th>
+                <th>2⁴</th>
+                <th>2³</th>
+                <th>2²</th>
+                <th>2¹</th>
+                <th>2⁰</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="nilai-row">
+                <td>128</td>
+                <td>64</td>
+                <td>32</td>
+                <td>16</td>
+                <td>8</td>
+                <td>4</td>
+                <td>2</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="highlight-box">
+          <strong>📌 Istilah Penting:</strong>
+          <ul>
+            <li><strong>MSB (Most Significant Bit)</strong> — bit paling kiri (nilai terbesar)</li>
+            <li><strong>LSB (Least Significant Bit)</strong> — bit paling kanan (nilai terkecil)</li>
+          </ul>
+        </div>
+
+        <div class="contoh-box">
+          <div class="contoh-title">📌 Contoh:</div>
+          <div class="contoh-isi">
+            <code>1101</code> (biner) = (1 × 8) + (1 × 4) + (0 × 2) + (1 × 1)<br>
+            = 8 + 4 + 0 + 1 = <strong>13</strong> (desimal)
+          </div>
+        </div>
+
+        <h3>3. Sistem Oktal (Basis 8)</h3>
+        <p>Sistem yang menggunakan 8 simbol: 0, 1, 2, 3, 4, 5, 6, 7. Sistem ini sering digunakan sebagai cara singkat untuk menuliskan bilangan biner, karena <strong>1 digit oktal = 3 digit biner</strong>.</p>
+
+        <h4>Tabel Hubungan Biner-Oktal-Desimal:</h4>
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Desimal</th>
+              <th>Biner (3-bit)</th>
+              <th>Oktal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>000</td><td>0</td></tr>
+            <tr><td>1</td><td>001</td><td>1</td></tr>
+            <tr><td>2</td><td>010</td><td>2</td></tr>
+            <tr><td>3</td><td>011</td><td>3</td></tr>
+            <tr><td>4</td><td>100</td><td>4</td></tr>
+            <tr><td>5</td><td>101</td><td>5</td></tr>
+            <tr><td>6</td><td>110</td><td>6</td></tr>
+            <tr><td>7</td><td>111</td><td>7</td></tr>
+          </tbody>
+        </table>
+
+        <!-- ===== BAGIAN 3 ===== -->
+        <h2 id="bagian3">Bagian 3: Konversi Bilangan Biner ke Desimal (dan Sebaliknya)</h2>
+
+        <h3>A. Konversi Biner ke Desimal</h3>
+        <p>Caranya: <strong>kalikan setiap digit biner dengan nilai posisinya, lalu jumlahkan</strong>.</p>
+
+        <div class="contoh-box">
+          <div class="contoh-title">📌 Contoh: <code>1101</code> (biner)</div>
+          <div class="contoh-isi">
+            • Digit paling kanan (1) × 1 = 1<br>
+            • Digit kedua (0) × 2 = 0<br>
+            • Digit ketiga (1) × 4 = 4<br>
+            • Digit keempat (1) × 8 = 8<br>
+            <span class="arrow">→</span> Total: 1 + 0 + 4 + 8 = <strong>13</strong> (desimal)
+          </div>
+        </div>
+
+        <h3>B. Konversi Desimal ke Biner</h3>
+        <p>Metode <strong>pembagian berulang dengan 2</strong>:</p>
+        <ol>
+          <li>Bagi bilangan dengan 2, catat sisanya (0 atau 1)</li>
+          <li>Ulangi dengan hasil bagi sampai hasilnya 0</li>
+          <li>Baca sisa dari <strong>bawah ke atas</strong></li>
+        </ol>
+
+        <div class="contoh-box">
+          <div class="contoh-title">📌 Contoh: 29 → biner</div>
+          <table class="tabel-materi" style="margin-top:0.5rem;">
+            <thead>
+              <tr>
+                <th>Langkah</th>
+                <th>Pembagian</th>
+                <th>Hasil</th>
+                <th>Sisa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>I</td><td>29 ÷ 2</td><td>14</td><td>1</td></tr>
+              <tr><td>II</td><td>14 ÷ 2</td><td>7</td><td>0</td></tr>
+              <tr><td>III</td><td>7 ÷ 2</td><td>3</td><td>1</td></tr>
+              <tr><td>IV</td><td>3 ÷ 2</td><td>1</td><td>1</td></tr>
+              <tr><td>V</td><td>1 ÷ 2</td><td>0</td><td>1</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:0.5rem;">Baca dari bawah ke atas: <strong>11101</strong></p>
+        </div>
+
+        <!-- ===== BAGIAN 4 ===== -->
+        <h2 id="bagian4">Bagian 4: Konversi Biner ke Oktal dan Sebaliknya</h2>
+
+        <h3>A. Biner ke Oktal</h3>
+        <div class="highlight-box">
+          <strong>🔑 Kunci utama:</strong>
+          <p><strong>1 digit oktal = 3 digit biner</strong></p>
+        </div>
+        <p>Kelompokkan digit biner menjadi kelompok 3-bit, mulai dari <strong>kanan</strong>. Jika kelompok terakhir kurang dari 3 bit, tambahkan 0 di depan.</p>
+
+        <div class="contoh-box">
+          <div class="contoh-title">📌 Contoh: <code>1011101</code> (biner)</div>
+          <div class="contoh-isi">
+            1. Kelompokkan dari kanan: <code>1</code> | <code>011</code> | <code>101</code><br>
+            2. Kelompok pertama kurang 3 bit, tambahkan 0: <code>001</code> | <code>011</code> | <code>101</code><br>
+            3. Konversi setiap kelompok: <code>001</code> = 1, <code>011</code> = 3, <code>101</code> = 5<br>
+            <span class="arrow">→</span> Hasil: <strong>135</strong> (oktal)
+          </div>
+        </div>
+
+        <h3>B. Oktal ke Biner</h3>
+        <p>Setiap digit oktal dikonversi menjadi 3 digit biner, lalu digabungkan.</p>
+
+        <div class="contoh-box">
+          <div class="contoh-title">📌 Contoh: <code>247</code> (oktal)</div>
+          <div class="contoh-isi">
+            • <code>2</code> = <code>010</code><br>
+            • <code>4</code> = <code>100</code><br>
+            • <code>7</code> = <code>111</code><br>
+            <span class="arrow">→</span> Gabungkan: <strong>010100111</strong> (biner)
+          </div>
+        </div>
+
+        <h3>C. Desimal ke Oktal</h3>
+        <p>Caranya sama dengan konversi desimal ke biner, tetapi menggunakan <strong>pembagian dengan 8</strong>.</p>
+
+        <div class="contoh-box">
+          <div class="contoh-title">📌 Contoh: 245 → oktal</div>
+          <table class="tabel-materi" style="margin-top:0.5rem;">
+            <thead>
+              <tr>
+                <th>Langkah</th>
+                <th>Pembagian</th>
+                <th>Hasil</th>
+                <th>Sisa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>I</td><td>245 ÷ 8</td><td>30</td><td>5</td></tr>
+              <tr><td>II</td><td>30 ÷ 8</td><td>3</td><td>6</td></tr>
+              <tr><td>III</td><td>3 ÷ 8</td><td>0</td><td>3</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:0.5rem;">Baca dari bawah ke atas: <strong>365</strong> (oktal)</p>
+        </div>
+
+        <h3>D. Oktal ke Desimal</h3>
+        <p>Kalikan setiap digit oktal dengan nilai posisinya (pangkat 8), lalu jumlahkan.</p>
+
+        <div class="contoh-box">
+          <div class="contoh-title">📌 Contoh: <code>367</code> (oktal)</div>
+          <div class="contoh-isi">
+            = (3 × 8²) + (6 × 8¹) + (7 × 8⁰)<br>
+            = (3 × 64) + (6 × 8) + (7 × 1)<br>
+            = 192 + 48 + 7<br>
+            <span class="arrow">→</span> = <strong>247</strong> (desimal)
+          </div>
+        </div>
+
+        <!-- ===== BAGIAN 5 ===== -->
+        <h2 id="bagian5">Bagian 5: Penerapan dalam Kehidupan Sehari-hari</h2>
+
+        <h3>1. Kode ASCII untuk Teks</h3>
+        <p>Setiap huruf dan simbol di keyboard memiliki kode biner. Contoh:</p>
+        <ul>
+          <li>Huruf "A" = <code>01000001</code> (65 desimal)</li>
+          <li>Huruf "a" = <code>01100001</code> (97 desimal)</li>
+        </ul>
+
+        <h3>2. Kapasitas Penyimpanan</h3>
+        <p>Memahami bit dan byte membantu kita mengelola penyimpanan. Contoh: File video 500 MB = sekitar <strong>4.000.000.000 bit</strong>.</p>
+
+        <h3>3. Kode Warna dalam Desain Web</h3>
+        <p>Warna di halaman web direpresentasikan dengan kode heksadesimal (basis 16) yang merupakan "kerabat dekat" biner. Contoh: warna putih = <code>#FFFFFF</code>, yang dalam biner adalah <code>11111111 11111111 11111111</code>.</p>
+
+        <h3>4. Sandi dan Keamanan Digital</h3>
+        <p>Konsep biner digunakan dalam enkripsi dan sandi digital, termasuk pengaturan jaringan Wi-Fi.</p>
+
+        <!-- ===== REFERENSI ===== -->
+        <h2 id="referensi">📚 Referensi Materi</h2>
+        <ol>
+          <li>CCEA. <em>Fact File: AS2 Data Representation</em>.</li>
+          <li>Muhamad Ali, ST., M.T. <em>Bab 1 Sistem Bilangan</em>. Universitas Negeri Yogyakarta.</li>
+          <li>Kemendikbud. <em>Sistem Bilangan</em>. LMS SPADA.</li>
+          <li>Ahmad Burhanudin. <em>Sistem Bilangan</em>. Universitas Negeri Yogyakarta.</li>
+          <li>Bagus Haryadi. <em>Elektronika Digital</em>. Universitas Ahmad Dahlan.</li>
+          <li><em>Bahan Kuliah Pengantar Teknologi Informasi</em>. Universitas Islam Negeri Ar-Raniry.</li>
+          <li><em>Modul 1 Sistem Bilangan dan Pangkat</em>. LMS SPADA Kemendikbud.</li>
+          <li><em>Buku Kalkulus 1</em>. Universitas Islam Riau.</li>
+        </ol>
+
+        <!-- ===== NAVIGASI ===== -->
+        <div class="nav-bottom">
+          <a href="bk5.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Portal
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <a href="bk5.html" class="btn-nav primary">
+              🎮 Coba Materi + Aktivitas →
+            </a>
+          </div>
+          <div class="nav-hint">
+            💡 Ingin belajar sambil berlatih? Coba mode "Materi + Aktivitas" untuk pengalaman yang lebih interaktif!
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <!-- Tombol floating daftar isi -->
+  <button id="tocBtn" aria-label="Daftar Isi" title="Ke Daftar Isi" onclick="scrollToTOC()">📑</button>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="script.js"></script>
+
+  <script>
+    // Scroll ke daftar isi
+    function scrollToTOC() {
+      const toc = document.getElementById('daftarIsi');
+      if (toc) {
+        toc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Smooth scroll untuk link di dalam halaman
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const target = document.querySelector(targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
