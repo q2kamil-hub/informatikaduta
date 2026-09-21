@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Lab GUI · Bagian 2: Komponen Dasar · Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA MATERI RINGKAS ===== */
+    .materi-ringkas {
+      max-width: 820px;
+      margin: 0 auto 1.5rem;
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem 1.8rem;
+      border-left: 6px solid #8aaa7a;
+      border: 2px solid #e5dbd0;
+    }
+
+    .materi-ringkas h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .materi-ringkas h2 .badge {
+      background: #8aaa7a;
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .materi-ringkas h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #4d3829;
+      margin: 1rem 0 0.4rem;
+    }
+
+    .materi-ringkas p {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #2f2822;
+      margin-bottom: 0.6rem;
+    }
+
+    .materi-ringkas ul {
+      margin: 0.3rem 0 0.8rem 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .materi-ringkas li {
+      margin-bottom: 0.25rem;
+      line-height: 1.6;
+    }
+
+    .materi-ringkas .info-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 0.8rem 1.2rem;
+      border: 2px solid #e5dbd0;
+      margin: 0.6rem 0;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .materi-ringkas .info-box strong {
+      color: #4d3829;
+    }
+
+    .materi-ringkas .link-materi {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: #5c4638;
+      font-size: 0.85rem;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 2px dotted #bfaa9a;
+      transition: all 0.2s ease;
+    }
+
+    .materi-ringkas .link-materi:hover {
+      color: #4d3829;
+      border-bottom-color: #7a5f4c;
+    }
+
+    /* ===== GAYA AKTIVITAS ===== */
+    .aktivitas-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Progress Bagian */
+    .bagian-progress {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      margin: 0.5rem 0 1.5rem;
+    }
+
+    .bagian-progress .step {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 30px;
+      background: #f5ede6;
+      border: 2px solid #e5dbd0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .bagian-progress .step.active {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .bagian-progress .step.completed {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .bagian-progress .step .num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+    }
+
+    /* ===== NAVIGASI AKTIVITAS ===== */
+    .nav-aktivitas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0.8rem 1rem;
+      background: #f5f0ea;
+      border-radius: 16px;
+      border: 2px solid #e5dbd0;
+    }
+    .nav-aktivitas .btn-nav {
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+      border: 2px solid #cbb5a2;
+      background: #fcf9f6;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.15s ease;
+      color: #4d3829;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: inherit;
+    }
+    .nav-aktivitas .btn-nav:hover {
+      background: #e8dcd0;
+      transform: translateY(-2px);
+    }
+    .nav-aktivitas .btn-nav.primary {
+      background: #6b8c5e;
+      border-color: #4d7a3b;
+      color: #fff;
+    }
+    .nav-aktivitas .btn-nav.primary:hover {
+      background: #4d7a3b;
+    }
+    .nav-aktivitas .btn-nav.danger {
+      background: #e87a6a;
+      border-color: #d45a4a;
+      color: #fff;
+    }
+    .nav-aktivitas .btn-nav.danger:hover {
+      background: #d45a4a;
+    }
+    .nav-aktivitas .info-aktivitas {
+      font-size: 0.85rem;
+      color: #5a4a3a;
+      font-weight: 500;
+    }
+
+    /* ===== SIMULASI WINDOW ===== */
+    .simulasi-window {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 2px solid #d0c4b8;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      overflow: hidden;
+      margin: 0.5rem 0 1.5rem;
+      position: relative;
+    }
+
+    .window-titlebar {
+      background: #e8ddd0;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #d0c4b8;
+      user-select: none;
+    }
+    .window-titlebar .judul-window {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #3b2b1e;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .window-titlebar .judul-window .ikon-window {
+      font-size: 1.1rem;
+    }
+    .window-controls {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .window-controls button {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #d5c8ba;
+      color: #4d3829;
+      font-weight: 700;
+    }
+    .window-controls button:hover {
+      transform: scale(1.1);
+    }
+    .window-controls .btn-minimize { background: #f5c542; }
+    .window-controls .btn-maximize { background: #7dbd7d; }
+    .window-controls .btn-close { background: #e87a6a; color: #fff; }
+    .window-controls .btn-close:hover { background: #d45a4a; }
+
+    .window-body {
+      display: flex;
+      min-height: 380px;
+      background: #fcfaf7;
+      position: relative;
+    }
+
+    .nav-pane {
+      width: 200px;
+      min-width: 140px;
+      background: #f5f0ea;
+      padding: 0.8rem 0.6rem;
+      border-right: 2px solid #e5dbd0;
+      flex-shrink: 0;
+    }
+    .nav-pane .nav-item {
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      transition: background 0.1s ease;
+      color: #3d2c1f;
+    }
+    .nav-pane .nav-item:hover {
+      background: #e5dbd0;
+    }
+    .nav-pane .nav-item .nav-icon {
+      font-size: 1.1rem;
+    }
+    .nav-pane .nav-item.active {
+      background: #d9cdbf;
+      font-weight: 600;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 1.2rem 1.5rem;
+      overflow: auto;
+      position: relative;
+    }
+
+    .address-bar-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #fff;
+      border: 2px solid #e5dbd0;
+      border-radius: 30px;
+      padding: 0.2rem 0.2rem 0.2rem 1rem;
+      margin-bottom: 1rem;
+    }
+    .address-bar-wrapper .label-address {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #8a7a6a;
+      letter-spacing: 0.05em;
+    }
+    .address-bar-wrapper input {
+      flex: 1;
+      border: none;
+      padding: 0.3rem 0;
+      font-size: 0.85rem;
+      background: transparent;
+      outline: none;
+      color: #3d2c1f;
+      min-width: 60px;
+      font-family: inherit;
+    }
+    .address-bar-wrapper .btn-go {
+      background: #6b8c5e;
+      color: #fff;
+      border: none;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.75rem;
+      transition: background 0.15s;
+      font-family: inherit;
+    }
+    .address-bar-wrapper .btn-go:hover {
+      background: #4d7a3b;
+    }
+
+    .menu-bar-sim {
+      display: flex;
+      gap: 0.2rem;
+      background: #f5f0ea;
+      padding: 0.2rem 0.5rem;
+      border-bottom: 2px solid #e5dbd0;
+      flex-wrap: wrap;
+    }
+    .menu-bar-sim .menu-item {
+      padding: 0.3rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #3d2c1f;
+      transition: background 0.1s ease;
+      position: relative;
+    }
+    .menu-bar-sim .menu-item:hover {
+      background: #e5dbd0;
+    }
+    .menu-bar-sim .menu-item .dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #fff;
+      border: 2px solid #d9cdbf;
+      border-radius: 8px;
+      min-width: 160px;
+      padding: 0.3rem 0;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      z-index: 10;
+    }
+    .menu-bar-sim .menu-item:hover .dropdown {
+      display: block;
+    }
+    .menu-bar-sim .menu-item .dropdown li {
+      list-style: none;
+      padding: 0.3rem 1.2rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .menu-bar-sim .menu-item .dropdown li:hover {
+      background: #f5ede6;
+    }
+
+    .toolbar-sim {
+      display: flex;
+      gap: 0.3rem;
+      padding: 0.4rem 0.6rem;
+      background: #faf8f5;
+      border-bottom: 2px solid #e5dbd0;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .toolbar-sim .tool-btn {
+      padding: 0.3rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.1s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: #3d2c1f;
+      font-family: inherit;
+    }
+    .toolbar-sim .tool-btn:hover {
+      background: #e8dcd0;
+      border-color: #d0c4b8;
+    }
+    .toolbar-sim .tool-btn .tool-icon {
+      font-size: 1.1rem;
+    }
+    .toolbar-sim .separator {
+      width: 2px;
+      height: 24px;
+      background: #e5dbd0;
+      margin: 0 0.2rem;
+    }
+
+    .text-area-sim {
+      border: 2px solid #e5dbd0;
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      min-height: 120px;
+      background: #fff;
+      margin: 0.8rem 0;
+      font-size: 0.95rem;
+      color: #3d2c1f;
+      outline: none;
+      width: 100%;
+      resize: vertical;
+      font-family: inherit;
+      transition: border-color 0.15s;
+      box-sizing: border-box;
+    }
+    .text-area-sim:focus {
+      border-color: #b09b88;
+    }
+
+    .pengaturan-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem 2rem;
+      background: #f5f0ea;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.8rem 0;
+      border: 2px solid #e5dbd0;
+    }
+    .pengaturan-area .group-label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #5a4a3a;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .pengaturan-area .opsi-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .pengaturan-area .opsi-group label {
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      color: #3d2c1f;
+    }
+    .pengaturan-area .opsi-group input[type="checkbox"],
+    .pengaturan-area .opsi-group input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: #6b8c5e;
+    }
+    .pengaturan-area input[type="range"] {
+      width: 140px;
+      accent-color: #6b8c5e;
+      cursor: pointer;
+    }
+    .pengaturan-area .nilai-slider {
+      font-weight: 600;
+      color: #4d7a3b;
+      min-width: 30px;
+      display: inline-block;
+    }
+
+    .btn-aksi {
+      padding: 0.5rem 1.8rem;
+      border-radius: 30px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: #e8dcd0;
+      color: #3d2c1f;
+      margin-right: 0.5rem;
+      margin-bottom: 0.3rem;
+      font-family: inherit;
+    }
+    .btn-aksi:hover {
+      background: #d9cdbf;
+      transform: translateY(-1px);
+    }
+    .btn-aksi.primary {
+      background: #6b8c5e;
+      color: #fff;
+    }
+    .btn-aksi.primary:hover {
+      background: #4d7a3b;
+    }
+
+    /* ===== HIGHLIGHT KOMPONEN (untuk tantangan) ===== */
+    .komponen-highlight {
+      outline: 3px dashed #f5c542 !important;
+      outline-offset: 3px;
+      animation: pulseHighlight 1.5s ease-in-out infinite;
+      cursor: pointer !important;
+      position: relative;
+      z-index: 5;
+    }
+
+    @keyframes pulseHighlight {
+      0%, 100% { outline-color: #f5c542; }
+      50% { outline-color: #e8a020; }
+    }
+
+    .komponen-highlight:hover {
+      outline-style: solid !important;
+      outline-width: 4px !important;
+      background: rgba(245, 200, 66, 0.15) !important;
+    }
+
+    /* ===== AREA TANTANGAN ===== */
+    #area-tantangan {
+      display: none;
+      margin: 1.5rem 0;
+      padding: 1.2rem 1.8rem;
+      background: #f5ede6;
+      border-radius: 20px;
+      border-left: 6px solid #dbb9a6;
+    }
+    #area-tantangan.active {
+      display: block;
+    }
+
+    .tantangan-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tantangan-header .tantangan-progress {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #4d3829;
+      background: #fff;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      border: 2px solid #e5dbd0;
+    }
+
+    .tantangan-header .tantangan-skor {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #2d5a1e;
+      background: #e8f5e0;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      border: 2px solid #8aaa7a;
+    }
+
+    .soal-tantangan {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #3b2b1e;
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+
+    .petunjuk-tantangan {
+      color: #5a4a3a;
+      margin-bottom: 0.8rem;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #fff;
+      border-radius: 10px;
+      border-left: 4px solid #8ab4d4;
+    }
+
+    .feedback-tantangan {
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin-top: 0.8rem;
+      font-weight: 600;
+      display: none;
+      font-size: 0.95rem;
+    }
+    .feedback-tantangan.benar {
+      display: block;
+      background: #d4e8cb;
+      color: #3d6b2c;
+      border: 2px solid #6b8c5e;
+    }
+    .feedback-tantangan.salah {
+      display: block;
+      background: #f5d6d0;
+      color: #a84a3a;
+      border: 2px solid #d97a6a;
+    }
+
+    .btn-skip {
+      margin-top: 0.5rem;
+      padding: 0.3rem 1.2rem;
+      border-radius: 20px;
+      border: 2px solid #cbb5a2;
+      background: #fcf9f6;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #5a4a3a;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .btn-skip:hover {
+      background: #e8dcd0;
+    }
+
+    /* ===== NAVIGASI BAWAH ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav-bawah {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-nav-bawah:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+    .btn-nav-bawah.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+    .btn-nav-bawah.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+    .btn-nav-bawah:disabled,
+    .btn-nav-bawah.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      pointer-events: none;
+    }
+    .btn-nav-bawah .back-arrow {
+      font-size: 1.2rem;
+    }
+    .nav-hint {
+      font-size: 0.8rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+    .nav-hint.locked {
+      color: #d4a0a0;
+    }
+    .nav-hint.ready {
+      color: #2d5a1e;
+      font-weight: 600;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 820px) {
+      .window-body {
+        flex-direction: column;
+      }
+      .nav-pane {
+        width: 100%;
+        min-width: unset;
+        border-right: none;
+        border-bottom: 2px solid #e5dbd0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.1rem;
+        padding: 0.4rem 0.6rem;
+      }
+      .nav-pane .nav-item {
+        padding: 0.2rem 0.6rem;
+        font-size: 0.75rem;
+      }
+      .main-content {
+        padding: 0.8rem 1rem;
+      }
+      .pengaturan-area {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      .nav-aktivitas {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+      .nav-aktivitas .btn-nav {
+        justify-content: center;
+      }
+      .bagian-progress .step {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.6rem;
+      }
+      .bagian-progress .step .num {
+        width: 16px;
+        height: 16px;
+        font-size: 0.55rem;
+      }
+    }
+    @media (max-width: 480px) {
+      .window-titlebar .judul-window {
+        font-size: 0.8rem;
+      }
+      .window-controls button {
+        width: 24px;
+        height: 24px;
+        font-size: 0.6rem;
+      }
+      .toolbar-sim .tool-btn {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+      }
+      .menu-bar-sim .menu-item {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+      }
+      .nav-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-nav-bawah {
+        justify-content: center;
+      }
+      .materi-ringkas {
+        padding: 1rem 1.2rem;
+      }
+      .materi-ringkas h2 {
+        font-size: 1.1rem;
+      }
+      #area-tantangan {
+        padding: 1rem 1.2rem;
+      }
+      .soal-tantangan {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER (dinamis) -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="tik.html">Teknologi Informasi dan Komunikasi</a></li>
+      <li><a href="tik1.html">Antarmuka GUI</a></li>
+      <li>Lab GUI · Bagian 2</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-container">
+
+        <!-- ===== PROGRESS BAGIAN ===== -->
+        <div class="bagian-progress">
+          <span class="step completed"><span class="num">✓</span> Eksplorasi</span>
+          <span class="step active"><span class="num">2</span> Komponen Dasar</span>
+          <span class="step"><span class="num">3</span> Komponen Input</span>
+          <span class="step"><span class="num">4</span> Komponen Lanjutan</span>
+          <span class="step"><span class="num">5</span> Kuis Akhir</span>
+        </div>
+
+        <!-- ===== MATERI RINGKAS ===== -->
+        <div class="materi-ringkas">
+          <h2>📖 Materi Singkat <span class="badge">Bagian 2</span></h2>
+
+          <h3>1. Window (Jendela)</h3>
+          <p>
+            <strong>Window</strong> adalah area berbentuk persegi panjang di layar yang menampilkan konten dari sebuah program atau folder. Window dapat dipindahkan, diperbesar, diperkecil, dan ditutup.
+          </p>
+          <div class="info-box">
+            💡 <strong>Contoh:</strong> Saat kamu membuka Kalkulator, muncul kotak persegi panjang berisi tombol angka — itulah window. Saat membuka File Explorer, ada jendela besar yang menampilkan daftar file.
+          </div>
+
+          <h3>2. Title Bar (Bilah Judul)</h3>
+          <p>
+            Bagian paling atas dari sebuah window yang menampilkan <strong>nama program atau file</strong> yang sedang dibuka. Di sisi kanannya terdapat tombol kontrol window.
+          </p>
+
+          <h3>3. Window Controls (Kontrol Jendela)</h3>
+          <p>
+            Tiga tombol di pojok kanan Title Bar:
+          </p>
+          <ul>
+            <li><strong>Minimize (─)</strong> — menyembunyikan window ke taskbar</li>
+            <li><strong>Maximize (☐)</strong> — memperbesar window ke seluruh layar</li>
+            <li><strong>Close (✕)</strong> — menutup window</li>
+          </ul>
+
+          <h3>4. Menu Bar (Bilah Menu)</h3>
+          <p>
+            <strong>Menu Bar</strong> adalah daftar menu utama (File, Edit, Settings, Help) yang terletak di bawah Title Bar. Setiap menu berisi pilihan perintah (drop-down menu).
+          </p>
+          <div class="info-box">
+            💡 <strong>Contoh:</strong> Klik "File" → muncul pilihan "New", "Open", "Save", "Print".
+          </div>
+
+          <h3>5. Toolbar (Bilah Alat)</h3>
+          <p>
+            <strong>Toolbar</strong> adalah kumpulan tombol ikon untuk <strong>akses cepat</strong> ke perintah yang sering digunakan (Save, Undo, Redo, Print). Toolbar biasanya berada di bawah Menu Bar.
+          </p>
+
+          <a href="materitik1.html" class="link-materi">
+            📚 Baca materi lengkap di sini →
+          </a>
+        </div>
+
+        <!-- ===== NAVIGASI AKTIVITAS ===== -->
+        <div class="nav-aktivitas">
+          <a href="aktivitastik1a.html" class="btn-nav">⬅ Bagian Sebelumnya</a>
+          <span class="info-aktivitas" id="infoAktivitas">🎯 Misi 1: Kenali Komponen Dasar</span>
+          <a href="tik1.html" class="btn-nav">🏠 Portal</a>
+        </div>
+
+        <!-- ===== AREA TANTANGAN ===== -->
+        <div id="area-tantangan" class="active">
+          <div class="tantangan-header">
+            <span class="tantangan-progress" id="tantanganProgress">Soal 1 dari 4</span>
+            <span class="tantangan-skor" id="tantanganSkor">Skor: 0</span>
+          </div>
+          <div class="soal-tantangan" id="soalTantangan">🔍 Memuat soal...</div>
+          <div class="petunjuk-tantangan" id="petunjukTantangan">Petunjuk akan muncul di sini.</div>
+          <div class="feedback-tantangan" id="feedbackTantangan"></div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.8rem;">
+            <button class="btn-aksi primary" id="btnTantanganBerikutnya" style="display:none;">Soal Berikutnya →</button>
+            <button class="btn-skip" id="btnSkipTantangan">⏭️ Lewati Soal</button>
+          </div>
+        </div>
+
+        <!-- ===== SIMULASI WINDOW ===== -->
+        <div class="simulasi-window" id="simulasiWindow">
+
+          <!-- Title Bar -->
+          <div class="window-titlebar" id="titleBar" data-komponen="title-bar">
+            <span class="judul-window" data-komponen="title-bar">
+              <span class="ikon-window" data-komponen="title-bar">📄</span>
+              <span id="windowTitle" data-komponen="title-bar">Dokumen Simulasi - Editor TIK</span>
+            </span>
+            <div class="window-controls" data-komponen="window-controls">
+              <button class="btn-minimize" title="Minimize" data-komponen="window-controls">─</button>
+              <button class="btn-maximize" title="Maximize" data-komponen="window-controls">☐</button>
+              <button class="btn-close" title="Close" data-komponen="window-controls">✕</button>
+            </div>
+          </div>
+
+          <!-- Menu Bar -->
+          <div class="menu-bar-sim" id="menuBar" data-komponen="menu-bar">
+            <span class="menu-item" data-komponen="menu-bar">
+              📁 File
+              <ul class="dropdown">
+                <li>📄 New</li>
+                <li>📂 Open</li>
+                <li>💾 Save</li>
+                <li>🖨️ Print</li>
+              </ul>
+            </span>
+            <span class="menu-item" data-komponen="menu-bar">
+              ✏️ Edit
+              <ul class="dropdown">
+                <li>↩️ Undo</li>
+                <li>↪️ Redo</li>
+                <li>✂️ Cut</li>
+                <li>📋 Copy</li>
+                <li>📌 Paste</li>
+              </ul>
+            </span>
+            <span class="menu-item" data-komponen="menu-bar">
+              ⚙️ Settings
+              <ul class="dropdown">
+                <li>🔧 Preferences</li>
+                <li>🎨 Theme</li>
+                <li>🔒 Privacy</li>
+              </ul>
+            </span>
+            <span class="menu-item" data-komponen="menu-bar">
+              ❓ Help
+              <ul class="dropdown">
+                <li>📖 User Guide</li>
+                <li>ℹ️ About</li>
+              </ul>
+            </span>
+          </div>
+
+          <!-- Toolbar -->
+          <div class="toolbar-sim" id="toolbar" data-komponen="toolbar">
+            <button class="tool-btn" data-komponen="toolbar" title="New"><span class="tool-icon">📄</span> New</button>
+            <button class="tool-btn" data-komponen="toolbar" title="Open"><span class="tool-icon">📂</span> Open</button>
+            <button class="tool-btn" data-komponen="toolbar" title="Save" id="btnSave"><span class="tool-icon">💾</span> Save</button>
+            <span class="separator"></span>
+            <button class="tool-btn" data-komponen="toolbar" title="Undo"><span class="tool-icon">↩️</span> Undo</button>
+            <button class="tool-btn" data-komponen="toolbar" title="Redo"><span class="tool-icon">↪️</span> Redo</button>
+            <span class="separator"></span>
+            <button class="tool-btn" data-komponen="toolbar" title="Print"><span class="tool-icon">🖨️</span> Print</button>
+            <button class="tool-btn" data-komponen="toolbar" title="Settings" id="btnSettings"><span class="tool-icon">⚙️</span> Settings</button>
+          </div>
+
+          <!-- Body Window -->
+          <div class="window-body">
+
+            <!-- Navigation Pane -->
+            <div class="nav-pane" id="navPane">
+              <div class="nav-item active" data-komponen="nav-pane"><span class="nav-icon">📁</span> My Documents</div>
+              <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon">🖼️</span> Pictures</div>
+              <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon">🎵</span> Music</div>
+              <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon">🎬</span> Videos</div>
+              <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon">⬇️</span> Downloads</div>
+              <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon">🗑️</span> Trash</div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+
+              <!-- Address Bar -->
+              <div class="address-bar-wrapper" id="addressBar" data-komponen="address-bar">
+                <span class="label-address">📍</span>
+                <input type="text" placeholder="C:\Users\Siswa\Documents\TIK" value="C:\Users\Siswa\Documents\TIK" id="addressInput" data-komponen="address-bar">
+                <button class="btn-go" data-komponen="address-bar">Go</button>
+              </div>
+
+              <!-- Text Area -->
+              <textarea class="text-area-sim" id="textArea" data-komponen="text-field" placeholder="Ketik di sini...">Selamat belajar GUI! 🎉
+Ini adalah simulasi aplikasi perkantoran.
+Coba cari dan kenali setiap komponen GUI di sekitarmu!</textarea>
+
+              <!-- Pengaturan -->
+              <div class="pengaturan-area" id="pengaturanArea">
+                <div>
+                  <span class="group-label">☑️ Pengaturan Tampilan</span>
+                  <div class="opsi-group">
+                    <label><input type="checkbox" data-komponen="checkbox"> Mode Gelap</label>
+                    <label><input type="checkbox" data-komponen="checkbox"> Tampilkan Grid</label>
+                    <label><input type="checkbox" data-komponen="checkbox"> Auto-save</label>
+                  </div>
+                </div>
+                <div>
+                  <span class="group-label">🔘 Pilihan Format</span>
+                  <div class="opsi-group">
+                    <label><input type="radio" name="format" data-komponen="radio-button" checked> .docx</label>
+                    <label><input type="radio" name="format" data-komponen="radio-button"> .pdf</label>
+                    <label><input type="radio" name="format" data-komponen="radio-button"> .txt</label>
+                  </div>
+                </div>
+                <div>
+                  <span class="group-label">📊 Ukuran Font</span>
+                  <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <input type="range" min="8" max="24" value="14" id="sliderFont" data-komponen="slider">
+                    <span class="nilai-slider" id="nilaiSlider">14</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tombol aksi -->
+              <div style="display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.3rem;">
+                <button class="btn-aksi primary" data-komponen="button" id="btnSimpan">💾 Simpan</button>
+                <button class="btn-aksi" data-komponen="button" id="btnBatal">↩️ Batal</button>
+                <button class="btn-aksi" data-komponen="button" id="btnCetak">🖨️ Cetak</button>
+                <button class="btn-aksi" data-komponen="button" id="btnTentang">ℹ️ Tentang</button>
+              </div>
+
+            </div><!-- end main-content -->
+          </div><!-- end window-body -->
+        </div><!-- end simulasi-window -->
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom">
+          <a href="aktivitastik1a.html" class="btn-nav-bawah">
+            <span class="back-arrow">←</span> Bagian 1
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian3" onclick="lanjutKeBagian3()">
+              Lanjut ke Bagian 3: Komponen Input →
+            </button>
+          </div>
+          <div class="nav-hint locked" id="hintLanjut">
+            🔒 Selesaikan semua 4 soal tantangan untuk membuka Bagian 3
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="script.js"></script>
+
+  <!-- ===== SCRIPT AKTIVITAS ===== -->
+  <script>
+    (function() {
+      "use strict";
+
+      // ---- DATA TANTANGAN (4 KOMPONEN DASAR) ----
+      const tantanganSoal = [
+        {
+          soal: '🔍 <strong>Misi 1 dari 4:</strong> Klik pada <strong>Title Bar</strong> — bagian yang menampilkan nama file "Dokumen Simulasi - Editor TIK".',
+          petunjuk: '💡 Petunjuk: Title Bar adalah bagian paling atas window, tempat nama program/file ditampilkan. Klik pada area judul tersebut.',
+          target: 'title-bar'
+        },
+        {
+          soal: '🔍 <strong>Misi 2 dari 4:</strong> Klik pada <strong>Window Controls</strong> — kumpulan tombol untuk minimize, maximize, dan close.',
+          petunjuk: '💡 Petunjuk: Tombol-tombol ini terletak di pojok kanan atas window. Cari tombol berbentuk lingkaran dengan simbol ─, ☐, atau ✕.',
+          target: 'window-controls'
+        },
+        {
+          soal: '🔍 <strong>Misi 3 dari 4:</strong> Klik pada <strong>Menu Bar</strong> — daftar menu utama seperti File, Edit, Settings, Help.',
+          petunjuk: '💡 Petunjuk: Menu Bar berada tepat di bawah Title Bar. Klik pada area menu "File" atau "Edit".',
+          target: 'menu-bar'
+        },
+        {
+          soal: '🔍 <strong>Misi 4 dari 4:</strong> Klik pada <strong>Toolbar</strong> — kumpulan tombol ikon untuk akses cepat (Save, Undo, Print).',
+          petunjuk: '💡 Petunjuk: Toolbar berada di bawah Menu Bar, berisi tombol-tombol kecil dengan ikon seperti 💾 Save, ↩️ Undo, 🖨️ Print.',
+          target: 'toolbar'
+        }
+      ];
+
+      // ---- STATE ----
+      let tantanganIndex = 0;
+      let skor = 0;
+      let tantanganSelesai = false;
+      let menungguJawaban = false;
+
+      // ---- DOM REFS ----
+      const elSoalTantangan = document.getElementById('soalTantangan');
+      const elPetunjukTantangan = document.getElementById('petunjukTantangan');
+      const elFeedbackTantangan = document.getElementById('feedbackTantangan');
+      const elBtnTantanganBerikutnya = document.getElementById('btnTantanganBerikutnya');
+      const elBtnSkipTantangan = document.getElementById('btnSkipTantangan');
+      const elTantanganProgress = document.getElementById('tantanganProgress');
+      const elTantanganSkor = document.getElementById('tantanganSkor');
+      const elInfoAktivitas = document.getElementById('infoAktivitas');
+      const elBtnLanjutBagian3 = document.getElementById('btnLanjutBagian3');
+      const elHintLanjut = document.getElementById('hintLanjut');
+
+      // ---- RENDER SOAL ----
+      function tampilkanSoal() {
+        if (tantanganIndex >= tantanganSoal.length) {
+          selesaiTantangan();
+          return;
+        }
+
+        const soal = tantanganSoal[tantanganIndex];
+        elSoalTantangan.innerHTML = soal.soal;
+        elPetunjukTantangan.innerHTML = soal.petunjuk;
+        elFeedbackTantangan.className = 'feedback-tantangan';
+        elFeedbackTantangan.style.display = 'none';
+        elBtnTantanganBerikutnya.style.display = 'none';
+        elBtnSkipTantangan.style.display = 'inline-block';
+
+        elTantanganProgress.textContent = `Soal ${tantanganIndex + 1} dari ${tantanganSoal.length}`;
+        elInfoAktivitas.textContent = `🎯 Misi ${tantanganIndex + 1}/${tantanganSoal.length}: Kenali Komponen Dasar`;
+
+        // Highlight komponen target setelah beberapa detik (opsional, sebagai bantuan)
+        setTimeout(() => {
+          highlightKomponenTarget(soal.target);
+        }, 5000);
+
+        menungguJawaban = true;
+      }
+
+      // ---- HIGHLIGHT KOMPONEN (opsional, bantuan visual) ----
+      let highlightTimeout;
+      function highlightKomponenTarget(target) {
+        // Hapus highlight sebelumnya
+        document.querySelectorAll('.komponen-highlight').forEach(el => {
+          el.classList.remove('komponen-highlight');
+        });
+
+        // Highlight semua elemen dengan data-komponen=target
+        const elements = document.querySelectorAll(`[data-komponen="${target}"]`);
+        elements.forEach(el => {
+          // Hanya highlight elemen paling luar (parent utama)
+          el.classList.add('komponen-highlight');
+        });
+
+        // Auto-hilangkan highlight setelah 3 detik
+        clearTimeout(highlightTimeout);
+        highlightTimeout = setTimeout(() => {
+          document.querySelectorAll('.komponen-highlight').forEach(el => {
+            el.classList.remove('komponen-highlight');
+          });
+        }, 3000);
+      }
+
+      // ---- KLIK KOMPONEN ----
+      function handleKomponenClick(e, key) {
+        if (!menungguJawaban) return;
+
+        e.stopPropagation();
+        e.preventDefault();
+
+        const soal = tantanganSoal[tantanganIndex];
+        if (!soal) return;
+
+        if (key === soal.target) {
+          // JAWABAN BENAR
+          menungguJawaban = false;
+          skor += 25;
+          elTantanganSkor.textContent = `Skor: ${skor}`;
+
+          elFeedbackTantangan.className = 'feedback-tantangan benar';
+          elFeedbackTantangan.innerHTML = '✅ <strong>Benar!</strong> Kamu berhasil menemukan komponen ini!';
+          elFeedbackTantangan.style.display = 'block';
+
+          elBtnTantanganBerikutnya.style.display = 'inline-block';
+          elBtnSkipTantangan.style.display = 'none';
+
+          // Hapus highlight
+          document.querySelectorAll('.komponen-highlight').forEach(el => {
+            el.classList.remove('komponen-highlight');
+          });
+
+        } else {
+          // JAWABAN SALAH
+          elFeedbackTantangan.className = 'feedback-tantangan salah';
+          elFeedbackTantangan.innerHTML = '❌ <strong>Belum tepat.</strong> ' + soal.petunjuk;
+          elFeedbackTantangan.style.display = 'block';
+
+          // Hilangkan feedback setelah 3 detik
+          setTimeout(() => {
+            if (menungguJawaban) {
+              elFeedbackTantangan.style.display = 'none';
+            }
+          }, 3000);
+        }
+      }
+
+      // ---- NEXT SOAL ----
+      function nextSoal() {
+        tantanganIndex++;
+        if (tantanganIndex < tantanganSoal.length) {
+          tampilkanSoal();
+        } else {
+          selesaiTantangan();
+        }
+      }
+
+      // ---- SKIP SOAL ----
+      function skipSoal() {
+        menungguJawaban = false;
+        const soal = tantanganSoal[tantanganIndex];
+        elFeedbackTantangan.className = 'feedback-tantangan salah';
+        elFeedbackTantangan.innerHTML = '⏭️ <strong>Soal dilewati.</strong> Komponen yang dicari: <strong>' + 
+          (soal.target === 'title-bar' ? 'Title Bar' :
+           soal.target === 'window-controls' ? 'Window Controls' :
+           soal.target === 'menu-bar' ? 'Menu Bar' : 'Toolbar') + '</strong>';
+        elFeedbackTantangan.style.display = 'block';
+
+        elBtnTantanganBerikutnya.style.display = 'inline-block';
+        elBtnSkipTantangan.style.display = 'none';
+
+        document.querySelectorAll('.komponen-highlight').forEach(el => {
+          el.classList.remove('komponen-highlight');
+        });
+      }
+
+      // ---- SELESAI TANTANGAN ----
+      function selesaiTantangan() {
+        tantanganSelesai = true;
+        elSoalTantangan.innerHTML = '🎉 <strong>Selamat!</strong> Kamu telah menyelesaikan Misi 1: Kenali Komponen Dasar!';
+        elPetunjukTantangan.innerHTML = 'Kamu berhasil mengidentifikasi 4 komponen dasar GUI: <strong>Title Bar, Window Controls, Menu Bar, dan Toolbar</strong>.';
+        elFeedbackTantangan.className = 'feedback-tantangan benar';
+        elFeedbackTantangan.innerHTML = '✅ Total Skor: <strong>' + skor + '</strong> poin';
+        elFeedbackTantangan.style.display = 'block';
+        elBtnTantanganBerikutnya.style.display = 'none';
+        elBtnSkipTantangan.style.display = 'none';
+
+        // Buka navigasi ke Bagian 3
+        elBtnLanjutBagian3.classList.remove('locked');
+        elBtnLanjutBagian3.classList.add('primary');
+        elHintLanjut.classList.remove('locked');
+        elHintLanjut.classList.add('ready');
+        elHintLanjut.textContent = '✅ Bagian 3 sudah terbuka! Klik untuk melanjutkan.';
+
+        elInfoAktivitas.textContent = '🎉 Misi 1 Selesai!';
+
+        // Simpan skor ke localStorage
+        try {
+          const progress = JSON.parse(localStorage.getItem('labgui_progress') || '{}');
+          progress.skorBagian2 = skor;
+          progress.bagian = 2;
+          localStorage.setItem('labgui_progress', JSON.stringify(progress));
+        } catch (e) {
+          console.warn('localStorage tidak tersedia:', e);
+        }
+      }
+
+      // ---- REGISTRASI KLIK KOMPONEN ----
+      function registerKomponenKlik() {
+        document.querySelectorAll('[data-komponen]').forEach(el => {
+          el.addEventListener('click', function(e) {
+            const key = el.dataset.komponen;
+            if (key) handleKomponenClick(e, key);
+          });
+        });
+      }
+
+      // ---- LANJUT KE BAGIAN 3 ----
+      function lanjutKeBagian3() {
+        if (!tantanganSelesai) {
+          alert('🔒 Selesaikan semua 4 soal tantangan terlebih dahulu!');
+          return;
+        }
+        window.location.href = 'aktivitastik1c.html';
+      }
+
+      // ---- SLIDER & TOMBOL SIMULASI ----
+      document.getElementById('sliderFont').addEventListener('input', function() {
+        document.getElementById('nilaiSlider').textContent = this.value;
+        document.getElementById('textArea').style.fontSize = this.value + 'px';
+      });
+
+      document.getElementById('btnSimpan').addEventListener('click', function(e) {
+        e.stopPropagation();
+        alert('💾 Dokumen berhasil disimpan! (simulasi)');
+      });
+
+      document.getElementById('btnBatal').addEventListener('click', function(e) {
+        e.stopPropagation();
+        alert('↩️ Perubahan dibatalkan. (simulasi)');
+      });
+
+      document.getElementById('btnCetak').addEventListener('click', function(e) {
+        e.stopPropagation();
+        alert('🖨️ Mencetak dokumen... (simulasi)');
+      });
+
+      document.getElementById('btnTentang').addEventListener('click', function(e) {
+        e.stopPropagation();
+        alert('ℹ️ Lab GUI - Simulasi Antarmuka\nDibuat untuk pembelajaran Informatika SMP.\n\nVersi 1.0');
+      });
+
+      // ---- EVENT LISTENERS ----
+      elBtnTantanganBerikutnya.addEventListener('click', nextSoal);
+      elBtnSkipTantangan.addEventListener('click', skipSoal);
+      elBtnLanjutBagian3.addEventListener('click', lanjutKeBagian3);
+
+      // ---- INISIALISASI ----
+      registerKomponenKlik();
+      tampilkanSoal();
+      elTantanganSkor.textContent = 'Skor: 0';
+
+      console.log('✅ Lab GUI Bagian 2: Komponen Dasar siap!');
+    })();
+  </script>
+
+</body>
+</html>

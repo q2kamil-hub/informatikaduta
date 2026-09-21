@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Lab GUI · Bagian 1: Eksplorasi · Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA MATERI RINGKAS ===== */
+    .materi-ringkas {
+      max-width: 820px;
+      margin: 0 auto 1.5rem;
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem 1.8rem;
+      border-left: 6px solid #8ab4d4;
+      border: 2px solid #e5dbd0;
+    }
+
+    .materi-ringkas h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .materi-ringkas h2 .badge {
+      background: #8ab4d4;
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .materi-ringkas h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #4d3829;
+      margin: 1rem 0 0.4rem;
+    }
+
+    .materi-ringkas p {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #2f2822;
+      margin-bottom: 0.6rem;
+    }
+
+    .materi-ringkas ul {
+      margin: 0.3rem 0 0.8rem 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .materi-ringkas li {
+      margin-bottom: 0.25rem;
+      line-height: 1.6;
+    }
+
+    .materi-ringkas .wimp-badge {
+      display: inline-block;
+      background: #4d3829;
+      color: #f5c542;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      margin: 0.3rem 0 0.6rem;
+    }
+
+    .materi-ringkas .info-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 0.8rem 1.2rem;
+      border: 2px solid #e5dbd0;
+      margin: 0.6rem 0;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .materi-ringkas .info-box strong {
+      color: #4d3829;
+    }
+
+    .materi-ringkas .link-materi {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: #5c4638;
+      font-size: 0.85rem;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 2px dotted #bfaa9a;
+      transition: all 0.2s ease;
+    }
+
+    .materi-ringkas .link-materi:hover {
+      color: #4d3829;
+      border-bottom-color: #7a5f4c;
+    }
+
+    /* ===== GAYA AKTIVITAS ===== */
+    :root {
+      --gui-bg: #f7f3ef;
+      --gui-window-bg: #ffffff;
+      --gui-border: #d0c4b8;
+      --gui-title-bg: #e8ddd0;
+      --gui-accent: #6b8c5e;
+      --gui-accent-light: #d4e8cb;
+      --gui-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      --gui-radius: 16px;
+    }
+
+    .aktivitas-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Progress Bagian */
+    .bagian-progress {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      margin: 0.5rem 0 1.5rem;
+    }
+
+    .bagian-progress .step {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 30px;
+      background: #f5ede6;
+      border: 2px solid #e5dbd0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .bagian-progress .step.active {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .bagian-progress .step.completed {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .bagian-progress .step .num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+    }
+
+    /* ===== HALAMAN PEMBUKA ===== */
+    #halaman-pembuka {
+      text-align: center;
+      padding: 1.5rem 1rem 1rem;
+    }
+    #halaman-pembuka .ilustrasi {
+      font-size: 5rem;
+      margin: 0.5rem 0 1rem;
+      display: block;
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    #halaman-pembuka h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    #halaman-pembuka .deskripsi {
+      max-width: 620px;
+      margin: 0.8rem auto 1.8rem;
+      font-size: 1.05rem;
+      color: #4e4540;
+      line-height: 1.7;
+    }
+    #halaman-pembuka .info-misi {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      max-width: 620px;
+      margin: 0 auto 1.5rem;
+      border-left: 6px solid #dbb9a6;
+      text-align: left;
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+    #halaman-pembuka .info-misi strong {
+      color: #4d3829;
+    }
+    .btn-mulai {
+      display: inline-block;
+      padding: 1rem 3.5rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, #6b8c5e, #4d7a3b);
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 24px rgba(70, 110, 50, 0.3);
+      text-decoration: none;
+      font-family: inherit;
+    }
+    .btn-mulai:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 32px rgba(70, 110, 50, 0.35);
+    }
+    .btn-mulai:focus-visible {
+      outline: 3px solid #4d7a3b;
+      outline-offset: 4px;
+    }
+
+    /* ===== NAVIGASI AKTIVITAS ===== */
+    .nav-aktivitas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0.8rem 1rem;
+      background: #f5f0ea;
+      border-radius: 16px;
+      border: 2px solid #e5dbd0;
+    }
+    .nav-aktivitas .btn-nav {
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+      border: 2px solid #cbb5a2;
+      background: #fcf9f6;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.15s ease;
+      color: #4d3829;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: inherit;
+    }
+    .nav-aktivitas .btn-nav:hover {
+      background: #e8dcd0;
+      transform: translateY(-2px);
+    }
+    .nav-aktivitas .btn-nav.primary {
+      background: #6b8c5e;
+      border-color: #4d7a3b;
+      color: #fff;
+    }
+    .nav-aktivitas .btn-nav.primary:hover {
+      background: #4d7a3b;
+    }
+    .nav-aktivitas .info-aktivitas {
+      font-size: 0.85rem;
+      color: #5a4a3a;
+      font-weight: 500;
+    }
+
+    /* ===== AREA SIMULASI ===== */
+    #area-simulasi {
+      display: none;
+      margin-top: 0.5rem;
+    }
+    #area-simulasi.active {
+      display: block;
+    }
+
+    /* Toolbar kontrol */
+    .aktivitas-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: center;
+      justify-content: space-between;
+      background: #ede4db;
+      padding: 0.7rem 1.2rem;
+      border-radius: 16px 16px 0 0;
+      border-bottom: 2px solid #d9cdbf;
+    }
+    .aktivitas-toolbar .mode-indikator {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #4d3829;
+    }
+    .aktivitas-toolbar .mode-indikator span {
+      background: #4d7a3b;
+      color: #fff;
+      padding: 0.15rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      margin-left: 0.3rem;
+    }
+    .progress-tracker {
+      font-size: 0.85rem;
+      color: #5a4a3a;
+      background: #fcf9f6;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      border: 1px solid #d9cdbf;
+    }
+    .progress-tracker strong {
+      color: #4d7a3b;
+    }
+
+    /* ===== SIMULASI WINDOW ===== */
+    .simulasi-window {
+      background: var(--gui-window-bg);
+      border-radius: var(--gui-radius);
+      border: 2px solid var(--gui-border);
+      box-shadow: var(--gui-shadow);
+      overflow: hidden;
+      margin: 0.5rem 0 1.5rem;
+      position: relative;
+    }
+
+    .window-titlebar {
+      background: var(--gui-title-bg);
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--gui-border);
+      user-select: none;
+    }
+    .window-titlebar .judul-window {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #3b2b1e;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .window-titlebar .judul-window:hover {
+      background: rgba(0,0,0,0.05);
+    }
+    .window-titlebar .judul-window .ikon-window {
+      font-size: 1.1rem;
+    }
+    .window-controls {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .window-controls button {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #d5c8ba;
+      color: #4d3829;
+      font-weight: 700;
+    }
+    .window-controls button:hover {
+      transform: scale(1.1);
+    }
+    .window-controls .btn-minimize { background: #f5c542; }
+    .window-controls .btn-maximize { background: #7dbd7d; }
+    .window-controls .btn-close { background: #e87a6a; color: #fff; }
+    .window-controls .btn-close:hover { background: #d45a4a; }
+
+    .window-body {
+      display: flex;
+      min-height: 380px;
+      background: #fcfaf7;
+      position: relative;
+    }
+
+    .nav-pane {
+      width: 200px;
+      min-width: 140px;
+      background: #f5f0ea;
+      padding: 0.8rem 0.6rem;
+      border-right: 2px solid #e5dbd0;
+      flex-shrink: 0;
+    }
+    .nav-pane .nav-item {
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      transition: background 0.1s ease;
+      color: #3d2c1f;
+    }
+    .nav-pane .nav-item:hover {
+      background: #e5dbd0;
+    }
+    .nav-pane .nav-item .nav-icon {
+      font-size: 1.1rem;
+    }
+    .nav-pane .nav-item.active {
+      background: #d9cdbf;
+      font-weight: 600;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 1.2rem 1.5rem;
+      overflow: auto;
+      position: relative;
+    }
+
+    .address-bar-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #fff;
+      border: 2px solid #e5dbd0;
+      border-radius: 30px;
+      padding: 0.2rem 0.2rem 0.2rem 1rem;
+      margin-bottom: 1rem;
+    }
+    .address-bar-wrapper .label-address {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #8a7a6a;
+      letter-spacing: 0.05em;
+    }
+    .address-bar-wrapper input {
+      flex: 1;
+      border: none;
+      padding: 0.3rem 0;
+      font-size: 0.85rem;
+      background: transparent;
+      outline: none;
+      color: #3d2c1f;
+      min-width: 60px;
+      font-family: inherit;
+    }
+    .address-bar-wrapper .btn-go {
+      background: #6b8c5e;
+      color: #fff;
+      border: none;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.75rem;
+      transition: background 0.15s;
+      font-family: inherit;
+    }
+    .address-bar-wrapper .btn-go:hover {
+      background: #4d7a3b;
+    }
+
+    .menu-bar-sim {
+      display: flex;
+      gap: 0.2rem;
+      background: #f5f0ea;
+      padding: 0.2rem 0.5rem;
+      border-bottom: 2px solid #e5dbd0;
+      flex-wrap: wrap;
+    }
+    .menu-bar-sim .menu-item {
+      padding: 0.3rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #3d2c1f;
+      transition: background 0.1s ease;
+      position: relative;
+    }
+    .menu-bar-sim .menu-item:hover {
+      background: #e5dbd0;
+    }
+    .menu-bar-sim .menu-item .dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #fff;
+      border: 2px solid #d9cdbf;
+      border-radius: 8px;
+      min-width: 160px;
+      padding: 0.3rem 0;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      z-index: 10;
+    }
+    .menu-bar-sim .menu-item:hover .dropdown {
+      display: block;
+    }
+    .menu-bar-sim .menu-item .dropdown li {
+      list-style: none;
+      padding: 0.3rem 1.2rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .menu-bar-sim .menu-item .dropdown li:hover {
+      background: #f5ede6;
+    }
+
+    .toolbar-sim {
+      display: flex;
+      gap: 0.3rem;
+      padding: 0.4rem 0.6rem;
+      background: #faf8f5;
+      border-bottom: 2px solid #e5dbd0;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .toolbar-sim .tool-btn {
+      padding: 0.3rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.1s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: #3d2c1f;
+      font-family: inherit;
+    }
+    .toolbar-sim .tool-btn:hover {
+      background: #e8dcd0;
+      border-color: #d0c4b8;
+    }
+    .toolbar-sim .tool-btn .tool-icon {
+      font-size: 1.1rem;
+    }
+    .toolbar-sim .separator {
+      width: 2px;
+      height: 24px;
+      background: #e5dbd0;
+      margin: 0 0.2rem;
+    }
+
+    .text-area-sim {
+      border: 2px solid #e5dbd0;
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      min-height: 120px;
+      background: #fff;
+      margin: 0.8rem 0;
+      font-size: 0.95rem;
+      color: #3d2c1f;
+      outline: none;
+      width: 100%;
+      resize: vertical;
+      font-family: inherit;
+      transition: border-color 0.15s;
+      box-sizing: border-box;
+    }
+    .text-area-sim:focus {
+      border-color: #b09b88;
+    }
+
+    .pengaturan-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem 2rem;
+      background: #f5f0ea;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.8rem 0;
+      border: 2px solid #e5dbd0;
+    }
+    .pengaturan-area .group-label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #5a4a3a;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .pengaturan-area .opsi-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .pengaturan-area .opsi-group label {
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      color: #3d2c1f;
+    }
+    .pengaturan-area .opsi-group input[type="checkbox"],
+    .pengaturan-area .opsi-group input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: #6b8c5e;
+    }
+    .pengaturan-area input[type="range"] {
+      width: 140px;
+      accent-color: #6b8c5e;
+      cursor: pointer;
+    }
+    .pengaturan-area .nilai-slider {
+      font-weight: 600;
+      color: #4d7a3b;
+      min-width: 30px;
+      display: inline-block;
+    }
+
+    .btn-aksi {
+      padding: 0.5rem 1.8rem;
+      border-radius: 30px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: #e8dcd0;
+      color: #3d2c1f;
+      margin-right: 0.5rem;
+      margin-bottom: 0.3rem;
+      font-family: inherit;
+    }
+    .btn-aksi:hover {
+      background: #d9cdbf;
+      transform: translateY(-1px);
+    }
+    .btn-aksi.primary {
+      background: #6b8c5e;
+      color: #fff;
+    }
+    .btn-aksi.primary:hover {
+      background: #4d7a3b;
+    }
+
+    /* ===== TOOLTIP ===== */
+    .gui-tooltip {
+      position: fixed;
+      background: #3b2b1e;
+      color: #f5ede6;
+      padding: 0.7rem 1.2rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      max-width: 280px;
+      pointer-events: none;
+      z-index: 9999;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      line-height: 1.5;
+    }
+    .gui-tooltip.visible {
+      opacity: 1;
+    }
+    .gui-tooltip .tt-title {
+      font-weight: 700;
+      color: #f5c542;
+      display: block;
+    }
+    .gui-tooltip .tt-fungsi {
+      display: block;
+      margin-top: 0.2rem;
+    }
+    .gui-tooltip .tt-analogi {
+      display: block;
+      font-size: 0.75rem;
+      opacity: 0.8;
+      margin-top: 0.2rem;
+      font-style: italic;
+    }
+
+    /* ===== NAVIGASI BAWAH ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav-bawah {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-nav-bawah:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+    .btn-nav-bawah.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+    .btn-nav-bawah.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+    .btn-nav-bawah:disabled,
+    .btn-nav-bawah.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      pointer-events: none;
+    }
+    .btn-nav-bawah .back-arrow {
+      font-size: 1.2rem;
+    }
+    .nav-hint {
+      font-size: 0.8rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+    .nav-hint.locked {
+      color: #d4a0a0;
+    }
+    .nav-hint.ready {
+      color: #2d5a1e;
+      font-weight: 600;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 820px) {
+      .window-body {
+        flex-direction: column;
+      }
+      .nav-pane {
+        width: 100%;
+        min-width: unset;
+        border-right: none;
+        border-bottom: 2px solid #e5dbd0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.1rem;
+        padding: 0.4rem 0.6rem;
+      }
+      .nav-pane .nav-item {
+        padding: 0.2rem 0.6rem;
+        font-size: 0.75rem;
+      }
+      .main-content {
+        padding: 0.8rem 1rem;
+      }
+      .pengaturan-area {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      #halaman-pembuka h1 {
+        font-size: 1.8rem;
+      }
+      .aktivitas-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+      }
+      .aktivitas-toolbar .mode-indikator {
+        text-align: center;
+      }
+      .nav-aktivitas {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+      .nav-aktivitas .btn-nav {
+        justify-content: center;
+      }
+      .bagian-progress .step {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.6rem;
+      }
+      .bagian-progress .step .num {
+        width: 16px;
+        height: 16px;
+        font-size: 0.55rem;
+      }
+    }
+    @media (max-width: 480px) {
+      .window-titlebar .judul-window {
+        font-size: 0.8rem;
+      }
+      .window-controls button {
+        width: 24px;
+        height: 24px;
+        font-size: 0.6rem;
+      }
+      .toolbar-sim .tool-btn {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+      }
+      .menu-bar-sim .menu-item {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+      }
+      #halaman-pembuka .ilustrasi {
+        font-size: 3.5rem;
+      }
+      .btn-mulai {
+        padding: 0.7rem 2rem;
+        font-size: 1rem;
+      }
+      .nav-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-nav-bawah {
+        justify-content: center;
+      }
+      .materi-ringkas {
+        padding: 1rem 1.2rem;
+      }
+      .materi-ringkas h2 {
+        font-size: 1.1rem;
+      }
+      .bagian-progress {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER (dinamis) -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="tik.html">Teknologi Informasi dan Komunikasi</a></li>
+      <li><a href="tik1.html">Antarmuka GUI</a></li>
+      <li>Lab GUI · Bagian 1</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-container">
+
+        <!-- ===== PROGRESS BAGIAN ===== -->
+        <div class="bagian-progress">
+          <span class="step active"><span class="num">1</span> Eksplorasi</span>
+          <span class="step"><span class="num">2</span> Komponen Dasar</span>
+          <span class="step"><span class="num">3</span> Komponen Input</span>
+          <span class="step"><span class="num">4</span> Komponen Lanjutan</span>
+          <span class="step"><span class="num">5</span> Kuis Akhir</span>
+        </div>
+
+        <!-- ===== MATERI RINGKAS ===== -->
+        <div class="materi-ringkas">
+          <h2>📖 Materi Singkat <span class="badge">Bagian 1</span></h2>
+
+          <h3>1. Apa Itu Antarmuka Pengguna (User Interface)?</h3>
+          <p>
+            <strong>Antarmuka pengguna</strong> adalah jembatan yang menghubungkan pengguna dengan perangkat digital. Ada beberapa jenis antarmuka:
+          </p>
+          <ul>
+            <li><strong>GUI</strong> (Graphical User Interface) — menggunakan ikon, tombol, dan elemen visual. Contoh: desktop Windows, layar ponsel.</li>
+            <li><strong>CLI</strong> (Command Line Interface) — menggunakan perintah teks. Contoh: Terminal Linux, Command Prompt.</li>
+            <li><strong>VUI</strong> (Voice User Interface) — menggunakan suara. Contoh: Siri, Google Assistant.</li>
+          </ul>
+          <div class="info-box">
+            💡 <strong>Mengapa GUI lebih populer?</strong> Karena GUI lebih intuitif — pengguna cukup memilih perintah dalam bentuk ikon atau tombol, tanpa menghafal perintah teks yang rumit.
+          </div>
+
+          <h3>2. Memahami GUI (Graphical User Interface)</h3>
+          <p>
+            <strong>GUI</strong> adalah antarmuka yang menggunakan ikon dan elemen grafis sebagai pengganti perintah berbasis teks. Konsep ini pertama kali dikembangkan secara komersial pada tahun <strong>1984 oleh Apple Computer</strong>, dan kini menjadi standar di hampir semua sistem operasi.
+          </p>
+          <div class="info-box">
+            🚦 <strong>Analogi:</strong> GUI seperti <strong>papan tanda di jalan raya</strong>. Tanpa tanda, kita bingung arah; dengan tanda, kita tahu harus belok kiri, kanan, atau terus.
+          </div>
+
+          <h3>3. WIMP System</h3>
+          <p>Sebagian besar GUI menggunakan sistem <strong>WIMP</strong>:</p>
+          <div class="wimp-badge">WIMP = Windows, Icons, Menus, Pointing</div>
+          <ul>
+            <li><strong>Windows</strong> — jendela area kerja program</li>
+            <li><strong>Icons</strong> — simbol visual program/file/folder</li>
+            <li><strong>Menus</strong> — daftar pilihan perintah</li>
+            <li><strong>Pointing</strong> — pointer (mouse/sentuhan) untuk memilih</li>
+          </ul>
+
+          <a href="materitik1.html" class="link-materi">
+            📚 Baca materi lengkap di sini →
+          </a>
+        </div>
+
+        <!-- ===== HALAMAN PEMBUKA ===== -->
+        <div id="halaman-pembuka">
+          <span class="ilustrasi">🖥️</span>
+          <h1>Lab GUI: Jelajahi Antarmuka</h1>
+          <p class="deskripsi">
+            Selamat datang di Lab GUI! Di sini kamu akan menjelajahi berbagai komponen antarmuka berbasis grafis melalui simulasi aplikasi interaktif.
+          </p>
+
+          <div class="info-misi">
+            <strong>🎯 Misi Bagian 1:</strong> Eksplorasi Bebas
+            <br><br>
+            Arahkan kursor ke berbagai komponen di simulasi window untuk melihat <strong>tooltip</strong> yang menjelaskan fungsi setiap komponen. Temukan <strong>12 komponen GUI</strong> yang berbeda!
+            <br><br>
+            💡 <em>Tidak ada jawaban benar/salah di bagian ini — ini saatnya kamu mengenal komponen GUI secara bebas.</em>
+          </div>
+
+          <button class="btn-mulai" id="btnMulai">🚀 Mulai Eksplorasi</button>
+        </div>
+
+        <!-- ===== AREA SIMULASI ===== -->
+        <div id="area-simulasi">
+
+          <!-- Navigasi Aktivitas -->
+          <div class="nav-aktivitas">
+            <a href="tik1.html" class="btn-nav">⬅ Kembali ke Portal</a>
+            <span class="info-aktivitas" id="infoAktivitas">📚 Mode Belajar</span>
+            <a href="materitik1.html" class="btn-nav">📖 Materi</a>
+          </div>
+
+          <!-- Toolbar kontrol aktivitas -->
+          <div class="aktivitas-toolbar">
+            <div class="mode-indikator">
+              📚 Mode: <span id="modeLabel">Eksplorasi Bebas</span>
+            </div>
+            <div class="progress-tracker">
+              Komponen ditemukan: <strong id="progressCounter">0</strong> / <span id="totalKomponen">12</span>
+            </div>
+          </div>
+
+          <!-- ===== SIMULASI WINDOW ===== -->
+          <div class="simulasi-window" id="simulasiWindow">
+
+            <!-- Title Bar -->
+            <div class="window-titlebar" id="titleBar" data-komponen="title-bar">
+              <span class="judul-window" data-komponen="title-bar">
+                <span class="ikon-window" data-komponen="title-bar">📄</span>
+                <span id="windowTitle" data-komponen="title-bar">Dokumen Simulasi - Editor TIK</span>
+              </span>
+              <div class="window-controls" data-komponen="window-controls">
+                <button class="btn-minimize" title="Minimize" data-komponen="window-controls">─</button>
+                <button class="btn-maximize" title="Maximize" data-komponen="window-controls">☐</button>
+                <button class="btn-close" title="Close" data-komponen="window-controls">✕</button>
+              </div>
+            </div>
+
+            <!-- Menu Bar -->
+            <div class="menu-bar-sim" id="menuBar">
+              <span class="menu-item" data-komponen="menu-bar">
+                📁 File
+                <ul class="dropdown">
+                  <li data-komponen="menu-bar">📄 New</li>
+                  <li data-komponen="menu-bar">📂 Open</li>
+                  <li data-komponen="menu-bar">💾 Save</li>
+                  <li data-komponen="menu-bar">🖨️ Print</li>
+                </ul>
+              </span>
+              <span class="menu-item" data-komponen="menu-bar">
+                ✏️ Edit
+                <ul class="dropdown">
+                  <li data-komponen="menu-bar">↩️ Undo</li>
+                  <li data-komponen="menu-bar">↪️ Redo</li>
+                  <li data-komponen="menu-bar">✂️ Cut</li>
+                  <li data-komponen="menu-bar">📋 Copy</li>
+                  <li data-komponen="menu-bar">📌 Paste</li>
+                </ul>
+              </span>
+              <span class="menu-item" data-komponen="menu-bar">
+                ⚙️ Settings
+                <ul class="dropdown">
+                  <li data-komponen="menu-bar">🔧 Preferences</li>
+                  <li data-komponen="menu-bar">🎨 Theme</li>
+                  <li data-komponen="menu-bar">🔒 Privacy</li>
+                </ul>
+              </span>
+              <span class="menu-item" data-komponen="menu-bar">
+                ❓ Help
+                <ul class="dropdown">
+                  <li data-komponen="menu-bar">📖 User Guide</li>
+                  <li data-komponen="menu-bar">ℹ️ About</li>
+                </ul>
+              </span>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="toolbar-sim" id="toolbar">
+              <button class="tool-btn" data-komponen="toolbar" title="New"><span class="tool-icon" data-komponen="toolbar">📄</span> New</button>
+              <button class="tool-btn" data-komponen="toolbar" title="Open"><span class="tool-icon" data-komponen="toolbar">📂</span> Open</button>
+              <button class="tool-btn" data-komponen="toolbar" title="Save" id="btnSave"><span class="tool-icon" data-komponen="toolbar">💾</span> Save</button>
+              <span class="separator"></span>
+              <button class="tool-btn" data-komponen="toolbar" title="Undo"><span class="tool-icon" data-komponen="toolbar">↩️</span> Undo</button>
+              <button class="tool-btn" data-komponen="toolbar" title="Redo"><span class="tool-icon" data-komponen="toolbar">↪️</span> Redo</button>
+              <span class="separator"></span>
+              <button class="tool-btn" data-komponen="toolbar" title="Print"><span class="tool-icon" data-komponen="toolbar">🖨️</span> Print</button>
+              <button class="tool-btn" data-komponen="toolbar" title="Settings" id="btnSettings"><span class="tool-icon" data-komponen="toolbar">⚙️</span> Settings</button>
+            </div>
+
+            <!-- Body Window -->
+            <div class="window-body">
+
+              <!-- Navigation Pane -->
+              <div class="nav-pane" id="navPane">
+                <div class="nav-item active" data-komponen="nav-pane"><span class="nav-icon" data-komponen="nav-pane">📁</span> My Documents</div>
+                <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon" data-komponen="nav-pane">🖼️</span> Pictures</div>
+                <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon" data-komponen="nav-pane">🎵</span> Music</div>
+                <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon" data-komponen="nav-pane">🎬</span> Videos</div>
+                <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon" data-komponen="nav-pane">⬇️</span> Downloads</div>
+                <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon" data-komponen="nav-pane">🗑️</span> Trash</div>
+              </div>
+
+              <!-- Main Content -->
+              <div class="main-content">
+
+                <!-- Address Bar -->
+                <div class="address-bar-wrapper" id="addressBar">
+                  <span class="label-address" data-komponen="address-bar">📍</span>
+                  <input type="text" placeholder="C:\Users\Siswa\Documents\TIK" value="C:\Users\Siswa\Documents\TIK" id="addressInput" data-komponen="address-bar">
+                  <button class="btn-go" data-komponen="address-bar">Go</button>
+                </div>
+
+                <!-- Text Area -->
+                <textarea class="text-area-sim" id="textArea" data-komponen="text-field" placeholder="Ketik di sini...">Selamat belajar GUI! 🎉
+Ini adalah simulasi aplikasi perkantoran.
+Coba cari dan kenali setiap komponen GUI di sekitarmu!</textarea>
+
+                <!-- Pengaturan -->
+                <div class="pengaturan-area" id="pengaturanArea">
+                  <div>
+                    <span class="group-label">☑️ Pengaturan Tampilan</span>
+                    <div class="opsi-group">
+                      <label><input type="checkbox" data-komponen="checkbox"> Mode Gelap</label>
+                      <label><input type="checkbox" data-komponen="checkbox"> Tampilkan Grid</label>
+                      <label><input type="checkbox" data-komponen="checkbox"> Auto-save</label>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="group-label">🔘 Pilihan Format</span>
+                    <div class="opsi-group">
+                      <label><input type="radio" name="format" data-komponen="radio-button" checked> .docx</label>
+                      <label><input type="radio" name="format" data-komponen="radio-button"> .pdf</label>
+                      <label><input type="radio" name="format" data-komponen="radio-button"> .txt</label>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="group-label">📊 Ukuran Font</span>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                      <input type="range" min="8" max="24" value="14" id="sliderFont" data-komponen="slider">
+                      <span class="nilai-slider" id="nilaiSlider">14</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tombol aksi -->
+                <div style="display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.3rem;">
+                  <button class="btn-aksi primary" data-komponen="button" id="btnSimpan">💾 Simpan</button>
+                  <button class="btn-aksi" data-komponen="button" id="btnBatal">↩️ Batal</button>
+                  <button class="btn-aksi" data-komponen="button" id="btnCetak">🖨️ Cetak</button>
+                  <button class="btn-aksi" data-komponen="button" id="btnTentang">ℹ️ Tentang</button>
+                </div>
+
+              </div><!-- end main-content -->
+            </div><!-- end window-body -->
+          </div><!-- end simulasi-window -->
+
+          <!-- Tombol lanjut -->
+          <div style="text-align:center; margin: 1.5rem 0 0.5rem;">
+            <p style="font-size:0.9rem; color:#7a6656; margin-bottom:0.6rem;" id="hintLanjut">
+              ⏳ Temukan minimal <strong>10 dari 12 komponen</strong> untuk membuka Bagian 2.
+            </p>
+            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian2" onclick="lanjutKeBagian2()">
+              Lanjut ke Bagian 2: Komponen Dasar →
+            </button>
+          </div>
+
+        </div><!-- end area-simulasi -->
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom">
+          <a href="tik1.html" class="btn-nav-bawah">
+            <span class="back-arrow">←</span> Kembali ke Portal
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <a href="materitik1.html" class="btn-nav-bawah">📖 Baca Materi Lengkap</a>
+          </div>
+          <div class="nav-hint">
+            💡 Part 1 dari 5 · Eksplorasi Bebas
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- ===== TOOLTIP ===== -->
+  <div class="gui-tooltip" id="guiTooltip">
+    <span class="tt-title" id="ttTitle">Komponen</span>
+    <span class="tt-fungsi" id="ttFungsi">Fungsi komponen</span>
+    <span class="tt-analogi" id="ttAnalogi">Analogi: ...</span>
+  </div>
+
+  <script src="script.js"></script>
+
+  <!-- ===== SCRIPT AKTIVITAS ===== -->
+  <script>
+    (function() {
+      "use strict";
+
+      // ---- DATA KOMPONEN ----
+      const komponenData = {
+        'title-bar': {
+          nama: 'Title Bar (Bilah Judul)',
+          fungsi: 'Menampilkan nama program/file yang sedang dibuka. Juga berisi tombol kontrol window.',
+          analogi: 'Seperti label pada map atau sampul buku.'
+        },
+        'window-controls': {
+          nama: 'Window Controls (Kontrol Jendela)',
+          fungsi: 'Tombol Minimize (−), Maximize (☐), dan Close (✕) untuk mengatur tampilan jendela.',
+          analogi: 'Seperti kunci, gagang, dan engsel pada pintu.'
+        },
+        'menu-bar': {
+          nama: 'Menu Bar (Bilah Menu)',
+          fungsi: 'Berisi daftar menu utama (File, Edit, Settings, Help) dengan pilihan perintah di dalamnya.',
+          analogi: 'Seperti daftar isi pada buku yang memandu ke bab-bab tertentu.'
+        },
+        'toolbar': {
+          nama: 'Toolbar (Bilah Alat)',
+          fungsi: 'Kumpulan tombol ikon untuk akses cepat ke perintah yang sering digunakan.',
+          analogi: 'Seperti rak alat di bengkel yang berisi perkakas siap pakai.'
+        },
+        'address-bar': {
+          nama: 'Address Bar (Bilah Alamat)',
+          fungsi: 'Menunjukkan lokasi folder atau alamat web yang sedang diakses.',
+          analogi: 'Seperti alamat rumah yang menunjukkan di mana kamu berada.'
+        },
+        'nav-pane': {
+          nama: 'Navigation Pane (Panel Navigasi)',
+          fungsi: 'Memudahkan akses ke folder-folder penting (Documents, Pictures, Music, dll).',
+          analogi: 'Seperti peta atau daftar ruangan di sebuah gedung.'
+        },
+        'text-field': {
+          nama: 'Text Field (Kotak Teks)',
+          fungsi: 'Area untuk mengetik dan mengedit teks atau data.',
+          analogi: 'Seperti lembar kertas kosong untuk menulis.'
+        },
+        'checkbox': {
+          nama: 'Checkbox (Kotak Centang)',
+          fungsi: 'Memungkinkan pengguna memilih satu atau lebih opsi dari beberapa pilihan.',
+          analogi: 'Seperti daftar belanja yang dicentang saat sudah dibeli.'
+        },
+        'radio-button': {
+          nama: 'Radio Button (Tombol Pilihan)',
+          fungsi: 'Memungkinkan pengguna memilih satu opsi dari beberapa pilihan yang tersedia.',
+          analogi: 'Seperti tombol pilihan pada radio: hanya satu stasiun yang bisa dipilih.'
+        },
+        'slider': {
+          nama: 'Slider (Penggeser)',
+          fungsi: 'Penggeser untuk memilih nilai dalam rentang tertentu (misalnya ukuran font).',
+          analogi: 'Seperti pengatur volume atau suhu pada perangkat elektronik.'
+        },
+        'button': {
+          nama: 'Button (Tombol)',
+          fungsi: 'Elemen yang dapat diklik untuk menjalankan suatu perintah atau aksi.',
+          analogi: 'Seperti bel pintu atau saklar lampu.'
+        },
+        'icon': {
+          nama: 'Icon (Ikon)',
+          fungsi: 'Simbol visual yang mewakili program, file, folder, atau perintah tertentu.',
+          analogi: 'Seperti rambu lalu lintas atau logo pada kemasan produk.'
+        }
+      };
+
+      // Daftar komponen yang perlu ditemukan
+      const daftarKomponen = [
+        'title-bar', 'window-controls', 'menu-bar', 'toolbar',
+        'address-bar', 'nav-pane', 'text-field', 'checkbox',
+        'radio-button', 'slider', 'button', 'icon'
+      ];
+
+      // ---- STATE ----
+      let komponenDitemukan = new Set();
+
+      // ---- DOM REFS ----
+      const elPembuka = document.getElementById('halaman-pembuka');
+      const elSimulasi = document.getElementById('area-simulasi');
+      const elBtnMulai = document.getElementById('btnMulai');
+      const elTooltip = document.getElementById('guiTooltip');
+      const elProgress = document.getElementById('progressCounter');
+      const elTotalKomponen = document.getElementById('totalKomponen');
+      const elInfoAktivitas = document.getElementById('infoAktivitas');
+      const elHintLanjut = document.getElementById('hintLanjut');
+      const elBtnLanjutBagian2 = document.getElementById('btnLanjutBagian2');
+
+      // ---- TOOLTIP ----
+      let tooltipTimeout;
+
+      function showTooltip(e, komponenKey) {
+        const data = komponenData[komponenKey];
+        if (!data) return;
+
+        const rect = e.target.getBoundingClientRect();
+        let left = rect.left + rect.width / 2 - 140;
+        if (left < 10) left = 10;
+        if (left + 280 > window.innerWidth) left = window.innerWidth - 290;
+
+        let top = rect.bottom + 12;
+        if (top + 120 > window.innerHeight) {
+          top = rect.top - 130;
+        }
+
+        elTooltip.style.left = left + 'px';
+        elTooltip.style.top = top + 'px';
+
+        document.getElementById('ttTitle').textContent = '🔹 ' + data.nama;
+        document.getElementById('ttFungsi').textContent = data.fungsi;
+        document.getElementById('ttAnalogi').textContent = '💡 ' + data.analogi;
+
+        elTooltip.classList.add('visible');
+        clearTimeout(tooltipTimeout);
+
+        // Catat komponen ditemukan
+        catatDitemukan(komponenKey);
+      }
+
+      function hideTooltip() {
+        tooltipTimeout = setTimeout(() => {
+          elTooltip.classList.remove('visible');
+        }, 150);
+      }
+
+      // ---- CATAT KOMPONEN ----
+      function catatDitemukan(key) {
+        if (daftarKomponen.includes(key) && !komponenDitemukan.has(key)) {
+          komponenDitemukan.add(key);
+          updateProgress();
+        }
+      }
+
+      function updateProgress() {
+        const total = daftarKomponen.length;
+        const ditemukan = komponenDitemukan.size;
+        elProgress.textContent = ditemukan;
+        elTotalKomponen.textContent = total;
+
+        // Update hint & tombol
+        if (ditemukan >= 10) {
+          elHintLanjut.innerHTML = '🎉 <strong>Hebat!</strong> Kamu telah menemukan ' + ditemukan + ' komponen! Bagian 2 sudah terbuka.';
+          elHintLanjut.style.color = '#2d5a1e';
+          elBtnLanjutBagian2.classList.remove('locked');
+          elBtnLanjutBagian2.classList.add('primary');
+        } else {
+          elHintLanjut.innerHTML = '⏳ Temukan minimal <strong>10 dari 12 komponen</strong> untuk membuka Bagian 2. (Sudah: ' + ditemukan + '/12)';
+          elHintLanjut.style.color = '#7a6656';
+          elBtnLanjutBagian2.classList.add('locked');
+          elBtnLanjutBagian2.classList.remove('primary');
+        }
+      }
+
+      // ---- REGISTRASI KOMPONEN ----
+      function registerKomponen() {
+        // Semua elemen dengan data-komponen
+        document.querySelectorAll('[data-komponen]').forEach(el => {
+          const key = el.dataset.komponen;
+          if (!key) return;
+
+          el.addEventListener('mouseenter', function(e) {
+            showTooltip(e, key);
+          });
+          el.addEventListener('mouseleave', hideTooltip);
+        });
+
+        // Icon di Navigation Pane
+        document.querySelectorAll('.nav-item .nav-icon').forEach(el => {
+          el.addEventListener('mouseenter', function(e) {
+            showTooltip(e, 'icon');
+          });
+          el.addEventListener('mouseleave', hideTooltip);
+        });
+
+        // Tool icon
+        document.querySelectorAll('.tool-btn .tool-icon').forEach(el => {
+          el.addEventListener('mouseenter', function(e) {
+            showTooltip(e, 'toolbar');
+          });
+          el.addEventListener('mouseleave', hideTooltip);
+        });
+      }
+
+      // ---- NAVIGASI ----
+      function mulaiAktivitas() {
+        elPembuka.style.display = 'none';
+        elSimulasi.classList.add('active');
+        registerKomponen();
+        updateProgress();
+        elInfoAktivitas.textContent = '📚 Mode Eksplorasi Bebas - Arahkan kursor ke komponen!';
+
+        // Scroll ke simulasi
+        setTimeout(() => {
+          elSimulasi.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+
+      function lanjutKeBagian2() {
+        if (komponenDitemukan.size < 10) {
+          alert('🔒 Temukan minimal 10 komponen terlebih dahulu!');
+          return;
+        }
+        // Simpan progress ke localStorage
+        try {
+          localStorage.setItem('labgui_progress', JSON.stringify({
+            komponenDitemukan: Array.from(komponenDitemukan),
+            bagian: 1
+          }));
+        } catch (e) {
+          console.warn('localStorage tidak tersedia:', e);
+        }
+        window.location.href = 'aktivitastik1b.html';
+      }
+
+      // ---- EVENT LISTENERS ----
+      elBtnMulai.addEventListener('click', mulaiAktivitas);
+      elBtnLanjutBagian2.addEventListener('click', lanjutKeBagian2);
+
+      // Slider
+      document.getElementById('sliderFont').addEventListener('input', function() {
+        document.getElementById('nilaiSlider').textContent = this.value;
+        document.getElementById('textArea').style.fontSize = this.value + 'px';
+      });
+
+      // Tombol simpan
+      document.getElementById('btnSimpan').addEventListener('click', function() {
+        alert('💾 Dokumen berhasil disimpan! (simulasi)');
+      });
+
+      // Tombol batal
+      document.getElementById('btnBatal').addEventListener('click', function() {
+        alert('↩️ Perubahan dibatalkan. (simulasi)');
+      });
+
+      // Tombol cetak
+      document.getElementById('btnCetak').addEventListener('click', function() {
+        alert('🖨️ Mencetak dokumen... (simulasi)');
+      });
+
+      // Tombol tentang
+      document.getElementById('btnTentang').addEventListener('click', function() {
+        alert('ℹ️ Lab GUI - Simulasi Antarmuka\nDibuat untuk pembelajaran Informatika SMP.\n\nVersi 1.0');
+      });
+
+      // Settings button
+      document.getElementById('btnSettings').addEventListener('click', function() {
+        const area = document.getElementById('pengaturanArea');
+        if (area.style.display === 'none' || area.style.display === '') {
+          area.style.display = 'flex';
+        } else {
+          area.style.display = 'none';
+        }
+      });
+
+      // Inisialisasi
+      elTotalKomponen.textContent = daftarKomponen.length;
+
+      console.log('✅ Lab GUI Bagian 1: Eksplorasi siap!');
+    })();
+  </script>
+
+</body>
+</html>
