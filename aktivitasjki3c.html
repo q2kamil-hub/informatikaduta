@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Lab Enkripsi · Bagian 3: Sandi Caesar · Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== GAYA MATERI RINGKAS ===== */
+    .materi-ringkas {
+      max-width: 820px;
+      margin: 0 auto 1.5rem;
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem 1.8rem;
+      border-left: 6px solid #dbb9a6;
+      border: 2px solid #e5dbd0;
+    }
+
+    .materi-ringkas h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .materi-ringkas h2 .badge {
+      background: #dbb9a6;
+      color: #3b2b1e;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .materi-ringkas h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #4d3829;
+      margin: 1rem 0 0.4rem;
+    }
+
+    .materi-ringkas p {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #2f2822;
+      margin-bottom: 0.6rem;
+    }
+
+    .materi-ringkas ul {
+      margin: 0.3rem 0 0.8rem 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .materi-ringkas li {
+      margin-bottom: 0.25rem;
+      line-height: 1.6;
+    }
+
+    .materi-ringkas .info-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 0.8rem 1.2rem;
+      border: 2px solid #e5dbd0;
+      margin: 0.6rem 0;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .materi-ringkas .info-box strong {
+      color: #4d3829;
+    }
+
+    .materi-ringkas .blok-formula {
+      background: #2f2822;
+      color: #f5c542;
+      border-radius: 10px;
+      padding: 0.7rem 1.2rem;
+      margin: 0.6rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .materi-ringkas .link-materi {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: #5c4638;
+      font-size: 0.85rem;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 2px dotted #bfaa9a;
+      transition: all 0.2s ease;
+    }
+
+    .materi-ringkas .link-materi:hover {
+      color: #4d3829;
+      border-bottom-color: #7a5f4c;
+    }
+
+    /* ===== GAYA AKTIVITAS ===== */
+    .aktivitas-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .bagian-progress {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      margin: 0.5rem 0 1.5rem;
+    }
+
+    .bagian-progress .step {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 30px;
+      background: #f5ede6;
+      border: 2px solid #e5dbd0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+
+    .bagian-progress .step.active {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .bagian-progress .step.completed {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+
+    .bagian-progress .step .num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+    }
+
+    .nav-aktivitas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0.8rem 1rem;
+      background: #f5f0ea;
+      border-radius: 16px;
+      border: 2px solid #e5dbd0;
+    }
+    .nav-aktivitas .btn-nav {
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+      border: 2px solid #cbb5a2;
+      background: #fcf9f6;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.15s ease;
+      color: #4d3829;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: inherit;
+    }
+    .nav-aktivitas .btn-nav:hover {
+      background: #e8dcd0;
+      transform: translateY(-2px);
+    }
+    .nav-aktivitas .info-aktivitas {
+      font-size: 0.85rem;
+      color: #5a4a3a;
+      font-weight: 500;
+    }
+
+    .aktivitas-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: center;
+      justify-content: space-between;
+      background: #ede4db;
+      padding: 0.7rem 1.2rem;
+      border-radius: 16px 16px 0 0;
+      border-bottom: 2px solid #d9cdbf;
+    }
+    .aktivitas-toolbar .mode-indikator {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #4d3829;
+    }
+    .aktivitas-toolbar .mode-indikator span {
+      background: #4d7a3b;
+      color: #fff;
+      padding: 0.15rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      margin-left: 0.3rem;
+    }
+    .progress-tracker {
+      font-size: 0.85rem;
+      color: #5a4a3a;
+      background: #fcf9f6;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      border: 1px solid #d9cdbf;
+    }
+    .progress-tracker strong {
+      color: #4d7a3b;
+    }
+
+    .mode-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin: 1rem 0 0.5rem;
+    }
+    .mode-btn {
+      padding: 0.5rem 1.3rem;
+      border-radius: 30px;
+      border: 2px solid #cbb5a2;
+      background: #fcf9f6;
+      color: #4d3829;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .mode-btn:hover {
+      background: #e8dcd0;
+      transform: translateY(-1px);
+    }
+    .mode-btn.active {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+    .mode-btn.selesai {
+      background: #8aaa7a;
+      border-color: #6a8a5a;
+      color: #fff;
+    }
+
+    .mode-content {
+      display: none;
+    }
+    .mode-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== SLIDE ALFABET ===== */
+    .slide-wrapper {
+      background: #2f2822;
+      border-radius: 20px;
+      padding: 1.5rem 1.2rem;
+      margin: 1rem 0;
+      border: 4px solid #dbb9a6;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #dbb9a6, #8aaa7a, #f5c542, #dbb9a6);
+      background-size: 200% 100%;
+      animation: gradientMove 3s linear infinite;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .slide-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #dbb9a6;
+      text-align: center;
+      margin-bottom: 0.3rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .slide-sub {
+      font-size: 0.8rem;
+      color: #a89688;
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+
+    /* Viewport slide */
+    .slide-viewport {
+      overflow: hidden;
+      border-radius: 12px;
+      background: rgba(47, 40, 34, 0.5);
+      padding: 0.6rem 0;
+      position: relative;
+      margin-bottom: 0.3rem;
+    }
+
+    /* Viewport atas (plaintext) */
+    .slide-viewport.plaintext-view {
+      border: 2px solid rgba(138, 180, 212, 0.3);
+      background: rgba(138, 180, 212, 0.06);
+    }
+
+    /* Viewport bawah (ciphertext) */
+    .slide-viewport.ciphertext-view {
+      border: 2px solid rgba(245, 200, 66, 0.3);
+      background: rgba(245, 200, 66, 0.06);
+    }
+
+    /* Row huruf — yang bergeser */
+    .slide-row {
+      display: flex;
+      gap: 4px;
+      transition: transform 0.5s ease;
+      padding: 0 0;
+      will-change: transform;
+    }
+
+    .slide-huruf {
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      line-height: 34px;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      font-size: 1.05rem;
+      font-weight: 800;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    /* Huruf plaintext */
+    .plaintext-view .slide-huruf {
+      background: rgba(138, 180, 212, 0.15);
+      color: #8ab4d4;
+      border: 1px solid rgba(138, 180, 212, 0.3);
+    }
+
+    /* Huruf ciphertext */
+    .ciphertext-view .slide-huruf {
+      background: rgba(245, 200, 66, 0.15);
+      color: #f5c542;
+      border: 1px solid rgba(245, 200, 66, 0.3);
+    }
+
+    /* Huruf yang sejajar (di bawah pointer) */
+    .slide-huruf.aktif {
+      transform: scale(1.15);
+      box-shadow: 0 0 12px currentColor;
+      z-index: 2;
+      position: relative;
+    }
+
+    /* Label baris */
+    .slide-row-label {
+      font-size: 0.7rem;
+      color: #a89688;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      text-align: center;
+      margin-top: 0.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    /* Pointer / garis bantu tengah */
+    .slide-viewport::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 3px;
+      background: linear-gradient(180deg, transparent, #8aaa7a 20%, #8aaa7a 80%, transparent);
+      transform: translateX(-50%);
+      z-index: 5;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* Pasangan visual: garis horizontal dari atas ke bawah */
+    .slide-pasangan-info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      padding: 0.8rem 1rem;
+      background: rgba(138, 170, 122, 0.1);
+      border: 2px solid rgba(138, 170, 122, 0.3);
+      border-radius: 12px;
+    }
+
+    .slide-pasangan-info .pasangan-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+    }
+
+    .slide-pasangan-info .pasangan-item .dari {
+      color: #8ab4d4;
+      font-size: 1.2rem;
+    }
+
+    .slide-pasangan-info .pasangan-item .arrow {
+      color: #a89688;
+      font-size: 0.9rem;
+    }
+
+    .slide-pasangan-info .pasangan-item .ke {
+      color: #f5c542;
+      font-size: 1.2rem;
+    }
+
+    /* Slider kunci */
+    .slider-kunci-global {
+      width: 100%;
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .slider-kunci-global label {
+      display: block;
+      color: #dbb9a6;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .slider-kunci-global input[type="range"] {
+      width: 100%;
+      max-width: 400px;
+      accent-color: #f5c542;
+      cursor: pointer;
+    }
+
+    .slider-kunci-global .kunci-display {
+      font-family: 'Courier New', monospace;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #f5c542;
+      margin-top: 0.3rem;
+    }
+
+    /* ===== BENCH BOX ===== */
+    .bengkel-box {
+      background: #2f2822;
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border: 4px solid #dbb9a6;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bengkel-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #dbb9a6, #8ab4d4, #8aaa7a, #dbb9a6);
+      background-size: 200% 100%;
+      animation: gradientMove 3s linear infinite;
+    }
+
+    .bengkel-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #dbb9a6;
+      text-align: center;
+      margin-bottom: 0.3rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .bengkel-sub {
+      font-size: 0.8rem;
+      color: #a89688;
+      text-align: center;
+      margin-bottom: 1.3rem;
+    }
+
+    .bengkel-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .bengkel-kolom {
+      background: rgba(219, 185, 166, 0.08);
+      border: 2px solid rgba(219, 185, 166, 0.25);
+      border-radius: 14px;
+      padding: 1rem 0.8rem;
+    }
+
+    .bengkel-kolom .kolom-label {
+      font-size: 0.7rem;
+      color: #dbb9a6;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .bengkel-input {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 2px solid rgba(219, 185, 166, 0.3);
+      border-radius: 8px;
+      background: rgba(47, 40, 34, 0.5);
+      color: #f5c542;
+      font-family: 'Courier New', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 2px;
+      outline: none;
+      text-transform: uppercase;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+    .bengkel-input:focus {
+      border-color: #f5c542;
+    }
+
+    .bengkel-hasil {
+      font-family: 'Courier New', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #f5c542;
+      text-align: center;
+      letter-spacing: 2px;
+      padding: 0.6rem 0.8rem;
+      background: rgba(47, 40, 34, 0.5);
+      border-radius: 8px;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      word-break: break-all;
+    }
+
+    .bengkel-hasil.empty {
+      color: #7a6656;
+      font-size: 0.85rem;
+      letter-spacing: 0;
+      font-weight: 400;
+    }
+
+    .animasi-huruf-bengkel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      padding: 1rem 0.5rem;
+      margin-top: 0.5rem;
+      background: rgba(47, 40, 34, 0.5);
+      border-radius: 12px;
+      min-height: 70px;
+      align-items: center;
+    }
+
+    .huruf-animasi {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+      transition: all 0.3s ease;
+    }
+
+    .huruf-animasi .awal {
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #8ab4d4;
+      background: rgba(138, 180, 212, 0.15);
+      padding: 0.15rem 0.4rem;
+      border-radius: 5px;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .huruf-animasi .hasil {
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f5c542;
+      background: rgba(245, 200, 66, 0.15);
+      padding: 0.15rem 0.4rem;
+      border-radius: 5px;
+      min-width: 22px;
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.3s ease;
+    }
+
+    .huruf-animasi .hasil.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .huruf-animasi .arrow {
+      font-size: 0.6rem;
+      color: #a89688;
+    }
+
+    /* ===== TOMBOL ===== */
+    .btn-bengkel {
+      padding: 0.6rem 1.6rem;
+      border-radius: 30px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-bengkel.primary {
+      background: linear-gradient(135deg, #f5c542, #d4a030);
+      color: #2f2822;
+      box-shadow: 0 4px 14px rgba(245, 200, 66, 0.3);
+    }
+    .btn-bengkel.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 200, 66, 0.5);
+    }
+
+    .btn-bengkel.secondary {
+      background: rgba(219, 185, 166, 0.15);
+      color: #dbb9a6;
+      border: 2px solid rgba(219, 185, 166, 0.3);
+    }
+    .btn-bengkel.secondary:hover {
+      background: rgba(219, 185, 166, 0.25);
+      border-color: #dbb9a6;
+      transform: translateY(-2px);
+    }
+
+    .btn-bengkel:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .bengkel-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    /* ===== TANTANGAN ===== */
+    .tantangan-container {
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .tantangan-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .tantangan-header .timer {
+      background: #f5ede6;
+      border: 2px solid #dbb9a6;
+      border-radius: 30px;
+      padding: 0.4rem 1rem;
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 0.9rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .tantangan-header .skor-box {
+      background: #e8f5e0;
+      border: 2px solid #8aaa7a;
+      border-radius: 30px;
+      padding: 0.4rem 1rem;
+      font-weight: 700;
+      color: #2d5a1e;
+      font-size: 0.9rem;
+    }
+
+    .tantangan-info {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1rem;
+      border-left: 6px solid #dbb9a6;
+      text-align: left;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .tantangan-info strong {
+      color: #4d3829;
+    }
+
+    .tantangan-soal {
+      background: #2f2822;
+      border: 4px solid #dbb9a6;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .tantangan-soal .soal-label {
+      font-size: 0.75rem;
+      color: #dbb9a6;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .tantangan-soal .soal-progress-inline {
+      font-size: 0.75rem;
+      color: #a89688;
+      margin-bottom: 0.5rem;
+    }
+
+    .tantangan-soal .soal-cipher {
+      font-family: 'Courier New', monospace;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #f5c542;
+      letter-spacing: 4px;
+      margin: 0.8rem 0;
+      word-break: break-all;
+    }
+
+    .tantangan-soal .soal-hint {
+      font-size: 0.85rem;
+      color: #a89688;
+      font-style: italic;
+    }
+
+    .tantangan-slider-wrapper {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1rem;
+      border: 2px solid #e5dbd0;
+    }
+
+    .tantangan-slider-wrapper label {
+      display: block;
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tantangan-slider-wrapper input[type="range"] {
+      width: 100%;
+      accent-color: #6b8c5e;
+      cursor: pointer;
+    }
+
+    .tantangan-preview {
+      background: #2f2822;
+      border-radius: 12px;
+      padding: 0.8rem 1.2rem;
+      margin: 0.6rem 0;
+      text-align: center;
+    }
+
+    .tantangan-preview .preview-label {
+      font-size: 0.7rem;
+      color: #a89688;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    .tantangan-preview .preview-text {
+      font-family: 'Courier New', monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #f5c542;
+      letter-spacing: 3px;
+      transition: color 0.3s ease;
+    }
+
+    .tantangan-preview .preview-text.benar {
+      color: #8aaa7a;
+      text-shadow: 0 0 10px rgba(138, 170, 122, 0.5);
+    }
+
+    /* ===== BUAT KODE ===== */
+    .buat-kode-container {
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .buat-kode-info {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1rem;
+      border-left: 6px solid #dbb9a6;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .buat-kode-info strong {
+      color: #4d3829;
+    }
+
+    /* ===== FEEDBACK ===== */
+    .feedback-bengkel {
+      margin-top: 1rem;
+      padding: 0.9rem 1.3rem;
+      border-radius: 12px;
+      font-weight: 600;
+      display: none;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .feedback-bengkel.show {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+    .feedback-bengkel.success {
+      background: rgba(138, 170, 122, 0.2);
+      border: 2px solid #8aaa7a;
+      color: #c8e6c8;
+    }
+    .feedback-bengkel.info {
+      background: rgba(138, 180, 212, 0.15);
+      border: 2px solid #8ab4d4;
+      color: #c8e0f0;
+    }
+    .feedback-bengkel.error {
+      background: rgba(212, 160, 160, 0.15);
+      border: 2px solid #d4a0a0;
+      color: #e0c8c8;
+    }
+
+    /* ===== AREA SOAL ===== */
+    #area-soal {
+      display: none;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+    #area-soal.active {
+      display: block;
+    }
+
+    .soal-header {
+      background: #f5ede6;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1rem;
+      border-left: 6px solid #dbb9a6;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .soal-header .soal-info {
+      font-size: 0.95rem;
+      color: #3b2b1e;
+      font-weight: 600;
+    }
+
+    .soal-header .soal-progress {
+      font-size: 0.85rem;
+      color: #4d7a3b;
+      font-weight: 700;
+      background: #fff;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      border: 2px solid #e5dbd0;
+    }
+
+    .soal-kuis {
+      background: #fff;
+      padding: 1.2rem 1.5rem;
+      border-radius: 16px;
+      border: 2px solid #e5dbd0;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .soal-kuis.correct {
+      border-color: #8aaa7a;
+      background: #f0f8eb;
+    }
+
+    .soal-kuis.wrong {
+      border-color: #d4a0a0;
+      background: #fdf0f0;
+    }
+
+    .soal-kuis .pertanyaan {
+      font-weight: 600;
+      font-size: 1rem;
+      color: #3b2b1e;
+      margin-bottom: 0.6rem;
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      line-height: 1.6;
+    }
+
+    .soal-kuis .pertanyaan .soal-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #4d3829;
+      color: #fff;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .soal-kuis .opsi-kuis {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-left: 0.3rem;
+    }
+
+    .soal-kuis .opsi-kuis label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      cursor: pointer;
+      font-size: 0.92rem;
+      color: #3d2c1f;
+      padding: 0.5rem 0.9rem;
+      border-radius: 10px;
+      border: 2px solid #e5dbd0;
+      transition: all 0.15s;
+      line-height: 1.5;
+    }
+
+    .soal-kuis .opsi-kuis label:hover:not(.disabled) {
+      background: #f5ede6;
+      border-color: #b09b88;
+    }
+
+    .soal-kuis .opsi-kuis label.disabled {
+      cursor: default;
+    }
+
+    .soal-kuis .opsi-kuis label.selected {
+      border-color: #4d3829;
+      background: #f5ede6;
+    }
+
+    .soal-kuis .opsi-kuis label.correct-answer {
+      border-color: #8aaa7a;
+      background: #e8f5e0;
+    }
+
+    .soal-kuis .opsi-kuis label.wrong-answer {
+      border-color: #d4a0a0;
+      background: #f5e0e0;
+    }
+
+    .soal-kuis .opsi-kuis input[type="radio"] {
+      accent-color: #6b8c5e;
+      width: 18px;
+      height: 18px;
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+    }
+
+    .soal-kuis .opsi-kuis .check-icon {
+      margin-left: auto;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .soal-kuis .jawaban-feedback {
+      margin-top: 0.8rem;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      display: none;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .soal-kuis .jawaban-feedback.benar {
+      display: block;
+      background: #d4e8cb;
+      color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+
+    .soal-kuis .jawaban-feedback.salah {
+      display: block;
+      background: #f5d6d0;
+      color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+
+    .soal-kuis .jawaban-feedback .kunci {
+      font-weight: 700;
+      color: #4d7a3b;
+    }
+
+    .btn-submit-kuis {
+      display: block;
+      margin: 1.5rem auto 0;
+      padding: 0.8rem 2.8rem;
+      border-radius: 30px;
+      border: none;
+      background: #4d3829;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-submit-kuis:hover {
+      background: #6b4f3a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(75, 46, 30, 0.3);
+    }
+
+    .btn-submit-kuis:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .hasil-soal {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: #f5ede6;
+      border-radius: 16px;
+      border: 3px double #dbb9a6;
+      text-align: center;
+    }
+
+    .hasil-soal.show {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .hasil-soal .hasil-icon {
+      font-size: 3.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hasil-soal .hasil-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.3rem;
+    }
+
+    .hasil-soal .hasil-skor {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #4d7a3b;
+      margin: 0.5rem 0;
+    }
+
+    .hasil-soal .hasil-desc {
+      font-size: 0.95rem;
+      color: #5c4638;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .hasil-soal .btn-aksi-hasil {
+      display: inline-flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .hasil-soal .btn-aksi-hasil button,
+    .hasil-soal .btn-aksi-hasil a {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .hasil-soal .btn-aksi-hasil button:hover,
+    .hasil-soal .btn-aksi-hasil a:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav-bawah {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-nav-bawah:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+    .btn-nav-bawah.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+    .btn-nav-bawah.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+    .btn-nav-bawah:disabled,
+    .btn-nav-bawah.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      pointer-events: none;
+    }
+    .btn-nav-bawah .back-arrow {
+      font-size: 1.2rem;
+    }
+    .nav-hint {
+      font-size: 0.8rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+    .nav-hint.locked {
+      color: #d4a0a0;
+    }
+    .nav-hint.ready {
+      color: #2d5a1e;
+      font-weight: 600;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 820px) {
+      .nav-aktivitas {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+      .nav-aktivitas .btn-nav {
+        justify-content: center;
+      }
+      .bagian-progress .step {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.6rem;
+      }
+      .bagian-progress .step .num {
+        width: 16px;
+        height: 16px;
+        font-size: 0.55rem;
+      }
+      .bengkel-grid {
+        grid-template-columns: 1fr;
+      }
+      .slide-huruf {
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        font-size: 0.9rem;
+      }
+    }
+    @media (max-width: 480px) {
+      .nav-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-nav-bawah {
+        justify-content: center;
+      }
+      .materi-ringkas {
+        padding: 1rem 1.2rem;
+      }
+      .materi-ringkas h2 {
+        font-size: 1.1rem;
+      }
+      .soal-kuis {
+        padding: 1rem;
+      }
+      .soal-kuis .pertanyaan {
+        font-size: 0.92rem;
+      }
+      .soal-kuis .opsi-kuis label {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.7rem;
+      }
+      .soal-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .slide-huruf {
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        font-size: 0.8rem;
+      }
+      .tantangan-soal .soal-cipher {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb" id="breadcrumb-container">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="jki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li><a href="jki3.html">Enkripsi sebagai Proteksi Data</a></li>
+      <li>Lab Enkripsi · Bagian 3</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-container">
+
+        <div class="bagian-progress">
+          <span class="step completed"><span class="num">✓</span> Pesan Rahasia</span>
+          <span class="step completed"><span class="num">✓</span> Kunci Rahasia</span>
+          <span class="step active"><span class="num">3</span> Sandi Caesar</span>
+          <span class="step"><span class="num">4</span> Detektif Enkripsi</span>
+          <span class="step"><span class="num">5</span> Kuis Akhir</span>
+        </div>
+
+        <div class="materi-ringkas">
+          <h2>📖 Materi Singkat <span class="badge">Bagian 3</span></h2>
+
+          <h3>1. Apa Itu Sandi Caesar?</h3>
+          <p>
+            <strong>Sandi Caesar (Caesar Cipher)</strong> adalah salah satu metode enkripsi tertua dan paling sederhana. Dinamai dari <strong>Julius Caesar</strong>, yang menggunakannya untuk berkomunikasi dengan para panglimanya.
+          </p>
+          <p>
+            Cara kerjanya: setiap huruf digeser sejumlah posisi dalam alfabet. Jumlah pergeseran disebut <strong>kunci</strong>.
+          </p>
+
+          <h3>2. Contoh</h3>
+          <div class="info-box">
+            <strong>Plaintext:</strong> CAESAR<br>
+            <strong>Kunci:</strong> 3<br>
+            <strong>Ciphertext:</strong> FDHVDU<br>
+            <span style="font-size:0.85rem; color:#7a6656;">
+              C→F, A→D, E→H, S→V, A→D, R→U
+            </span>
+          </div>
+
+          <h3>3. Rumus Matematika</h3>
+          <div class="blok-formula">
+            Enkripsi: C = (P + K) mod 26<br>
+            Dekripsi: P = (C − K) mod 26
+          </div>
+
+          <h3>4. Kelebihan & Kekurangan</h3>
+          <ul>
+            <li><strong>Kelebihan:</strong> sederhana, mudah dipahami, cocok untuk belajar</li>
+            <li><strong>Kekurangan:</strong> hanya 25 kemungkinan kunci, mudah dipecahkan, tidak cocok untuk data sensitif</li>
+          </ul>
+
+          <a href="materijki3.html" class="link-materi">
+            📚 Baca materi lengkap di sini →
+          </a>
+        </div>
+
+        <div class="nav-aktivitas">
+          <a href="aktivitasjki3b.html" class="btn-nav">⬅ Bagian Sebelumnya</a>
+          <span class="info-aktivitas" id="infoAktivitas">🎡 Bengkel Sandi Caesar</span>
+          <a href="jki3.html" class="btn-nav">🏠 Portal</a>
+        </div>
+
+        <div class="aktivitas-toolbar">
+          <div class="mode-indikator">
+            🎯 Mode: <span id="modeLabel">Slide Alfabet</span>
+          </div>
+          <div class="progress-tracker">
+            Mode selesai: <strong id="progressCounter">0</strong> / <span id="totalProgress">3</span>
+            &nbsp;|&nbsp;
+            Skor: <strong id="skorCounter">0</strong>
+          </div>
+        </div>
+
+        <div class="mode-selector">
+          <button class="mode-btn active" data-mode="1" onclick="switchMode(1)">🎡 Mode 1: Slide Alfabet</button>
+          <button class="mode-btn" data-mode="2" onclick="switchMode(2)">🔍 Mode 2: Pecahkan Kode</button>
+          <button class="mode-btn" data-mode="3" onclick="switchMode(3)">✍️ Mode 3: Buat Kode Sendiri</button>
+        </div>
+
+        <!-- MODE 1: SLIDE ALFABET -->
+        <div class="mode-content active" id="mode1Content">
+          <p style="text-align:center; color:#5c4638; font-size:0.9rem; margin: 0.5rem 0 1rem;">
+            🎯 Geser slider untuk memilih kunci. Deretan huruf bawah akan bergeser dari deretan atas — itulah ciphertext-nya!
+          </p>
+
+          <div class="slide-wrapper">
+            <div class="slide-title">🎡 SLIDE ALFABET</div>
+            <div class="slide-sub">Plaintext di atas, ciphertext di bawah</div>
+
+            <!-- Baris Plaintext (atas) -->
+            <div class="slide-viewport plaintext-view">
+              <div class="slide-row" id="rowPlaintext"></div>
+            </div>
+            <div class="slide-row-label">📥 Plaintext (atas)</div>
+
+            <!-- Baris Ciphertext (bawah) -->
+            <div class="slide-viewport ciphertext-view">
+              <div class="slide-row" id="rowCiphertext"></div>
+            </div>
+            <div class="slide-row-label">📤 Ciphertext (bawah) — bergeser sesuai kunci</div>
+
+            <!-- Info pasangan -->
+            <div class="slide-pasangan-info">
+              <div class="pasangan-item">
+                <span class="dari">A</span>
+                <span class="arrow">→</span>
+                <span class="ke" id="pasanganA">D</span>
+              </div>
+              <div class="pasangan-item">
+                <span class="dari">B</span>
+                <span class="arrow">→</span>
+                <span class="ke" id="pasanganB">E</span>
+              </div>
+              <div class="pasangan-item">
+                <span class="dari">C</span>
+                <span class="arrow">→</span>
+                <span class="ke" id="pasanganC">F</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="slider-kunci-global">
+            <label>🔑 Pilih Kunci (1-25)</label>
+            <input type="range" id="sliderKunciGlobal" min="1" max="25" value="3" oninput="updateKunciGlobal(this.value)">
+            <div class="kunci-display" id="kunciDisplayGlobal">3</div>
+          </div>
+
+          <div class="bengkel-box">
+            <div class="bengkel-title">⚙️ BENCH ENKRIPSI-DEKRIPSI</div>
+            <div class="bengkel-sub">Ketik pesan, lalu pilih enkripsi atau dekripsi</div>
+
+            <div class="bengkel-grid">
+              <div class="bengkel-kolom">
+                <div class="kolom-label">📥 INPUT</div>
+                <input type="text" class="bengkel-input" id="inputBengkel" maxlength="20" placeholder="SERBU PAGI" value="SERBU PAGI" oninput="updateInputBengkel()">
+              </div>
+              <div class="bengkel-kolom">
+                <div class="kolom-label">📤 HASIL</div>
+                <div class="bengkel-hasil empty" id="hasilBengkel">?</div>
+              </div>
+            </div>
+
+            <div class="animasi-huruf-bengkel" id="animasiBengkel"></div>
+
+            <div class="bengkel-buttons">
+              <button class="btn-bengkel primary" onclick="jalankanEnkripsiBengkel()">🔐 Enkripsi!</button>
+              <button class="btn-bengkel secondary" onclick="jalankanDekripsiBengkel()">🔓 Dekripsi!</button>
+              <button class="btn-bengkel secondary" onclick="resetBengkel()">🔄 Reset</button>
+            </div>
+
+            <div class="feedback-bengkel" id="feedbackBengkel"></div>
+          </div>
+        </div>
+
+        <!-- MODE 2: PECAHKAN KODE -->
+        <div class="mode-content" id="mode2Content">
+          <div class="tantangan-container">
+            <div class="tantangan-header">
+              <div class="timer" id="timerDisplay">⏱️ 60s</div>
+              <div class="skor-box" id="skorTantangan">Skor: 0</div>
+            </div>
+
+            <div class="tantangan-info">
+              <strong>🔍 Misi:</strong> Sistem menampilkan ciphertext Caesar. Tebak kunci yang digunakan dengan menggeser slider sampai plaintext-nya bermakna!
+            </div>
+
+            <div class="tantangan-soal">
+              <div class="soal-label">CIPHERTEXT</div>
+              <div class="soal-progress-inline" id="soalProgressInline">Soal 1 dari 4</div>
+              <div class="soal-cipher" id="soalCipher">?</div>
+              <div class="soal-hint">Geser kunci untuk menemukan plaintext yang bermakna</div>
+            </div>
+
+            <div class="tantangan-slider-wrapper">
+              <label>🔑 Coba Kunci: <span id="kunciTantanganValue">1</span></label>
+              <input type="range" min="1" max="25" value="1" id="sliderTantangan" oninput="updateTantangan(this.value)">
+              <div class="tantangan-preview">
+                <div class="preview-label">HASIL DEKRIPSI</div>
+                <div class="preview-text" id="previewTantangan">?</div>
+              </div>
+            </div>
+
+            <div class="bengkel-buttons">
+              <button class="btn-bengkel primary" id="btnMulaiTantangan" onclick="mulaiTantangan()">
+                🚀 Mulai Tantangan
+              </button>
+              <button class="btn-bengkel secondary" id="btnTantanganBerikutnya" onclick="tantanganBerikutnya()" style="display:none;">
+                ➡️ Soal Berikutnya
+              </button>
+            </div>
+
+            <div class="feedback-bengkel" id="feedbackTantangan"></div>
+          </div>
+        </div>
+
+        <!-- MODE 3: BUAT KODE SENDIRI -->
+        <div class="mode-content" id="mode3Content">
+          <div class="buat-kode-container">
+            <div class="buat-kode-info">
+              <strong>✍️ Buat Kode Sendiri:</strong> Ketik pesan rahasia, pilih kunci, dan sistem akan menghasilkan ciphertext Caesar yang bisa kamu kirim ke temanmu!
+            </div>
+
+            <div class="bengkel-box">
+              <div class="bengkel-title">✍️ BUAT KODE RAHASIA</div>
+
+              <div class="bengkel-grid" style="grid-template-columns: 1fr;">
+                <div class="bengkel-kolom">
+                  <div class="kolom-label">📝 Pesan Rahasia</div>
+                  <input type="text" class="bengkel-input" id="inputPesanBuat" maxlength="30" placeholder="SERBU PAGI" value="SERBU PAGI" oninput="updateBuatKode()">
+                </div>
+              </div>
+
+              <div class="slider-kunci-global" style="margin-top:1rem;">
+                <label>🔑 Pilih Kunci</label>
+                <input type="range" id="sliderKunciBuat" min="1" max="25" value="3" oninput="updateBuatKode()">
+                <div class="kunci-display" id="kunciDisplayBuat">3</div>
+              </div>
+
+              <div class="bengkel-kolom" style="margin-top:1rem;">
+                <div class="kolom-label">🔒 CIPHERTEXT (KIRIM KE TEMAN)</div>
+                <div class="bengkel-hasil" id="hasilBuatKode" style="color:#f5c542; font-size:1.3rem; letter-spacing:3px;">VHUE XDJL</div>
+                <div style="text-align:center; margin-top:0.6rem;">
+                  <button class="btn-bengkel secondary" onclick="copyKode()">📋 Salin Kode</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="feedback-bengkel show info" style="margin-top:1rem;">
+              💡 <strong>Tips:</strong> Beritahu temanmu kunci yang digunakan agar dia bisa mendekripsi pesanmu. Tanpa kunci, pesan tidak bisa dibaca!
+            </div>
+          </div>
+        </div>
+
+        <!-- AREA SOAL -->
+        <div id="area-soal">
+          <div class="soal-header">
+            <div class="soal-info">📝 <strong>Soal Pemahaman:</strong> 4 soal pilihan ganda</div>
+            <div class="soal-progress" id="soalProgress">Terjawab: 0 / 4</div>
+          </div>
+
+          <div id="soalContainer"></div>
+
+          <button class="btn-submit-kuis" id="btnPeriksaSoal">✅ Periksa Jawaban</button>
+        </div>
+
+        <div class="hasil-soal" id="hasilSoal">
+          <div class="hasil-icon" id="hasilIcon">🏆</div>
+          <div class="hasil-title" id="hasilTitle">Selamat!</div>
+          <div class="hasil-skor" id="hasilSkor">0 / 4</div>
+          <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 3.</div>
+          <div class="btn-aksi-hasil" id="btnAksiHasil"></div>
+        </div>
+
+        <div class="nav-bottom">
+          <a href="aktivitasjki3b.html" class="btn-nav-bawah">
+            <span class="back-arrow">←</span> Bagian 2
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian4" onclick="lanjutKeBagian4()">
+              Lanjut ke Bagian 4: Detektif Enkripsi →
+            </button>
+          </div>
+          <div class="nav-hint locked" id="hintLanjut">
+            🔒 Selesaikan semua mode dan soal pemahaman untuk membuka Bagian 4
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="script.js"></script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // DATA SOAL PEMAHAMAN
+      // ============================================
+      const soalData = [
+        {
+          pertanyaan: 'Siapa yang menggunakan Sandi Caesar untuk pertama kali?',
+          opsi: ['Isaac Newton', 'Julius Caesar', 'Albert Einstein', 'Alexander Graham Bell'],
+          kunci: 1,
+          penjelasan: 'Sandi Caesar dinamai dari Julius Caesar, yang menggunakannya untuk berkomunikasi dengan para panglimanya.'
+        },
+        {
+          pertanyaan: 'Jika plaintext "MAKAN" dienkripsi dengan kunci 2, apa ciphertext-nya?',
+          opsi: ['OCMCP', 'OCMCP', 'OCMCO', 'OCMCR'],
+          kunci: 0,
+          penjelasan: 'MAKAN digeser 2: M→O, A→C, K→M, A→C, N→P = OCMCP.'
+        },
+        {
+          pertanyaan: 'Mengapa Sandi Caesar dianggap tidak aman untuk melindungi data sensitif?',
+          opsi: [
+            'Karena terlalu rumit',
+            'Karena hanya ada 25 kemungkinan kunci, mudah dipecahkan',
+            'Karena memerlukan komputer super',
+            'Karena tidak bisa digunakan di internet'
+          ],
+          kunci: 1,
+          penjelasan: 'Hanya ada 25 kemungkinan kunci, sehingga Sandi Caesar mudah dipecahkan dengan brute force.'
+        },
+        {
+          pertanyaan: 'Dalam rumus enkripsi Caesar, C = (P + K) mod 26, apa arti "mod 26"?',
+          opsi: [
+            'Mengalikan dengan 26',
+            'Mengambil sisa pembagian dengan 26 untuk kembali ke awal alfabet',
+            'Menambahkan 26',
+            'Mengurangi 26'
+          ],
+          kunci: 1,
+          penjelasan: 'Mod 26 berarti mengambil sisa pembagian dengan 26 — ini membuat huruf kembali ke awal alfabet setelah Z.'
+        }
+      ];
+
+      // ============================================
+      // DATA TANTANGAN (DIVERIFIKASI)
+      // ============================================
+      const tantanganData = [
+        { cipher: 'ZRPHQ',   kunci: 3, plaintext: 'WOMEN' },
+        { cipher: 'FDHVDU',  kunci: 3, plaintext: 'CAESAR' },
+        { cipher: 'VHODPDW', kunci: 3, plaintext: 'SELAMAT' },
+        { cipher: 'ELQWDQJ', kunci: 3, plaintext: 'BINTANG' }
+      ];
+
+      // ============================================
+      // STATE
+      // ============================================
+      let currentMode = 1;
+      let modeSelesai = { 1: false, 2: false, 3: false };
+      let skorMode = { 1: 0, 2: 0, 3: 0 };
+
+      let kunciGlobal = 3;
+
+      let tantanganAktif = false;
+      let tantanganIndex = 0;
+      let tantanganTimer = null;
+      let tantanganWaktu = 60;
+      let tantanganSkor = 0;
+      let tantanganSoalSekarang = null;
+      let tantanganSudahBenar = false;
+
+      let soalJawaban = {};
+      let soalSubmitted = false;
+      let soalBenar = 0;
+      let soalSelesai = false;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const elModeLabel = document.getElementById('modeLabel');
+      const elProgressCounter = document.getElementById('progressCounter');
+      const elSkorCounter = document.getElementById('skorCounter');
+      const elAreaSoal = document.getElementById('area-soal');
+      const elSoalContainer = document.getElementById('soalContainer');
+      const elSoalProgress = document.getElementById('soalProgress');
+      const elBtnPeriksaSoal = document.getElementById('btnPeriksaSoal');
+      const elHasilSoal = document.getElementById('hasilSoal');
+      const elBtnLanjutBagian4 = document.getElementById('btnLanjutBagian4');
+      const elHintLanjut = document.getElementById('hintLanjut');
+
+      // ============================================
+      // FUNGSI CAESAR CIPHER
+      // ============================================
+      const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+      function caesarCipher(text, shift) {
+        return text.split('').map(char => {
+          if (char === ' ') return ' ';
+          const idx = ALPHABET.indexOf(char);
+          if (idx === -1) return char;
+          return ALPHABET[(idx + shift + 26) % 26];
+        }).join('');
+      }
+
+      function caesarDecrypt(text, shift) {
+        return caesarCipher(text, -shift);
+      }
+
+      // ============================================
+      // VALIDASI DATA TANTANGAN
+      // ============================================
+      tantanganData.forEach((soal, i) => {
+        const cek = caesarDecrypt(soal.cipher, soal.kunci);
+        if (cek !== soal.plaintext) {
+          console.warn(`⚠️ BUG soal ${i+1}: ${soal.cipher} + ${soal.kunci} = ${cek}, seharusnya ${soal.plaintext}`);
+        }
+      });
+
+      // ============================================
+      // RENDER SLIDE ALFABET
+      // ============================================
+      function renderSlide() {
+        const rowPlain = document.getElementById('rowPlaintext');
+        const rowCipher = document.getElementById('rowCiphertext');
+        if (!rowPlain || !rowCipher) return;
+
+        rowPlain.innerHTML = '';
+        rowCipher.innerHTML = '';
+
+        // Render 26 huruf untuk plaintext
+        for (let i = 0; i < 26; i++) {
+          const el = document.createElement('div');
+          el.className = 'slide-huruf';
+          el.textContent = ALPHABET[i];
+          rowPlain.appendChild(el);
+        }
+
+        // Render 26 huruf untuk ciphertext — tetapi kontennya adalah
+        // (i + kunci) % 26, sehingga saat dilihat baris ciphertext
+        // huruf ke-i adalah ciphertext dari huruf ke-i plaintext
+        for (let i = 0; i < 26; i++) {
+          const cipherIdx = (i + kunciGlobal) % 26;
+          const el = document.createElement('div');
+          el.className = 'slide-huruf';
+          el.textContent = ALPHABET[cipherIdx];
+          rowCipher.appendChild(el);
+        }
+
+        // Update info pasangan
+        document.getElementById('pasanganA').textContent = caesarCipher('A', kunciGlobal);
+        document.getElementById('pasanganB').textContent = caesarCipher('B', kunciGlobal);
+        document.getElementById('pasanganC').textContent = caesarCipher('C', kunciGlobal);
+      }
+
+      // ============================================
+      // KUNCI GLOBAL (MODE 1)
+      // ============================================
+      window.updateKunciGlobal = function(val) {
+        kunciGlobal = parseInt(val);
+        document.getElementById('kunciDisplayGlobal').textContent = val;
+        renderSlide();
+        updateInputBengkel();
+      };
+
+      window.updateInputBengkel = function() {
+        const input = document.getElementById('inputBengkel').value.toUpperCase().replace(/[^A-Z ]/g, '');
+        document.getElementById('inputBengkel').value = input;
+        document.getElementById('hasilBengkel').textContent = '?';
+        document.getElementById('hasilBengkel').classList.add('empty');
+        document.getElementById('animasiBengkel').innerHTML = '';
+        document.getElementById('feedbackBengkel').className = 'feedback-bengkel';
+      };
+
+      // ============================================
+      // ENKRIPSI BENCH (MODE 1)
+      // ============================================
+      window.jalankanEnkripsiBengkel = function() {
+        const input = document.getElementById('inputBengkel').value.trim().toUpperCase();
+        if (!input) {
+          alert('⚠️ Ketik pesan terlebih dahulu!');
+          return;
+        }
+
+        const hasil = caesarCipher(input, kunciGlobal);
+        const container = document.getElementById('animasiBengkel');
+        container.innerHTML = '';
+
+        input.split('').forEach((char, idx) => {
+          if (char === ' ') {
+            const spasi = document.createElement('div');
+            spasi.style.width = '10px';
+            container.appendChild(spasi);
+            return;
+          }
+
+          const cipherChar = hasil[idx];
+          const box = document.createElement('div');
+          box.className = 'huruf-animasi';
+          box.innerHTML = `
+            <div class="awal">${char}</div>
+            <div class="arrow">↓</div>
+            <div class="hasil" id="anim_${idx}">${cipherChar}</div>
+          `;
+          container.appendChild(box);
+
+          setTimeout(() => {
+            const el = document.getElementById('anim_' + idx);
+            if (el) el.classList.add('show');
+          }, 80 + idx * 70);
+        });
+
+        setTimeout(() => {
+          const output = document.getElementById('hasilBengkel');
+          output.textContent = hasil;
+          output.classList.remove('empty');
+
+          const fb = document.getElementById('feedbackBengkel');
+          fb.className = 'feedback-bengkel show success';
+          fb.innerHTML = `🔐 <strong>Enkripsi berhasil!</strong> "${input}" dengan kunci ${kunciGlobal} menjadi "${hasil}".`;
+
+          if (!modeSelesai[1]) {
+            skorMode[1] = 100;
+            modeSelesai[1] = true;
+            tandaiModeSelesai(1);
+            cekSemuaMode();
+          }
+          updateProgress();
+        }, 80 + input.length * 70 + 200);
+      };
+
+      window.jalankanDekripsiBengkel = function() {
+        const input = document.getElementById('inputBengkel').value.trim().toUpperCase();
+        if (!input) {
+          alert('⚠️ Ketik pesan terlebih dahulu!');
+          return;
+        }
+
+        const hasil = caesarDecrypt(input, kunciGlobal);
+        const container = document.getElementById('animasiBengkel');
+        container.innerHTML = '';
+
+        input.split('').forEach((char, idx) => {
+          if (char === ' ') {
+            const spasi = document.createElement('div');
+            spasi.style.width = '10px';
+            container.appendChild(spasi);
+            return;
+          }
+
+          const plainChar = hasil[idx];
+          const box = document.createElement('div');
+          box.className = 'huruf-animasi';
+          box.innerHTML = `
+            <div class="awal">${char}</div>
+            <div class="arrow">↓</div>
+            <div class="hasil" id="anim_${idx}">${plainChar}</div>
+          `;
+          container.appendChild(box);
+
+          setTimeout(() => {
+            const el = document.getElementById('anim_' + idx);
+            if (el) el.classList.add('show');
+          }, 80 + idx * 70);
+        });
+
+        setTimeout(() => {
+          const output = document.getElementById('hasilBengkel');
+          output.textContent = hasil;
+          output.classList.remove('empty');
+
+          const fb = document.getElementById('feedbackBengkel');
+          fb.className = 'feedback-bengkel show success';
+          fb.innerHTML = `🔓 <strong>Dekripsi berhasil!</strong> "${input}" dengan kunci ${kunciGlobal} menjadi "${hasil}".`;
+
+          if (!modeSelesai[1]) {
+            skorMode[1] = 100;
+            modeSelesai[1] = true;
+            tandaiModeSelesai(1);
+            cekSemuaMode();
+          }
+          updateProgress();
+        }, 80 + input.length * 70 + 200);
+      };
+
+      window.resetBengkel = function() {
+        document.getElementById('inputBengkel').value = 'SERBU PAGI';
+        document.getElementById('sliderKunciGlobal').value = 3;
+        kunciGlobal = 3;
+        document.getElementById('kunciDisplayGlobal').textContent = '3';
+        renderSlide();
+        updateInputBengkel();
+      };
+
+      // ============================================
+      // MODE 2: TANTANGAN PECAHKAN KODE
+      // ============================================
+      window.mulaiTantangan = function() {
+        tantanganAktif = true;
+        tantanganIndex = 0;
+        tantanganSkor = 0;
+        tantanganWaktu = 60;
+        tantanganSudahBenar = false;
+
+        document.getElementById('btnMulaiTantangan').style.display = 'none';
+        document.getElementById('skorTantangan').textContent = 'Skor: 0';
+        document.getElementById('timerDisplay').textContent = '⏱️ 60s';
+        document.getElementById('timerDisplay').style.color = '#4d3829';
+
+        tampilkanTantangan();
+
+        if (tantanganTimer) clearInterval(tantanganTimer);
+        tantanganTimer = setInterval(() => {
+          tantanganWaktu--;
+          document.getElementById('timerDisplay').textContent = `⏱️ ${tantanganWaktu}s`;
+          if (tantanganWaktu <= 10) {
+            document.getElementById('timerDisplay').style.color = '#d4a0a0';
+          }
+          if (tantanganWaktu <= 0) {
+            selesaiTantangan();
+          }
+        }, 1000);
+      };
+
+      function tampilkanTantangan() {
+        if (tantanganIndex >= tantanganData.length) {
+          selesaiTantangan();
+          return;
+        }
+
+        const soal = tantanganData[tantanganIndex];
+        tantanganSoalSekarang = soal;
+        tantanganSudahBenar = false;
+
+        document.getElementById('soalCipher').textContent = soal.cipher;
+        document.getElementById('soalProgressInline').textContent = `Soal ${tantanganIndex + 1} dari ${tantanganData.length}`;
+        document.getElementById('sliderTantangan').value = 1;
+        document.getElementById('kunciTantanganValue').textContent = '1';
+        document.getElementById('btnTantanganBerikutnya').style.display = 'none';
+        document.getElementById('feedbackTantangan').className = 'feedback-bengkel';
+
+        updateTantangan(1);
+      }
+
+      window.updateTantangan = function(val) {
+        document.getElementById('kunciTantanganValue').textContent = val;
+        if (!tantanganSoalSekarang) return;
+
+        const kunciInt = parseInt(val);
+        const hasil = caesarDecrypt(tantanganSoalSekarang.cipher, kunciInt);
+        const preview = document.getElementById('previewTantangan');
+        preview.textContent = hasil;
+
+        if (hasil === tantanganSoalSekarang.plaintext) {
+          preview.classList.add('benar');
+
+          if (!tantanganSudahBenar) {
+            tantanganSudahBenar = true;
+            tantanganSkor += 25;
+            document.getElementById('skorTantangan').textContent = `Skor: ${tantanganSkor}`;
+
+            const fb = document.getElementById('feedbackTantangan');
+            fb.className = 'feedback-bengkel show success';
+            fb.innerHTML = `🎉 <strong>Benar!</strong> Kunci ${val} menghasilkan "${hasil}". Kode terpecahkan!`;
+
+            document.getElementById('btnTantanganBerikutnya').style.display = 'inline-flex';
+            document.getElementById('btnTantanganBerikutnya').textContent = 
+              tantanganIndex < tantanganData.length - 1 ? '➡️ Soal Berikutnya' : '🏁 Selesai';
+          }
+        } else {
+          preview.classList.remove('benar');
+        }
+      };
+
+      window.tantanganBerikutnya = function() {
+        tantanganIndex++;
+        if (tantanganIndex < tantanganData.length) {
+          tampilkanTantangan();
+        } else {
+          selesaiTantangan();
+        }
+      };
+
+      function selesaiTantangan() {
+        if (tantanganTimer) {
+          clearInterval(tantanganTimer);
+          tantanganTimer = null;
+        }
+        tantanganAktif = false;
+
+        document.getElementById('btnMulaiTantangan').style.display = 'inline-flex';
+        document.getElementById('btnTantanganBerikutnya').style.display = 'none';
+        document.getElementById('timerDisplay').textContent = '⏱️ Selesai';
+        document.getElementById('soalProgressInline').textContent = 'Semua soal selesai';
+
+        const fb = document.getElementById('feedbackTantangan');
+        fb.className = 'feedback-bengkel show info';
+        fb.innerHTML = `🏁 <strong>Tantangan selesai!</strong> Skor total: ${tantanganSkor} dari ${tantanganData.length * 25}.`;
+
+        document.getElementById('btnMulaiTantangan').textContent = '🔄 Ulangi Tantangan';
+
+        if (tantanganSkor >= 75) {
+          if (!modeSelesai[2]) {
+            skorMode[2] = 100;
+            modeSelesai[2] = true;
+            tandaiModeSelesai(2);
+            cekSemuaMode();
+          }
+        } else {
+          skorMode[2] = tantanganSkor;
+        }
+        updateProgress();
+      }
+
+      // ============================================
+      // MODE 3: BUAT KODE SENDIRI
+      // ============================================
+      window.updateBuatKode = function() {
+        const pesan = document.getElementById('inputPesanBuat').value.toUpperCase().replace(/[^A-Z ]/g, '');
+        document.getElementById('inputPesanBuat').value = pesan;
+
+        const kunci = parseInt(document.getElementById('sliderKunciBuat').value);
+        document.getElementById('kunciDisplayBuat').textContent = kunci;
+
+        if (pesan.trim()) {
+          const cipher = caesarCipher(pesan, kunci);
+          document.getElementById('hasilBuatKode').textContent = cipher;
+
+          if (!modeSelesai[3]) {
+            skorMode[3] = 100;
+            modeSelesai[3] = true;
+            tandaiModeSelesai(3);
+            cekSemuaMode();
+          }
+          updateProgress();
+        } else {
+          document.getElementById('hasilBuatKode').textContent = '—';
+        }
+      };
+
+      window.copyKode = function() {
+        const kode = document.getElementById('hasilBuatKode').textContent;
+        if (kode && kode !== '—') {
+          navigator.clipboard.writeText(kode).then(() => {
+            alert('📋 Kode berhasil disalin: ' + kode);
+          }).catch(() => {
+            alert('📋 Kode: ' + kode);
+          });
+        }
+      };
+
+      // ============================================
+      // MODE SELECTOR
+      // ============================================
+      window.switchMode = function(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+          btn.classList.remove('active');
+          if (parseInt(btn.dataset.mode) === mode) btn.classList.add('active');
+        });
+        document.querySelectorAll('.mode-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById('mode' + mode + 'Content').classList.add('active');
+
+        const modeLabels = { 1: 'Slide Alfabet', 2: 'Pecahkan Kode', 3: 'Buat Kode Sendiri' };
+        elModeLabel.textContent = modeLabels[mode];
+
+        if (mode !== 2 && tantanganTimer) {
+          clearInterval(tantanganTimer);
+          tantanganTimer = null;
+          tantanganAktif = false;
+        }
+      };
+
+      function tandaiModeSelesai(mode) {
+        const btn = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
+        if (btn) btn.classList.add('selesai');
+      }
+
+      function updateProgress() {
+        const done = Object.values(modeSelesai).filter(Boolean).length;
+        elProgressCounter.textContent = done;
+        const totalSkor = Object.values(skorMode).reduce((a, b) => a + b, 0);
+        elSkorCounter.textContent = totalSkor;
+      }
+
+      function cekSemuaMode() {
+        if (modeSelesai[1] && modeSelesai[2] && modeSelesai[3]) {
+          elAreaSoal.classList.add('active');
+          renderSoal();
+          updateSoalProgress();
+          setTimeout(() => {
+            elAreaSoal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 400);
+        }
+      }
+
+      // ============================================
+      // SOAL PEMAHAMAN
+      // ============================================
+      function renderSoal() {
+        elSoalContainer.innerHTML = '';
+        soalData.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'soal-kuis';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            const id = `soal${idx}_opt${oi}`;
+            opsiHtml += `
+              <label for="${id}" onclick="pilihJawaban(${idx}, ${oi})" id="label_${idx}_${oi}">
+                <input type="radio" name="soal${idx}" id="${id}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          div.innerHTML = `
+            <div class="pertanyaan">
+              <span class="soal-num">${idx + 1}</span>
+              <span>${soal.pertanyaan}</span>
+            </div>
+            <div class="opsi-kuis">${opsiHtml}</div>
+            <div class="jawaban-feedback" id="feedback_soal_${idx}"></div>
+          `;
+
+          elSoalContainer.appendChild(div);
+        });
+      }
+
+      window.pilihJawaban = function(soalIndex, optIndex) {
+        if (soalSubmitted) return;
+        const soalDiv = document.querySelector(`.soal-kuis[data-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+
+        soalJawaban[soalIndex] = optIndex;
+        updateSoalProgress();
+      };
+
+      function updateSoalProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+        elSoalProgress.textContent = `Terjawab: ${answered} / ${total}`;
+      }
+
+      elBtnPeriksaSoal.addEventListener('click', function() {
+        if (soalSubmitted) return;
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
+          return;
+        }
+
+        let correct = 0;
+        soalData.forEach((soal, idx) => {
+          const selected = soalJawaban[idx];
+          const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
+          const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+          const feedback = document.getElementById(`feedback_soal_${idx}`);
+
+          labels.forEach((label, oi) => {
+            label.classList.add('disabled');
+            if (oi === soal.kunci) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+            if (oi === selected && selected !== soal.kunci) {
+              label.classList.add('wrong-answer');
+              label.querySelector('.check-icon').textContent = '❌';
+            }
+          });
+
+          if (selected === soal.kunci) {
+            soalDiv.classList.add('correct');
+            correct++;
+            feedback.className = 'jawaban-feedback benar';
+            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.penjelasan}`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.className = 'jawaban-feedback salah';
+            feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+          }
+        });
+
+        soalBenar = correct;
+        soalSubmitted = true;
+        elBtnPeriksaSoal.disabled = true;
+        elBtnPeriksaSoal.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+
+        tampilkanHasilSoal(correct, total);
+      });
+
+      function tampilkanHasilSoal(correct, total) {
+        setTimeout(() => {
+          elHasilSoal.classList.add('show');
+
+          if (correct >= 3) {
+            soalSelesai = true;
+            elHasilSoal.querySelector('#hasilIcon').textContent = '🏆';
+            elHasilSoal.querySelector('#hasilTitle').textContent = 'Selamat!';
+            elHasilSoal.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilSoal.querySelector('#hasilDesc').innerHTML = 
+              `Kamu berhasil menyelesaikan Bagian 3!<br><br>Bagian 4 sekarang terbuka!`;
+
+            elBtnLanjutBagian4.classList.remove('locked');
+            elBtnLanjutBagian4.classList.add('primary');
+            elHintLanjut.classList.remove('locked');
+            elHintLanjut.classList.add('ready');
+            elHintLanjut.textContent = '✅ Bagian 4 sudah terbuka! Klik untuk melanjutkan.';
+
+            document.querySelectorAll('.bagian-progress .step').forEach((step, idx) => {
+              if (idx === 2) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+              }
+            });
+
+            try {
+              const prev = JSON.parse(localStorage.getItem('labenkripsi_progress') || '{}');
+              prev.bagian = 3;
+              prev.skorBagian3 = 100 + (correct * 25);
+              localStorage.setItem('labenkripsi_progress', JSON.stringify(prev));
+            } catch (e) {}
+          } else {
+            elHasilSoal.querySelector('#hasilIcon').textContent = '📖';
+            elHasilSoal.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
+            elHasilSoal.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilSoal.querySelector('#hasilDesc').innerHTML = 
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal 3 soal benar untuk membuka Bagian 4.<br><br>Coba pelajari kembali materinya!`;
+          }
+
+          const btnAksi = elHasilSoal.querySelector('#btnAksiHasil');
+          btnAksi.innerHTML = `
+            <button onclick="ulangiSoal()">🔄 Ulangi Soal</button>
+            <a href="materijki3.html">📖 Baca Materi</a>
+          `;
+
+          setTimeout(() => {
+            elHasilSoal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 200);
+        }, 800);
+      }
+
+      window.ulangiSoal = function() {
+        if (!confirm('Yakin ingin mengulangi soal? Skor soal akan direset.')) return;
+
+        soalJawaban = {};
+        soalSubmitted = false;
+        soalBenar = 0;
+        soalSelesai = false;
+
+        elBtnPeriksaSoal.disabled = false;
+        elBtnPeriksaSoal.textContent = '✅ Periksa Jawaban';
+        elHasilSoal.classList.remove('show');
+
+        renderSoal();
+        updateSoalProgress();
+
+        elBtnLanjutBagian4.classList.add('locked');
+        elBtnLanjutBagian4.classList.remove('primary');
+        elHintLanjut.classList.add('locked');
+        elHintLanjut.classList.remove('ready');
+        elHintLanjut.textContent = '🔒 Selesaikan semua mode dan soal pemahaman untuk membuka Bagian 4';
+
+        document.querySelectorAll('.bagian-progress .step').forEach((step, idx) => {
+          if (idx === 2) {
+            step.classList.add('active');
+            step.classList.remove('completed');
+          }
+        });
+
+        elAreaSoal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+
+      window.lanjutKeBagian4 = function() {
+        if (!soalSelesai) {
+          alert('🔒 Selesaikan soal pemahaman dengan benar terlebih dahulu!');
+          return;
+        }
+        window.location.href = 'aktivitasjki3d.html';
+      };
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        renderSlide();
+        updateInputBengkel();
+        updateBuatKode();
+        updateProgress();
+      });
+
+      console.log('✅ Lab Enkripsi Bagian 3: Sandi Caesar (Slide Alfabet) siap!');
+    })();
+  </script>
+
+</body>
+</html>
