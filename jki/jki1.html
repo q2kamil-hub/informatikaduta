@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Jaringan Komputer dan Internet · Portal · Informatika DUTA</title>
+  <!-- CSS di root, naik satu level dari folder jki/ -->
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== GAYA PORTAL ===== */
+    .portal-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .portal-icon {
+      font-size: 5rem;
+      margin-bottom: 0.5rem;
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .portal-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .portal-sub {
+      font-size: 1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+
+    .portal-desc {
+      font-size: 0.95rem;
+      color: #5c4638;
+      line-height: 1.8;
+      max-width: 620px;
+      margin: 0 auto 2rem;
+      background: #f5ede6;
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 6px solid #dbb9a6;
+      text-align: left;
+    }
+
+    .portal-desc strong {
+      color: #4d3829;
+    }
+
+    .portal-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .portal-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1.8rem 2rem;
+      border-radius: 24px;
+      border: 3px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      color: inherit;
+      font-family: inherit;
+      min-width: 220px;
+      max-width: 280px;
+      flex: 1;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    }
+
+    .portal-btn:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+      border-color: #b09b88;
+    }
+
+    .portal-btn .btn-icon {
+      font-size: 3rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .portal-btn .btn-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      line-height: 1.3;
+    }
+
+    .portal-btn .btn-desc {
+      font-size: 0.8rem;
+      color: #7a6656;
+      line-height: 1.4;
+    }
+
+    .portal-btn.btn-materi {
+      border-color: #8ab4d4;
+      background: #f0f7fb;
+    }
+
+    .portal-btn.btn-materi:hover {
+      border-color: #6a94b4;
+      background: #e5f0f8;
+    }
+
+    .portal-btn.btn-materi .btn-title {
+      color: #1a4a6b;
+    }
+
+    .portal-btn.btn-aktivitas {
+      border-color: #8aaa7a;
+      background: #f0f8eb;
+    }
+
+    .portal-btn.btn-aktivitas:hover {
+      border-color: #6a8a5a;
+      background: #e5f2dc;
+    }
+
+    .portal-btn.btn-aktivitas .btn-title {
+      color: #2d5a1e;
+    }
+
+    .portal-info {
+      margin-top: 2.5rem;
+      font-size: 0.85rem;
+      color: #7a6656;
+      padding: 0.8rem 1.2rem;
+      background: #f8f4ef;
+      border-radius: 12px;
+      border: 1px dashed #d9cdbf;
+      display: inline-block;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .portal-info strong {
+      color: #4d3829;
+    }
+
+    @media (max-width: 720px) {
+      .portal-title { font-size: 1.6rem; }
+      .portal-icon { font-size: 3.5rem; }
+      .portal-btn { min-width: unset; padding: 1.4rem 1.2rem; }
+      .portal-btn .btn-icon { font-size: 2.4rem; }
+      .portal-btn .btn-title { font-size: 1rem; }
+      .portal-desc { padding: 1rem 1.2rem; font-size: 0.9rem; }
+    }
+
+    @media (max-width: 480px) {
+      .portal-buttons { flex-direction: column; align-items: stretch; }
+      .portal-btn { max-width: unset; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER (dinamis dari script.js — banner saja) -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB (statis, 3 level) -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materijki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li>Jaringan Komputer dan Internet serta Manfaatnya</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA: PORTAL -->
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="portal-wrapper">
+
+        <div class="portal-icon">🌐</div>
+        <div class="portal-title">Jaringan Komputer dan Internet</div>
+        <div class="portal-sub">Dari Ruang Lab hingga Dunia: Memahami Cara Perangkat Terhubung</div>
+
+        <div class="portal-desc">
+          <strong>🌍 Selamat datang!</strong> Modul ini membahas <strong>jaringan komputer</strong> dan <strong>internet</strong> — mulai dari jenis jaringan (LAN, MAN, WAN, Internet), perangkat yang terlibat (switch, router, modem), hingga manfaat internet dalam kehidupan sehari-hari seperti e-Learning, e-Commerce, dan e-Banking.
+          <br><br>
+          Kamu juga akan mempelajari bagaimana data dikirim melalui jaringan menggunakan protokol <strong>TCP/IP</strong> dan konsep <strong>alamat IP</strong>.
+          <br><br>
+          Silakan pilih mode pembelajaran yang kamu inginkan:
+        </div>
+
+        <div class="portal-buttons">
+          <a href="materijki1.html" class="portal-btn btn-materi">
+            <span class="btn-icon">📖</span>
+            <span class="btn-title">Materi Jaringan Komputer &amp; Internet</span>
+            <span class="btn-desc">Baca materi lengkap tanpa aktivitas</span>
+          </a>
+
+          <a href="aktivitasjki1a.html" class="portal-btn btn-aktivitas">
+            <span class="btn-icon">🎮</span>
+            <span class="btn-title">Materi + Aktivitas</span>
+            <span class="btn-desc">Belajar sambil menjelajahi jaringan virtual</span>
+          </a>
+        </div>
+
+        <div class="portal-info">
+          💡 <strong>Rekomendasi:</strong> Pilih <strong>"Materi + Aktivitas"</strong> untuk pengalaman belajar yang lebih lengkap dan interaktif. Kamu akan membangun jaringan LAN, menghubungkan ke internet, mengikuti perjalanan paket data, dan menjelajahi manfaat internet!
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js (header, footer, scroll) -->
+  <script src="../script.js"></script>
+
+  <!-- 
+    ============================================================
+    CATATAN UNTUK AI (tidak tampil di halaman)
+    ============================================================
+    1. STRUKTUR PORTAL MODUL:
+       jki1.html (halaman ini) = portal dengan 2 tombol:
+       - Materi → materijki1.html
+       - Materi + Aktivitas → aktivitasjki1a.html (bagian pertama)
+
+    2. ALUR AKTIVITAS (rencana):
+       aktivitasjki1a.html → Bangun LAN
+       aktivitasjki1b.html → Sambung Internet
+       aktivitasjki1c.html → Paket Data
+       aktivitasjki1d.html → Manfaat Internet
+       aktivitasjki1e.html → Ringkasan
+       aktivitasjki1f.html → Kuis Akhir + Form Identitas + Kirim Nilai (jika 6 file)
+       
+       ATAU versi 5 file:
+       aktivitasjki1a.html → Bangun LAN
+       aktivitasjki1b.html → Sambung Internet
+       aktivitasjki1c.html → Paket Data
+       aktivitasjki1d.html → Manfaat Internet
+       aktivitasjki1e.html → Kuis Akhir + Form + API
+
+    3. BREADCRUMB STATIS (3 level untuk halaman portal kartu):
+       - Beranda (link ../index.html)
+       - [Mapel] (link materijki.html)
+       - [Nama Kartu]
+
+    4. PATH RELATIF (file ini di ./jki/):
+       - CSS & JS: ../desain.css, ../script.js
+       - Link ke root: ../index.html
+       - Link ke kartu sesama folder: nama-file.html
+
+    5. MENU BAR: Dihapus total. Header hanya banner.
+
+    6. TEMA MODUL: Jaringan Komputer dan Internet serta Manfaatnya.
+       Warna aksen: #dbb9a6 (coklat pastel).
+
+    7. NAMA SHEET untuk modul jki1 (nanti di aktivitas f/e):
+       NAMA_SHEET = 'jki1'
+    ============================================================
+  -->
+
+</body>
+</html>

@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Jelajah Jaringan · Bagian 1: Bangun LAN · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== GAYA AKTIVITAS ===== */
+    .aktivitas-wrapper { max-width: 1000px; margin: 0 auto; }
+    .aktivitas-wrapper h1 {
+      font-size: 2.2rem; font-weight: 700; color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 0.3rem;
+    }
+    .aktivitas-wrapper .sub-judul-aktivitas {
+      font-size: 1rem; color: #5c4638; margin-bottom: 1.5rem;
+      border-left: 4px solid #dbb9a6; padding-left: 1rem;
+    }
+
+    /* ===== MATERI RINGKAS ===== */
+    .materi-ringkas {
+      background: #f8f4ef; border-radius: 16px;
+      padding: 1.5rem 1.8rem; border-left: 6px solid #8ab4d4;
+      border: 2px solid #e5dbd0; margin-bottom: 1.5rem;
+    }
+    .materi-ringkas h2 {
+      font-size: 1.3rem; font-weight: 700; color: #3b2b1e;
+      margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .materi-ringkas h2 .badge {
+      background: #8ab4d4; color: #fff; font-size: 0.7rem;
+      padding: 0.15rem 0.6rem; border-radius: 20px; font-weight: 600;
+    }
+    .materi-ringkas h3 {
+      font-size: 1.05rem; font-weight: 600; color: #4d3829; margin: 1rem 0 0.4rem;
+    }
+    .materi-ringkas p {
+      font-size: 0.92rem; line-height: 1.7; color: #2f2822; margin-bottom: 0.6rem;
+    }
+    .materi-ringkas ul { margin: 0.3rem 0 0.8rem 1.5rem; font-size: 0.9rem; }
+    .materi-ringkas li { margin-bottom: 0.25rem; line-height: 1.6; }
+    .materi-ringkas .info-box {
+      background: #fff; border-radius: 12px; padding: 0.8rem 1.2rem;
+      border: 2px solid #e5dbd0; margin: 0.6rem 0;
+      font-size: 0.88rem; line-height: 1.6;
+    }
+    .materi-ringkas .info-box strong { color: #4d3829; }
+    .materi-ringkas .link-materi {
+      display: inline-block; margin-top: 0.5rem; color: #5c4638;
+      font-size: 0.85rem; text-decoration: none; font-weight: 600;
+      border-bottom: 2px dotted #bfaa9a; transition: all 0.2s ease;
+    }
+    .materi-ringkas .link-materi:hover { color: #4d3829; border-bottom-color: #7a5f4c; }
+
+    /* ===== FORM IDENTITAS SISWA ===== */
+    .form-siswa-box {
+      background: #fff; border-radius: 20px; padding: 1.5rem 1.8rem;
+      margin: 1.5rem 0; border: 3px solid #8ab4d4;
+      box-shadow: 0 6px 20px rgba(138, 180, 212, 0.15); position: relative;
+    }
+    .form-siswa-box::before {
+      content: '📝'; position: absolute; top: -18px; left: 1.5rem;
+      background: #fff; padding: 0 0.5rem; font-size: 1.5rem;
+    }
+    .form-siswa-box .form-title {
+      font-size: 1.1rem; font-weight: 700; color: #1a4a6b; margin-bottom: 0.3rem;
+    }
+    .form-siswa-box .form-desc {
+      font-size: 0.85rem; color: #5c4638; margin-bottom: 1.2rem; line-height: 1.6;
+    }
+    .form-sekolah-wrapper,
+    .form-jumlah-wrapper,
+    .form-kelas-wrapper {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .form-sekolah-wrapper { padding-bottom: 1rem; border-bottom: 2px dashed #e5dbd0; }
+    .form-jumlah-wrapper { padding-bottom: 1rem; border-bottom: 2px dashed #e5dbd0; }
+    .form-kelas-wrapper { padding-top: 1rem; border-top: 2px dashed #e5dbd0; }
+    .form-sekolah-wrapper label,
+    .form-jumlah-wrapper label,
+    .form-kelas-wrapper label {
+      font-weight: 700; color: #4d3829; font-size: 0.95rem; min-width: 90px;
+    }
+    .form-sekolah-wrapper input[type="text"],
+    .form-kelas-wrapper input[type="text"] {
+      flex: 1; min-width: 180px; max-width: 320px;
+      padding: 0.6rem 1rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; background: #fcfaf7;
+      font-size: 0.95rem; font-weight: 600; color: #3d2c1f;
+      outline: none; transition: all 0.15s; font-family: inherit;
+    }
+    .form-sekolah-wrapper input[type="text"]:focus,
+    .form-kelas-wrapper input[type="text"]:focus {
+      border-color: #8ab4d4; background: #fff;
+      box-shadow: 0 0 0 3px rgba(138, 180, 212, 0.15);
+    }
+    .form-jumlah-wrapper select {
+      padding: 0.5rem 1rem; border-radius: 10px;
+      border: 2px solid #8ab4d4; background: #f0f7fb;
+      font-size: 1rem; font-weight: 700; color: #1a4a6b;
+      cursor: pointer; font-family: inherit; transition: all 0.15s;
+    }
+    .form-jumlah-wrapper select:focus {
+      outline: none; border-color: #6a94b4;
+      box-shadow: 0 0 0 3px rgba(138, 180, 212, 0.25);
+    }
+    .form-siswa-list {
+      display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1rem;
+    }
+    .form-siswa-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      flex-wrap: wrap; animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .form-siswa-item .siswa-num {
+      background: #8ab4d4; color: #fff; width: 28px; height: 28px;
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+    }
+    .form-siswa-item input[type="text"] {
+      flex: 1; min-width: 180px; padding: 0.6rem 1rem;
+      border-radius: 10px; border: 2px solid #e5dbd0;
+      background: #fcfaf7; font-size: 0.92rem; color: #3d2c1f;
+      outline: none; transition: all 0.15s; font-family: inherit;
+    }
+    .form-siswa-item input[type="text"]:focus {
+      border-color: #8ab4d4; background: #fff;
+      box-shadow: 0 0 0 3px rgba(138, 180, 212, 0.15);
+    }
+    .form-error {
+      display: none; background: #fdf0f0; border: 2px solid #d4a0a0;
+      color: #a84a3a; padding: 0.6rem 1rem; border-radius: 10px;
+      font-size: 0.88rem; font-weight: 600; margin-top: 0.8rem;
+    }
+    .form-error.show { display: block; animation: slideIn 0.3s ease; }
+    .btn-mulai {
+      display: inline-block; padding: 1rem 3rem; font-size: 1.1rem;
+      font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, #6b8c5e, #4d7a3b);
+      border-radius: 50px; border: none; cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 24px rgba(70, 110, 50, 0.3);
+      text-decoration: none; font-family: inherit;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-mulai:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 32px rgba(70, 110, 50, 0.35);
+    }
+    .btn-mulai:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+    .btn-wrapper-mulai { text-align: center; margin-top: 1.2rem; }
+
+    /* ===== STEP INDICATOR ===== */
+    .step-indicator {
+      display: flex; justify-content: space-between; align-items: center;
+      margin: 1.5rem 0 2rem 0; position: relative;
+      padding: 0 0.5rem; flex-wrap: wrap; gap: 0.3rem;
+    }
+    .step-indicator::before {
+      content: ''; position: absolute; top: 50%;
+      left: 30px; right: 30px; height: 3px;
+      background: #e5dbd0; transform: translateY(-50%); z-index: 0;
+    }
+    .step-dot {
+      display: flex; flex-direction: column; align-items: center;
+      z-index: 1; cursor: pointer; background: transparent;
+      border: none; padding: 0; font-family: inherit;
+      flex: 1; min-width: 50px;
+    }
+    .step-dot .circle {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: #f5ede6; border: 3px solid #d9cdbf;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.8rem; color: #7a6656;
+      transition: all 0.3s ease;
+    }
+    .step-dot.active .circle {
+      background: #4d3829; border-color: #4d3829; color: #fff;
+      transform: scale(1.1); box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+    .step-dot.completed .circle {
+      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
+    }
+    .step-dot .label {
+      font-size: 0.55rem; margin-top: 0.3rem; color: #7a6656;
+      text-align: center; max-width: 60px; font-weight: 500;
+    }
+    .step-dot.active .label { color: #3b2b1e; font-weight: 600; }
+    .step-dot.locked .circle { opacity: 0.4; cursor: not-allowed; }
+    .step-dot.locked .label { opacity: 0.4; }
+
+    /* ===== AREA SIMULASI ===== */
+    #area-simulasi { display: none; margin-top: 0.5rem; }
+    #area-simulasi.active { display: block; }
+
+    .scenario-panel {
+      background: #fffffffa; border-radius: 24px;
+      border: 2px solid #e5dbd0; padding: 2rem;
+      min-height: 400px; position: relative; transition: all 0.3s ease;
+    }
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.3rem;
+    }
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem; color: #5c4638; background: #f5ede6;
+      padding: 0.8rem 1.2rem; border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid #dbb9a6;
+    }
+
+    /* ===== TOPOLOGY CANVAS ===== */
+    .topology-canvas {
+      background: #f8f4ef; border-radius: 16px;
+      border: 2px dashed #d9cdbf; min-height: 250px;
+      padding: 1.5rem; position: relative;
+      display: flex; flex-wrap: wrap; justify-content: center;
+      align-items: center; gap: 1rem; margin: 1rem 0;
+    }
+    .device-icon {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 0.8rem 1rem; background: #fff;
+      border-radius: 12px; border: 2px solid #d9cdbf;
+      cursor: pointer; transition: all 0.2s ease;
+      min-width: 70px; user-select: none; position: relative;
+    }
+    .device-icon:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06); border-color: #b09b88;
+    }
+    .device-icon .icon { font-size: 2rem; margin-bottom: 0.2rem; }
+    .device-icon .name {
+      font-size: 0.7rem; font-weight: 600; color: #3b2b1e; text-align: center;
+    }
+    .device-icon.droppable { border-color: #8aaa7a; background: #f0f7eb; }
+    .device-icon.placed {
+      border-color: #4d3829; background: #f5ede6;
+      cursor: default; opacity: 0.85;
+    }
+    .device-icon.placed::after {
+      content: '✓'; position: absolute; top: -6px; right: -6px;
+      background: #8aaa7a; color: #fff; width: 20px; height: 20px;
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 0.7rem; font-weight: 700;
+      border: 2px solid #f8f4ef;
+    }
+
+    /* ===== QUESTION BOX ===== */
+    .question-box {
+      background: #f5ede6; border-radius: 16px;
+      padding: 1.2rem 1.5rem; margin: 1.2rem 0;
+      border-left: 6px solid #dbb9a6;
+    }
+    .question-box .q-title {
+      font-weight: 700; color: #3b2b1e; margin-bottom: 0.5rem;
+    }
+    .question-box .options {
+      display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.5rem;
+    }
+    .question-box .options button {
+      padding: 0.4rem 1.2rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      cursor: pointer; font-size: 0.85rem;
+      transition: all 0.2s ease; font-family: inherit;
+    }
+    .question-box .options button:hover {
+      background: #f5ede6; border-color: #b09b88;
+    }
+    .question-box .options button.correct {
+      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
+    }
+    .question-box .options button.wrong {
+      background: #d4a0a0; border-color: #d4a0a0; color: #fff;
+    }
+    .feedback-text {
+      margin-top: 0.8rem; padding: 0.6rem 1rem;
+      border-radius: 8px; font-weight: 500; display: none;
+    }
+    .feedback-text.show { display: block; }
+    .feedback-text.success { background: #e8f5e0; color: #2d5a1e; }
+    .feedback-text.info { background: #e3edf5; color: #1a4a6b; }
+
+    /* ===== TES PEMAHAMAN ===== */
+    .tes-section {
+      margin-top: 1.8rem; padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0; display: none;
+    }
+    .tes-section.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .tes-header {
+      background: #f5ede6; border-radius: 12px;
+      padding: 0.9rem 1.2rem; margin-bottom: 1rem;
+      border-left: 5px solid #dbb9a6;
+      display: flex; flex-wrap: wrap; justify-content: space-between;
+      align-items: center; gap: 0.5rem;
+    }
+    .tes-header .tes-info {
+      font-size: 0.95rem; color: #3b2b1e; font-weight: 600;
+    }
+    .tes-header .tes-progress {
+      font-size: 0.82rem; color: #4d7a3b; font-weight: 700;
+      background: #fff; padding: 0.25rem 0.9rem;
+      border-radius: 30px; border: 2px solid #e5dbd0;
+    }
+    .soal-kuis {
+      background: #fff; padding: 1.1rem 1.3rem;
+      border-radius: 14px; border: 2px solid #e5dbd0;
+      margin-bottom: 0.9rem; transition: all 0.3s ease;
+    }
+    .soal-kuis.correct { border-color: #8aaa7a; background: #f0f8eb; }
+    .soal-kuis.wrong { border-color: #d4a0a0; background: #fdf0f0; }
+    .soal-kuis .pertanyaan {
+      font-weight: 600; font-size: 0.95rem; color: #3b2b1e;
+      margin-bottom: 0.5rem; display: flex; gap: 0.5rem;
+      align-items: flex-start; line-height: 1.6;
+    }
+    .soal-kuis .pertanyaan .soal-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #4d3829; color: #fff; width: 24px; height: 24px;
+      border-radius: 50%; font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis {
+      display: flex; flex-direction: column; gap: 0.35rem; padding-left: 0.2rem;
+    }
+    .soal-kuis .opsi-kuis label {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+      padding: 0.45rem 0.8rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; transition: all 0.15s; line-height: 1.5;
+    }
+    .soal-kuis .opsi-kuis label:hover:not(.disabled) {
+      background: #f5ede6; border-color: #b09b88;
+    }
+    .soal-kuis .opsi-kuis label.disabled { cursor: default; }
+    .soal-kuis .opsi-kuis label.selected { border-color: #4d3829; background: #f5ede6; }
+    .soal-kuis .opsi-kuis label.correct-answer { border-color: #8aaa7a; background: #e8f5e0; }
+    .soal-kuis .opsi-kuis label.wrong-answer { border-color: #d4a0a0; background: #f5e0e0; }
+    .soal-kuis .opsi-kuis input[type="radio"] {
+      accent-color: #6b8c5e; width: 16px; height: 16px;
+      margin-top: 0.15rem; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis .check-icon {
+      margin-left: auto; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .soal-kuis .jawaban-feedback {
+      margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+      border-radius: 8px; display: none;
+      font-size: 0.85rem; line-height: 1.5;
+    }
+    .soal-kuis .jawaban-feedback.benar {
+      display: block; background: #d4e8cb; color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+    .soal-kuis .jawaban-feedback.salah {
+      display: block; background: #f5d6d0; color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+    .soal-kuis .jawaban-feedback .kunci { font-weight: 700; color: #4d7a3b; }
+    .btn-submit-tes {
+      display: block; margin: 1.2rem auto 0;
+      padding: 0.7rem 2.5rem; border-radius: 30px; border: none;
+      background: #4d3829; color: #fff; font-weight: 700;
+      font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn-submit-tes:hover {
+      background: #6b4f3a; transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(75, 46, 30, 0.3);
+    }
+    .btn-submit-tes:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    }
+
+    /* ===== HASIL TES ===== */
+    .hasil-tes {
+      display: none; margin-top: 1.2rem; padding: 1.2rem;
+      background: #f5ede6; border-radius: 14px;
+      border: 3px double #dbb9a6; text-align: center;
+    }
+    .hasil-tes.show { display: block; animation: fadeIn 0.4s ease; }
+    .hasil-tes .hasil-icon { font-size: 2.8rem; margin-bottom: 0.3rem; }
+    .hasil-tes .hasil-title { font-size: 1.15rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.2rem; }
+    .hasil-tes .hasil-skor { font-size: 2rem; font-weight: 800; color: #4d7a3b; margin: 0.3rem 0; }
+    .hasil-tes .hasil-desc { font-size: 0.9rem; color: #5c4638; margin-bottom: 0.8rem; line-height: 1.5; }
+
+    /* ===== STATUS KIRIM ===== */
+    .status-kirim {
+      max-width: 480px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+      border-radius: 12px; font-size: 0.88rem; font-weight: 600;
+      line-height: 1.5; display: none; align-items: center;
+      gap: 0.6rem; text-align: left;
+    }
+    .status-kirim.show { display: flex; }
+    .status-kirim.info { background: #e3edf5; border: 2px solid #8ab4d4; color: #1a4a6b; }
+    .status-kirim.success { background: #d4e8cb; border: 2px solid #8aaa7a; color: #2d5a1e; }
+    .status-kirim.error { background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a; }
+    .status-kirim .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem; margin-top: 2rem;
+      padding-top: 1.5rem; border-top: 2px solid #e5dbd0;
+    }
+    .btn-nav {
+      padding: 0.6rem 1.8rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 600; font-size: 0.9rem; color: #3b2b1e;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-nav:hover {
+      background: #f5ede6; border-color: #b09b88; transform: translateY(-2px);
+    }
+    .btn-nav.primary { background: #4d3829; border-color: #4d3829; color: #fff; }
+    .btn-nav.primary:hover { background: #6b4f3a; border-color: #6b4f3a; }
+    .btn-nav:disabled,
+    .btn-nav.locked {
+      opacity: 0.4; cursor: not-allowed;
+      transform: none !important; pointer-events: none;
+    }
+    .btn-nav .back-arrow { font-size: 1.2rem; }
+    .nav-hint {
+      font-size: 0.8rem; color: #7a6656; text-align: center;
+      width: 100%; margin-top: 0.3rem;
+    }
+    .nav-hint.locked { color: #d4a0a0; }
+    .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scenario-panel { padding: 1.2rem; }
+      .step-dot .circle { width: 30px; height: 30px; font-size: 0.7rem; }
+      .step-dot .label { font-size: 0.45rem; max-width: 40px; }
+      .step-indicator::before { left: 15px; right: 15px; }
+      .aktivitas-wrapper h1 { font-size: 1.7rem; }
+      .topology-canvas { min-height: 180px; padding: 1rem; gap: 0.6rem; }
+      .device-icon { padding: 0.5rem 0.7rem; min-width: 55px; }
+      .device-icon .icon { font-size: 1.5rem; }
+      .materi-ringkas { padding: 1.2rem 1.4rem; }
+      .form-siswa-box { padding: 1.2rem 1rem; }
+    }
+    @media (max-width: 480px) {
+      .step-indicator { flex-wrap: wrap; justify-content: center; gap: 0.2rem; }
+      .step-indicator::before { display: none; }
+      .step-dot { min-width: 35px; flex: unset; }
+      .step-dot .circle { width: 26px; height: 26px; font-size: 0.6rem; }
+      .step-dot .label { display: none; }
+      .scenario-panel { padding: 0.8rem; }
+      .scenario-panel .scenario-title { font-size: 1.1rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+      .materi-ringkas { padding: 1rem 1.2rem; }
+      .materi-ringkas h2 { font-size: 1.1rem; }
+      .question-box .options { flex-direction: column; }
+      .question-box .options button { width: 100%; }
+      .form-siswa-item input[type="text"] { min-width: 100px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materijki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li><a href="jki1.html">Jaringan Komputer dan Internet</a></li>
+      <li>Jelajah Jaringan · Bagian 1</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <h1>🌐 Jelajah Jaringan: Virtual Network Explorer</h1>
+        <p class="sub-judul-aktivitas">"Dari ruang lab hingga dunia! Pelajari bagaimana perangkat saling terhubung."</p>
+
+        <div class="materi-ringkas">
+          <h2>📖 Materi Singkat <span class="badge">Bagian 1</span></h2>
+
+          <h3>1. Apa Itu Jaringan Komputer?</h3>
+          <p>
+            <strong>Jaringan komputer</strong> adalah sekumpulan komputer dan perangkat lain yang <strong>terhubung satu sama lain</strong> untuk berbagi data dan sumber daya (printer, file, internet).
+          </p>
+
+          <h3>2. Jenis Jaringan Berdasarkan Jangkauan</h3>
+          <ul>
+            <li><strong>🏢 LAN (Local Area Network)</strong> — area terbatas: ruangan, gedung, rumah. Contoh: Wi-Fi rumah, lab sekolah.</li>
+            <li><strong>🏙️ MAN (Metropolitan Area Network)</strong> — satu kota atau wilayah metropolitan.</li>
+            <li><strong>🌍 WAN (Wide Area Network)</strong> — antar kota, provinsi, negara.</li>
+            <li><strong>☁️ Internet</strong> — jaringan global yang menghubungkan seluruh jaringan di dunia menggunakan protokol <strong>TCP/IP</strong>.</li>
+          </ul>
+
+          <div class="info-box">
+            💡 <strong>Ingat:</strong>
+            <ul style="margin:0.3rem 0 0 1.2rem;">
+              <li>Jaringan di <strong>satu ruangan/gedung</strong> = <strong>LAN</strong>.</li>
+              <li>Jaringan yang menjangkau <strong>seluruh dunia</strong> = <strong>Internet</strong>.</li>
+            </ul>
+          </div>
+
+          <h3>3. Perangkat yang Terlibat dalam LAN</h3>
+          <ul>
+            <li><strong>💻 Komputer / laptop</strong> — perangkat yang saling berbagi data.</li>
+            <li><strong>🖨️ Printer</strong> — sumber daya yang bisa dipakai bersama.</li>
+            <li><strong>🔀 Switch</strong> — perangkat pusat yang menghubungkan semua perangkat dalam LAN.</li>
+          </ul>
+
+          <a href="materijki1.html" class="link-materi">📚 Baca materi lengkap di sini →</a>
+        </div>
+
+        <!-- ===== FORM IDENTITAS SISWA ===== -->
+        <div class="form-siswa-box" id="formSiswaBox">
+          <div class="form-title">📝 Identitas Siswa</div>
+          <div class="form-desc">
+            Isi identitas siswa sebelum memulai aktivitas. Nama akan tercantum pada sertifikat digital di akhir modul.
+          </div>
+
+          <div class="form-sekolah-wrapper">
+            <label for="inputSekolah">Sekolah:</label>
+            <input type="text" id="inputSekolah" placeholder="SMPN 2 Talegong" maxlength="60" oninput="cekFormSiswa()">
+          </div>
+
+          <div class="form-jumlah-wrapper">
+            <label for="jumlahSiswa">Jumlah Siswa:</label>
+            <select id="jumlahSiswa" onchange="updateFormSiswa(this.value)">
+              <option value="1" selected>1 orang</option>
+              <option value="2">2 orang</option>
+              <option value="3">3 orang</option>
+              <option value="4">4 orang</option>
+              <option value="5">5 orang</option>
+            </select>
+          </div>
+
+          <div class="form-siswa-list" id="formSiswaList"></div>
+
+          <div class="form-kelas-wrapper">
+            <label for="inputKelas">Kelas:</label>
+            <input type="text" id="inputKelas" placeholder="Contoh: 7A" maxlength="10" oninput="cekFormSiswa()">
+          </div>
+
+          <div class="form-error" id="formError">
+            ⚠️ Semua nama, kelas, dan sekolah harus diisi sebelum memulai!
+          </div>
+
+          <div class="btn-wrapper-mulai">
+            <button class="btn-mulai" id="btnMulai" onclick="mulaiAktivitas()" disabled>
+              🚀 Mulai Aktivitas
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== AREA SIMULASI ===== -->
+        <div id="area-simulasi">
+
+          <div class="step-indicator" id="stepIndicator">
+            <button class="step-dot active" data-step="0">
+              <span class="circle">1</span>
+              <span class="label">Bangun LAN</span>
+            </button>
+            <button class="step-dot locked" data-step="1">
+              <span class="circle">2</span>
+              <span class="label">Sambung Internet</span>
+            </button>
+            <button class="step-dot locked" data-step="2">
+              <span class="circle">3</span>
+              <span class="label">Paket Data</span>
+            </button>
+            <button class="step-dot locked" data-step="3">
+              <span class="circle">4</span>
+              <span class="label">Manfaat</span>
+            </button>
+            <button class="step-dot locked" data-step="4">
+              <span class="circle">🏆</span>
+              <span class="label">Kuis Akhir</span>
+            </button>
+          </div>
+
+          <div class="scenario-panel">
+            <div class="scenario-title">🏗️ Skenario 1: Bangun Jaringan Lokal (LAN)</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Kamu ditugaskan membangun jaringan di laboratorium komputer sekolah. Terdapat <strong>6 komputer</strong> dan <strong>1 printer</strong> yang harus terhubung. Jangan lupa tambahkan <strong>Switch</strong> sebagai penghubung!
+            </div>
+
+            <p style="font-weight:600; color:#3b2b1e; margin-bottom:0.5rem;">🖱️ Klik setiap perangkat untuk menghubungkannya ke jaringan:</p>
+            <div class="topology-canvas" id="lanCanvas">
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span><span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span><span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span><span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span><span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span><span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="computer" onclick="placeDevice(this)">
+                <span class="icon">💻</span><span class="name">Komputer</span>
+              </div>
+              <div class="device-icon droppable" data-device="printer" onclick="placeDevice(this)">
+                <span class="icon">🖨️</span><span class="name">Printer</span>
+              </div>
+              <div class="device-icon droppable" data-device="switch" onclick="placeDevice(this)">
+                <span class="icon">🔀</span><span class="name">Switch</span>
+              </div>
+            </div>
+
+            <div id="lanStatus" style="text-align:center; padding:0.5rem; background:#f0ece6; border-radius:8px; margin:0.5rem 0; font-size:0.9rem; color:#5c4638;">
+              💡 Klik perangkat untuk menempatkannya di jaringan. Total: <strong>8 perangkat</strong>.
+            </div>
+
+            <div class="question-box">
+              <div class="q-title">💭 Pertanyaan Reflektif:</div>
+              <p style="margin-bottom:0.5rem;"><em>"Apa yang bisa dilakukan setelah jaringan LAN ini terbangun?"</em></p>
+              <div class="options">
+                <button onclick="answerQuestion(this, true)">📁 Berbagi file dan printer</button>
+                <button onclick="answerQuestion(this, false)">📧 Mengirim email ke luar negeri</button>
+                <button onclick="answerQuestion(this, false)">▶️ Mengakses YouTube</button>
+              </div>
+              <div class="feedback-text" id="lanFeedback"></div>
+            </div>
+
+            <div class="tes-section" id="tesSection">
+              <div class="tes-header">
+                <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 3 soal pilihan ganda</div>
+                <div class="tes-progress" id="tesProgress">Terjawab: 0 / 3</div>
+              </div>
+              <div id="soalContainer"></div>
+              <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+            </div>
+
+            <div class="hasil-tes" id="hasilTes">
+              <div class="hasil-icon" id="hasilIcon">🏆</div>
+              <div class="hasil-title" id="hasilTitle">Selamat!</div>
+              <div class="hasil-skor" id="hasilSkor">0 / 3</div>
+              <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 1.</div>
+            </div>
+          </div>
+
+          <!-- Status kirim -->
+          <div class="status-kirim info" id="statusKirim">
+            <span class="spinner"></span>
+            <span id="statusKirimText">Mengirim nilai...</span>
+          </div>
+
+          <div class="nav-bottom">
+            <a href="jki1.html" class="btn-nav">
+              <span class="back-arrow">←</span> Kembali ke Portal
+            </a>
+            <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+              <a href="materijki1.html" class="btn-nav">📖 Materi</a>
+              <button class="btn-nav primary locked" id="btnLanjutBagian2" onclick="lanjutKeBagian2()">
+                Lanjut ke Bagian 2: Sambung Internet →
+              </button>
+            </div>
+            <div class="nav-hint locked" id="hintLanjut">
+              🔒 Selesaikan aktivitas dan tes pemahaman untuk membuka Bagian 2
+            </div>
+          </div>
+
+        </div><!-- end area-simulasi -->
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ============================================
+      // KONFIGURASI MODUL
+      // ============================================
+      const NAMA_SHEET = 'jki1';
+      const MODUL_KEY = 'jki1';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
+
+      // ===== STATE =====
+      let aktivitasSelesai = false;
+      let questionAnswered = false;
+      let soalJawaban = {};
+      let soalSubmitted = false;
+      let soalBenar = 0;
+      let soalSelesai = false;
+
+      let daftarSiswa = [];
+      let jumlahSiswaSekarang = 1;
+
+      // ===== DATA SOAL TES =====
+      const soalData = [
+        {
+          pertanyaan: 'Jaringan yang menghubungkan komputer-komputer di satu laboratorium sekolah disebut…',
+          opsi: ['Internet', 'WAN', 'LAN', 'MAN'],
+          kunci: 2,
+          penjelasan: 'LAN (Local Area Network) adalah jaringan yang mencakup area terbatas seperti satu ruangan, gedung, atau laboratorium.'
+        },
+        {
+          pertanyaan: 'Perangkat apa yang berfungsi sebagai pusat penghubung semua perangkat dalam LAN?',
+          opsi: ['Printer', 'Switch', 'Monitor', 'Keyboard'],
+          kunci: 1,
+          penjelasan: 'Switch adalah perangkat pusat yang menghubungkan semua perangkat dalam LAN agar bisa saling berkomunikasi.'
+        },
+        {
+          pertanyaan: 'Manfaat utama dari jaringan LAN adalah…',
+          opsi: [
+            'Bisa mengakses situs web dunia',
+            'Bisa berbagi file, printer, dan sumber daya lokal',
+            'Bisa mengirim email ke luar negeri',
+            'Bisa menonton video streaming'
+          ],
+          kunci: 1,
+          penjelasan: 'LAN memungkinkan berbagi sumber daya lokal (file, printer, scanner) di antara perangkat yang terhubung, tanpa harus terhubung ke internet.'
+        }
+      ];
+
+      // ===== DOM REFS =====
+      const elFormSiswaBox = document.getElementById('formSiswaBox');
+      const elFormSiswaList = document.getElementById('formSiswaList');
+      const elInputSekolah = document.getElementById('inputSekolah');
+      const elInputKelas = document.getElementById('inputKelas');
+      const elFormError = document.getElementById('formError');
+      const elBtnMulai = document.getElementById('btnMulai');
+      const elAreaSimulasi = document.getElementById('area-simulasi');
+
+      const elTesSection = document.getElementById('tesSection');
+      const elSoalContainer = document.getElementById('soalContainer');
+      const elTesProgress = document.getElementById('tesProgress');
+      const elBtnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const elHasilTes = document.getElementById('hasilTes');
+      const elBtnLanjutBagian2 = document.getElementById('btnLanjutBagian2');
+      const elHintLanjut = document.getElementById('hintLanjut');
+      const elStatusKirim = document.getElementById('statusKirim');
+      const elStatusKirimText = document.getElementById('statusKirimText');
+
+      // ============================================
+      // FORM IDENTITAS SISWA
+      // ============================================
+      window.updateFormSiswa = function(jumlah) {
+        jumlahSiswaSekarang = parseInt(jumlah);
+        elFormSiswaList.innerHTML = '';
+
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const div = document.createElement('div');
+          div.className = 'form-siswa-item';
+          div.innerHTML = `
+            <span class="siswa-num">${i + 1}</span>
+            <input type="text"
+                   id="namaSiswa_${i}"
+                   placeholder="Nama lengkap siswa ${i + 1}"
+                   maxlength="40"
+                   oninput="cekFormSiswa()">
+          `;
+          elFormSiswaList.appendChild(div);
+        }
+        cekFormSiswa();
+      };
+
+      window.cekFormSiswa = function() {
+        const sekolah = elInputSekolah.value.trim();
+        const kelas = elInputKelas.value.trim();
+        let semuaNamaTerisi = true;
+
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const namaInput = document.getElementById('namaSiswa_' + i);
+          if (!namaInput || namaInput.value.trim() === '') {
+            semuaNamaTerisi = false;
+            break;
+          }
+        }
+
+        if (semuaNamaTerisi && kelas !== '' && sekolah !== '') {
+          elBtnMulai.disabled = false;
+          elFormError.classList.remove('show');
+        } else {
+          elBtnMulai.disabled = true;
+          elFormError.classList.remove('show');
+        }
+      };
+
+      function validasiFormSiswa() {
+        const sekolah = elInputSekolah.value.trim();
+        const kelas = elInputKelas.value.trim();
+        const errorMsg = elFormError;
+
+        if (sekolah === '') {
+          errorMsg.textContent = '⚠️ Sekolah harus diisi!';
+          errorMsg.classList.add('show');
+          return false;
+        }
+        if (kelas === '') {
+          errorMsg.textContent = '⚠️ Kelas harus diisi!';
+          errorMsg.classList.add('show');
+          return false;
+        }
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const namaInput = document.getElementById('namaSiswa_' + i);
+          if (!namaInput || namaInput.value.trim() === '') {
+            errorMsg.textContent = `⚠️ Nama siswa ${i + 1} harus diisi!`;
+            errorMsg.classList.add('show');
+            return false;
+          }
+        }
+        errorMsg.classList.remove('show');
+        return true;
+      }
+
+      function formatNamaSiswa(daftar) {
+        if (!daftar || daftar.length === 0) return 'Siswa Informatika';
+        if (daftar.length === 1) return daftar[0].nama;
+        if (daftar.length === 2) return daftar[0].nama + ' & ' + daftar[1].nama;
+        const names = daftar.map(s => s.nama);
+        const last = names.pop();
+        return names.join(', ') + ' & ' + last;
+      }
+
+      // ============================================
+      // MULAI AKTIVITAS
+      // ============================================
+      window.mulaiAktivitas = function() {
+        if (!validasiFormSiswa()) return;
+
+        daftarSiswa = [];
+        const sekolah = elInputSekolah.value.trim();
+        const kelas = elInputKelas.value.trim();
+
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const namaInput = document.getElementById('namaSiswa_' + i);
+          daftarSiswa.push({
+            nama: namaInput.value.trim(),
+            kelas: kelas,
+            sekolah: sekolah
+          });
+        }
+
+        const namaGabung = formatNamaSiswa(daftarSiswa);
+
+        // Simpan identitas
+        if (window.simpanIdentitasSiswa) {
+          window.simpanIdentitasSiswa(sekolah, namaGabung, kelas);
+        }
+        try {
+          localStorage.setItem('labjaringan_siswa', JSON.stringify(daftarSiswa));
+        } catch (e) {}
+
+        // Pastikan ID modul bersih agar Bagian 1 melakukan INSERT baru
+        if (window.hapusIdModul) {
+          window.hapusIdModul(MODUL_KEY);
+        }
+
+        elFormSiswaBox.style.display = 'none';
+        elAreaSimulasi.classList.add('active');
+
+        setTimeout(() => {
+          elAreaSimulasi.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      };
+
+      // ============================================
+      // PLACE DEVICE
+      // ============================================
+      window.placeDevice = function(el) {
+        if (el.classList.contains('placed')) {
+          el.classList.remove('placed');
+          document.getElementById('lanStatus').innerHTML = '💡 Klik perangkat untuk menempatkannya di jaringan.';
+          aktivitasSelesai = false;
+          return;
+        }
+        el.classList.add('placed');
+        const deviceName = el.querySelector('.name').textContent;
+        const totalDevices = document.querySelectorAll('#lanCanvas .device-icon.droppable').length;
+        const placedDevices = document.querySelectorAll('#lanCanvas .device-icon.placed').length;
+        document.getElementById('lanStatus').innerHTML = `✅ ${deviceName} telah terhubung ke jaringan! (${placedDevices}/${totalDevices})`;
+
+        if (placedDevices === totalDevices) {
+          document.getElementById('lanStatus').innerHTML = '🎉 <strong>Semua perangkat terhubung!</strong> LAN berhasil dibangun.';
+          aktivitasSelesai = true;
+          cekTesAktif();
+        }
+      };
+
+      // ============================================
+      // PERTANYAAN REFLEKTIF
+      // ============================================
+      window.answerQuestion = function(btn, isCorrect) {
+        if (questionAnswered) return;
+        const parent = btn.closest('.question-box');
+        const feedback = parent.querySelector('.feedback-text');
+
+        parent.querySelectorAll('.options button').forEach(b => {
+          b.classList.remove('correct', 'wrong');
+        });
+
+        if (isCorrect) {
+          btn.classList.add('correct');
+          feedback.className = 'feedback-text show success';
+          feedback.innerHTML = '✅ <strong>Jawaban tepat!</strong> LAN memungkinkan berbagi file dan printer antar perangkat yang terhubung. Namun LAN <strong>belum</strong> terhubung ke internet, sehingga belum bisa mengirim email ke luar negeri atau mengakses YouTube.';
+          questionAnswered = true;
+          cekTesAktif();
+        } else {
+          btn.classList.add('wrong');
+          feedback.className = 'feedback-text show info';
+          feedback.innerHTML = '💡 Belum tepat. Ingat: LAN adalah jaringan <strong>lokal</strong>, jadi belum bisa mengakses internet. Coba lagi!';
+          setTimeout(() => {
+            parent.querySelectorAll('.options button').forEach(b => b.classList.remove('wrong'));
+            feedback.className = 'feedback-text';
+          }, 2500);
+        }
+      };
+
+      function cekTesAktif() {
+        if (aktivitasSelesai && questionAnswered && !elTesSection.classList.contains('active')) {
+          elTesSection.classList.add('active');
+          renderSoal();
+          updateTesProgress();
+          setTimeout(() => {
+            elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 300);
+        }
+      }
+
+      // ============================================
+      // RENDER SOAL
+      // ============================================
+      function renderSoal() {
+        elSoalContainer.innerHTML = '';
+        soalData.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'soal-kuis';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            const id = `soal${idx}_opt${oi}`;
+            opsiHtml += `
+              <label for="${id}" onclick="pilihJawaban(${idx}, ${oi})" id="label_${idx}_${oi}">
+                <input type="radio" name="soal${idx}" id="${id}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          div.innerHTML = `
+            <div class="pertanyaan">
+              <span class="soal-num">${idx + 1}</span>
+              <span>${soal.pertanyaan}</span>
+            </div>
+            <div class="opsi-kuis">${opsiHtml}</div>
+            <div class="jawaban-feedback" id="feedback_soal_${idx}"></div>
+          `;
+          elSoalContainer.appendChild(div);
+        });
+      }
+
+      window.pilihJawaban = function(soalIndex, optIndex) {
+        if (soalSubmitted) return;
+        const soalDiv = document.querySelector(`.soal-kuis[data-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+
+        soalJawaban[soalIndex] = optIndex;
+        updateTesProgress();
+      };
+
+      function updateTesProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+        elTesProgress.textContent = `Terjawab: ${answered} / ${total}`;
+      }
+
+      // ============================================
+      // PERIKSA TES
+      // ============================================
+      elBtnPeriksaTes.addEventListener('click', function() {
+        if (soalSubmitted) return;
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
+          return;
+        }
+
+        let correct = 0;
+        soalData.forEach((soal, idx) => {
+          const selected = soalJawaban[idx];
+          const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
+          const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+          const feedback = document.getElementById(`feedback_soal_${idx}`);
+
+          labels.forEach((label, oi) => {
+            label.classList.add('disabled');
+            if (oi === soal.kunci) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+            if (oi === selected && selected !== soal.kunci) {
+              label.classList.add('wrong-answer');
+              label.querySelector('.check-icon').textContent = '❌';
+            }
+          });
+
+          if (selected === soal.kunci) {
+            soalDiv.classList.add('correct');
+            correct++;
+            feedback.className = 'jawaban-feedback benar';
+            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.penjelasan}`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.className = 'jawaban-feedback salah';
+            feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+          }
+        });
+
+        soalBenar = correct;
+        soalSubmitted = true;
+        elBtnPeriksaTes.disabled = true;
+        elBtnPeriksaTes.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+
+        tampilkanHasilTes(correct, total);
+      });
+
+      // ============================================
+      // TAMPILKAN HASIL TES
+      // ============================================
+      function tampilkanHasilTes(correct, total) {
+        setTimeout(() => {
+          elHasilTes.classList.add('show');
+
+          // Skor Bagian 1: 40 (aktivitas) + 60 × (correct/total) = maks 100
+          const skorBagian1 = Math.round(40 + (correct / total) * 60);
+
+          if (correct >= 2) {
+            soalSelesai = true;
+            elHasilTes.querySelector('#hasilIcon').textContent = '🏆';
+            elHasilTes.querySelector('#hasilTitle').textContent = 'Selamat!';
+            elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilTes.querySelector('#hasilDesc').innerHTML =
+              `Kamu berhasil menyelesaikan Bagian 1!<br><br>Bagian 2 sekarang terbuka!`;
+
+            elBtnLanjutBagian2.classList.remove('locked');
+            elBtnLanjutBagian2.classList.add('primary');
+            elHintLanjut.classList.remove('locked');
+            elHintLanjut.classList.add('ready');
+            elHintLanjut.textContent = '✅ Bagian 2 sudah terbuka! Klik untuk melanjutkan.';
+
+            document.querySelectorAll('.step-dot').forEach((step, idx) => {
+              if (idx === 0) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+              }
+            });
+
+            // Simpan progress untuk rekap Bagian 5
+            try {
+              const prev = JSON.parse(localStorage.getItem('labjaringan_progress') || '{}');
+              prev.bagian = 1;
+              prev.skor = skorBagian1;
+              localStorage.setItem('labjaringan_progress', JSON.stringify(prev));
+            } catch (e) {}
+          } else {
+            elHasilTes.querySelector('#hasilIcon').textContent = '📖';
+            elHasilTes.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
+            elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilTes.querySelector('#hasilDesc').innerHTML =
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal 2 soal benar untuk membuka Bagian 2.<br><br>Coba pelajari kembali materinya!`;
+          }
+
+          setTimeout(() => {
+            elHasilTes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 200);
+        }, 700);
+      }
+
+      // ============================================
+      // KIRIM NILAI BAGIAN 1
+      // ============================================
+      async function kirimNilaiBagian1() {
+        // Skor = 40 (aktivitas) + 60 × (correct/total) = maks 100
+        const skorBagian1 = Math.round(40 + (soalBenar / soalData.length) * 60);
+
+        elStatusKirim.className = 'status-kirim info show';
+        elStatusKirimText.textContent = 'Mengirim nilai Bagian 1...';
+
+        const hasil = await window.kirimNilaiBagian(
+          NAMA_SHEET,
+          'a',
+          skorBagian1,
+          TOTAL_BAGIAN
+        );
+
+        if (hasil && hasil.ok) {
+          elStatusKirim.className = 'status-kirim success show';
+          elStatusKirimText.innerHTML = `✅ Nilai Bagian 1 (<strong>${skorBagian1}</strong>) berhasil dikirim.`;
+        } else {
+          elStatusKirim.className = 'status-kirim error show';
+          elStatusKirimText.innerHTML = `⚠️ Gagal mengirim nilai. Tetap lanjut ke Bagian 2.`;
+        }
+      }
+
+      // ============================================
+      // LANJUT KE BAGIAN 2
+      // ============================================
+      window.lanjutKeBagian2 = async function() {
+        if (!soalSelesai) {
+          alert('🔒 Selesaikan tes pemahaman dengan benar terlebih dahulu!');
+          return;
+        }
+
+        elBtnLanjutBagian2.disabled = true;
+        await kirimNilaiBagian1();
+
+        setTimeout(() => {
+          window.location.href = 'aktivitasjki1b.html';
+        }, 800);
+      };
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        updateFormSiswa('1');
+      });
+
+      console.log('✅ Jelajah Jaringan Bagian 1: Bangun LAN siap!');
+    })();
+  </script>
+
+</body>
+</html>

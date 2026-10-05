@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Materi Berpikir Komputasional · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* gaya tambahan untuk halaman materi bk2 */
+    .materi-container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .materi-container h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin: 2rem 0 0.8rem 0;
+      color: #3b2b1e;
+      border-left: 6px solid #dbb9a6;
+      padding-left: 1rem;
+      scroll-margin-top: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 1.6rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.2rem 0 0.3rem 0;
+      color: #5a4232;
+    }
+
+    .materi-container p {
+      margin-bottom: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.3rem 0 1rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.3rem;
+      line-height: 1.6;
+    }
+
+    /* tabel */
+    .tabel-materi {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem 0;
+      font-size: 0.95rem;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .tabel-materi thead {
+      background: #e8dcd0;
+    }
+    .tabel-materi th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #3b2b1e;
+      border-bottom: 2px solid #d9cdbf;
+    }
+    .tabel-materi td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid #ede4db;
+      background: #fffdfa;
+      vertical-align: top;
+    }
+    .tabel-materi tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* kotak analogi */
+    .kotak-analogi {
+      background: #f5ede6;
+      border-radius: 20px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.5rem 0;
+      border-left: 6px solid #cbb5a2;
+    }
+    .kotak-analogi h4 {
+      margin-top: 0;
+      color: #4d3829;
+    }
+    .kotak-analogi ul {
+      margin-bottom: 0;
+    }
+
+    /* kotak pilar */
+    .kotak-pilar {
+      background: #fcf9f6;
+      border-radius: 20px;
+      padding: 1.3rem 1.8rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #dbb9a6;
+      border: 2px solid #e5dbd0;
+      border-left-width: 6px;
+    }
+    .kotak-pilar h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .kotak-pilar .badge-pilar {
+      display: inline-block;
+      background: #dbb9a6;
+      color: #3b2b1e;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .kotak-pilar p {
+      font-size: 0.95rem;
+    }
+
+    /* latihan */
+    .kotak-latihan {
+      background: #eef4e8;
+      border-radius: 20px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.5rem 0;
+      border-left: 6px solid #a8b99a;
+    }
+    .kotak-latihan h4 {
+      margin-top: 0;
+      color: #3d5230;
+    }
+    .kotak-latihan ul {
+      margin-bottom: 0;
+    }
+
+    /* Daftar Isi */
+    .toc-box {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0 2rem 0;
+      border: 2px solid #e5dbd0;
+    }
+
+    .toc-box .toc-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 1.05rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toc-box ol {
+      margin: 0 0 0 1.2rem;
+      padding: 0;
+    }
+
+    .toc-box li {
+      margin-bottom: 0.4rem;
+    }
+
+    .toc-box a {
+      color: #4d3829;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dotted #bfaa9a;
+      transition: all 0.2s ease;
+    }
+
+    .toc-box a:hover {
+      color: #6b4f3a;
+      border-bottom: 2px solid #7a5f4c;
+    }
+
+    /* Navigasi bawah */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #f5ede6;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    .nav-hint {
+      font-size: 0.85rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* Tombol floating daftar isi */
+    #tocBtn {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 1.5rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #f5ede6;
+      border: 2px solid #dbb9a6;
+      font-size: 1.3rem;
+      color: #4d3829;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 998;
+    }
+
+    #tocBtn:hover {
+      background: #dbb9a6;
+      color: #fff;
+      transform: scale(1.08);
+    }
+
+    /* responsif */
+    @media (max-width: 720px) {
+      .materi-container h2 { font-size: 1.3rem; }
+      .materi-container h3 { font-size: 1.1rem; }
+      .tabel-materi { font-size: 0.85rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.5rem 0.7rem; }
+      .kotak-analogi, .kotak-latihan, .kotak-pilar { padding: 1rem 1.2rem; }
+      .toc-box { padding: 1.2rem 1.4rem; }
+      #tocBtn { width: 40px; height: 40px; font-size: 1.1rem; left: 1rem; bottom: 1.8rem; }
+    }
+    @media (max-width: 480px) {
+      .tabel-materi { font-size: 0.75rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.4rem 0.5rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+    }
+
+    /* print */
+    @media print {
+      #tocBtn, #scrollTopBtn, .nav-bottom, .toc-box { display: none !important; }
+      body { background: #fff !important; }
+      .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materibk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk2.html">Berpikir Komputasional</a></li>
+      <li>Materi Lengkap</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <h1>📖 Materi: Berpikir Komputasional (Computational Thinking)</h1>
+        <p style="font-size:1.05rem; color:#5c4638; margin-bottom:2rem; border-left:4px solid #dbb9a6; padding-left:1rem; font-style:italic;">
+          Materi lengkap tanpa aktivitas — untuk referensi dan bacaan mandiri
+        </p>
+
+        <!-- DAFTAR ISI -->
+        <div class="toc-box" id="daftarIsi">
+          <div class="toc-title">📑 Daftar Isi</div>
+          <ol>
+            <li><a href="#bagian-a">Pendahuluan: Apa Itu Berpikir Komputasional?</a></li>
+            <li><a href="#bagian-b">Empat Pilar Berpikir Komputasional</a></li>
+            <li><a href="#bagian-c">Penerapan dalam Kehidupan Sehari-hari</a></li>
+            <li><a href="#bagian-d">Mengapa Berpikir Komputasional Penting?</a></li>
+            <li><a href="#bagian-e">Latihan: Mengaitkan Konsep dengan Kehidupan</a></li>
+          </ol>
+        </div>
+
+        <!-- A. PENDAHULUAN -->
+        <h2 id="bagian-a">A. Pendahuluan: Apa Itu Berpikir Komputasional?</h2>
+        <p>Pernahkah kamu melihat filter di media sosial yang bisa mengubah wajah menjadi karakter kartun? Atau aplikasi navigasi yang memberi tahu rute tercepat untuk menghindari macet? Di balik semua teknologi canggih itu, ada sebuah cara berpikir yang disebut <strong>berpikir komputasional</strong> (<em>computational thinking</em>).</p>
+        <p><strong>Berpikir komputasional</strong> adalah pendekatan pemecahan masalah dengan mengadopsi cara berpikir yang logis dan terstruktur, seperti yang digunakan dalam ilmu komputer. Penting untuk dipahami: <em>ini bukan tentang berpikir seperti komputer</em>, melainkan tentang menggunakan pola pikir sistematis untuk menyelesaikan masalah kompleks di berbagai bidang—baik di dunia teknologi maupun kehidupan sehari-hari.</p>
+
+        <div class="kotak-analogi">
+          <h4>💡 Analogi Sederhana</h4>
+          <p style="margin-bottom:0;">Bayangkan kamu menghadapi masalah besar seperti <strong>mengerjakan proyek sekolah</strong>. Jika kamu langsung panik dan mengerjakan semuanya sekaligus, hasilnya berantakan. Tapi jika kamu memecahnya menjadi bagian-bagian kecil (tentukan topik, cari referensi, tulis, presentasi), masalah itu terasa jauh lebih mudah. Itulah inti berpikir komputasional.</p>
+        </div>
+
+        <!-- B. EMPAT PILAR -->
+        <h2 id="bagian-b">B. Empat Pilar Berpikir Komputasional</h2>
+        <p style="margin-bottom:1rem;">Berpikir komputasional memiliki empat pilar utama yang saling berkaitan:</p>
+
+        <!-- Pilar 1 -->
+        <div class="kotak-pilar">
+          <h3>1. Dekomposisi <span class="badge-pilar">PILAR 1</span></h3>
+          <p><strong>Dekomposisi</strong> adalah kemampuan memecah masalah besar menjadi bagian-bagian kecil yang lebih mudah dikelola.</p>
+          <p><strong>Contoh dalam kehidupan sehari-hari:</strong></p>
+          <ul>
+            <li><strong>Membuat proyek sekolah:</strong> Tidak langsung mengerjakan semuanya sekaligus, tapi memecahnya menjadi: menentukan topik → mencari referensi → membuat kerangka → menulis isi → membuat presentasi.</li>
+            <li><strong>Merencanakan acara ulang tahun:</strong> Dibagi menjadi beberapa tugas: menentukan lokasi, menyusun daftar tamu, memesan katering, menyiapkan hiburan.</li>
+            <li><strong>Menyusun jadwal belajar:</strong> Dipecah per mata pelajaran, per hari, per jam.</li>
+          </ul>
+        </div>
+
+        <!-- Pilar 2 -->
+        <div class="kotak-pilar">
+          <h3>2. Pengenalan Pola <span class="badge-pilar">PILAR 2</span></h3>
+          <p><strong>Pengenalan pola</strong> adalah kemampuan menemukan kesamaan atau kemiripan dalam berbagai masalah.</p>
+          <p><strong>Contoh dalam kehidupan sehari-hari:</strong></p>
+          <ul>
+            <li><strong>Memasak:</strong> Jika kamu sudah bisa membuat nasi goreng, kamu akan lebih mudah membuat kwetiau goreng atau mie goreng karena proses dan bumbunya memiliki pola yang sama.</li>
+            <li><strong>Menganalisis kebiasaan:</strong> Menyadari bahwa setiap hari Senin pagi lalu lintas lebih macet, sehingga kamu memutuskan berangkat lebih awal.</li>
+            <li><strong>Belajar matematika:</strong> Pola bilangan ganjil (1, 3, 5, 7, ...) adalah contoh pengenalan pola.</li>
+          </ul>
+        </div>
+
+        <!-- Pilar 3 -->
+        <div class="kotak-pilar">
+          <h3>3. Abstraksi <span class="badge-pilar">PILAR 3</span></h3>
+          <p><strong>Abstraksi</strong> adalah kemampuan fokus pada informasi penting dan mengabaikan detail yang tidak relevan.</p>
+          <p><strong>Contoh dalam kehidupan sehari-hari:</strong></p>
+          <ul>
+            <li><strong>Menggunakan peta:</strong> Saat melihat peta untuk mencari rute, kita tidak memperhatikan setiap pohon atau bangunan. Kita hanya fokus pada jalan, marka, dan arah.</li>
+            <li><strong>Memasak nasi goreng:</strong> Kita tidak perlu memikirkan bagaimana kedelai diolah menjadi kecap. Cukup fokus pada langkah memasak yang penting.</li>
+            <li><strong>Menggambar sketsa:</strong> Hanya fokus pada bentuk utama, bukan setiap detail kecil.</li>
+          </ul>
+        </div>
+
+        <!-- Pilar 4 -->
+        <div class="kotak-pilar">
+          <h3>4. Algoritma <span class="badge-pilar">PILAR 4</span></h3>
+          <p><strong>Algoritma</strong> adalah serangkaian instruksi langkah demi langkah untuk menyelesaikan masalah.</p>
+          <p><strong>Contoh dalam kehidupan sehari-hari:</strong></p>
+          <ul>
+            <li><strong>Resep memasak:</strong> Algoritma membuat kopi instan: (1) Buka sachet, (2) Tuang ke gelas, (3) Panaskan air, (4) Tuang air panas, (5) Aduk, (6) Siap dinikmati.</li>
+            <li><strong>Petunjuk menuju sekolah:</strong> Rute yang kamu pikirkan sebelum berangkat adalah algoritma perjalanan.</li>
+            <li><strong>Langkah mencuci tangan:</strong> Basahi tangan → sabun → gosok → bilas → keringkan.</li>
+          </ul>
+        </div>
+
+        <!-- Tabel Ringkasan -->
+        <h3>Ringkasan 4 Pilar</h3>
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Pilar</th>
+              <th>Inti Konsep</th>
+              <th>Contoh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Dekomposisi</strong></td>
+              <td>Memecah masalah besar menjadi bagian kecil</td>
+              <td>Membagi proyek menjadi tugas-tugas</td>
+            </tr>
+            <tr>
+              <td><strong>Pengenalan Pola</strong></td>
+              <td>Menemukan kesamaan antar masalah</td>
+              <td>Menyadari pola lalu lintas Senin pagi</td>
+            </tr>
+            <tr>
+              <td><strong>Abstraksi</strong></td>
+              <td>Fokus pada informasi penting</td>
+              <td>Melihat peta hanya pada jalan</td>
+            </tr>
+            <tr>
+              <td><strong>Algoritma</strong></td>
+              <td>Langkah-langkah sistematis</td>
+              <td>Resep memasak</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- C. PENERAPAN -->
+        <h2 id="bagian-c">C. Penerapan dalam Kehidupan Sehari-hari</h2>
+
+        <h3>1. Media Sosial dan Rekomendasi Konten</h3>
+        <p>Pernah bertanya-tanya mengapa YouTube atau Instagram bisa merekomendasikan video atau produk yang sesuai dengan seleramu? Itu adalah hasil dari algoritma yang menggunakan pengenalan pola dari data aktivitasmu.</p>
+        <p><strong>Koneksi dengan Berpikir Komputasional:</strong></p>
+        <ul>
+          <li><strong>Pengenalan Pola:</strong> Sistem mendeteksi pola dari tontonan sebelumnya.</li>
+          <li><strong>Dekomposisi:</strong> Masalah "memberi rekomendasi" dipecah menjadi: analisis riwayat → deteksi preferensi → pencarian konten serupa.</li>
+          <li><strong>Algoritma:</strong> Ada langkah-langkah spesifik bagaimana rekomendasi itu dihasilkan.</li>
+        </ul>
+
+        <h3>2. Aplikasi Navigasi (Google Maps/Waze)</h3>
+        <p>Aplikasi navigasi menggunakan algoritma canggih untuk menemukan rute tercepat.</p>
+        <p><strong>Koneksi dengan Berpikir Komputasional:</strong></p>
+        <ul>
+          <li><strong>Dekomposisi:</strong> Peta jalan dipecah menjadi titik (persimpangan) dan garis (jalan).</li>
+          <li><strong>Abstraksi:</strong> Hanya data jalan dan kondisi lalu lintas yang diperhatikan, bukan gedung atau pohon di sekitar.</li>
+          <li><strong>Algoritma:</strong> Ada perhitungan matematis untuk menemukan rute optimal.</li>
+        </ul>
+
+        <h3>3. Filter Wajah di Media Sosial</h3>
+        <p>Filter yang mengikuti gerakan wajahmu secara real-time adalah contoh teknologi pengenalan pola dan citra.</p>
+        <p><strong>Koneksi dengan Berpikir Komputasional:</strong></p>
+        <ul>
+          <li><strong>Pengenalan Pola:</strong> Sistem mengenali pola wajah manusia (mata, hidung, mulut).</li>
+          <li><strong>Abstraksi:</strong> Hanya fitur-fitur penting wajah yang dideteksi, bukan detail seperti warna rambut atau latar belakang.</li>
+        </ul>
+
+        <h3>4. Game Online</h3>
+        <p>Game seperti Mobile Legends atau PUBG menggunakan prinsip informatika dalam pengembangan karakter dan sistem permainan.</p>
+        <p><strong>Koneksi dengan Berpikir Komputasional:</strong></p>
+        <ul>
+          <li><strong>Dekomposisi:</strong> Pengembangan game dipecah menjadi bagian: grafis, audio, logika permainan, jaringan.</li>
+          <li><strong>Algoritma:</strong> Perilaku musuh (NPC) dalam game mengikuti algoritma tertentu.</li>
+        </ul>
+
+        <!-- D. PENTINGNYA -->
+        <h2 id="bagian-d">D. Mengapa Berpikir Komputasional Penting?</h2>
+        <p>Berpikir komputasional bukan hanya untuk programmer atau ilmuwan komputer. Kemampuan ini bermanfaat untuk <strong>siapa saja</strong>, di bidang apa saja:</p>
+        <ul>
+          <li><strong>Memecahkan masalah secara efektif:</strong> Tidak bingung saat menghadapi masalah kompleks.</li>
+          <li><strong>Berpikir logis dan sistematis:</strong> Mengambil keputusan berdasarkan data, bukan emosi.</li>
+          <li><strong>Beradaptasi dengan teknologi:</strong> Lebih mudah memahami cara kerja aplikasi dan gadget.</li>
+          <li><strong>Berkolaborasi:</strong> Dapat menjelaskan ide secara terstruktur kepada orang lain.</li>
+          <li><strong>Berinovasi:</strong> Mampu menciptakan solusi baru untuk masalah sehari-hari.</li>
+        </ul>
+
+        <div class="kotak-analogi">
+          <h4>🎯 Di Dunia Kerja</h4>
+          <p style="margin-bottom:0;">Di era digital, hampir semua pekerjaan membutuhkan kemampuan berpikir komputasional—baik itu dokter yang menganalisis gejala pasien, pengusaha yang merancang strategi bisnis, atau seniman yang membuat animasi digital.</p>
+        </div>
+
+        <!-- E. LATIHAN -->
+        <h2 id="bagian-e">E. Latihan: Mengaitkan Konsep dengan Kehidupan</h2>
+        <p>Coba perhatikan aktivitas sehari-harimu. Bisakah kamu menemukan contoh penerapan 4 pilar berpikir komputasional dalam kegiatan berikut?</p>
+
+        <div class="kotak-latihan">
+          <h4>1. Menyusun Jadwal Belajar Harian</h4>
+          <ul>
+            <li><strong>Dekomposisi:</strong> Bagi pelajaran per hari &amp; per jam</li>
+            <li><strong>Algoritma:</strong> Urutan belajar dari yang mudah ke sulit</li>
+            <li><strong>Abstraksi:</strong> Fokus pada mata pelajaran inti</li>
+          </ul>
+        </div>
+
+        <div class="kotak-latihan">
+          <h4>2. Merencanakan Perjalanan Liburan Keluarga</h4>
+          <ul>
+            <li><strong>Dekomposisi:</strong> Transportasi, penginapan, makanan, aktivitas</li>
+            <li><strong>Pengenalan Pola:</strong> Melihat pola harga tiket di musim liburan</li>
+            <li><strong>Algoritma:</strong> Urutan pemesanan: tiket → hotel → itinerary</li>
+          </ul>
+        </div>
+
+        <div class="kotak-latihan">
+          <h4>3. Menyusun Strategi Bermain Game</h4>
+          <ul>
+            <li><strong>Pengenalan Pola:</strong> Mengenali pola gerakan musuh</li>
+            <li><strong>Algoritma:</strong> Urutan strategi serang &amp; bertahan</li>
+            <li><strong>Abstraksi:</strong> Fokus pada objektif utama permainan</li>
+          </ul>
+        </div>
+
+        <div class="kotak-latihan">
+          <h4>4. Mengatur Keuangan Jajan Mingguan</h4>
+          <ul>
+            <li><strong>Dekomposisi:</strong> Pisahkan kebutuhan: makan, transport, tabungan</li>
+            <li><strong>Pengenalan Pola:</strong> Melihat pengeluaran lebih besar di hari tertentu</li>
+            <li><strong>Algoritma:</strong> Susun anggaran → catat pengeluaran → evaluasi</li>
+          </ul>
+        </div>
+
+        <p style="margin-top:1.5rem;"><strong>💡 Tantangan untukmu:</strong> Coba pikirkan satu masalah yang sedang kamu hadapi. Bagaimana kamu bisa menggunakan 4 pilar berpikir komputasional untuk menyelesaikannya?</p>
+
+        <!-- NAVIGASI -->
+        <div class="nav-bottom">
+          <a href="bk2.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Portal
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <a href="aktivitasbk2a.html" class="btn-nav primary">
+              🎮 Coba Materi + Aktivitas →
+            </a>
+          </div>
+          <div class="nav-hint">
+            💡 Ingin belajar sambil berlatih? Coba mode "Materi + Aktivitas" untuk pengalaman yang lebih interaktif!
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <button id="tocBtn" aria-label="Daftar Isi" title="Ke Daftar Isi" onclick="scrollToTOC()">📑</button>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+
+  <script>
+    function scrollToTOC() {
+      const toc = document.getElementById('daftarIsi');
+      if (toc) {
+        toc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const target = document.querySelector(targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

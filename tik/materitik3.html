@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Materi Peramban & Pencarian Informasi · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== GAYA MATERI ===== */
+    .materi-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .materi-container h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #ff6b35, #d4a030);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .materi-container .sub-judul {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--c-tik, #ff8a5b);
+      padding-left: 1rem;
+      font-style: italic;
+    }
+
+    .materi-container h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2.5rem 0 0.8rem 0;
+      color: #4d3829;
+      border-left: 6px solid var(--c-tik, #ff8a5b);
+      padding-left: 1rem;
+      scroll-margin-top: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.2rem 0 0.3rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container p {
+      margin-bottom: 1rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.5rem 0 1.2rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.4rem;
+      color: #2f2822;
+      line-height: 1.7;
+    }
+
+    .materi-container .highlight-box {
+      background: #fff5ee;
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 8px solid var(--c-tik, #ff8a5b);
+      margin: 1.5rem 0;
+    }
+
+    .materi-container .highlight-box strong {
+      color: #4d3829;
+    }
+
+    .materi-container .highlight-box ul {
+      margin-bottom: 0;
+    }
+
+    .materi-container code {
+      background: #f0ece6;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      color: #4d3829;
+    }
+
+    /* ===== DAFTAR ISI ===== */
+    .toc-box {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0 2rem 0;
+      border: 2px solid #e5dbd0;
+    }
+
+    .toc-box .toc-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 1.05rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toc-box ol {
+      margin: 0 0 0 1.2rem;
+      padding: 0;
+    }
+
+    .toc-box li {
+      margin-bottom: 0.4rem;
+    }
+
+    .toc-box a {
+      color: #4d3829;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dotted #bfaa9a;
+      transition: all 0.2s ease;
+    }
+
+    .toc-box a:hover {
+      color: #6b4f3a;
+      border-bottom: 2px solid #7a5f4c;
+    }
+
+    /* ===== TABEL ===== */
+    .tabel-materi {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .tabel-materi thead {
+      background: var(--c-tik, #ff8a5b);
+      color: #fff;
+    }
+
+    .tabel-materi th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .tabel-materi td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+      color: #2f2822;
+      line-height: 1.6;
+      vertical-align: top;
+    }
+
+    .tabel-materi tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabel-materi tr:hover td {
+      background: #fdf6f1;
+    }
+
+    .tabel-materi code {
+      background: #f0ece6;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #a01746;
+    }
+
+    /* ===== CONTOH BOX ===== */
+    .contoh-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      border: 2px solid #e5dbd0;
+      margin: 1rem 0;
+    }
+
+    .contoh-box .contoh-title {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .contoh-box .contoh-isi {
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .contoh-box .contoh-isi .arrow {
+      color: var(--c-tik, #ff8a5b);
+      font-weight: 700;
+    }
+
+    /* ===== ANALOGI BOX ===== */
+    .analogi-box {
+      background: linear-gradient(135deg, #fff5ee, #fff9f2);
+      border-radius: 16px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.5rem 0;
+      border: 2px dashed var(--c-tik, #ff8a5b);
+    }
+
+    .analogi-box .analogi-title {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .analogi-box .analogi-content {
+      font-size: 0.95rem;
+      color: #2f2822;
+      line-height: 1.7;
+    }
+
+    /* ===== 3 TAHAP CARDS ===== */
+    .tahap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .tahap-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.3rem 1.5rem;
+      border: 2px solid #e5dbd0;
+      transition: all 0.25s ease;
+    }
+
+    .tahap-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(255, 138, 91, 0.15);
+      border-color: var(--c-tik, #ff8a5b);
+    }
+
+    .tahap-card .tahap-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .tahap-card .tahap-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #4d3829;
+      margin-bottom: 0.4rem;
+    }
+
+    .tahap-card .tahap-desc {
+      font-size: 0.9rem;
+      color: #5c4638;
+      line-height: 1.6;
+    }
+
+    /* ===== 5W CARDS ===== */
+    .w-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.8rem;
+      margin: 1.5rem 0;
+    }
+
+    .w-card {
+      background: #fff5ee;
+      border-radius: 12px;
+      padding: 0.9rem 1.2rem;
+      border-left: 5px solid var(--c-tik, #ff8a5b);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .w-card .w-letter {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--c-tik, #ff8a5b);
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .w-card .w-content .w-title {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 0.9rem;
+    }
+
+    .w-card .w-content .w-desc {
+      font-size: 0.8rem;
+      color: #5c4638;
+      line-height: 1.4;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav:hover {
+      background: #fff5ee;
+      border-color: var(--c-tik, #ff8a5b);
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.primary {
+      background: var(--c-tik, #ff8a5b);
+      border-color: var(--c-tik, #ff8a5b);
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: #e77645;
+      border-color: #e77645;
+    }
+
+    .btn-nav .back-arrow {
+      font-size: 1.2rem;
+    }
+
+    .nav-hint {
+      font-size: 0.85rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* ===== TOMBOL FLOATING DAFTAR ISI ===== */
+    #tocBtn {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 1.5rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #fff5ee;
+      border: 2px solid var(--c-tik, #ff8a5b);
+      font-size: 1.3rem;
+      color: #4d3829;
+      box-shadow: 0 6px 18px rgba(255, 138, 91, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 998;
+    }
+
+    #tocBtn:hover {
+      background: var(--c-tik, #ff8a5b);
+      color: #fff;
+      transform: scale(1.08);
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .materi-container h1 { font-size: 1.7rem; }
+      .materi-container h2 { font-size: 1.3rem; }
+      .materi-container h3 { font-size: 1.05rem; }
+      .tabel-materi { font-size: 0.8rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.5rem 0.6rem; }
+      .toc-box { padding: 1.2rem 1.4rem; }
+      #tocBtn { width: 40px; height: 40px; font-size: 1.1rem; left: 1rem; bottom: 1.8rem; }
+      .tahap-grid { grid-template-columns: 1fr; }
+      .w-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .tabel-materi { font-size: 0.7rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.4rem 0.4rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+    }
+
+    /* ===== PRINT ===== */
+    @media print {
+      #tocBtn, #scrollTopBtn, .nav-bottom, .toc-box { display: none !important; }
+      body { background: #fff !important; }
+      .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materitik.html">Teknologi Informasi dan Komunikasi</a></li>
+      <li><a href="tik3.html">Peramban & Pencarian Informasi</a></li>
+      <li>Materi Lengkap</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <h1>🔍 Menggunakan Peramban untuk Mencari & Memilah Informasi</h1>
+        <p class="sub-judul">Peramban · Mesin Pencari · Verifikasi Informasi — Materi Lengkap Bagian 1–3</p>
+
+        <!-- ===== DAFTAR ISI ===== -->
+        <div class="toc-box" id="daftarIsi">
+          <div class="toc-title">📑 Daftar Isi</div>
+          <ol>
+            <li><a href="#bagian1">Pendahuluan — Peramban dan Mesin Pencari, Apa Bedanya?</a></li>
+            <li><a href="#bagian2">Cara Kerja Mesin Pencari dan Teknik Pencarian Dasar</a></li>
+            <li><a href="#bagian3">Memilah Informasi — Verifikasi dan Kredibilitas Sumber</a></li>
+            <li><a href="#referensi">Referensi Materi</a></li>
+          </ol>
+        </div>
+
+        <!-- ===== BAGIAN 1 ===== -->
+        <h2 id="bagian1">Bagian 1: Pendahuluan — Peramban dan Mesin Pencari, Apa Bedanya?</h2>
+        <p>Setiap hari kita membuka internet untuk mencari berbagai hal: tugas sekolah, resep masakan, atau video hiburan. Tapi tahukah kamu bahwa <strong>peramban</strong> (browser) dan <strong>mesin pencari</strong> (search engine) adalah dua hal yang <strong>berbeda</strong>?</p>
+
+        <h3>1. Peramban Web (Browser)</h3>
+        <p><strong>Peramban web</strong> adalah perangkat lunak yang berfungsi untuk <strong>menampilkan halaman website</strong>. Contohnya:</p>
+        <ul>
+          <li><strong>Google Chrome</strong></li>
+          <li><strong>Mozilla Firefox</strong></li>
+          <li><strong>Microsoft Edge</strong></li>
+          <li><strong>Apple Safari</strong></li>
+        </ul>
+        <p>Tanpa peramban, kamu tidak bisa mengakses informasi di internet. Peramban bekerja dengan mengirim permintaan ke server website menggunakan protokol <strong>HTTP/HTTPS</strong>, lalu menampilkan data yang diterima dalam bentuk teks, gambar, dan video.</p>
+
+        <h3>2. Mesin Pencari (Search Engine)</h3>
+        <p><strong>Mesin pencari</strong> adalah <strong>website</strong> yang membantumu menemukan informasi. Contohnya:</p>
+        <ul>
+          <li><strong>Google</strong></li>
+          <li><strong>Bing</strong></li>
+          <li><strong>Yahoo</strong></li>
+          <li><strong>DuckDuckGo</strong></li>
+        </ul>
+        <p>Mesin pencari bekerja dengan cara <strong>"merayapi"</strong> (crawling) halaman-halaman web di seluruh internet, menyimpannya dalam <strong>indeks raksasa</strong>, lalu menampilkan hasil yang paling relevan berdasarkan kata kunci yang kamu masukkan.</p>
+
+        <!-- Analogi -->
+        <div class="analogi-box">
+          <div class="analogi-title">🚗 Analogi Sederhana</div>
+          <div class="analogi-content">
+            <strong>Peramban</strong> seperti <strong>mobil</strong> — kendaraan yang membawamu ke mana saja.<br>
+            <strong>Mesin pencari</strong> seperti <strong>peta</strong> — alat yang membantumu menemukan lokasi yang dituju.
+          </div>
+        </div>
+
+        <p>Saat ini, banyak peramban sudah <strong>terintegrasi</strong> dengan mesin pencari tertentu. Google Chrome menggunakan Google Search, Microsoft Edge menggunakan Bing.</p>
+
+        <div class="highlight-box">
+          <strong>📌 Perbedaan Utama:</strong>
+          <ul>
+            <li><strong>Peramban</strong> = alat untuk <em>membuka</em> website</li>
+            <li><strong>Mesin pencari</strong> = website khusus yang membantu <em>menemukan</em> informasi di internet</li>
+          </ul>
+        </div>
+
+        <!-- ===== BAGIAN 2 ===== -->
+        <h2 id="bagian2">Bagian 2: Cara Kerja Mesin Pencari dan Teknik Pencarian Dasar</h2>
+
+        <h3>A. Cara Kerja Mesin Pencari — 3 Tahap Utama</h3>
+        <p>Mesin pencari seperti Google tidak "menjelajahi internet secara langsung" setiap kali kamu mencari. Ia menggunakan tiga tahap utama:</p>
+
+        <div class="tahap-grid">
+          <div class="tahap-card">
+            <span class="tahap-icon">🕷️</span>
+            <div class="tahap-title">1. Crawling</div>
+            <div class="tahap-desc">
+              Mesin pencari mengirim <strong>"bot"</strong> atau <strong>"spider"</strong> untuk menelusuri halaman-halaman web di seluruh internet. Bot ini mengikuti tautan dari satu halaman ke halaman lain, mengumpulkan informasi.
+            </div>
+          </div>
+
+          <div class="tahap-card">
+            <span class="tahap-icon">📚</span>
+            <div class="tahap-title">2. Indexing</div>
+            <div class="tahap-desc">
+              Informasi yang ditemukan <strong>diorganisir dan disimpan</strong> dalam database raksasa. Bayangkan seperti katalog perpustakaan yang mencatat setiap buku berdasarkan judul, penulis, dan topik.
+            </div>
+          </div>
+
+          <div class="tahap-card">
+            <span class="tahap-icon">🏆</span>
+            <div class="tahap-title">3. Ranking</div>
+            <div class="tahap-desc">
+              Ketika kamu memasukkan kata kunci, mesin pencari mencari di indeksnya dan menampilkan hasil berdasarkan <strong>relevansi dan kualitas</strong>. Faktor seperti kualitas konten, struktur tautan, dan perilaku pengguna mempengaruhi peringkat.
+            </div>
+          </div>
+        </div>
+
+        <h3>B. Teknik Pencarian Dasar</h3>
+        <p>Untuk mendapatkan hasil yang lebih spesifik dan relevan, kamu bisa menggunakan beberapa teknik pencarian berikut:</p>
+
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Teknik</th>
+              <th>Contoh</th>
+              <th>Fungsi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Kata kunci spesifik</strong></td>
+              <td><code>resep kue cokelat</code></td>
+              <td>Lebih baik dari <code>cara membuat kue</code> — hasil lebih relevan</td>
+            </tr>
+            <tr>
+              <td><strong>Tanda kutip (" ")</strong></td>
+              <td><code>"kursus bahasa inggris di banda aceh"</code></td>
+              <td>Mencari frasa yang <strong>persis sama</strong> dengan yang di dalam tanda kutip</td>
+            </tr>
+            <tr>
+              <td><strong>Operator minus (-)</strong></td>
+              <td><code>jaguar -mobil</code></td>
+              <td>Mengecualikan kata "mobil" dari hasil pencarian</td>
+            </tr>
+            <tr>
+              <td><strong>Site search (site:)</strong></td>
+              <td><code>beasiswa site:unsyiah.ac.id</code></td>
+              <td>Mencari hanya di situs tertentu</td>
+            </tr>
+            <tr>
+              <td><strong>Filetype (filetype:)</strong></td>
+              <td><code>rumus matematika filetype:pdf</code></td>
+              <td>Mencari file dengan tipe tertentu (PDF, DOC, PPT, dll.)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="highlight-box">
+          <strong>💡 Tips Tambahan:</strong>
+          <ul>
+            <li>Gunakan kata yang <strong>singkat dan spesifik</strong></li>
+            <li>Huruf besar/kecil <strong>tidak berpengaruh</strong></li>
+            <li>Manfaatkan <strong>saran pencarian</strong> yang muncul saat mengetik</li>
+          </ul>
+        </div>
+
+        <div class="contoh-box">
+          <div class="contoh-title">📌 Contoh Pencarian Cerdas:</div>
+          <div class="contoh-isi">
+            ❌ Kurang efektif: <code>kue</code><br>
+            ✅ Lebih efektif: <code>resep kue cokelat</code><br>
+            ⭐ Paling presisi: <code>"resep kue cokelat" filetype:pdf</code>
+          </div>
+        </div>
+
+        <!-- ===== BAGIAN 3 ===== -->
+        <h2 id="bagian3">Bagian 3: Memilah Informasi — Verifikasi dan Kredibilitas Sumber</h2>
+        <p>Menemukan informasi hanyalah langkah pertama. Tantangan sesungguhnya adalah <strong>memilah</strong> mana informasi yang benar dan mana yang menyesatkan.</p>
+
+        <div class="highlight-box">
+          <strong>📊 Fakta Penting:</strong>
+          <p>Sebuah studi dari <em>Stanford History Education Group</em> menemukan bahwa <strong>82% siswa SMP tidak bisa membedakan iklan dengan berita</strong>. Ini menunjukkan pentingnya keterampilan verifikasi!</p>
+        </div>
+
+        <h3>Panduan Memilah Informasi</h3>
+
+        <h4>1. Periksa Sumber (Who?)</h4>
+        <ul>
+          <li>Siapa yang menulis/menerbitkan informasi ini?</li>
+          <li>Apakah penulis memiliki keahlian di bidangnya?</li>
+          <li>Apakah situsnya kredibel? Domain <strong><code>.go.id</code></strong> (pemerintah), <strong><code>.ac.id</code></strong>/<strong><code>.edu</code></strong> (pendidikan), dan <strong><code>.org</code></strong> (organisasi resmi) umumnya lebih terpercaya daripada blog pribadi.</li>
+        </ul>
+
+        <h4>2. Periksa Tanggal (When?)</h4>
+        <ul>
+          <li>Kapan informasi ini dipublikasikan atau terakhir diperbarui?</li>
+          <li>Informasi lama bisa jadi sudah tidak relevan.</li>
+          <li>Hoaks sering <strong>mendaur ulang berita lama</strong> seolah-olah baru.</li>
+        </ul>
+
+        <h4>3. Periksa Bukti (What?)</h4>
+        <ul>
+          <li>Apakah klaim didukung oleh data, kutipan ahli, atau penelitian?</li>
+          <li>Apakah ada tautan ke sumber asli?</li>
+        </ul>
+
+        <h4>4. Bandingkan dengan Sumber Lain (Consistency)</h4>
+        <ul>
+          <li>Apakah informasi ini juga ditemukan di sumber terpercaya lainnya?</li>
+          <li>Jika hanya satu situs yang mengatakan sesuatu yang aneh, curigai!</li>
+        </ul>
+
+        <h4>5. Periksa Bias (Why?)</h4>
+        <ul>
+          <li>Apakah penulis punya kepentingan tertentu? Misalnya, menjual produk atau mendukung kelompok tertentu?</li>
+          <li>Apakah bahasa yang digunakan emosional atau menghasut?</li>
+        </ul>
+
+        <h4>6. Waspadai Konten AI</h4>
+        <ul>
+          <li>AI bisa <strong>"berhalusinasi"</strong> (membuat fakta palsu).</li>
+          <li>Periksa apakah klaim AI didukung oleh sumber asli.</li>
+        </ul>
+
+        <h3>5W untuk Pencarian Cerdas</h3>
+        <p>Untuk mempermudah mengingat panduan di atas, gunakan kerangka <strong>5W</strong>:</p>
+
+        <div class="w-grid">
+          <div class="w-card">
+            <div class="w-letter">W</div>
+            <div class="w-content">
+              <div class="w-title">Who</div>
+              <div class="w-desc">Siapa yang menerbitkan?</div>
+            </div>
+          </div>
+          <div class="w-card">
+            <div class="w-letter">W</div>
+            <div class="w-content">
+              <div class="w-title">What</div>
+              <div class="w-desc">Apa jenis situsnya? (.gov, .edu, blog?)</div>
+            </div>
+          </div>
+          <div class="w-card">
+            <div class="w-letter">W</div>
+            <div class="w-content">
+              <div class="w-title">Where</div>
+              <div class="w-desc">Dari mana asalnya?</div>
+            </div>
+          </div>
+          <div class="w-card">
+            <div class="w-letter">W</div>
+            <div class="w-content">
+              <div class="w-title">When</div>
+              <div class="w-desc">Kapan dipublikasikan?</div>
+            </div>
+          </div>
+          <div class="w-card">
+            <div class="w-letter">W</div>
+            <div class="w-content">
+              <div class="w-title">Why</div>
+              <div class="w-desc">Mengapa dipublikasikan?</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== REFERENSI ===== -->
+        <h2 id="referensi">📚 Referensi Materi</h2>
+        <ol>
+          <li>Mozilla. <em>Apakah itu peramban web?</em></li>
+          <li>Modul Praktikum Mesin Pencari - Kemdiktisaintek.</li>
+          <li>eSafety Commissioner. <em>Critical thinking: Deciding what to trust.</em></li>
+          <li>SMPN 1 Padang. <em>Heuristik Digital: Teknik Pencarian Informasi Akurat.</em></li>
+          <li>Microsoft Learn. <em>搜索指导中的搜索工具.</em></li>
+          <li>InformationLiteracy.gov. <em>Fact or Fiction? A Checklist.</em></li>
+          <li>SMPN 1 Kendari. <em>Tips Mencari Referensi Tugas di Internet.</em></li>
+          <li>Qwords. <em>Apa itu Web Browser?</em></li>
+          <li>Google Support. <em>Cara melakukan penelusuran di Google.</em></li>
+          <li>ANTARA News. <em>Cara menyaring informasi dan hindari hoaks.</em></li>
+          <li>Microsoft Learn. <em>Why Search Strategies Matter.</em></li>
+          <li>LMS SPADA. <em>Pencarian Informasi di Internet Melalui Google Search Engine.</em></li>
+          <li>ABC Education. <em>ESCAPE misinformation.</em></li>
+        </ol>
+
+        <!-- ===== NAVIGASI ===== -->
+        <div class="nav-bottom">
+          <a href="tik3.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Portal
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <a href="aktivitastik3a.html" class="btn-nav primary">
+              🎮 Coba Materi + Aktivitas →
+            </a>
+          </div>
+          <div class="nav-hint">
+            💡 Ingin belajar sambil berlatih? Coba mode "Materi + Aktivitas" untuk pengalaman yang lebih interaktif!
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <button id="tocBtn" aria-label="Daftar Isi" title="Ke Daftar Isi" onclick="scrollToTOC()">📑</button>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+
+  <script>
+    function scrollToTOC() {
+      const toc = document.getElementById('daftarIsi');
+      if (toc) {
+        toc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const target = document.querySelector(targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

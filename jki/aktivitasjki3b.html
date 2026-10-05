@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Lab Enkripsi · Bagian 2: Kunci Rahasia · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    .materi-ringkas {
+      max-width: 820px; margin: 0 auto 1.5rem;
+      background: #f8f4ef; border-radius: 16px;
+      padding: 1.5rem 1.8rem; border-left: 6px solid #8aaa7a;
+      border: 2px solid #e5dbd0;
+    }
+    .materi-ringkas h2 {
+      font-size: 1.3rem; font-weight: 700; color: #3b2b1e;
+      margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .materi-ringkas h2 .badge {
+      background: #8aaa7a; color: #fff; font-size: 0.7rem;
+      padding: 0.15rem 0.6rem; border-radius: 20px; font-weight: 600;
+    }
+    .materi-ringkas h3 {
+      font-size: 1.05rem; font-weight: 600; color: #4d3829; margin: 1rem 0 0.4rem;
+    }
+    .materi-ringkas p {
+      font-size: 0.92rem; line-height: 1.7; color: #2f2822; margin-bottom: 0.6rem;
+    }
+    .materi-ringkas ul { margin: 0.3rem 0 0.8rem 1.5rem; font-size: 0.9rem; }
+    .materi-ringkas li { margin-bottom: 0.25rem; line-height: 1.6; }
+    .materi-ringkas .info-box {
+      background: #fff; border-radius: 12px; padding: 0.8rem 1.2rem;
+      border: 2px solid #e5dbd0; margin: 0.6rem 0;
+      font-size: 0.88rem; line-height: 1.6;
+    }
+    .materi-ringkas .info-box strong { color: #4d3829; }
+    .materi-ringkas .link-materi {
+      display: inline-block; margin-top: 0.5rem; color: #5c4638;
+      font-size: 0.85rem; text-decoration: none; font-weight: 600;
+      border-bottom: 2px dotted #bfaa9a; transition: all 0.2s ease;
+    }
+    .materi-ringkas .link-materi:hover { color: #4d3829; border-bottom-color: #7a5f4c; }
+
+    .aktivitas-wrapper { max-width: 1000px; margin: 0 auto; }
+
+    .bagian-progress {
+      display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center;
+      margin: 0.5rem 0 1.5rem;
+    }
+    .bagian-progress .step {
+      display: flex; align-items: center; gap: 0.3rem;
+      padding: 0.35rem 0.9rem; border-radius: 30px;
+      background: #f5ede6; border: 2px solid #e5dbd0;
+      font-size: 0.75rem; font-weight: 600; color: #7a6656;
+      transition: all 0.3s ease;
+    }
+    .bagian-progress .step.active { background: #4d3829; border-color: #4d3829; color: #fff; }
+    .bagian-progress .step.completed { background: #8aaa7a; border-color: #8aaa7a; color: #fff; }
+    .bagian-progress .step .num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(255,255,255,0.3); display: flex;
+      align-items: center; justify-content: center; font-size: 0.65rem;
+    }
+
+    .nav-aktivitas {
+      display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: space-between;
+      align-items: center; margin-bottom: 1rem; padding: 0.8rem 1rem;
+      background: #f5f0ea; border-radius: 16px; border: 2px solid #e5dbd0;
+    }
+    .nav-aktivitas .btn-nav {
+      padding: 0.5rem 1.5rem; border-radius: 30px;
+      border: 2px solid #cbb5a2; background: #fcf9f6; cursor: pointer;
+      font-weight: 600; font-size: 0.9rem; transition: all 0.15s ease;
+      color: #4d3829; text-decoration: none; display: inline-flex;
+      align-items: center; gap: 0.4rem; font-family: inherit;
+    }
+    .nav-aktivitas .btn-nav:hover { background: #e8dcd0; transform: translateY(-2px); }
+    .nav-aktivitas .info-aktivitas { font-size: 0.85rem; color: #5a4a3a; font-weight: 500; }
+
+    .aktivitas-toolbar {
+      display: flex; flex-wrap: wrap; gap: 0.6rem 1rem;
+      align-items: center; justify-content: space-between;
+      background: #ede4db; padding: 0.7rem 1.2rem;
+      border-radius: 16px 16px 0 0; border-bottom: 2px solid #d9cdbf;
+    }
+    .aktivitas-toolbar .mode-indikator {
+      font-weight: 600; font-size: 0.9rem; color: #4d3829;
+    }
+    .aktivitas-toolbar .mode-indikator span {
+      background: #4d7a3b; color: #fff;
+      padding: 0.15rem 0.9rem; border-radius: 20px;
+      font-size: 0.75rem; margin-left: 0.3rem;
+    }
+    .progress-tracker {
+      font-size: 0.85rem; color: #5a4a3a; background: #fcf9f6;
+      padding: 0.2rem 1rem; border-radius: 30px; border: 1px solid #d9cdbf;
+    }
+    .progress-tracker strong { color: #4d7a3b; }
+
+    .mode-selector {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      justify-content: center; margin: 1rem 0 0.5rem;
+    }
+    .mode-btn {
+      padding: 0.5rem 1.3rem; border-radius: 30px;
+      border: 2px solid #cbb5a2; background: #fcf9f6;
+      color: #4d3829; font-weight: 600; font-size: 0.85rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; display: inline-flex;
+      align-items: center; gap: 0.3rem;
+    }
+    .mode-btn:hover { background: #e8dcd0; transform: translateY(-1px); }
+    .mode-btn.active { background: #4d3829; border-color: #4d3829; color: #fff; }
+    .mode-btn.selesai { background: #8aaa7a; border-color: #6a8a5a; color: #fff; }
+
+    .mode-content { display: none; }
+    .mode-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .mesin-enkripsi {
+      background: #2f2822; border-radius: 20px;
+      padding: 1.5rem; margin: 1rem 0;
+      border: 4px solid #dbb9a6;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      position: relative; overflow: hidden;
+    }
+    .mesin-enkripsi::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 5px;
+      background: linear-gradient(90deg, #8ab4d4, #8aaa7a, #f5c542, #8ab4d4);
+      background-size: 200% 100%;
+      animation: gradientMove 3s linear infinite;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    .mesin-title {
+      font-size: 1.1rem; font-weight: 700; color: #dbb9a6;
+      text-align: center; margin-bottom: 0.3rem;
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .mesin-sub {
+      font-size: 0.8rem; color: #a89688;
+      text-align: center; margin-bottom: 1.3rem;
+    }
+    .mesin-grid {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      gap: 0.8rem; align-items: stretch;
+    }
+    .mesin-kolom {
+      background: rgba(219, 185, 166, 0.08);
+      border: 2px solid rgba(219, 185, 166, 0.25);
+      border-radius: 14px; padding: 1rem 0.8rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .mesin-kolom .kolom-label {
+      font-size: 0.7rem; color: #dbb9a6;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      font-weight: 700; text-align: center;
+    }
+    .mesin-kolom .kolom-value {
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem; font-weight: 700;
+      color: #f5c542; text-align: center;
+      letter-spacing: 2px; padding: 0.5rem 0.4rem;
+      background: rgba(47, 40, 34, 0.5);
+      border-radius: 8px; min-height: 42px;
+      display: flex; align-items: center;
+      justify-content: center; word-break: break-all;
+      line-height: 1.3;
+    }
+    .mesin-kolom .kolom-value.empty {
+      color: #7a6656; font-size: 0.85rem;
+      letter-spacing: 0; font-weight: 400;
+    }
+    .mesin-kolom .kolom-hint {
+      font-size: 0.7rem; color: #a89688;
+      text-align: center; font-style: italic;
+    }
+    .mesin-kunci {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 1rem 1.3rem;
+      background: rgba(245, 200, 66, 0.1);
+      border: 3px solid #f5c542;
+      border-radius: 14px; min-width: 130px;
+    }
+    .mesin-kunci .kunci-label {
+      font-size: 0.7rem; color: #f5c542;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      font-weight: 700; margin-bottom: 0.4rem;
+    }
+    .mesin-kunci .kunci-value {
+      font-family: 'Courier New', monospace;
+      font-size: 2rem; font-weight: 800;
+      color: #f5c542; line-height: 1; margin-bottom: 0.4rem;
+    }
+    .mesin-kunci .kunci-slider {
+      width: 110px; accent-color: #f5c542; cursor: pointer;
+    }
+    .mesin-kunci .kunci-range {
+      display: flex; justify-content: space-between;
+      font-size: 0.6rem; color: #a89688;
+      width: 110px; margin-top: 0.2rem;
+    }
+    .mesin-input {
+      width: 100%; padding: 0.5rem 0.6rem;
+      border: 2px solid rgba(219, 185, 166, 0.3);
+      border-radius: 8px; background: rgba(47, 40, 34, 0.5);
+      color: #f5c542; font-family: 'Courier New', monospace;
+      font-size: 1rem; font-weight: 700; text-align: center;
+      letter-spacing: 2px; outline: none;
+      text-transform: uppercase; box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+    .mesin-input:focus { border-color: #f5c542; }
+
+    .mesin-buttons {
+      display: flex; flex-wrap: wrap;
+      gap: 0.6rem; justify-content: center; margin-top: 1.2rem;
+    }
+    .btn-mesin {
+      padding: 0.6rem 1.8rem; border-radius: 30px; border: none;
+      font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; display: inline-flex;
+      align-items: center; gap: 0.4rem;
+    }
+    .btn-mesin.primary {
+      background: linear-gradient(135deg, #f5c542, #d4a030);
+      color: #2f2822; box-shadow: 0 4px 14px rgba(245, 200, 66, 0.3);
+    }
+    .btn-mesin.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 200, 66, 0.5);
+    }
+    .btn-mesin.secondary {
+      background: rgba(219, 185, 166, 0.15);
+      color: #dbb9a6; border: 2px solid rgba(219, 185, 166, 0.3);
+    }
+    .btn-mesin.secondary:hover {
+      background: rgba(219, 185, 166, 0.25);
+      border-color: #dbb9a6; transform: translateY(-2px);
+    }
+    .btn-mesin:disabled {
+      opacity: 0.4; cursor: not-allowed; transform: none !important;
+    }
+
+    .animasi-huruf-container {
+      background: rgba(47, 40, 34, 0.5);
+      border-radius: 12px; padding: 1rem;
+      margin: 1rem 0; display: flex;
+      flex-wrap: wrap; gap: 0.5rem;
+      justify-content: center; min-height: 70px;
+    }
+    .huruf-box {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 0.2rem;
+    }
+    .huruf-box .huruf-awal {
+      font-family: 'Courier New', monospace;
+      font-size: 1rem; font-weight: 700;
+      color: #8ab4d4; background: rgba(138, 180, 212, 0.15);
+      padding: 0.2rem 0.5rem; border-radius: 6px;
+      min-width: 24px; text-align: center;
+    }
+    .huruf-box .huruf-arrow {
+      font-size: 0.7rem; color: #a89688;
+    }
+    .huruf-box .huruf-hasil {
+      font-family: 'Courier New', monospace;
+      font-size: 1rem; font-weight: 700;
+      color: #f5c542; background: rgba(245, 200, 66, 0.15);
+      padding: 0.2rem 0.5rem; border-radius: 6px;
+      min-width: 24px; text-align: center;
+      transition: all 0.3s ease;
+      opacity: 0; transform: scale(0.5);
+    }
+    .huruf-box .huruf-hasil.show { opacity: 1; transform: scale(1); }
+    .huruf-box.spasi .huruf-awal,
+    .huruf-box.spasi .huruf-hasil { opacity: 0.3; }
+
+    .feedback-mesin {
+      margin-top: 1rem; padding: 0.9rem 1.3rem;
+      border-radius: 12px; font-weight: 600;
+      display: none; font-size: 0.9rem; line-height: 1.6;
+    }
+    .feedback-mesin.show { display: block; animation: fadeIn 0.4s ease; }
+    .feedback-mesin.success {
+      background: rgba(138, 170, 122, 0.2);
+      border: 2px solid #8aaa7a; color: #c8e6c8;
+    }
+    .feedback-mesin.info {
+      background: rgba(138, 180, 212, 0.15);
+      border: 2px solid #8ab4d4; color: #c8e0f0;
+    }
+
+    /* MODE 3: TANTANGAN */
+    .tantangan-container { max-width: 600px; margin: 0 auto; text-align: center; }
+    .tantangan-info {
+      background: #f5ede6; border-radius: 16px;
+      padding: 1rem 1.5rem; margin-bottom: 1rem;
+      border-left: 6px solid #dbb9a6; text-align: left;
+    }
+    .tantangan-info strong { color: #4d3829; }
+    .tantangan-soal {
+      background: #2f2822; border: 4px solid #dbb9a6;
+      border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem;
+    }
+    .tantangan-soal .soal-label {
+      font-size: 0.75rem; color: #dbb9a6;
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .tantangan-soal .soal-progress-inline {
+      font-size: 0.75rem; color: #a89688; margin-bottom: 0.5rem;
+    }
+    .tantangan-soal .soal-cipher {
+      font-family: 'Courier New', monospace;
+      font-size: 2rem; font-weight: 800;
+      color: #f5c542; letter-spacing: 4px;
+      margin: 0.8rem 0; word-break: break-all;
+    }
+    .tantangan-soal .soal-hint {
+      font-size: 0.85rem; color: #a89688; font-style: italic;
+    }
+    .tantangan-slider-wrapper {
+      background: #f8f4ef; border-radius: 16px;
+      padding: 1.2rem 1.5rem; margin-bottom: 1rem;
+      border: 2px solid #e5dbd0;
+    }
+    .tantangan-slider-wrapper label {
+      display: block; font-weight: 700;
+      color: #4d3829; font-size: 0.9rem; margin-bottom: 0.5rem;
+    }
+    .tantangan-slider-wrapper input[type="range"] {
+      width: 100%; accent-color: #6b8c5e; cursor: pointer;
+    }
+    .tantangan-slider-wrapper .slider-value {
+      font-family: 'Courier New', monospace;
+      font-size: 1.5rem; font-weight: 800;
+      color: #4d7a3b; text-align: center; margin: 0.5rem 0;
+    }
+    .tantangan-preview {
+      background: #2f2822; border-radius: 12px;
+      padding: 0.8rem 1.2rem; margin: 0.6rem 0;
+      text-align: center;
+    }
+    .tantangan-preview .preview-label {
+      font-size: 0.7rem; color: #a89688;
+      letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .tantangan-preview .preview-text {
+      font-family: 'Courier New', monospace;
+      font-size: 1.3rem; font-weight: 700;
+      color: #f5c542; letter-spacing: 3px;
+      transition: color 0.3s ease;
+    }
+    .tantangan-preview .preview-text.benar {
+      color: #8aaa7a;
+      text-shadow: 0 0 10px rgba(138, 170, 122, 0.5);
+    }
+    .tantangan-header {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 1rem;
+      gap: 0.6rem; flex-wrap: wrap;
+    }
+    .tantangan-header .timer {
+      background: #f5ede6; border: 2px solid #dbb9a6;
+      border-radius: 30px; padding: 0.4rem 1rem;
+      font-weight: 700; color: #4d3829;
+      font-size: 0.9rem; font-family: 'Courier New', monospace;
+    }
+    .tantangan-header .skor-box {
+      background: #e8f5e0; border: 2px solid #8aaa7a;
+      border-radius: 30px; padding: 0.4rem 1rem;
+      font-weight: 700; color: #2d5a1e; font-size: 0.9rem;
+    }
+
+    /* MODE 4 */
+    .buat-kode-container { max-width: 600px; margin: 0 auto; }
+    .buat-kode-info {
+      background: #f5ede6; border-radius: 16px;
+      padding: 1rem 1.5rem; margin-bottom: 1rem;
+      border-left: 6px solid #dbb9a6;
+      font-size: 0.9rem; line-height: 1.6;
+    }
+    .buat-kode-info strong { color: #4d3829; }
+    .buat-kode-hasil {
+      background: #2f2822; border-radius: 16px;
+      padding: 1.2rem; margin: 1rem 0;
+      border: 3px solid #f5c542;
+    }
+    .buat-kode-hasil .hasil-label {
+      font-size: 0.7rem; color: #dbb9a6;
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 0.3rem; text-align: center;
+    }
+    .buat-kode-hasil .hasil-text {
+      font-family: 'Courier New', monospace;
+      font-size: 1.4rem; font-weight: 800;
+      color: #f5c542; letter-spacing: 3px;
+      text-align: center; padding: 0.5rem;
+      background: rgba(47, 40, 34, 0.5);
+      border-radius: 8px; word-break: break-all;
+      margin-bottom: 0.5rem;
+    }
+    .buat-kode-hasil .hasil-copy {
+      display: flex; justify-content: center; gap: 0.5rem;
+    }
+    .buat-kode-hasil .btn-copy {
+      padding: 0.4rem 1.2rem; border-radius: 20px;
+      border: 2px solid #dbb9a6; background: transparent;
+      color: #dbb9a6; font-weight: 600; font-size: 0.8rem;
+      cursor: pointer; transition: all 0.15s;
+      font-family: inherit;
+    }
+    .buat-kode-hasil .btn-copy:hover {
+      background: rgba(219, 185, 166, 0.2);
+    }
+
+    /* AREA SOAL */
+    #area-soal {
+      display: none; margin-top: 1.5rem;
+      padding-top: 1.5rem; border-top: 2px solid #e5dbd0;
+    }
+    #area-soal.active { display: block; }
+
+    .soal-header {
+      background: #f5ede6; border-radius: 16px;
+      padding: 1rem 1.5rem; margin-bottom: 1rem;
+      border-left: 6px solid #dbb9a6;
+      display: flex; flex-wrap: wrap;
+      justify-content: space-between; align-items: center;
+      gap: 0.5rem;
+    }
+    .soal-header .soal-info {
+      font-size: 0.95rem; color: #3b2b1e; font-weight: 600;
+    }
+    .soal-header .soal-progress {
+      font-size: 0.85rem; color: #4d7a3b; font-weight: 700;
+      background: #fff; padding: 0.3rem 1rem;
+      border-radius: 30px; border: 2px solid #e5dbd0;
+    }
+    .soal-kuis {
+      background: #fff; padding: 1.2rem 1.5rem;
+      border-radius: 16px; border: 2px solid #e5dbd0;
+      margin-bottom: 1rem; transition: all 0.3s ease;
+    }
+    .soal-kuis.correct { border-color: #8aaa7a; background: #f0f8eb; }
+    .soal-kuis.wrong { border-color: #d4a0a0; background: #fdf0f0; }
+    .soal-kuis .pertanyaan {
+      font-weight: 600; font-size: 1rem;
+      color: #3b2b1e; margin-bottom: 0.6rem;
+      display: flex; gap: 0.5rem;
+      align-items: flex-start; line-height: 1.6;
+    }
+    .soal-kuis .pertanyaan .soal-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #4d3829; color: #fff;
+      width: 26px; height: 26px; border-radius: 50%;
+      font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis {
+      display: flex; flex-direction: column;
+      gap: 0.4rem; padding-left: 0.3rem;
+    }
+    .soal-kuis .opsi-kuis label {
+      display: flex; align-items: flex-start;
+      gap: 0.6rem; cursor: pointer;
+      font-size: 0.92rem; color: #3d2c1f;
+      padding: 0.5rem 0.9rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; transition: all 0.15s;
+      line-height: 1.5;
+    }
+    .soal-kuis .opsi-kuis label:hover:not(.disabled) {
+      background: #f5ede6; border-color: #b09b88;
+    }
+    .soal-kuis .opsi-kuis label.disabled { cursor: default; }
+    .soal-kuis .opsi-kuis label.selected { border-color: #4d3829; background: #f5ede6; }
+    .soal-kuis .opsi-kuis label.correct-answer { border-color: #8aaa7a; background: #e8f5e0; }
+    .soal-kuis .opsi-kuis label.wrong-answer { border-color: #d4a0a0; background: #f5e0e0; }
+    .soal-kuis .opsi-kuis input[type="radio"] {
+      accent-color: #6b8c5e;
+      width: 18px; height: 18px;
+      margin-top: 0.15rem; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis .check-icon {
+      margin-left: auto; font-size: 1rem; flex-shrink: 0;
+    }
+    .soal-kuis .jawaban-feedback {
+      margin-top: 0.8rem; padding: 0.7rem 1rem;
+      border-radius: 10px; display: none;
+      font-size: 0.88rem; line-height: 1.6;
+    }
+    .soal-kuis .jawaban-feedback.benar {
+      display: block; background: #d4e8cb;
+      color: #3d6b2c; border-left: 4px solid #6b8c5e;
+    }
+    .soal-kuis .jawaban-feedback.salah {
+      display: block; background: #f5d6d0;
+      color: #a84a3a; border-left: 4px solid #d97a6a;
+    }
+    .soal-kuis .jawaban-feedback .kunci {
+      font-weight: 700; color: #4d7a3b;
+    }
+    .btn-submit-kuis {
+      display: block; margin: 1.5rem auto 0;
+      padding: 0.8rem 2.8rem; border-radius: 30px;
+      border: none; background: #4d3829;
+      color: #fff; font-weight: 700; font-size: 1rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn-submit-kuis:hover {
+      background: #6b4f3a; transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(75, 46, 30, 0.3);
+    }
+    .btn-submit-kuis:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    }
+    .hasil-soal {
+      display: none; margin-top: 1.5rem;
+      padding: 1.5rem; background: #f5ede6;
+      border-radius: 16px; border: 3px double #dbb9a6;
+      text-align: center;
+    }
+    .hasil-soal.show { display: block; animation: fadeIn 0.4s ease; }
+    .hasil-soal .hasil-icon { font-size: 3.5rem; margin-bottom: 0.5rem; }
+    .hasil-soal .hasil-title {
+      font-size: 1.3rem; font-weight: 700;
+      color: #3b2b1e; margin-bottom: 0.3rem;
+    }
+    .hasil-soal .hasil-skor {
+      font-size: 2.5rem; font-weight: 800;
+      color: #4d7a3b; margin: 0.5rem 0;
+    }
+    .hasil-soal .hasil-desc {
+      font-size: 0.95rem; color: #5c4638;
+      margin-bottom: 1rem; line-height: 1.6;
+    }
+    .hasil-soal .btn-aksi-hasil {
+      display: inline-flex; gap: 0.5rem;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .hasil-soal .btn-aksi-hasil button,
+    .hasil-soal .btn-aksi-hasil a {
+      padding: 0.6rem 1.8rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 600; font-size: 0.9rem;
+      color: #3b2b1e; cursor: pointer;
+      transition: all 0.2s ease; font-family: inherit;
+      text-decoration: none; display: inline-flex;
+      align-items: center; gap: 0.4rem;
+    }
+    .hasil-soal .btn-aksi-hasil button:hover,
+    .hasil-soal .btn-aksi-hasil a:hover {
+      background: #f5ede6; border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    /* STATUS KIRIM */
+    .status-kirim {
+      max-width: 480px; margin: 1rem auto;
+      padding: 0.8rem 1.2rem; border-radius: 12px;
+      font-size: 0.88rem; font-weight: 600;
+      line-height: 1.5; display: none;
+      align-items: center; gap: 0.6rem;
+      text-align: left;
+    }
+    .status-kirim.show { display: flex; }
+    .status-kirim.info { background: #e3edf5; border: 2px solid #8ab4d4; color: #1a4a6b; }
+    .status-kirim.success { background: #d4e8cb; border: 2px solid #8aaa7a; color: #2d5a1e; }
+    .status-kirim.error { background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a; }
+    .status-kirim .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid currentColor;
+      border-top-color: transparent; border-radius: 50%;
+      animation: spin 0.7s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .nav-bottom {
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap;
+      gap: 1rem; margin-top: 2rem;
+      padding-top: 1.5rem; border-top: 2px solid #e5dbd0;
+    }
+    .btn-nav-bawah {
+      padding: 0.6rem 1.8rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 600; font-size: 0.9rem;
+      color: #3b2b1e; cursor: pointer;
+      transition: all 0.2s ease; font-family: inherit;
+      text-decoration: none; display: inline-flex;
+      align-items: center; gap: 0.4rem;
+    }
+    .btn-nav-bawah:hover {
+      background: #f5ede6; border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+    .btn-nav-bawah.primary {
+      background: #4d3829; border-color: #4d3829; color: #fff;
+    }
+    .btn-nav-bawah.primary:hover {
+      background: #6b4f3a; border-color: #6b4f3a;
+    }
+    .btn-nav-bawah:disabled,
+    .btn-nav-bawah.locked {
+      opacity: 0.4; cursor: not-allowed;
+      transform: none !important; pointer-events: none;
+    }
+    .btn-nav-bawah .back-arrow { font-size: 1.2rem; }
+    .nav-hint {
+      font-size: 0.8rem; color: #7a6656;
+      text-align: center; width: 100%; margin-top: 0.3rem;
+    }
+    .nav-hint.locked { color: #d4a0a0; }
+    .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+
+    @media (max-width: 820px) {
+      .nav-aktivitas { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+      .nav-aktivitas .btn-nav { justify-content: center; }
+      .bagian-progress .step { font-size: 0.65rem; padding: 0.25rem 0.6rem; }
+      .bagian-progress .step .num { width: 16px; height: 16px; font-size: 0.55rem; }
+      .mesin-grid { grid-template-columns: 1fr; }
+      .mesin-kunci { order: -1; }
+    }
+    @media (max-width: 480px) {
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav-bawah { justify-content: center; }
+      .materi-ringkas { padding: 1rem 1.2rem; }
+      .materi-ringkas h2 { font-size: 1.1rem; }
+      .soal-kuis { padding: 1rem; }
+      .soal-kuis .pertanyaan { font-size: 0.92rem; }
+      .soal-kuis .opsi-kuis label { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
+      .soal-header { flex-direction: column; align-items: flex-start; }
+      .mesin-enkripsi { padding: 1rem; }
+      .mesin-kolom .kolom-value { font-size: 0.9rem; }
+      .tantangan-soal .soal-cipher { font-size: 1.5rem; letter-spacing: 2px; }
+      .huruf-box .huruf-awal,
+      .huruf-box .huruf-hasil { font-size: 0.85rem; padding: 0.15rem 0.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materijki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li><a href="jki3.html">Enkripsi sebagai Proteksi Data</a></li>
+      <li>Lab Enkripsi · Bagian 2</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <div class="bagian-progress">
+          <span class="step completed"><span class="num">✓</span> Pesan Rahasia</span>
+          <span class="step active"><span class="num">2</span> Kunci Rahasia</span>
+          <span class="step"><span class="num">3</span> Sandi Caesar</span>
+          <span class="step"><span class="num">4</span> Detektif Enkripsi</span>
+          <span class="step"><span class="num">5</span> Kuis Akhir</span>
+        </div>
+
+        <div class="materi-ringkas">
+          <h2>📖 Materi Singkat <span class="badge">Bagian 2</span></h2>
+
+          <h3>1. Tiga Komponen Utama Enkripsi</h3>
+          <ul>
+            <li><strong>Plaintext</strong> — pesan asli yang dapat dibaca manusia. Contoh: "AKU SUKA KAMU"</li>
+            <li><strong>Ciphertext</strong> — pesan yang telah diacak. Contoh: "BLV TVL B NBLV"</li>
+            <li><strong>Kunci (Key)</strong> — parameter untuk mengubah plaintext ↔ ciphertext</li>
+          </ul>
+
+          <h3>2. Proses Enkripsi dan Dekripsi</h3>
+          <div class="info-box">
+            <strong>Plaintext</strong> ──[Enkripsi + Kunci]──► <strong>Ciphertext</strong> ──[Dekripsi + Kunci]──► <strong>Plaintext</strong>
+          </div>
+
+          <h3>3. Analogi Sederhana</h3>
+          <p>
+            Bayangkan kamu memasukkan surat ke dalam kotak besi dan menguncinya. Surat itu <strong>plaintext</strong>. Kotak terkunci adalah <strong>ciphertext</strong>. Kunci gembok adalah <strong>kunci enkripsi</strong>. Hanya orang yang memiliki kunci yang bisa membuka kotak dan membaca surat.
+          </p>
+
+          <h3>4. Prinsip Kerckhoff</h3>
+          <p>
+            Dalam sistem enkripsi, <strong>algoritma boleh diketahui publik</strong>, tetapi <strong>kunci harus dirahasiakan</strong>. Jika kunci jatuh ke tangan yang salah, enkripsi bisa dibobol.
+          </p>
+
+          <a href="materijki3.html" class="link-materi">📚 Baca materi lengkap di sini →</a>
+        </div>
+
+        <div class="nav-aktivitas">
+          <a href="aktivitasjki3a.html" class="btn-nav">⬅ Bagian Sebelumnya</a>
+          <span class="info-aktivitas" id="infoAktivitas">🔑 Simulasi: Kunci Rahasia</span>
+          <a href="jki3.html" class="btn-nav">🏠 Portal</a>
+        </div>
+
+        <div class="aktivitas-toolbar">
+          <div class="mode-indikator">
+            🎯 Mode: <span id="modeLabel">Mesin Enkripsi</span>
+          </div>
+          <div class="progress-tracker">
+            Mode selesai: <strong id="progressCounter">0</strong> / <span id="totalProgress">4</span>
+            &nbsp;|&nbsp;
+            Skor: <strong id="skorCounter">0</strong>
+          </div>
+        </div>
+
+        <div class="mode-selector">
+          <button class="mode-btn active" data-mode="1" onclick="switchMode(1)">🔐 Mode 1: Enkripsi</button>
+          <button class="mode-btn" data-mode="2" onclick="switchMode(2)">🔓 Mode 2: Dekripsi</button>
+          <button class="mode-btn" data-mode="3" onclick="switchMode(3)">🧠 Mode 3: Tantangan</button>
+          <button class="mode-btn" data-mode="4" onclick="switchMode(4)">✨ Mode 4: Buat Kode</button>
+        </div>
+
+        <!-- MODE 1: ENKRIPSI -->
+        <div class="mode-content active" id="mode1Content">
+          <p style="text-align:center; color:#5c4638; font-size:0.9rem; margin: 0.5rem 0 1rem;">
+            🎯 Ketik plaintext, pilih kunci, lalu klik "Enkripsi!" untuk melihat huruf bergeser satu per satu.
+          </p>
+
+          <div class="mesin-enkripsi">
+            <div class="mesin-title">⚙️ MESIN ENKRIPSI</div>
+            <div class="mesin-sub">Ubah plaintext menjadi ciphertext</div>
+
+            <div class="mesin-grid">
+              <div class="mesin-kolom">
+                <div class="kolom-label">📥 Plaintext</div>
+                <input type="text" class="mesin-input" id="inputPlaintext" maxlength="15" placeholder="HALO" value="HALO" oninput="updatePreviewMode1()">
+                <div class="kolom-hint">Pesan asli</div>
+              </div>
+
+              <div class="mesin-kunci">
+                <div class="kunci-label">🔑 Kunci</div>
+                <div class="kunci-value" id="kunciValue1">3</div>
+                <input type="range" class="kunci-slider" id="kunciSlider1" min="1" max="25" value="3" oninput="updateKunciMode1(this.value)">
+                <div class="kunci-range"><span>1</span><span>25</span></div>
+              </div>
+
+              <div class="mesin-kolom">
+                <div class="kolom-label">📤 Ciphertext</div>
+                <div class="kolom-value empty" id="outputCiphertext1">?</div>
+                <div class="kolom-hint">Hasil enkripsi</div>
+              </div>
+            </div>
+
+            <div class="animasi-huruf-container" id="animasiContainer1"></div>
+
+            <div class="mesin-buttons">
+              <button class="btn-mesin primary" id="btnEnkripsi" onclick="jalankanEnkripsi()">
+                🔐 Enkripsi!
+              </button>
+              <button class="btn-mesin secondary" onclick="resetMode1()">
+                🔄 Reset
+              </button>
+            </div>
+
+            <div class="feedback-mesin" id="feedbackMode1"></div>
+          </div>
+        </div>
+
+        <!-- MODE 2: DEKRIPSI -->
+        <div class="mode-content" id="mode2Content">
+          <p style="text-align:center; color:#5c4638; font-size:0.9rem; margin: 0.5rem 0 1rem;">
+            🎯 Ketik ciphertext, pilih kunci yang sama, lalu klik "Dekripsi!" untuk mengembalikan pesan asli.
+          </p>
+
+          <div class="mesin-enkripsi">
+            <div class="mesin-title">🔓 MESIN DEKRIPSI</div>
+            <div class="mesin-sub">Ubah ciphertext kembali menjadi plaintext</div>
+
+            <div class="mesin-grid">
+              <div class="mesin-kolom">
+                <div class="kolom-label">📥 Ciphertext</div>
+                <input type="text" class="mesin-input" id="inputCiphertext" maxlength="15" placeholder="KDOR" value="KDOR" oninput="updatePreviewMode2()">
+                <div class="kolom-hint">Pesan teracak</div>
+              </div>
+
+              <div class="mesin-kunci">
+                <div class="kunci-label">🔑 Kunci</div>
+                <div class="kunci-value" id="kunciValue2">3</div>
+                <input type="range" class="kunci-slider" id="kunciSlider2" min="1" max="25" value="3" oninput="updateKunciMode2(this.value)">
+                <div class="kunci-range"><span>1</span><span>25</span></div>
+              </div>
+
+              <div class="mesin-kolom">
+                <div class="kolom-label">📤 Plaintext</div>
+                <div class="kolom-value empty" id="outputPlaintext2">?</div>
+                <div class="kolom-hint">Hasil dekripsi</div>
+              </div>
+            </div>
+
+            <div class="animasi-huruf-container" id="animasiContainer2"></div>
+
+            <div class="mesin-buttons">
+              <button class="btn-mesin primary" id="btnDekripsi" onclick="jalankanDekripsi()">
+                🔓 Dekripsi!
+              </button>
+              <button class="btn-mesin secondary" onclick="resetMode2()">
+                🔄 Reset
+              </button>
+            </div>
+
+            <div class="feedback-mesin" id="feedbackMode2"></div>
+          </div>
+        </div>
+
+        <!-- MODE 3: TANTANGAN -->
+        <div class="mode-content" id="mode3Content">
+          <div class="tantangan-container">
+            <div class="tantangan-header">
+              <div class="timer" id="timerDisplay">⏱️ 60s</div>
+              <div class="skor-box" id="skorTantangan">Skor: 0</div>
+            </div>
+
+            <div class="tantangan-info">
+              <strong>🎯 Tantangan:</strong> Sistem menampilkan ciphertext. Tebak kunci yang digunakan dengan menggeser slider sampai plaintext-nya bermakna!
+            </div>
+
+            <div class="tantangan-soal">
+              <div class="soal-label">CIPHERTEXT</div>
+              <div class="soal-progress-inline" id="soalProgressInline">Soal 1 dari 4</div>
+              <div class="soal-cipher" id="soalCipher">?</div>
+              <div class="soal-hint">Geser kunci untuk menemukan plaintext yang bermakna</div>
+            </div>
+
+            <div class="tantangan-slider-wrapper">
+              <label>🔑 Coba Kunci: <span id="kunciTantanganValue">1</span></label>
+              <input type="range" min="1" max="25" value="1" id="sliderTantangan" oninput="updateTantangan(this.value)">
+              <div class="tantangan-preview">
+                <div class="preview-label">HASIL DEKRIPSI</div>
+                <div class="preview-text" id="previewTantangan">?</div>
+              </div>
+            </div>
+
+            <div class="mesin-buttons">
+              <button class="btn-mesin primary" id="btnMulaiTantangan" onclick="mulaiTantangan()">
+                🚀 Mulai Tantangan
+              </button>
+              <button class="btn-mesin secondary" id="btnTantanganBerikutnya" onclick="tantanganBerikutnya()" style="display:none;">
+                ➡️ Soal Berikutnya
+              </button>
+            </div>
+
+            <div class="feedback-mesin" id="feedbackTantangan"></div>
+          </div>
+        </div>
+
+        <!-- MODE 4: BUAT KODE SENDIRI -->
+        <div class="mode-content" id="mode4Content">
+          <div class="buat-kode-container">
+            <div class="buat-kode-info">
+              <strong>✨ Buat Kode Sendiri:</strong> Ketik pesan rahasia, pilih kunci, dan sistem akan menghasilkan ciphertext yang bisa kamu kirim ke temanmu!
+            </div>
+
+            <div class="mesin-enkripsi">
+              <div class="mesin-title">✍️ BUAT KODE RAHASIA</div>
+
+              <div class="mesin-grid" style="grid-template-columns: 1fr;">
+                <div class="mesin-kolom">
+                  <div class="kolom-label">📝 Pesan Rahasia</div>
+                  <input type="text" class="mesin-input" id="inputPesanBuat" maxlength="30" placeholder="AKU SUKA KAMU" value="AKU SUKA KAMU" oninput="updateBuatKode()">
+                </div>
+
+                <div class="mesin-kunci" style="margin-top:1rem;">
+                  <div class="kunci-label">🔑 Kunci</div>
+                  <div class="kunci-value" id="kunciValue4">3</div>
+                  <input type="range" class="kunci-slider" id="kunciSlider4" min="1" max="25" value="3" oninput="updateBuatKode()">
+                  <div class="kunci-range"><span>1</span><span>25</span></div>
+                </div>
+              </div>
+
+              <div class="buat-kode-hasil">
+                <div class="hasil-label">🔒 CIPHERTEXT (KIRIM KE TEMAN)</div>
+                <div class="hasil-text" id="hasilBuatKode">KDOR</div>
+                <div class="hasil-copy">
+                  <button class="btn-copy" onclick="copyKode()">📋 Salin Kode</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="feedback-mesin show success" style="margin-top:1rem;">
+              💡 <strong>Tips:</strong> Beritahu temanmu kunci yang digunakan agar dia bisa mendekripsi pesanmu. Tanpa kunci, pesan tidak bisa dibaca!
+            </div>
+          </div>
+        </div>
+
+        <!-- AREA SOAL -->
+        <div id="area-soal">
+          <div class="soal-header">
+            <div class="soal-info">📝 <strong>Soal Pemahaman:</strong> 4 soal pilihan ganda</div>
+            <div class="soal-progress" id="soalProgress">Terjawab: 0 / 4</div>
+          </div>
+
+          <div id="soalContainer"></div>
+
+          <button class="btn-submit-kuis" id="btnPeriksaSoal">✅ Periksa Jawaban</button>
+        </div>
+
+        <div class="hasil-soal" id="hasilSoal">
+          <div class="hasil-icon" id="hasilIcon">🏆</div>
+          <div class="hasil-title" id="hasilTitle">Selamat!</div>
+          <div class="hasil-skor" id="hasilSkor">0 / 4</div>
+          <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 2.</div>
+          <div class="btn-aksi-hasil" id="btnAksiHasil"></div>
+        </div>
+
+        <!-- Status kirim -->
+        <div class="status-kirim info" id="statusKirim">
+          <span class="spinner"></span>
+          <span id="statusKirimText">Mengirim nilai...</span>
+        </div>
+
+        <div class="nav-bottom">
+          <a href="aktivitasjki3a.html" class="btn-nav-bawah">
+            <span class="back-arrow">←</span> Bagian 1
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian3" onclick="lanjutKeBagian3()">
+              Lanjut ke Bagian 3: Sandi Caesar →
+            </button>
+          </div>
+          <div class="nav-hint locked" id="hintLanjut">
+            🔒 Selesaikan semua mode dan soal pemahaman untuk membuka Bagian 3
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI MODUL
+      // ============================================
+      const NAMA_SHEET = 'jki3';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
+
+      // ============================================
+      // DATA SOAL PEMAHAMAN
+      // ============================================
+      const soalData = [
+        {
+          pertanyaan: 'Apa yang dimaksud dengan plaintext?',
+          opsi: [
+            'Pesan yang telah dienkripsi',
+            'Pesan asli yang dapat dibaca manusia',
+            'Kunci untuk membuka pesan',
+            'Algoritma enkripsi'
+          ],
+          kunci: 1,
+          penjelasan: 'Plaintext adalah pesan asli yang dapat dibaca dan dipahami manusia sebelum dienkripsi.'
+        },
+        {
+          pertanyaan: 'Dalam proses enkripsi, apa fungsi kunci?',
+          opsi: [
+            'Mengubah plaintext menjadi ciphertext dan sebaliknya',
+            'Menghapus pesan setelah dikirim',
+            'Mempercepat pengiriman data',
+            'Menyimpan pesan di server'
+          ],
+          kunci: 0,
+          penjelasan: 'Kunci adalah parameter yang digunakan untuk mengubah plaintext menjadi ciphertext (enkripsi) dan sebaliknya (dekripsi).'
+        },
+        {
+          pertanyaan: 'Jika plaintext "BUKU" dienkripsi dengan kunci geser 2, apa ciphertext-nya?',
+          opsi: [
+            'DWMW',
+            'DWMW',
+            'DWMV',
+            'DWMX'
+          ],
+          kunci: 0,
+          penjelasan: 'BUKU digeser 2: B→D, U→W, K→M, U→W = DWMW.'
+        },
+        {
+          pertanyaan: 'Mengapa kunci harus dirahasiakan?',
+          opsi: [
+            'Karena kunci adalah satu-satunya cara untuk membuka ciphertext',
+            'Karena kunci membuat pesan lebih panjang',
+            'Karena kunci adalah nama pengguna',
+            'Karena kunci tidak penting'
+          ],
+          kunci: 0,
+          penjelasan: 'Tanpa kunci yang tepat, ciphertext tidak bisa dikembalikan ke plaintext. Jika kunci bocor, enkripsi bisa dibobol.'
+        }
+      ];
+
+      // ============================================
+      // DATA TANTANGAN (VERIFIED)
+      // ============================================
+      const tantanganData = [
+        { cipher: 'IBMP',    kunci: 1, plaintext: 'HALO' },
+        { cipher: 'ZRPHQ',   kunci: 3, plaintext: 'WOMEN' },
+        { cipher: 'FDHVDU',  kunci: 3, plaintext: 'CAESAR' },
+        { cipher: 'VHODPDW', kunci: 3, plaintext: 'SELAMAT' }
+      ];
+
+      // ============================================
+      // STATE
+      // ============================================
+      let currentMode = 1;
+      let modeSelesai = { 1: false, 2: false, 3: false, 4: false };
+      let skorMode = { 1: 0, 2: 0, 3: 0, 4: 0 };
+
+      let tantanganAktif = false;
+      let tantanganIndex = 0;
+      let tantanganTimer = null;
+      let tantanganWaktu = 60;
+      let tantanganSkor = 0;
+      let tantanganSoalSekarang = null;
+      let tantanganSudahBenar = false;
+
+      let soalJawaban = {};
+      let soalSubmitted = false;
+      let soalBenar = 0;
+      let soalSelesai = false;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const elModeLabel = document.getElementById('modeLabel');
+      const elProgressCounter = document.getElementById('progressCounter');
+      const elSkorCounter = document.getElementById('skorCounter');
+      const elAreaSoal = document.getElementById('area-soal');
+      const elSoalContainer = document.getElementById('soalContainer');
+      const elSoalProgress = document.getElementById('soalProgress');
+      const elBtnPeriksaSoal = document.getElementById('btnPeriksaSoal');
+      const elHasilSoal = document.getElementById('hasilSoal');
+      const elBtnLanjutBagian3 = document.getElementById('btnLanjutBagian3');
+      const elHintLanjut = document.getElementById('hintLanjut');
+      const elStatusKirim = document.getElementById('statusKirim');
+      const elStatusKirimText = document.getElementById('statusKirimText');
+
+      // ============================================
+      // FUNGSI CAESAR CIPHER
+      // ============================================
+      const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+      function caesarCipher(text, shift) {
+        return text.split('').map(char => {
+          if (char === ' ') return ' ';
+          const idx = ALPHABET.indexOf(char);
+          if (idx === -1) return char;
+          return ALPHABET[(idx + shift + 26) % 26];
+        }).join('');
+      }
+
+      function caesarDecrypt(text, shift) {
+        return caesarCipher(text, -shift);
+      }
+
+      // ============================================
+      // VALIDASI DATA TANTANGAN (untuk debugging)
+      // ============================================
+      tantanganData.forEach((soal, i) => {
+        const cek = caesarDecrypt(soal.cipher, soal.kunci);
+        if (cek !== soal.plaintext) {
+          console.warn(`⚠️ BUG soal ${i+1}: ${soal.cipher} + ${soal.kunci} = ${cek}, seharusnya ${soal.plaintext}`);
+        }
+      });
+
+      // ============================================
+      // MODE SELECTOR
+      // ============================================
+      window.switchMode = function(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+          btn.classList.remove('active');
+          if (parseInt(btn.dataset.mode) === mode) btn.classList.add('active');
+        });
+        document.querySelectorAll('.mode-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById('mode' + mode + 'Content').classList.add('active');
+
+        const modeLabels = {
+          1: 'Mesin Enkripsi',
+          2: 'Mesin Dekripsi',
+          3: 'Tantangan Tebak Kunci',
+          4: 'Buat Kode Sendiri'
+        };
+        elModeLabel.textContent = modeLabels[mode];
+
+        if (mode !== 3 && tantanganTimer) {
+          clearInterval(tantanganTimer);
+          tantanganTimer = null;
+          tantanganAktif = false;
+        }
+      };
+
+      // ============================================
+      // MODE 1: ENKRIPSI
+      // ============================================
+      window.updateKunciMode1 = function(val) {
+        document.getElementById('kunciValue1').textContent = val;
+        updatePreviewMode1();
+      };
+
+      window.updatePreviewMode1 = function() {
+        const plain = document.getElementById('inputPlaintext').value.toUpperCase().replace(/[^A-Z ]/g, '');
+        document.getElementById('inputPlaintext').value = plain;
+
+        document.getElementById('outputCiphertext1').textContent = '?';
+        document.getElementById('outputCiphertext1').classList.add('empty');
+        document.getElementById('animasiContainer1').innerHTML = '';
+        document.getElementById('feedbackMode1').className = 'feedback-mesin';
+      };
+
+      window.jalankanEnkripsi = function() {
+        const plain = document.getElementById('inputPlaintext').value.trim().toUpperCase();
+        const kunci = parseInt(document.getElementById('kunciSlider1').value);
+
+        if (!plain) {
+          alert('⚠️ Ketik plaintext terlebih dahulu!');
+          return;
+        }
+
+        const cipher = caesarCipher(plain, kunci);
+
+        const container = document.getElementById('animasiContainer1');
+        container.innerHTML = '';
+
+        plain.split('').forEach((char, idx) => {
+          const cipherChar = cipher[idx];
+          const box = document.createElement('div');
+          box.className = 'huruf-box' + (char === ' ' ? ' spasi' : '');
+          box.innerHTML = `
+            <div class="huruf-awal">${char === ' ' ? '␣' : char}</div>
+            <div class="huruf-arrow">↓ +${kunci}</div>
+            <div class="huruf-hasil" id="hasil_${idx}">${cipherChar === ' ' ? '␣' : cipherChar}</div>
+          `;
+          container.appendChild(box);
+
+          setTimeout(() => {
+            const el = document.getElementById('hasil_' + idx);
+            if (el) el.classList.add('show');
+          }, 100 + idx * 80);
+        });
+
+        setTimeout(() => {
+          const output = document.getElementById('outputCiphertext1');
+          output.textContent = cipher;
+          output.classList.remove('empty');
+
+          const fb = document.getElementById('feedbackMode1');
+          fb.className = 'feedback-mesin show success';
+          fb.innerHTML = `🔐 <strong>Enkripsi berhasil!</strong> "${plain}" dengan kunci ${kunci} menjadi "${cipher}". Setiap huruf bergeser ${kunci} posisi ke depan dalam alfabet.`;
+
+          if (!modeSelesai[1]) {
+            skorMode[1] = 100;
+            modeSelesai[1] = true;
+            tandaiModeSelesai(1);
+            cekSemuaMode();
+          }
+          updateProgress();
+        }, 100 + plain.length * 80 + 200);
+      };
+
+      window.resetMode1 = function() {
+        document.getElementById('inputPlaintext').value = 'HALO';
+        document.getElementById('kunciSlider1').value = 3;
+        document.getElementById('kunciValue1').textContent = '3';
+        document.getElementById('outputCiphertext1').textContent = '?';
+        document.getElementById('outputCiphertext1').classList.add('empty');
+        document.getElementById('animasiContainer1').innerHTML = '';
+        document.getElementById('feedbackMode1').className = 'feedback-mesin';
+      };
+
+      // ============================================
+      // MODE 2: DEKRIPSI
+      // ============================================
+      window.updateKunciMode2 = function(val) {
+        document.getElementById('kunciValue2').textContent = val;
+        updatePreviewMode2();
+      };
+
+      window.updatePreviewMode2 = function() {
+        const cipher = document.getElementById('inputCiphertext').value.toUpperCase().replace(/[^A-Z ]/g, '');
+        document.getElementById('inputCiphertext').value = cipher;
+
+        document.getElementById('outputPlaintext2').textContent = '?';
+        document.getElementById('outputPlaintext2').classList.add('empty');
+        document.getElementById('animasiContainer2').innerHTML = '';
+        document.getElementById('feedbackMode2').className = 'feedback-mesin';
+      };
+
+      window.jalankanDekripsi = function() {
+        const cipher = document.getElementById('inputCiphertext').value.trim().toUpperCase();
+        const kunci = parseInt(document.getElementById('kunciSlider2').value);
+
+        if (!cipher) {
+          alert('⚠️ Ketik ciphertext terlebih dahulu!');
+          return;
+        }
+
+        const plain = caesarDecrypt(cipher, kunci);
+
+        const container = document.getElementById('animasiContainer2');
+        container.innerHTML = '';
+
+        cipher.split('').forEach((char, idx) => {
+          const plainChar = plain[idx];
+          const box = document.createElement('div');
+          box.className = 'huruf-box' + (char === ' ' ? ' spasi' : '');
+          box.innerHTML = `
+            <div class="huruf-awal">${char === ' ' ? '␣' : char}</div>
+            <div class="huruf-arrow">↓ −${kunci}</div>
+            <div class="huruf-hasil" id="hasil2_${idx}">${plainChar === ' ' ? '␣' : plainChar}</div>
+          `;
+          container.appendChild(box);
+
+          setTimeout(() => {
+            const el = document.getElementById('hasil2_' + idx);
+            if (el) el.classList.add('show');
+          }, 100 + idx * 80);
+        });
+
+        setTimeout(() => {
+          const output = document.getElementById('outputPlaintext2');
+          output.textContent = plain;
+          output.classList.remove('empty');
+
+          const fb = document.getElementById('feedbackMode2');
+          fb.className = 'feedback-mesin show success';
+          fb.innerHTML = `🔓 <strong>Dekripsi berhasil!</strong> "${cipher}" dengan kunci ${kunci} kembali menjadi "${plain}". Setiap huruf bergeser ${kunci} posisi ke belakang.`;
+
+          if (!modeSelesai[2]) {
+            skorMode[2] = 100;
+            modeSelesai[2] = true;
+            tandaiModeSelesai(2);
+            cekSemuaMode();
+          }
+          updateProgress();
+        }, 100 + cipher.length * 80 + 200);
+      };
+
+      window.resetMode2 = function() {
+        document.getElementById('inputCiphertext').value = 'KDOR';
+        document.getElementById('kunciSlider2').value = 3;
+        document.getElementById('kunciValue2').textContent = '3';
+        document.getElementById('outputPlaintext2').textContent = '?';
+        document.getElementById('outputPlaintext2').classList.add('empty');
+        document.getElementById('animasiContainer2').innerHTML = '';
+        document.getElementById('feedbackMode2').className = 'feedback-mesin';
+      };
+
+      // ============================================
+      // MODE 3: TANTANGAN
+      // ============================================
+      window.mulaiTantangan = function() {
+        tantanganAktif = true;
+        tantanganIndex = 0;
+        tantanganSkor = 0;
+        tantanganWaktu = 60;
+        tantanganSudahBenar = false;
+
+        document.getElementById('btnMulaiTantangan').style.display = 'none';
+        document.getElementById('skorTantangan').textContent = 'Skor: 0';
+        document.getElementById('timerDisplay').textContent = '⏱️ 60s';
+        document.getElementById('timerDisplay').style.color = '#4d3829';
+
+        tampilkanTantangan();
+
+        if (tantanganTimer) clearInterval(tantanganTimer);
+        tantanganTimer = setInterval(() => {
+          tantanganWaktu--;
+          document.getElementById('timerDisplay').textContent = `⏱️ ${tantanganWaktu}s`;
+          if (tantanganWaktu <= 10) {
+            document.getElementById('timerDisplay').style.color = '#d4a0a0';
+          }
+          if (tantanganWaktu <= 0) {
+            selesaiTantangan();
+          }
+        }, 1000);
+      };
+
+      function tampilkanTantangan() {
+        if (tantanganIndex >= tantanganData.length) {
+          selesaiTantangan();
+          return;
+        }
+
+        const soal = tantanganData[tantanganIndex];
+        tantanganSoalSekarang = soal;
+        tantanganSudahBenar = false;
+
+        document.getElementById('soalCipher').textContent = soal.cipher;
+        document.getElementById('soalProgressInline').textContent = `Soal ${tantanganIndex + 1} dari ${tantanganData.length}`;
+        document.getElementById('sliderTantangan').value = 1;
+        document.getElementById('kunciTantanganValue').textContent = '1';
+        document.getElementById('btnTantanganBerikutnya').style.display = 'none';
+        document.getElementById('feedbackTantangan').className = 'feedback-mesin';
+
+        updateTantangan(1);
+      }
+
+      window.updateTantangan = function(val) {
+        document.getElementById('kunciTantanganValue').textContent = val;
+        if (!tantanganSoalSekarang) return;
+
+        const kunciInt = parseInt(val);
+        const hasil = caesarDecrypt(tantanganSoalSekarang.cipher, kunciInt);
+        const preview = document.getElementById('previewTantangan');
+        preview.textContent = hasil;
+
+        if (hasil === tantanganSoalSekarang.plaintext) {
+          preview.classList.add('benar');
+
+          if (!tantanganSudahBenar) {
+            tantanganSudahBenar = true;
+            tantanganSkor += 25;
+            document.getElementById('skorTantangan').textContent = `Skor: ${tantanganSkor}`;
+
+            const fb = document.getElementById('feedbackTantangan');
+            fb.className = 'feedback-mesin show success';
+            fb.innerHTML = `🎉 <strong>Benar!</strong> Kunci ${val} menghasilkan plaintext "${hasil}". Kode terpecahkan!`;
+
+            document.getElementById('btnTantanganBerikutnya').style.display = 'inline-flex';
+            document.getElementById('btnTantanganBerikutnya').textContent =
+              tantanganIndex < tantanganData.length - 1 ? '➡️ Soal Berikutnya' : '🏁 Selesai';
+          }
+        } else {
+          preview.classList.remove('benar');
+        }
+      };
+
+      window.tantanganBerikutnya = function() {
+        tantanganIndex++;
+        if (tantanganIndex < tantanganData.length) {
+          tampilkanTantangan();
+        } else {
+          selesaiTantangan();
+        }
+      };
+
+      function selesaiTantangan() {
+        if (tantanganTimer) {
+          clearInterval(tantanganTimer);
+          tantanganTimer = null;
+        }
+        tantanganAktif = false;
+
+        document.getElementById('btnMulaiTantangan').style.display = 'inline-flex';
+        document.getElementById('btnTantanganBerikutnya').style.display = 'none';
+        document.getElementById('timerDisplay').textContent = '⏱️ Selesai';
+        document.getElementById('timerDisplay').style.color = '#4d3829';
+        document.getElementById('soalProgressInline').textContent = 'Semua soal selesai';
+
+        const fb = document.getElementById('feedbackTantangan');
+        fb.className = 'feedback-mesin show info';
+        fb.innerHTML = `🏁 <strong>Tantangan selesai!</strong> Skor total: ${tantanganSkor} dari ${tantanganData.length * 25}.`;
+
+        document.getElementById('btnMulaiTantangan').textContent = '🔄 Ulangi Tantangan';
+
+        if (tantanganSkor >= 75) {
+          if (!modeSelesai[3]) {
+            skorMode[3] = 100;
+            modeSelesai[3] = true;
+            tandaiModeSelesai(3);
+            cekSemuaMode();
+          }
+        } else {
+          skorMode[3] = tantanganSkor;
+        }
+        updateProgress();
+      }
+
+      // ============================================
+      // MODE 4: BUAT KODE SENDIRI
+      // ============================================
+      window.updateBuatKode = function() {
+        const pesan = document.getElementById('inputPesanBuat').value.toUpperCase().replace(/[^A-Z ]/g, '');
+        document.getElementById('inputPesanBuat').value = pesan;
+
+        const kunci = parseInt(document.getElementById('kunciSlider4').value);
+        document.getElementById('kunciValue4').textContent = kunci;
+
+        if (pesan.trim()) {
+          const cipher = caesarCipher(pesan, kunci);
+          document.getElementById('hasilBuatKode').textContent = cipher;
+
+          if (!modeSelesai[4]) {
+            skorMode[4] = 100;
+            modeSelesai[4] = true;
+            tandaiModeSelesai(4);
+            cekSemuaMode();
+          }
+          updateProgress();
+        } else {
+          document.getElementById('hasilBuatKode').textContent = '—';
+        }
+      };
+
+      window.copyKode = function() {
+        const kode = document.getElementById('hasilBuatKode').textContent;
+        if (kode && kode !== '—') {
+          navigator.clipboard.writeText(kode).then(() => {
+            alert('📋 Kode berhasil disalin: ' + kode);
+          }).catch(() => {
+            alert('📋 Kode: ' + kode);
+          });
+        }
+      };
+
+      // ============================================
+      // TANDAI MODE SELESAI
+      // ============================================
+      function tandaiModeSelesai(mode) {
+        const btn = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
+        if (btn) btn.classList.add('selesai');
+      }
+
+      // ============================================
+      // UPDATE PROGRESS
+      // ============================================
+      function updateProgress() {
+        const done = Object.values(modeSelesai).filter(Boolean).length;
+        elProgressCounter.textContent = done;
+        const totalSkor = Object.values(skorMode).reduce((a, b) => a + b, 0);
+        elSkorCounter.textContent = totalSkor;
+      }
+
+      // ============================================
+      // CEK SEMUA MODE SELESAI
+      // ============================================
+      function cekSemuaMode() {
+        if (modeSelesai[1] && modeSelesai[2] && modeSelesai[3] && modeSelesai[4]) {
+          elAreaSoal.classList.add('active');
+          renderSoal();
+          updateSoalProgress();
+          setTimeout(() => {
+            elAreaSoal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 400);
+        }
+      }
+
+      // ============================================
+      // SOAL PEMAHAMAN
+      // ============================================
+      function renderSoal() {
+        elSoalContainer.innerHTML = '';
+        soalData.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'soal-kuis';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            const id = `soal${idx}_opt${oi}`;
+            opsiHtml += `
+              <label for="${id}" onclick="pilihJawaban(${idx}, ${oi})" id="label_${idx}_${oi}">
+                <input type="radio" name="soal${idx}" id="${id}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          div.innerHTML = `
+            <div class="pertanyaan">
+              <span class="soal-num">${idx + 1}</span>
+              <span>${soal.pertanyaan}</span>
+            </div>
+            <div class="opsi-kuis">${opsiHtml}</div>
+            <div class="jawaban-feedback" id="feedback_soal_${idx}"></div>
+          `;
+
+          elSoalContainer.appendChild(div);
+        });
+      }
+
+      window.pilihJawaban = function(soalIndex, optIndex) {
+        if (soalSubmitted) return;
+        const soalDiv = document.querySelector(`.soal-kuis[data-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+
+        soalJawaban[soalIndex] = optIndex;
+        updateSoalProgress();
+      };
+
+      function updateSoalProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+        elSoalProgress.textContent = `Terjawab: ${answered} / ${total}`;
+      }
+
+      elBtnPeriksaSoal.addEventListener('click', function() {
+        if (soalSubmitted) return;
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
+          return;
+        }
+
+        let correct = 0;
+        soalData.forEach((soal, idx) => {
+          const selected = soalJawaban[idx];
+          const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
+          const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+          const feedback = document.getElementById(`feedback_soal_${idx}`);
+
+          labels.forEach((label, oi) => {
+            label.classList.add('disabled');
+            if (oi === soal.kunci) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+            if (oi === selected && selected !== soal.kunci) {
+              label.classList.add('wrong-answer');
+              label.querySelector('.check-icon').textContent = '❌';
+            }
+          });
+
+          if (selected === soal.kunci) {
+            soalDiv.classList.add('correct');
+            correct++;
+            feedback.className = 'jawaban-feedback benar';
+            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.penjelasan}`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.className = 'jawaban-feedback salah';
+            feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+          }
+        });
+
+        soalBenar = correct;
+        soalSubmitted = true;
+        elBtnPeriksaSoal.disabled = true;
+        elBtnPeriksaSoal.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+
+        tampilkanHasilSoal(correct, total);
+      });
+
+      function tampilkanHasilSoal(correct, total) {
+        setTimeout(() => {
+          elHasilSoal.classList.add('show');
+
+          const skorBagian2 = Math.round(40 + (correct / total) * 60);
+
+          if (correct >= 3) {
+            soalSelesai = true;
+            elHasilSoal.querySelector('#hasilIcon').textContent = '🏆';
+            elHasilSoal.querySelector('#hasilTitle').textContent = 'Selamat!';
+            elHasilSoal.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilSoal.querySelector('#hasilDesc').innerHTML =
+              `Kamu berhasil menyelesaikan Bagian 2!<br><br>Bagian 3 sekarang terbuka!`;
+
+            elBtnLanjutBagian3.classList.remove('locked');
+            elBtnLanjutBagian3.classList.add('primary');
+            elHintLanjut.classList.remove('locked');
+            elHintLanjut.classList.add('ready');
+            elHintLanjut.textContent = '✅ Bagian 3 sudah terbuka! Klik untuk melanjutkan.';
+
+            document.querySelectorAll('.bagian-progress .step').forEach((step, idx) => {
+              if (idx === 1) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+              }
+            });
+
+            try {
+              const prev = JSON.parse(localStorage.getItem('labenkripsi_progress') || '{}');
+              prev.bagian = 2;
+              prev.skorBagian2 = skorBagian2;
+              localStorage.setItem('labenkripsi_progress', JSON.stringify(prev));
+            } catch (e) {}
+          } else {
+            elHasilSoal.querySelector('#hasilIcon').textContent = '📖';
+            elHasilSoal.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
+            elHasilSoal.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilSoal.querySelector('#hasilDesc').innerHTML =
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal 3 soal benar untuk membuka Bagian 3.<br><br>Coba pelajari kembali materinya!`;
+          }
+
+          const btnAksi = elHasilSoal.querySelector('#btnAksiHasil');
+          btnAksi.innerHTML = `
+            <button onclick="ulangiSoal()">🔄 Ulangi Soal</button>
+            <a href="materijki3.html">📖 Baca Materi</a>
+          `;
+
+          setTimeout(() => {
+            elHasilSoal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 200);
+        }, 800);
+      }
+
+      window.ulangiSoal = function() {
+        if (!confirm('Yakin ingin mengulangi soal? Skor soal akan direset.')) return;
+
+        soalJawaban = {};
+        soalSubmitted = false;
+        soalBenar = 0;
+        soalSelesai = false;
+
+        elBtnPeriksaSoal.disabled = false;
+        elBtnPeriksaSoal.textContent = '✅ Periksa Jawaban';
+        elHasilSoal.classList.remove('show');
+
+        renderSoal();
+        updateSoalProgress();
+
+        elBtnLanjutBagian3.classList.add('locked');
+        elBtnLanjutBagian3.classList.remove('primary');
+        elHintLanjut.classList.add('locked');
+        elHintLanjut.classList.remove('ready');
+        elHintLanjut.textContent = '🔒 Selesaikan semua mode dan soal pemahaman untuk membuka Bagian 3';
+
+        document.querySelectorAll('.bagian-progress .step').forEach((step, idx) => {
+          if (idx === 1) {
+            step.classList.add('active');
+            step.classList.remove('completed');
+          }
+        });
+
+        elAreaSoal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+
+      // ============================================
+      // KIRIM NILAI BAGIAN 2
+      // ============================================
+      async function kirimNilaiBagian2() {
+        const skorBagian2 = Math.round(40 + (soalBenar / soalData.length) * 60);
+
+        elStatusKirim.className = 'status-kirim info show';
+        elStatusKirimText.textContent = 'Mengirim nilai Bagian 2...';
+
+        const hasil = await window.kirimNilaiBagian(
+          NAMA_SHEET,
+          'b',
+          skorBagian2,
+          TOTAL_BAGIAN
+        );
+
+        if (hasil && hasil.ok) {
+          elStatusKirim.className = 'status-kirim success show';
+          elStatusKirimText.innerHTML = `✅ Nilai Bagian 2 (<strong>${skorBagian2}</strong>) berhasil dikirim.`;
+        } else {
+          elStatusKirim.className = 'status-kirim error show';
+          elStatusKirimText.innerHTML = `⚠️ Gagal mengirim nilai. Tetap lanjut ke Bagian 3.`;
+        }
+      }
+
+      // ============================================
+      // LANJUT KE BAGIAN 3
+      // ============================================
+      window.lanjutKeBagian3 = async function() {
+        if (!soalSelesai) {
+          alert('🔒 Selesaikan soal pemahaman dengan benar terlebih dahulu!');
+          return;
+        }
+
+        elBtnLanjutBagian3.disabled = true;
+        await kirimNilaiBagian2();
+
+        setTimeout(() => {
+          window.location.href = 'aktivitasjki3c.html';
+        }, 800);
+      };
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        updatePreviewMode1();
+        updatePreviewMode2();
+        updateBuatKode();
+        updateProgress();
+      });
+
+      console.log('✅ Lab Enkripsi Bagian 2: Kunci Rahasia siap!');
+    })();
+  </script>
+
+</body>
+</html>

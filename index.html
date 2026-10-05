@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Portal Informatika DUTA · SMPN 2 Talegong</title>
+  <!-- desain.css -->
+  <link rel="stylesheet" href="desain.css">
+  <!-- script.js akan dimuat di akhir body -->
+</head>
+<body>
+  <!-- HEADER DINAMIS (diisi oleh script.js — banner saja, tanpa menu bar) -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB (statis, ditulis langsung di HTML) -->
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li>Beranda</li>
+    </ol>
+  </nav>
+
+  <!-- KONTEN UTAMA (index.html) — PORTAL -->
+  <main class="container" id="konten-utama">
+
+    <section class="hero">
+      <h1>📡 Portal Informatika DUTA</h1>
+      <p class="lead">Pilih salah satu kartu di bawah untuk mulai menjelajah materi, atau ikuti ujian yang sedang aktif.</p>
+
+      <!-- Info website — collapsible -->
+      <div class="info-collapsible" id="info-collapsible">
+        <div class="info-content" id="info-content">
+          <h2>📘 Mengapa Informatika DUTA?</h2>
+          <p><strong>DUTA</strong> (Digital untuk Talenta) adalah media pembelajaran dan sumber belajar yang dirancang khusus untuk siswa SMP dalam memahami mata pelajaran Informatika. Website ini dikembangkan oleh <strong>SMPN 2 Talegong</strong> sebagai bagian dari komitmen kami terhadap pendidikan digital yang inklusif dan bermakna.</p>
+          <p>Informatika bukan sekadar tentang komputer, tetapi cara berpikir logis, kreatif, dan kolaboratif. Melalui platform ini, siswa dan tenaga kependidikan dapat mengakses materi <strong>Teknologi Informasi dan Komunikasi, Sistem Komputer, Jaringan &amp; Internet, Dampak Sosial Informatika, Analisis Data, Berpikir Komputasional, dan Algoritma Pemrograman</strong> secara terstruktur.</p>
+
+          <h2>🎯 Tujuan Pembelajaran</h2>
+          <ul>
+            <li>Menyediakan konten yang selaras dengan kurikulum merdeka dan kebutuhan abad 21.</li>
+            <li>Menjadi rujukan bagi guru dan siswa di sekolah lain untuk menunjang proses belajar mengajar.</li>
+            <li>Membangun literasi digital yang kritis dan bertanggung jawab.</li>
+          </ul>
+
+          <h2>🤝 Untuk Siapa?</h2>
+          <p>Website ini terbuka untuk <strong>seluruh siswa SMP, guru, dan tenaga kependidikan</strong> di Indonesia. Materi disajikan dengan bahasa yang lugas, ilustrasi yang mendukung, dan contoh kasus yang dekat dengan keseharian siswa. Kami mengundang sekolah lain untuk memanfaatkan sumber daya ini secara gratis dan berbagi pengalaman terbaik.</p>
+
+          <blockquote>
+            “Dengan Informatika DUTA, belajar menjadi lebih terarah, menyenangkan, dan relevan dengan dunia digital saat ini.”
+          </blockquote>
+
+          <p>Jelajahi kartu portal di bawah untuk memulai perjalanan belajarmu. Selamat belajar dan berinovasi!</p>
+        </div>
+
+        <button class="info-toggle" id="info-toggle"
+                aria-expanded="false" aria-controls="info-content">
+          <span class="label">Baca selengkapnya</span>
+          <span class="arrow" aria-hidden="true">▾</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="portal-grid" aria-label="Menu utama portal">
+
+      <a class="portal-card" href="./tik/materitik.html">
+        <span class="ikon" aria-hidden="true">🖥️</span>
+        <h2>Teknologi Informasi dan Komunikasi</h2>
+        <p>Perangkat, aplikasi, dan pemanfaatan TIK dalam kehidupan sehari-hari.</p>
+      </a>
+
+      <a class="portal-card" href="./sk/materisk.html">
+        <span class="ikon" aria-hidden="true">⚙️</span>
+        <h2>Sistem Komputer</h2>
+        <p>Perangkat keras, perangkat lunak, dan cara kerja sistem komputer.</p>
+      </a>
+
+      <a class="portal-card" href="./jki/materijki.html">
+        <span class="ikon" aria-hidden="true">🌐</span>
+        <h2>Jaringan Komputer dan Internet</h2>
+        <p>Konsep jaringan, konektivitas, dan layanan internet.</p>
+      </a>
+
+      <a class="portal-card" href="./dsi/materidsi.html">
+        <span class="ikon" aria-hidden="true">⚖️</span>
+        <h2>Dampak Sosial dan Informatika</h2>
+        <p>Etika, keamanan, dan dampak teknologi bagi masyarakat.</p>
+      </a>
+
+      <a class="portal-card" href="./ad/materiad.html">
+        <span class="ikon" aria-hidden="true">📊</span>
+        <h2>Analisis Data</h2>
+        <p>Mengumpulkan, mengolah, dan memaknai data.</p>
+      </a>
+
+      <a class="portal-card" href="./bk/materibk.html">
+        <span class="ikon" aria-hidden="true">🧠</span>
+        <h2>Berpikir Komputasional</h2>
+        <p>Dekomposisi, pola, abstraksi, dan algoritma.</p>
+      </a>
+
+      <a class="portal-card" href="./ap/materidap.html">
+        <span class="ikon" aria-hidden="true">💻</span>
+        <h2>Algoritma Pemrograman</h2>
+        <p>Langkah-langkah logis dan dasar-dasar pemrograman.</p>
+      </a>
+
+      <a class="portal-card ujian" href="./ujian/daftarujian.html">
+        <span class="ikon" aria-hidden="true">📝</span>
+        <h2>Ujian Aktif</h2>
+        <p>Daftar ujian yang sedang berlangsung. Kerjakan dengan jujur dan teliti.</p>
+      </a>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER DINAMIS (diisi script.js) -->
+  <footer id="footer-utama"></footer>
+
+  <!-- tombol floating panah ke atas -->
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- script.js dimuat di akhir -->
+  <script src="script.js"></script>
+  <!-- catatan: script.js berisi header, footer, dan logika tombol -->
+  <!-- AI: tidak menambah fitur tambahan di luar permintaan. Konsistensi antar halaman dijaga. -->
+  <!-- encoding UTF-8 telah ditetapkan di meta charset -->
+</body>
+</html>

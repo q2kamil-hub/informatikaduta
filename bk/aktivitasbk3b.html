@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Mesin Komputasi · Bagian 2: Menjalankan Fungsi · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== MATERI RINGKAS ===== */
+    .materi-ringkas {
+      max-width: 820px; margin: 0 auto 1.5rem;
+      background: #f8f4ef; border-radius: 16px;
+      padding: 1.5rem 1.8rem; border-left: 6px solid var(--c-bk, #f26d8a);
+      border: 2px solid #e5dbd0;
+    }
+    .materi-ringkas h2 {
+      font-size: 1.3rem; font-weight: 700; color: #3b2b1e;
+      margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .materi-ringkas h2 .badge {
+      background: var(--c-bk, #f26d8a); color: #fff; font-size: 0.7rem;
+      padding: 0.15rem 0.6rem; border-radius: 20px; font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .materi-ringkas h3 {
+      font-size: 1.05rem; font-weight: 600; color: #4d3829; margin: 1rem 0 0.4rem;
+    }
+    .materi-ringkas p {
+      font-size: 0.92rem; line-height: 1.7; color: #2f2822; margin-bottom: 0.6rem;
+    }
+    .materi-ringkas ul, .materi-ringkas ol {
+      margin: 0.3rem 0 0.8rem 1.5rem; font-size: 0.9rem;
+    }
+    .materi-ringkas li { margin-bottom: 0.25rem; line-height: 1.6; }
+    .materi-ringkas .info-box {
+      background: #fff; border-radius: 12px; padding: 0.8rem 1.2rem;
+      border: 2px solid #e5dbd0; margin: 0.6rem 0;
+      font-size: 0.88rem; line-height: 1.6;
+    }
+    .materi-ringkas .info-box strong { color: #4d3829; }
+    .materi-ringkas .link-materi {
+      display: inline-block; margin-top: 0.5rem; color: #5c4638;
+      font-size: 0.85rem; text-decoration: none; font-weight: 600;
+      border-bottom: 2px dotted #bfaa9a; transition: all 0.2s ease;
+    }
+    .materi-ringkas .link-materi:hover { color: #4d3829; border-bottom-color: #7a5f4c; }
+
+    .aktivitas-wrapper { max-width: 1000px; margin: 0 auto; }
+
+    /* ===== STEP INDICATOR ===== */
+    .step-indicator {
+      display: flex; justify-content: space-between; align-items: center;
+      margin: 1.5rem 0 2rem 0; position: relative;
+      padding: 0 0.5rem; flex-wrap: wrap; gap: 0.3rem;
+    }
+    .step-indicator::before {
+      content: ''; position: absolute; top: 50%;
+      left: 30px; right: 30px; height: 3px;
+      background: #e5dbd0; transform: translateY(-50%); z-index: 0;
+    }
+    .step-dot {
+      display: flex; flex-direction: column; align-items: center;
+      z-index: 1; cursor: pointer; background: transparent;
+      border: none; padding: 0; font-family: inherit;
+      flex: 1; min-width: 50px;
+    }
+    .step-dot .circle {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: #f5ede6; border: 3px solid #d9cdbf;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.8rem; color: #7a6656;
+      transition: all 0.3s ease;
+    }
+    .step-dot.active .circle {
+      background: var(--c-bk, #f26d8a); border-color: var(--c-bk, #f26d8a);
+      color: #fff; transform: scale(1.1);
+      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.3);
+    }
+    .step-dot.completed .circle {
+      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
+    }
+    .step-dot .label {
+      font-size: 0.55rem; margin-top: 0.3rem; color: #7a6656;
+      text-align: center; max-width: 70px; font-weight: 500;
+    }
+    .step-dot.active .label { color: #3b2b1e; font-weight: 600; }
+    .step-dot.locked .circle { opacity: 0.4; cursor: not-allowed; }
+    .step-dot.locked .label { opacity: 0.4; }
+
+    /* ===== AREA SIMULASI ===== */
+    #area-simulasi { display: none; margin-top: 0.5rem; }
+    #area-simulasi.active { display: block; }
+
+    .scenario-panel {
+      background: #fffffffa; border-radius: 24px;
+      border: 2px solid #e5dbd0; padding: 2rem;
+      min-height: 400px; position: relative; transition: all 0.3s ease;
+    }
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.3rem;
+    }
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem; color: #5c4638; background: #fdf2f5;
+      padding: 0.8rem 1.2rem; border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid var(--c-bk, #f26d8a);
+    }
+
+    /* ===== MESIN FUNGSI (VISUAL) ===== */
+    .mesin-wrapper {
+      background: #fcfaf7; border-radius: 20px;
+      padding: 1.5rem; border: 3px solid #d9cdbf;
+      margin: 1rem 0;
+    }
+
+    .mesin-nama {
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 0.95rem;
+      margin-bottom: 0.8rem;
+      background: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #e5dbd0;
+      display: inline-block;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .mesin-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .mesin-box {
+      border-radius: 14px;
+      padding: 1rem 0.8rem;
+      text-align: center;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .mesin-box.input {
+      background: #f0f7fb;
+      border: 3px solid #8ab4d4;
+    }
+    .mesin-box.proses {
+      background: #f5f0fb;
+      border: 3px solid #b090d0;
+    }
+    .mesin-box.output {
+      background: #f0f8eb;
+      border: 3px solid #8aaa7a;
+    }
+
+    .mesin-box .box-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      margin-bottom: 0.3rem;
+    }
+    .mesin-box.input .box-label { background: #8ab4d4; color: #fff; }
+    .mesin-box.proses .box-label { background: #b090d0; color: #fff; }
+    .mesin-box.output .box-label { background: #8aaa7a; color: #fff; }
+
+    .mesin-box .box-value {
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .mesin-box .box-value.placeholder {
+      color: #b0a096;
+      font-style: italic;
+      font-size: 0.85rem;
+    }
+
+    .mesin-arrow {
+      font-size: 1.8rem;
+      color: #b09b88;
+      text-align: center;
+    }
+
+    .mesin-input-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 2px dashed #e5dbd0;
+    }
+
+    .mesin-input-area label {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 0.9rem;
+    }
+
+    .mesin-input-area input[type="number"],
+    .mesin-input-area input[type="text"],
+    .mesin-input-area select {
+      padding: 0.55rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #e5dbd0;
+      background: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #3d2c1f;
+      outline: none;
+      transition: all 0.15s;
+      font-family: inherit;
+      min-width: 120px;
+      max-width: 220px;
+    }
+    .mesin-input-area input:focus,
+    .mesin-input-area select:focus {
+      border-color: var(--c-bk, #f26d8a);
+      box-shadow: 0 0 0 3px rgba(242, 109, 138, 0.15);
+    }
+
+    .btn-jalankan {
+      padding: 0.7rem 2rem;
+      border-radius: 30px;
+      border: none;
+      background: linear-gradient(135deg, var(--c-bk, #f26d8a), var(--c-ad, #b07be0));
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.25);
+    }
+    .btn-jalankan:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(242, 109, 138, 0.35);
+    }
+    .btn-jalankan:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    }
+
+    /* Animasi mesin jalan */
+    .mesin-box.proses.berjalan {
+      animation: prosesPulse 1.2s ease-in-out;
+    }
+    @keyframes prosesPulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(176, 144, 208, 0.5); }
+      50% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(176, 144, 208, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(176, 144, 208, 0); }
+    }
+
+    .mesin-box.output.hasil {
+      animation: hasilMuncul 0.6s ease-out;
+    }
+    @keyframes hasilMuncul {
+      0% { transform: scale(0.8); opacity: 0; }
+      60% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Riwayat eksekusi */
+    .riwayat-box {
+      background: #fff;
+      border-radius: 14px;
+      padding: 0.8rem 1.2rem;
+      border: 2px solid #e5dbd0;
+      margin-top: 1rem;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .riwayat-box .riwayat-title {
+      font-weight: 700;
+      color: #4d3829;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .riwayat-box .riwayat-title .counter {
+      background: var(--c-bk, #f26d8a);
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+    .riwayat-item {
+      background: #fcfaf7;
+      border-left: 4px solid #d9cdbf;
+      border-radius: 6px;
+      padding: 0.5rem 0.8rem;
+      margin-bottom: 0.4rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: #3d2c1f;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .riwayat-item .riwayat-fungsi {
+      font-weight: 700;
+      color: #a01746;
+    }
+    .riwayat-item .riwayat-hasil {
+      color: #2d5a1e;
+      font-weight: 700;
+    }
+    .riwayat-empty {
+      color: #a0968c;
+      font-style: italic;
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 0.5rem;
+    }
+
+    /* Info box instruksi */
+    .info-eksekusi {
+      background: #fdf2f5;
+      border: 2px solid var(--c-bk, #f26d8a);
+      border-radius: 12px;
+      padding: 0.8rem 1.2rem;
+      margin: 0.8rem 0;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #a01746;
+    }
+    .info-eksekusi strong { color: #6b0f30; }
+
+    .target-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      background: #fff;
+      border-radius: 12px;
+      padding: 0.7rem 1.2rem;
+      border: 2px solid #e5dbd0;
+      margin: 0.8rem 0;
+    }
+    .target-box .target-label {
+      font-size: 0.85rem;
+      color: #4d3829;
+      font-weight: 600;
+    }
+    .target-box .target-nilai {
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #4d7a3b;
+    }
+
+    /* Progress misi */
+    .misi-progress {
+      display: flex;
+      gap: 0.4rem;
+      margin: 0.8rem 0;
+      flex-wrap: wrap;
+    }
+    .misi-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: #f5ede6;
+      border: 2px solid #e5dbd0;
+      border-radius: 30px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #7a6656;
+      transition: all 0.3s ease;
+    }
+    .misi-badge.selesai {
+      background: #8aaa7a;
+      border-color: #8aaa7a;
+      color: #fff;
+    }
+    .misi-badge.aktif {
+      background: var(--c-bk, #f26d8a);
+      border-color: var(--c-bk, #f26d8a);
+      color: #fff;
+    }
+
+    .game-feedback {
+      margin-top: 1rem; padding: 0.9rem 1.3rem;
+      border-radius: 12px; font-weight: 600;
+      display: none; font-size: 0.9rem; line-height: 1.6;
+    }
+    .game-feedback.show { display: block; animation: fadeIn 0.4s ease; }
+    .game-feedback.success {
+      background: #d4e8cb; border: 2px solid #8aaa7a; color: #3d6b2c;
+    }
+    .game-feedback.error {
+      background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a;
+    }
+    .game-feedback.info {
+      background: #fdf2f5; border: 2px solid var(--c-bk, #f26d8a); color: #a01746;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .game-actions {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      justify-content: center; margin-top: 1rem;
+    }
+    .btn-game {
+      padding: 0.6rem 1.8rem; border-radius: 30px; border: none;
+      font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; display: inline-flex;
+      align-items: center; gap: 0.4rem;
+    }
+    .btn-game.primary {
+      background: linear-gradient(135deg, var(--c-bk, #f26d8a), var(--c-ad, #b07be0));
+      color: #fff; box-shadow: 0 4px 14px rgba(242, 109, 138, 0.25);
+    }
+    .btn-game.primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(242, 109, 138, 0.35);
+    }
+    .btn-game.secondary {
+      background: #f5ede6; color: #4d3829; border: 2px solid #d9cdbf;
+    }
+    .btn-game.secondary:hover { background: #e8dcd0; transform: translateY(-2px); }
+    .btn-game:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    }
+
+    /* ===== TES PEMAHAMAN ===== */
+    .tes-section {
+      margin-top: 1.8rem; padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0; display: none;
+    }
+    .tes-section.active { display: block; animation: fadeIn 0.4s ease; }
+    .tes-header {
+      background: #fdf2f5; border-radius: 12px;
+      padding: 0.9rem 1.2rem; margin-bottom: 1rem;
+      border-left: 5px solid var(--c-bk, #f26d8a);
+      display: flex; flex-wrap: wrap; justify-content: space-between;
+      align-items: center; gap: 0.5rem;
+    }
+    .tes-header .tes-info {
+      font-size: 0.95rem; color: #3b2b1e; font-weight: 600;
+    }
+    .tes-header .tes-progress {
+      font-size: 0.82rem; color: #4d7a3b; font-weight: 700;
+      background: #fff; padding: 0.25rem 0.9rem;
+      border-radius: 30px; border: 2px solid #e5dbd0;
+    }
+
+    .soal-kuis {
+      background: #fff; padding: 1.1rem 1.3rem;
+      border-radius: 14px; border: 2px solid #e5dbd0;
+      margin-bottom: 0.9rem; transition: all 0.3s ease;
+    }
+    .soal-kuis.correct { border-color: #8aaa7a; background: #f0f8eb; }
+    .soal-kuis.wrong { border-color: #d4a0a0; background: #fdf0f0; }
+    .soal-kuis .pertanyaan {
+      font-weight: 600; font-size: 0.95rem; color: #3b2b1e;
+      margin-bottom: 0.5rem; display: flex; gap: 0.5rem;
+      align-items: flex-start; line-height: 1.6;
+    }
+    .soal-kuis .pertanyaan .soal-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--c-bk, #f26d8a); color: #fff;
+      width: 24px; height: 24px; border-radius: 50%;
+      font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis {
+      display: flex; flex-direction: column; gap: 0.35rem; padding-left: 0.2rem;
+    }
+    .soal-kuis .opsi-kuis label {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+      padding: 0.45rem 0.8rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; transition: all 0.15s; line-height: 1.5;
+    }
+    .soal-kuis .opsi-kuis label:hover:not(.disabled) {
+      background: #fdf2f5; border-color: var(--c-bk, #f26d8a);
+    }
+    .soal-kuis .opsi-kuis label.disabled { cursor: default; }
+    .soal-kuis .opsi-kuis label.selected {
+      border-color: var(--c-bk, #f26d8a); background: #fdf2f5;
+    }
+    .soal-kuis .opsi-kuis label.correct-answer {
+      border-color: #8aaa7a; background: #e8f5e0;
+    }
+    .soal-kuis .opsi-kuis label.wrong-answer {
+      border-color: #d4a0a0; background: #f5e0e0;
+    }
+    .soal-kuis .opsi-kuis input[type="radio"] {
+      accent-color: var(--c-bk, #f26d8a);
+      width: 16px; height: 16px;
+      margin-top: 0.15rem; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis .check-icon {
+      margin-left: auto; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .soal-kuis .jawaban-feedback {
+      margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+      border-radius: 8px; display: none;
+      font-size: 0.85rem; line-height: 1.5;
+    }
+    .soal-kuis .jawaban-feedback.benar {
+      display: block; background: #d4e8cb; color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+    .soal-kuis .jawaban-feedback.salah {
+      display: block; background: #f5d6d0; color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+    .soal-kuis .jawaban-feedback .kunci { font-weight: 700; color: #4d7a3b; }
+
+    .btn-submit-tes {
+      display: block; margin: 1.2rem auto 0;
+      padding: 0.7rem 2.5rem; border-radius: 30px; border: none;
+      background: linear-gradient(135deg, var(--c-bk, #f26d8a), var(--c-ad, #b07be0));
+      color: #fff; font-weight: 700;
+      font-size: 0.95rem; cursor: pointer;
+      transition: all 0.2s ease; font-family: inherit;
+    }
+    .btn-submit-tes:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(242, 109, 138, 0.35);
+    }
+    .btn-submit-tes:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    }
+
+    .hasil-tes {
+      display: none; margin-top: 1.2rem; padding: 1.2rem;
+      background: #fdf2f5; border-radius: 14px;
+      border: 3px double var(--c-bk, #f26d8a);
+      text-align: center;
+    }
+    .hasil-tes.show { display: block; animation: fadeIn 0.4s ease; }
+    .hasil-tes .hasil-icon { font-size: 2.8rem; margin-bottom: 0.3rem; }
+    .hasil-tes .hasil-title {
+      font-size: 1.15rem; font-weight: 700;
+      color: #3b2b1e; margin-bottom: 0.2rem;
+    }
+    .hasil-tes .hasil-skor {
+      font-size: 2rem; font-weight: 800; color: #4d7a3b; margin: 0.3rem 0;
+    }
+    .hasil-tes .hasil-desc {
+      font-size: 0.9rem; color: #5c4638;
+      margin-bottom: 0.8rem; line-height: 1.5;
+    }
+
+    /* ===== STATUS KIRIM ===== */
+    .status-kirim {
+      max-width: 480px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+      border-radius: 12px; font-size: 0.88rem; font-weight: 600;
+      line-height: 1.5; display: none; align-items: center;
+      gap: 0.6rem; text-align: left;
+    }
+    .status-kirim.show { display: flex; }
+    .status-kirim.info {
+      background: #fdf2f5; border: 2px solid var(--c-bk, #f26d8a); color: #a01746;
+    }
+    .status-kirim.success { background: #d4e8cb; border: 2px solid #8aaa7a; color: #2d5a1e; }
+    .status-kirim.error { background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a; }
+    .status-kirim .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem; margin-top: 2rem;
+      padding-top: 1.5rem; border-top: 2px solid #e5dbd0;
+    }
+    .btn-nav-bawah {
+      padding: 0.6rem 1.8rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 600; font-size: 0.9rem; color: #3b2b1e;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-nav-bawah:hover {
+      background: #fdf2f5; border-color: var(--c-bk, #f26d8a);
+      transform: translateY(-2px);
+    }
+    .btn-nav-bawah.primary {
+      background: #4d3829; border-color: #4d3829; color: #fff;
+    }
+    .btn-nav-bawah.primary:hover {
+      background: #6b4f3a; border-color: #6b4f3a;
+    }
+    .btn-nav-bawah:disabled,
+    .btn-nav-bawah.locked {
+      opacity: 0.4; cursor: not-allowed;
+      transform: none !important; pointer-events: none;
+    }
+    .btn-nav-bawah .back-arrow { font-size: 1.2rem; }
+    .nav-hint {
+      font-size: 0.8rem; color: #7a6656; text-align: center;
+      width: 100%; margin-top: 0.3rem;
+    }
+    .nav-hint.locked { color: #d4a0a0; }
+    .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 820px) {
+      .step-dot .circle { width: 30px; height: 30px; font-size: 0.7rem; }
+      .step-dot .label { font-size: 0.45rem; max-width: 50px; }
+      .step-indicator::before { left: 15px; right: 15px; }
+      .scenario-panel { padding: 1.2rem; }
+      .mesin-flow {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+      }
+      .mesin-arrow {
+        transform: rotate(90deg);
+        font-size: 1.4rem;
+      }
+      .mesin-box { min-height: 80px; }
+    }
+    @media (max-width: 480px) {
+      .step-indicator { flex-wrap: wrap; justify-content: center; gap: 0.2rem; }
+      .step-indicator::before { display: none; }
+      .step-dot { min-width: 35px; flex: unset; }
+      .step-dot .circle { width: 26px; height: 26px; font-size: 0.6rem; }
+      .step-dot .label { display: none; }
+      .scenario-panel { padding: 0.8rem; }
+      .scenario-panel .scenario-title { font-size: 1.1rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav-bawah { justify-content: center; }
+      .materi-ringkas { padding: 1rem 1.2rem; }
+      .materi-ringkas h2 { font-size: 1.1rem; }
+      .soal-kuis { padding: 1rem; }
+      .soal-kuis .pertanyaan { font-size: 0.92rem; }
+      .soal-kuis .opsi-kuis label { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
+      .tes-header { flex-direction: column; align-items: flex-start; }
+      .mesin-input-area { flex-direction: column; align-items: stretch; }
+      .mesin-input-area input,
+      .mesin-input-area select { max-width: unset; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materibk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk3.html">Mesin Komputasi</a></li>
+      <li>Bagian 2: Menjalankan Fungsi</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <div class="bagian-progress">
+          <span class="step completed"><span class="num">✓</span> I-P-O</span>
+          <span class="step active"><span class="num">2</span> Eksekusi Fungsi</span>
+          <span class="step"><span class="num">3</span> Black Box</span>
+          <span class="step"><span class="num">4</span> Analogi</span>
+          <span class="step"><span class="num">5</span> Kuis Akhir</span>
+        </div>
+
+        <div class="materi-ringkas">
+          <h2>📖 Materi Singkat <span class="badge">Bagian 2</span></h2>
+
+          <h3>1. Apa Itu Mengeksekusi Fungsi?</h3>
+          <p>
+            <strong>Mengeksekusi fungsi</strong> berarti <strong>menjalankan</strong> sebuah mesin komputasi dengan memberikan input tertentu, sehingga proses berjalan dan menghasilkan output. Dalam pemrograman, ini disebut <em>memanggil fungsi</em> (<em>calling a function</em>).
+          </p>
+
+          <h3>2. Tiga Langkah Eksekusi</h3>
+          <ol>
+            <li><strong>Berikan Input:</strong> tentukan nilai yang akan diproses.</li>
+            <li><strong>Jalankan Proses:</strong> mesin mengolah sesuai aturan.</li>
+            <li><strong>Ambil Output:</strong> hasil akhir muncul dan bisa digunakan.</li>
+          </ol>
+
+          <h3>3. Contoh dalam Kehidupan Sehari-hari</h3>
+          <div class="info-box">
+            <strong>🧮 Fungsi "Tambah 10":</strong>
+            <ul style="margin:0.3rem 0 0 1.2rem;">
+              <li><strong>Input:</strong> 5</li>
+              <li><strong>Proses:</strong> 5 + 10</li>
+              <li><strong>Output:</strong> 15</li>
+            </ul>
+            <em>Setiap kali dipanggil dengan input berbeda, output-nya berubah:</em>
+            <ul style="margin:0.3rem 0 0 1.2rem;">
+              <li>Input 20 → Output 30</li>
+              <li>Input 100 → Output 110</li>
+            </ul>
+          </div>
+
+          <div class="info-box">
+            <strong>💧 Fungsi "Konversi Suhu":</strong>
+            <ul style="margin:0.3rem 0 0 1.2rem;">
+              <li><strong>Input:</strong> suhu dalam Celsius (mis. 25°C)</li>
+              <li><strong>Proses:</strong> rumus konversi (C × 9/5) + 32</li>
+              <li><strong>Output:</strong> suhu dalam Fahrenheit (77°F)</li>
+            </ul>
+          </div>
+
+          <h3>4. Manfaat Eksekusi Fungsi</h3>
+          <ul>
+            <li><strong>Konsisten:</strong> hasil selalu sama jika input sama.</li>
+            <li><strong>Dapat digunakan ulang:</strong> fungsi yang sama bisa dipanggil berkali-kali dengan input berbeda.</li>
+            <li><strong>Efisien:</strong> tidak perlu menulis ulang aturan proses setiap kali.</li>
+          </ul>
+
+          <a href="materibk3.html" class="link-materi">📚 Baca materi lengkap di sini →</a>
+        </div>
+
+        <!-- ===== AREA SIMULASI ===== -->
+        <div id="area-simulasi">
+
+          <div class="step-indicator" id="stepIndicator">
+            <button class="step-dot completed" data-step="0">
+              <span class="circle">✓</span>
+              <span class="label">I-P-O</span>
+            </button>
+            <button class="step-dot active" data-step="1">
+              <span class="circle">2</span>
+              <span class="label">Eksekusi Fungsi</span>
+            </button>
+            <button class="step-dot locked" data-step="2">
+              <span class="circle">3</span>
+              <span class="label">Black Box</span>
+            </button>
+            <button class="step-dot locked" data-step="3">
+              <span class="circle">4</span>
+              <span class="label">Analogi</span>
+            </button>
+            <button class="step-dot locked" data-step="4">
+              <span class="circle">🏆</span>
+              <span class="label">Kuis Akhir</span>
+            </button>
+          </div>
+
+          <div class="scenario-panel">
+            <div class="scenario-title">⚙️ Aktivitas 2: Jalankan Mesin Fungsi!</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Agen CT! Kamu sekarang menjadi <strong>operator mesin fungsi</strong>. Tugasmu adalah <strong>menjalankan fungsi</strong> dengan memberikan input yang tepat, mengamati proses, dan mendapatkan output yang sesuai dengan misi. Ada 3 misi yang harus diselesaikan!
+            </div>
+
+            <div class="misi-progress" id="misiProgress">
+              <span class="misi-badge aktif" data-misi="0">🎯 Misi 1: Tambah 10</span>
+              <span class="misi-badge" data-misi="1">🌡️ Misi 2: Konversi Suhu</span>
+              <span class="misi-badge" data-misi="2">📏 Misi 3: Luas Persegi</span>
+            </div>
+
+            <div class="mesin-wrapper">
+              <div class="mesin-nama" id="mesinNama">⚙️ MESIN: f(x) = x + 10</div>
+
+              <div class="mesin-flow">
+                <div class="mesin-box input" id="mesinInput">
+                  <span class="box-label">📥 INPUT</span>
+                  <span class="box-value placeholder" id="nilaiInput">— belum diisi —</span>
+                </div>
+                <div class="mesin-arrow">➜</div>
+                <div class="mesin-box proses" id="mesinProses">
+                  <span class="box-label">⚙️ PROSES</span>
+                  <span class="box-value" id="nilaiProses">x + 10</span>
+                </div>
+                <div class="mesin-arrow">➜</div>
+                <div class="mesin-box output" id="mesinOutput">
+                  <span class="box-label">📤 OUTPUT</span>
+                  <span class="box-value placeholder" id="nilaiOutput">— belum dijalankan —</span>
+                </div>
+              </div>
+
+              <div class="mesin-input-area" id="mesinInputArea">
+                <!-- Diisi dinamis -->
+              </div>
+
+              <div class="game-actions">
+                <button class="btn-jalankan" id="btnJalankan" onclick="jalankanMesin()" disabled>
+                  ▶️ Jalankan Fungsi
+                </button>
+                <button class="btn-game secondary" onclick="resetMisi()">
+                  🔄 Reset Misi
+                </button>
+              </div>
+
+              <div class="target-box">
+                <span class="target-label">🎯 Target Output Misi:</span>
+                <span class="target-nilai" id="targetNilai">—</span>
+              </div>
+
+              <div class="game-feedback" id="gameFeedback"></div>
+
+              <div class="riwayat-box">
+                <div class="riwayat-title">
+                  <span>📜 Riwayat Eksekusi</span>
+                  <span class="counter" id="riwayatCounter">0</span>
+                </div>
+                <div id="riwayatList">
+                  <div class="riwayat-empty">Belum ada eksekusi. Coba jalankan fungsinya!</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== TES PEMAHAMAN ===== -->
+          <div class="tes-section" id="tesSection">
+            <div class="tes-header">
+              <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 4 soal pilihan ganda</div>
+              <div class="tes-progress" id="tesProgress">Terjawab: 0 / 4</div>
+            </div>
+
+            <div id="soalContainer"></div>
+
+            <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+          </div>
+
+          <!-- ===== HASIL TES ===== -->
+          <div class="hasil-tes" id="hasilTes">
+            <div class="hasil-icon" id="hasilIcon">🏆</div>
+            <div class="hasil-title" id="hasilTitle">Selamat!</div>
+            <div class="hasil-skor" id="hasilSkor">0 / 4</div>
+            <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 2.</div>
+          </div>
+
+          <!-- Status kirim -->
+          <div class="status-kirim info" id="statusKirim">
+            <span class="spinner"></span>
+            <span id="statusKirimText">Mengirim nilai...</span>
+          </div>
+
+        </div><!-- end area-simulasi -->
+
+        <div class="nav-bottom">
+          <a href="aktivitasbk3a.html" class="btn-nav-bawah">
+            <span class="back-arrow">←</span> Bagian Sebelumnya
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <a href="bk3.html" class="btn-nav-bawah">🏠 Portal</a>
+            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian3" onclick="lanjutKeBagian3()">
+              Lanjut ke Bagian 3: Black Box →
+            </button>
+          </div>
+          <div class="nav-hint locked" id="hintLanjut">
+            🔒 Selesaikan aktivitas dan tes pemahaman untuk membuka Bagian 3
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI MODUL
+      // ============================================
+      const NAMA_SHEET = 'bk3';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
+
+      // ============================================
+      // DATA MISI (3 MISI)
+      // ============================================
+      const misiData = [
+        {
+          nama: 'f(x) = x + 10',
+          deskripsi: 'Menambahkan 10 ke input',
+          prosesLabel: 'x + 10',
+          inputLabel: 'Nilai x:',
+          inputType: 'number',
+          inputPlaceholder: 'Contoh: 5',
+          hitung: (x) => x + 10,
+          target: 25,
+          targetDeskripsi: 'Hasil output harus 25 (artinya input = 15)'
+        },
+        {
+          nama: 'f(c) = (c × 9/5) + 32',
+          deskripsi: 'Mengubah Celsius ke Fahrenheit',
+          prosesLabel: '(c × 9/5) + 32',
+          inputLabel: 'Suhu Celsius:',
+          inputType: 'number',
+          inputPlaceholder: 'Contoh: 25',
+          hitung: (c) => Math.round((c * 9/5) + 32),
+          target: 77,
+          targetDeskripsi: 'Hasil output harus 77°F (artinya input = 25°C)'
+        },
+        {
+          nama: 'f(s) = s × s',
+          deskripsi: 'Menghitung luas persegi dari panjang sisi',
+          prosesLabel: 's × s',
+          inputLabel: 'Panjang sisi:',
+          inputType: 'number',
+          inputPlaceholder: 'Contoh: 6',
+          hitung: (s) => s * s,
+          target: 64,
+          targetDeskripsi: 'Hasil output harus 64 (artinya input = 8)'
+        }
+      ];
+
+      // ============================================
+      // DATA SOAL TES (4 SOAL)
+      // ============================================
+      const soalData = [
+        {
+          pertanyaan: 'Apa arti "mengeksekusi fungsi" dalam berpikir komputasional?',
+          opsi: [
+            'Menghapus fungsi dari memori',
+            'Menjalankan fungsi dengan memberikan input untuk mendapatkan output',
+            'Menulis fungsi baru',
+            'Menggandakan fungsi menjadi dua'
+          ],
+          kunci: 1,
+          penjelasan: 'Mengeksekusi fungsi berarti menjalankan fungsi dengan memberikan input tertentu sehingga menghasilkan output.'
+        },
+        {
+          pertanyaan: 'Jika fungsi f(x) = x + 10 dipanggil dengan input 7, maka output-nya adalah...',
+          opsi: ['7', '10', '17', '70'],
+          kunci: 2,
+          penjelasan: 'f(7) = 7 + 10 = 17. Input 7 diproses dengan menambahkan 10, menghasilkan output 17.'
+        },
+        {
+          pertanyaan: 'Mengapa fungsi yang sama bisa menghasilkan output berbeda?',
+          opsi: [
+            'Karena fungsinya rusak',
+            'Karena input yang diberikan berbeda',
+            'Karena komputer berubah pikiran',
+            'Karena output tidak ditentukan'
+          ],
+          kunci: 1,
+          penjelasan: 'Fungsi yang sama menghasilkan output berbeda karena input yang diberikan berbeda. Contoh: f(5)=15, f(20)=30.'
+        },
+        {
+          pertanyaan: 'Langkah pertama dalam mengeksekusi fungsi adalah...',
+          opsi: [
+            'Mengambil output',
+            'Memberikan input',
+            'Menghentikan program',
+            'Mengubah fungsi'
+          ],
+          kunci: 1,
+          penjelasan: 'Urutan eksekusi fungsi: (1) berikan input, (2) jalankan proses, (3) ambil output. Jadi langkah pertama adalah memberikan input.'
+        }
+      ];
+
+      // ============================================
+      // STATE
+      // ============================================
+      let misiIndex = 0;
+      let misiSelesai = [false, false, false];
+      let totalEksekusi = 0;
+      let eksekusiSukses = 0;
+      let aktivitasSelesai = false;
+
+      let soalJawaban = {};
+      let soalSubmitted = false;
+      let soalBenar = 0;
+      let soalSelesai = false;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const elAreaSimulasi = document.getElementById('area-simulasi');
+      const elMesinNama = document.getElementById('mesinNama');
+      const elNilaiInput = document.getElementById('nilaiInput');
+      const elNilaiProses = document.getElementById('nilaiProses');
+      const elNilaiOutput = document.getElementById('nilaiOutput');
+      const elMesinInputArea = document.getElementById('mesinInputArea');
+      const elBtnJalankan = document.getElementById('btnJalankan');
+      const elTargetNilai = document.getElementById('targetNilai');
+      const elGameFeedback = document.getElementById('gameFeedback');
+      const elRiwayatList = document.getElementById('riwayatList');
+      const elRiwayatCounter = document.getElementById('riwayatCounter');
+      const elMisiProgress = document.getElementById('misiProgress');
+
+      const elTesSection = document.getElementById('tesSection');
+      const elSoalContainer = document.getElementById('soalContainer');
+      const elTesProgress = document.getElementById('tesProgress');
+      const elBtnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const elHasilTes = document.getElementById('hasilTes');
+      const elBtnLanjutBagian3 = document.getElementById('btnLanjutBagian3');
+      const elHintLanjut = document.getElementById('hintLanjut');
+      const elStatusKirim = document.getElementById('statusKirim');
+      const elStatusKirimText = document.getElementById('statusKirimText');
+
+      // ============================================
+      // MULAI (langsung tampil, identitas sudah di Bagian 1)
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        elAreaSimulasi.classList.add('active');
+        muatMisi(0);
+      });
+
+      // ============================================
+      // MUAT MISI
+      // ============================================
+      function muatMisi(idx) {
+        misiIndex = idx;
+        const misi = misiData[idx];
+
+        elMesinNama.textContent = '⚙️ MESIN: ' + misi.nama;
+        elNilaiProses.textContent = misi.prosesLabel;
+        elNilaiInput.textContent = '— belum diisi —';
+        elNilaiInput.classList.add('placeholder');
+        elNilaiOutput.textContent = '— belum dijalankan —';
+        elNilaiOutput.classList.add('placeholder');
+        elNilaiOutput.classList.remove('hasil');
+        elTargetNilai.textContent = misi.target + ' (' + misi.targetDeskripsi + ')';
+
+        // Render input area
+        elMesinInputArea.innerHTML = `
+          <label for="inputNilai">${misi.inputLabel}</label>
+          <input type="${misi.inputType}" id="inputNilai" placeholder="${misi.inputPlaceholder}" step="any">
+          <button class="btn-jalankan" onclick="jalankanMesin()" id="btnJalankanInline">
+            ▶️ Jalankan
+          </button>
+        `;
+
+        // Reset input area event
+        const inputNilai = document.getElementById('inputNilai');
+        if (inputNilai) {
+          inputNilai.addEventListener('input', cekInput);
+          inputNilai.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') jalankanMesin();
+          });
+        }
+
+        // Update misi badge
+        updateMisiBadge();
+
+        // Reset feedback
+        elGameFeedback.classList.remove('show');
+        elBtnJalankan.disabled = true;
+
+        // Fokus ke input
+        setTimeout(() => {
+          const inp = document.getElementById('inputNilai');
+          if (inp) inp.focus();
+        }, 300);
+      }
+
+      function updateMisiBadge() {
+        const badges = elMisiProgress.querySelectorAll('.misi-badge');
+        badges.forEach((badge, i) => {
+          badge.classList.remove('aktif', 'selesai');
+          if (misiSelesai[i]) badge.classList.add('selesai');
+          else if (i === misiIndex) badge.classList.add('aktif');
+        });
+      }
+
+      // ============================================
+      // CEK INPUT
+      // ============================================
+      function cekInput() {
+        const inp = document.getElementById('inputNilai');
+        if (!inp) return;
+        const val = inp.value.trim();
+        const adaIsi = val !== '' && !isNaN(Number(val));
+        elBtnJalankan.disabled = !adaIsi;
+      }
+
+      // ============================================
+      // JALANKAN MESIN
+      // ============================================
+      window.jalankanMesin = function() {
+        if (aktivitasSelesai) return;
+
+        const inp = document.getElementById('inputNilai');
+        if (!inp) return;
+        const valStr = inp.value.trim();
+        if (valStr === '' || isNaN(Number(valStr))) {
+          elGameFeedback.className = 'game-feedback show error';
+          elGameFeedback.innerHTML = '⚠️ Masukkan angka yang valid terlebih dahulu!';
+          return;
+        }
+
+        const input = Number(valStr);
+        const misi = misiData[misiIndex];
+        const output = misi.hitung(input);
+
+        // Update tampilan input
+        elNilaiInput.textContent = String(input);
+        elNilaiInput.classList.remove('placeholder');
+
+        // Animasi proses
+        const mesinProses = document.getElementById('mesinProses');
+        mesinProses.classList.add('berjalan');
+        setTimeout(() => mesinProses.classList.remove('berjalan'), 1200);
+
+        // Tampilkan output setelah animasi
+        setTimeout(() => {
+          elNilaiOutput.textContent = String(output);
+          elNilaiOutput.classList.remove('placeholder');
+          elNilaiOutput.classList.add('hasil');
+
+          // Cek target
+          const benar = (output === misi.target);
+
+          if (benar) {
+            eksekusiSukses++;
+            if (!misiSelesai[misiIndex]) {
+              misiSelesai[misiIndex] = true;
+            }
+            updateMisiBadge();
+
+            elGameFeedback.className = 'game-feedback show success';
+            elGameFeedback.innerHTML = `🎉 <strong>Berhasil!</strong> f(${input}) = ${output}. Target ${misi.target} tercapai!`;
+
+            // Cek semua misi selesai
+            if (misiSelesai.every(v => v === true)) {
+              selesaiSemuaMisi();
+            } else if (misiIndex < misiData.length - 1) {
+              // Arahkan ke misi berikutnya yang belum selesai
+              const nextIdx = misiSelesai.findIndex((v, i) => !v && i > misiIndex);
+              const targetIdx = nextIdx >= 0 ? nextIdx : misiSelesai.findIndex(v => !v);
+              if (targetIdx >= 0) {
+                setTimeout(() => {
+                  elGameFeedback.innerHTML += '<br>➡️ Lanjut ke misi berikutnya...';
+                  setTimeout(() => muatMisi(targetIdx), 1200);
+                }, 1500);
+              }
+            }
+          } else {
+            elGameFeedback.className = 'game-feedback show info';
+            elGameFeedback.innerHTML = `📊 f(${input}) = ${output}. Belum mencapai target <strong>${misi.target}</strong>. Coba input lain!`;
+          }
+        }, 900);
+
+        // Simpan riwayat
+        totalEksekusi++;
+        tambahRiwayat(misi.nama, input, output);
+        elRiwayatCounter.textContent = totalEksekusi;
+      };
+
+      // ============================================
+      // TAMBAH RIWAYAT
+      // ============================================
+      function tambahRiwayat(namaFungsi, input, output) {
+        // Hapus empty state
+        const emptyEl = elRiwayatList.querySelector('.riwayat-empty');
+        if (emptyEl) emptyEl.remove();
+
+        const div = document.createElement('div');
+        div.className = 'riwayat-item';
+        div.innerHTML = `<span class="riwayat-fungsi">${namaFungsi}</span> · f(${input}) = <span class="riwayat-hasil">${output}</span>`;
+        elRiwayatList.insertBefore(div, elRiwayatList.firstChild);
+
+        // Batasi 20 riwayat
+        const semua = elRiwayatList.querySelectorAll('.riwayat-item');
+        if (semua.length > 20) {
+          semua[semua.length - 1].remove();
+        }
+      }
+
+      // ============================================
+      // RESET MISI
+      // ============================================
+      window.resetMisi = function() {
+        if (aktivitasSelesai) return;
+        muatMisi(misiIndex);
+      };
+
+      // ============================================
+      // SELESAI SEMUA MISI
+      // ============================================
+      function selesaiSemuaMisi() {
+        aktivitasSelesai = true;
+        elBtnJalankan.disabled = true;
+
+        // Sembunyikan input area
+        const inp = document.getElementById('inputNilai');
+        if (inp) inp.disabled = true;
+
+        elGameFeedback.className = 'game-feedback show success';
+        elGameFeedback.innerHTML = `🏆 <strong>Luar biasa!</strong> Kamu telah menyelesaikan <strong>3 misi</strong> eksekusi fungsi!<br>Total eksekusi: <strong>${totalEksekusi}</strong> · Sukses: <strong>${eksekusiSukses}</strong>`;
+
+        setTimeout(() => {
+          elTesSection.classList.add('active');
+          renderSoal();
+          updateTesProgress();
+          elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 1800);
+      }
+
+      // ============================================
+      // RENDER SOAL TES
+      // ============================================
+      function renderSoal() {
+        elSoalContainer.innerHTML = '';
+        soalData.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'soal-kuis';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            const id = `soal${idx}_opt${oi}`;
+            opsiHtml += `
+              <label for="${id}" onclick="pilihJawaban(${idx}, ${oi})" id="label_${idx}_${oi}">
+                <input type="radio" name="soal${idx}" id="${id}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          div.innerHTML = `
+            <div class="pertanyaan">
+              <span class="soal-num">${idx + 1}</span>
+              <span>${soal.pertanyaan}</span>
+            </div>
+            <div class="opsi-kuis">${opsiHtml}</div>
+            <div class="jawaban-feedback" id="feedback_soal_${idx}"></div>
+          `;
+
+          elSoalContainer.appendChild(div);
+        });
+      }
+
+      window.pilihJawaban = function(soalIndex, optIndex) {
+        if (soalSubmitted) return;
+        const soalDiv = document.querySelector(`.soal-kuis[data-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+
+        soalJawaban[soalIndex] = optIndex;
+        updateTesProgress();
+      };
+
+      function updateTesProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+        elTesProgress.textContent = `Terjawab: ${answered} / ${total}`;
+      }
+
+      // ============================================
+      // PERIKSA TES
+      // ============================================
+      elBtnPeriksaTes.addEventListener('click', function() {
+        if (soalSubmitted) return;
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
+          return;
+        }
+
+        let correct = 0;
+        soalData.forEach((soal, idx) => {
+          const selected = soalJawaban[idx];
+          const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
+          const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+          const feedback = document.getElementById(`feedback_soal_${idx}`);
+
+          labels.forEach((label, oi) => {
+            label.classList.add('disabled');
+            if (oi === soal.kunci) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+            if (oi === selected && selected !== soal.kunci) {
+              label.classList.add('wrong-answer');
+              label.querySelector('.check-icon').textContent = '❌';
+            }
+          });
+
+          if (selected === soal.kunci) {
+            soalDiv.classList.add('correct');
+            correct++;
+            feedback.className = 'jawaban-feedback benar';
+            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.penjelasan}`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.className = 'jawaban-feedback salah';
+            feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+          }
+        });
+
+        soalBenar = correct;
+        soalSubmitted = true;
+        elBtnPeriksaTes.disabled = true;
+        elBtnPeriksaTes.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+
+        tampilkanHasilTes(correct, total);
+      });
+
+      // ============================================
+      // TAMPILKAN HASIL TES
+      // ============================================
+      function tampilkanHasilTes(correct, total) {
+        setTimeout(() => {
+          elHasilTes.classList.add('show');
+
+          const skorBagian2 = Math.round(40 + (correct / total) * 60);
+
+          if (correct >= 3) {
+            soalSelesai = true;
+            elHasilTes.querySelector('#hasilIcon').textContent = '🏆';
+            elHasilTes.querySelector('#hasilTitle').textContent = 'Selamat!';
+            elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilTes.querySelector('#hasilDesc').innerHTML =
+              `Kamu berhasil menyelesaikan Bagian 2!<br><br>Bagian 3 sekarang terbuka!`;
+
+            elBtnLanjutBagian3.classList.remove('locked');
+            elBtnLanjutBagian3.classList.add('primary');
+            elHintLanjut.classList.remove('locked');
+            elHintLanjut.classList.add('ready');
+            elHintLanjut.textContent = '✅ Bagian 3 sudah terbuka! Klik untuk melanjutkan.';
+
+            document.querySelectorAll('.step-dot').forEach((step, idx) => {
+              if (idx === 1) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+              }
+            });
+
+            try {
+              const prev = JSON.parse(localStorage.getItem('labbk3_progress') || '{}');
+              prev.bagian = 2;
+              prev.skorBagian2 = skorBagian2;
+              localStorage.setItem('labbk3_progress', JSON.stringify(prev));
+            } catch (e) {}
+          } else {
+            elHasilTes.querySelector('#hasilIcon').textContent = '📖';
+            elHasilTes.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
+            elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilTes.querySelector('#hasilDesc').innerHTML =
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal 3 soal benar untuk membuka Bagian 3.<br><br>Coba pelajari kembali materinya!`;
+          }
+
+          setTimeout(() => {
+            elHasilTes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 200);
+        }, 700);
+      }
+
+      // ============================================
+      // KIRIM NILAI BAGIAN 2
+      // ============================================
+      async function kirimNilaiBagian2() {
+        const skorBagian2 = Math.round(40 + (soalBenar / soalData.length) * 60);
+
+        elStatusKirim.className = 'status-kirim info show';
+        elStatusKirimText.textContent = 'Mengirim nilai Bagian 2...';
+
+        const hasil = await window.kirimNilaiBagian(
+          NAMA_SHEET,
+          'b',
+          skorBagian2,
+          TOTAL_BAGIAN
+        );
+
+        if (hasil && hasil.ok) {
+          elStatusKirim.className = 'status-kirim success show';
+          elStatusKirimText.innerHTML = `✅ Nilai Bagian 2 (<strong>${skorBagian2}</strong>) berhasil dikirim.`;
+        } else {
+          elStatusKirim.className = 'status-kirim error show';
+          elStatusKirimText.innerHTML = `⚠️ Gagal mengirim nilai. Tetap lanjut ke Bagian 3.`;
+        }
+      }
+
+      // ============================================
+      // LANJUT KE BAGIAN 3
+      // ============================================
+      window.lanjutKeBagian3 = async function() {
+        if (!soalSelesai) {
+          alert('🔒 Selesaikan tes pemahaman dengan benar terlebih dahulu!');
+          return;
+        }
+
+        elBtnLanjutBagian3.disabled = true;
+        await kirimNilaiBagian2();
+
+        setTimeout(() => {
+          window.location.href = 'aktivitasbk3c.html';
+        }, 800);
+      };
+
+      console.log('✅ BK3 Bagian 2: Menjalankan Fungsi siap!');
+    })();
+  </script>
+
+</body>
+</html>

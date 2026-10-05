@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Jelajah Jaringan · Bagian 3: Paket Data · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== GAYA AKTIVITAS ===== */
+    .aktivitas-wrapper { max-width: 1000px; margin: 0 auto; }
+    .aktivitas-wrapper h1 {
+      font-size: 2.2rem; font-weight: 700; color: #3b2b1e;
+      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 0.3rem;
+    }
+    .aktivitas-wrapper .sub-judul-aktivitas {
+      font-size: 1rem; color: #5c4638; margin-bottom: 1.5rem;
+      border-left: 4px solid #dbb9a6; padding-left: 1rem;
+    }
+
+    /* ===== MATERI RINGKAS ===== */
+    .materi-ringkas {
+      background: #f8f4ef; border-radius: 16px;
+      padding: 1.5rem 1.8rem; border-left: 6px solid #8ab4d4;
+      border: 2px solid #e5dbd0; margin-bottom: 1.5rem;
+    }
+    .materi-ringkas h2 {
+      font-size: 1.3rem; font-weight: 700; color: #3b2b1e;
+      margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .materi-ringkas h2 .badge {
+      background: #8ab4d4; color: #fff; font-size: 0.7rem;
+      padding: 0.15rem 0.6rem; border-radius: 20px; font-weight: 600;
+    }
+    .materi-ringkas h3 {
+      font-size: 1.05rem; font-weight: 600; color: #4d3829; margin: 1rem 0 0.4rem;
+    }
+    .materi-ringkas p {
+      font-size: 0.92rem; line-height: 1.7; color: #2f2822; margin-bottom: 0.6rem;
+    }
+    .materi-ringkas ul { margin: 0.3rem 0 0.8rem 1.5rem; font-size: 0.9rem; }
+    .materi-ringkas li { margin-bottom: 0.25rem; line-height: 1.6; }
+    .materi-ringkas .info-box {
+      background: #fff; border-radius: 12px; padding: 0.8rem 1.2rem;
+      border: 2px solid #e5dbd0; margin: 0.6rem 0;
+      font-size: 0.88rem; line-height: 1.6;
+    }
+    .materi-ringkas .info-box strong { color: #4d3829; }
+    .materi-ringkas .link-materi {
+      display: inline-block; margin-top: 0.5rem; color: #5c4638;
+      font-size: 0.85rem; text-decoration: none; font-weight: 600;
+      border-bottom: 2px dotted #bfaa9a; transition: all 0.2s ease;
+    }
+    .materi-ringkas .link-materi:hover { color: #4d3829; border-bottom-color: #7a5f4c; }
+
+    /* ===== STEP INDICATOR ===== */
+    .step-indicator {
+      display: flex; justify-content: space-between; align-items: center;
+      margin: 1.5rem 0 2rem 0; position: relative;
+      padding: 0 0.5rem; flex-wrap: wrap; gap: 0.3rem;
+    }
+    .step-indicator::before {
+      content: ''; position: absolute; top: 50%;
+      left: 30px; right: 30px; height: 3px;
+      background: #e5dbd0; transform: translateY(-50%); z-index: 0;
+    }
+    .step-dot {
+      display: flex; flex-direction: column; align-items: center;
+      z-index: 1; cursor: pointer; background: transparent;
+      border: none; padding: 0; font-family: inherit;
+      flex: 1; min-width: 50px;
+    }
+    .step-dot .circle {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: #f5ede6; border: 3px solid #d9cdbf;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.8rem; color: #7a6656;
+      transition: all 0.3s ease;
+    }
+    .step-dot.active .circle {
+      background: #4d3829; border-color: #4d3829; color: #fff;
+      transform: scale(1.1); box-shadow: 0 4px 14px rgba(75, 46, 30, 0.3);
+    }
+    .step-dot.completed .circle {
+      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
+    }
+    .step-dot .label {
+      font-size: 0.55rem; margin-top: 0.3rem; color: #7a6656;
+      text-align: center; max-width: 60px; font-weight: 500;
+    }
+    .step-dot.active .label { color: #3b2b1e; font-weight: 600; }
+    .step-dot.locked .circle { opacity: 0.4; cursor: not-allowed; }
+    .step-dot.locked .label { opacity: 0.4; }
+
+    /* ===== PANEL SKENARIO ===== */
+    .scenario-panel {
+      background: #fffffffa; border-radius: 24px;
+      border: 2px solid #e5dbd0; padding: 2rem;
+      min-height: 400px; position: relative; transition: all 0.3s ease;
+    }
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.3rem;
+    }
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem; color: #5c4638; background: #f5ede6;
+      padding: 0.8rem 1.2rem; border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid #dbb9a6;
+    }
+
+    /* ===== ANIMASI PAKET DATA ===== */
+    .packet-track {
+      background: #f0ece6; border-radius: 12px;
+      padding: 1.2rem 1rem; margin: 1rem 0;
+      border: 2px solid #e5dbd0;
+    }
+    .packet-nodes {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 0.5rem; font-size: 0.7rem;
+      color: #5c4638; margin-bottom: 0.8rem;
+    }
+    .packet-node {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.2rem; flex: 1; min-width: 60px; text-align: center;
+      transition: all 0.3s ease; padding: 0.4rem 0.2rem; border-radius: 8px;
+    }
+    .packet-node .node-icon { font-size: 1.5rem; }
+    .packet-node .node-label { font-size: 0.65rem; font-weight: 600; }
+    .packet-node .node-ip {
+      font-size: 0.55rem; color: #7a6656; font-family: 'Courier New', monospace;
+    }
+    .packet-node.active {
+      background: #e8f5e0; box-shadow: 0 0 0 2px #8aaa7a;
+    }
+    .packet-animation-bar {
+      position: relative; height: 50px; background: #fff;
+      border-radius: 8px; border: 2px dashed #d9cdbf; overflow: hidden;
+    }
+    .packet-dot {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #4d3829, #6b4f3a);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 0.9rem;
+      transition: left 0.4s ease;
+      box-shadow: 0 4px 12px rgba(75, 46, 30, 0.3);
+      color: #fff; z-index: 2;
+    }
+    .packet-dot::before {
+      content: ''; position: absolute; inset: -4px;
+      border-radius: 50%; background: rgba(75, 46, 30, 0.15);
+      animation: pulse-ring 1.2s ease-in-out infinite; z-index: -1;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.4); opacity: 0; }
+    }
+
+    /* ===== CONTROL BAR ===== */
+    .control-bar {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      margin: 1rem 0; align-items: center;
+    }
+    .btn-control {
+      padding: 0.5rem 1.2rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 600; font-size: 0.85rem; color: #3b2b1e;
+      cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+    }
+    .btn-control:hover {
+      background: #f5ede6; border-color: #b09b88; transform: translateY(-2px);
+    }
+    .btn-control.primary { background: #4d3829; border-color: #4d3829; color: #fff; }
+    .btn-control.primary:hover { background: #6b4f3a; border-color: #6b4f3a; }
+    .btn-control:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    }
+    .slider-control {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.8rem; color: #5c4638;
+    }
+    .slider-control input[type="range"] {
+      width: 100px; accent-color: #4d3829;
+    }
+
+    /* ===== LOG ===== */
+    .packet-log {
+      background: #fff; border-radius: 8px; padding: 0.8rem;
+      border: 1px solid #e5dbd0; max-height: 120px;
+      overflow-y: auto; font-size: 0.8rem;
+      color: #3b2b1e; margin: 0.5rem 0;
+    }
+    .packet-log .log-title {
+      font-weight: 700; margin-bottom: 0.3rem; color: #4d3829;
+    }
+    .packet-log .log-entry {
+      padding: 0.15rem 0; border-bottom: 1px dashed #f0ece6;
+    }
+    .packet-log .log-entry:last-child { border-bottom: none; }
+
+    /* ===== QUESTION BOX ===== */
+    .question-box {
+      background: #f5ede6; border-radius: 16px;
+      padding: 1.2rem 1.5rem; margin: 1.2rem 0;
+      border-left: 6px solid #dbb9a6;
+    }
+    .question-box .q-title {
+      font-weight: 700; color: #3b2b1e; margin-bottom: 0.5rem;
+    }
+    .question-box .options {
+      display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.5rem;
+    }
+    .question-box .options button {
+      padding: 0.4rem 1.2rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      cursor: pointer; font-size: 0.85rem;
+      transition: all 0.2s ease; font-family: inherit;
+    }
+    .question-box .options button:hover {
+      background: #f5ede6; border-color: #b09b88;
+    }
+    .question-box .options button.correct {
+      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
+    }
+    .question-box .options button.wrong {
+      background: #d4a0a0; border-color: #d4a0a0; color: #fff;
+    }
+    .feedback-text {
+      margin-top: 0.8rem; padding: 0.6rem 1rem;
+      border-radius: 8px; font-weight: 500; display: none;
+    }
+    .feedback-text.show { display: block; }
+    .feedback-text.success { background: #e8f5e0; color: #2d5a1e; }
+    .feedback-text.info { background: #e3edf5; color: #1a4a6b; }
+
+    /* ===== TES PEMAHAMAN ===== */
+    .tes-section {
+      margin-top: 1.8rem; padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0; display: none;
+    }
+    .tes-section.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .tes-header {
+      background: #f5ede6; border-radius: 12px;
+      padding: 0.9rem 1.2rem; margin-bottom: 1rem;
+      border-left: 5px solid #dbb9a6;
+      display: flex; flex-wrap: wrap; justify-content: space-between;
+      align-items: center; gap: 0.5rem;
+    }
+    .tes-header .tes-info {
+      font-size: 0.95rem; color: #3b2b1e; font-weight: 600;
+    }
+    .tes-header .tes-progress {
+      font-size: 0.82rem; color: #4d7a3b; font-weight: 700;
+      background: #fff; padding: 0.25rem 0.9rem;
+      border-radius: 30px; border: 2px solid #e5dbd0;
+    }
+    .soal-kuis {
+      background: #fff; padding: 1.1rem 1.3rem;
+      border-radius: 14px; border: 2px solid #e5dbd0;
+      margin-bottom: 0.9rem; transition: all 0.3s ease;
+    }
+    .soal-kuis.correct { border-color: #8aaa7a; background: #f0f8eb; }
+    .soal-kuis.wrong { border-color: #d4a0a0; background: #fdf0f0; }
+    .soal-kuis .pertanyaan {
+      font-weight: 600; font-size: 0.95rem; color: #3b2b1e;
+      margin-bottom: 0.5rem; display: flex; gap: 0.5rem;
+      align-items: flex-start; line-height: 1.6;
+    }
+    .soal-kuis .pertanyaan .soal-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #4d3829; color: #fff; width: 24px; height: 24px;
+      border-radius: 50%; font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis {
+      display: flex; flex-direction: column; gap: 0.35rem; padding-left: 0.2rem;
+    }
+    .soal-kuis .opsi-kuis label {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+      padding: 0.45rem 0.8rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; transition: all 0.15s; line-height: 1.5;
+    }
+    .soal-kuis .opsi-kuis label:hover:not(.disabled) {
+      background: #f5ede6; border-color: #b09b88;
+    }
+    .soal-kuis .opsi-kuis label.disabled { cursor: default; }
+    .soal-kuis .opsi-kuis label.selected { border-color: #4d3829; background: #f5ede6; }
+    .soal-kuis .opsi-kuis label.correct-answer { border-color: #8aaa7a; background: #e8f5e0; }
+    .soal-kuis .opsi-kuis label.wrong-answer { border-color: #d4a0a0; background: #f5e0e0; }
+    .soal-kuis .opsi-kuis input[type="radio"] {
+      accent-color: #6b8c5e; width: 16px; height: 16px;
+      margin-top: 0.15rem; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis .check-icon {
+      margin-left: auto; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .soal-kuis .jawaban-feedback {
+      margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+      border-radius: 8px; display: none;
+      font-size: 0.85rem; line-height: 1.5;
+    }
+    .soal-kuis .jawaban-feedback.benar {
+      display: block; background: #d4e8cb; color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+    .soal-kuis .jawaban-feedback.salah {
+      display: block; background: #f5d6d0; color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+    .soal-kuis .jawaban-feedback .kunci { font-weight: 700; color: #4d7a3b; }
+    .btn-submit-tes {
+      display: block; margin: 1.2rem auto 0;
+      padding: 0.7rem 2.5rem; border-radius: 30px; border: none;
+      background: #4d3829; color: #fff; font-weight: 700;
+      font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn-submit-tes:hover {
+      background: #6b4f3a; transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(75, 46, 30, 0.3);
+    }
+    .btn-submit-tes:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    }
+
+    /* ===== HASIL TES ===== */
+    .hasil-tes {
+      display: none; margin-top: 1.2rem; padding: 1.2rem;
+      background: #f5ede6; border-radius: 14px;
+      border: 3px double #dbb9a6; text-align: center;
+    }
+    .hasil-tes.show { display: block; animation: fadeIn 0.4s ease; }
+    .hasil-tes .hasil-icon { font-size: 2.8rem; margin-bottom: 0.3rem; }
+    .hasil-tes .hasil-title { font-size: 1.15rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.2rem; }
+    .hasil-tes .hasil-skor { font-size: 2rem; font-weight: 800; color: #4d7a3b; margin: 0.3rem 0; }
+    .hasil-tes .hasil-desc { font-size: 0.9rem; color: #5c4638; margin-bottom: 0.8rem; line-height: 1.5; }
+
+    /* ===== STATUS KIRIM ===== */
+    .status-kirim {
+      max-width: 480px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+      border-radius: 12px; font-size: 0.88rem; font-weight: 600;
+      line-height: 1.5; display: none; align-items: center;
+      gap: 0.6rem; text-align: left;
+    }
+    .status-kirim.show { display: flex; }
+    .status-kirim.info { background: #e3edf5; border: 2px solid #8ab4d4; color: #1a4a6b; }
+    .status-kirim.success { background: #d4e8cb; border: 2px solid #8aaa7a; color: #2d5a1e; }
+    .status-kirim.error { background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a; }
+    .status-kirim .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem; margin-top: 2rem;
+      padding-top: 1.5rem; border-top: 2px solid #e5dbd0;
+    }
+    .btn-nav {
+      padding: 0.6rem 1.8rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 600; font-size: 0.9rem; color: #3b2b1e;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-nav:hover {
+      background: #f5ede6; border-color: #b09b88; transform: translateY(-2px);
+    }
+    .btn-nav.primary { background: #4d3829; border-color: #4d3829; color: #fff; }
+    .btn-nav.primary:hover { background: #6b4f3a; border-color: #6b4f3a; }
+    .btn-nav:disabled,
+    .btn-nav.locked {
+      opacity: 0.4; cursor: not-allowed;
+      transform: none !important; pointer-events: none;
+    }
+    .btn-nav .back-arrow { font-size: 1.2rem; }
+    .nav-hint {
+      font-size: 0.8rem; color: #7a6656; text-align: center;
+      width: 100%; margin-top: 0.3rem;
+    }
+    .nav-hint.locked { color: #d4a0a0; }
+    .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scenario-panel { padding: 1.2rem; }
+      .step-dot .circle { width: 30px; height: 30px; font-size: 0.7rem; }
+      .step-dot .label { font-size: 0.45rem; max-width: 40px; }
+      .step-indicator::before { left: 15px; right: 15px; }
+      .aktivitas-wrapper h1 { font-size: 1.7rem; }
+      .packet-nodes { gap: 0.3rem; font-size: 0.6rem; }
+      .packet-node { min-width: 45px; }
+      .packet-node .node-icon { font-size: 1.2rem; }
+      .materi-ringkas { padding: 1.2rem 1.4rem; }
+    }
+    @media (max-width: 480px) {
+      .step-indicator { flex-wrap: wrap; justify-content: center; gap: 0.2rem; }
+      .step-indicator::before { display: none; }
+      .step-dot { min-width: 35px; flex: unset; }
+      .step-dot .circle { width: 26px; height: 26px; font-size: 0.6rem; }
+      .step-dot .label { display: none; }
+      .scenario-panel { padding: 0.8rem; }
+      .scenario-panel .scenario-title { font-size: 1.1rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+      .materi-ringkas { padding: 1rem 1.2rem; }
+      .materi-ringkas h2 { font-size: 1.1rem; }
+      .question-box .options { flex-direction: column; }
+      .question-box .options button { width: 100%; }
+      .packet-nodes { flex-wrap: nowrap; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materijki.html">Jaringan Komputer &amp; Internet</a></li>
+      <li><a href="jki1.html">Jaringan Komputer dan Internet</a></li>
+      <li>Jelajah Jaringan · Bagian 3</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <h1>📦 Jelajah Jaringan: Petualangan Paket Data</h1>
+        <p class="sub-judul-aktivitas">"Ikuti perjalanan data dari pengirim ke penerima!"</p>
+
+        <div class="materi-ringkas">
+          <h2>📖 Materi Singkat <span class="badge">Bagian 3</span></h2>
+
+          <h3>1. Apa Itu Protokol TCP/IP?</h3>
+          <p>
+            <strong>TCP/IP</strong> (Transmission Control Protocol / Internet Protocol) adalah <strong>aturan komunikasi</strong> yang digunakan perangkat di internet. Tanpa protokol ini, perangkat tidak bisa saling memahami saat bertukar data.
+          </p>
+          <ul>
+            <li><strong>IP (Internet Protocol)</strong> — mengatur <strong>alamat</strong> dan <strong>rute</strong> pengiriman data.</li>
+            <li><strong>TCP (Transmission Control Protocol)</strong> — memastikan data <strong>dikirim lengkap dan urut</strong> sampai tujuan.</li>
+          </ul>
+
+          <h3>2. Alamat IP — Identitas Perangkat</h3>
+          <p>
+            Setiap perangkat yang terhubung ke jaringan punya <strong>alamat IP</strong> unik, seperti alamat rumah. Contoh:
+          </p>
+          <ul>
+            <li><strong>192.168.1.10</strong> — alamat IP lokal (di jaringan rumah/sekolah).</li>
+            <li><strong>8.8.8.8</strong> — alamat IP server Google DNS di internet.</li>
+          </ul>
+
+          <h3>3. Paket Data — Data yang Dipecah</h3>
+          <p>
+            Saat kamu mengirim email atau membuka situs web, data <strong>tidak dikirim utuh</strong>. Data <strong>dipecah menjadi paket-paket kecil</strong>, lalu setiap paket dikirim melalui jaringan.
+          </p>
+          <ul>
+            <li>Setiap paket punya <strong>alamat pengirim</strong> dan <strong>alamat tujuan</strong>.</li>
+            <li>Paket bisa melewati <strong>jalur berbeda</strong>.</li>
+            <li>Di tujuan, paket <strong>disusun ulang</strong> menjadi data utuh.</li>
+          </ul>
+
+          <div class="info-box">
+            📦 <strong>Analogi:</strong> Paket data seperti <strong>kiriman paket pos</strong>:
+            <ul style="margin:0.3rem 0 0 1.2rem;">
+              <li>📮 Alamat IP = alamat rumah</li>
+              <li>📦 Paket data = kotak kiriman</li>
+              <li>📡 Router = kantor pos yang mengarahkan</li>
+            </ul>
+          </div>
+
+          <a href="materijki1.html" class="link-materi">📚 Baca materi lengkap di sini →</a>
+        </div>
+
+        <div class="step-indicator" id="stepIndicator">
+          <button class="step-dot completed" data-step="0">
+            <span class="circle">✓</span>
+            <span class="label">Bangun LAN</span>
+          </button>
+          <button class="step-dot completed" data-step="1">
+            <span class="circle">✓</span>
+            <span class="label">Sambung Internet</span>
+          </button>
+          <button class="step-dot active" data-step="2">
+            <span class="circle">3</span>
+            <span class="label">Paket Data</span>
+          </button>
+          <button class="step-dot locked" data-step="3">
+            <span class="circle">4</span>
+            <span class="label">Manfaat</span>
+          </button>
+          <button class="step-dot locked" data-step="4">
+            <span class="circle">🏆</span>
+            <span class="label">Kuis Akhir</span>
+          </button>
+        </div>
+
+        <div class="scenario-panel" id="scenarioPanel">
+
+          <div class="scenario-title">📦 Skenario 3: Petualangan Paket Data</div>
+          <div class="scenario-story">
+            📖 <strong>Cerita:</strong> Kamu mengirim email ke teman di kota lain. Ikuti perjalanan paket data dari komputermu, melewati switch, router, internet, hingga sampai ke komputer penerima!
+          </div>
+
+          <div class="packet-track">
+            <div class="packet-nodes" id="packetNodes">
+              <div class="packet-node" data-stop="0">
+                <span class="node-icon">💻</span>
+                <span class="node-label">Pengirim</span>
+                <span class="node-ip">192.168.1.10</span>
+              </div>
+              <div class="packet-node" data-stop="1">
+                <span class="node-icon">🔀</span>
+                <span class="node-label">Switch</span>
+                <span class="node-ip">LAN</span>
+              </div>
+              <div class="packet-node" data-stop="2">
+                <span class="node-icon">📡</span>
+                <span class="node-label">Router</span>
+                <span class="node-ip">192.168.1.1</span>
+              </div>
+              <div class="packet-node" data-stop="3">
+                <span class="node-icon">☁️</span>
+                <span class="node-label">Internet</span>
+                <span class="node-ip">ISP</span>
+              </div>
+              <div class="packet-node" data-stop="4">
+                <span class="node-icon">📡</span>
+                <span class="node-label">Router</span>
+                <span class="node-ip">10.0.0.1</span>
+              </div>
+              <div class="packet-node" data-stop="5">
+                <span class="node-icon">🔀</span>
+                <span class="node-label">Switch</span>
+                <span class="node-ip">LAN</span>
+              </div>
+              <div class="packet-node" data-stop="6">
+                <span class="node-icon">💻</span>
+                <span class="node-label">Penerima</span>
+                <span class="node-ip">10.0.0.5</span>
+              </div>
+            </div>
+
+            <div class="packet-animation-bar">
+              <div class="packet-dot" id="packetDot" style="left: 1%;">📦</div>
+            </div>
+          </div>
+
+          <div class="control-bar">
+            <button class="btn-control primary" id="btnPlay" onclick="playPacket()">▶️ Play</button>
+            <button class="btn-control" onclick="pausePacket()">⏸️ Pause</button>
+            <button class="btn-control" onclick="stepPacket()">⏭️ Step-by-Step</button>
+            <button class="btn-control" onclick="resetPacket()">🔄 Reset</button>
+            <div class="slider-control">
+              <span>🐢</span>
+              <input type="range" id="speedSlider" min="1" max="5" value="3" oninput="updateSpeed(this.value)">
+              <span>🐇</span>
+            </div>
+          </div>
+
+          <div class="packet-log" id="packetLog">
+            <div class="log-title">📋 Log Aktivitas:</div>
+            <div id="logEntries">
+              <div class="log-entry">⏳ Paket data siap dikirim...</div>
+            </div>
+          </div>
+
+          <div class="question-box">
+            <div class="q-title">💭 Pertanyaan Reflektif:</div>
+            <p style="margin-bottom:0.5rem;"><em>"Mengapa data dipecah menjadi paket-paket kecil sebelum dikirim?"</em></p>
+            <div class="options">
+              <button onclick="answerQuestion(this, true)">🚀 Agar pengiriman lebih efisien dan bisa melewati jalur berbeda</button>
+              <button onclick="answerQuestion(this, false)">📦 Agar ukuran data menjadi lebih besar</button>
+              <button onclick="answerQuestion(this, false)">🔒 Agar data lebih aman dari virus</button>
+            </div>
+            <div class="feedback-text" id="packetFeedback"></div>
+          </div>
+
+          <div class="tes-section" id="tesSection">
+            <div class="tes-header">
+              <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 3 soal pilihan ganda</div>
+              <div class="tes-progress" id="tesProgress">Terjawab: 0 / 3</div>
+            </div>
+            <div id="soalContainer"></div>
+            <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+          </div>
+
+          <div class="hasil-tes" id="hasilTes">
+            <div class="hasil-icon" id="hasilIcon">🏆</div>
+            <div class="hasil-title" id="hasilTitle">Selamat!</div>
+            <div class="hasil-skor" id="hasilSkor">0 / 3</div>
+            <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 3.</div>
+          </div>
+
+          <!-- Status kirim -->
+          <div class="status-kirim info" id="statusKirim">
+            <span class="spinner"></span>
+            <span id="statusKirimText">Mengirim nilai...</span>
+          </div>
+
+        </div>
+
+        <div class="nav-bottom">
+          <a href="aktivitasjki1b.html" class="btn-nav">
+            <span class="back-arrow">←</span> Bagian Sebelumnya
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <a href="jki1.html" class="btn-nav">🏠 Portal</a>
+            <button class="btn-nav primary locked" id="btnLanjutBagian4" onclick="lanjutKeBagian4()">
+              Lanjut ke Bagian 4: Manfaat Internet →
+            </button>
+          </div>
+          <div class="nav-hint locked" id="hintLanjut">
+            🔒 Selesaikan aktivitas dan tes pemahaman untuk membuka Bagian 4
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ============================================
+      // KONFIGURASI MODUL
+      // ============================================
+      const NAMA_SHEET = 'jki1';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
+
+      // ===== STATE =====
+      let packetInterval = null;
+      let packetPosition = 1;
+      let packetPaused = false;
+      let packetSpeed = 3;
+      let currentStopIndex = 0;
+      let activityCompleted = false;
+      let questionAnswered = false;
+      let soalJawaban = {};
+      let soalSubmitted = false;
+      let soalBenar = 0;
+      let soalSelesai = false;
+
+      const packetStops = [1, 17.3, 33.6, 50, 66.3, 82.6, 99];
+      const stopLabels = [
+        '💻 Pengirim (192.168.1.10)',
+        '🔀 Switch (LAN)',
+        '📡 Router (192.168.1.1)',
+        '☁️ Internet (ISP)',
+        '📡 Router (10.0.0.1)',
+        '🔀 Switch (LAN)',
+        '💻 Penerima (10.0.0.5) — ✅ Tiba!'
+      ];
+
+      // ===== DATA SOAL TES =====
+      const soalData = [
+        {
+          pertanyaan: 'Apa fungsi utama protokol TCP/IP dalam jaringan internet?',
+          opsi: [
+            'Mencetak dokumen',
+            'Mengatur aturan komunikasi dan pengiriman data antar perangkat',
+            'Menyimpan file di komputer',
+            'Menampilkan gambar di layar'
+          ],
+          kunci: 1,
+          penjelasan: 'TCP/IP adalah aturan komunikasi yang mengatur bagaimana perangkat saling bertukar data di internet. IP mengatur alamat & rute, TCP memastikan data terkirim lengkap dan urut.'
+        },
+        {
+          pertanyaan: 'Mengapa data dipecah menjadi paket-paket kecil sebelum dikirim melalui jaringan?',
+          opsi: [
+            'Agar ukuran data menjadi lebih besar',
+            'Agar pengiriman lebih efisien dan bisa melewati jalur berbeda',
+            'Agar data tidak bisa dibaca',
+            'Agar data lebih cepat terhapus'
+          ],
+          kunci: 1,
+          penjelasan: 'Memecah data menjadi paket kecil membuat pengiriman lebih efisien. Setiap paket bisa melewati jalur berbeda dan disusun ulang di tujuan.'
+        },
+        {
+          pertanyaan: 'Apa yang dimaksud dengan alamat IP?',
+          opsi: [
+            'Alamat rumah fisik pengguna',
+            'Identitas unik perangkat di jaringan',
+            'Nama pengguna email',
+            'Nomor telepon'
+          ],
+          kunci: 1,
+          penjelasan: 'Alamat IP adalah identitas unik setiap perangkat di jaringan, seperti alamat rumah. Contoh: 192.168.1.10 (lokal) atau 8.8.8.8 (server Google DNS).'
+        }
+      ];
+
+      // ===== DOM REFS =====
+      const elTesSection = document.getElementById('tesSection');
+      const elSoalContainer = document.getElementById('soalContainer');
+      const elTesProgress = document.getElementById('tesProgress');
+      const elBtnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const elHasilTes = document.getElementById('hasilTes');
+      const elBtnLanjutBagian4 = document.getElementById('btnLanjutBagian4');
+      const elHintLanjut = document.getElementById('hintLanjut');
+      const elStatusKirim = document.getElementById('statusKirim');
+      const elStatusKirimText = document.getElementById('statusKirimText');
+
+      // ===== ANIMASI PAKET =====
+      window.playPacket = function() {
+        if (packetInterval) return;
+        packetPaused = false;
+        document.getElementById('btnPlay').disabled = true;
+
+        if (packetPosition >= 99) resetPacket();
+
+        packetInterval = setInterval(() => {
+          if (!packetPaused) {
+            packetPosition += 0.6 * (packetSpeed / 3);
+            if (packetPosition >= 99) {
+              packetPosition = 99;
+              clearInterval(packetInterval);
+              packetInterval = null;
+              document.getElementById('btnPlay').disabled = false;
+              addLogEntry('✅ Paket data berhasil sampai tujuan!');
+              markActivityComplete();
+            }
+            updatePacketPosition();
+          }
+        }, 60);
+      };
+
+      window.pausePacket = function() {
+        packetPaused = true;
+        if (packetInterval) {
+          clearInterval(packetInterval);
+          packetInterval = null;
+        }
+        document.getElementById('btnPlay').disabled = false;
+        addLogEntry('⏸️ Animasi dijeda');
+      };
+
+      window.stepPacket = function() {
+        if (packetPosition >= 99) {
+          resetPacket();
+          return;
+        }
+        for (let i = currentStopIndex + 1; i < packetStops.length; i++) {
+          if (packetStops[i] > packetPosition) {
+            packetPosition = packetStops[i];
+            currentStopIndex = i;
+            updatePacketPosition();
+            addLogEntry(`📍 Sampai di: ${stopLabels[i]}`);
+            if (packetPosition >= 99) {
+              addLogEntry('✅ Paket data berhasil sampai tujuan!');
+              markActivityComplete();
+            }
+            return;
+          }
+        }
+      };
+
+      window.resetPacket = function() {
+        if (packetInterval) {
+          clearInterval(packetInterval);
+          packetInterval = null;
+        }
+        packetPosition = 1;
+        currentStopIndex = 0;
+        packetPaused = false;
+        document.getElementById('btnPlay').disabled = false;
+        updatePacketPosition();
+        document.getElementById('logEntries').innerHTML = '<div class="log-entry">⏳ Paket data siap dikirim...</div>';
+        document.querySelectorAll('.packet-node').forEach(n => n.classList.remove('active'));
+      };
+
+      window.updateSpeed = function(val) {
+        packetSpeed = parseInt(val);
+        if (packetInterval) {
+          clearInterval(packetInterval);
+          packetInterval = null;
+          playPacket();
+        }
+      };
+
+      function updatePacketPosition() {
+        const dot = document.getElementById('packetDot');
+        if (dot) dot.style.left = `calc(${packetPosition}% - 16px)`;
+
+        let closestIdx = 0;
+        let closestDist = Infinity;
+        for (let i = 0; i < packetStops.length; i++) {
+          const d = Math.abs(packetPosition - packetStops[i]);
+          if (d < closestDist) {
+            closestDist = d;
+            closestIdx = i;
+          }
+        }
+        if (closestDist < 4) {
+          document.querySelectorAll('.packet-node').forEach((n, idx) => {
+            n.classList.toggle('active', idx === closestIdx);
+          });
+        } else {
+          document.querySelectorAll('.packet-node').forEach(n => n.classList.remove('active'));
+        }
+      }
+
+      function addLogEntry(msg) {
+        const log = document.getElementById('logEntries');
+        if (!log) return;
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.textContent = msg;
+        log.appendChild(entry);
+        log.parentElement.scrollTop = log.parentElement.scrollHeight;
+      }
+
+      function markActivityComplete() {
+        if (activityCompleted) return;
+        activityCompleted = true;
+        cekTesAktif();
+      }
+
+      // ===== PERTANYAAN REFLEKTIF =====
+      window.answerQuestion = function(btn, isCorrect) {
+        if (questionAnswered) return;
+        const parent = btn.closest('.question-box');
+        const feedback = parent.querySelector('.feedback-text');
+
+        parent.querySelectorAll('.options button').forEach(b => {
+          b.classList.remove('correct', 'wrong');
+        });
+
+        if (isCorrect) {
+          btn.classList.add('correct');
+          feedback.className = 'feedback-text show success';
+          feedback.innerHTML = '✅ <strong>Jawaban tepat!</strong> Data dipecah menjadi paket kecil agar pengiriman lebih efisien. Setiap paket bisa melewati jalur berbeda, lalu disusun ulang di tujuan.';
+          questionAnswered = true;
+          cekTesAktif();
+        } else {
+          btn.classList.add('wrong');
+          feedback.className = 'feedback-text show info';
+          feedback.innerHTML = '💡 Belum tepat. Pikirkan: kalau data dikirim utuh, apa yang terjadi kalau ada gangguan di jalur? Paket kecil lebih fleksibel. Coba lagi!';
+          setTimeout(() => {
+            parent.querySelectorAll('.options button').forEach(b => b.classList.remove('wrong'));
+            feedback.className = 'feedback-text';
+          }, 2500);
+        }
+      };
+
+      function cekTesAktif() {
+        if (activityCompleted && questionAnswered && !elTesSection.classList.contains('active')) {
+          elTesSection.classList.add('active');
+          renderSoal();
+          updateTesProgress();
+          setTimeout(() => {
+            elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 300);
+        }
+      }
+
+      // ===== RENDER SOAL TES =====
+      function renderSoal() {
+        elSoalContainer.innerHTML = '';
+        soalData.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'soal-kuis';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            const id = `soal${idx}_opt${oi}`;
+            opsiHtml += `
+              <label for="${id}" onclick="pilihJawaban(${idx}, ${oi})" id="label_${idx}_${oi}">
+                <input type="radio" name="soal${idx}" id="${id}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          div.innerHTML = `
+            <div class="pertanyaan">
+              <span class="soal-num">${idx + 1}</span>
+              <span>${soal.pertanyaan}</span>
+            </div>
+            <div class="opsi-kuis">${opsiHtml}</div>
+            <div class="jawaban-feedback" id="feedback_soal_${idx}"></div>
+          `;
+          elSoalContainer.appendChild(div);
+        });
+      }
+
+      window.pilihJawaban = function(soalIndex, optIndex) {
+        if (soalSubmitted) return;
+        const soalDiv = document.querySelector(`.soal-kuis[data-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+
+        soalJawaban[soalIndex] = optIndex;
+        updateTesProgress();
+      };
+
+      function updateTesProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+        elTesProgress.textContent = `Terjawab: ${answered} / ${total}`;
+      }
+
+      // ===== PERIKSA TES =====
+      elBtnPeriksaTes.addEventListener('click', function() {
+        if (soalSubmitted) return;
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
+          return;
+        }
+
+        let correct = 0;
+        soalData.forEach((soal, idx) => {
+          const selected = soalJawaban[idx];
+          const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
+          const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+          const feedback = document.getElementById(`feedback_soal_${idx}`);
+
+          labels.forEach((label, oi) => {
+            label.classList.add('disabled');
+            if (oi === soal.kunci) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+            if (oi === selected && selected !== soal.kunci) {
+              label.classList.add('wrong-answer');
+              label.querySelector('.check-icon').textContent = '❌';
+            }
+          });
+
+          if (selected === soal.kunci) {
+            soalDiv.classList.add('correct');
+            correct++;
+            feedback.className = 'jawaban-feedback benar';
+            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.penjelasan}`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.className = 'jawaban-feedback salah';
+            feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+          }
+        });
+
+        soalBenar = correct;
+        soalSubmitted = true;
+        elBtnPeriksaTes.disabled = true;
+        elBtnPeriksaTes.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+
+        tampilkanHasilTes(correct, total);
+      });
+
+      // ===== TAMPILKAN HASIL TES =====
+      function tampilkanHasilTes(correct, total) {
+        setTimeout(() => {
+          elHasilTes.classList.add('show');
+
+          const skorBagian3 = Math.round(40 + (correct / total) * 60);
+
+          if (correct >= 2) {
+            soalSelesai = true;
+            elHasilTes.querySelector('#hasilIcon').textContent = '🏆';
+            elHasilTes.querySelector('#hasilTitle').textContent = 'Selamat!';
+            elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilTes.querySelector('#hasilDesc').innerHTML =
+              `Kamu berhasil menyelesaikan Bagian 3!<br><br>Bagian 4 sekarang terbuka!`;
+
+            elBtnLanjutBagian4.classList.remove('locked');
+            elBtnLanjutBagian4.classList.add('primary');
+            elHintLanjut.classList.remove('locked');
+            elHintLanjut.classList.add('ready');
+            elHintLanjut.textContent = '✅ Bagian 4 sudah terbuka! Klik untuk melanjutkan.';
+
+            document.querySelectorAll('.step-dot').forEach((step, idx) => {
+              if (idx === 2) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+              }
+            });
+
+            try {
+              const prev = JSON.parse(localStorage.getItem('labjaringan_progress') || '{}');
+              prev.bagian = 3;
+              prev.skorBagian3 = skorBagian3;
+              localStorage.setItem('labjaringan_progress', JSON.stringify(prev));
+            } catch (e) {}
+          } else {
+            elHasilTes.querySelector('#hasilIcon').textContent = '📖';
+            elHasilTes.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
+            elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilTes.querySelector('#hasilDesc').innerHTML =
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal 2 soal benar untuk membuka Bagian 4.<br><br>Coba pelajari kembali materinya!`;
+          }
+
+          setTimeout(() => {
+            elHasilTes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 200);
+        }, 700);
+      }
+
+      // ============================================
+      // KIRIM NILAI BAGIAN 3
+      // ============================================
+      async function kirimNilaiBagian3() {
+        const skorBagian3 = Math.round(40 + (soalBenar / soalData.length) * 60);
+
+        elStatusKirim.className = 'status-kirim info show';
+        elStatusKirimText.textContent = 'Mengirim nilai Bagian 3...';
+
+        const hasil = await window.kirimNilaiBagian(
+          NAMA_SHEET,
+          'c',
+          skorBagian3,
+          TOTAL_BAGIAN
+        );
+
+        if (hasil && hasil.ok) {
+          elStatusKirim.className = 'status-kirim success show';
+          elStatusKirimText.innerHTML = `✅ Nilai Bagian 3 (<strong>${skorBagian3}</strong>) berhasil dikirim.`;
+        } else {
+          elStatusKirim.className = 'status-kirim error show';
+          elStatusKirimText.innerHTML = `⚠️ Gagal mengirim nilai. Tetap lanjut ke Bagian 4.`;
+        }
+      }
+
+      // ============================================
+      // LANJUT KE BAGIAN 4
+      // ============================================
+      window.lanjutKeBagian4 = async function() {
+        if (!soalSelesai) {
+          alert('🔒 Selesaikan tes pemahaman dengan benar terlebih dahulu!');
+          return;
+        }
+
+        elBtnLanjutBagian4.disabled = true;
+        await kirimNilaiBagian3();
+
+        setTimeout(() => {
+          window.location.href = 'aktivitasjki1d.html';
+        }, 800);
+      };
+
+      document.addEventListener('DOMContentLoaded', function() {
+        updatePacketPosition();
+      });
+
+      console.log('✅ Jelajah Jaringan Bagian 3: Paket Data siap!');
+    })();
+  </script>
+
+</body>
+</html>

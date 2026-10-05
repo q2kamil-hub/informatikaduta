@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Petualangan BK · Bagian 3: Abstraksi · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== MATERI RINGKAS ===== */
+    .materi-ringkas {
+      max-width: 820px; margin: 0 auto 1.5rem;
+      background: #f8f4ef; border-radius: 16px;
+      padding: 1.5rem 1.8rem; border-left: 6px solid var(--c-bk, #f26d8a);
+      border: 2px solid #e5dbd0;
+    }
+    .materi-ringkas h2 {
+      font-size: 1.3rem; font-weight: 700; color: #3b2b1e;
+      margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .materi-ringkas h2 .badge {
+      background: var(--c-bk, #f26d8a); color: #fff; font-size: 0.7rem;
+      padding: 0.15rem 0.6rem; border-radius: 20px; font-weight: 600;
+    }
+    .materi-ringkas h3 {
+      font-size: 1.05rem; font-weight: 600; color: #4d3829; margin: 1rem 0 0.4rem;
+    }
+    .materi-ringkas p {
+      font-size: 0.92rem; line-height: 1.7; color: #2f2822; margin-bottom: 0.6rem;
+    }
+    .materi-ringkas ul { margin: 0.3rem 0 0.8rem 1.5rem; font-size: 0.9rem; }
+    .materi-ringkas li { margin-bottom: 0.25rem; line-height: 1.6; }
+    .materi-ringkas .info-box {
+      background: #fff; border-radius: 12px; padding: 0.8rem 1.2rem;
+      border: 2px solid #e5dbd0; margin: 0.6rem 0;
+      font-size: 0.88rem; line-height: 1.6;
+    }
+    .materi-ringkas .info-box strong { color: #4d3829; }
+    .materi-ringkas .link-materi {
+      display: inline-block; margin-top: 0.5rem; color: #5c4638;
+      font-size: 0.85rem; text-decoration: none; font-weight: 600;
+      border-bottom: 2px dotted #bfaa9a; transition: all 0.2s ease;
+    }
+    .materi-ringkas .link-materi:hover { color: #4d3829; border-bottom-color: #7a5f4c; }
+
+    .aktivitas-wrapper { max-width: 1000px; margin: 0 auto; }
+
+    /* ===== STEP INDICATOR ===== */
+    .step-indicator {
+      display: flex; justify-content: space-between; align-items: center;
+      margin: 1.5rem 0 2rem 0; position: relative;
+      padding: 0 0.5rem; flex-wrap: wrap; gap: 0.3rem;
+    }
+    .step-indicator::before {
+      content: ''; position: absolute; top: 50%;
+      left: 30px; right: 30px; height: 3px;
+      background: #e5dbd0; transform: translateY(-50%); z-index: 0;
+    }
+    .step-dot {
+      display: flex; flex-direction: column; align-items: center;
+      z-index: 1; cursor: pointer; background: transparent;
+      border: none; padding: 0; font-family: inherit;
+      flex: 1; min-width: 50px;
+    }
+    .step-dot .circle {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: #f5ede6; border: 3px solid #d9cdbf;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.8rem; color: #7a6656;
+      transition: all 0.3s ease;
+    }
+    .step-dot.active .circle {
+      background: var(--c-bk, #f26d8a); border-color: var(--c-bk, #f26d8a);
+      color: #fff; transform: scale(1.1);
+      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.3);
+    }
+    .step-dot.completed .circle {
+      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
+    }
+    .step-dot .label {
+      font-size: 0.55rem; margin-top: 0.3rem; color: #7a6656;
+      text-align: center; max-width: 70px; font-weight: 500;
+    }
+    .step-dot.active .label { color: #3b2b1e; font-weight: 600; }
+    .step-dot.locked .circle { opacity: 0.4; cursor: not-allowed; }
+    .step-dot.locked .label { opacity: 0.4; }
+
+    /* ===== AREA SIMULASI ===== */
+    #area-simulasi { display: none; margin-top: 0.5rem; }
+    #area-simulasi.active { display: block; }
+
+    .scenario-panel {
+      background: #fffffffa; border-radius: 24px;
+      border: 2px solid #e5dbd0; padding: 2rem;
+      min-height: 400px; position: relative; transition: all 0.3s ease;
+    }
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.3rem;
+    }
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem; color: #5c4638; background: #fdf2f5;
+      padding: 0.8rem 1.2rem; border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid var(--c-bk, #f26d8a);
+    }
+
+    /* ===== GAME: PILIH INFORMASI PENTING ===== */
+    .game-box {
+      background: #fff; border-radius: 16px;
+      padding: 1.2rem 1.5rem; border: 2px solid #e5dbd0;
+      margin: 1rem 0;
+    }
+    .game-box .game-label {
+      font-weight: 700; color: #4d3829; font-size: 0.95rem;
+      margin-bottom: 0.6rem;
+    }
+    .skenario-abstraksi {
+      background: linear-gradient(135deg, #fdf2f5, #f5ecff);
+      border: 3px solid var(--c-bk, #f26d8a);
+      border-radius: 16px; padding: 1.2rem 1.5rem;
+      margin: 0.8rem 0 1.2rem 0; text-align: center;
+    }
+    .skenario-abstraksi .skenario-icon { font-size: 2.5rem; margin-bottom: 0.3rem; }
+    .skenario-abstraksi .skenario-title {
+      font-size: 1.15rem; font-weight: 700; color: #a01746;
+    }
+    .skenario-abstraksi .skenario-desc {
+      font-size: 0.9rem; color: #5c4638; margin-top: 0.3rem;
+      line-height: 1.6;
+    }
+
+    .info-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.6rem; margin: 0.8rem 0;
+    }
+
+    .info-kartu {
+      background: #fcfaf7; border: 2px solid #e5dbd0;
+      border-radius: 12px; padding: 0.7rem 1rem;
+      cursor: pointer; transition: all 0.2s ease;
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.88rem; color: #3d2c1f;
+      font-weight: 500; line-height: 1.4;
+      position: relative; user-select: none;
+    }
+    .info-kartu:hover:not(.disabled) {
+      border-color: var(--c-bk, #f26d8a);
+      background: #fdf2f5;
+      transform: translateY(-2px);
+    }
+    .info-kartu .cek {
+      width: 24px; height: 24px; border-radius: 6px;
+      border: 2px solid #cbb5a2; background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; font-weight: 700; color: #fff;
+      flex-shrink: 0; transition: all 0.2s;
+    }
+    .info-kartu.selected {
+      border-color: var(--c-bk, #f26d8a);
+      background: #fdf2f5;
+      box-shadow: 0 4px 12px rgba(242, 109, 138, 0.15);
+    }
+    .info-kartu.selected .cek {
+      background: var(--c-bk, #f26d8a);
+      border-color: var(--c-bk, #f26d8a);
+    }
+    .info-kartu.selected .cek::before { content: '✓'; }
+    .info-kartu.disabled { cursor: default; opacity: 0.9; }
+    .info-kartu.benar {
+      border-color: #8aaa7a; background: #f0f8eb;
+    }
+    .info-kartu.benar .cek {
+      background: #8aaa7a; border-color: #8aaa7a;
+    }
+    .info-kartu.benar .cek::before { content: '✓'; }
+    .info-kartu.salah {
+      border-color: #d4a0a0; background: #fdf0f0;
+    }
+    .info-kartu.salah .cek {
+      background: #d4a0a0; border-color: #d4a0a0;
+    }
+    .info-kartu.salah .cek::before { content: '✗'; }
+    .info-kartu.info-tambahan {
+      border-color: #8aaa7a;
+      background: #f0f8eb;
+    }
+    .info-kartu.info-tambahan .cek::before { content: '✓'; }
+    .info-kartu.info-tambahan .cek {
+      background: #8aaa7a; border-color: #8aaa7a;
+    }
+
+    .game-feedback {
+      margin-top: 1rem; padding: 0.9rem 1.3rem;
+      border-radius: 12px; font-weight: 600;
+      display: none; font-size: 0.9rem; line-height: 1.6;
+    }
+    .game-feedback.show { display: block; animation: fadeIn 0.4s ease; }
+    .game-feedback.success {
+      background: #d4e8cb; border: 2px solid #8aaa7a; color: #3d6b2c;
+    }
+    .game-feedback.error {
+      background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a;
+    }
+    .game-feedback.info {
+      background: #fdf2f5; border: 2px solid var(--c-bk, #f26d8a); color: #a01746;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .game-actions {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      justify-content: center; margin-top: 1rem;
+    }
+    .btn-game {
+      padding: 0.6rem 1.8rem; border-radius: 30px; border: none;
+      font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; display: inline-flex;
+      align-items: center; gap: 0.4rem;
+    }
+    .btn-game.primary {
+      background: linear-gradient(135deg, var(--c-bk, #f26d8a), var(--c-ad, #b07be0));
+      color: #fff; box-shadow: 0 4px 14px rgba(242, 109, 138, 0.25);
+    }
+    .btn-game.primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(242, 109, 138, 0.35);
+    }
+    .btn-game.secondary {
+      background: #f5ede6; color: #4d3829; border: 2px solid #d9cdbf;
+    }
+    .btn-game.secondary:hover { background: #e8dcd0; transform: translateY(-2px); }
+    .btn-game:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    }
+
+    /* ===== TES PEMAHAMAN ===== */
+    .tes-section {
+      margin-top: 1.8rem; padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0; display: none;
+    }
+    .tes-section.active { display: block; animation: fadeIn 0.4s ease; }
+    .tes-header {
+      background: #fdf2f5; border-radius: 12px;
+      padding: 0.9rem 1.2rem; margin-bottom: 1rem;
+      border-left: 5px solid var(--c-bk, #f26d8a);
+      display: flex; flex-wrap: wrap; justify-content: space-between;
+      align-items: center; gap: 0.5rem;
+    }
+    .tes-header .tes-info {
+      font-size: 0.95rem; color: #3b2b1e; font-weight: 600;
+    }
+    .tes-header .tes-progress {
+      font-size: 0.82rem; color: #4d7a3b; font-weight: 700;
+      background: #fff; padding: 0.25rem 0.9rem;
+      border-radius: 30px; border: 2px solid #e5dbd0;
+    }
+
+    .soal-kuis {
+      background: #fff; padding: 1.1rem 1.3rem;
+      border-radius: 14px; border: 2px solid #e5dbd0;
+      margin-bottom: 0.9rem; transition: all 0.3s ease;
+    }
+    .soal-kuis.correct { border-color: #8aaa7a; background: #f0f8eb; }
+    .soal-kuis.wrong { border-color: #d4a0a0; background: #fdf0f0; }
+    .soal-kuis .pertanyaan {
+      font-weight: 600; font-size: 0.95rem; color: #3b2b1e;
+      margin-bottom: 0.5rem; display: flex; gap: 0.5rem;
+      align-items: flex-start; line-height: 1.6;
+    }
+    .soal-kuis .pertanyaan .soal-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--c-bk, #f26d8a); color: #fff;
+      width: 24px; height: 24px; border-radius: 50%;
+      font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis {
+      display: flex; flex-direction: column; gap: 0.35rem; padding-left: 0.2rem;
+    }
+    .soal-kuis .opsi-kuis label {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+      padding: 0.45rem 0.8rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; transition: all 0.15s; line-height: 1.5;
+    }
+    .soal-kuis .opsi-kuis label:hover:not(.disabled) {
+      background: #fdf2f5; border-color: var(--c-bk, #f26d8a);
+    }
+    .soal-kuis .opsi-kuis label.disabled { cursor: default; }
+    .soal-kuis .opsi-kuis label.selected {
+      border-color: var(--c-bk, #f26d8a); background: #fdf2f5;
+    }
+    .soal-kuis .opsi-kuis label.correct-answer {
+      border-color: #8aaa7a; background: #e8f5e0;
+    }
+    .soal-kuis .opsi-kuis label.wrong-answer {
+      border-color: #d4a0a0; background: #f5e0e0;
+    }
+    .soal-kuis .opsi-kuis input[type="radio"] {
+      accent-color: var(--c-bk, #f26d8a);
+      width: 16px; height: 16px;
+      margin-top: 0.15rem; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis .check-icon {
+      margin-left: auto; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .soal-kuis .jawaban-feedback {
+      margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+      border-radius: 8px; display: none;
+      font-size: 0.85rem; line-height: 1.5;
+    }
+    .soal-kuis .jawaban-feedback.benar {
+      display: block; background: #d4e8cb; color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+    .soal-kuis .jawaban-feedback.salah {
+      display: block; background: #f5d6d0; color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+    .soal-kuis .jawaban-feedback .kunci { font-weight: 700; color: #4d7a3b; }
+
+    .btn-submit-tes {
+      display: block; margin: 1.2rem auto 0;
+      padding: 0.7rem 2.5rem; border-radius: 30px; border: none;
+      background: linear-gradient(135deg, var(--c-bk, #f26d8a), var(--c-ad, #b07be0));
+      color: #fff; font-weight: 700;
+      font-size: 0.95rem; cursor: pointer;
+      transition: all 0.2s ease; font-family: inherit;
+    }
+    .btn-submit-tes:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(242, 109, 138, 0.35);
+    }
+    .btn-submit-tes:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    }
+
+    .hasil-tes {
+      display: none; margin-top: 1.2rem; padding: 1.2rem;
+      background: #fdf2f5; border-radius: 14px;
+      border: 3px double var(--c-bk, #f26d8a);
+      text-align: center;
+    }
+    .hasil-tes.show { display: block; animation: fadeIn 0.4s ease; }
+    .hasil-tes .hasil-icon { font-size: 2.8rem; margin-bottom: 0.3rem; }
+    .hasil-tes .hasil-title {
+      font-size: 1.15rem; font-weight: 700;
+      color: #3b2b1e; margin-bottom: 0.2rem;
+    }
+    .hasil-tes .hasil-skor {
+      font-size: 2rem; font-weight: 800; color: #4d7a3b; margin: 0.3rem 0;
+    }
+    .hasil-tes .hasil-desc {
+      font-size: 0.9rem; color: #5c4638;
+      margin-bottom: 0.8rem; line-height: 1.5;
+    }
+
+    /* ===== STATUS KIRIM ===== */
+    .status-kirim {
+      max-width: 480px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+      border-radius: 12px; font-size: 0.88rem; font-weight: 600;
+      line-height: 1.5; display: none; align-items: center;
+      gap: 0.6rem; text-align: left;
+    }
+    .status-kirim.show { display: flex; }
+    .status-kirim.info {
+      background: #fdf2f5; border: 2px solid var(--c-bk, #f26d8a); color: #a01746;
+    }
+    .status-kirim.success { background: #d4e8cb; border: 2px solid #8aaa7a; color: #2d5a1e; }
+    .status-kirim.error { background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a; }
+    .status-kirim .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem; margin-top: 2rem;
+      padding-top: 1.5rem; border-top: 2px solid #e5dbd0;
+    }
+    .btn-nav-bawah {
+      padding: 0.6rem 1.8rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 600; font-size: 0.9rem; color: #3b2b1e;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-nav-bawah:hover {
+      background: #fdf2f5; border-color: var(--c-bk, #f26d8a);
+      transform: translateY(-2px);
+    }
+    .btn-nav-bawah.primary {
+      background: #4d3829; border-color: #4d3829; color: #fff;
+    }
+    .btn-nav-bawah.primary:hover {
+      background: #6b4f3a; border-color: #6b4f3a;
+    }
+    .btn-nav-bawah:disabled,
+    .btn-nav-bawah.locked {
+      opacity: 0.4; cursor: not-allowed;
+      transform: none !important; pointer-events: none;
+    }
+    .btn-nav-bawah .back-arrow { font-size: 1.2rem; }
+    .nav-hint {
+      font-size: 0.8rem; color: #7a6656; text-align: center;
+      width: 100%; margin-top: 0.3rem;
+    }
+    .nav-hint.locked { color: #d4a0a0; }
+    .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 820px) {
+      .step-dot .circle { width: 30px; height: 30px; font-size: 0.7rem; }
+      .step-dot .label { font-size: 0.45rem; max-width: 50px; }
+      .step-indicator::before { left: 15px; right: 15px; }
+      .scenario-panel { padding: 1.2rem; }
+      .info-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+    }
+    @media (max-width: 480px) {
+      .step-indicator { flex-wrap: wrap; justify-content: center; gap: 0.2rem; }
+      .step-indicator::before { display: none; }
+      .step-dot { min-width: 35px; flex: unset; }
+      .step-dot .circle { width: 26px; height: 26px; font-size: 0.6rem; }
+      .step-dot .label { display: none; }
+      .scenario-panel { padding: 0.8rem; }
+      .scenario-panel .scenario-title { font-size: 1.1rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav-bawah { justify-content: center; }
+      .materi-ringkas { padding: 1rem 1.2rem; }
+      .materi-ringkas h2 { font-size: 1.1rem; }
+      .soal-kuis { padding: 1rem; }
+      .soal-kuis .pertanyaan { font-size: 0.92rem; }
+      .soal-kuis .opsi-kuis label { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
+      .tes-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materibk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk2.html">Berpikir Komputasional</a></li>
+      <li>Petualangan BK · Bagian 3</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <div class="bagian-progress">
+          <span class="step completed"><span class="num">✓</span> Dekomposisi</span>
+          <span class="step completed"><span class="num">✓</span> Pengenalan Pola</span>
+          <span class="step active"><span class="num">3</span> Abstraksi</span>
+          <span class="step"><span class="num">4</span> Algoritma</span>
+          <span class="step"><span class="num">5</span> Kuis Akhir</span>
+        </div>
+
+        <div class="materi-ringkas">
+          <h2>📖 Materi Singkat <span class="badge">Bagian 3</span></h2>
+
+          <h3>1. Apa Itu Abstraksi?</h3>
+          <p>
+            <strong>Abstraksi</strong> adalah kemampuan <strong>fokus pada informasi penting</strong> dan <strong>mengabaikan detail yang tidak relevan</strong>. Ini membantu kita menyederhanakan masalah yang rumit menjadi lebih mudah dipahami.
+          </p>
+
+          <h3>2. Mengapa Perlu Abstraksi?</h3>
+          <p>
+            Dunia ini penuh dengan detail. Jika kita memperhatikan semuanya, kita akan kewalahan. Abstraksi membantu kita:
+          </p>
+          <ul>
+            <li><strong>Menyederhanakan:</strong> Melihat gambaran besar tanpa terganggu detail kecil</li>
+            <li><strong>Fokus:</strong> Hanya memikirkan hal-hal yang benar-benar penting</li>
+            <li><strong>Berkomunikasi:</strong> Menjelaskan ide secara ringkas dan jelas</li>
+            <li><strong>Membuat model:</strong> Membuat gambaran sederhana dari dunia nyata</li>
+          </ul>
+
+          <h3>3. Contoh dalam Kehidupan Sehari-hari</h3>
+          <div class="info-box">
+            <strong>🗺️ Peta:</strong> Saat melihat peta untuk mencari rute, kita hanya fokus pada jalan, marka, dan arah. Kita tidak memperhatikan setiap pohon, nama toko, atau warna bangunan.
+          </div>
+
+          <div class="info-box">
+            <strong>🍜 Memasak:</strong> Saat memasak nasi goreng, kita tidak perlu memikirkan bagaimana kedelai diolah menjadi kecap. Cukup fokus pada langkah memasak yang penting.
+          </div>
+
+          <div class="info-box">
+            <strong>🤳 Filter wajah:</strong> Aplikasi filter hanya mendeteksi fitur penting wajah (mata, hidung, mulut), bukan warna rambut atau latar belakang.
+          </div>
+
+          <div class="info-box">
+            <strong>🚗 Navigasi:</strong> Aplikasi peta hanya menampilkan jalan dan kondisi lalu lintas, bukan gedung atau taman yang dilewati.
+          </div>
+
+          <h3>4. Manfaat Abstraksi</h3>
+          <ul>
+            <li><strong>Lebih cepat:</strong> Tidak membuang waktu pada hal yang tidak penting.</li>
+            <li><strong>Lebih fokus:</strong> Energi diarahkan ke inti masalah.</li>
+            <li><strong>Lebih kreatif:</strong> Model sederhana memudahkan ide baru muncul.</li>
+          </ul>
+
+          <a href="materibk2.html" class="link-materi">📚 Baca materi lengkap di sini →</a>
+        </div>
+
+        <!-- ===== AREA SIMULASI ===== -->
+        <div id="area-simulasi">
+
+          <div class="step-indicator" id="stepIndicator">
+            <button class="step-dot completed" data-step="0">
+              <span class="circle">✓</span>
+              <span class="label">Dekomposisi</span>
+            </button>
+            <button class="step-dot completed" data-step="1">
+              <span class="circle">✓</span>
+              <span class="label">Pengenalan Pola</span>
+            </button>
+            <button class="step-dot active" data-step="2">
+              <span class="circle">3</span>
+              <span class="label">Abstraksi</span>
+            </button>
+            <button class="step-dot locked" data-step="3">
+              <span class="circle">4</span>
+              <span class="label">Algoritma</span>
+            </button>
+            <button class="step-dot locked" data-step="4">
+              <span class="circle">🏆</span>
+              <span class="label">Kuis Akhir</span>
+            </button>
+          </div>
+
+          <div class="scenario-panel">
+            <div class="scenario-title">🎯 Aktivitas 3: Pilih Informasi Penting!</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Kamu ditugaskan membuat <strong>peta sederhana</strong> rute dari rumah ke sekolah untuk teman barumu. Pilih hanya informasi yang <strong>penting</strong> untuk peta tersebut, dan <strong>abaikan</strong> yang tidak perlu!
+            </div>
+
+            <div class="skenario-abstraksi">
+              <div class="skenario-icon">🗺️</div>
+              <div class="skenario-title">SKENARIO</div>
+              <div class="skenario-desc">"Membuat peta rute dari rumah ke sekolah agar teman baru tidak tersesat"</div>
+            </div>
+
+            <div class="game-box">
+              <div class="game-label">📋 Centang informasi yang PENTING untuk peta rute (pilih 5):</div>
+              <div class="info-grid" id="infoGrid"></div>
+            </div>
+
+            <div class="game-actions">
+              <button class="btn-game primary" id="btnPeriksa" onclick="periksaPilihan()" disabled>
+                ✅ Periksa Jawaban
+              </button>
+              <button class="btn-game secondary" onclick="resetPilihan()">
+                🔄 Reset
+              </button>
+            </div>
+
+            <div class="game-feedback" id="gameFeedback"></div>
+          </div>
+
+          <!-- ===== TES PEMAHAMAN ===== -->
+          <div class="tes-section" id="tesSection">
+            <div class="tes-header">
+              <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 4 soal pilihan ganda</div>
+              <div class="tes-progress" id="tesProgress">Terjawab: 0 / 4</div>
+            </div>
+
+            <div id="soalContainer"></div>
+
+            <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+          </div>
+
+          <!-- ===== HASIL TES ===== -->
+          <div class="hasil-tes" id="hasilTes">
+            <div class="hasil-icon" id="hasilIcon">🏆</div>
+            <div class="hasil-title" id="hasilTitle">Selamat!</div>
+            <div class="hasil-skor" id="hasilSkor">0 / 4</div>
+            <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 3.</div>
+          </div>
+
+          <!-- Status kirim -->
+          <div class="status-kirim info" id="statusKirim">
+            <span class="spinner"></span>
+            <span id="statusKirimText">Mengirim nilai...</span>
+          </div>
+
+        </div><!-- end area-simulasi -->
+
+        <div class="nav-bottom">
+          <a href="aktivitasbk2b.html" class="btn-nav-bawah">
+            <span class="back-arrow">←</span> Bagian Sebelumnya          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <a href="bk2.html" class="btn-nav-bawah">🏠 Portal</a>
+            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian4" onclick="lanjutKeBagian4()">
+              Lanjut ke Bagian 4: Algoritma →
+            </button>
+          </div>
+          <div class="nav-hint locked" id="hintLanjut">
+            🔒 Selesaikan aktivitas dan tes pemahaman untuk membuka Bagian 4
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI MODUL
+      // ============================================
+      const NAMA_SHEET = 'bk2';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
+
+      // ============================================
+      // DATA AKTIVITAS: PILIH INFORMASI PENTING
+      // ============================================
+      const infoData = [
+        { teks: 'Nama jalan yang dilewati', penting: true, alasan: 'Wajib ada untuk menunjukkan rute.' },
+        { teks: 'Belokan kiri/kanan di persimpangan', penting: true, alasan: 'Petunjuk arah sangat penting.' },
+        { teks: 'Patokan gedung penting (mis. masjid, pasar)', penting: true, alasan: 'Membantu teman mengenali lokasi.' },
+        { teks: 'Panjang jalan dalam meter', penting: true, alasan: 'Membantu memperkirakan waktu tempuh.' },
+        { teks: 'Nama sekolah sebagai tujuan', penting: true, alasan: 'Tujuan akhir harus jelas.' },
+        { teks: 'Warna cat rumah-rumah di sekitar', penting: false, alasan: 'Tidak relevan untuk navigasi rute.' },
+        { teks: 'Nama setiap pemilik toko', penting: false, alasan: 'Detail yang berlebihan dan tidak membantu.' },
+        { teks: 'Jumlah pohon di pinggir jalan', penting: false, alasan: 'Bukan informasi yang membantu rute.' },
+        { teks: 'Merek motor yang lewat', penting: false, alasan: 'Tidak ada hubungannya dengan rute.' }
+      ];
+
+      // ============================================
+      // DATA SOAL TES (4 SOAL)
+      // ============================================
+      const soalData = [
+        {
+          pertanyaan: 'Apa yang dimaksud dengan abstraksi dalam berpikir komputasional?',
+          opsi: [
+            'Menggabungkan semua detail menjadi satu',
+            'Fokus pada informasi penting dan mengabaikan detail yang tidak relevan',
+            'Menghafal seluruh isi materi',
+            'Memecah masalah menjadi bagian kecil'
+          ],
+          kunci: 1,
+          penjelasan: 'Abstraksi adalah kemampuan fokus pada informasi penting dan mengabaikan detail yang tidak relevan.'
+        },
+        {
+          pertanyaan: 'Manakah contoh abstraksi dalam kehidupan sehari-hari?',
+          opsi: [
+            'Membuat peta hanya menampilkan jalan dan arah',
+            'Memecah proyek menjadi tugas kecil',
+            'Menemukan pola bilangan ganjil',
+            'Menyusun resep langkah membuat kopi'
+          ],
+          kunci: 0,
+          penjelasan: 'Membuat peta hanya menampilkan jalan dan arah adalah contoh abstraksi — kita hanya fokus pada informasi penting.'
+        },
+        {
+          pertanyaan: 'Mengapa abstraksi penting saat menyelesaikan masalah kompleks?',
+          opsi: [
+            'Agar masalah terlihat lebih sulit',
+            'Agar kita fokus pada inti masalah tanpa terganggu detail kecil',
+            'Agar kita bisa mengabaikan semua detail',
+            'Agar kita tidak perlu berpikir sama sekali'
+          ],
+          kunci: 1,
+          penjelasan: 'Abstraksi membantu kita fokus pada inti masalah tanpa terganggu detail kecil yang tidak relevan.'
+        },
+        {
+          pertanyaan: 'Saat mempelajari cara kerja mesin cuci, kita tidak perlu tahu setiap kabel dan bautnya. Ini contoh dari...',
+          opsi: [
+            'Dekomposisi',
+            'Pengenalan Pola',
+            'Abstraksi',
+            'Algoritma'
+          ],
+          kunci: 2,
+          penjelasan: 'Contoh ini adalah abstraksi: kita fokus pada prinsip kerja mesin cuci, bukan detail teknisnya.'
+        }
+      ];
+
+      // ============================================
+      // STATE
+      // ============================================
+      let infoDipilih = new Set();
+      let aktivitasSelesai = false;
+      let soalJawaban = {};
+      let soalSubmitted = false;
+      let soalBenar = 0;
+      let soalSelesai = false;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const elInfoGrid = document.getElementById('infoGrid');
+      const elBtnPeriksa = document.getElementById('btnPeriksa');
+      const elGameFeedback = document.getElementById('gameFeedback');
+      const elAreaSimulasi = document.getElementById('area-simulasi');
+      const elTesSection = document.getElementById('tesSection');
+      const elSoalContainer = document.getElementById('soalContainer');
+      const elTesProgress = document.getElementById('tesProgress');
+      const elBtnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const elHasilTes = document.getElementById('hasilTes');
+      const elBtnLanjutBagian4 = document.getElementById('btnLanjutBagian4');
+      const elHintLanjut = document.getElementById('hintLanjut');
+      const elStatusKirim = document.getElementById('statusKirim');
+      const elStatusKirimText = document.getElementById('statusKirimText');
+
+      // ============================================
+      // MULAI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        elAreaSimulasi.classList.add('active');
+        renderInfo();
+      });
+
+      // ============================================
+      // RENDER INFO KARTU
+      // ============================================
+      function renderInfo() {
+        elInfoGrid.innerHTML = '';
+        const shuffled = [...infoData].sort(() => Math.random() - 0.5);
+
+        shuffled.forEach((info, idx) => {
+          const div = document.createElement('div');
+          div.className = 'info-kartu';
+          div.dataset.idx = idx;
+          div.dataset.penting = info.penting ? '1' : '0';
+          div.innerHTML = `
+            <span class="cek"></span>
+            <span>${info.teks}</span>
+          `;
+          div.onclick = function() { toggleInfo(this); };
+          elInfoGrid.appendChild(div);
+        });
+      }
+
+      function toggleInfo(el) {
+        if (aktivitasSelesai) return;
+        const idx = el.dataset.idx;
+
+        if (infoDipilih.has(idx)) {
+          infoDipilih.delete(idx);
+          el.classList.remove('selected');
+        } else {
+          if (infoDipilih.size >= 5) {
+            alert('⚠️ Kamu hanya boleh memilih 5 informasi!');
+            return;
+          }
+          infoDipilih.add(idx);
+          el.classList.add('selected');
+        }
+
+        elBtnPeriksa.disabled = (infoDipilih.size !== 5);
+        elGameFeedback.classList.remove('show');
+      }
+
+      // ============================================
+      // PERIKSA PILIHAN
+      // ============================================
+      window.periksaPilihan = function() {
+        if (aktivitasSelesai) return;
+
+        const kartuList = elInfoGrid.querySelectorAll('.info-kartu');
+        let benar = 0;
+        let salah = 0;
+
+        kartuList.forEach(kartu => {
+          const isPenting = kartu.dataset.penting === '1';
+          const isSelected = infoDipilih.has(kartu.dataset.idx);
+
+          kartu.classList.add('disabled');
+
+          if (isPenting && isSelected) {
+            kartu.classList.add('benar');
+            benar++;
+          } else if (!isPenting && isSelected) {
+            kartu.classList.add('salah');
+            salah++;
+          } else if (isPenting && !isSelected) {
+            kartu.classList.add('info-tambahan');
+          }
+        });
+
+        aktivitasSelesai = true;
+        elBtnPeriksa.disabled = true;
+
+        const totalSkorAktivitas = Math.round((benar / 5) * 100);
+
+        if (benar === 5 && salah === 0) {
+          elGameFeedback.className = 'game-feedback show success';
+          elGameFeedback.innerHTML = `🎉 <strong>Sempurna!</strong> Kamu memilih 5 informasi penting dengan tepat!<br>Skor aktivitas: <strong>${totalSkorAktivitas}</strong>`;
+        } else if (benar >= 3) {
+          elGameFeedback.className = 'game-feedback show info';
+          elGameFeedback.innerHTML = `📊 Kamu memilih <strong>${benar} dari 5</strong> informasi penting${salah > 0 ? ` (${salah} pilihan salah)` : ''}.<br>Skor aktivitas: <strong>${totalSkorAktivitas}</strong>`;
+        } else {
+          elGameFeedback.className = 'game-feedback show error';
+          elGameFeedback.innerHTML = `❌ Kamu hanya memilih <strong>${benar} dari 5</strong> informasi yang tepat. Pelajari kembali materi abstraksi.<br>Skor aktivitas: <strong>${totalSkorAktivitas}</strong>`;
+        }
+
+        setTimeout(() => {
+          elTesSection.classList.add('active');
+          renderSoal();
+          updateTesProgress();
+          elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 800);
+      };
+
+      window.resetPilihan = function() {
+        if (aktivitasSelesai) return;
+        infoDipilih.clear();
+        document.querySelectorAll('.info-kartu').forEach(k => {
+          k.classList.remove('selected', 'benar', 'salah', 'info-tambahan', 'disabled');
+        });
+        elBtnPeriksa.disabled = true;
+        elGameFeedback.classList.remove('show');
+      };
+
+      // ============================================
+      // RENDER SOAL TES
+      // ============================================
+      function renderSoal() {
+        elSoalContainer.innerHTML = '';
+        soalData.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'soal-kuis';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            const id = `soal${idx}_opt${oi}`;
+            opsiHtml += `
+              <label for="${id}" onclick="pilihJawaban(${idx}, ${oi})" id="label_${idx}_${oi}">
+                <input type="radio" name="soal${idx}" id="${id}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          div.innerHTML = `
+            <div class="pertanyaan">
+              <span class="soal-num">${idx + 1}</span>
+              <span>${soal.pertanyaan}</span>
+            </div>
+            <div class="opsi-kuis">${opsiHtml}</div>
+            <div class="jawaban-feedback" id="feedback_soal_${idx}"></div>
+          `;
+
+          elSoalContainer.appendChild(div);
+        });
+      }
+
+      window.pilihJawaban = function(soalIndex, optIndex) {
+        if (soalSubmitted) return;
+        const soalDiv = document.querySelector(`.soal-kuis[data-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+
+        soalJawaban[soalIndex] = optIndex;
+        updateTesProgress();
+      };
+
+      function updateTesProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+        elTesProgress.textContent = `Terjawab: ${answered} / ${total}`;
+      }
+
+      // ============================================
+      // PERIKSA TES
+      // ============================================
+      elBtnPeriksaTes.addEventListener('click', function() {
+        if (soalSubmitted) return;
+        const total = soalData.length;
+        const answered = Object.keys(soalJawaban).length;
+
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
+          return;
+        }
+
+        let correct = 0;
+        soalData.forEach((soal, idx) => {
+          const selected = soalJawaban[idx];
+          const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
+          const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+          const feedback = document.getElementById(`feedback_soal_${idx}`);
+
+          labels.forEach((label, oi) => {
+            label.classList.add('disabled');
+            if (oi === soal.kunci) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+            if (oi === selected && selected !== soal.kunci) {
+              label.classList.add('wrong-answer');
+              label.querySelector('.check-icon').textContent = '❌';
+            }
+          });
+
+          if (selected === soal.kunci) {
+            soalDiv.classList.add('correct');
+            correct++;
+            feedback.className = 'jawaban-feedback benar';
+            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.penjelasan}`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.className = 'jawaban-feedback salah';
+            feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+          }
+        });
+
+        soalBenar = correct;
+        soalSubmitted = true;
+        elBtnPeriksaTes.disabled = true;
+        elBtnPeriksaTes.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+
+        tampilkanHasilTes(correct, total);
+      });
+
+      // ============================================
+      // TAMPILKAN HASIL TES
+      // ============================================
+      function tampilkanHasilTes(correct, total) {
+        setTimeout(() => {
+          elHasilTes.classList.add('show');
+
+          const skorBagian3 = Math.round(40 + (correct / total) * 60);
+
+          if (correct >= 3) {
+            soalSelesai = true;
+            elHasilTes.querySelector('#hasilIcon').textContent = '🏆';
+            elHasilTes.querySelector('#hasilTitle').textContent = 'Selamat!';
+            elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilTes.querySelector('#hasilDesc').innerHTML =
+              `Kamu berhasil menyelesaikan Bagian 3!<br><br>Bagian 4 sekarang terbuka!`;
+
+            elBtnLanjutBagian4.classList.remove('locked');
+            elBtnLanjutBagian4.classList.add('primary');
+            elHintLanjut.classList.remove('locked');
+            elHintLanjut.classList.add('ready');
+            elHintLanjut.textContent = '✅ Bagian 4 sudah terbuka! Klik untuk melanjutkan.';
+
+            document.querySelectorAll('.step-dot').forEach((step, idx) => {
+              if (idx === 2) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+              }
+            });
+
+            try {
+              const prev = JSON.parse(localStorage.getItem('labkpk_progress') || '{}');
+              prev.bagian = 3;
+              prev.skorBagian3 = skorBagian3;
+              localStorage.setItem('labkpk_progress', JSON.stringify(prev));
+            } catch (e) {}
+          } else {
+            elHasilTes.querySelector('#hasilIcon').textContent = '📖';
+            elHasilTes.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
+            elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilTes.querySelector('#hasilDesc').innerHTML =
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal 3 soal benar untuk membuka Bagian 4.<br><br>Coba pelajari kembali materinya!`;
+          }
+
+          setTimeout(() => {
+            elHasilTes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 200);
+        }, 700);
+      }
+
+      // ============================================
+      // KIRIM NILAI BAGIAN 3
+      // ============================================
+      async function kirimNilaiBagian3() {
+        const skorBagian3 = Math.round(40 + (soalBenar / soalData.length) * 60);
+
+        elStatusKirim.className = 'status-kirim info show';
+        elStatusKirimText.textContent = 'Mengirim nilai Bagian 3...';
+
+        const hasil = await window.kirimNilaiBagian(
+          NAMA_SHEET,
+          'c',
+          skorBagian3,
+          TOTAL_BAGIAN
+        );
+
+        if (hasil && hasil.ok) {
+          elStatusKirim.className = 'status-kirim success show';
+          elStatusKirimText.innerHTML = `✅ Nilai Bagian 3 (<strong>${skorBagian3}</strong>) berhasil dikirim.`;
+        } else {
+          elStatusKirim.className = 'status-kirim error show';
+          elStatusKirimText.innerHTML = `⚠️ Gagal mengirim nilai. Tetap lanjut ke Bagian 4.`;
+        }
+      }
+
+      // ============================================
+      // LANJUT KE BAGIAN 4
+      // ============================================
+      window.lanjutKeBagian4 = async function() {
+        if (!soalSelesai) {
+          alert('🔒 Selesaikan tes pemahaman dengan benar terlebih dahulu!');
+          return;
+        }
+
+        elBtnLanjutBagian4.disabled = true;
+        await kirimNilaiBagian3();
+
+        setTimeout(() => {
+          window.location.href = 'aktivitasbk2d.html';
+        }, 800);
+      };
+
+      console.log('✅ Petualangan BK Bagian 3: Abstraksi siap!');
+    })();
+  </script>
+
+</body>
+</html>
