@@ -44,7 +44,7 @@
           <p>Website ini terbuka untuk <strong>seluruh siswa SMP, guru, dan tenaga kependidikan</strong> di Indonesia. Materi disajikan dengan bahasa yang lugas, ilustrasi yang mendukung, dan contoh kasus yang dekat dengan keseharian siswa. Kami mengundang sekolah lain untuk memanfaatkan sumber daya ini secara gratis dan berbagi pengalaman terbaik.</p>
 
           <blockquote>
-            “Dengan Informatika DUTA, belajar menjadi lebih terarah, menyenangkan, dan relevan dengan dunia digital saat ini.”
+            "Dengan Informatika DUTA, belajar menjadi lebih terarah, menyenangkan, dan relevan dengan dunia digital saat ini."
           </blockquote>
 
           <p>Jelajahi kartu portal di bawah untuk memulai perjalanan belajarmu. Selamat belajar dan berinovasi!</p>
@@ -120,6 +120,37 @@
 
   <!-- script.js dimuat di akhir -->
   <script src="script.js"></script>
+
+  <!-- clear localStorage modul saat index.html dibuka -->
+  <script>
+    (function() {
+      "use strict";
+
+      // Daftar prefix key yang dipakai modul-modul
+      const PREFIXES = [
+        'lab',        // labtik1_siswa, labtik1_progress, labbk3_progress, dll.
+        'duta'        // duta_siswa, duta_id_tik1, duta_id_bk3, dll.
+      ];
+
+      try {
+        const keysToRemove = [];
+
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (!key) continue;
+
+          const cocok = PREFIXES.some(p => key.startsWith(p));
+          if (cocok) keysToRemove.push(key);
+        }
+
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+
+        console.log(`🧹 Reset localStorage: ${keysToRemove.length} key dihapus.`);
+      } catch (e) {
+        console.warn('Gagal reset localStorage:', e);
+      }
+    })();
+  </script>
   <!-- catatan: script.js berisi header, footer, dan logika tombol -->
   <!-- AI: tidak menambah fitur tambahan di luar permintaan. Konsistensi antar halaman dijaga. -->
   <!-- encoding UTF-8 telah ditetapkan di meta charset -->
