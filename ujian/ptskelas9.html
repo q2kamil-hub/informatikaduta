@@ -1,0 +1,2612 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>PTS Kelas 9 · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== GAYA CBT ===== */
+    :root {
+      --cbt-bg: #f0f4f8;
+      --cbt-card: #ffffff;
+      --cbt-primary: #2563eb;
+      --cbt-primary-dark: #1d4ed8;
+      --cbt-success: #16a34a;
+      --cbt-danger: #dc2626;
+      --cbt-warning: #d97706;
+      --cbt-mark: #f59e0b;
+      --cbt-border: #cbd5e1;
+      --cbt-ink: #1e293b;
+      --cbt-ink-soft: #64748b;
+      --cbt-header: #1e3a5f;
+    }
+
+    body {
+      background: var(--cbt-bg);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* ============ HEADER CBT ============ */
+    .cbt-header {
+      background: var(--cbt-header);
+      color: #fff;
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+    .cbt-header .cbt-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .cbt-header .cbt-info {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+    }
+    .cbt-header .cbt-timer {
+      background: rgba(255,255,255,0.15);
+      padding: 0.35rem 1rem;
+      border-radius: 30px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .cbt-header .cbt-timer.warning {
+      background: rgba(220, 38, 38, 0.35);
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    .cbt-header .cbt-progress-text {
+      background: rgba(255,255,255,0.15);
+      padding: 0.35rem 1rem;
+      border-radius: 30px;
+      font-weight: 600;
+    }
+    .cbt-header .cbt-paket {
+      background: rgba(245, 158, 11, 0.25);
+      padding: 0.35rem 1rem;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ============ LAYOUT UTAMA ============ */
+    .cbt-container {
+      max-width: 860px;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .cbt-progress-bar {
+      background: #e2e8f0;
+      border-radius: 30px;
+      height: 10px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .cbt-progress-bar .fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #2563eb);
+      border-radius: 30px;
+      transition: width 0.35s ease;
+      width: 0%;
+    }
+
+    /* ============ KARTU SOAL ============ */
+    .cbt-card {
+      background: var(--cbt-card);
+      border-radius: 20px;
+      padding: 1.8rem 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .cbt-question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .cbt-question-number {
+      display: inline-block;
+      background: var(--cbt-primary);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.9rem;
+      border-radius: 30px;
+      letter-spacing: 0.03em;
+    }
+
+    /* Badge tipe soal */
+    .cbt-type-badge {
+      display: inline-block;
+      background: #e0e7ff;
+      color: #3730a3;
+      font-weight: 700;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      letter-spacing: 0.03em;
+      margin-left: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .cbt-mark-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 30px;
+      border: 2px solid var(--cbt-border);
+      background: #fff;
+      color: var(--cbt-ink-soft);
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      font-family: inherit;
+    }
+    .cbt-mark-btn:hover {
+      border-color: var(--cbt-mark);
+      color: var(--cbt-mark);
+    }
+    .cbt-mark-btn.marked {
+      background: var(--cbt-mark);
+      border-color: var(--cbt-mark);
+      color: #fff;
+    }
+
+    .cbt-question-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--cbt-ink);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ============ TIPE 1: PILIHAN GANDA (PG) ============ */
+    .cbt-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .cbt-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      padding: 0.95rem 1.2rem;
+      border: 2px solid var(--cbt-border);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      background: #fafbfc;
+      user-select: none;
+    }
+    .cbt-option:hover {
+      border-color: #93c5fd;
+      background: #eff6ff;
+      transform: translateX(4px);
+    }
+    .cbt-option.selected {
+      border-color: var(--cbt-primary);
+      background: #dbeafe;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    .cbt-option .option-letter {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: var(--cbt-ink);
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.18s ease;
+    }
+    .cbt-option.selected .option-letter {
+      background: var(--cbt-primary);
+      color: #fff;
+    }
+    .cbt-option .option-text {
+      font-size: 1rem;
+      color: var(--cbt-ink);
+      line-height: 1.6;
+      padding-top: 0.15rem;
+    }
+
+    /* ============ TIPE 2: BENAR-SALAH (BS) ============ */
+    .bs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+    .bs-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.9rem 1.1rem;
+      background: #fafbfc;
+      border: 2px solid var(--cbt-border);
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .bs-item .bs-pernyataan {
+      flex: 1 1 260px;
+      font-size: 1rem;
+      color: var(--cbt-ink);
+      line-height: 1.6;
+    }
+    .bs-item .bs-pernyataan .bs-label {
+      font-weight: 700;
+      color: var(--cbt-primary);
+      margin-right: 0.4rem;
+    }
+    .bs-pilihan {
+      display: inline-flex;
+      gap: 0.4rem;
+      flex-shrink: 0;
+      align-self: flex-start;
+    }
+    .bs-pilihan button {
+      padding: 0.35rem 0.9rem;
+      border: 2px solid var(--cbt-border);
+      background: #fff;
+      color: var(--cbt-ink-soft);
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      min-width: 54px;
+    }
+    .bs-pilihan button:hover {
+      border-color: #93c5fd;
+      color: var(--cbt-primary);
+    }
+    .bs-pilihan button.selected.benar {
+      background: var(--cbt-success);
+      border-color: var(--cbt-success);
+      color: #fff;
+    }
+    .bs-pilihan button.selected.salah {
+      background: var(--cbt-danger);
+      border-color: var(--cbt-danger);
+      color: #fff;
+    }
+
+    /* ============ TIPE 3: MENCOCOKKAN (MATCH) ============ */
+    .match-info {
+      font-size: 0.9rem;
+      color: var(--cbt-ink-soft);
+      margin-bottom: 1rem;
+      padding: 0.6rem 0.9rem;
+      background: #eff6ff;
+      border-radius: 10px;
+      border-left: 4px solid var(--cbt-primary);
+    }
+    .match-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .match-col-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--cbt-ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .match-item {
+      padding: 0.8rem 1rem;
+      border: 2px solid var(--cbt-border);
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      font-size: 0.95rem;
+      color: var(--cbt-ink);
+      margin-bottom: 0.5rem;
+      position: relative;
+      line-height: 1.5;
+    }
+    .match-item:hover {
+      border-color: #93c5fd;
+      background: #f0f7ff;
+    }
+    .match-item.selected {
+      border-color: var(--cbt-primary);
+      background: #dbeafe;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .match-item.paired {
+      border-color: var(--cbt-success);
+      background: #f0fdf4;
+    }
+    .match-item .match-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--cbt-success);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .match-actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .match-actions button {
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      border: 2px solid var(--cbt-border);
+      background: #fff;
+      color: var(--cbt-ink-soft);
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    .match-actions button:hover {
+      background: #fef2f2;
+      border-color: #fca5a5;
+      color: var(--cbt-danger);
+    }
+
+    /* ============ TIPE 4: PILIHAN GANDA KOMPLEKS (PGK) ============ */
+    .pgk-info {
+      font-size: 0.85rem;
+      color: #92400e;
+      background: #fef3c7;
+      padding: 0.55rem 0.9rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--cbt-warning);
+      line-height: 1.5;
+    }
+    .cbt-option.pgk .option-letter {
+      border-radius: 6px;
+      background: #fff;
+      border: 2px solid var(--cbt-border);
+    }
+    .cbt-option.pgk.selected .option-letter {
+      background: var(--cbt-primary);
+      border-color: var(--cbt-primary);
+      color: #fff;
+    }
+    .cbt-option.pgk.selected .option-letter::after {
+      content: "✓";
+      font-size: 1.05rem;
+    }
+    .cbt-option.pgk.selected .option-letter .chk {
+      display: none;
+    }
+
+    /* ============ TIPE 5: MENGURUTKAN (ORDER) ============ */
+    .order-info {
+      font-size: 0.9rem;
+      color: var(--cbt-ink-soft);
+      margin-bottom: 1rem;
+      padding: 0.6rem 0.9rem;
+      background: #eff6ff;
+      border-radius: 10px;
+      border-left: 4px solid var(--cbt-primary);
+    }
+    .order-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .order-item {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.85rem 1.1rem;
+      border: 2px solid var(--cbt-border);
+      border-radius: 12px;
+      background: #fafbfc;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+    .order-item:hover {
+      border-color: #93c5fd;
+      background: #eff6ff;
+    }
+    .order-item.picked {
+      border-color: var(--cbt-primary);
+      background: #dbeafe;
+    }
+    .order-item .order-num {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: var(--cbt-ink-soft);
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.18s ease;
+    }
+    .order-item.picked .order-num {
+      background: var(--cbt-primary);
+      color: #fff;
+    }
+    .order-item .order-text {
+      font-size: 0.98rem;
+      color: var(--cbt-ink);
+      line-height: 1.55;
+    }
+    .order-actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .order-actions button {
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      border: 2px solid var(--cbt-border);
+      background: #fff;
+      color: var(--cbt-ink-soft);
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    .order-actions button:hover {
+      background: #fef2f2;
+      border-color: #fca5a5;
+      color: var(--cbt-danger);
+    }
+
+    /* ============ NAVIGASI SOAL ============ */
+    .cbt-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .cbt-btn {
+      padding: 0.7rem 1.8rem;
+      border-radius: 12px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .cbt-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .cbt-btn.primary {
+      background: var(--cbt-primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .cbt-btn.primary:hover:not(:disabled) {
+      background: var(--cbt-primary-dark);
+      transform: translateY(-2px);
+    }
+    .cbt-btn.secondary {
+      background: #fff;
+      color: var(--cbt-ink);
+      border: 2px solid var(--cbt-border);
+    }
+    .cbt-btn.secondary:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .cbt-btn.danger {
+      background: var(--cbt-danger);
+      color: #fff;
+    }
+    .cbt-btn.danger:hover:not(:disabled) {
+      background: #b91c1c;
+    }
+
+    /* Nomor navigasi */
+    .cbt-number-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      padding: 1rem 1.2rem;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .cbt-num-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 2px solid var(--cbt-border);
+      background: #fff;
+      color: var(--cbt-ink);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      position: relative;
+    }
+    .cbt-num-btn:hover {
+      border-color: var(--cbt-primary);
+      background: #eff6ff;
+    }
+    .cbt-num-btn.answered {
+      background: #dbeafe;
+      border-color: #93c5fd;
+      color: var(--cbt-primary-dark);
+    }
+    .cbt-num-btn.active {
+      background: var(--cbt-primary);
+      border-color: var(--cbt-primary);
+      color: #fff;
+      transform: scale(1.1);
+    }
+    .cbt-num-btn.marked::after {
+      content: "★";
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      font-size: 0.75rem;
+      color: var(--cbt-mark);
+      background: #fff;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .cbt-num-btn.active.marked::after {
+      background: #fff;
+      color: var(--cbt-mark);
+    }
+
+    /* ============ STATUS KIRIM ============ */
+    .cbt-status {
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: none;
+      margin-top: 1rem;
+      text-align: left;
+      line-height: 1.5;
+    }
+    .cbt-status.info { background: #dbeafe; color: #1e40af; display: block; }
+    .cbt-status.success { background: #dcfce7; color: #166534; display: block; }
+    .cbt-status.error { background: #fee2e2; color: #991b1b; display: block; }
+    .cbt-status.warning { background: #fef3c7; color: #92400e; display: block; }
+
+    /* ============ IDENTITAS ============ */
+    .cbt-identity {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+      margin-bottom: 1.2rem;
+    }
+    .cbt-identity .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .cbt-identity .field label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--cbt-ink);
+    }
+    .cbt-identity .field input {
+      padding: 0.7rem 1rem;
+      border: 2px solid var(--cbt-border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+    .cbt-identity .field input:focus {
+      outline: none;
+      border-color: var(--cbt-primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    .cbt-identity .field input:read-only {
+      background: #f1f5f9;
+      color: var(--cbt-ink-soft);
+    }
+
+    /* ============ MODAL ============ */
+    .cbt-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .cbt-modal-overlay.active {
+      display: flex;
+    }
+    .cbt-modal {
+      background: #fff;
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .cbt-modal h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--cbt-ink);
+      margin-bottom: 0.7rem;
+    }
+    .cbt-modal p {
+      color: var(--cbt-ink-soft);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .cbt-modal .modal-actions {
+      display: flex;
+      gap: 0.7rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    /* ============ LAYAR INTRO ============ */
+    .cbt-intro {
+      text-align: center;
+      padding: 1.5rem 1rem;
+    }
+    .cbt-intro .intro-icon {
+      font-size: 3.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .cbt-intro h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--cbt-ink);
+      margin-bottom: 0.5rem;
+    }
+    .cbt-intro .intro-desc {
+      color: var(--cbt-ink-soft);
+      font-size: 1rem;
+      max-width: 55ch;
+      margin: 0 auto 1.5rem auto;
+      line-height: 1.7;
+    }
+    .cbt-intro .intro-info {
+      display: inline-flex;
+      gap: 1.5rem;
+      background: #f1f5f9;
+      padding: 1rem 2rem;
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .cbt-intro .intro-info .item {
+      text-align: center;
+    }
+    .cbt-intro .intro-info .item .num {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--cbt-primary);
+    }
+    .cbt-intro .intro-info .item .lbl {
+      font-size: 0.8rem;
+      color: var(--cbt-ink-soft);
+      font-weight: 600;
+    }
+
+    /* ============ LAYAR SELESAI ============ */
+    .cbt-finish {
+      text-align: center;
+      padding: 2.5rem 2rem;
+    }
+    .cbt-finish .finish-icon {
+      font-size: 4rem;
+      margin-bottom: 0.8rem;
+      line-height: 1;
+    }
+    .cbt-finish .finish-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--cbt-ink);
+      margin-bottom: 0.8rem;
+    }
+    .cbt-finish .finish-message {
+      font-size: 1rem;
+      color: var(--cbt-ink-soft);
+      max-width: 50ch;
+      margin: 0 auto 1.5rem auto;
+      line-height: 1.7;
+    }
+
+    /* ============ RESPONSIF ============ */
+    @media (max-width: 640px) {
+      .cbt-card { padding: 1.3rem 1.2rem; }
+      .cbt-question-text { font-size: 1.02rem; }
+      .cbt-option { padding: 0.8rem 1rem; }
+      .cbt-option .option-text { font-size: 0.92rem; }
+      .cbt-identity { grid-template-columns: 1fr; }
+      .cbt-header { padding: 0.7rem 1rem; }
+      .cbt-header .cbt-title { font-size: 0.9rem; }
+      .cbt-header .cbt-info { font-size: 0.8rem; gap: 0.7rem; }
+      .cbt-num-btn { width: 36px; height: 36px; font-size: 0.8rem; }
+      .cbt-btn { padding: 0.65rem 1.2rem; font-size: 0.88rem; }
+      .cbt-nav { justify-content: center; }
+      .match-container { grid-template-columns: 1fr; }
+      .bs-item { padding: 0.8rem 0.9rem; }
+      .bs-item .bs-pernyataan { font-size: 0.92rem; }
+    }
+
+    @media print {
+      .cbt-header, .cbt-nav, .cbt-number-nav, .cbt-btn { display: none !important; }
+      body { background: #fff; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER CBT ===== -->
+  <header class="cbt-header">
+    <div class="cbt-title">
+      <span>📝</span> PTS Kelas 9 — Informatika DUTA
+    </div>
+    <div class="cbt-info">
+      <div class="cbt-paket" id="paketDisplay">Paket -</div>
+      <div class="cbt-progress-text" id="progressText">Soal 0 / 20</div>
+      <div class="cbt-timer" id="timerDisplay">⏱ 30:00</div>
+    </div>
+  </header>
+
+  <div class="cbt-container">
+
+    <!-- ===== LAYAR INTRO ===== -->
+    <div id="introScreen">
+      <div class="cbt-card cbt-intro">
+        <div class="intro-icon">🎓</div>
+        <h1>Penilaian Tengah Semester</h1>
+        <p class="intro-desc">
+          PTS mata pelajaran Informatika Kelas 9. Soal mencakup materi Berpikir Komputasional,
+          Mesin Komputasi, Himpunan, dan Representasi Data. Soal terdiri dari lima tipe:
+          Pilihan Ganda, Benar-Salah, Mencocokkan, Pilihan Ganda Kompleks, dan Mengurutkan.
+          Paket soal akan ditentukan secara acak.
+        </p>
+
+        <div class="intro-info">
+          <div class="item">
+            <div class="num">20</div>
+            <div class="lbl">Soal</div>
+          </div>
+          <div class="item">
+            <div class="num">30</div>
+            <div class="lbl">Menit</div>
+          </div>
+          <div class="item">
+            <div class="num">100</div>
+            <div class="lbl">Poin Maksimal</div>
+          </div>
+        </div>
+
+        <div style="max-width: 480px; margin: 0 auto;">
+          <div class="cbt-identity">
+            <div class="field">
+              <label for="inputNama">Nama Lengkap</label>
+              <input type="text" id="inputNama" placeholder="Tulis namamu" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="inputKelas">Kelas</label>
+              <input type="text" id="inputKelas" placeholder="Contoh: 9A" autocomplete="off">
+            </div>
+          </div>
+          <div class="cbt-identity" style="grid-template-columns:1fr;">
+            <div class="field">
+              <label for="inputSekolah">Sekolah</label>
+              <input type="text" id="inputSekolah" placeholder="Contoh: SMPN 2 Talegong" autocomplete="off">
+            </div>
+          </div>
+
+          <p style="font-size:0.85rem; color:var(--cbt-ink-soft); margin-bottom:1rem; text-align:left; line-height:1.6;">
+            ⚠️ <strong>Perhatian:</strong> Pada perangkat HP, layar akan otomatis masuk mode
+            penuh saat ujian dimulai. Pastikan kamu sudah siap sebelum menekan tombol mulai.
+          </p>
+
+          <button class="cbt-btn primary" id="btnMulai" style="width:100%; justify-content:center; margin-top:0.5rem;">
+            🚀 Mulai Ujian
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== LAYAR SOAL ===== -->
+    <div id="quizScreen" style="display:none;">
+      <div class="cbt-progress-bar">
+        <div class="fill" id="progressFill"></div>
+      </div>
+
+      <div class="cbt-card">
+        <div class="cbt-question-header">
+          <div>
+            <span class="cbt-question-number" id="questionNumber">Soal 1 dari 20</span>
+            <span class="cbt-type-badge" id="typeBadge">PG</span>
+          </div>
+          <button class="cbt-mark-btn" id="btnMark">☆ Tandai</button>
+        </div>
+        <div class="cbt-question-text" id="questionText">Memuat soal...</div>
+        <div id="answerArea"></div>
+      </div>
+
+      <div class="cbt-nav">
+        <button class="cbt-btn secondary" id="btnPrev" disabled>← Sebelumnya</button>
+        <button class="cbt-btn danger" id="btnSelesai">✅ Selesai</button>
+        <button class="cbt-btn primary" id="btnNext">Selanjutnya →</button>
+      </div>
+
+      <div class="cbt-number-nav" id="numberNav"></div>
+    </div>
+
+    <!-- ===== LAYAR SELESAI ===== -->
+    <div id="finishScreen" style="display:none;">
+      <div class="cbt-card cbt-finish">
+        <div class="finish-icon" id="finishIcon">✅</div>
+        <div class="finish-title" id="finishTitle">Ujian Selesai</div>
+        <p class="finish-message" id="finishMessage">
+          Jawabanmu telah dikirim. Nilai akan diumumkan oleh guru.
+        </p>
+        <div id="statusKirim" class="cbt-status"></div>
+
+        <button class="cbt-btn primary" id="btnKirimUlang"
+                style="display:none; margin-top:1rem; justify-content:center; width:100%;">
+          🔄 Ulangi Kirim Nilai
+        </button>
+
+        <div style="margin-top:1.5rem; display:flex; gap:0.8rem; justify-content:center; flex-wrap:wrap;">
+          <a href="../index.html" class="cbt-btn secondary" style="text-decoration:none;">🏠 Kembali ke Beranda</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== MODAL KONFIRMASI ===== -->
+  <div class="cbt-modal-overlay" id="modalOverlay">
+    <div class="cbt-modal">
+      <h3 id="modalTitle">Selesaikan Ujian?</h3>
+      <p id="modalMessage">Pastikan semua soal sudah kamu jawab.</p>
+      <div class="modal-actions">
+        <button class="cbt-btn secondary" id="modalCancel">Cek Ulang</button>
+        <button class="cbt-btn danger" id="modalConfirm">Ya, Selesai</button>
+      </div>
+    </div>
+  </div>
+
+<!-- ===== BAGIAN 1 SELESAI — LANJUT KE BAGIAN 2 ===== -->
+
+
+  <script src="../script.js"></script>
+
+  <script>
+  (function() {
+    "use strict";
+
+    // ============================================
+    // KONFIGURASI
+    // ============================================
+    const NAMA_SHEET = 'ptskelas9';
+    const DURASI_MENIT = 30;
+    const TOTAL_SOAL = 20;
+    const SS_KEY_PENDING = 'duta_ptskelas9_pending';
+
+    // ============================================
+    // BANK SOAL — PAKET A
+    // 20 soal: 4 PG, 4 BS, 4 Match, 4 PGK, 4 Order
+    // Setiap tipe muncul 1x per materi (BK2, BK3, BK4, BK5)
+    // ============================================
+    const PAKET_A = [
+      // ---------- BK2 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK2',
+        q: "Empat pilar berpikir komputasional adalah…",
+        o: [
+          "Dekomposisi, Pengenalan Pola, Abstraksi, Algoritma",
+          "Input, Proses, Output, Penyimpanan",
+          "Biner, Oktal, Desimal, Heksadesimal",
+          "Irisan, Gabungan, Selisih, Komplemen"
+        ],
+        a: 0
+      },
+      // ---------- BK2 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK2',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "Abstraksi adalah kemampuan memecah masalah besar menjadi bagian kecil.", a: false },
+          { text: "Pengenalan pola membantu kita menemukan kesamaan dari masalah yang berbeda.", a: true },
+          { text: "Algoritma adalah urutan langkah sistematis untuk menyelesaikan masalah.", a: true }
+        ]
+      },
+      // ---------- BK2 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK2',
+        q: "Pasangkan pilar berpikir komputasional dengan contohnya!",
+        left: [
+          { id: '1', text: "Dekomposisi" },
+          { id: '2', text: "Algoritma" },
+          { id: '3', text: "Abstraksi" },
+          { id: '4', text: "Pengenalan Pola" }
+        ],
+        right: [
+          { id: 'A', text: "Membuat resep langkah demi langkah" },
+          { id: 'B', text: "Fokus pada jalan saat melihat peta" },
+          { id: 'C', text: "Memecah proyek menjadi tugas kecil" },
+          { id: 'D', text: "Menyadari kemacetan setiap Senin pagi" }
+        ],
+        key: { '1': 'C', '2': 'A', '3': 'B', '4': 'D' }
+      },
+      // ---------- BK2 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK2',
+        q: "Manakah pernyataan berikut yang benar tentang penerapan berpikir komputasional? (Pilih lebih dari satu)",
+        o: [
+          "Filter wajah di media sosial menggunakan pengenalan pola.",
+          "Aplikasi navigasi menggunakan abstraksi dengan hanya fokus pada jalan dan kondisi lalu lintas.",
+          "Berpikir komputasional hanya berguna bagi programmer.",
+          "Dekomposisi membantu memecah masalah kompleks menjadi lebih sederhana."
+        ],
+        a: [0, 1, 3] // A, B, D
+      },
+      // ---------- BK2 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK2',
+        q: "Urutkan langkah-langkah berpikir komputasional dalam menyelesaikan masalah \"merencanakan liburan keluarga\"!",
+        items: [
+          { id: 0, text: "Menyusun urutan pemesanan tiket → hotel → itinerary" },
+          { id: 1, text: "Memecah masalah menjadi transportasi, penginapan, makanan, aktivitas" },
+          { id: 2, text: "Melihat pola harga tiket di musim liburan" },
+          { id: 3, text: "Fokus pada tujuan utama liburan" }
+        ],
+        // Urutan benar (indeks id): 1 → 2 → 3 → 0
+        key: [1, 2, 3, 0]
+      },
+
+      // ---------- BK3 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK3',
+        q: "Bagian dari fungsi komputasi yang menerima data atau informasi disebut…",
+        o: ["Output", "Proses", "Input", "Storage"],
+        a: 2
+      },
+      // ---------- BK3 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK3',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "Dalam konsep black box, kita tidak perlu tahu detail proses di dalamnya.", a: true },
+          { text: "Output adalah hasil akhir dari proses yang dilakukan.", a: true },
+          { text: "Mesin penjual otomatis tidak menerapkan konsep input-proses-output.", a: false }
+        ]
+      },
+      // ---------- BK3 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK3',
+        q: "Pasangkan analogi dengan komponen input-proses-output yang sesuai!",
+        left: [
+          { id: '1', text: "Mesin cuci" },
+          { id: '2', text: "Koki di restoran" },
+          { id: '3', text: "Kalkulator" },
+          { id: '4', text: "Mesin ATM" }
+        ],
+        right: [
+          { id: 'A', text: "Input: pakaian kotor" },
+          { id: 'B', text: "Proses: memasak bahan" },
+          { id: 'C', text: "Output: hasil perhitungan" },
+          { id: 'D', text: "Output: uang tunai" }
+        ],
+        key: { '1': 'A', '2': 'B', '3': 'C', '4': 'D' }
+      },
+      // ---------- BK3 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK3',
+        q: "Manakah yang termasuk input dalam sistem komputer? (Pilih lebih dari satu)",
+        o: ["Keyboard", "Monitor", "Mouse", "Printer", "Scanner"],
+        a: [0, 2, 4] // A, C, E
+      },
+      // ---------- BK3 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK3',
+        q: "Urutkan proses dalam fungsi \"Membuat Teh Manis\"!",
+        items: [
+          { id: 0, text: "Aduk hingga rata" },
+          { id: 1, text: "Rebus air hingga mendidih" },
+          { id: 2, text: "Tambahkan gula sesuai selera" },
+          { id: 3, text: "Seduh teh dalam air panas" }
+        ],
+        key: [1, 3, 2, 0]
+      },
+
+      // ---------- BK4 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK4',
+        q: "Himpunan yang berisi semua anggota dari dua himpunan atau lebih disebut…",
+        o: ["Irisan", "Gabungan", "Selisih", "Komplemen"],
+        a: 1
+      },
+      // ---------- BK4 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK4',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "A ∩ B adalah himpunan yang berisi anggota yang sama-sama dimiliki A dan B.", a: true },
+          { text: "Himpunan kosong dilambangkan dengan {0}.", a: false },
+          { text: "A ∪ B berisi semua anggota A dan B tanpa duplikat.", a: true }
+        ]
+      },
+      // ---------- BK4 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK4',
+        q: "Pasangkan operasi himpunan dengan hasilnya! (A = {1,2,3,4}, B = {3,4,5,6})",
+        left: [
+          { id: '1', text: "A ∩ B" },
+          { id: '2', text: "A ∪ B" },
+          { id: '3', text: "A − B" },
+          { id: '4', text: "B − A" }
+        ],
+        right: [
+          { id: 'A', text: "{1, 2}" },
+          { id: 'B', text: "{3, 4}" },
+          { id: 'C', text: "{1, 2, 3, 4, 5, 6}" },
+          { id: 'D', text: "{5, 6}" }
+        ],
+        key: { '1': 'B', '2': 'C', '3': 'A', '4': 'D' }
+      },
+      // ---------- BK4 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK4',
+        q: "Diketahui S = {1,2,3,4,5,6,7,8}, A = {1,2,3,4}, B = {3,4,5,6}. Manakah pernyataan yang benar? (Pilih lebih dari satu)",
+        o: [
+          "A ∩ B = {3,4}",
+          "A ∪ B = {1,2,3,4,5,6}",
+          "A' = {5,6,7,8}",
+          "A − B = {1,2,3}"
+        ],
+        a: [0, 1, 2] // A, B, C
+      },
+      // ---------- BK4 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK4',
+        q: "Urutkan langkah memodelkan masalah \"preferensi makanan\" ke dalam himpunan!",
+        items: [
+          { id: 0, text: "Tentukan |A ∪ B| = |A| + |B| − |A ∩ B|" },
+          { id: 1, text: "Definisikan A = {siswa suka nasi goreng}, B = {siswa suka mie goreng}" },
+          { id: 2, text: "Tentukan |A| = 15, |B| = 12, |A ∩ B| = 6" },
+          { id: 3, text: "Hitung: 15 + 12 − 6 = 21" }
+        ],
+        key: [1, 2, 0, 3]
+      },
+
+      // ---------- BK5 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK5',
+        q: "Bilangan biner 1101 jika dikonversi ke desimal adalah…",
+        o: ["11", "12", "13", "14"],
+        a: 2
+      },
+      // ---------- BK5 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK5',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "1 byte = 8 bit.", a: true },
+          { text: "Bilangan oktal menggunakan basis 8.", a: true },
+          { text: "Biner 1010 sama dengan desimal 10.", a: true }
+        ]
+      },
+      // ---------- BK5 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK5',
+        q: "Pasangkan bilangan biner dengan bilangan desimal yang sesuai!",
+        left: [
+          { id: '1', text: "001" },
+          { id: '2', text: "010" },
+          { id: '3', text: "101" },
+          { id: '4', text: "111" }
+        ],
+        right: [
+          { id: 'A', text: "5" },
+          { id: 'B', text: "1" },
+          { id: 'C', text: "2" },
+          { id: 'D', text: "7" }
+        ],
+        key: { '1': 'B', '2': 'C', '3': 'A', '4': 'D' }
+      },
+      // ---------- BK5 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK5',
+        q: "Manakah pernyataan yang benar tentang konversi bilangan? (Pilih lebih dari satu)",
+        o: [
+          "Biner 11101 = desimal 29",
+          "Oktal 247 = biner 010100111",
+          "Desimal 245 = oktal 365",
+          "Biner 1011101 = oktal 135"
+        ],
+        a: [0, 1, 2, 3] // A, B, C, D — semua benar
+      },
+      // ---------- BK5 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK5',
+        q: "Urutkan langkah konversi desimal 29 ke biner!",
+        items: [
+          { id: 0, text: "1 ÷ 2 = 0 sisa 1" },
+          { id: 1, text: "29 ÷ 2 = 14 sisa 1" },
+          { id: 2, text: "7 ÷ 2 = 3 sisa 1" },
+          { id: 3, text: "14 ÷ 2 = 7 sisa 0" },
+          { id: 4, text: "3 ÷ 2 = 1 sisa 1" }
+        ],
+        // key adalah urutan id yang benar dari langkah ke-1 s/d terakhir
+        key: [1, 3, 2, 4, 0]
+      }
+    ];
+
+// ===== BAGIAN 2 SELESAI — LANJUT KE BAGIAN 3 =====
+
+
+    // ============================================
+    // BANK SOAL — PAKET B
+    // 20 soal: 4 PG, 4 BS, 4 Match, 4 PGK, 4 Order
+    // ============================================
+    const PAKET_B = [
+      // ---------- BK2 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK2',
+        q: "Kemampuan memecah masalah besar menjadi bagian-bagian kecil yang lebih mudah dikelola disebut…",
+        o: ["Abstraksi", "Dekomposisi", "Algoritma", "Pengenalan Pola"],
+        a: 1
+      },
+      // ---------- BK2 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK2',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "Berpikir komputasional berarti berpikir seperti komputer.", a: false },
+          { text: "Algoritma adalah urutan langkah logis untuk menyelesaikan masalah.", a: true },
+          { text: "Abstraksi berarti mengabaikan informasi yang tidak relevan.", a: true }
+        ]
+      },
+      // ---------- BK2 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK2',
+        q: "Pasangkan istilah dengan pengertiannya!",
+        left: [
+          { id: '1', text: "Dekomposisi" },
+          { id: '2', text: "Pengenalan Pola" },
+          { id: '3', text: "Abstraksi" },
+          { id: '4', text: "Algoritma" }
+        ],
+        right: [
+          { id: 'A', text: "Menemukan kesamaan antar masalah" },
+          { id: 'B', text: "Fokus pada informasi penting" },
+          { id: 'C', text: "Memecah masalah menjadi bagian kecil" },
+          { id: 'D', text: "Langkah-langkah sistematis penyelesaian" }
+        ],
+        key: { '1': 'C', '2': 'A', '3': 'B', '4': 'D' }
+      },
+      // ---------- BK2 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK2',
+        q: "Manakah yang merupakan contoh penerapan dekomposisi dalam kehidupan sehari-hari? (Pilih lebih dari satu)",
+        o: [
+          "Membagi proyek sekolah menjadi beberapa tugas kecil",
+          "Menyadari bahwa setiap Senin pagi jalanan lebih macet",
+          "Memecah masalah liburan menjadi transportasi, penginapan, dan aktivitas",
+          "Membagi jadwal belajar per mata pelajaran dan per hari"
+        ],
+        a: [0, 2, 3] // A, C, D
+      },
+      // ---------- BK2 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK2',
+        q: "Urutkan langkah-langkah menyusun strategi bermain game menggunakan berpikir komputasional!",
+        items: [
+          { id: 0, text: "Menyusun urutan strategi serang dan bertahan" },
+          { id: 1, text: "Mengenali pola gerakan musuh" },
+          { id: 2, text: "Fokus pada objektif utama permainan" },
+          { id: 3, text: "Menentukan tujuan akhir permainan" }
+        ],
+        key: [3, 1, 2, 0]
+      },
+
+      // ---------- BK3 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK3',
+        q: "Bagian dari fungsi komputasi yang menghasilkan keluaran setelah diproses disebut…",
+        o: ["Input", "Proses", "Output", "Storage"],
+        a: 2
+      },
+      // ---------- BK3 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK3',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "Proses dalam fungsi komputasi dilakukan oleh CPU.", a: true },
+          { text: "Output bisa berupa informasi yang ditampilkan atau tindakan yang dilakukan.", a: true },
+          { text: "Dalam black box, kita harus mengetahui seluruh detail proses di dalamnya.", a: false }
+        ]
+      },
+      // ---------- BK3 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK3',
+        q: "Pasangkan aktivitas dengan komponen input-proses-output yang sesuai!",
+        left: [
+          { id: '1', text: "Menghitung nilai rata-rata" },
+          { id: '2', text: "Mesin cuci" },
+          { id: '3', text: "Mengirim email" },
+          { id: '4', text: "Menonton film di YouTube" }
+        ],
+        right: [
+          { id: 'A', text: "Input: daftar nilai ujian" },
+          { id: 'B', text: "Proses: mencuci, membilas, memeras" },
+          { id: 'C', text: "Output: pesan terkirim" },
+          { id: 'D', text: "Output: film diputar" }
+        ],
+        key: { '1': 'A', '2': 'B', '3': 'C', '4': 'D' }
+      },
+      // ---------- BK3 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK3',
+        q: "Manakah yang termasuk output dari sebuah sistem komputasi? (Pilih lebih dari satu)",
+        o: [
+          "Monitor menampilkan gambar",
+          "Keyboard menerima ketikan",
+          "Printer mencetak dokumen",
+          "Speaker mengeluarkan suara",
+          "Mouse menggerakkan kursor"
+        ],
+        a: [0, 2, 3] // A, C, D
+      },
+      // ---------- BK3 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK3',
+        q: "Urutkan proses dalam fungsi \"Pengecekan Kelulusan\"!",
+        items: [
+          { id: 0, text: "Jika nilai ≥ 75, maka \"Lulus\"" },
+          { id: 1, text: "Input: nilai siswa = 80" },
+          { id: 2, text: "Jika nilai < 75, maka \"Tidak Lulus\"" },
+          { id: 3, text: "Output: \"Lulus\"" }
+        ],
+        key: [1, 0, 2, 3]
+      },
+
+      // ---------- BK4 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK4',
+        q: "Himpunan yang berisi anggota yang sama-sama dimiliki oleh dua himpunan disebut…",
+        o: ["Gabungan", "Irisan", "Selisih", "Komplemen"],
+        a: 1
+      },
+      // ---------- BK4 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK4',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "Himpunan semesta memuat semua objek yang sedang dibicarakan.", a: true },
+          { text: "Simbol ∈ berarti \"bukan anggota dari\".", a: false },
+          { text: "A − B adalah himpunan anggota A yang tidak ada di B.", a: true }
+        ]
+      },
+      // ---------- BK4 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK4',
+        q: "Pasangkan operasi himpunan dengan hasilnya! (S = {1,2,3,4,5,6}, A = {1,2,3}, B = {3,4,5})",
+        left: [
+          { id: '1', text: "A ∩ B" },
+          { id: '2', text: "A ∪ B" },
+          { id: '3', text: "A − B" },
+          { id: '4', text: "A'" }
+        ],
+        right: [
+          { id: 'A', text: "{1, 2}" },
+          { id: 'B', text: "{3}" },
+          { id: 'C', text: "{1, 2, 3, 4, 5}" },
+          { id: 'D', text: "{4, 5, 6}" }
+        ],
+        key: { '1': 'B', '2': 'C', '3': 'A', '4': 'D' }
+      },
+      // ---------- BK4 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK4',
+        q: "Diketahui S = {1,2,3,4,5,6,7,8}, A = {1,2,3,4}, B = {3,4,5,6}. Manakah pernyataan yang benar? (Pilih lebih dari satu)",
+        o: [
+          "A ∩ B = {3,4}",
+          "A ∪ B = {1,2,3,4,5,6}",
+          "B − A = {5,6}",
+          "A' = {5,6,7,8}"
+        ],
+        a: [0, 1, 2, 3] // A, B, C, D — semua benar
+      },
+      // ---------- BK4 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK4',
+        q: "Urutkan langkah memodelkan masalah \"rekomendasi film\" ke dalam himpunan!",
+        items: [
+          { id: 0, text: "R = S − T (rekomendasi genre yang disukai tapi belum ditonton)" },
+          { id: 1, text: "Definisikan G = {genre film}, S = {genre disukai}, T = {genre sudah ditonton}" },
+          { id: 2, text: "Tentukan R = {genre yang akan direkomendasikan}" },
+          { id: 3, text: "Terapkan logika selisih himpunan" }
+        ],
+        key: [1, 2, 3, 0]
+      },
+
+      // ---------- BK5 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK5',
+        q: "Bilangan biner 1011 jika dikonversi ke desimal adalah…",
+        o: ["9", "10", "11", "12"],
+        a: 2
+      },
+      // ---------- BK5 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK5',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "1 kilobyte = 1.024 byte.", a: true },
+          { text: "Bilangan oktal menggunakan 8 simbol: 0–7.", a: true },
+          { text: "Biner 1111 sama dengan desimal 15.", a: true }
+        ]
+      },
+      // ---------- BK5 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK5',
+        q: "Pasangkan bilangan oktal dengan bilangan biner yang sesuai!",
+        left: [
+          { id: '1', text: "2" },
+          { id: '2', text: "4" },
+          { id: '3', text: "5" },
+          { id: '4', text: "7" }
+        ],
+        right: [
+          { id: 'A', text: "100" },
+          { id: 'B', text: "010" },
+          { id: 'C', text: "111" },
+          { id: 'D', text: "101" }
+        ],
+        key: { '1': 'B', '2': 'A', '3': 'D', '4': 'C' }
+      },
+      // ---------- BK5 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK5',
+        q: "Manakah pernyataan yang benar tentang konversi bilangan? (Pilih lebih dari satu)",
+        o: [
+          "Biner 1101 = desimal 13",
+          "Oktal 367 = desimal 247",
+          "Desimal 29 = biner 11101",
+          "Biner 1011101 = oktal 135"
+        ],
+        a: [0, 1, 2, 3] // A, B, C, D — semua benar
+      },
+      // ---------- BK5 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK5',
+        q: "Urutkan langkah konversi desimal 245 ke oktal!",
+        items: [
+          { id: 0, text: "3 ÷ 8 = 0 sisa 3" },
+          { id: 1, text: "245 ÷ 8 = 30 sisa 5" },
+          { id: 2, text: "30 ÷ 8 = 3 sisa 6" }
+        ],
+        key: [1, 2, 0]
+      }
+    ];
+
+    // ============================================
+    // BANK SOAL — PAKET C
+    // 20 soal: 4 PG, 4 BS, 4 Match, 4 PGK, 4 Order
+    // ============================================
+    const PAKET_C = [
+      // ---------- BK2 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK2',
+        q: "Pilar berpikir komputasional yang berfokus pada informasi penting dan mengabaikan detail yang tidak relevan disebut…",
+        o: ["Dekomposisi", "Pengenalan Pola", "Abstraksi", "Algoritma"],
+        a: 2
+      },
+      // ---------- BK2 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK2',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "Pengenalan pola adalah kemampuan menemukan kesamaan dalam berbagai masalah.", a: true },
+          { text: "Berpikir komputasional hanya bermanfaat bagi programmer.", a: false },
+          { text: "Algoritma harus disusun secara sistematis dan logis.", a: true }
+        ]
+      },
+      // ---------- BK2 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK2',
+        q: "Pasangkan contoh dengan pilar berpikir komputasional yang sesuai!",
+        left: [
+          { id: '1', text: "Membuat kopi instan langkah demi langkah" },
+          { id: '2', text: "Membagi proyek menjadi tugas kecil" },
+          { id: '3', text: "Menyadari pola lalu lintas Senin pagi" },
+          { id: '4', text: "Melihat peta hanya fokus pada jalan" }
+        ],
+        right: [
+          { id: 'A', text: "Dekomposisi" },
+          { id: 'B', text: "Pengenalan Pola" },
+          { id: 'C', text: "Abstraksi" },
+          { id: 'D', text: "Algoritma" }
+        ],
+        key: { '1': 'D', '2': 'A', '3': 'B', '4': 'C' }
+      },
+      // ---------- BK2 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK2',
+        q: "Manakah yang merupakan contoh penerapan abstraksi? (Pilih lebih dari satu)",
+        o: [
+          "Saat memasak nasi goreng, tidak memikirkan proses pembuatan kecap",
+          "Menggambar sketsa hanya fokus pada bentuk utama",
+          "Membagi jadwal belajar per mata pelajaran",
+          "Melihat peta hanya pada jalan dan arah"
+        ],
+        a: [0, 1, 3] // A, B, D
+      },
+      // ---------- BK2 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK2',
+        q: "Urutkan langkah-langkah mengatur keuangan jajan mingguan menggunakan berpikir komputasional!",
+        items: [
+          { id: 0, text: "Susun anggaran → catat pengeluaran → evaluasi" },
+          { id: 1, text: "Pisahkan kebutuhan: makan, transport, tabungan" },
+          { id: 2, text: "Melihat pengeluaran lebih besar di hari tertentu" },
+          { id: 3, text: "Tentukan tujuan menabung" }
+        ],
+        key: [1, 2, 3, 0]
+      },
+
+      // ---------- BK3 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK3',
+        q: "Serangkaian langkah atau aturan yang mengubah input menjadi output disebut…",
+        o: ["Input", "Proses", "Output", "Storage"],
+        a: 1
+      },
+      // ---------- BK3 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK3',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "Input bisa berasal dari pengguna, perangkat lain, atau penyimpanan.", a: true },
+          { text: "Fungsi dalam berpikir komputasional digambarkan sebagai \"kotak hitam\".", a: true },
+          { text: "Output tidak dapat berupa tindakan yang dilakukan perangkat.", a: false }
+        ]
+      },
+      // ---------- BK3 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK3',
+        q: "Pasangkan analogi dengan komponen output yang sesuai!",
+        left: [
+          { id: '1', text: "Mesin ATM" },
+          { id: '2', text: "Koki di restoran" },
+          { id: '3', text: "Aplikasi navigasi" },
+          { id: '4', text: "Mesin cetak foto" }
+        ],
+        right: [
+          { id: 'A', text: "Makanan siap saji" },
+          { id: 'B', text: "Uang tunai dan struk" },
+          { id: 'C', text: "Foto cetak" },
+          { id: 'D', text: "Rute perjalanan" }
+        ],
+        key: { '1': 'B', '2': 'A', '3': 'D', '4': 'C' }
+      },
+      // ---------- BK3 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK3',
+        q: "Manakah yang termasuk proses dalam sistem komputasi? (Pilih lebih dari satu)",
+        o: [
+          "CPU melakukan perhitungan",
+          "Keyboard menerima ketikan",
+          "Mesin kopi memanaskan air",
+          "Monitor menampilkan gambar",
+          "Kalkulator menghitung hasil"
+        ],
+        a: [0, 2, 4] // A, C, E
+      },
+      // ---------- BK3 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK3',
+        q: "Urutkan proses dalam fungsi \"Menghitung Nilai Rata-rata\"!",
+        items: [
+          { id: 0, text: "Bagi dengan jumlah data: 425 ÷ 5 = 85" },
+          { id: 1, text: "Input: daftar nilai ujian [80, 85, 90, 75, 95]" },
+          { id: 2, text: "Jumlahkan semua nilai: 80+85+90+75+95 = 425" },
+          { id: 3, text: "Output: nilai rata-rata = 85" }
+        ],
+        key: [1, 2, 0, 3]
+      },
+
+      // ---------- BK4 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK4',
+        q: "Himpunan yang tidak memiliki anggota sama sekali disebut…",
+        o: ["Himpunan Semesta", "Himpunan Kosong", "Himpunan Bagian", "Himpunan Komplemen"],
+        a: 1
+      },
+      // ---------- BK4 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK4',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "Himpunan kosong dilambangkan dengan ∅ atau {}.", a: true },
+          { text: "A ⊆ B berarti semua anggota A juga anggota B.", a: true },
+          { text: "Komplemen A adalah anggota himpunan semesta yang menjadi anggota A.", a: false }
+        ]
+      },
+      // ---------- BK4 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK4',
+        q: "Pasangkan operasi himpunan dengan hasilnya! (S = {1,2,3,4,5,6}, A = {1,2,3,4}, B = {4,5,6})",
+        left: [
+          { id: '1', text: "A ∩ B" },
+          { id: '2', text: "A ∪ B" },
+          { id: '3', text: "A − B" },
+          { id: '4', text: "B − A" }
+        ],
+        right: [
+          { id: 'A', text: "{1, 2, 3}" },
+          { id: 'B', text: "{4}" },
+          { id: 'C', text: "{1, 2, 3, 4, 5, 6}" },
+          { id: 'D', text: "{5, 6}" }
+        ],
+        key: { '1': 'B', '2': 'C', '3': 'A', '4': 'D' }
+      },
+      // ---------- BK4 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK4',
+        q: "Diketahui S = {1,2,3,4,5,6,7,8}, A = {1,2,3,4}, B = {3,4,5,6}. Manakah pernyataan yang benar? (Pilih lebih dari satu)",
+        o: [
+          "A ∩ B = {3,4}",
+          "A ∪ B = {1,2,3,4,5,6}",
+          "A − B = {1,2}",
+          "B' = {1,2,7,8}"
+        ],
+        a: [0, 1, 2, 3] // A, B, C, D — semua benar
+      },
+      // ---------- BK4 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK4',
+        q: "Urutkan langkah memodelkan masalah \"logika peminjaman buku\" ke dalam himpunan!",
+        items: [
+          { id: 0, text: "Jika buku ∈ L, maka buku ∈ D" },
+          { id: 1, text: "Definisikan P = {buku dipinjam}, T = {tepat waktu}, L = {terlambat}, D = {kena denda}" },
+          { id: 2, text: "L = P − T" },
+          { id: 3, text: "Tentukan relasi logika" }
+        ],
+        key: [1, 3, 2, 0]
+      },
+
+      // ---------- BK5 · PG ----------
+      {
+        type: 'pg',
+        materi: 'BK5',
+        q: "Bilangan biner 1001 jika dikonversi ke desimal adalah…",
+        o: ["7", "8", "9", "10"],
+        a: 2
+      },
+      // ---------- BK5 · BS ----------
+      {
+        type: 'bs',
+        materi: 'BK5',
+        q: "Tentukan benar atau salah pernyataan berikut!",
+        items: [
+          { text: "1 byte = 8 bit.", a: true },
+          { text: "Bilangan biner hanya menggunakan simbol 0 dan 1.", a: true },
+          { text: "Biner 110 = desimal 5.", a: false }
+        ]
+      },
+      // ---------- BK5 · Match ----------
+      {
+        type: 'match',
+        materi: 'BK5',
+        q: "Pasangkan bilangan biner dengan bilangan oktal yang sesuai!",
+        left: [
+          { id: '1', text: "001" },
+          { id: '2', text: "011" },
+          { id: '3', text: "101" },
+          { id: '4', text: "111" }
+        ],
+        right: [
+          { id: 'A', text: "3" },
+          { id: 'B', text: "5" },
+          { id: 'C', text: "1" },
+          { id: 'D', text: "7" }
+        ],
+        key: { '1': 'C', '2': 'A', '3': 'B', '4': 'D' }
+      },
+      // ---------- BK5 · PGK ----------
+      {
+        type: 'pgk',
+        materi: 'BK5',
+        q: "Manakah pernyataan yang benar tentang konversi bilangan? (Pilih lebih dari satu)",
+        o: [
+          "Biner 1101 = desimal 13",
+          "Oktal 247 = biner 010100111",
+          "Desimal 245 = oktal 365",
+          "Biner 1011101 = oktal 135"
+        ],
+        a: [0, 1, 2, 3] // A, B, C, D — semua benar
+      },
+      // ---------- BK5 · Order ----------
+      {
+        type: 'order',
+        materi: 'BK5',
+        q: "Urutkan langkah konversi biner 1011101 ke oktal!",
+        items: [
+          { id: 0, text: "Konversi setiap kelompok: 001=1, 011=3, 101=5" },
+          { id: 1, text: "Kelompokkan dari kanan: 1 | 011 | 101" },
+          { id: 2, text: "Hasil: 135 (oktal)" },
+          { id: 3, text: "Tambahkan 0 di depan kelompok pertama: 001 | 011 | 101" }
+        ],
+        key: [1, 3, 0, 2]
+      }
+    ];
+
+    // ============================================
+    // DAFTAR SEMUA PAKET
+    // ============================================
+    const SEMUA_PAKET = { A: PAKET_A, B: PAKET_B, C: PAKET_C };
+
+// ===== BAGIAN 3 SELESAI — LANJUT KE BAGIAN 4 =====
+
+
+    // ============================================
+    // STATE
+    // ============================================
+    let paketTerpilih = null;
+    let daftarSoal = [];
+    let currentIndex = 0;
+    let jawabanUser = [];   // struktur per tipe soal
+    let markedSoal = [];
+    let timerInterval = null;
+    let waktuTersisa = DURASI_MENIT * 60;
+    let ujianSelesai = false;
+    let nilaiGagalKirim = null; // { nilaiAkhir }
+
+    // State sementara untuk tipe Match & Order pada soal aktif
+    let matchSelectedLeft = null;
+    let orderPicked = []; // array id yang sudah dipilih berurutan
+
+    // ============================================
+    // DOM REFS
+    // ============================================
+    const introScreen = document.getElementById('introScreen');
+    const quizScreen = document.getElementById('quizScreen');
+    const finishScreen = document.getElementById('finishScreen');
+
+    const inputNama = document.getElementById('inputNama');
+    const inputKelas = document.getElementById('inputKelas');
+    const inputSekolah = document.getElementById('inputSekolah');
+    const btnMulai = document.getElementById('btnMulai');
+
+    const paketDisplay = document.getElementById('paketDisplay');
+    const progressText = document.getElementById('progressText');
+    const progressFill = document.getElementById('progressFill');
+    const timerDisplay = document.getElementById('timerDisplay');
+
+    const questionNumber = document.getElementById('questionNumber');
+    const typeBadge = document.getElementById('typeBadge');
+    const questionText = document.getElementById('questionText');
+    const answerArea = document.getElementById('answerArea');
+    const btnMark = document.getElementById('btnMark');
+
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const btnSelesai = document.getElementById('btnSelesai');
+    const numberNav = document.getElementById('numberNav');
+
+    const finishIcon = document.getElementById('finishIcon');
+    const finishTitle = document.getElementById('finishTitle');
+    const finishMessage = document.getElementById('finishMessage');
+    const statusKirim = document.getElementById('statusKirim');
+    const btnKirimUlang = document.getElementById('btnKirimUlang');
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalCancel = document.getElementById('modalCancel');
+    const modalConfirm = document.getElementById('modalConfirm');
+
+    // ============================================
+    // HELPER: LABEL TIPE SOAL
+    // ============================================
+    const LABEL_TIPE = {
+      pg:    'Pilihan Ganda',
+      bs:    'Benar / Salah',
+      match: 'Mencocokkan',
+      pgk:   'PG Kompleks',
+      order: 'Mengurutkan'
+    };
+
+    // ============================================
+    // INIT JAWABAN PER TIPE
+    // ============================================
+    function initJawabanKosong(soal) {
+      switch (soal.type) {
+        case 'pg':    return null;
+        case 'bs':    return new Array(soal.items.length).fill(null); // true/false/null
+        case 'match': return {};   // { idLeft: idRight }
+        case 'pgk':   return [];   // array indeks opsi terpilih
+        case 'order': return [];   // array id terurut
+        default:      return null;
+      }
+    }
+
+    // ============================================
+    // CEK APAKAH SOAL SUDAH DIJAWAB
+    // ============================================
+    function isTerjawab(soal, jawaban) {
+      if (jawaban === null || jawaban === undefined) return false;
+      switch (soal.type) {
+        case 'pg':
+          return typeof jawaban === 'number';
+        case 'bs':
+          return jawaban.some(function(v) { return v !== null; });
+        case 'match':
+          return Object.keys(jawaban).length > 0;
+        case 'pgk':
+          return jawaban.length > 0;
+        case 'order':
+          return jawaban.length > 0;
+        default:
+          return false;
+      }
+    }
+
+    // ============================================
+    // MULAI UJIAN
+    // ============================================
+    btnMulai.addEventListener('click', function() {
+      const nama = inputNama.value.trim();
+      const kelas = inputKelas.value.trim();
+      const sekolah = inputSekolah.value.trim();
+
+      if (!nama)    { alert('Silakan isi nama lengkap terlebih dahulu.'); inputNama.focus(); return; }
+      if (!kelas)   { alert('Silakan isi kelas terlebih dahulu.'); inputKelas.focus(); return; }
+      if (!sekolah) { alert('Silakan isi sekolah terlebih dahulu.'); inputSekolah.focus(); return; }
+
+      window.simpanIdentitasSiswa(sekolah, nama, kelas);
+
+      const kodePaket = ['A', 'B', 'C'][Math.floor(Math.random() * 3)];
+      paketTerpilih = kodePaket;
+      daftarSoal = SEMUA_PAKET[kodePaket];
+
+      currentIndex = 0;
+      jawabanUser = daftarSoal.map(function(s) { return initJawabanKosong(s); });
+      markedSoal = new Array(daftarSoal.length).fill(false);
+      ujianSelesai = false;
+
+      paketDisplay.textContent = 'Paket ' + kodePaket;
+      introScreen.style.display = 'none';
+      quizScreen.style.display = 'block';
+      finishScreen.style.display = 'none';
+
+      requestFullscreenIfMobile();
+      renderNumberNav();
+      renderSoal();
+      mulaiTimer();
+    });
+
+    // ============================================
+    // FULLSCREEN (khusus HP)
+    // ============================================
+    function requestFullscreenIfMobile() {
+      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      if (!isMobile) return;
+      const el = document.documentElement;
+      const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+      if (req) req.call(el).catch(function() {});
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('portrait').catch(function() {});
+      }
+    }
+
+    // ============================================
+    // TIMER
+    // ============================================
+    function mulaiTimer() {
+      waktuTersisa = DURASI_MENIT * 60;
+      updateTimerDisplay();
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(function() {
+        waktuTersisa--;
+        updateTimerDisplay();
+        if (waktuTersisa <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          selesaikanUjian(true);
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(waktuTersisa / 60);
+      const d = waktuTersisa % 60;
+      timerDisplay.textContent = '⏱ ' + String(m).padStart(2, '0') + ':' + String(d).padStart(2, '0');
+      if (waktuTersisa <= 300) timerDisplay.classList.add('warning');
+      else timerDisplay.classList.remove('warning');
+    }
+
+    // ============================================
+    // RENDER SOAL (DISPATCHER)
+    // ============================================
+    let lastRenderedIndex = -1;
+
+    function renderSoal() {
+      const soal = daftarSoal[currentIndex];
+      if (!soal) return;
+
+      // Reset pilihan Match hanya saat pindah ke soal lain
+      if (lastRenderedIndex !== currentIndex) {
+        matchSelectedLeft = null;
+      }
+      lastRenderedIndex = currentIndex;
+
+      questionNumber.textContent = 'Soal ' + (currentIndex + 1) + ' dari ' + daftarSoal.length;
+      typeBadge.textContent = LABEL_TIPE[soal.type] || soal.type.toUpperCase();
+      questionText.textContent = soal.q;
+
+      progressText.textContent = 'Soal ' + (currentIndex + 1) + ' / ' + daftarSoal.length;
+      progressFill.style.width = ((currentIndex + 1) / daftarSoal.length * 100) + '%';
+
+      if (markedSoal[currentIndex]) {
+        btnMark.classList.add('marked');
+        btnMark.textContent = '★ Ditandai';
+      } else {
+        btnMark.classList.remove('marked');
+        btnMark.textContent = '☆ Tandai';
+      }
+
+      // Reset state sementara Match/Order
+      //matchSelectedLeft = null;
+	  // matchSelectedLeft TIDAK direset di sini agar pilihan kiri tetap tersimpan
+      orderPicked = [];
+
+      // Render area jawaban sesuai tipe
+      answerArea.innerHTML = '';
+      switch (soal.type) {
+        case 'pg':    renderPG(soal, currentIndex);    break;
+        case 'bs':    renderBS(soal, currentIndex);    break;
+        case 'match': renderMatch(soal, currentIndex); break;
+        case 'pgk':   renderPGK(soal, currentIndex);   break;
+        case 'order': renderOrder(soal, currentIndex); break;
+      }
+
+      btnPrev.disabled = currentIndex === 0;
+      btnNext.disabled = currentIndex === daftarSoal.length - 1;
+      updateNumberNavActive();
+    }
+
+    // ============================================
+    // RENDER: PG
+    // ============================================
+    function renderPG(soal, idx) {
+      const wrap = document.createElement('div');
+      wrap.className = 'cbt-options';
+      const huruf = ['A', 'B', 'C', 'D', 'E'];
+      soal.o.forEach(function(teks, i) {
+        const div = document.createElement('div');
+        div.className = 'cbt-option' + (jawabanUser[idx] === i ? ' selected' : '');
+        div.innerHTML = '<div class="option-letter">' + huruf[i] + '</div>' +
+                        '<div class="option-text">' + teks + '</div>';
+        div.addEventListener('click', function() {
+          if (ujianSelesai) return;
+          jawabanUser[idx] = i;
+          wrap.querySelectorAll('.cbt-option').forEach(function(el, j) {
+            el.classList.toggle('selected', j === i);
+          });
+          updateNumberNavActive();
+        });
+        wrap.appendChild(div);
+      });
+      answerArea.appendChild(wrap);
+    }
+
+    // ============================================
+    // RENDER: BS
+    // ============================================
+    function renderBS(soal, idx) {
+      const list = document.createElement('div');
+      list.className = 'bs-list';
+      const huruf = ['a', 'b', 'c', 'd', 'e'];
+      soal.items.forEach(function(item, i) {
+        const row = document.createElement('div');
+        row.className = 'bs-item';
+        const text = document.createElement('div');
+        text.className = 'bs-pernyataan';
+        text.innerHTML = '<span class="bs-label">' + huruf[i] + '.</span>' + item.text;
+        row.appendChild(text);
+
+        const pilihan = document.createElement('div');
+        pilihan.className = 'bs-pilihan';
+        ['Benar', 'Salah'].forEach(function(label, k) {
+          const nilai = (k === 0); // Benar = true, Salah = false
+          const btn = document.createElement('button');
+          btn.textContent = label;
+          btn.type = 'button';
+          const current = jawabanUser[idx][i];
+          if (current === nilai) {
+            btn.classList.add('selected');
+            btn.classList.add(label === 'Benar' ? 'benar' : 'salah');
+          }
+          btn.addEventListener('click', function() {
+            if (ujianSelesai) return;
+            jawabanUser[idx][i] = nilai;
+            pilihan.querySelectorAll('button').forEach(function(b) {
+              b.classList.remove('selected', 'benar', 'salah');
+            });
+            btn.classList.add('selected');
+            btn.classList.add(label === 'Benar' ? 'benar' : 'salah');
+            updateNumberNavActive();
+          });
+          pilihan.appendChild(btn);
+        });
+        row.appendChild(pilihan);
+        list.appendChild(row);
+      });
+      answerArea.appendChild(list);
+    }
+
+    // ============================================
+    // RENDER: MATCH
+    // ============================================
+    function renderMatch(soal, idx) {
+      const info = document.createElement('div');
+      info.className = 'match-info';
+      info.textContent = 'Klik item di kolom kiri, lalu klik pasangannya di kolom kanan. Klik item yang sudah dipasangkan untuk melepas.';
+      answerArea.appendChild(info);
+
+      const container = document.createElement('div');
+      container.className = 'match-container';
+
+      const colLeft = document.createElement('div');
+      const colRight = document.createElement('div');
+
+      const titleL = document.createElement('div');
+      titleL.className = 'match-col-title';
+      titleL.textContent = 'Kolom Kiri';
+      colLeft.appendChild(titleL);
+
+      const titleR = document.createElement('div');
+      titleR.className = 'match-col-title';
+      titleR.textContent = 'Kolom Kanan';
+      colRight.appendChild(titleR);
+
+      const jawaban = jawabanUser[idx]; // { idLeft: idRight }
+
+      function getLeftPair(idLeft) { return jawaban[idLeft]; }
+      function findLeftByRight(idRight) {
+        for (const k in jawaban) if (jawaban[k] === idRight) return k;
+        return null;
+      }
+
+      // Render kolom kiri
+      soal.left.forEach(function(item) {
+        const div = document.createElement('div');
+        div.className = 'match-item';
+        div.textContent = item.id + '. ' + item.text;
+        const pasangan = getLeftPair(item.id);
+        if (pasangan) {
+          div.classList.add('paired');
+          const badge = document.createElement('span');
+          badge.className = 'match-badge';
+          badge.textContent = pasangan;
+          div.appendChild(badge);
+        }
+        if (matchSelectedLeft === item.id) div.classList.add('selected');
+        div.addEventListener('click', function() {
+          if (ujianSelesai) return;
+          // Kalau item sudah dipasangkan → lepas
+          if (getLeftPair(item.id)) {
+            delete jawaban[item.id];
+            matchSelectedLeft = null;
+            renderSoal();
+            return;
+          }
+          // Kalau sudah ada yang dipilih dan sama → batal pilih
+          if (matchSelectedLeft === item.id) {
+            matchSelectedLeft = null;
+          } else {
+            matchSelectedLeft = item.id;
+          }
+          renderSoal();
+        });
+        colLeft.appendChild(div);
+      });
+
+      // Render kolom kanan
+      soal.right.forEach(function(item) {
+        const div = document.createElement('div');
+        div.className = 'match-item';
+        div.textContent = item.id + '. ' + item.text;
+        const leftId = findLeftByRight(item.id);
+        if (leftId) {
+          div.classList.add('paired');
+          const badge = document.createElement('span');
+          badge.className = 'match-badge';
+          badge.textContent = leftId;
+          div.appendChild(badge);
+        }
+        div.addEventListener('click', function() {
+          if (ujianSelesai) return;
+          // Kalau item sudah dipasangkan → lepas
+          const leftIdNow = findLeftByRight(item.id);
+          if (leftIdNow) {
+            delete jawaban[leftIdNow];
+            matchSelectedLeft = null;
+            renderSoal();
+            return;
+          }
+          // Butuh item kiri sudah dipilih
+          if (!matchSelectedLeft) return;
+          // Pasangkan
+          jawaban[matchSelectedLeft] = item.id;
+          matchSelectedLeft = null;
+          renderSoal();
+          updateNumberNavActive();
+        });
+        colRight.appendChild(div);
+      });
+
+      container.appendChild(colLeft);
+      container.appendChild(colRight);
+      answerArea.appendChild(container);
+
+      // Tombol reset pasangan
+      const actions = document.createElement('div');
+      actions.className = 'match-actions';
+      const btnReset = document.createElement('button');
+      btnReset.type = 'button';
+      btnReset.textContent = '↺ Reset Pasangan';
+      btnReset.addEventListener('click', function() {
+        if (ujianSelesai) return;
+        jawabanUser[idx] = {};
+        matchSelectedLeft = null;
+        renderSoal();
+        updateNumberNavActive();
+      });
+      actions.appendChild(btnReset);
+      answerArea.appendChild(actions);
+    }
+
+    // ============================================
+    // RENDER: PGK (Pilihan Ganda Kompleks)
+    // ============================================
+    function renderPGK(soal, idx) {
+      const info = document.createElement('div');
+      info.className = 'pgk-info';
+      info.textContent = 'ℹ️ Pilih lebih dari satu jawaban yang benar. Jawaban dianggap benar hanya jika semua pilihan tepat.';
+      answerArea.appendChild(info);
+
+      const wrap = document.createElement('div');
+      wrap.className = 'cbt-options';
+      const huruf = ['A', 'B', 'C', 'D', 'E'];
+      soal.o.forEach(function(teks, i) {
+        const div = document.createElement('div');
+        const dipilih = jawabanUser[idx].indexOf(i) !== -1;
+        div.className = 'cbt-option pgk' + (dipilih ? ' selected' : '');
+        div.innerHTML = '<div class="option-letter"><span class="chk">' + huruf[i] + '</span></div>' +
+                        '<div class="option-text">' + teks + '</div>';
+        div.addEventListener('click', function() {
+          if (ujianSelesai) return;
+          const arr = jawabanUser[idx];
+          const pos = arr.indexOf(i);
+          if (pos === -1) arr.push(i);
+          else arr.splice(pos, 1);
+          div.classList.toggle('selected', arr.indexOf(i) !== -1);
+          updateNumberNavActive();
+        });
+        wrap.appendChild(div);
+      });
+      answerArea.appendChild(wrap);
+    }
+
+    // ============================================
+    // RENDER: ORDER (Mengurutkan)
+    // ============================================
+    function renderOrder(soal, idx) {
+      const info = document.createElement('div');
+      info.className = 'order-info';
+      info.textContent = 'Klik langkah sesuai urutan yang benar. Nomor urut akan muncul pada tiap langkah. Klik lagi untuk membatalkan.';
+      answerArea.appendChild(info);
+
+      const list = document.createElement('div');
+      list.className = 'order-list';
+
+      soal.items.forEach(function(item) {
+        const div = document.createElement('div');
+        const posisi = jawabanUser[idx].indexOf(item.id);
+        const picked = posisi !== -1;
+        div.className = 'order-item' + (picked ? ' picked' : '');
+        div.innerHTML = '<div class="order-num">' + (picked ? (posisi + 1) : '?') + '</div>' +
+                        '<div class="order-text">' + item.text + '</div>';
+        div.addEventListener('click', function() {
+          if (ujianSelesai) return;
+          const arr = jawabanUser[idx];
+          const pos = arr.indexOf(item.id);
+          if (pos === -1) arr.push(item.id);
+          else arr.splice(pos, 1);
+          renderSoal();
+          updateNumberNavActive();
+        });
+        list.appendChild(div);
+      });
+      answerArea.appendChild(list);
+
+      // Tombol reset urutan
+      const actions = document.createElement('div');
+      actions.className = 'order-actions';
+      const btnReset = document.createElement('button');
+      btnReset.type = 'button';
+      btnReset.textContent = '↺ Reset Urutan';
+      btnReset.addEventListener('click', function() {
+        if (ujianSelesai) return;
+        jawabanUser[idx] = [];
+        orderPicked = [];
+        renderSoal();
+        updateNumberNavActive();
+      });
+      actions.appendChild(btnReset);
+      answerArea.appendChild(actions);
+    }
+
+    // ============================================
+    // MARK SOAL
+    // ============================================
+    btnMark.addEventListener('click', function() {
+      if (ujianSelesai) return;
+      markedSoal[currentIndex] = !markedSoal[currentIndex];
+      if (markedSoal[currentIndex]) {
+        btnMark.classList.add('marked');
+        btnMark.textContent = '★ Ditandai';
+      } else {
+        btnMark.classList.remove('marked');
+        btnMark.textContent = '☆ Tandai';
+      }
+      updateNumberNavActive();
+    });
+
+    // ============================================
+    // NAVIGASI NOMOR
+    // ============================================
+    function renderNumberNav() {
+      numberNav.innerHTML = '';
+      for (let i = 0; i < daftarSoal.length; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'cbt-num-btn';
+        btn.textContent = i + 1;
+        btn.addEventListener('click', function() {
+          currentIndex = i;
+          renderSoal();
+        });
+        numberNav.appendChild(btn);
+      }
+    }
+
+    function updateNumberNavActive() {
+      const btns = numberNav.querySelectorAll('.cbt-num-btn');
+      btns.forEach(function(btn, i) {
+        btn.classList.toggle('active', i === currentIndex);
+        btn.classList.toggle('answered', isTerjawab(daftarSoal[i], jawabanUser[i]));
+        btn.classList.toggle('marked', markedSoal[i]);
+      });
+    }
+
+    // ============================================
+    // NAVIGASI PREV / NEXT
+    // ============================================
+    btnPrev.addEventListener('click', function() {
+      if (currentIndex > 0) { currentIndex--; renderSoal(); }
+    });
+    btnNext.addEventListener('click', function() {
+      if (currentIndex < daftarSoal.length - 1) { currentIndex++; renderSoal(); }
+    });
+
+    // ============================================
+    // SELESAI (BUKA MODAL)
+    // ============================================
+    btnSelesai.addEventListener('click', function() {
+      let belumDijawab = 0;
+      daftarSoal.forEach(function(s, i) {
+        if (!isTerjawab(s, jawabanUser[i])) belumDijawab++;
+      });
+      const ditandai = markedSoal.filter(function(m) { return m; }).length;
+
+      let pesan = '';
+      if (belumDijawab > 0 && ditandai > 0) {
+        pesan = 'Masih ada ' + belumDijawab + ' soal belum dijawab dan ' + ditandai +
+                ' soal ditandai. Yakin ingin menyelesaikan ujian?';
+      } else if (belumDijawab > 0) {
+        pesan = 'Masih ada ' + belumDijawab + ' soal yang belum dijawab. ' +
+                'Soal kosong akan dihitung salah. Yakin ingin menyelesaikan?';
+      } else if (ditandai > 0) {
+        pesan = 'Masih ada ' + ditandai + ' soal yang ditandai. Yakin ingin menyelesaikan ujian?';
+      } else {
+        pesan = 'Semua soal sudah dijawab. Yakin ingin menyelesaikan ujian?';
+      }
+
+      modalTitle.textContent = 'Selesaikan Ujian?';
+      modalMessage.textContent = pesan;
+      modalOverlay.classList.add('active');
+    });
+
+    modalCancel.addEventListener('click', function() { modalOverlay.classList.remove('active'); });
+    modalConfirm.addEventListener('click', function() {
+      modalOverlay.classList.remove('active');
+      selesaikanUjian(false);
+    });
+    modalOverlay.addEventListener('click', function(e) {
+      if (e.target === modalOverlay) modalOverlay.classList.remove('active');
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+        modalOverlay.classList.remove('active');
+      }
+    });
+
+    // ============================================
+    // PENILAIAN PER TIPE SOAL
+    // ============================================
+    function nilaiPG(soal, jawaban) {
+      if (typeof jawaban !== 'number') return 0;
+      return jawaban === soal.a ? 5 : 0;
+    }
+
+    function nilaiBS(soal, jawaban) {
+      if (!Array.isArray(jawaban)) return 0;
+      let benar = 0;
+      soal.items.forEach(function(item, i) {
+        if (jawaban[i] === item.a) benar++;
+      });
+      if (benar === 3) return 5;
+      if (benar === 2) return 3;
+      if (benar === 1) return 1;
+      return 0;
+    }
+
+    function nilaiMatch(soal, jawaban) {
+      if (!jawaban || typeof jawaban !== 'object') return 0;
+      let benar = 0;
+      for (const k in soal.key) {
+        if (jawaban[k] === soal.key[k]) benar++;
+      }
+      // 4/3/2/1/0 → 5/3/2/1/0
+      if (benar >= 4) return 5;
+      if (benar === 3) return 3;
+      if (benar === 2) return 2;
+      if (benar === 1) return 1;
+      return 0;
+    }
+
+    function nilaiPGK(soal, jawaban) {
+      if (!Array.isArray(jawaban)) return 0;
+      const dipilih = jawaban.slice().sort().join(',');
+      const kunci = soal.a.slice().sort().join(',');
+      return dipilih === kunci ? 5 : 0; // all or nothing
+    }
+
+    function nilaiOrder(soal, jawaban) {
+      if (!Array.isArray(jawaban)) return 0;
+      const total = soal.key.length;
+      let benar = 0;
+      for (let i = 0; i < total; i++) {
+        if (jawaban[i] === soal.key[i]) benar++;
+      }
+      // Proporsional
+      if (benar === total) return 5;
+      if (total === 4) {
+        if (benar === 3) return 3;
+        if (benar === 2) return 2;
+        if (benar === 1) return 1;
+      } else if (total === 3) {
+        if (benar === 2) return 3;
+        if (benar === 1) return 1;
+      } else {
+        // fallback proporsional
+        return Math.round((benar / total) * 5);
+      }
+      return 0;
+    }
+
+    function hitungNilaiSoal(soal, jawaban) {
+      switch (soal.type) {
+        case 'pg':    return nilaiPG(soal, jawaban);
+        case 'bs':    return nilaiBS(soal, jawaban);
+        case 'match': return nilaiMatch(soal, jawaban);
+        case 'pgk':   return nilaiPGK(soal, jawaban);
+        case 'order': return nilaiOrder(soal, jawaban);
+        default:      return 0;
+      }
+    }
+
+    // ============================================
+    // SELESAIKAN UJIAN (HITUNG + KIRIM)
+    // ============================================
+    async function selesaikanUjian(autoSubmit) {
+      if (ujianSelesai) return;
+      ujianSelesai = true;
+
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+
+      // Hitung total
+      let total = 0;
+      daftarSoal.forEach(function(s, i) {
+        total += hitungNilaiSoal(s, jawabanUser[i]);
+      });
+      const nilaiAkhir = Math.min(100, Math.max(0, Math.round(total)));
+
+      nilaiGagalKirim = { nilaiAkhir: nilaiAkhir };
+      simpanPendingKeSessionStorage();
+
+      try {
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(function() {});
+        }
+      } catch (e) {}
+
+      quizScreen.style.display = 'none';
+      finishScreen.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      finishIcon.textContent = '✅';
+      finishTitle.textContent = 'Ujian Selesai';
+      if (autoSubmit) {
+        finishMessage.textContent = '⏰ Waktu habis! Jawabanmu sedang dikirim. Nilai akan diumumkan oleh guru.';
+      } else {
+        finishMessage.textContent = 'Jawabanmu sedang dikirim. Nilai akan diumumkan oleh guru.';
+      }
+
+      await kirimNilaiUjian();
+    }
+
+    // ============================================
+    // PENDING (sessionStorage)
+    // ============================================
+    function simpanPendingKeSessionStorage() {
+      if (!nilaiGagalKirim) return;
+      try {
+        const siswa = window.ambilIdentitasSiswa();
+        sessionStorage.setItem(SS_KEY_PENDING, JSON.stringify({
+          nilaiAkhir: nilaiGagalKirim.nilaiAkhir,
+          siswa: siswa || null,
+          waktu: Date.now()
+        }));
+      } catch (e) {}
+    }
+    function hapusPendingDariSessionStorage() {
+      try { sessionStorage.removeItem(SS_KEY_PENDING); } catch (e) {}
+    }
+    function ambilPendingDariSessionStorage() {
+      try {
+        const raw = sessionStorage.getItem(SS_KEY_PENDING);
+        if (!raw) return null;
+        const data = JSON.parse(raw);
+        if (!data || typeof data.nilaiAkhir !== 'number') return null;
+        return data;
+      } catch (e) { return null; }
+    }
+
+    // ============================================
+    // KIRIM NILAI
+    // ============================================
+    async function kirimNilaiUjian() {
+      if (!nilaiGagalKirim) return;
+      btnKirimUlang.style.display = 'none';
+      statusKirim.className = 'cbt-status info';
+      statusKirim.textContent = '📤 Mengirim jawaban...';
+
+      try {
+        const siswa = window.ambilIdentitasSiswa();
+        if (!siswa) {
+          statusKirim.className = 'cbt-status error';
+          statusKirim.textContent = '⚠️ Identitas siswa tidak ditemukan. Nilai tidak dapat dikirim.';
+          return;
+        }
+
+        const hasil = await window.kirimNilaiBagian(
+          NAMA_SHEET,
+          'nilai_akhir',
+          nilaiGagalKirim.nilaiAkhir,
+          ['nilai_akhir']
+        );
+
+        if (hasil && hasil.ok) {
+          statusKirim.className = 'cbt-status success';
+          statusKirim.textContent = '✅ Jawaban berhasil dikirim.';
+          btnKirimUlang.style.display = 'none';
+          nilaiGagalKirim = null;
+          hapusPendingDariSessionStorage();
+        } else {
+          statusKirim.className = 'cbt-status error';
+          statusKirim.textContent = '⚠️ Gagal mengirim: ' +
+            ((hasil && hasil.error) || 'Terjadi kesalahan jaringan') +
+            '. Periksa koneksi lalu tekan "Ulangi Kirim Nilai".';
+          btnKirimUlang.style.display = 'inline-flex';
+        }
+      } catch (err) {
+        statusKirim.className = 'cbt-status error';
+        statusKirim.textContent = '⚠️ Gagal mengirim: ' + err.message +
+          '. Periksa koneksi lalu tekan "Ulangi Kirim Nilai".';
+        btnKirimUlang.style.display = 'inline-flex';
+      }
+    }
+
+    btnKirimUlang.addEventListener('click', function() {
+      if (!nilaiGagalKirim) return;
+      kirimNilaiUjian();
+    });
+
+    // ============================================
+    // AUTO-RECOVER PENDING
+    // ============================================
+    (function cekPendingSaatMuat() {
+      const pending = ambilPendingDariSessionStorage();
+      if (!pending) return;
+
+      nilaiGagalKirim = { nilaiAkhir: pending.nilaiAkhir };
+
+      if (pending.siswa && pending.siswa.nama) {
+        window.simpanIdentitasSiswa(
+          pending.siswa.sekolah || '',
+          pending.siswa.nama || '',
+          pending.siswa.kelas || ''
+        );
+      }
+
+      introScreen.style.display = 'none';
+      quizScreen.style.display = 'none';
+      finishScreen.style.display = 'block';
+
+      finishIcon.textContent = '⏳';
+      finishTitle.textContent = 'Menunggu Pengiriman Nilai';
+      finishMessage.textContent =
+        'Terdeteksi nilai dari ujian sebelumnya yang belum terkirim. ' +
+        'Sistem akan mencoba mengirim ulang secara otomatis.';
+
+      setTimeout(function() { kirimNilaiUjian(); }, 500);
+    })();
+
+    // ============================================
+    // AUTO-FILL IDENTITAS
+    // ============================================
+    (function autoFillIdentity() {
+      const siswa = window.ambilIdentitasSiswa();
+      if (siswa) {
+        if (siswa.nama) inputNama.value = siswa.nama;
+        if (siswa.kelas) inputKelas.value = siswa.kelas;
+        if (siswa.sekolah) inputSekolah.value = siswa.sekolah;
+      }
+    })();
+
+  })();
+  </script>
+
+</body>
+</html>
