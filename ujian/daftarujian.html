@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Daftar Ujian Aktif · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== GAYA DAFTAR UJIAN ===== */
+    .ujian-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .ujian-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .ujian-header .ujian-icon {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .ujian-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      background: linear-gradient(135deg, #ef476f, #d4a030);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .ujian-header .ujian-sub {
+      font-size: 1rem;
+      color: #5c4638;
+      font-style: italic;
+    }
+
+    /* ===== LOADING / EMPTY STATE ===== */
+    .ujian-loading,
+    .ujian-empty,
+    .ujian-error {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      background: #fff;
+      border-radius: 20px;
+      border: 2px solid #e5dbd0;
+      margin: 1rem 0;
+    }
+
+    .ujian-loading .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e5dbd0;
+      border-top-color: #ef476f;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .ujian-loading p,
+    .ujian-empty p,
+    .ujian-error p {
+      color: #5c4638;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .ujian-empty .empty-icon,
+    .ujian-error .error-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+
+    .ujian-error {
+      border-color: #d4a0a0;
+      background: #fdf0f0;
+    }
+
+    .ujian-error p {
+      color: #a84a3a;
+    }
+
+    /* ===== DAFTAR TOMBOL UJIAN ===== */
+    .ujian-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+    }
+
+    .ujian-card {
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border-radius: 20px;
+      padding: 1.5rem 1.6rem;
+      text-decoration: none;
+      color: inherit;
+      border: 3px solid #e5dbd0;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      font-family: inherit;
+      text-align: left;
+    }
+
+    .ujian-card::before {
+      content: '';
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 8px;
+      background: linear-gradient(180deg, #ef476f, #d4a030);
+    }
+
+    .ujian-card::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #ef476f;
+      opacity: 0.08;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      pointer-events: none;
+    }
+
+    .ujian-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 36px rgba(239, 71, 111, 0.18);
+      border-color: #ef476f;
+    }
+
+    .ujian-card:hover::after {
+      transform: scale(1.4);
+      opacity: 0.15;
+    }
+
+    .ujian-card .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.6rem;
+      line-height: 1;
+    }
+
+    .ujian-card .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      margin-bottom: 0.4rem;
+      line-height: 1.4;
+    }
+
+    .ujian-card .card-meta {
+      font-size: 0.82rem;
+      color: #7a6656;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.3rem;
+    }
+
+    .ujian-card .card-badge {
+      display: inline-block;
+      padding: 0.15rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .ujian-card .card-badge.badge-token {
+      background: #fde8ec;
+      color: #a3123c;
+      border: 1px solid #f5b8c4;
+    }
+
+    .ujian-card .card-badge.badge-free {
+      background: #e8f5e0;
+      color: #2d5a1e;
+      border: 1px solid #b8dfa8;
+    }
+
+    /* ===== MODAL TOKEN ===== */
+    .token-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(43, 29, 46, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 1rem;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .token-modal.show {
+      display: flex;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .token-modal .modal-box {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2rem 1.8rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+      border: 3px solid #ef476f;
+      position: relative;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .token-modal .modal-icon {
+      font-size: 3rem;
+      text-align: center;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .token-modal .modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      text-align: center;
+      margin-bottom: 0.3rem;
+    }
+
+    .token-modal .modal-sub {
+      font-size: 0.88rem;
+      color: #5c4638;
+      text-align: center;
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .token-modal .modal-ujian-nama {
+      background: #fde8ec;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #a3123c;
+      text-align: center;
+      margin-bottom: 1rem;
+      border-left: 5px solid #ef476f;
+      line-height: 1.4;
+    }
+
+    .token-modal input[type="text"] {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border-radius: 12px;
+      border: 2px solid #e5dbd0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+      text-align: center;
+      text-transform: uppercase;
+      color: #3d2c1f;
+      outline: none;
+      transition: all 0.15s;
+      box-sizing: border-box;
+      background: #fcfaf7;
+    }
+
+    .token-modal input[type="text"]:focus {
+      border-color: #ef476f;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(239, 71, 111, 0.15);
+    }
+
+    .token-modal .modal-error {
+      display: none;
+      background: #fdf0f0;
+      border: 2px solid #d4a0a0;
+      color: #a84a3a;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 0.8rem;
+      text-align: center;
+    }
+
+    .token-modal .modal-error.show {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .token-modal .modal-actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .token-modal .btn-modal {
+      flex: 1;
+      padding: 0.75rem 1.2rem;
+      border-radius: 30px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      min-width: 100px;
+    }
+
+    .token-modal .btn-modal.primary {
+      background: linear-gradient(135deg, #ef476f, #d4a030);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(239, 71, 111, 0.3);
+    }
+
+    .token-modal .btn-modal.primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(239, 71, 111, 0.4);
+    }
+
+    .token-modal .btn-modal.secondary {
+      background: #f5ede6;
+      color: #4d3829;
+      border: 2px solid #d9cdbf;
+    }
+
+    .token-modal .btn-modal.secondary:hover {
+      background: #e8dcd0;
+      transform: translateY(-2px);
+    }
+
+    .token-modal .btn-modal:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .token-modal .modal-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid currentColor;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .ujian-header h1 { font-size: 1.6rem; }
+      .ujian-header .ujian-icon { font-size: 3rem; }
+      .ujian-grid { grid-template-columns: 1fr; gap: 0.9rem; }
+    }
+
+    @media (max-width: 480px) {
+      .ujian-card { padding: 1.2rem 1.3rem; }
+      .ujian-card .card-title { font-size: 1rem; }
+      .token-modal .modal-box { padding: 1.5rem 1.2rem; }
+      .token-modal .modal-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li>Daftar Ujian Aktif</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="ujian-wrapper">
+
+        <div class="ujian-header">
+          <span class="ujian-icon">📝</span>
+          <h1>Daftar Ujian Aktif</h1>
+          <p class="ujian-sub">Pilih ujian yang ingin kamu kerjakan. Kerjakan dengan jujur dan teliti.</p>
+        </div>
+
+        <!-- Loading state -->
+        <div class="ujian-loading" id="ujianLoading">
+          <span class="spinner"></span>
+          <p>Memuat daftar ujian...</p>
+        </div>
+
+        <!-- Empty state -->
+        <div class="ujian-empty" id="ujianEmpty" style="display:none;">
+          <span class="empty-icon">📭</span>
+          <p><strong>Belum ada ujian yang aktif saat ini.</strong><br>Silakan kembali lagi nanti.</p>
+        </div>
+
+        <!-- Error state -->
+        <div class="ujian-error" id="ujianError" style="display:none;">
+          <span class="error-icon">⚠️</span>
+          <p id="ujianErrorText">Terjadi kesalahan saat memuat daftar ujian.</p>
+        </div>
+
+        <!-- Daftar ujian -->
+        <div class="ujian-grid" id="ujianGrid" style="display:none;"></div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <!-- ===== MODAL TOKEN ===== -->
+  <div class="token-modal" id="tokenModal" role="dialog" aria-modal="true" aria-labelledby="tokenModalTitle">
+    <div class="modal-box">
+      <span class="modal-icon">🔐</span>
+      <div class="modal-title" id="tokenModalTitle">Masukkan Token Ujian</div>
+      <div class="modal-sub">Ujian ini dilindungi token. Mintalah token kepada gurumu.</div>
+
+      <div class="modal-ujian-nama" id="modalUjianNama">—</div>
+
+      <input type="text" id="inputToken" placeholder="TOKEN" maxlength="20" autocomplete="off">
+
+      <div class="modal-error" id="modalError"></div>
+
+      <div class="modal-actions">
+        <button class="btn-modal secondary" id="btnBatalToken" type="button">Batal</button>
+        <button class="btn-modal primary" id="btnKirimToken" type="button">🔓 Buka Ujian</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../script.js"></script>
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI
+      // ============================================
+      const API_URL = (window.DUTA_API && window.DUTA_API.url) || '';
+
+      // ============================================
+      // STATE
+      // ============================================
+      let daftarUjian = [];
+      let ujianDipilih = null;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const elLoading = document.getElementById('ujianLoading');
+      const elEmpty = document.getElementById('ujianEmpty');
+      const elError = document.getElementById('ujianError');
+      const elErrorText = document.getElementById('ujianErrorText');
+      const elGrid = document.getElementById('ujianGrid');
+
+      const elModal = document.getElementById('tokenModal');
+      const elModalUjianNama = document.getElementById('modalUjianNama');
+      const elInputToken = document.getElementById('inputToken');
+      const elModalError = document.getElementById('modalError');
+      const elBtnBatal = document.getElementById('btnBatalToken');
+      const elBtnKirim = document.getElementById('btnKirimToken');
+
+      // ============================================
+      // LOAD DAFTAR UJIAN
+      // ============================================
+      async function muatDaftarUjian() {
+        if (!API_URL) {
+          tampilkanError('URL API tidak tersedia. Hubungi gurumu.');
+          return;
+        }
+
+        try {
+          const resp = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'listUjian' })
+          });
+
+          const hasil = await resp.json();
+
+          if (!hasil || !hasil.ok) {
+            tampilkanError((hasil && hasil.error) || 'Gagal memuat daftar ujian.');
+            return;
+          }
+
+          daftarUjian = Array.isArray(hasil.ujian) ? hasil.ujian : [];
+
+          if (daftarUjian.length === 0) {
+            elLoading.style.display = 'none';
+            elEmpty.style.display = 'block';
+            return;
+          }
+
+          renderDaftarUjian(daftarUjian);
+          elLoading.style.display = 'none';
+          elGrid.style.display = 'grid';
+
+        } catch (err) {
+          tampilkanError('Kesalahan jaringan: ' + err.message);
+        }
+      }
+
+      function tampilkanError(msg) {
+        elLoading.style.display = 'none';
+        elError.style.display = 'block';
+        elErrorText.textContent = msg;
+      }
+
+      // ============================================
+      // RENDER TOMBOL UJIAN
+      // ============================================
+      function renderDaftarUjian(list) {
+        elGrid.innerHTML = '';
+
+        list.forEach((u, index) => {
+          const btn = document.createElement('button');
+          btn.className = 'ujian-card';
+          btn.type = 'button';
+          btn.setAttribute('aria-label', 'Mulai ujian: ' + u.nama);
+
+          const badge = u.pakaiToken
+            ? '<span class="card-badge badge-token">🔐 Perlu Token</span>'
+            : '<span class="card-badge badge-free">✓ Tanpa Token</span>';
+
+          btn.innerHTML = `
+            <span class="card-icon">${u.pakaiToken ? '🔐' : '📄'}</span>
+            <span class="card-title">${escapeHtml(u.nama)}</span>
+            <span class="card-meta">
+              <span>Ujian #${escapeHtml(String(u.no))}</span>
+              ${badge}
+            </span>
+          `;
+
+          btn.addEventListener('click', () => klikUjian(u));
+          elGrid.appendChild(btn);
+        });
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      // ============================================
+      // KLIK UJIAN
+      // ============================================
+      function klikUjian(u) {
+        if (u.pakaiToken) {
+          bukaModalToken(u);
+        } else {
+          window.location.href = u.link;
+        }
+      }
+
+      // ============================================
+      // MODAL TOKEN
+      // ============================================
+      function bukaModalToken(u) {
+        ujianDipilih = u;
+        elModalUjianNama.textContent = u.nama;
+        elInputToken.value = '';
+        elModalError.classList.remove('show');
+        elBtnKirim.disabled = false;
+        elBtnKirim.innerHTML = '🔓 Buka Ujian';
+
+        elModal.classList.add('show');
+
+        setTimeout(() => elInputToken.focus(), 200);
+      }
+
+      function tutupModalToken() {
+        elModal.classList.remove('show');
+        ujianDipilih = null;
+      }
+
+      // ============================================
+      // VERIFIKASI TOKEN
+      // ============================================
+      async function verifikasiToken() {
+        if (!ujianDipilih) return;
+
+        const token = elInputToken.value.trim();
+
+        if (!token) {
+          elModalError.textContent = '⚠️ Token tidak boleh kosong.';
+          elModalError.classList.add('show');
+          return;
+        }
+
+        elModalError.classList.remove('show');
+        elBtnKirim.disabled = true;
+        elBtnKirim.innerHTML = '<span class="modal-spinner"></span> Memeriksa...';
+
+        try {
+          const resp = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'verifyToken',
+              namaUjian: ujianDipilih.nama,
+              token: token
+            })
+          });
+
+          const hasil = await resp.json();
+
+          if (hasil && hasil.ok && hasil.valid) {
+            elBtnKirim.innerHTML = '✅ Berhasil! Membuka...';
+            setTimeout(() => {
+              window.location.href = hasil.link || ujianDipilih.link;
+            }, 600);
+            return;
+          }
+
+          // Gagal
+          elBtnKirim.disabled = false;
+          elBtnKirim.innerHTML = '🔓 Buka Ujian';
+          elModalError.textContent = (hasil && hasil.message) || '❌ Token salah. Coba lagi.';
+          elModalError.classList.add('show');
+          elInputToken.select();
+
+        } catch (err) {
+          elBtnKirim.disabled = false;
+          elBtnKirim.innerHTML = '🔓 Buka Ujian';
+          elModalError.textContent = '⚠️ Kesalahan jaringan: ' + err.message;
+          elModalError.classList.add('show');
+        }
+      }
+
+      // ============================================
+      // EVENT LISTENERS
+      // ============================================
+      elBtnBatal.addEventListener('click', tutupModalToken);
+      elBtnKirim.addEventListener('click', verifikasiToken);
+
+      elInputToken.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          verifikasiToken();
+        }
+      });
+
+      // Klik backdrop untuk tutup modal
+      elModal.addEventListener('click', function(e) {
+        if (e.target === elModal) tutupModalToken();
+      });
+
+      // Esc untuk tutup modal
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && elModal.classList.contains('show')) {
+          tutupModalToken();
+        }
+      });
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', muatDaftarUjian);
+
+      console.log('✅ Daftar Ujian siap!');
+    })();
+  </script>
+</body>
+</html>
