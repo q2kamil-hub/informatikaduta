@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>BK6 Bagian 1: Simulasi Tumpukan Buku · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== Gaya khusus aktivitas BK6 ===== */
+    :root {
+      --c-bk6: #f26d8a;
+      --c-bk6-dark: #a01746;
+      --c-bk6-soft: #fff5f8;
+      --c-bk6-ungu: #b07be0;
+    }
+
+    /* Progress bagian */
+    .bagian-progress {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, #fff5f8, #f3ecff);
+      border-radius: 22px;
+    }
+    .bagian-progress .step {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: #fff;
+      color: #b09ac0;
+      border: 2px solid #e8d9f5;
+    }
+    .bagian-progress .step.aktif {
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.30);
+    }
+    .bagian-progress .step.selesai {
+      background: #d4f5dd;
+      color: #227a44;
+      border-color: #6ecb8f;
+    }
+    .bagian-progress .step .angka {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      font-size: 0.75rem;
+    }
+    .bagian-progress .step.aktif .angka { background: rgba(255,255,255,0.30); }
+    .bagian-progress .step:not(.aktif):not(.selesai) .angka { background: #f0e6ff; }
+
+    /* Materi ringkas */
+    .materi-ringkas {
+      background: linear-gradient(135deg, #fff3e0, #ffe3f1);
+      border-radius: 24px;
+      padding: 1.4rem 1.7rem;
+      margin-bottom: 1.5rem;
+      border-left: 8px solid var(--c-bk6);
+      box-shadow: 0 6px 18px rgba(140, 80, 180, 0.08);
+    }
+    .materi-ringkas h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #6a2a7a;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      padding: 0;
+    }
+    .materi-ringkas p { margin-bottom: 0.6rem; color: #3a2b3e; }
+    .materi-ringkas ul { margin: 0.3rem 0 0 1.4rem; color: #3a2b3e; }
+    .materi-ringkas li { margin-bottom: 0.3rem; }
+    .materi-ringkas li::marker { color: var(--c-bk6); }
+
+    /* Form siswa */
+    .form-siswa-box {
+      background: #fff;
+      border: 2px solid #f0e6ff;
+      border-radius: 24px;
+      padding: 1.5rem 1.7rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 6px 18px rgba(80, 40, 100, 0.06);
+    }
+    .form-siswa-box h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      padding: 0;
+    }
+    .form-siswa-box .field {
+      margin-bottom: 0.9rem;
+    }
+    .form-siswa-box label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #5c2f8a;
+      margin-bottom: 0.3rem;
+    }
+    .form-siswa-box input {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 14px;
+      border: 2px solid #e8d9f5;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--ink);
+      background: #faf6ff;
+      transition: border-color 0.18s ease, background 0.18s ease;
+    }
+    .form-siswa-box input:focus {
+      outline: none;
+      border-color: var(--c-bk6);
+      background: #fff;
+    }
+
+    /* Area simulasi */
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      padding: 0.6rem 1rem;
+      background: #faf6ff;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #5c2f8a;
+    }
+    .step-indicator .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--c-bk6);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .scenario-panel {
+      background: #fff;
+      border-radius: 24px;
+      padding: 1.5rem 1.7rem;
+      border: 2px solid #f0e6ff;
+      box-shadow: 0 6px 18px rgba(80, 40, 100, 0.06);
+    }
+
+    /* ===== Simulasi tumpukan buku ===== */
+    .simulasi-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.3rem;
+      margin-bottom: 1.3rem;
+    }
+    @media (max-width: 720px) {
+      .simulasi-wrap { grid-template-columns: 1fr; }
+    }
+
+    .tumpukan-area {
+      background: linear-gradient(180deg, #faf6ff 0%, #f0e6ff 100%);
+      border-radius: 20px;
+      padding: 1.2rem;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      position: relative;
+      border: 2px dashed #d4b3e8;
+    }
+    .tumpukan-area .label-meja {
+      position: absolute;
+      bottom: 0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #8a4bbf;
+      background: rgba(255,255,255,0.85);
+      padding: 0.25rem 0.9rem;
+      border-radius: 20px;
+    }
+    .tumpukan-area .top-marker {
+      position: absolute;
+      top: 0.8rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--c-bk6-dark);
+      background: #fff;
+      padding: 0.25rem 0.9rem;
+      border-radius: 20px;
+      border: 2px solid var(--c-bk6);
+      box-shadow: 0 4px 12px rgba(242, 109, 138, 0.25);
+      transition: opacity 0.2s ease;
+    }
+    .tumpukan-area .top-marker.hidden { opacity: 0; }
+
+    .buku-item {
+      width: 80%;
+      max-width: 260px;
+      padding: 0.7rem 1rem;
+      margin-bottom: 0.35rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(80, 40, 100, 0.18);
+      animation: slideIn 0.35s ease;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .buku-item.pop-anim {
+      animation: slideOut 0.35s ease forwards;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-30px) scale(0.9); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes slideOut {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to { opacity: 0; transform: translateY(-40px) scale(0.85); }
+    }
+
+    /* Kontrol */
+    .kontrol-area {
+      background: #fff;
+      border-radius: 20px;
+      padding: 1.2rem;
+      border: 2px solid #f0e6ff;
+    }
+    .kontrol-area h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      margin: 0 0 0.8rem 0;
+      border: none;
+      padding: 0;
+    }
+    .input-buku {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.7rem;
+    }
+    .input-buku input {
+      flex: 1;
+      padding: 0.65rem 0.9rem;
+      border-radius: 12px;
+      border: 2px solid #e8d9f5;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #faf6ff;
+    }
+    .input-buku input:focus {
+      outline: none;
+      border-color: var(--c-bk6);
+      background: #fff;
+    }
+    .btn {
+      padding: 0.65rem 1.2rem;
+      border-radius: 14px;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; filter: none; }
+    .btn-push {
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(242, 109, 138, 0.30);
+    }
+    .btn-pop {
+      background: linear-gradient(135deg, #f4b942, #d4a030);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(244, 185, 66, 0.30);
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+    .btn-reset {
+      background: #fff;
+      color: #a01746;
+      border: 2px solid var(--c-bk6);
+      width: 100%;
+    }
+
+    /* Log */
+    .log-area {
+      margin-top: 1rem;
+      background: #2b1d2e;
+      border-radius: 14px;
+      padding: 0.8rem 1rem;
+      max-height: 160px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: #e8dcd0;
+    }
+    .log-area .log-line { margin-bottom: 0.25rem; }
+    .log-area .log-line.push { color: #a8e6cf; }
+    .log-area .log-line.pop { color: #ffd7a8; }
+    .log-area .log-line.info { color: #c5b3ff; }
+    .log-area .log-empty { color: #7a6a80; font-style: italic; }
+
+    /* Penghitung */
+    .penghitung {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+    }
+    .penghitung .kotak {
+      flex: 1;
+      text-align: center;
+      background: #faf6ff;
+      border-radius: 14px;
+      padding: 0.6rem 0.4rem;
+      border: 2px solid #e8d9f5;
+    }
+    .penghitung .kotak .angka {
+      display: block;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--c-bk6-dark);
+    }
+    .penghitung .kotak .label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #8a4bbf;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    /* Tantangan */
+    .tantangan-box {
+      background: linear-gradient(135deg, #e6f4ff, #f3ecff);
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      margin-top: 1.3rem;
+      border: 2px dashed var(--c-bk6-ungu);
+    }
+    .tantangan-box h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.05rem;
+      color: #5c2f8a;
+      border: none;
+      padding: 0;
+    }
+    .tantangan-box p { margin-bottom: 0.8rem; color: #3a2b3e; }
+    .tantangan-box .jawab-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .tantangan-box input {
+      width: 90px;
+      padding: 0.6rem 0.8rem;
+      border-radius: 12px;
+      border: 2px solid #d4b3e8;
+      font-size: 0.95rem;
+      font-family: inherit;
+      text-align: center;
+      font-weight: 700;
+      background: #fff;
+    }
+    .tantangan-box input:focus {
+      outline: none;
+      border-color: var(--c-bk6);
+    }
+    .tantangan-box .feedback-tantangan {
+      margin-top: 0.7rem;
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      display: none;
+    }
+    .tantangan-box .feedback-tantangan.show { display: block; }
+    .tantangan-box .feedback-tantangan.ok {
+      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
+    }
+    .tantangan-box .feedback-tantangan.no {
+      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
+    }
+
+    /* Tes pemahaman */
+    .tes-box {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 3px dashed #e8d9f5;
+    }
+    .tes-box h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      margin-bottom: 0.4rem;
+      border: none;
+      padding: 0;
+    }
+    .tes-box .sub {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      margin-bottom: 1rem;
+    }
+    .soal-item {
+      background: #faf6ff;
+      border-radius: 18px;
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 1rem;
+      border-left: 5px solid var(--c-bk6-ungu);
+    }
+    .soal-item .pertanyaan {
+      font-weight: 700;
+      color: #5c2f8a;
+      margin-bottom: 0.7rem;
+      font-size: 0.95rem;
+    }
+    .soal-item .opsi-tes {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .soal-item .opsi-tes label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 12px;
+      border: 2px solid #e8d9f5;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: all 0.15s ease;
+    }
+    .soal-item .opsi-tes label:hover {
+      border-color: var(--c-bk6);
+      background: #fff5f8;
+    }
+    .soal-item .opsi-tes input[type="radio"] {
+      margin-top: 0.25rem;
+      accent-color: var(--c-bk6-ungu);
+    }
+    .soal-item .opsi-tes label.benar {
+      background: #d4f5dd; border-color: #6ecb8f; color: #227a44; font-weight: 700;
+    }
+    .soal-item .opsi-tes label.salah {
+      background: #ffe0e6; border-color: var(--c-bk6); color: #a01746; font-weight: 700;
+    }
+
+    /* Tombol periksa tes */
+    .btn-periksa-tes {
+      display: block;
+      margin: 1.2rem auto 0;
+      padding: 0.9rem 2.2rem;
+      border-radius: 40px;
+      border: none;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(242, 109, 138, 0.30);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-periksa-tes:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(242, 109, 138, 0.42);
+    }
+    .btn-periksa-tes:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none;
+    }
+
+    /* Hasil tes */
+    .hasil-tes {
+      display: none;
+      margin-top: 1.3rem;
+      background: linear-gradient(135deg, #fff5f8, #f3ecff);
+      border-radius: 22px;
+      padding: 1.4rem 1.6rem;
+      border-left: 8px solid var(--c-bk6-ungu);
+      box-shadow: 0 8px 24px rgba(140, 80, 180, 0.12);
+    }
+    .hasil-tes.show { display: block; }
+    .hasil-tes h3 {
+      margin: 0 0 0.5rem 0;
+      color: #5c2f8a;
+      font-size: 1.2rem;
+      border: none;
+      padding: 0;
+    }
+    .hasil-tes .skor-besar {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--c-bk6-dark);
+      line-height: 1;
+      margin: 0.4rem 0;
+    }
+    .hasil-tes .pesan {
+      padding: 0.7rem 1.1rem;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-top: 0.7rem;
+    }
+    .hasil-tes .pesan.lulus {
+      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
+    }
+    .hasil-tes .pesan.gagal {
+      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
+    }
+
+    /* Status kirim */
+    .status-kirim {
+      display: none;
+      margin-top: 1.2rem;
+      padding: 0.9rem 1.3rem;
+      border-radius: 16px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+    .status-kirim.show { display: block; }
+    .status-kirim.info {
+      background: #e6f4ff; color: #1f6b7d; border-left: 5px solid #4fb0c6;
+    }
+    .status-kirim.success {
+      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
+    }
+    .status-kirim.error {
+      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
+    }
+
+    /* Navigasi bawah */
+    .nav-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 3px dashed #e8d9f5;
+    }
+    .nav-bottom a, .nav-bottom button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.98rem;
+      font-family: inherit;
+      color: #fff;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(242, 109, 138, 0.30);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-bottom a:hover, .nav-bottom button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(242, 109, 138, 0.42);
+    }
+    .nav-bottom button:disabled {
+      opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none;
+    }
+    .nav-bottom .secondary {
+      background: #fff;
+      color: #a01746;
+      border: 2px solid var(--c-bk6);
+      box-shadow: 0 6px 18px rgba(242, 109, 138, 0.15);
+    }
+
+    @media (max-width: 720px) {
+      .bagian-progress { padding: 0.7rem; gap: 0.35rem; }
+      .bagian-progress .step { font-size: 0.75rem; padding: 0.35rem 0.7rem; }
+      .bagian-progress .step .angka { width: 18px; height: 18px; font-size: 0.65rem; }
+      .scenario-panel { padding: 1.1rem 1rem; }
+      .tumpukan-area { min-height: 260px; }
+      .buku-item { font-size: 0.8rem; padding: 0.55rem 0.7rem; }
+      .nav-bottom a, .nav-bottom button { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materibk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk6.html">BK6: Tumpukan (Stack)</a></li>
+      <li>Bagian 1: Simulasi Tumpukan Buku</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <!-- ===== PROGRESS BAGIAN ===== -->
+        <div class="bagian-progress" aria-label="Progress bagian">
+          <div class="step aktif"><span class="angka">1</span> Simulasi Buku</div>
+          <div class="step"><span class="angka">2</span> Lab Stack</div>
+          <div class="step"><span class="angka">3</span> Riwayat Browser</div>
+          <div class="step"><span class="angka">4</span> Studi Kasus</div>
+          <div class="step"><span class="angka">5</span> Kuis Akhir</div>
+        </div>
+
+        <!-- ===== MATERI SINGKAT ===== -->
+        <div class="materi-ringkas">
+          <h2>📚 Materi Singkat — Bagian 1</h2>
+          <p>
+            <strong>Tumpukan (Stack)</strong> adalah cara komputer mengorganisasi data dengan aturan
+            <strong>LIFO (Last In First Out)</strong>: data yang <em>terakhir masuk</em> adalah data yang
+            <em>pertama keluar</em>.
+          </p>
+          <ul>
+            <li><strong>Push</strong> — menambah data ke atas tumpukan (menaruh buku di atas).</li>
+            <li><strong>Pop</strong> — mengambil data dari atas tumpukan (mengambil buku paling atas).</li>
+            <li><strong>TOP</strong> — elemen paling atas, satu-satunya yang bisa diakses langsung.</li>
+            <li><strong>IsEmpty</strong> — memeriksa apakah tumpukan kosong.</li>
+          </ul>
+          <p style="margin-top:0.6rem;">
+            Contoh nyata: tumpukan piring di dapur, tombol Undo (Ctrl+Z), dan tombol Back di browser.
+          </p>
+        </div>
+
+        <!-- ===== FORM IDENTITAS (KHUSUS BAGIAN 1) ===== -->
+        <div class="form-siswa-box" id="formSiswaBox">
+          <h2>👤 Identitas Siswa</h2>
+          <div class="field">
+            <label for="inputSekolah">Sekolah</label>
+            <input type="text" id="inputSekolah" placeholder="Contoh: SMPN 2 Talegong" autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="inputNama">Nama Lengkap</label>
+            <input type="text" id="inputNama" placeholder="Nama lengkapmu" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="inputKelas">Kelas</label>
+            <input type="text" id="inputKelas" placeholder="Contoh: 8A" autocomplete="off">
+          </div>
+        </div>
+
+        <!-- ===== AREA SIMULASI ===== -->
+        <div id="area-simulasi">
+          <div class="step-indicator">
+            <span class="dot"></span>
+            <span>Aktivitas Interaktif — Simulasi Tumpukan Buku Perpustakaan</span>
+          </div>
+
+          <div class="scenario-panel">
+            <p style="margin-bottom:1rem; color:#3a2b3e;">
+              Kelola tumpukan buku di meja perpustakaan. Gunakan tombol
+              <strong>Tambah ke Tumpukan</strong> (Push) dan <strong>Ambil Buku Teratas</strong> (Pop).
+              Perhatikan bagaimana buku yang <em>terakhir ditambahkan</em> selalu menjadi yang
+              <em>pertama diambil</em>.
+            </p>
+
+            <!-- Simulasi -->
+            <div class="simulasi-wrap">
+              <!-- Tumpukan -->
+              <div>
+                <div class="tumpukan-area" id="tumpukanArea">
+                  <div class="top-marker hidden" id="topMarker">⬇ TOP</div>
+                  <div class="label-meja">📖 Meja Perpustakaan</div>
+                </div>
+                <div class="penghitung">
+                  <div class="kotak">
+                    <span class="angka" id="hitungPush">0</span>
+                    <span class="label">Push</span>
+                  </div>
+                  <div class="kotak">
+                    <span class="angka" id="hitungPop">0</span>
+                    <span class="label">Pop</span>
+                  </div>
+                  <div class="kotak">
+                    <span class="angka" id="hitungIsi">0</span>
+                    <span class="label">Isi Stack</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kontrol -->
+              <div class="kontrol-area">
+                <h3>🎮 Kontrol</h3>
+                <div class="input-buku">
+                  <input type="text" id="inputJudulBuku" placeholder="Judul buku..." maxlength="30">
+                  <button class="btn btn-push" id="btnPush">➕ Push</button>
+                </div>
+                <button class="btn btn-pop" id="btnPop">📤 Ambil Buku Teratas (Pop)</button>
+                <button class="btn btn-reset" id="btnReset">🔄 Reset Tumpukan</button>
+
+                <div class="log-area" id="logArea">
+                  <div class="log-empty">Belum ada aktivitas...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tantangan -->
+            <div class="tantangan-box" id="tantanganBox">
+              <h3>🎯 Tantangan</h3>
+              <p id="tantanganTeks">
+                Tambahkan 4 buku: <strong>Laskar Pelangi</strong>, <strong>Bumi Manusia</strong>,
+                <strong>Negeri 5 Menara</strong>, dan <strong>Perahu Kertas</strong>.
+                Lalu jawab: berapa kali Pop diperlukan untuk mengambil buku
+                <strong>Laskar Pelangi</strong> (buku paling bawah)?
+              </p>
+              <div class="jawab-row">
+                <label for="jawabTantangan" style="font-weight:700; color:#5c2f8a; font-size:0.9rem;">Jawaban:</label>
+                <input type="number" id="jawabTantangan" min="1" max="10" placeholder="0">
+                <button class="btn btn-push" id="btnCekTantangan" style="padding:0.6rem 1.2rem;">Cek</button>
+              </div>
+              <div class="feedback-tantangan" id="feedbackTantangan"></div>
+            </div>
+
+            <!-- ===== TES PEMAHAMAN ===== -->
+            <div class="tes-box" id="tesBox">
+              <h2>📝 Tes Pemahaman — Bagian 1</h2>
+              <p class="sub">Minimal <strong>2 dari 3 soal</strong> benar untuk lanjut ke Bagian 2.</p>
+
+              <div id="soalWrap"></div>
+
+              <button class="btn-periksa-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+
+              <div class="hasil-tes" id="hasilTes"></div>
+              <div class="status-kirim" id="statusKirim"></div>
+            </div>
+
+            <!-- ===== NAVIGASI BAWAH ===== -->
+            <div class="nav-bottom">
+              <a class="secondary" href="bk6.html">← Kembali ke Portal</a>
+              <button id="btnLanjut" disabled>Lanjut ke Bagian 2 →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" title="Kembali ke atas" aria-label="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI MODUL
+      // ============================================
+      const NAMA_SHEET = 'bk6';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
+      const KEY_SISWA = 'labbk6_siswa';
+      const KEY_PROGRESS = 'labbk6_progress';
+
+      // ============================================
+      // STATE
+      // ============================================
+      let stack = [];        // array judul buku, index 0 = paling bawah
+      let hitPush = 0;
+      let hitPop = 0;
+
+      const WARNA_BUKU = [
+        '#f26d8a', '#b07be0', '#4fb0c6', '#6ecb8f',
+        '#f4b942', '#ff8a5b', '#5c7cfa', '#ef476f'
+      ];
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const tumpukanArea = document.getElementById('tumpukanArea');
+      const topMarker = document.getElementById('topMarker');
+      const inputJudul = document.getElementById('inputJudulBuku');
+      const btnPush = document.getElementById('btnPush');
+      const btnPop = document.getElementById('btnPop');
+      const btnReset = document.getElementById('btnReset');
+      const logArea = document.getElementById('logArea');
+      const hitungPush = document.getElementById('hitungPush');
+      const hitungPop = document.getElementById('hitungPop');
+      const hitungIsi = document.getElementById('hitungIsi');
+
+      const jawabTantangan = document.getElementById('jawabTantangan');
+      const btnCekTantangan = document.getElementById('btnCekTantangan');
+      const feedbackTantangan = document.getElementById('feedbackTantangan');
+
+      const soalWrap = document.getElementById('soalWrap');
+      const btnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const hasilTes = document.getElementById('hasilTes');
+      const statusKirim = document.getElementById('statusKirim');
+      const btnLanjut = document.getElementById('btnLanjut');
+
+      const formSiswaBox = document.getElementById('formSiswaBox');
+      const inputSekolah = document.getElementById('inputSekolah');
+      const inputNama = document.getElementById('inputNama');
+      const inputKelas = document.getElementById('inputKelas');
+
+      // ============================================
+      // RENDER TUMPUKAN
+      // ============================================
+      function renderTumpukan() {
+        // Hapus semua buku (kecuali top-marker dan label)
+        tumpukanArea.querySelectorAll('.buku-item').forEach(function(el) { el.remove(); });
+
+        // Render dari atas ke bawah (index terbesar = paling atas)
+        const labelMeja = tumpukanArea.querySelector('.label-meja');
+        for (let i = stack.length - 1; i >= 0; i--) {
+          const div = document.createElement('div');
+          div.className = 'buku-item';
+          div.style.background = WARNA_BUKU[i % WARNA_BUKU.length];
+          div.textContent = stack[i];
+          div.dataset.index = i;
+          tumpukanArea.insertBefore(div, labelMeja);
+        }
+
+        // Top marker
+        if (stack.length > 0) {
+          topMarker.classList.remove('hidden');
+          topMarker.textContent = '⬇ TOP: ' + stack[stack.length - 1];
+        } else {
+          topMarker.classList.add('hidden');
+        }
+
+        // Penghitung
+        hitungPush.textContent = hitPush;
+        hitungPop.textContent = hitPop;
+        hitungIsi.textContent = stack.length;
+      }
+
+      // ============================================
+      // LOG
+      // ============================================
+      function tambahLog(teks, tipe) {
+        // Hapus pesan kosong
+        const empty = logArea.querySelector('.log-empty');
+        if (empty) empty.remove();
+
+        const div = document.createElement('div');
+        div.className = 'log-line ' + (tipe || 'info');
+        const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        div.textContent = '[' + waktu + '] ' + teks;
+        logArea.appendChild(div);
+        logArea.scrollTop = logArea.scrollHeight;
+      }
+
+      // ============================================
+      // PUSH
+      // ============================================
+      function doPush() {
+        const judul = inputJudul.value.trim();
+        if (!judul) {
+          tambahLog('⚠️ Judul buku tidak boleh kosong.', 'info');
+          inputJudul.focus();
+          return;
+        }
+        if (stack.length >= 10) {
+          tambahLog('⚠️ Tumpukan penuh (maks 10 buku).', 'info');
+          return;
+        }
+        stack.push(judul);
+        hitPush++;
+        renderTumpukan();
+        tambahLog('Push: "' + judul + '"', 'push');
+        inputJudul.value = '';
+        inputJudul.focus();
+      }
+
+      // ============================================
+      // POP
+      // ============================================
+      function doPop() {
+        if (stack.length === 0) {
+          tambahLog('⚠️ Tumpukan kosong! Tidak bisa Pop.', 'info');
+          return;
+        }
+        const teratas = stack[stack.length - 1];
+
+        // Animasi: cari elemen buku paling atas dan beri class pop-anim
+        const items = tumpukanArea.querySelectorAll('.buku-item');
+        if (items.length > 0) {
+          const topEl = items[0]; // paling atas karena di-insert pertama
+          topEl.classList.add('pop-anim');
+          setTimeout(function() {
+            stack.pop();
+            hitPop++;
+            renderTumpukan();
+            tambahLog('Pop: "' + teratas + '"', 'pop');
+          }, 320);
+        } else {
+          stack.pop();
+          hitPop++;
+          renderTumpukan();
+          tambahLog('Pop: "' + teratas + '"', 'pop');
+        }
+      }
+
+      // ============================================
+      // RESET
+      // ============================================
+      function doReset() {
+        stack = [];
+        hitPush = 0;
+        hitPop = 0;
+        renderTumpukan();
+        logArea.innerHTML = '<div class="log-empty">Belum ada aktivitas...</div>';
+        tambahLog('Tumpukan direset.', 'info');
+      }
+
+      // ============================================
+      // TANTANGAN
+      // ============================================
+      function cekTantangan() {
+        const jawab = parseInt(jawabTantangan.value, 10);
+        // Jawaban benar: 4 (karena Laskar Pelangi paling bawah, perlu 4x Pop)
+        if (jawab === 4) {
+          feedbackTantangan.textContent = '✅ Benar! Laskar Pelangi adalah buku paling bawah, jadi perlu 4 kali Pop (Perahu Kertas, Negeri 5 Menara, Bumi Manusia, baru Laskar Pelangi).';
+          feedbackTantangan.className = 'feedback-tantangan show ok';
+        } else if (isNaN(jawab)) {
+          feedbackTantangan.textContent = '⚠️ Masukkan angka jawaban terlebih dahulu.';
+          feedbackTantangan.className = 'feedback-tantangan show no';
+        } else {
+          feedbackTantangan.textContent = '❌ Belum tepat. Ingat: Laskar Pelangi ada di paling bawah. Hitung berapa buku di atasnya + 1.';
+          feedbackTantangan.className = 'feedback-tantangan show no';
+        }
+      }
+
+      // ============================================
+      // SOAL TES PEMAHAMAN
+      // ============================================
+      const SOAL = [
+        {
+          q: 'Prinsip kerja stack adalah...',
+          o: ['First In First Out (FIFO)', 'Last In First Out (LIFO)', 'Random Access', 'First In Last Out (FILO)'],
+          a: 1,
+          feedback: 'Stack menggunakan prinsip LIFO — data yang terakhir masuk adalah yang pertama keluar.'
+        },
+        {
+          q: 'Budi menumpuk 4 kartu berturut-turut: Merah, Kuning, Hijau, Biru. Jika Budi melakukan operasi Pop satu kali, kartu apa yang keluar?',
+          o: ['Merah', 'Kuning', 'Hijau', 'Biru'],
+          a: 3,
+          feedback: 'Biru adalah kartu terakhir yang ditumpuk (TOP), sehingga pertama keluar saat Pop.'
+        },
+        {
+          q: 'Ketika stack dalam keadaan kosong, lalu kita coba melakukan operasi Pop, apa yang terjadi?',
+          o: [
+            'Stack akan mengeluarkan data kosong',
+            'Stack akan error karena tidak ada data yang bisa diambil',
+            'Stack akan otomatis mengisi data baru',
+            'Stack akan mengembalikan data terakhir yang pernah di-pop'
+          ],
+          a: 1,
+          feedback: 'Operasi Pop pada stack kosong menyebabkan error/underflow karena tidak ada data yang bisa diambil.'
+        }
+      ];
+
+      let jawabanUser = new Array(SOAL.length).fill(null);
+
+      function renderSoal() {
+        soalWrap.innerHTML = '';
+        SOAL.forEach(function(soal, i) {
+          const div = document.createElement('div');
+          div.className = 'soal-item';
+
+          let html = '<div class="pertanyaan">' + (i + 1) + '. ' + soal.q + '</div><div class="opsi-tes">';
+          soal.o.forEach(function(opsi, j) {
+            html += '<label data-soal="' + i + '" data-opsi="' + j + '">' +
+                    '<input type="radio" name="soal' + i + '" value="' + j + '">' +
+                    '<span><strong>' + String.fromCharCode(65 + j) + '.</strong> ' + opsi + '</span>' +
+                    '</label>';
+          });
+          html += '</div>';
+          div.innerHTML = html;
+          soalWrap.appendChild(div);
+
+          div.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+              jawabanUser[i] = parseInt(radio.value, 10);
+            });
+          });
+        });
+      }
+
+      // ============================================
+      // PERIKSA TES
+      // ============================================
+      function periksaTes() {
+        const belumDijawab = jawabanUser.findIndex(function(j) { return j === null; });
+        if (belumDijawab !== -1) {
+          alert('Soal nomor ' + (belumDijawab + 1) + ' belum dijawab.');
+          return;
+        }
+
+        let benar = 0;
+        jawabanUser.forEach(function(jawab, i) {
+          if (jawab === SOAL[i].a) benar++;
+        });
+
+        // Tandai opsi benar/salah
+        soalWrap.querySelectorAll('label[data-soal]').forEach(function(label) {
+          const i = parseInt(label.dataset.soal, 10);
+          const j = parseInt(label.dataset.opsi, 10);
+          label.querySelector('input').disabled = true;
+          if (j === SOAL[i].a) {
+            label.classList.add('benar');
+          } else if (jawabanUser[i] === j) {
+            label.classList.add('salah');
+          }
+        });
+
+        const skor = Math.round(40 + (benar / SOAL.length) * 60);
+        const lulus = benar >= 2;
+
+        let html = '<h3>Hasil Tes Pemahaman</h3>' +
+                   '<div class="skor-besar">' + skor + '</div>' +
+                   '<p><strong>Jawaban benar:</strong> ' + benar + ' / ' + SOAL.length + '</p>';
+
+        if (lulus) {
+          html += '<div class="pesan lulus">🎉 Selamat! Kamu lulus Bagian 1. Silakan lanjut ke Bagian 2.</div>';
+        } else {
+          html += '<div class="pesan gagal">📖 Belum lulus (minimal 2 benar). Silakan baca ulang materi singkat dan coba lagi.</div>';
+        }
+
+        hasilTes.innerHTML = html;
+        hasilTes.classList.add('show');
+        hasilTes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Aktifkan tombol lanjut kalau lulus
+        if (lulus) {
+          btnLanjut.disabled = false;
+
+          // Simpan progress
+          simpanProgress(skor, benar, SOAL.length);
+
+          // Kirim nilai
+          kirimNilai(skor);
+        } else {
+          btnLanjut.disabled = true;
+          // Boleh ulangi
+          btnPeriksaTes.disabled = false;
+        }
+
+        btnPeriksaTes.disabled = true;
+      }
+
+      // ============================================
+      // SIMPAN PROGRESS
+      // ============================================
+      function simpanProgress(skor, benar, total) {
+        try {
+          const prog = JSON.parse(localStorage.getItem(KEY_PROGRESS) || '{}');
+          prog.bagian = 'a';
+          prog.skor = skor;
+          prog.benar = benar;
+          prog.total = total;
+          prog.waktu = new Date().toISOString();
+          localStorage.setItem(KEY_PROGRESS, JSON.stringify(prog));
+        } catch (e) {
+          console.warn('Gagal simpan progress:', e);
+        }
+      }
+
+      // ============================================
+      // KIRIM NILAI
+      // ============================================
+      async function kirimNilai(skor) {
+        // Validasi identitas
+        const sekolah = inputSekolah.value.trim();
+        const nama = inputNama.value.trim();
+        const kelas = inputKelas.value.trim();
+
+        if (!nama || !kelas) {
+          statusKirim.textContent = '⚠️ Identitas belum lengkap. Isi nama dan kelas terlebih dahulu.';
+          statusKirim.className = 'status-kirim show error';
+          btnLanjut.disabled = true;
+          return;
+        }
+
+        // Simpan identitas ke localStorage
+        window.simpanIdentitasSiswa(sekolah, nama, kelas);
+
+        // Simpan daftar siswa
+        try {
+          const daftar = JSON.parse(localStorage.getItem(KEY_SISWA) || '[]');
+          daftar.push({ nama: nama, kelas: kelas, sekolah: sekolah, waktu: new Date().toISOString() });
+          localStorage.setItem(KEY_SISWA, JSON.stringify(daftar));
+        } catch (e) {}
+
+        // Tampilkan status info
+        statusKirim.textContent = '⏳ Mengirim nilai Bagian 1...';
+        statusKirim.className = 'status-kirim show info';
+
+        // Kirim via helper global
+        const hasil = await window.kirimNilaiBagian(
+          NAMA_SHEET,
+          'a',
+          skor,
+          TOTAL_BAGIAN
+        );
+
+        if (hasil.ok) {
+          statusKirim.textContent = '✅ Nilai Bagian 1 berhasil dikirim! ID: ' + (hasil.id || '-') + '. Silakan lanjut ke Bagian 2.';
+          statusKirim.className = 'status-kirim show success';
+        } else {
+          statusKirim.textContent = '❌ Gagal mengirim nilai: ' + (hasil.error || 'Terjadi kesalahan') + '. Coba lagi.';
+          statusKirim.className = 'status-kirim show error';
+          btnLanjut.disabled = true;
+        }
+      }
+
+      // ============================================
+      // LANJUT KE BAGIAN 2
+      // ============================================
+      btnLanjut.addEventListener('click', function() {
+        if (btnLanjut.disabled) return;
+        btnLanjut.disabled = true;
+        btnLanjut.textContent = '⏳ Berpindah...';
+        setTimeout(function() {
+          window.location.href = 'aktivitasbk6b.html';
+        }, 800);
+      });
+
+      // ============================================
+      // EVENT LISTENERS
+      // ============================================
+      btnPush.addEventListener('click', doPush);
+      inputJudul.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doPush();
+      });
+
+      btnPop.addEventListener('click', doPop);
+      btnReset.addEventListener('click', doReset);
+      btnCekTantangan.addEventListener('click', cekTantangan);
+      jawabTantangan.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') cekTantangan();
+      });
+
+      btnPeriksaTes.addEventListener('click', periksaTes);
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      renderTumpukan();
+      renderSoal();
+
+      // Kalau sudah ada progress Bagian 1 sebelumnya, tampilkan info
+      try {
+        const prog = JSON.parse(localStorage.getItem(KEY_PROGRESS) || '{}');
+        if (prog.skor) {
+          console.log('Progress Bagian 1 sebelumnya: skor ' + prog.skor);
+        }
+      } catch (e) {}
+
+    })();
+  </script>
+</body>
+</html>

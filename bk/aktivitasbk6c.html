@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>BK6 Bagian 3: Simulasi Riwayat Browser · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== Gaya khusus aktivitas BK6 ===== */
+    :root {
+      --c-bk6: #f26d8a;
+      --c-bk6-dark: #a01746;
+      --c-bk6-soft: #fff5f8;
+      --c-bk6-ungu: #b07be0;
+    }
+
+    /* Progress bagian */
+    .bagian-progress {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, #fff5f8, #f3ecff);
+      border-radius: 22px;
+    }
+    .bagian-progress .step {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: #fff;
+      color: #b09ac0;
+      border: 2px solid #e8d9f5;
+    }
+    .bagian-progress .step.aktif {
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.30);
+    }
+    .bagian-progress .step.selesai {
+      background: #d4f5dd;
+      color: #227a44;
+      border-color: #6ecb8f;
+    }
+    .bagian-progress .step .angka {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      font-size: 0.75rem;
+    }
+    .bagian-progress .step.aktif .angka { background: rgba(255,255,255,0.30); }
+    .bagian-progress .step:not(.aktif):not(.selesai) .angka { background: #f0e6ff; }
+
+    /* Materi ringkas */
+    .materi-ringkas {
+      background: linear-gradient(135deg, #fff3e0, #ffe3f1);
+      border-radius: 24px;
+      padding: 1.4rem 1.7rem;
+      margin-bottom: 1.5rem;
+      border-left: 8px solid var(--c-bk6);
+      box-shadow: 0 6px 18px rgba(140, 80, 180, 0.08);
+    }
+    .materi-ringkas h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #6a2a7a;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      padding: 0;
+    }
+    .materi-ringkas p { margin-bottom: 0.6rem; color: #3a2b3e; }
+    .materi-ringkas ul { margin: 0.3rem 0 0 1.4rem; color: #3a2b3e; }
+    .materi-ringkas li { margin-bottom: 0.3rem; }
+    .materi-ringkas li::marker { color: var(--c-bk6); }
+
+    /* Area simulasi */
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      padding: 0.6rem 1rem;
+      background: #faf6ff;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #5c2f8a;
+    }
+    .step-indicator .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--c-bk6);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .scenario-panel {
+      background: #fff;
+      border-radius: 24px;
+      padding: 1.5rem 1.7rem;
+      border: 2px solid #f0e6ff;
+      box-shadow: 0 6px 18px rgba(80, 40, 100, 0.06);
+    }
+
+    /* ===== Browser mini ===== */
+    .simulasi-wrap {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 1.3rem;
+      margin-bottom: 1.3rem;
+    }
+    @media (max-width: 820px) {
+      .simulasi-wrap { grid-template-columns: 1fr; }
+    }
+
+    .browser-mini {
+      background: #fff;
+      border-radius: 18px;
+      border: 3px solid #d4b3e8;
+      overflow: hidden;
+      box-shadow: 0 8px 22px rgba(80, 40, 100, 0.10);
+    }
+    .browser-bar {
+      background: linear-gradient(135deg, #f0e6ff, #faf6ff);
+      padding: 0.7rem 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 2px solid #e8d9f5;
+    }
+    .browser-bar .btn-nav {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid #d4b3e8;
+      background: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .browser-bar .btn-nav:hover:not(:disabled) {
+      background: var(--c-bk6);
+      color: #fff;
+      border-color: var(--c-bk6);
+      transform: scale(1.05);
+    }
+    .browser-bar .btn-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .browser-bar .address {
+      flex: 1;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background: #fff;
+      border: 2px solid #e8d9f5;
+      font-size: 0.85rem;
+      font-family: 'Courier New', monospace;
+      color: #5c2f8a;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .browser-content {
+      min-height: 220px;
+      padding: 1.5rem 1.3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(135deg, #faf6ff, #fff);
+      transition: background 0.3s ease;
+    }
+    .browser-content .ikon-situs {
+      font-size: 3rem;
+      line-height: 1;
+      margin-bottom: 0.6rem;
+    }
+    .browser-content .nama-situs {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      margin-bottom: 0.3rem;
+    }
+    .browser-content .deskripsi-situs {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      max-width: 40ch;
+    }
+    .browser-content.kosong {
+      color: #b09ac0;
+      font-style: italic;
+    }
+
+    /* Daftar situs */
+    .daftar-situs {
+      background: #fff;
+      border-radius: 18px;
+      padding: 1.1rem 1.2rem;
+      border: 2px solid #f0e6ff;
+    }
+    .daftar-situs h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      margin: 0 0 0.7rem 0;
+      border: none;
+      padding: 0;
+    }
+    .situs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+    .situs-btn {
+      padding: 0.7rem 0.6rem;
+      border-radius: 14px;
+      border: 2px solid #e8d9f5;
+      background: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      font-family: inherit;
+      color: #5c2f8a;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .situs-btn .ikon {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+    .situs-btn:hover {
+      border-color: var(--c-bk6);
+      background: #fff5f8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(242, 109, 138, 0.18);
+    }
+    .situs-btn.aktif {
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      border-color: transparent;
+    }
+
+    /* Visualisasi stack riwayat */
+    .stack-riwayat {
+      margin-top: 1rem;
+      background: linear-gradient(180deg, #faf6ff 0%, #f0e6ff 100%);
+      border-radius: 16px;
+      padding: 1rem;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      border: 2px dashed #d4b3e8;
+    }
+    .stack-riwayat .label-stack {
+      position: absolute;
+      top: 0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .stack-riwayat .riwayat-item {
+      padding: 0.45rem 0.8rem;
+      margin-bottom: 0.25rem;
+      border-radius: 8px;
+      background: #fff;
+      border-left: 4px solid var(--c-bk6);
+      font-size: 0.8rem;
+      font-family: 'Courier New', monospace;
+      color: #5c2f8a;
+      font-weight: 600;
+      animation: slideIn 0.3s ease;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .stack-riwayat .riwayat-item.teratas {
+      background: linear-gradient(135deg, #fff5f8, #f3ecff);
+      border-left-color: var(--c-bk6-dark);
+      font-weight: 800;
+      box-shadow: 0 3px 10px rgba(242, 109, 138, 0.20);
+    }
+    .stack-riwayat .stack-kosong {
+      color: #b09ac0;
+      font-style: italic;
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 1rem;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-12px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Log */
+    .log-area {
+      margin-top: 1rem;
+      background: #2b1d2e;
+      border-radius: 14px;
+      padding: 0.8rem 1rem;
+      max-height: 150px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: #e8dcd0;
+    }
+    .log-area .log-line { margin-bottom: 0.25rem; }
+    .log-area .log-line.push { color: #a8e6cf; }
+    .log-area .log-line.pop { color: #ffd7a8; }
+    .log-area .log-line.info { color: #c5b3ff; }
+    .log-area .log-empty { color: #7a6a80; font-style: italic; }
+
+    /* Penghitung */
+    .penghitung {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+    .penghitung .kotak {
+      flex: 1;
+      text-align: center;
+      background: #faf6ff;
+      border-radius: 12px;
+      padding: 0.5rem 0.3rem;
+      border: 2px solid #e8d9f5;
+    }
+    .penghitung .kotak .angka {
+      display: block;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--c-bk6-dark);
+    }
+    .penghitung .kotak .label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #8a4bbf;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    /* Tantangan */
+    .tantangan-box {
+      background: linear-gradient(135deg, #e6f4ff, #f3ecff);
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      margin-top: 1.3rem;
+      border: 2px dashed var(--c-bk6-ungu);
+    }
+    .tantangan-box h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.05rem;
+      color: #5c2f8a;
+      border: none;
+      padding: 0;
+    }
+    .tantangan-box p { margin-bottom: 0.8rem; color: #3a2b3e; }
+    .tantangan-box .soal-tantangan {
+      background: #fff;
+      border-radius: 14px;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.92rem;
+      color: #2b1d2e;
+      border-left: 4px solid var(--c-bk6-ungu);
+    }
+    .tantangan-box .soal-tantangan strong { color: #5c2f8a; }
+    .tantangan-box .opsi-tantangan {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
+    }
+    .tantangan-box .opsi-tantangan button {
+      text-align: left;
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      border: 2px solid #d4b3e8;
+      background: #fff;
+      color: var(--ink);
+      font-size: 0.9rem;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tantangan-box .opsi-tantangan button:hover:not(:disabled) {
+      border-color: var(--c-bk6);
+      background: #fff5f8;
+      transform: translateX(4px);
+    }
+    .tantangan-box .opsi-tantangan button.benar {
+      background: #d4f5dd; border-color: #6ecb8f; color: #227a44; font-weight: 700;
+    }
+    .tantangan-box .opsi-tantangan button.salah {
+      background: #ffe0e6; border-color: var(--c-bk6); color: #a01746; font-weight: 700;
+    }
+    .tantangan-box .feedback-tantangan {
+      margin-top: 0.7rem;
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      display: none;
+    }
+    .tantangan-box .feedback-tantangan.show { display: block; }
+    .tantangan-box .feedback-tantangan.ok {
+      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
+    }
+    .tantangan-box .feedback-tantangan.no {
+      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
+    }
+
+    /* Tes pemahaman */
+    .tes-box {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 3px dashed #e8d9f5;
+    }
+    .tes-box h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      margin-bottom: 0.4rem;
+      border: none;
+      padding: 0;
+    }
+    .tes-box .sub {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      margin-bottom: 1rem;
+    }
+    .soal-item {
+      background: #faf6ff;
+      border-radius: 18px;
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 1rem;
+      border-left: 5px solid var(--c-bk6-ungu);
+    }
+    .soal-item .pertanyaan {
+      font-weight: 700;
+      color: #5c2f8a;
+      margin-bottom: 0.7rem;
+      font-size: 0.95rem;
+    }
+    .soal-item .opsi-tes {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .soal-item .opsi-tes label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 12px;
+      border: 2px solid #e8d9f5;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: all 0.15s ease;
+    }
+    .soal-item .opsi-tes label:hover {
+      border-color: var(--c-bk6);
+      background: #fff5f8;
+    }
+    .soal-item .opsi-tes input[type="radio"] {
+      margin-top: 0.25rem;
+      accent-color: var(--c-bk6-ungu);
+    }
+    .soal-item .opsi-tes label.benar {
+      background: #d4f5dd; border-color: #6ecb8f; color: #227a44; font-weight: 700;
+    }
+    .soal-item .opsi-tes label.salah {
+      background: #ffe0e6; border-color: var(--c-bk6); color: #a01746; font-weight: 700;
+    }
+
+    /* Tombol periksa tes */
+    .btn-periksa-tes {
+      display: block;
+      margin: 1.2rem auto 0;
+      padding: 0.9rem 2.2rem;
+      border-radius: 40px;
+      border: none;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(242, 109, 138, 0.30);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-periksa-tes:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(242, 109, 138, 0.42);
+    }
+    .btn-periksa-tes:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none;
+    }
+
+    /* Hasil tes */
+    .hasil-tes {
+      display: none;
+      margin-top: 1.3rem;
+      background: linear-gradient(135deg, #fff5f8, #f3ecff);
+      border-radius: 22px;
+      padding: 1.4rem 1.6rem;
+      border-left: 8px solid var(--c-bk6-ungu);
+      box-shadow: 0 8px 24px rgba(140, 80, 180, 0.12);
+    }
+    .hasil-tes.show { display: block; }
+    .hasil-tes h3 {
+      margin: 0 0 0.5rem 0;
+      color: #5c2f8a;
+      font-size: 1.2rem;
+      border: none;
+      padding: 0;
+    }
+    .hasil-tes .skor-besar {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--c-bk6-dark);
+      line-height: 1;
+      margin: 0.4rem 0;
+    }
+    .hasil-tes .pesan {
+      padding: 0.7rem 1.1rem;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-top: 0.7rem;
+    }
+    .hasil-tes .pesan.lulus {
+      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
+    }
+    .hasil-tes .pesan.gagal {
+      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
+    }
+
+    /* Status kirim */
+    .status-kirim {
+      display: none;
+      margin-top: 1.2rem;
+      padding: 0.9rem 1.3rem;
+      border-radius: 16px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+    .status-kirim.show { display: block; }
+    .status-kirim.info {
+      background: #e6f4ff; color: #1f6b7d; border-left: 5px solid #4fb0c6;
+    }
+    .status-kirim.success {
+      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
+    }
+    .status-kirim.error {
+      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
+    }
+
+    /* Navigasi bawah */
+    .nav-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 3px dashed #e8d9f5;
+    }
+    .nav-bottom a, .nav-bottom button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.98rem;
+      font-family: inherit;
+      color: #fff;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(242, 109, 138, 0.30);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-bottom a:hover, .nav-bottom button:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(242, 109, 138, 0.42);
+    }
+    .nav-bottom button:disabled {
+      opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none;
+    }
+    .nav-bottom .secondary {
+      background: #fff;
+      color: #a01746;
+      border: 2px solid var(--c-bk6);
+      box-shadow: 0 6px 18px rgba(242, 109, 138, 0.15);
+    }
+
+    @media (max-width: 720px) {
+      .bagian-progress { padding: 0.7rem; gap: 0.35rem; }
+      .bagian-progress .step { font-size: 0.72rem; padding: 0.35rem 0.6rem; }
+      .bagian-progress .step .angka { width: 18px; height: 18px; font-size: 0.65rem; }
+      .scenario-panel { padding: 1.1rem 1rem; }
+      .situs-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-bottom a, .nav-bottom button { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materibk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk6.html">BK6: Tumpukan (Stack)</a></li>
+      <li>Bagian 3: Simulasi Riwayat Browser</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <!-- ===== PROGRESS BAGIAN ===== -->
+        <div class="bagian-progress" aria-label="Progress bagian">
+          <div class="step selesai"><span class="angka">✓</span> Simulasi Buku</div>
+          <div class="step selesai"><span class="angka">✓</span> Lab Stack</div>
+          <div class="step aktif"><span class="angka">3</span> Riwayat Browser</div>
+          <div class="step"><span class="angka">4</span> Studi Kasus</div>
+          <div class="step"><span class="angka">5</span> Kuis Akhir</div>
+        </div>
+
+        <!-- ===== MATERI SINGKAT ===== -->
+        <div class="materi-ringkas">
+          <h2>📚 Materi Singkat — Bagian 3</h2>
+          <p>
+            Stack banyak dipakai di teknologi sehari-hari. Salah satu contoh paling nyata adalah
+            <strong>tombol Back di browser</strong>. Browser menyimpan riwayat halaman yang kamu
+            kunjungi dalam sebuah <strong>stack</strong>.
+          </p>
+          <ul>
+            <li>Setiap kali kamu membuka halaman baru → <strong>Push</strong> URL ke stack riwayat.</li>
+            <li>Setiap kali kamu klik <strong>Back</strong> → <strong>Pop</strong> dari stack riwayat.</li>
+            <li>Halaman yang muncul adalah halaman yang <em>terakhir dikunjungi</em> sebelum halaman saat ini.</li>
+          </ul>
+          <p style="margin-top:0.6rem;">
+            <strong>Contoh lain:</strong> tombol Undo (Ctrl+Z), riwayat chat WhatsApp,
+            call stack di program komputer, dan tumpukan buku di meja belajar.
+          </p>
+        </div>
+
+        <!-- ===== AREA SIMULASI ===== -->
+        <div id="area-simulasi">
+          <div class="step-indicator">
+            <span class="dot"></span>
+            <span>Aktivitas Interaktif — Simulasi Riwayat Browser</span>
+          </div>
+
+          <div class="scenario-panel">
+            <p style="margin-bottom:1rem; color:#3a2b3e;">
+              Buka beberapa website Indonesia dengan mengklik tombol di panel kanan.
+              Amati bagaimana <strong>stack riwayat</strong> bertambah setiap kali kamu membuka situs baru.
+              Lalu gunakan tombol <strong>← Back</strong> dan <strong>→ Forward</strong> di browser mini
+              untuk menjelajah riwayat.
+            </p>
+
+            <!-- Simulasi -->
+            <div class="simulasi-wrap">
+              <!-- Browser mini -->
+              <div>
+                <div class="browser-mini">
+                  <div class="browser-bar">
+                    <button class="btn-nav" id="btnBack" title="Back" aria-label="Back" disabled>←</button>
+                    <button class="btn-nav" id="btnForward" title="Forward" aria-label="Forward" disabled>→</button>
+                    <div class="address" id="addressBar">about:blank</div>
+                  </div>
+                  <div class="browser-content kosong" id="browserContent">
+                    <div class="ikon-situs">🌐</div>
+                    <div class="nama-situs">Halaman Kosong</div>
+                    <div class="deskripsi-situs">Klik salah satu situs di panel kanan untuk mulai menjelajah.</div>
+                  </div>
+                </div>
+
+                <!-- Stack riwayat -->
+                <div class="stack-riwayat" id="stackRiwayat">
+                  <div class="label-stack">📚 Stack Riwayat (TOP di atas)</div>
+                  <div class="stack-kosong">Stack riwayat kosong</div>
+                </div>
+
+                <!-- Penghitung -->
+                <div class="penghitung">
+                  <div class="kotak">
+                    <span class="angka" id="hitungPush">0</span>
+                    <span class="label">Push</span>
+                  </div>
+                  <div class="kotak">
+                    <span class="angka" id="hitungPop">0</span>
+                    <span class="label">Back</span>
+                  </div>
+                  <div class="kotak">
+                    <span class="angka" id="hitungForward">0</span>
+                    <span class="label">Forward</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Daftar situs + log -->
+              <div>
+                <div class="daftar-situs">
+                  <h3>🌐 Daftar Website</h3>
+                  <div class="situs-grid" id="situsGrid"></div>
+                </div>
+
+                <div class="log-area" id="logArea">
+                  <div class="log-empty">Belum ada aktivitas...</div>
+                </div>
+
+                <button class="btn btn-reset" id="btnReset" style="width:100%; margin-top:0.8rem; padding:0.65rem 1.2rem; border-radius:14px; border:2px solid var(--c-bk6); background:#fff; color:#a01746; font-weight:700; font-family:inherit; font-size:0.9rem; cursor:pointer; transition:all 0.15s ease;">🔄 Reset Simulasi</button>
+              </div>
+            </div>
+
+            <!-- Tantangan -->
+            <div class="tantangan-box" id="tantanganBox">
+              <h3>🎯 Tantangan — Prediksi Halaman</h3>
+              <div class="soal-tantangan">
+                <strong>Skenario:</strong> Siti membuka <strong>Google → Ruangguru → Tokopedia → Gojek</strong>.
+                Ia klik <strong>Back 2 kali</strong>. Halaman apa yang sekarang tampil?
+              </div>
+              <div class="opsi-tantangan" id="opsiTantangan">
+                <button data-jawab="salah" data-feedback="Bukan. Setelah Back 1x dari Gojek, Siti di Tokopedia. Back 2x, Siti di Ruangguru.">A. Gojek</button>
+                <button data-jawab="salah" data-feedback="Bukan. Tokopedia adalah hasil Back 1x, bukan Back 2x.">B. Tokopedia</button>
+                <button data-jawab="benar" data-feedback="Benar! Stack riwayat: [Google, Ruangguru, Tokopedia, Gojek]. Back 1x → Pop Gojek → di Tokopedia. Back 2x → Pop Tokopedia → di Ruangguru.">C. Ruangguru</button>
+                <button data-jawab="salah" data-feedback="Bukan. Google adalah halaman paling awal, butuh 3x Back untuk kembali ke Google.">D. Google</button>
+              </div>
+              <div class="feedback-tantangan" id="feedbackTantangan"></div>
+            </div>
+
+            <!-- ===== TES PEMAHAMAN ===== -->
+            <div class="tes-box" id="tesBox">
+              <h2>📝 Tes Pemahaman — Bagian 3</h2>
+              <p class="sub">Minimal <strong>2 dari 3 soal</strong> benar untuk lanjut ke Bagian 4.</p>
+
+              <div id="soalWrap"></div>
+
+              <button class="btn-periksa-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+
+              <div class="hasil-tes" id="hasilTes"></div>
+              <div class="status-kirim" id="statusKirim"></div>
+            </div>
+
+            <!-- ===== NAVIGASI BAWAH ===== -->
+            <div class="nav-bottom">
+              <a class="secondary" href="aktivitasbk6b.html">← Bagian 2</a>
+              <button id="btnLanjut" disabled>Lanjut ke Bagian 4 →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" title="Kembali ke atas" aria-label="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI MODUL
+      // ============================================
+      const NAMA_SHEET = 'bk6';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
+      const KEY_PROGRESS = 'labbk6_progress';
+
+      // ============================================
+      // DATA SITUS
+      // ============================================
+      const SITUS = [
+        { id: 'google',     nama: 'Google',     url: 'google.com',     ikon: '🔍', deskripsi: 'Mesin pencari paling populer di dunia.' },
+        { id: 'ruangguru',  nama: 'Ruangguru',  url: 'ruangguru.com',  ikon: '📚', deskripsi: 'Platform belajar online untuk siswa Indonesia.' },
+        { id: 'tokopedia',  nama: 'Tokopedia',  url: 'tokopedia.com',  ikon: '🛒', deskripsi: 'Marketplace jual beli online.' },
+        { id: 'gojek',      nama: 'Gojek',      url: 'gojek.com',      ikon: '🛵', deskripsi: 'Aplikasi transportasi dan layanan on-demand.' },
+        { id: 'detik',      nama: 'Detik.com',  url: 'detik.com',      ikon: '📰', deskripsi: 'Portal berita terbesar di Indonesia.' },
+        { id: 'youtube',    nama: 'YouTube',    url: 'youtube.com',    ikon: '▶️', deskripsi: 'Platform berbagi video.' }
+      ];
+
+      // ============================================
+      // STATE
+      // ============================================
+      let riwayat = [];        // stack riwayat (index 0 = paling bawah)
+      let riwayatMaju = [];    // stack forward
+      let situsSekarang = null;
+      let hitPush = 0;
+      let hitBack = 0;
+      let hitForward = 0;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const btnBack = document.getElementById('btnBack');
+      const btnForward = document.getElementById('btnForward');
+      const addressBar = document.getElementById('addressBar');
+      const browserContent = document.getElementById('browserContent');
+      const stackRiwayat = document.getElementById('stackRiwayat');
+      const situsGrid = document.getElementById('situsGrid');
+      const logArea = document.getElementById('logArea');
+      const btnReset = document.getElementById('btnReset');
+      const hitungPush = document.getElementById('hitungPush');
+      const hitungPop = document.getElementById('hitungPop');
+      const hitungForward = document.getElementById('hitungForward');
+
+      const opsiTantangan = document.getElementById('opsiTantangan');
+      const feedbackTantangan = document.getElementById('feedbackTantangan');
+
+      const soalWrap = document.getElementById('soalWrap');
+      const btnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const hasilTes = document.getElementById('hasilTes');
+      const statusKirim = document.getElementById('statusKirim');
+      const btnLanjut = document.getElementById('btnLanjut');
+
+      // ============================================
+      // RENDER DAFTAR SITUS
+      // ============================================
+      function renderSitusGrid() {
+        situsGrid.innerHTML = '';
+        SITUS.forEach(function(situs) {
+          const btn = document.createElement('button');
+          btn.className = 'situs-btn';
+          btn.dataset.id = situs.id;
+          btn.innerHTML = '<span class="ikon">' + situs.ikon + '</span><span>' + situs.nama + '</span>';
+          btn.addEventListener('click', function() { bukaSitus(situs.id); });
+          situsGrid.appendChild(btn);
+        });
+      }
+
+      // ============================================
+      // BUKA SITUS (PUSH)
+      // ============================================
+      function bukaSitus(idSitus) {
+        const situs = SITUS.find(function(s) { return s.id === idSitus; });
+        if (!situs) return;
+
+        // Kalau ada riwayat maju (forward), hapus — karena membuka situs baru
+        if (riwayatMaju.length > 0) {
+          riwayatMaju = [];
+          tambahLog('Riwayat maju dihapus (buka situs baru).', 'info');
+        }
+
+        // Push ke riwayat
+        riwayat.push(situs);
+        situsSekarang = situs;
+        hitPush++;
+
+        renderBrowser();
+        renderStackRiwayat();
+        updatePenghitung();
+        updateTombolNav();
+        updateSitusAktif();
+
+        tambahLog('Push: ' + situs.url, 'push');
+      }
+
+      // ============================================
+      // BACK (POP)
+      // ============================================
+      function doBack() {
+        if (riwayat.length <= 1) return;
+
+        // Pop dari riwayat, push ke riwayat maju
+        const keluar = riwayat.pop();
+        riwayatMaju.push(keluar);
+        situsSekarang = riwayat[riwayat.length - 1];
+        hitBack++;
+
+        renderBrowser();
+        renderStackRiwayat();
+        updatePenghitung();
+        updateTombolNav();
+        updateSitusAktif();
+
+        tambahLog('Back → Pop: ' + keluar.url + ' | Kembali ke: ' + situsSekarang.url, 'pop');
+      }
+
+      // ============================================
+      // FORWARD
+      // ============================================
+      function doForward() {
+        if (riwayatMaju.length === 0) return;
+
+        const masuk = riwayatMaju.pop();
+        riwayat.push(masuk);
+        situsSekarang = masuk;
+        hitForward++;
+
+        renderBrowser();
+        renderStackRiwayat();
+        updatePenghitung();
+        updateTombolNav();
+        updateSitusAktif();
+
+        tambahLog('Forward → Push: ' + masuk.url, 'push');
+      }
+
+      // ============================================
+      // RENDER BROWSER
+      // ============================================
+      function renderBrowser() {
+        if (!situsSekarang) {
+          addressBar.textContent = 'about:blank';
+          browserContent.className = 'browser-content kosong';
+          browserContent.innerHTML = '<div class="ikon-situs">🌐</div>' +
+                                     '<div class="nama-situs">Halaman Kosong</div>' +
+                                     '<div class="deskripsi-situs">Klik salah satu situs di panel kanan untuk mulai menjelajah.</div>';
+          return;
+        }
+
+        addressBar.textContent = 'https://' + situsSekarang.url;
+        browserContent.className = 'browser-content';
+        browserContent.innerHTML = '<div class="ikon-situs">' + situsSekarang.ikon + '</div>' +
+                                   '<div class="nama-situs">' + situsSekarang.nama + '</div>' +
+                                   '<div class="deskripsi-situs">' + situsSekarang.deskripsi + '</div>';
+      }
+
+      // ============================================
+      // RENDER STACK RIWAYAT
+      // ============================================
+      function renderStackRiwayat() {
+        const labelStack = stackRiwayat.querySelector('.label-stack');
+        stackRiwayat.innerHTML = '';
+        stackRiwayat.appendChild(labelStack);
+
+        if (riwayat.length === 0) {
+          const kosong = document.createElement('div');
+          kosong.className = 'stack-kosong';
+          kosong.textContent = 'Stack riwayat kosong';
+          stackRiwayat.appendChild(kosong);
+          return;
+        }
+
+        // Render dari atas ke bawah (index terbesar = paling atas)
+        for (let i = riwayat.length - 1; i >= 0; i--) {
+          const div = document.createElement('div');
+          div.className = 'riwayat-item';
+          if (i === riwayat.length - 1) div.classList.add('teratas');
+          div.textContent = (i === riwayat.length - 1 ? '⬇ ' : '   ') + riwayat[i].url;
+          stackRiwayat.appendChild(div);
+        }
+      }
+
+      // ============================================
+      // UPDATE PENGHITUNG
+      // ============================================
+      function updatePenghitung() {
+        hitungPush.textContent = hitPush;
+        hitungPop.textContent = hitBack;
+        hitungForward.textContent = hitForward;
+      }
+
+      // ============================================
+      // UPDATE TOMBOL NAV
+      // ============================================
+      function updateTombolNav() {
+        btnBack.disabled = riwayat.length <= 1;
+        btnForward.disabled = riwayatMaju.length === 0;
+      }
+
+      // ============================================
+      // UPDATE SITUS AKTIF
+      // ============================================
+      function updateSitusAktif() {
+        situsGrid.querySelectorAll('.situs-btn').forEach(function(btn) {
+          btn.classList.toggle('aktif', situsSekarang && btn.dataset.id === situsSekarang.id);
+        });
+      }
+
+      // ============================================
+      // LOG
+      // ============================================
+      function tambahLog(teks, tipe) {
+        const empty = logArea.querySelector('.log-empty');
+        if (empty) empty.remove();
+
+        const div = document.createElement('div');
+        div.className = 'log-line ' + (tipe || 'info');
+        const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        div.textContent = '[' + waktu + '] ' + teks;
+        logArea.appendChild(div);
+        logArea.scrollTop = logArea.scrollHeight;
+      }
+
+      // ============================================
+      // RESET
+      // ============================================
+      function doReset() {
+        riwayat = [];
+        riwayatMaju = [];
+        situsSekarang = null;
+        hitPush = 0;
+        hitBack = 0;
+        hitForward = 0;
+
+        renderBrowser();
+        renderStackRiwayat();
+        updatePenghitung();
+        updateTombolNav();
+        updateSitusAktif();
+
+        logArea.innerHTML = '<div class="log-empty">Belum ada aktivitas...</div>';
+        tambahLog('Simulasi direset.', 'info');
+      }
+
+      // ============================================
+      // TANTANGAN
+      // ============================================
+      opsiTantangan.querySelectorAll('button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          opsiTantangan.querySelectorAll('button').forEach(function(b) {
+            b.disabled = true;
+            b.style.cursor = 'default';
+          });
+
+          const benar = btn.dataset.jawab === 'benar';
+          btn.classList.add(benar ? 'benar' : 'salah');
+
+          feedbackTantangan.textContent = btn.dataset.feedback || '';
+          feedbackTantangan.className = 'feedback-tantangan show ' + (benar ? 'ok' : 'no');
+
+          if (!benar) {
+            opsiTantangan.querySelectorAll('button').forEach(function(b) {
+              if (b.dataset.jawab === 'benar') b.classList.add('benar');
+            });
+          }
+        });
+      });
+
+      // ============================================
+      // SOAL TES PEMAHAMAN
+      // ============================================
+      const SOAL = [
+        {
+          q: 'Ketika kamu membuka website di browser, mengapa tombol Back selalu mengembalikan ke halaman terakhir yang dikunjungi?',
+          o: [
+            'Karena browser menyimpan semua halaman di hard disk',
+            'Karena browser menggunakan prinsip stack (LIFO) untuk riwayat',
+            'Karena browser menggunakan prinsip queue (FIFO) untuk riwayat',
+            'Karena browser memilih halaman secara acak'
+          ],
+          a: 1,
+          feedback: 'Browser menyimpan riwayat dalam stack. Tombol Back = Pop, sehingga halaman terakhir yang dikunjungi kembali lebih dulu.'
+        },
+        {
+          q: 'Manakah dari aktivitas berikut yang paling tepat menggambarkan prinsip stack?',
+          o: [
+            'Antrean siswa saat bel istirahat berbunyi',
+            'Tumpukan piring di rak dapur',
+            'Daftar hadir siswa di kelas',
+            'Nomor urut peserta lomba'
+          ],
+          a: 1,
+          feedback: 'Tumpukan piring menggunakan prinsip LIFO — piring terakhir ditaruh diambil pertama. Antrean dan daftar hadir menggunakan prinsip FIFO/urut.'
+        },
+        {
+          q: 'Dewi membuka aplikasi Gojek, lalu membuka Tokopedia di browser, kemudian membuka Ruangguru. Setelah itu ia menutup Ruangguru dan klik Back di browser. Halaman apa yang muncul?',
+          o: ['Gojek', 'Tokopedia', 'Ruangguru', 'Halaman kosong'],
+          a: 1,
+          feedback: 'Stack riwayat: [Gojek, Tokopedia, Ruangguru]. Klik Back = Pop Ruangguru, sehingga kembali ke Tokopedia.'
+        }
+      ];
+
+      let jawabanUser = new Array(SOAL.length).fill(null);
+
+      function renderSoal() {
+        soalWrap.innerHTML = '';
+        SOAL.forEach(function(soal, i) {
+          const div = document.createElement('div');
+          div.className = 'soal-item';
+
+          let html = '<div class="pertanyaan">' + (i + 1) + '. ' + soal.q + '</div><div class="opsi-tes">';
+          soal.o.forEach(function(opsi, j) {
+            html += '<label data-soal="' + i + '" data-opsi="' + j + '">' +
+                    '<input type="radio" name="soal' + i + '" value="' + j + '">' +
+                    '<span><strong>' + String.fromCharCode(65 + j) + '.</strong> ' + opsi + '</span>' +
+                    '</label>';
+          });
+          html += '</div>';
+          div.innerHTML = html;
+          soalWrap.appendChild(div);
+
+          div.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+              jawabanUser[i] = parseInt(radio.value, 10);
+            });
+          });
+        });
+      }
+
+      // ============================================
+      // PERIKSA TES
+      // ============================================
+      function periksaTes() {
+        const belumDijawab = jawabanUser.findIndex(function(j) { return j === null; });
+        if (belumDijawab !== -1) {
+          alert('Soal nomor ' + (belumDijawab + 1) + ' belum dijawab.');
+          return;
+        }
+
+        let benar = 0;
+        jawabanUser.forEach(function(jawab, i) {
+          if (jawab === SOAL[i].a) benar++;
+        });
+
+        soalWrap.querySelectorAll('label[data-soal]').forEach(function(label) {
+          const i = parseInt(label.dataset.soal, 10);
+          const j = parseInt(label.dataset.opsi, 10);
+          label.querySelector('input').disabled = true;
+          if (j === SOAL[i].a) {
+            label.classList.add('benar');
+          } else if (jawabanUser[i] === j) {
+            label.classList.add('salah');
+          }
+        });
+
+        const skor = Math.round(40 + (benar / SOAL.length) * 60);
+        const lulus = benar >= 2;
+
+        let html = '<h3>Hasil Tes Pemahaman — Bagian 3</h3>' +
+                   '<div class="skor-besar">' + skor + '</div>' +
+                   '<p><strong>Jawaban benar:</strong> ' + benar + ' / ' + SOAL.length + '</p>';
+
+        if (lulus) {
+          html += '<div class="pesan lulus">🎉 Selamat! Kamu lulus Bagian 3. Silakan lanjut ke Bagian 4.</div>';
+        } else {
+          html += '<div class="pesan gagal">📖 Belum lulus (minimal 2 benar). Silakan baca ulang materi singkat dan coba lagi.</div>';
+        }
+
+        hasilTes.innerHTML = html;
+        hasilTes.classList.add('show');
+        hasilTes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        if (lulus) {
+          btnLanjut.disabled = false;
+          simpanProgress(skor, benar, SOAL.length);
+          kirimNilai(skor);
+        } else {
+          btnLanjut.disabled = true;
+        }
+
+        btnPeriksaTes.disabled = true;
+      }
+
+      // ============================================
+      // SIMPAN PROGRESS
+      // ============================================
+      function simpanProgress(skor, benar, total) {
+        try {
+          const prog = JSON.parse(localStorage.getItem(KEY_PROGRESS) || '{}');
+          prog.bagian = 'c';
+          prog.skorBagian3 = skor;
+          prog.benarBagian3 = benar;
+          prog.totalBagian3 = total;
+          prog.waktuBagian3 = new Date().toISOString();
+          localStorage.setItem(KEY_PROGRESS, JSON.stringify(prog));
+        } catch (e) {
+          console.warn('Gagal simpan progress:', e);
+        }
+      }
+
+      // ============================================
+      // KIRIM NILAI (mode UPDATE)
+      // ============================================
+      async function kirimNilai(skor) {
+        statusKirim.textContent = '⏳ Mengirim nilai Bagian 3...';
+        statusKirim.className = 'status-kirim show info';
+
+        const hasil = await window.kirimNilaiBagian(
+          NAMA_SHEET,
+          'c',
+          skor,
+          TOTAL_BAGIAN
+        );
+
+        if (hasil.ok) {
+          statusKirim.textContent = '✅ Nilai Bagian 3 berhasil dikirim! Silakan lanjut ke Bagian 4.';
+          statusKirim.className = 'status-kirim show success';
+        } else {
+          statusKirim.textContent = '❌ Gagal mengirim nilai: ' + (hasil.error || 'Terjadi kesalahan') + '. Coba lagi.';
+          statusKirim.className = 'status-kirim show error';
+          btnLanjut.disabled = true;
+        }
+      }
+
+      // ============================================
+      // LANJUT KE BAGIAN 4
+      // ============================================
+      btnLanjut.addEventListener('click', function() {
+        if (btnLanjut.disabled) return;
+        btnLanjut.disabled = true;
+        btnLanjut.textContent = '⏳ Berpindah...';
+        setTimeout(function() {
+          window.location.href = 'aktivitasbk6d.html';
+        }, 800);
+      });
+
+      // ============================================
+      // EVENT LISTENERS
+      // ============================================
+      btnBack.addEventListener('click', doBack);
+      btnForward.addEventListener('click', doForward);
+      btnReset.addEventListener('click', doReset);
+      btnPeriksaTes.addEventListener('click', periksaTes);
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      renderSitusGrid();
+      renderBrowser();
+      renderStackRiwayat();
+      updatePenghitung();
+      updateTombolNav();
+      renderSoal();
+
+    })();
+  </script>
+</body>
+</html>

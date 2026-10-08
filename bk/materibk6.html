@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Materi BK6: Tumpukan (Stack) · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== Gaya khusus halaman materi BK6 ===== */
+    :root {
+      --c-bk6: #f26d8a;
+      --c-bk6-dark: #a01746;
+      --c-bk6-soft: #fff5f8;
+      --c-bk6-ungu: #b07be0;
+    }
+
+    .materi-header {
+      background: linear-gradient(135deg, #f26d8a 0%, #b07be0 100%);
+      border-radius: 28px;
+      padding: 2.2rem 2.4rem 1.8rem 2.4rem;
+      margin-bottom: 1.8rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 14px 36px rgba(242, 109, 138, 0.28);
+    }
+    .materi-header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.22) 0 8px, transparent 9px),
+        radial-gradient(circle at 85% 70%, rgba(255,255,255,0.16) 0 6px, transparent 7px);
+      pointer-events: none;
+      opacity: 0.8;
+    }
+    .materi-header .ikon-besar {
+      font-size: 3rem;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+    }
+    .materi-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .materi-header .subjudul {
+      font-size: 1rem;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+      margin: 0;
+    }
+
+    /* ===== Daftar Isi ===== */
+    .daftar-isi {
+      background: linear-gradient(135deg, #fff5f8, #f3ecff);
+      border-radius: 24px;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 2rem;
+      border-left: 8px solid var(--c-bk6);
+      box-shadow: 0 6px 18px rgba(140, 80, 180, 0.08);
+    }
+    .daftar-isi h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #6a2a7a;
+      margin: 0 0 0.8rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      padding: 0;
+    }
+    .daftar-isi ol {
+      margin: 0 0 0 1.4rem;
+      padding: 0;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+    }
+    .daftar-isi li { margin-bottom: 0.35rem; }
+    .daftar-isi a {
+      color: #8a4bbf;
+      text-decoration: none;
+      border-bottom: 1px dotted #d4b3e8;
+      font-weight: 600;
+    }
+    .daftar-isi a:hover {
+      color: #5c1f8a;
+      border-bottom: 2px solid #8a4bbf;
+    }
+
+    /* ===== Bagian materi ===== */
+    .bagian {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 2rem 2.2rem;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 8px 24px rgba(80, 40, 100, 0.07);
+      border: 2px solid #f5edfa;
+      scroll-margin-top: 1.5rem;
+    }
+    .bagian h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      margin: 0 0 1rem 0;
+      padding-left: 1rem;
+      border-left: 7px solid;
+      border-image: linear-gradient(180deg, var(--c-bk6), var(--c-bk6-ungu)) 1;
+      letter-spacing: -0.01em;
+    }
+    .bagian h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #6a2a7a;
+      margin: 1.6rem 0 0.6rem 0;
+    }
+    .bagian h3:first-of-type { margin-top: 0.6rem; }
+    .bagian p { margin-bottom: 1rem; color: #3a2b3e; }
+    .bagian ul, .bagian ol { margin: 0.5rem 0 1.2rem 1.8rem; }
+    .bagian li { margin-bottom: 0.4rem; }
+    .bagian li::marker { color: var(--c-bk6); }
+    .bagian strong { color: #5c2f8a; }
+
+    /* ===== Kotak analogi ===== */
+    .kotak-analogi {
+      background: linear-gradient(135deg, #fff3e0, #ffe3f1);
+      padding: 1.1rem 1.6rem;
+      border-radius: 40px 14px 40px 14px;
+      font-style: italic;
+      color: #6a2a4a;
+      margin: 1.4rem 0;
+      border-left: 7px solid var(--c-bk6);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.7);
+    }
+    .kotak-analogi strong { font-style: normal; }
+
+    /* ===== Tabel ===== */
+    .tabel-wrap {
+      overflow-x: auto;
+      margin: 1.2rem 0;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(80, 40, 100, 0.08);
+    }
+    table.tabel-materi {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      font-size: 0.95rem;
+      min-width: 520px;
+    }
+    table.tabel-materi th {
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+    table.tabel-materi td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #f0e6ff;
+      color: #3a2b3e;
+      vertical-align: top;
+    }
+    table.tabel-materi tr:last-child td { border-bottom: none; }
+    table.tabel-materi tr:nth-child(even) td { background: #faf6ff; }
+
+    /* ===== Kotak kuis kilat ===== */
+    .kuis-kilat {
+      background: linear-gradient(135deg, #e6f4ff, #f3ecff);
+      border-radius: 24px;
+      padding: 1.5rem 1.8rem;
+      margin: 1.6rem 0;
+      border: 2px dashed var(--c-bk6-ungu);
+    }
+    .kuis-kilat h3 {
+      margin-top: 0 !important;
+      color: #5c2f8a !important;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .kuis-kilat .opsi {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 0.8rem 0;
+    }
+    .kuis-kilat .opsi button {
+      text-align: left;
+      padding: 0.7rem 1.1rem;
+      border-radius: 14px;
+      border: 2px solid #d4b3e8;
+      background: #fff;
+      color: var(--ink);
+      font-size: 0.95rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .kuis-kilat .opsi button:hover {
+      border-color: var(--c-bk6);
+      background: #fff5f8;
+      transform: translateX(4px);
+    }
+    .kuis-kilat .opsi button.benar {
+      background: #d4f5dd;
+      border-color: #6ecb8f;
+      color: #227a44;
+      font-weight: 700;
+    }
+    .kuis-kilat .opsi button.salah {
+      background: #ffe0e6;
+      border-color: var(--c-bk6);
+      color: #a01746;
+      font-weight: 700;
+    }
+    .kuis-kilat .feedback {
+      margin-top: 0.8rem;
+      padding: 0.7rem 1.1rem;
+      border-radius: 14px;
+      font-size: 0.92rem;
+      display: none;
+    }
+    .kuis-kilat .feedback.show { display: block; }
+    .kuis-kilat .feedback.ok {
+      background: #d4f5dd;
+      color: #227a44;
+      border-left: 5px solid #6ecb8f;
+    }
+    .kuis-kilat .feedback.no {
+      background: #ffe0e6;
+      color: #a01746;
+      border-left: 5px solid var(--c-bk6);
+    }
+
+    /* ===== Ilustrasi stack ===== */
+    .ilustrasi-stack {
+      background: #2b1d2e;
+      color: #e8dcd0;
+      border-radius: 18px;
+      padding: 1.4rem 1.6rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin: 1.2rem 0;
+      overflow-x: auto;
+      white-space: pre;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.05);
+    }
+
+    /* ===== Kotak referensi ===== */
+    .kotak-referensi {
+      background: #faf6ff;
+      border-radius: 20px;
+      padding: 1.3rem 1.6rem;
+      margin-top: 1.5rem;
+      border-left: 6px solid var(--c-bk6-ungu);
+    }
+    .kotak-referensi h3 {
+      margin-top: 0 !important;
+      font-size: 1.05rem !important;
+      color: #5c2f8a !important;
+    }
+    .kotak-referensi ul {
+      margin: 0.4rem 0 0 1.4rem !important;
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+    }
+    .kotak-referensi li { margin-bottom: 0.5rem; }
+    .kotak-referensi a { color: #8a4bbf; word-break: break-all; }
+
+    /* ===== Navigasi bawah ===== */
+    .nav-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      padding: 1.5rem 1rem;
+    }
+    .nav-bottom a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      box-shadow: 0 8px 22px rgba(242, 109, 138, 0.30);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-bottom a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(242, 109, 138, 0.42);
+    }
+    .nav-bottom a.secondary {
+      background: #fff;
+      color: #a01746;
+      border: 2px solid var(--c-bk6);
+      box-shadow: 0 6px 18px rgba(242, 109, 138, 0.15);
+    }
+
+    /* ===== Tombol floating daftar isi ===== */
+    #tocBtn {
+      position: fixed;
+      bottom: 6.5rem;
+      right: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--c-bk6-ungu), var(--c-bk6));
+      border: none;
+      font-size: 1.4rem;
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(140, 80, 180, 0.40);
+      cursor: pointer;
+      opacity: 0.9;
+      transition: opacity 0.2s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 998;
+      line-height: 1;
+    }
+    #tocBtn:hover {
+      opacity: 1;
+      transform: scale(1.08) translateY(-2px);
+    }
+    #tocBtn:focus-visible {
+      outline: 3px solid #8a4bbf;
+      outline-offset: 3px;
+    }
+
+    /* Panel daftar isi floating */
+    #tocPanel {
+      position: fixed;
+      bottom: 11.5rem;
+      right: 1.5rem;
+      width: min(320px, calc(100vw - 3rem));
+      max-height: 60vh;
+      overflow-y: auto;
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 18px 48px rgba(80, 40, 100, 0.25);
+      padding: 1.2rem 1.3rem;
+      z-index: 997;
+      display: none;
+      border: 2px solid #f0e6ff;
+    }
+    #tocPanel.show { display: block; }
+    #tocPanel h3 {
+      margin: 0 0 0.7rem 0 !important;
+      font-size: 1rem !important;
+      color: #5c2f8a !important;
+      border: none !important;
+      padding: 0 !important;
+    }
+    #tocPanel ol {
+      margin: 0 0 0 1.2rem !important;
+      padding: 0;
+      font-size: 0.9rem;
+    }
+    #tocPanel li { margin-bottom: 0.4rem; }
+    #tocPanel a {
+      color: #8a4bbf;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    #tocPanel a:hover { color: #5c1f8a; text-decoration: underline; }
+
+    /* ===== Responsif ===== */
+    @media (max-width: 720px) {
+      .materi-header { padding: 1.5rem 1.3rem 1.3rem 1.3rem; border-radius: 22px; }
+      .materi-header h1 { font-size: 1.6rem; }
+      .materi-header .ikon-besar { font-size: 2.4rem; }
+      .bagian { padding: 1.3rem 1.2rem; border-radius: 22px; }
+      .bagian h2 { font-size: 1.3rem; }
+      .bagian h3 { font-size: 1.1rem; }
+      .daftar-isi { padding: 1.1rem 1.2rem; }
+      .nav-bottom a { width: 100%; justify-content: center; }
+      #tocBtn { width: 44px; height: 44px; right: 1rem; bottom: 5.5rem; }
+      #tocPanel { right: 1rem; bottom: 10rem; }
+    }
+  </style>
+</head>
+<body>
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materibk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk6.html">BK6: Tumpukan (Stack)</a></li>
+      <li>Materi Lengkap</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+
+    <!-- ===== HERO ===== -->
+    <section class="materi-header">
+      <div class="ikon-besar">📚</div>
+      <h1>Mengenal Organisasi Data Terstruktur — Tumpukan (Stack)</h1>
+      <p class="subjudul">Materi lengkap tanpa aktivitas · Berpikir Komputasional · Fase D</p>
+    </section>
+
+    <!-- ===== DAFTAR ISI ===== -->
+    <nav class="daftar-isi" id="daftar-isi" aria-label="Daftar Isi">
+      <h2>📑 Daftar Isi</h2>
+      <ol>
+        <li><a href="#bagian-1">Bagian 1: Apa Itu Tumpukan (Stack)?</a></li>
+        <li><a href="#bagian-2">Bagian 2: Operasi pada Tumpukan (Push, Pop, Top)</a></li>
+        <li><a href="#bagian-3">Bagian 3: Penerapan Stack dalam Kehidupan Sehari-hari</a></li>
+        <li><a href="#kuis-akhir">Kuis Akhir Komprehensif (10 Soal)</a></li>
+        <li><a href="#referensi">Referensi</a></li>
+      </ol>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- BAGIAN 1 -->
+    <!-- ============================================================ -->
+    <article class="bagian" id="bagian-1">
+      <h2>Bagian 1: Apa Itu Tumpukan (Stack)?</h2>
+
+      <h3>1.1 Pengertian Tumpukan</h3>
+      <p>
+        <strong>Tumpukan (Stack)</strong> adalah cara komputer mengorganisasi data dengan aturan khusus:
+        <strong>data yang terakhir masuk adalah data yang pertama keluar</strong>. Aturan ini disebut
+        <strong>LIFO (Last In First Out)</strong>.
+      </p>
+      <p>Bayangkan tumpukan piring di rak dapur:</p>
+      <ul>
+        <li>Piring yang <strong>terakhir ditaruh</strong> (paling atas) akan <strong>pertama diambil</strong>.</li>
+        <li>Piring yang <strong>pertama ditaruh</strong> (paling bawah) akan <strong>terakhir diambil</strong>.</li>
+        <li>Kamu tidak bisa mengambil piring dari tengah atau bawah tanpa mengambil piring di atasnya terlebih dahulu.</li>
+      </ul>
+
+      <div class="kotak-analogi">
+        <strong>Analogi:</strong> Tumpukan piring di rak dapur adalah contoh paling mudah dari stack.
+        Ibu selalu mengambil piring paling atas, bukan piring paling bawah.
+      </div>
+
+      <h3>1.2 Elemen Penting dalam Stack</h3>
+      <div class="tabel-wrap">
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Istilah</th>
+              <th>Penjelasan</th>
+              <th>Analogi Piring</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>TOP</strong></td>
+              <td>Elemen paling atas, satu-satunya yang bisa diakses</td>
+              <td>Piring paling atas</td>
+            </tr>
+            <tr>
+              <td><strong>Push</strong></td>
+              <td>Operasi menambah data ke atas tumpukan</td>
+              <td>Menaruh piring baru di atas</td>
+            </tr>
+            <tr>
+              <td><strong>Pop</strong></td>
+              <td>Operasi mengambil data dari atas tumpukan</td>
+              <td>Mengambil piring paling atas</td>
+            </tr>
+            <tr>
+              <td><strong>IsEmpty</strong></td>
+              <td>Pemeriksaan apakah tumpukan kosong</td>
+              <td>Cek apakah rak piring kosong</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>1.3 Mengapa Belajar Stack?</h3>
+      <p>
+        Stack adalah salah satu struktur data fundamental dalam ilmu komputer. Banyak teknologi
+        yang kamu gunakan sehari-hari bekerja dengan prinsip stack:
+      </p>
+      <ul>
+        <li><strong>Tombol Back di browser</strong> (Chrome, Firefox): Halaman yang terakhir kamu kunjungi adalah yang pertama muncul saat kamu klik Back.</li>
+        <li><strong>Tombol Undo (Ctrl+Z)</strong> di aplikasi edit teks: Perubahan terakhir yang dibatalkan terlebih dahulu.</li>
+        <li><strong>Riwayat perintah</strong> di aplikasi Gojek atau Tokopedia.</li>
+      </ul>
+
+      <!-- KUIS KILAT 1 -->
+      <div class="kuis-kilat" data-kuis="k1">
+        <h3>⚡ Kuis Kilat 1</h3>
+        <p>
+          Raka sedang bermain game di HP-nya. Ia melakukan gerakan berturut-turut:
+          <strong>Loncat → Tendang → Pukul → Tendang</strong>.
+          Jika setiap gerakan disimpan dalam stack (tumpukan), gerakan mana yang akan
+          <strong>pertama kali dibatalkan</strong> jika Raka menekan tombol Undo?
+        </p>
+        <div class="opsi">
+          <button data-jawab="salah" data-feedback="Bukan. Loncat adalah gerakan pertama yang masuk, jadi paling bawah di stack.">A. Loncat</button>
+          <button data-jawab="salah" data-feedback="Bukan. Tendang (pertama) masuk sebelum Pukul dan Tendang (terakhir).">B. Tendang (pertama)</button>
+          <button data-jawab="salah" data-feedback="Bukan. Pukul masuk sebelum Tendang (terakhir).">C. Pukul</button>
+          <button data-jawab="benar" data-feedback="Benar! Tendang (terakhir) adalah data yang paling akhir masuk (TOP), sehingga pertama keluar saat Undo.">D. Tendang (terakhir)</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="kotak-referensi">
+        <h3>📖 Sumber</h3>
+        <ul>
+          <li>Bebras Indonesia 2018 (Tantangan SMP) — Konsep Stack dalam soal parkir mobil</li>
+          <li>SMPN 2 Balen — Materi Struktur Data Fase D</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ============================================================ -->
+    <!-- BAGIAN 2 -->
+    <!-- ============================================================ -->
+    <article class="bagian" id="bagian-2">
+      <h2>Bagian 2: Operasi pada Tumpukan (Push, Pop, Top)</h2>
+
+      <h3>2.1 Tiga Operasi Utama Stack</h3>
+      <p>
+        Stack memiliki operasi-operasi dasar yang terbatas. Keterbatasan ini justru yang membuat
+        stack sangat efisien untuk kasus tertentu.
+      </p>
+      <div class="tabel-wrap">
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Operasi</th>
+              <th>Fungsi</th>
+              <th>Analogi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Push</strong></td>
+              <td>Menambahkan elemen ke posisi TOP</td>
+              <td>Menaruh piring di atas tumpukan</td>
+            </tr>
+            <tr>
+              <td><strong>Pop</strong></td>
+              <td>Mengambil dan menghapus elemen dari TOP</td>
+              <td>Mengambil piring paling atas</td>
+            </tr>
+            <tr>
+              <td><strong>Top</strong></td>
+              <td>Melihat elemen TOP tanpa menghapusnya</td>
+              <td>Melihat piring paling atas tanpa mengambilnya</td>
+            </tr>
+            <tr>
+              <td><strong>IsEmpty</strong></td>
+              <td>Memeriksa apakah stack kosong</td>
+              <td>Mengecek rak piring</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>2.2 Ilustrasi Operasi Stack</h3>
+      <p><strong>Skenario:</strong> Dewi menumpuk 3 buku di perpustakaan.</p>
+
+      <div class="ilustrasi-stack">Langkah 1: Push("Matematika")
+┌─────────────┐
+│ Matematika  │ ← TOP
+└─────────────┘
+
+Langkah 2: Push("IPA")
+┌─────────────┐
+│     IPA     │ ← TOP
+├─────────────┤
+│ Matematika  │
+└─────────────┘
+
+Langkah 3: Push("Bahasa")
+┌─────────────┐
+│   Bahasa    │ ← TOP
+├─────────────┤
+│     IPA     │
+├─────────────┤
+│ Matematika  │
+└─────────────┘
+
+Langkah 4: Pop()
+┌─────────────┐
+│     IPA     │ ← TOP
+├─────────────┤
+│ Matematika  │
+└─────────────┘
+(Hasil Pop: "Bahasa")</div>
+
+      <h3>2.3 Aturan Penting</h3>
+      <ul>
+        <li><strong>Push</strong> hanya bisa dilakukan jika stack belum penuh.</li>
+        <li><strong>Pop</strong> hanya bisa dilakukan jika stack tidak kosong.</li>
+        <li>Operasi stack bersifat <strong>O(1)</strong> atau waktu konstan — seberapa pun banyaknya data, kecepatan operasi tetap sama.</li>
+      </ul>
+
+      <!-- KUIS KILAT 2 -->
+      <div class="kuis-kilat" data-kuis="k2">
+        <h3>⚡ Kuis Kilat 2</h3>
+        <p>Perhatikan urutan operasi berikut pada stack kosong:</p>
+        <ol>
+          <li>Push(5)</li>
+          <li>Push(3)</li>
+          <li>Push(8)</li>
+          <li>Pop()</li>
+          <li>Push(2)</li>
+          <li>Top()</li>
+        </ol>
+        <p>Berapa nilai yang dikembalikan oleh operasi <strong>Top</strong>?</p>
+        <div class="opsi">
+          <button data-jawab="salah" data-feedback="Bukan. 5 adalah elemen paling bawah, tidak bisa diakses langsung.">A. 5</button>
+          <button data-jawab="salah" data-feedback="Bukan. 3 berada di tengah, bukan TOP.">B. 3</button>
+          <button data-jawab="salah" data-feedback="Bukan. 8 sudah dihapus oleh Pop().">C. 8</button>
+          <button data-jawab="benar" data-feedback="Benar! Setelah Pop menghapus 8, Push(2) menambahkan 2 sebagai TOP baru.">D. 2</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="kotak-referensi">
+        <h3>📖 Sumber</h3>
+        <ul>
+          <li>Universitas Indonesia — Struktur Data dan Algoritma: Stacks &amp; Queues</li>
+          <li>Institut Teknologi Bandung — Data Structures and Algorithms: Stacks</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ============================================================ -->
+    <!-- BAGIAN 3 -->
+    <!-- ============================================================ -->
+    <article class="bagian" id="bagian-3">
+      <h2>Bagian 3: Penerapan Stack dalam Kehidupan Sehari-hari</h2>
+
+      <h3>3.1 Stack di Dunia Nyata</h3>
+      <p>
+        Konsep stack bukan hanya teori di buku. Banyak teknologi dan aktivitas sehari-hari
+        menggunakan prinsip LIFO.
+      </p>
+      <div class="tabel-wrap">
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Penerapan</th>
+              <th>Penjelasan</th>
+              <th>Contoh Konteks Indonesia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Tombol Undo</strong></td>
+              <td>Perubahan terakhir dibatalkan pertama</td>
+              <td>Ctrl+Z di Microsoft Word saat menulis tugas</td>
+            </tr>
+            <tr>
+              <td><strong>Browser Back</strong></td>
+              <td>Halaman terakhir dikunjungi pertama kembali</td>
+              <td>Klik Back setelah browsing di Tokopedia</td>
+            </tr>
+            <tr>
+              <td><strong>Riwayat Chat</strong></td>
+              <td>Pesan terakhir muncul paling atas</td>
+              <td>Chat WhatsApp dengan teman</td>
+            </tr>
+            <tr>
+              <td><strong>Call Stack</strong></td>
+              <td>Fungsi yang terakhir dipanggil selesai pertama</td>
+              <td>Program komputer saat menjalankan aplikasi</td>
+            </tr>
+            <tr>
+              <td><strong>Tumpukan Buku</strong></td>
+              <td>Buku terakhir ditaruh diambil pertama</td>
+              <td>Tumpukan buku pelajaran di meja belajar</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>3.2 Studi Kasus: Tombol Back di Browser</h3>
+      <p>Ketika kamu membuka website:</p>
+      <ol>
+        <li>Buka Google → Stack: [Google]</li>
+        <li>Buka Ruangguru → Stack: [Google, Ruangguru]</li>
+        <li>Buka Tokopedia → Stack: [Google, Ruangguru, Tokopedia]</li>
+        <li>Klik Back → Kembali ke Ruangguru. Stack: [Google, Ruangguru]</li>
+        <li>Klik Back lagi → Kembali ke Google. Stack: [Google]</li>
+      </ol>
+      <p>
+        Inilah mengapa tombol Back selalu mengembalikan ke halaman sebelumnya,
+        bukan ke halaman pertama.
+      </p>
+
+      <h3>3.3 Studi Kasus: Gotong Royong di Sekolah</h3>
+      <p>Bayangkan kegiatan gotong royong membersihkan kelas:</p>
+      <ul>
+        <li>Setiap siswa yang selesai membersihkan area, namanya dicatat di papan tulis (<strong>Push</strong>).</li>
+        <li>Ketika guru ingin memanggil siswa untuk membantu memindahkan meja, ia memanggil siswa yang terakhir selesai (<strong>Pop</strong>) — karena siswa tersebut masih berada di area dan siap membantu.</li>
+      </ul>
+      <p>Ini adalah prinsip LIFO dalam konteks budaya Indonesia.</p>
+
+      <!-- KUIS KILAT 3 -->
+      <div class="kuis-kilat" data-kuis="k3">
+        <h3>⚡ Kuis Kilat 3</h3>
+        <p>
+          Aurel sedang mengerjakan tugas di Microsoft Word. Ia melakukan:
+        </p>
+        <ol>
+          <li>Mengetik "Tugas Informatika"</li>
+          <li>Menambahkan " - Stack"</li>
+          <li>Menghapus "Stack"</li>
+          <li>Menambahkan " - LIFO"</li>
+        </ol>
+        <p>Jika Aurel menekan <strong>Ctrl+Z (Undo) satu kali</strong>, apa yang terjadi?</p>
+        <div class="opsi">
+          <button data-jawab="salah" data-feedback="Bukan. Undo hanya membatalkan aksi terakhir, bukan semua aksi.">A. Teks kembali ke "Tugas Informatika"</button>
+          <button data-jawab="benar" data-feedback="Benar! Undo membatalkan aksi terakhir (menambahkan ' - LIFO'), mengembalikan ke kondisi sebelum aksi tersebut.">B. Teks menjadi "Tugas Informatika - Stack"</button>
+          <button data-jawab="salah" data-feedback="Bukan. ' - LIFO' justru yang dibatalkan oleh Undo.">C. Teks menjadi "Tugas Informatika - LIFO"</button>
+          <button data-jawab="salah" data-feedback="Bukan. Undo tidak menghapus semua teks.">D. Semua teks terhapus</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="kotak-referensi">
+        <h3>📖 Sumber</h3>
+        <ul>
+          <li>Bebras Indonesia 2018 — Tantangan Stack SMP</li>
+          <li>SMPN 2 Balen — Smart Warehouse: Struktur Data</li>
+          <li>USC Viterbi — Stacks and Queues Applications</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ============================================================ -->
+    <!-- KUIS AKHIR -->
+    <!-- ============================================================ -->
+    <article class="bagian" id="kuis-akhir">
+      <h2>Kuis Akhir Komprehensif (10 Soal)</h2>
+      <p>
+        <strong>Kriteria kelulusan:</strong> minimal <strong>7 dari 10 soal</strong> benar.
+        Jawablah dengan memilih salah satu opsi di setiap soal.
+      </p>
+
+      <div id="kuisAkhirWrap"></div>
+
+      <div id="hasilKuisAkhir" style="display:none; margin-top:1.5rem;"></div>
+    </article>
+
+    <!-- ============================================================ -->
+    <!-- REFERENSI -->
+    <!-- ============================================================ -->
+    <article class="bagian" id="referensi">
+      <h2>Referensi</h2>
+      <ul>
+        <li>Bebras Indonesia. (2018). <em>Tantangan Bebras Indonesia 2018 — Tingkat SMP (Penggalang)</em>. Diakses dari http://bebras.or.id</li>
+        <li>SMP Negeri 2 Balen. (2026). <em>Smart Warehouse: Struktur Data — List/Array, Stack (LIFO), dan Queue (FIFO)</em>. Diakses dari https://www.smpn2balen.sch.id</li>
+        <li>USC Viterbi School of Engineering. <em>Stacks and Queues</em>. Diakses dari https://viterbi-web.usc.edu</li>
+        <li>Institut Teknologi Bandung. <em>Data Structures and Algorithms: Stacks</em>. Diakses dari https://www.cse.iitb.ac.in</li>
+        <li>Universitas Indonesia. <em>Struktur Data dan Algoritma: Implementasi ADT — Stacks &amp; Queues</em>. Diakses dari http://aren.cs.ui.ac.id</li>
+        <li>Sadiman. (2024). <em>Informatika untuk Siswa SMA-MA/SMK-MAK Kelas 12</em>. Yrama Widya.</li>
+      </ul>
+    </article>
+
+    <!-- ===== NAVIGASI BAWAH ===== -->
+    <nav class="nav-bottom" aria-label="Navigasi bawah">
+      <a class="secondary" href="bk6.html">← Kembali ke Portal BK6</a>
+      <a href="aktivitasbk6a.html">🎮 Mulai Aktivitas Bagian 1 →</a>
+    </nav>
+
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <!-- Tombol floating Daftar Isi -->
+  <button id="tocBtn" title="Daftar Isi" aria-label="Buka Daftar Isi">📑</button>
+  <div id="tocPanel" role="dialog" aria-label="Panel Daftar Isi">
+    <h3>📑 Daftar Isi</h3>
+    <ol>
+      <li><a href="#bagian-1">Apa Itu Tumpukan (Stack)?</a></li>
+      <li><a href="#bagian-2">Operasi pada Tumpukan</a></li>
+      <li><a href="#bagian-3">Penerapan Stack Sehari-hari</a></li>
+      <li><a href="#kuis-akhir">Kuis Akhir Komprehensif</a></li>
+      <li><a href="#referensi">Referensi</a></li>
+    </ol>
+  </div>
+
+  <button id="scrollTopBtn" title="Kembali ke atas" aria-label="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KUIS KILAT (3 kuis di tengah materi)
+      // ============================================
+      document.querySelectorAll('.kuis-kilat').forEach(function(box) {
+        const feedback = box.querySelector('.feedback');
+        box.querySelectorAll('.opsi button').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            // Nonaktifkan semua tombol setelah menjawab
+            box.querySelectorAll('.opsi button').forEach(function(b) {
+              b.disabled = true;
+              b.style.cursor = 'default';
+            });
+
+            const benar = btn.dataset.jawab === 'benar';
+            btn.classList.add(benar ? 'benar' : 'salah');
+
+            feedback.textContent = btn.dataset.feedback || '';
+            feedback.classList.add('show', benar ? 'ok' : 'no');
+
+            // Tandai jawaban benar juga
+            if (!benar) {
+              box.querySelectorAll('.opsi button').forEach(function(b) {
+                if (b.dataset.jawab === 'benar') b.classList.add('benar');
+              });
+            }
+          });
+        });
+      });
+
+      // ============================================
+      // KUIS AKHIR — 10 SOAL
+      // ============================================
+      const SOAL_AKHIR = [
+        {
+          q: 'Prinsip kerja stack adalah...',
+          o: ['FIFO', 'LIFO', 'LILO', 'FILO'],
+          a: 1
+        },
+        {
+          q: 'Operasi untuk menambahkan data ke stack disebut...',
+          o: ['Pop', 'Top', 'Push', 'Enqueue'],
+          a: 2
+        },
+        {
+          q: 'Operasi untuk mengambil data dari stack disebut...',
+          o: ['Pop', 'Top', 'Push', 'Dequeue'],
+          a: 0
+        },
+        {
+          q: 'Budi menumpuk kartu: A, B, C, D (A paling bawah). Ia melakukan Pop 2 kali. Kartu apa yang tersisa di stack?',
+          o: ['A, B', 'B, C', 'C, D', 'A, D'],
+          a: 0
+        },
+        {
+          q: 'Dalam stack, elemen yang bisa diakses langsung adalah...',
+          o: ['Elemen bawah', 'Elemen tengah', 'Elemen atas (TOP)', 'Semua elemen'],
+          a: 2
+        },
+        {
+          q: 'Ketika stack kosong, operasi Pop akan menyebabkan...',
+          o: ['Stack terisi otomatis', 'Error/underflow', 'Stack ter-reset', 'Tidak terjadi apa-apa'],
+          a: 1
+        },
+        {
+          q: 'Manakah yang bukan contoh penerapan stack?',
+          o: ['Tombol Undo', 'Tombol Back browser', 'Antrean di kasir', 'Tumpukan piring'],
+          a: 2
+        },
+        {
+          q: 'Raka melakukan: Push(3), Push(7), Pop, Push(5), Push(2), Pop. Berapa isi stack dari bawah ke atas?',
+          o: ['[3, 7]', '[3, 5]', '[7, 5]', '[5, 2]'],
+          a: 1
+        },
+        {
+          q: 'Mengapa stack disebut struktur data dengan akses terbatas?',
+          o: [
+            'Karena hanya bisa menyimpan sedikit data',
+            'Karena hanya bisa mengakses elemen TOP',
+            'Karena hanya bisa digunakan di komputer lama',
+            'Karena tidak bisa dihapus'
+          ],
+          a: 1
+        },
+        {
+          q: 'Siti memiliki stack kosong. Ia melakukan: Push(1), Push(2), Push(3), Pop, Push(4), Pop, Pop. Berapa banyak data yang tersisa?',
+          o: ['0', '1', '2', '3'],
+          a: 1
+        }
+      ];
+
+      const wrap = document.getElementById('kuisAkhirWrap');
+      const hasilBox = document.getElementById('hasilKuisAkhir');
+      const jawabanUser = new Array(SOAL_AKHIR.length).fill(null);
+
+      // Render soal
+      SOAL_AKHIR.forEach(function(soal, i) {
+        const div = document.createElement('div');
+        div.style.cssText = 'background:#faf6ff; border-radius:18px; padding:1.1rem 1.3rem; margin-bottom:1rem; border-left:5px solid #b07be0;';
+
+        let html = '<p style="font-weight:700; color:#5c2f8a; margin-bottom:0.6rem;">' +
+                   (i + 1) + '. ' + soal.q + '</p><div style="display:flex; flex-direction:column; gap:0.4rem;">';
+
+        soal.o.forEach(function(opsi, j) {
+          html += '<label style="display:flex; align-items:flex-start; gap:0.6rem; padding:0.55rem 0.9rem; border-radius:12px; border:2px solid #e8d9f5; background:#fff; cursor:pointer; transition:all 0.15s ease; font-size:0.94rem;">' +
+                  '<input type="radio" name="soal' + i + '" value="' + j + '" style="margin-top:0.25rem; accent-color:#b07be0;">' +
+                  '<span><strong>' + String.fromCharCode(65 + j) + '.</strong> ' + opsi + '</span>' +
+                  '</label>';
+        });
+
+        html += '</div>';
+        div.innerHTML = html;
+        wrap.appendChild(div);
+
+        // Event listener
+        div.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+          radio.addEventListener('change', function() {
+            jawabanUser[i] = parseInt(radio.value, 10);
+          });
+        });
+      });
+
+      // Tombol periksa
+      const btnPeriksa = document.createElement('button');
+      btnPeriksa.textContent = '✅ Periksa Jawaban';
+      btnPeriksa.style.cssText = 'display:block; margin:1.5rem auto 0; padding:0.9rem 2.2rem; border-radius:40px; border:none; background:linear-gradient(135deg,#f26d8a,#b07be0); color:#fff; font-weight:700; font-size:1rem; cursor:pointer; box-shadow:0 8px 22px rgba(242,109,138,0.30); transition:transform 0.2s ease, box-shadow 0.2s ease;';
+      btnPeriksa.addEventListener('mouseenter', function() { btnPeriksa.style.transform = 'translateY(-2px)'; });
+      btnPeriksa.addEventListener('mouseleave', function() { btnPeriksa.style.transform = 'translateY(0)'; });
+      btnPeriksa.addEventListener('click', periksaJawaban);
+      wrap.appendChild(btnPeriksa);
+
+      function periksaJawaban() {
+        // Cek apakah semua soal sudah dijawab
+        const belumDijawab = jawabanUser.findIndex(function(j) { return j === null; });
+        if (belumDijawab !== -1) {
+          alert('Soal nomor ' + (belumDijawab + 1) + ' belum dijawab. Silakan jawab semua soal terlebih dahulu.');
+          return;
+        }
+
+        let benar = 0;
+        jawabanUser.forEach(function(jawab, i) {
+          if (jawab === SOAL_AKHIR[i].a) benar++;
+        });
+
+        const skor = Math.round((benar / SOAL_AKHIR.length) * 100);
+        const lulus = benar >= 7;
+
+        // Level
+        let level, badge, warna;
+        if (benar === 10) { level = 'Ahli Stack'; badge = '🏆 Stack Master'; warna = '#d4af37'; }
+        else if (benar === 9) { level = 'Mahir'; badge = '🥇 Stack Pro'; warna = '#c0c0c0'; }
+        else if (benar === 8) { level = 'Terampil'; badge = '🥈 Stack Explorer'; warna = '#cd7f32'; }
+        else if (benar === 7) { level = 'Cukup'; badge = '📘 Stack Learner'; warna = '#6ecb8f'; }
+        else { level = 'Perlu Belajar Lagi'; badge = '📖 Belum Lulus'; warna = '#f26d8a'; }
+
+        let html = '<div style="background:linear-gradient(135deg,#fff5f8,#f3ecff); border-radius:24px; padding:1.6rem 1.8rem; border-left:8px solid ' + warna + '; box-shadow:0 8px 24px rgba(140,80,180,0.12);">' +
+                   '<h3 style="margin:0 0 0.6rem 0; color:#5c2f8a; font-size:1.3rem;">Hasil Kuis Akhir</h3>' +
+                   '<p style="font-size:1.1rem; margin-bottom:0.4rem;"><strong>Jawaban benar:</strong> ' + benar + ' / ' + SOAL_AKHIR.length + '</p>' +
+                   '<p style="font-size:1.1rem; margin-bottom:0.4rem;"><strong>Skor:</strong> ' + skor + ' / 100</p>' +
+                   '<p style="font-size:1.1rem; margin-bottom:0.4rem;"><strong>Level:</strong> ' + level + '</p>' +
+                   '<p style="font-size:1.1rem; margin-bottom:0.8rem;"><strong>Badge:</strong> ' + badge + '</p>';
+
+        if (lulus) {
+          html += '<p style="background:#d4f5dd; color:#227a44; padding:0.8rem 1.2rem; border-radius:14px; font-weight:600; margin:0;">🎉 Selamat! Kamu lulus Kuis Akhir. Lanjutkan ke aktivitas untuk mendapatkan sertifikat digital.</p>';
+        } else {
+          html += '<p style="background:#ffe0e6; color:#a01746; padding:0.8rem 1.2rem; border-radius:14px; font-weight:600; margin:0;">📖 Kamu belum lulus (minimal 7 benar). Silakan baca ulang Bagian 1–3, lalu coba lagi.</p>';
+        }
+
+        html += '</div>';
+
+        hasilBox.innerHTML = html;
+        hasilBox.style.display = 'block';
+        hasilBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // ============================================
+      // TOMBOL FLOATING DAFTAR ISI
+      // ============================================
+      const tocBtn = document.getElementById('tocBtn');
+      const tocPanel = document.getElementById('tocPanel');
+
+      tocBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        tocPanel.classList.toggle('show');
+      });
+
+      // Tutup panel kalau klik di luar
+      document.addEventListener('click', function(e) {
+        if (tocPanel.classList.contains('show') &&
+            !tocPanel.contains(e.target) &&
+            e.target !== tocBtn) {
+          tocPanel.classList.remove('show');
+        }
+      });
+
+      // Tutup panel setelah klik link
+      tocPanel.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', function() {
+          tocPanel.classList.remove('show');
+        });
+      });
+
+      // ESC untuk tutup
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') tocPanel.classList.remove('show');
+      });
+
+    })();
+  </script>
+</body>
+</html>

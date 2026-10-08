@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>BK6 Bagian 5: Kuis Akhir &amp; Sertifikat · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== Gaya khusus aktivitas BK6 ===== */
+    :root {
+      --c-bk6: #f26d8a;
+      --c-bk6-dark: #a01746;
+      --c-bk6-soft: #fff5f8;
+      --c-bk6-ungu: #b07be0;
+    }
+
+    /* Progress bagian */
+    .bagian-progress {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, #fff5f8, #f3ecff);
+      border-radius: 22px;
+    }
+    .bagian-progress .step {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: #fff;
+      color: #b09ac0;
+      border: 2px solid #e8d9f5;
+    }
+    .bagian-progress .step.aktif {
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.30);
+    }
+    .bagian-progress .step.selesai {
+      background: #d4f5dd;
+      color: #227a44;
+      border-color: #6ecb8f;
+    }
+    .bagian-progress .step .angka {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      font-size: 0.75rem;
+    }
+    .bagian-progress .step.aktif .angka { background: rgba(255,255,255,0.30); }
+    .bagian-progress .step:not(.aktif):not(.selesai) .angka { background: #f0e6ff; }
+
+    /* Kartu umum */
+    .kartu {
+      background: #fff;
+      border-radius: 24px;
+      padding: 1.5rem 1.7rem;
+      border: 2px solid #f0e6ff;
+      box-shadow: 0 6px 18px rgba(80, 40, 100, 0.06);
+      margin-bottom: 1.5rem;
+    }
+    .kartu h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      padding: 0;
+    }
+
+    /* Rekap skor */
+    .rekap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.7rem;
+    }
+    .rekap-item {
+      background: linear-gradient(135deg, #faf6ff, #f0e6ff);
+      border-radius: 16px;
+      padding: 0.9rem 0.7rem;
+      text-align: center;
+      border: 2px solid #e8d9f5;
+    }
+    .rekap-item .bagian {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #8a4bbf;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.3rem;
+    }
+    .rekap-item .nilai {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--c-bk6-dark);
+      line-height: 1;
+    }
+    .rekap-item.kosong .nilai {
+      color: #c9b8d6;
+      font-size: 1.2rem;
+    }
+
+    /* Form identitas (terisi otomatis) */
+    .form-siswa-box {
+      background: #fff;
+      border: 2px solid #f0e6ff;
+      border-radius: 24px;
+      padding: 1.5rem 1.7rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 6px 18px rgba(80, 40, 100, 0.06);
+    }
+    .form-siswa-box h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      padding: 0;
+    }
+    .form-siswa-box .field {
+      margin-bottom: 0.9rem;
+    }
+    .form-siswa-box label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #5c2f8a;
+      margin-bottom: 0.3rem;
+    }
+    .form-siswa-box input {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 14px;
+      border: 2px solid #e8d9f5;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--ink);
+      background: #faf6ff;
+      transition: border-color 0.18s ease, background 0.18s ease;
+    }
+    .form-siswa-box input:focus {
+      outline: none;
+      border-color: var(--c-bk6);
+      background: #fff;
+    }
+    .form-siswa-box .info-auto {
+      font-size: 0.82rem;
+      color: #8a4bbf;
+      background: #faf6ff;
+      padding: 0.5rem 0.9rem;
+      border-radius: 12px;
+      border-left: 4px solid var(--c-bk6-ungu);
+      margin-bottom: 0.9rem;
+    }
+
+    /* Kuis akhir */
+    .soal-item {
+      background: #faf6ff;
+      border-radius: 18px;
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 1rem;
+      border-left: 5px solid var(--c-bk6-ungu);
+    }
+    .soal-item .pertanyaan {
+      font-weight: 700;
+      color: #5c2f8a;
+      margin-bottom: 0.7rem;
+      font-size: 0.95rem;
+    }
+    .soal-item .opsi-tes {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .soal-item .opsi-tes label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 12px;
+      border: 2px solid #e8d9f5;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: all 0.15s ease;
+    }
+    .soal-item .opsi-tes label:hover {
+      border-color: var(--c-bk6);
+      background: #fff5f8;
+    }
+    .soal-item .opsi-tes input[type="radio"] {
+      margin-top: 0.25rem;
+      accent-color: var(--c-bk6-ungu);
+    }
+    .soal-item .opsi-tes label.benar {
+      background: #d4f5dd; border-color: #6ecb8f; color: #227a44; font-weight: 700;
+    }
+    .soal-item .opsi-tes label.salah {
+      background: #ffe0e6; border-color: var(--c-bk6); color: #a01746; font-weight: 700;
+    }
+
+    /* Tombol utama */
+    .btn-utama {
+      display: block;
+      margin: 1.2rem auto 0;
+      padding: 0.95rem 2.4rem;
+      border-radius: 40px;
+      border: none;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.02rem;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 10px 26px rgba(242, 109, 138, 0.32);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-utama:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(242, 109, 138, 0.45);
+    }
+    .btn-utama:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none;
+    }
+
+    /* Hasil kuis akhir */
+    .hasil-akhir {
+      display: none;
+      margin-top: 1.5rem;
+      background: linear-gradient(135deg, #fff5f8, #f3ecff);
+      border-radius: 24px;
+      padding: 1.6rem 1.8rem;
+      border-left: 8px solid var(--c-bk6-ungu);
+      box-shadow: 0 10px 28px rgba(140, 80, 180, 0.14);
+    }
+    .hasil-akhir.show { display: block; }
+    .hasil-akhir h3 {
+      margin: 0 0 0.6rem 0;
+      color: #5c2f8a;
+      font-size: 1.3rem;
+      border: none;
+      padding: 0;
+    }
+    .nilai-besar {
+      font-size: 3.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+      margin: 0.4rem 0 0.2rem 0;
+    }
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.4rem;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 1rem;
+      margin: 0.5rem 0;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    }
+    .level-master   { background: linear-gradient(135deg, #ffd700, #d4af37); color: #5c3a00; }
+    .level-mahir    { background: linear-gradient(135deg, #e0e0e0, #b0b0b0); color: #3a3a3a; }
+    .level-pemula   { background: linear-gradient(135deg, #f0c090, #cd7f32); color: #fff; }
+    .level-belum    { background: linear-gradient(135deg, #ffe0e6, #ffc4d0); color: #a01746; }
+
+    .rincian-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+    .rincian-item {
+      background: #fff;
+      border-radius: 14px;
+      padding: 0.8rem 0.9rem;
+      border: 2px solid #e8d9f5;
+      text-align: center;
+    }
+    .rincian-item .label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #8a4bbf;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+    .rincian-item .angka {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--c-bk6-dark);
+    }
+
+    /* Status API */
+    .status-kirim {
+      display: none;
+      margin-top: 1.2rem;
+      padding: 0.9rem 1.3rem;
+      border-radius: 16px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+    .status-kirim.show { display: block; }
+    .status-kirim.info {
+      background: #e6f4ff; color: #1f6b7d; border-left: 5px solid #4fb0c6;
+    }
+    .status-kirim.success {
+      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
+    }
+    .status-kirim.error {
+      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
+    }
+
+    /* Sertifikat */
+    .sertifikat-wrap {
+      display: none;
+      margin-top: 1.5rem;
+      animation: fadeIn 0.5s ease;
+    }
+    .sertifikat-wrap.show { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .sertifikat {
+      background: linear-gradient(135deg, #fffdf7, #fff8ee);
+      border: 8px double var(--c-bk6-ungu);
+      border-radius: 20px;
+      padding: 1.8rem 2rem;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 16px 40px rgba(140, 80, 180, 0.18);
+      overflow: hidden;
+    }
+    .sertifikat::before,
+    .sertifikat::after {
+      content: "";
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(242,109,138,0.12), transparent 70%);
+      pointer-events: none;
+    }
+    .sertifikat::before { top: -20px; left: -20px; }
+    .sertifikat::after { bottom: -20px; right: -20px; }
+
+    .sertifikat .kepala {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #8a4bbf;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .sertifikat h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0.4rem 0 0.2rem 0;
+      letter-spacing: -0.01em;
+      border: none;
+      padding: 0;
+    }
+    .sertifikat .sub {
+      font-size: 0.9rem;
+      color: #8a4bbf;
+      margin-bottom: 1.2rem;
+    }
+    .sertifikat .diberikan {
+      font-size: 0.85rem;
+      color: #5b4a55;
+      margin-bottom: 0.3rem;
+    }
+    .sertifikat .nama-siswa {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--c-bk6-dark);
+      margin: 0.3rem 0 0.8rem 0;
+      padding-bottom: 0.6rem;
+      border-bottom: 3px dashed #e8d9f5;
+      letter-spacing: -0.01em;
+    }
+    .sertifikat .materi {
+      font-size: 0.95rem;
+      color: #3a2b3e;
+      font-style: italic;
+      margin-bottom: 0.9rem;
+      line-height: 1.5;
+    }
+    .sertifikat .level-sertifikat {
+      display: inline-block;
+      padding: 0.5rem 1.4rem;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 1rem;
+      margin: 0.4rem 0 0.9rem 0;
+    }
+    .sertifikat .footer-sertifikat {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      margin-top: 1.2rem;
+      font-size: 0.85rem;
+      color: #5b4a55;
+      text-align: left;
+    }
+    .sertifikat .footer-sertifikat .kolom {
+      flex: 1;
+    }
+    .sertifikat .footer-sertifikat .kolom.kanan { text-align: right; }
+    .sertifikat .footer-sertifikat strong { color: #5c2f8a; }
+
+    /* Tombol aksi sertifikat */
+    .aksi-sertifikat {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      justify-content: center;
+      margin-top: 1.3rem;
+    }
+    .aksi-sertifikat button {
+      padding: 0.75rem 1.6rem;
+      border-radius: 40px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    .aksi-sertifikat button:hover { transform: translateY(-2px); filter: brightness(1.05); }
+    .aksi-sertifikat .cetak {
+      background: linear-gradient(135deg, #4fb0c6, #2d8fa6);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(79, 176, 198, 0.30);
+    }
+    .aksi-sertifikat .ulang {
+      background: linear-gradient(135deg, #f4b942, #d4a030);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(244, 185, 66, 0.30);
+    }
+    .aksi-sertifikat .kembali {
+      background: #fff;
+      color: #a01746;
+      border: 2px solid var(--c-bk6);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* Navigasi bawah */
+    .nav-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 3px dashed #e8d9f5;
+    }
+    .nav-bottom a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.98rem;
+      font-family: inherit;
+      color: #fff;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      box-shadow: 0 8px 22px rgba(242, 109, 138, 0.30);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-bottom a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(242, 109, 138, 0.42);
+    }
+    .nav-bottom .secondary {
+      background: #fff;
+      color: #a01746;
+      border: 2px solid var(--c-bk6);
+      box-shadow: 0 6px 18px rgba(242, 109, 138, 0.15);
+    }
+
+    /* Print */
+    @media print {
+      body * { visibility: hidden; }
+      .sertifikat, .sertifikat * { visibility: visible; }
+      .sertifikat {
+        position: absolute;
+        left: 0; top: 0;
+        width: 100%;
+        box-shadow: none;
+      }
+      .aksi-sertifikat, .nav-bottom, #scrollTopBtn, header, footer, .breadcrumb-wrapper, .bagian-progress { display: none !important; }
+    }
+
+    @media (max-width: 720px) {
+      .bagian-progress { padding: 0.7rem; gap: 0.35rem; }
+      .bagian-progress .step { font-size: 0.72rem; padding: 0.35rem 0.6rem; }
+      .bagian-progress .step .angka { width: 18px; height: 18px; font-size: 0.65rem; }
+      .kartu, .form-siswa-box { padding: 1.2rem 1.2rem; }
+      .nilai-besar { font-size: 2.4rem; }
+      .sertifikat { padding: 1.3rem 1.2rem; }
+      .sertifikat h2 { font-size: 1.3rem; }
+      .sertifikat .nama-siswa { font-size: 1.4rem; }
+      .sertifikat .footer-sertifikat { flex-direction: column; align-items: flex-start; }
+      .sertifikat .footer-sertifikat .kolom.kanan { text-align: left; }
+      .aksi-sertifikat button { width: 100%; justify-content: center; }
+      .nav-bottom a { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materibk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk6.html">BK6: Tumpukan (Stack)</a></li>
+      <li>Bagian 5: Kuis Akhir &amp; Sertifikat</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <!-- ===== PROGRESS BAGIAN ===== -->
+        <div class="bagian-progress" aria-label="Progress bagian">
+          <div class="step selesai"><span class="angka">✓</span> Simulasi Buku</div>
+          <div class="step selesai"><span class="angka">✓</span> Lab Stack</div>
+          <div class="step selesai"><span class="angka">✓</span> Riwayat Browser</div>
+          <div class="step selesai"><span class="angka">✓</span> Studi Kasus</div>
+          <div class="step aktif"><span class="angka">5</span> Kuis Akhir</div>
+        </div>
+
+        <!-- ===== REKAP SKOR ===== -->
+        <div class="kartu">
+          <h2>📊 Rekap Skor Bagian 1–4</h2>
+          <div class="rekap-grid" id="rekapGrid">
+            <div class="rekap-item kosong" data-bagian="a">
+              <div class="bagian">Bagian 1</div>
+              <div class="nilai">–</div>
+            </div>
+            <div class="rekap-item kosong" data-bagian="b">
+              <div class="bagian">Bagian 2</div>
+              <div class="nilai">–</div>
+            </div>
+            <div class="rekap-item kosong" data-bagian="c">
+              <div class="bagian">Bagian 3</div>
+              <div class="nilai">–</div>
+            </div>
+            <div class="rekap-item kosong" data-bagian="d">
+              <div class="bagian">Bagian 4</div>
+              <div class="nilai">–</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== FORM IDENTITAS (terisi otomatis) ===== -->
+        <div class="form-siswa-box" id="formSiswaBox">
+          <h2>👤 Identitas Siswa</h2>
+          <div class="info-auto" id="infoAuto">
+            Data diambil otomatis dari Bagian 1. Kamu bisa mengubahnya jika perlu.
+          </div>
+          <div class="field">
+            <label for="inputSekolah">Sekolah</label>
+            <input type="text" id="inputSekolah" placeholder="Contoh: SMPN 2 Talegong" autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="inputNama">Nama Lengkap</label>
+            <input type="text" id="inputNama" placeholder="Nama lengkapmu" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="inputKelas">Kelas</label>
+            <input type="text" id="inputKelas" placeholder="Contoh: 8A" autocomplete="off">
+          </div>
+        </div>
+
+        <!-- ===== KUIS AKHIR ===== -->
+        <div class="kartu">
+          <h2>📝 Kuis Akhir — 10 Soal</h2>
+          <p style="font-size:0.92rem; color:var(--ink-soft); margin-bottom:1rem;">
+            <strong>Kriteria kelulusan:</strong> minimal <strong>7 dari 10 soal</strong> benar.
+            Nilai akhir = (rata-rata Bagian 1–4 × 50%) + (skor kuis × 50%).
+          </p>
+
+          <div id="soalWrap"></div>
+
+          <button class="btn-utama" id="btnPeriksaKuis">✅ Periksa &amp; Kirim Nilai Akhir</button>
+
+          <div class="status-kirim" id="statusKirim"></div>
+
+          <!-- Hasil akhir -->
+          <div class="hasil-akhir" id="hasilAkhir"></div>
+
+          <!-- Sertifikat -->
+          <div class="sertifikat-wrap" id="sertifikatWrap"></div>
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom">
+          <a class="secondary" href="aktivitasbk6d.html">← Bagian 4</a>
+          <a href="bk6.html">🏠 Kembali ke Portal BK6</a>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" title="Kembali ke atas" aria-label="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI MODUL
+      // ============================================
+      const NAMA_SHEET = 'bk6';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
+      const KEY_PROGRESS = 'labbk6_progress';
+
+      // ============================================
+      // SOAL KUIS AKHIR (10 SOAL)
+      // ============================================
+      const SOAL = [
+        {
+          q: 'Prinsip kerja stack adalah...',
+          o: ['FIFO', 'LIFO', 'LILO', 'FILO'],
+          a: 1
+        },
+        {
+          q: 'Operasi untuk menambahkan data ke stack disebut...',
+          o: ['Pop', 'Top', 'Push', 'Enqueue'],
+          a: 2
+        },
+        {
+          q: 'Operasi untuk mengambil data dari stack disebut...',
+          o: ['Pop', 'Top', 'Push', 'Dequeue'],
+          a: 0
+        },
+        {
+          q: 'Budi menumpuk kartu: A, B, C, D (A paling bawah). Ia melakukan Pop 2 kali. Kartu apa yang tersisa di stack?',
+          o: ['A, B', 'B, C', 'C, D', 'A, D'],
+          a: 0
+        },
+        {
+          q: 'Dalam stack, elemen yang bisa diakses langsung adalah...',
+          o: ['Elemen bawah', 'Elemen tengah', 'Elemen atas (TOP)', 'Semua elemen'],
+          a: 2
+        },
+        {
+          q: 'Ketika stack kosong, operasi Pop akan menyebabkan...',
+          o: ['Stack terisi otomatis', 'Error/underflow', 'Stack ter-reset', 'Tidak terjadi apa-apa'],
+          a: 1
+        },
+        {
+          q: 'Manakah yang bukan contoh penerapan stack?',
+          o: ['Tombol Undo', 'Tombol Back browser', 'Antrean di kasir', 'Tumpukan piring'],
+          a: 2
+        },
+        {
+          q: 'Raka melakukan: Push(3), Push(7), Pop, Push(5), Push(2), Pop. Berapa isi stack dari bawah ke atas?',
+          o: ['[3, 7]', '[3, 5]', '[7, 5]', '[5, 2]'],
+          a: 1
+        },
+        {
+          q: 'Mengapa stack disebut struktur data dengan akses terbatas?',
+          o: [
+            'Karena hanya bisa menyimpan sedikit data',
+            'Karena hanya bisa mengakses elemen TOP',
+            'Karena hanya bisa digunakan di komputer lama',
+            'Karena tidak bisa dihapus'
+          ],
+          a: 1
+        },
+        {
+          q: 'Siti memiliki stack kosong. Ia melakukan: Push(1), Push(2), Push(3), Pop, Push(4), Pop, Pop. Berapa banyak data yang tersisa?',
+          o: ['0', '1', '2', '3'],
+          a: 1
+        }
+      ];
+
+      let jawabanUser = new Array(SOAL.length).fill(null);
+      let sudahKirim = false;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const rekapGrid = document.getElementById('rekapGrid');
+      const inputSekolah = document.getElementById('inputSekolah');
+      const inputNama = document.getElementById('inputNama');
+      const inputKelas = document.getElementById('inputKelas');
+      const infoAuto = document.getElementById('infoAuto');
+      const soalWrap = document.getElementById('soalWrap');
+      const btnPeriksaKuis = document.getElementById('btnPeriksaKuis');
+      const statusKirim = document.getElementById('statusKirim');
+      const hasilAkhir = document.getElementById('hasilAkhir');
+      const sertifikatWrap = document.getElementById('sertifikatWrap');
+
+      // ============================================
+      // REKAP SKOR DARI LOCALSTORAGE
+      // ============================================
+      function muatRekapSkor() {
+        let prog = {};
+        try {
+          prog = JSON.parse(localStorage.getItem(KEY_PROGRESS) || '{}');
+        } catch (e) {}
+
+        const skorMap = {
+          a: prog.skor,
+          b: prog.skorBagian2,
+          c: prog.skorBagian3,
+          d: prog.skorBagian4
+        };
+
+        rekapGrid.querySelectorAll('.rekap-item').forEach(function(item) {
+          const bagian = item.dataset.bagian;
+          const skor = skorMap[bagian];
+          const nilaiEl = item.querySelector('.nilai');
+          if (skor !== undefined && skor !== null) {
+            nilaiEl.textContent = skor;
+            item.classList.remove('kosong');
+          } else {
+            nilaiEl.textContent = '–';
+            item.classList.add('kosong');
+          }
+        });
+
+        return skorMap;
+      }
+
+      // ============================================
+      // ISI FORM IDENTITAS OTOMATIS
+      // ============================================
+      function muatIdentitas() {
+        const siswa = window.ambilIdentitasSiswa && window.ambilIdentitasSiswa();
+        if (siswa) {
+          inputSekolah.value = siswa.sekolah || '';
+          inputNama.value = siswa.nama || '';
+          inputKelas.value = siswa.kelas || '';
+          infoAuto.textContent = '✓ Data berhasil dimuat dari Bagian 1. Kamu bisa mengubahnya jika perlu.';
+          infoAuto.style.background = '#d4f5dd';
+          infoAuto.style.color = '#227a44';
+          infoAuto.style.borderLeftColor = '#6ecb8f';
+        } else {
+          infoAuto.textContent = '⚠️ Data identitas tidak ditemukan. Silakan isi manual di bawah ini.';
+          infoAuto.style.background = '#fff3e0';
+          infoAuto.style.color = '#8a5e00';
+          infoAuto.style.borderLeftColor = '#f4b942';
+        }
+      }
+
+      // ============================================
+      // RENDER SOAL
+      // ============================================
+      function renderSoal() {
+        soalWrap.innerHTML = '';
+        SOAL.forEach(function(soal, i) {
+          const div = document.createElement('div');
+          div.className = 'soal-item';
+
+          let html = '<div class="pertanyaan">' + (i + 1) + '. ' + soal.q + '</div><div class="opsi-tes">';
+          soal.o.forEach(function(opsi, j) {
+            html += '<label data-soal="' + i + '" data-opsi="' + j + '">' +
+                    '<input type="radio" name="soal' + i + '" value="' + j + '">' +
+                    '<span><strong>' + String.fromCharCode(65 + j) + '.</strong> ' + opsi + '</span>' +
+                    '</label>';
+          });
+          html += '</div>';
+          div.innerHTML = html;
+          soalWrap.appendChild(div);
+
+          div.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+              jawabanUser[i] = parseInt(radio.value, 10);
+            });
+          });
+        });
+      }
+
+      // ============================================
+      // PERIKSA & KIRIM NILAI AKHIR
+      // ============================================
+      async function periksaDanKirim() {
+        // Validasi identitas
+        const sekolah = inputSekolah.value.trim();
+        const nama = inputNama.value.trim();
+        const kelas = inputKelas.value.trim();
+
+        if (!nama || !kelas) {
+          statusKirim.textContent = '⚠️ Identitas belum lengkap. Isi nama dan kelas terlebih dahulu.';
+          statusKirim.className = 'status-kirim show error';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+
+        // Validasi jawaban
+        const belumDijawab = jawabanUser.findIndex(function(j) { return j === null; });
+        if (belumDijawab !== -1) {
+          alert('Soal nomor ' + (belumDijawab + 1) + ' belum dijawab. Silakan jawab semua soal terlebih dahulu.');
+          return;
+        }
+
+        // Hitung skor kuis
+        let benar = 0;
+        jawabanUser.forEach(function(jawab, i) {
+          if (jawab === SOAL[i].a) benar++;
+        });
+        const skorKuis = Math.round((benar / SOAL.length) * 100);
+        const lulus = benar >= 7;
+
+        // Tandai opsi benar/salah
+        soalWrap.querySelectorAll('label[data-soal]').forEach(function(label) {
+          const i = parseInt(label.dataset.soal, 10);
+          const j = parseInt(label.dataset.opsi, 10);
+          label.querySelector('input').disabled = true;
+          if (j === SOAL[i].a) {
+            label.classList.add('benar');
+          } else if (jawabanUser[i] === j) {
+            label.classList.add('salah');
+          }
+        });
+
+        btnPeriksaKuis.disabled = true;
+
+        // Ambil skor Bagian 1-4
+        const skorMap = muatRekapSkor();
+        const skorAktivitas = [
+          skorMap.a || 0,
+          skorMap.b || 0,
+          skorMap.c || 0,
+          skorMap.d || 0
+        ];
+        const rataAktivitas = window.hitungRataAktivitas
+          ? window.hitungRataAktivitas(skorAktivitas)
+          : Math.round(skorAktivitas.reduce(function(a, b) { return a + b; }, 0) / 4);
+        const nilaiAkhir = window.hitungNilaiAkhir
+          ? window.hitungNilaiAkhir(skorAktivitas, skorKuis)
+          : Math.round(rataAktivitas * 0.5 + skorKuis * 0.5);
+
+        // Simpan identitas (untuk keperluan tampilan sertifikat)
+        window.simpanIdentitasSiswa(sekolah, nama, kelas);
+
+        // Simpan progress e
+        try {
+          const prog = JSON.parse(localStorage.getItem(KEY_PROGRESS) || '{}');
+          prog.bagian = 'e';
+          prog.skorKuis = skorKuis;
+          prog.benarKuis = benar;
+          prog.nilaiAkhir = nilaiAkhir;
+          prog.waktuBagian5 = new Date().toISOString();
+          localStorage.setItem(KEY_PROGRESS, JSON.stringify(prog));
+        } catch (e) {}
+
+        // Tampilkan hasil
+        tampilkanHasil(benar, skorKuis, rataAktivitas, nilaiAkhir, lulus, skorAktivitas);
+
+        // Kirim ke sheet
+        statusKirim.textContent = '⏳ Mengirim nilai Bagian 5 & nilai akhir...';
+        statusKirim.className = 'status-kirim show info';
+
+        const hasil = await window.kirimNilaiBagian(
+          NAMA_SHEET,
+          'e',
+          skorKuis,
+          TOTAL_BAGIAN,
+          nilaiAkhir
+        );
+
+        if (hasil.ok) {
+          statusKirim.textContent = '✅ Nilai Bagian 5 & nilai akhir berhasil dikirim! ID: ' + (hasil.id || '-');
+          statusKirim.className = 'status-kirim show success';
+          sudahKirim = true;
+          tampilkanSertifikat(nama, kelas, sekolah, nilaiAkhir, lulus, benar);
+        } else {
+          statusKirim.textContent = '❌ Gagal mengirim nilai: ' + (hasil.error || 'Terjadi kesalahan') + '. Silakan klik "Ulangi Kirim" di bawah sertifikat.';
+          statusKirim.className = 'status-kirim show error';
+          // Tetap tampilkan sertifikat (dengan tombol ulangi kirim)
+          tampilkanSertifikat(nama, kelas, sekolah, nilaiAkhir, lulus, benar);
+        }
+      }
+
+      // ============================================
+      // TAMPILKAN HASIL
+      // ============================================
+      function tampilkanHasil(benar, skorKuis, rataAktivitas, nilaiAkhir, lulus, skorAktivitas) {
+        let level, levelClass, badge;
+        if (lulus && nilaiAkhir >= 90) {
+          level = 'Master'; levelClass = 'level-master'; badge = '🏅 Stack Master';
+        } else if (lulus && nilaiAkhir >= 80) {
+          level = 'Mahir'; levelClass = 'level-mahir'; badge = '🥇 Stack Pro';
+        } else if (lulus && nilaiAkhir >= 70) {
+          level = 'Pemula'; levelClass = 'level-pemula'; badge = '🥈 Stack Explorer';
+        } else if (lulus) {
+          level = 'Cukup'; levelClass = 'level-pemula'; badge = '📘 Stack Learner';
+        } else {
+          level = 'Perlu Belajar Lagi'; levelClass = 'level-belum'; badge = '📖 Belum Lulus';
+        }
+
+        let html = '<h3>🎯 Hasil Akhir</h3>' +
+                   '<div class="nilai-besar">' + nilaiAkhir + '</div>' +
+                   '<p style="margin-bottom:0.4rem;"><strong>Level:</strong></p>' +
+                   '<span class="level-badge ' + levelClass + '">' + badge + ' — ' + level + '</span>';
+
+        html += '<div class="rincian-grid">' +
+                '<div class="rincian-item"><div class="label">Rata Aktivitas</div><div class="angka">' + rataAktivitas + '</div></div>' +
+                '<div class="rincian-item"><div class="label">Skor Kuis</div><div class="angka">' + skorKuis + '</div></div>' +
+                '<div class="rincian-item"><div class="label">Benar Kuis</div><div class="angka">' + benar + '/' + SOAL.length + '</div></div>' +
+                '<div class="rincian-item"><div class="label">Nilai Akhir</div><div class="angka">' + nilaiAkhir + '</div></div>' +
+                '</div>';
+
+        // Rumus
+        html += '<p style="margin-top:1rem; font-size:0.86rem; color:var(--ink-soft); line-height:1.6;">' +
+                '<strong>Rumus:</strong> Nilai Akhir = (Rata-rata Bagian 1–4 × 50%) + (Skor Kuis × 50%)<br>' +
+                '= (' + rataAktivitas + ' × 0.5) + (' + skorKuis + ' × 0.5) = ' + nilaiAkhir +
+                '</p>';
+
+        if (lulus) {
+          html += '<div style="margin-top:0.9rem; padding:0.7rem 1.1rem; border-radius:14px; font-weight:600; font-size:0.92rem; background:#d4f5dd; color:#227a44; border-left:5px solid #6ecb8f;">🎉 Selamat! Kamu lulus Kuis Akhir. Sertifikat digitalmu sudah siap di bawah.</div>';
+        } else {
+          html += '<div style="margin-top:0.9rem; padding:0.7rem 1.1rem; border-radius:14px; font-weight:600; font-size:0.92rem; background:#ffe0e6; color:#a01746; border-left:5px solid var(--c-bk6);">📖 Belum lulus (minimal 7 benar). Silakan klik "Ulangi Kuis" untuk mencoba lagi.</div>';
+        }
+
+        hasilAkhir.innerHTML = html;
+        hasilAkhir.classList.add('show');
+        hasilAkhir.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // ============================================
+      // TAMPILKAN SERTIFIKAT
+      // ============================================
+      function tampilkanSertifikat(nama, kelas, sekolah, nilaiAkhir, lulus, benar) {
+        const tanggal = new Date().toLocaleDateString('id-ID', {
+          day: 'numeric', month: 'long', year: 'numeric'
+        });
+
+        let level, levelClass, badge;
+        if (lulus && nilaiAkhir >= 90) {
+          level = 'Master'; levelClass = 'level-master'; badge = '🏅 Stack Master';
+        } else if (lulus && nilaiAkhir >= 80) {
+          level = 'Mahir'; levelClass = 'level-mahir'; badge = '🥇 Stack Pro';
+        } else if (lulus && nilaiAkhir >= 70) {
+          level = 'Pemula'; levelClass = 'level-pemula'; badge = '🥈 Stack Explorer';
+        } else if (lulus) {
+          level = 'Cukup'; levelClass = 'level-pemula'; badge = '📘 Stack Learner';
+        } else {
+          level = 'Perlu Belajar Lagi'; levelClass = 'level-belum'; badge = '📖 Belum Lulus';
+        }
+
+        const sekolahTampil = sekolah || 'SMPN 2 Talegong';
+
+        let html = '<div class="sertifikat" id="sertifikatCetak">' +
+                   '<div class="kepala">Sertifikat Pembelajaran</div>' +
+                   '<h2>Informatika — Berpikir Komputasional</h2>' +
+                   '<div class="sub">Mengenal Organisasi Data Terstruktur — Tumpukan (Stack)</div>' +
+                   '<div class="diberikan">Diberikan kepada:</div>' +
+                   '<div class="nama-siswa">' + escapeHtml(nama) + '</div>' +
+                   '<div class="materi">' +
+                     'Telah menyelesaikan seluruh rangkaian aktivitas pembelajaran<br>' +
+                     'BK6: Tumpukan (Stack) dengan prinsip LIFO' +
+                   '</div>' +
+                   '<span class="level-badge ' + levelClass + '">' + badge + ' — ' + level + '</span>' +
+                   '<div style="font-size:0.9rem; color:#5b4a55; margin-top:0.4rem;">' +
+                     'Skor Kuis Akhir: <strong>' + benar + '/10</strong> · Nilai Akhir: <strong>' + nilaiAkhir + '</strong>' +
+                   '</div>' +
+                   '<div class="footer-sertifikat">' +
+                     '<div class="kolom">' +
+                       '<div>Tanggal: <strong>' + tanggal + '</strong></div>' +
+                       '<div>Kelas: <strong>' + escapeHtml(kelas) + '</strong></div>' +
+                     '</div>' +
+                     '<div class="kolom kanan">' +
+                       '<div><strong>' + escapeHtml(sekolahTampil) + '</strong></div>' +
+                       '<div style="font-size:0.78rem; margin-top:0.3rem;">Kiki Husni Kamil, S.Pd.<br>Guru Informatika</div>' +
+                     '</div>' +
+                   '</div>' +
+                   '</div>';
+
+        // Tombol aksi
+        html += '<div class="aksi-sertifikat">' +
+                '<button class="cetak" id="btnCetak">🖨️ Cetak Sertifikat</button>' +
+                '<button class="ulang" id="btnUlang">🔄 Ulangi Kuis</button>' +
+                '<button class="kembali" id="btnKirimUlang" style="display:' + (sudahKirim ? 'none' : 'inline-flex') + ';">📤 Ulangi Kirim Nilai</button>' +
+                '</div>';
+
+        sertifikatWrap.innerHTML = html;
+        sertifikatWrap.classList.add('show');
+
+        // Event listeners
+        const btnCetak = document.getElementById('btnCetak');
+        const btnUlang = document.getElementById('btnUlang');
+        const btnKirimUlang = document.getElementById('btnKirimUlang');
+
+        if (btnCetak) {
+          btnCetak.addEventListener('click', function() {
+            window.print();
+          });
+        }
+
+        if (btnUlang) {
+          btnUlang.addEventListener('click', function() {
+            if (!confirm('Ulangi Kuis Akhir? Jawaban dan hasil saat ini akan dihapus. Nilai yang sudah terkirim tetap tersimpan di sheet.')) return;
+            ulangiKuis();
+          });
+        }
+
+        if (btnKirimUlang) {
+          btnKirimUlang.addEventListener('click', async function() {
+            btnKirimUlang.disabled = true;
+            btnKirimUlang.textContent = '⏳ Mengirim...';
+            const hasil = await window.kirimNilaiBagian(NAMA_SHEET, 'e', Math.round((benar / SOAL.length) * 100), TOTAL_BAGIAN, nilaiAkhir);
+            if (hasil.ok) {
+              statusKirim.textContent = '✅ Nilai berhasil dikirim ulang!';
+              statusKirim.className = 'status-kirim show success';
+              sudahKirim = true;
+              btnKirimUlang.style.display = 'none';
+            } else {
+              statusKirim.textContent = '❌ Masih gagal: ' + (hasil.error || 'Terjadi kesalahan');
+              statusKirim.className = 'status-kirim show error';
+              btnKirimUlang.disabled = false;
+              btnKirimUlang.textContent = '📤 Ulangi Kirim Nilai';
+            }
+          });
+        }
+      }
+
+      // ============================================
+      // ULANGI KUIS
+      // ============================================
+      function ulangiKuis() {
+        jawabanUser = new Array(SOAL.length).fill(null);
+        sudahKirim = false;
+        btnPeriksaKuis.disabled = false;
+        hasilAkhir.classList.remove('show');
+        hasilAkhir.innerHTML = '';
+        sertifikatWrap.classList.remove('show');
+        sertifikatWrap.innerHTML = '';
+        statusKirim.className = 'status-kirim';
+        renderSoal();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // ============================================
+      // ESCAPE HTML
+      // ============================================
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      // ============================================
+      // EVENT LISTENERS
+      // ============================================
+      btnPeriksaKuis.addEventListener('click', periksaDanKirim);
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      muatRekapSkor();
+      muatIdentitas();
+      renderSoal();
+
+    })();
+  </script>
+</body>
+</html>

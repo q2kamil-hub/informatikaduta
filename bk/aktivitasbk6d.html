@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>BK6 Bagian 4: Studi Kasus Tambahan · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== Gaya khusus aktivitas BK6 ===== */
+    :root {
+      --c-bk6: #f26d8a;
+      --c-bk6-dark: #a01746;
+      --c-bk6-soft: #fff5f8;
+      --c-bk6-ungu: #b07be0;
+    }
+
+    /* Progress bagian */
+    .bagian-progress {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, #fff5f8, #f3ecff);
+      border-radius: 22px;
+    }
+    .bagian-progress .step {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: #fff;
+      color: #b09ac0;
+      border: 2px solid #e8d9f5;
+    }
+    .bagian-progress .step.aktif {
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.30);
+    }
+    .bagian-progress .step.selesai {
+      background: #d4f5dd;
+      color: #227a44;
+      border-color: #6ecb8f;
+    }
+    .bagian-progress .step .angka {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      font-size: 0.75rem;
+    }
+    .bagian-progress .step.aktif .angka { background: rgba(255,255,255,0.30); }
+    .bagian-progress .step:not(.aktif):not(.selesai) .angka { background: #f0e6ff; }
+
+    /* Materi ringkas */
+    .materi-ringkas {
+      background: linear-gradient(135deg, #fff3e0, #ffe3f1);
+      border-radius: 24px;
+      padding: 1.4rem 1.7rem;
+      margin-bottom: 1.5rem;
+      border-left: 8px solid var(--c-bk6);
+      box-shadow: 0 6px 18px rgba(140, 80, 180, 0.08);
+    }
+    .materi-ringkas h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #6a2a7a;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      padding: 0;
+    }
+    .materi-ringkas p { margin-bottom: 0.6rem; color: #3a2b3e; }
+    .materi-ringkas ul { margin: 0.3rem 0 0 1.4rem; color: #3a2b3e; }
+    .materi-ringkas li { margin-bottom: 0.3rem; }
+    .materi-ringkas li::marker { color: var(--c-bk6); }
+
+    /* Area simulasi */
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      padding: 0.6rem 1rem;
+      background: #faf6ff;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #5c2f8a;
+    }
+    .step-indicator .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--c-bk6);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .scenario-panel {
+      background: #fff;
+      border-radius: 24px;
+      padding: 1.5rem 1.7rem;
+      border: 2px solid #f0e6ff;
+      box-shadow: 0 6px 18px rgba(80, 40, 100, 0.06);
+    }
+
+    /* Tab navigation */
+    .tab-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.3rem;
+      padding: 0.5rem;
+      background: #faf6ff;
+      border-radius: 18px;
+    }
+    .tab-nav button {
+      flex: 1;
+      min-width: 130px;
+      padding: 0.7rem 1rem;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      background: transparent;
+      color: #8a4bbf;
+      font-size: 0.88rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+    .tab-nav button:hover:not(.aktif) {
+      background: #fff;
+      border-color: #e8d9f5;
+    }
+    .tab-nav button.aktif {
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(242, 109, 138, 0.28);
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .tab-panel.aktif { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Studi Kasus 1: Undo Editor ===== */
+    .editor-wrap {
+      background: #fff;
+      border-radius: 18px;
+      border: 2px solid #e8d9f5;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(80, 40, 100, 0.08);
+    }
+    .editor-toolbar {
+      background: linear-gradient(135deg, #f0e6ff, #faf6ff);
+      padding: 0.7rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      border-bottom: 2px solid #e8d9f5;
+    }
+    .editor-toolbar button {
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #d4b3e8;
+      background: #fff;
+      color: #5c2f8a;
+      font-size: 0.85rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .editor-toolbar button:hover:not(:disabled) {
+      background: var(--c-bk6);
+      color: #fff;
+      border-color: var(--c-bk6);
+      transform: translateY(-1px);
+    }
+    .editor-toolbar button:disabled {
+      opacity: 0.4; cursor: not-allowed;
+    }
+    .editor-toolbar button.undo-btn {
+      background: linear-gradient(135deg, #f4b942, #d4a030);
+      color: #fff;
+      border-color: transparent;
+    }
+    .editor-toolbar button.undo-btn:hover:not(:disabled) {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+    .editor-toolbar .info-undo {
+      margin-left: auto;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #8a4bbf;
+      background: #fff;
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
+      border: 2px solid #e8d9f5;
+    }
+
+    .editor-area {
+      min-height: 140px;
+      padding: 1.2rem 1.4rem;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      color: #2b1d2e;
+      background: #fff;
+      line-height: 1.7;
+      word-wrap: break-word;
+    }
+    .editor-area:empty::before {
+      content: 'Ketik sesuatu di sini...';
+      color: #b09ac0;
+      font-style: italic;
+    }
+    .editor-area:focus {
+      outline: none;
+      background: #faf6ff;
+    }
+
+    .undo-stack-view {
+      margin-top: 1rem;
+      background: linear-gradient(180deg, #faf6ff 0%, #f0e6ff 100%);
+      border-radius: 16px;
+      padding: 1rem;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      border: 2px dashed #d4b3e8;
+    }
+    .undo-stack-view .label-stack {
+      position: absolute;
+      top: 0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(135deg, #f4b942, #d4a030);
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .undo-stack-view .undo-item {
+      padding: 0.45rem 0.8rem;
+      margin-bottom: 0.25rem;
+      border-radius: 8px;
+      background: #fff;
+      border-left: 4px solid #f4b942;
+      font-size: 0.78rem;
+      font-family: 'Courier New', monospace;
+      color: #5c2f8a;
+      font-weight: 600;
+      animation: slideIn 0.3s ease;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .undo-stack-view .undo-item.teratas {
+      background: linear-gradient(135deg, #fff8e6, #ffe9b8);
+      border-left-color: #d4a030;
+      font-weight: 800;
+      box-shadow: 0 3px 10px rgba(244, 185, 66, 0.25);
+    }
+    .undo-stack-view .stack-kosong {
+      color: #b09ac0;
+      font-style: italic;
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 1rem;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-12px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ===== Studi Kasus 2: Gotong Royong ===== */
+    .gotong-wrap {
+      background: linear-gradient(135deg, #f0f9f4, #e6f4ff);
+      border-radius: 18px;
+      padding: 1.3rem 1.5rem;
+      border: 2px solid #a8e6cf;
+    }
+    .gotong-wrap h3 {
+      margin: 0 0 0.6rem 0;
+      color: #227a44;
+      font-size: 1.05rem;
+      border: none;
+      padding: 0;
+    }
+    .gotong-wrap p { margin-bottom: 0.9rem; color: #3a2b3e; font-size: 0.92rem; }
+    .papan-nama {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 120px;
+      border: 2px dashed #6ecb8f;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 0.9rem;
+    }
+    .papan-nama .nama-item {
+      padding: 0.5rem 0.9rem;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #e6f9ed, #d4f5dd);
+      border-left: 4px solid #6ecb8f;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #227a44;
+      animation: slideIn 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .papan-nama .nama-item .urutan {
+      font-size: 0.72rem;
+      font-weight: 800;
+      background: #fff;
+      color: #227a44;
+      padding: 0.15rem 0.55rem;
+      border-radius: 12px;
+      border: 1px solid #6ecb8f;
+      white-space: nowrap;
+    }
+    .papan-nama .nama-item.terakhir {
+      background: linear-gradient(135deg, #fff8e6, #ffe9b8);
+      border-left-color: #f4b942;
+      color: #8a5e00;
+    }
+    .papan-nama .papan-kosong {
+      color: #7a9a80;
+      font-style: italic;
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 1.5rem 1rem;
+    }
+    .gotong-kontrol {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .gotong-kontrol input {
+      flex: 1;
+      min-width: 140px;
+      padding: 0.65rem 0.9rem;
+      border-radius: 12px;
+      border: 2px solid #a8e6cf;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #fff;
+    }
+    .gotong-kontrol input:focus {
+      outline: none;
+      border-color: #6ecb8f;
+    }
+    .btn-hijau {
+      padding: 0.65rem 1.2rem;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #6ecb8f, #4fb0c6);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(110, 203, 143, 0.30);
+      transition: all 0.15s ease;
+    }
+    .btn-hijau:hover:not(:disabled) {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+    .btn-hijau:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ===== Studi Kasus 3: Stack Trace ===== */
+    .trace-wrap {
+      background: #2b1d2e;
+      border-radius: 18px;
+      padding: 1.3rem 1.5rem;
+      color: #e8dcd0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    .trace-wrap h3 {
+      margin: 0 0 0.8rem 0;
+      color: #a8e6cf;
+      font-size: 1.05rem;
+      font-family: system-ui, sans-serif;
+      border: none;
+      padding: 0;
+    }
+    .trace-line {
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
+      margin-bottom: 0.25rem;
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+    .trace-line.aktif {
+      background: rgba(242, 109, 138, 0.18);
+      border-left: 3px solid var(--c-bk6);
+    }
+    .trace-line.selesai {
+      opacity: 0.55;
+    }
+    .trace-line .nomor {
+      color: #c5b3ff;
+      font-weight: 700;
+      min-width: 26px;
+    }
+    .trace-line .teks {
+      flex: 1;
+      word-break: break-word;
+    }
+    .trace-line .status {
+      color: #a8e6cf;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .trace-wrap .trace-info {
+      margin-top: 0.9rem;
+      padding: 0.7rem 1rem;
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      font-family: system-ui, sans-serif;
+      font-size: 0.88rem;
+      color: #c5b3ff;
+      line-height: 1.5;
+    }
+    .trace-kontrol {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.9rem;
+      flex-wrap: wrap;
+    }
+    .trace-kontrol button {
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      border: 2px solid #c5b3ff;
+      background: transparent;
+      color: #c5b3ff;
+      font-size: 0.88rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .trace-kontrol button:hover:not(:disabled) {
+      background: #c5b3ff;
+      color: #2b1d2e;
+    }
+    .trace-kontrol button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Pesan status */
+    .pesan-status {
+      margin-top: 0.8rem;
+      padding: 0.7rem 1rem;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: none;
+    }
+    .pesan-status.show { display: block; }
+    .pesan-status.ok {
+      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
+    }
+    .pesan-status.warn {
+      background: #fff3e0; color: #8a5e00; border-left: 5px solid #f4b942;
+    }
+    .pesan-status.err {
+      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
+    }
+    .pesan-status.info {
+      background: #e6f4ff; color: #1f6b7d; border-left: 5px solid #4fb0c6;
+    }
+
+    /* Tes pemahaman */
+    .tes-box {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 3px dashed #e8d9f5;
+    }
+    .tes-box h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      margin-bottom: 0.4rem;
+      border: none;
+      padding: 0;
+    }
+    .tes-box .sub {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      margin-bottom: 1rem;
+    }
+    .soal-item {
+      background: #faf6ff;
+      border-radius: 18px;
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 1rem;
+      border-left: 5px solid var(--c-bk6-ungu);
+    }
+    .soal-item .pertanyaan {
+      font-weight: 700;
+      color: #5c2f8a;
+      margin-bottom: 0.7rem;
+      font-size: 0.95rem;
+    }
+    .soal-item .opsi-tes {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .soal-item .opsi-tes label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 12px;
+      border: 2px solid #e8d9f5;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: all 0.15s ease;
+    }
+    .soal-item .opsi-tes label:hover {
+      border-color: var(--c-bk6);
+      background: #fff5f8;
+    }
+    .soal-item .opsi-tes input[type="radio"] {
+      margin-top: 0.25rem;
+      accent-color: var(--c-bk6-ungu);
+    }
+    .soal-item .opsi-tes label.benar {
+      background: #d4f5dd; border-color: #6ecb8f; color: #227a44; font-weight: 700;
+    }
+    .soal-item .opsi-tes label.salah {
+      background: #ffe0e6; border-color: var(--c-bk6); color: #a01746; font-weight: 700;
+    }
+
+    /* Tombol periksa tes */
+    .btn-periksa-tes {
+      display: block;
+      margin: 1.2rem auto 0;
+      padding: 0.9rem 2.2rem;
+      border-radius: 40px;
+      border: none;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(242, 109, 138, 0.30);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-periksa-tes:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(242, 109, 138, 0.42);
+    }
+    .btn-periksa-tes:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none;
+    }
+
+    /* Hasil tes */
+    .hasil-tes {
+      display: none;
+      margin-top: 1.3rem;
+      background: linear-gradient(135deg, #fff5f8, #f3ecff);
+      border-radius: 22px;
+      padding: 1.4rem 1.6rem;
+      border-left: 8px solid var(--c-bk6-ungu);
+      box-shadow: 0 8px 24px rgba(140, 80, 180, 0.12);
+    }
+    .hasil-tes.show { display: block; }
+    .hasil-tes h3 {
+      margin: 0 0 0.5rem 0;
+      color: #5c2f8a;
+      font-size: 1.2rem;
+      border: none;
+      padding: 0;
+    }
+    .hasil-tes .skor-besar {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--c-bk6-dark);
+      line-height: 1;
+      margin: 0.4rem 0;
+    }
+    .hasil-tes .pesan {
+      padding: 0.7rem 1.1rem;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-top: 0.7rem;
+    }
+    .hasil-tes .pesan.lulus {
+      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
+    }
+    .hasil-tes .pesan.gagal {
+      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
+    }
+
+    /* Status kirim */
+    .status-kirim {
+      display: none;
+      margin-top: 1.2rem;
+      padding: 0.9rem 1.3rem;
+      border-radius: 16px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+    .status-kirim.show { display: block; }
+    .status-kirim.info {
+      background: #e6f4ff; color: #1f6b7d; border-left: 5px solid #4fb0c6;
+    }
+    .status-kirim.success {
+      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
+    }
+    .status-kirim.error {
+      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
+    }
+
+    /* Navigasi bawah */
+    .nav-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 3px dashed #e8d9f5;
+    }
+    .nav-bottom a, .nav-bottom button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.98rem;
+      font-family: inherit;
+      color: #fff;
+      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(242, 109, 138, 0.30);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-bottom a:hover, .nav-bottom button:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(242, 109, 138, 0.42);
+    }
+    .nav-bottom button:disabled {
+      opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none;
+    }
+    .nav-bottom .secondary {
+      background: #fff;
+      color: #a01746;
+      border: 2px solid var(--c-bk6);
+      box-shadow: 0 6px 18px rgba(242, 109, 138, 0.15);
+    }
+
+    @media (max-width: 720px) {
+      .bagian-progress { padding: 0.7rem; gap: 0.35rem; }
+      .bagian-progress .step { font-size: 0.72rem; padding: 0.35rem 0.6rem; }
+      .bagian-progress .step .angka { width: 18px; height: 18px; font-size: 0.65rem; }
+      .scenario-panel { padding: 1.1rem 1rem; }
+      .tab-nav button { font-size: 0.78rem; padding: 0.55rem 0.6rem; min-width: 100px; }
+      .editor-area { font-size: 0.9rem; padding: 1rem; }
+      .nav-bottom a, .nav-bottom button { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materibk.html">Berpikir Komputasional</a></li>
+      <li><a href="bk6.html">BK6: Tumpukan (Stack)</a></li>
+      <li>Bagian 4: Studi Kasus Tambahan</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <!-- ===== PROGRESS BAGIAN ===== -->
+        <div class="bagian-progress" aria-label="Progress bagian">
+          <div class="step selesai"><span class="angka">✓</span> Simulasi Buku</div>
+          <div class="step selesai"><span class="angka">✓</span> Lab Stack</div>
+          <div class="step selesai"><span class="angka">✓</span> Riwayat Browser</div>
+          <div class="step aktif"><span class="angka">4</span> Studi Kasus</div>
+          <div class="step"><span class="angka">5</span> Kuis Akhir</div>
+        </div>
+
+        <!-- ===== MATERI SINGKAT ===== -->
+        <div class="materi-ringkas">
+          <h2>📚 Materi Singkat — Bagian 4</h2>
+          <p>
+            Stack bukan hanya teori — ia bekerja di balik banyak fitur yang kita pakai setiap hari.
+            Di bagian ini, kamu akan menjelajahi <strong>tiga studi kasus nyata</strong>:
+          </p>
+          <ul>
+            <li><strong>Undo Editor</strong> — Setiap perubahan yang kamu lakukan disimpan di stack. Ctrl+Z = Pop.</li>
+            <li><strong>Gotong Royong</strong> — Nama siswa yang selesai dicatat di papan. Yang terakhir selesai dipanggil lebih dulu.</li>
+            <li><strong>Stack Trace</strong> — Saat program error, jejak fungsi yang dipanggil ditampilkan dalam urutan stack (terakhir dipanggil, muncul paling atas).</li>
+          </ul>
+          <p style="margin-top:0.6rem;">
+            Ketiga studi kasus ini menunjukkan betapa pentingnya prinsip <strong>LIFO</strong>
+            dalam kehidupan sehari-hari dan dunia pemrograman.
+          </p>
+        </div>
+
+        <!-- ===== AREA SIMULASI ===== -->
+        <div id="area-simulasi">
+          <div class="step-indicator">
+            <span class="dot"></span>
+            <span>Aktivitas Interaktif — Tiga Studi Kasus Stack</span>
+          </div>
+
+          <div class="scenario-panel">
+            <p style="margin-bottom:1rem; color:#3a2b3e;">
+              Pilih salah satu tab di bawah untuk menjelajahi studi kasus. Setiap studi kasus
+              menunjukkan bagaimana stack bekerja di situasi nyata.
+            </p>
+
+            <!-- Tab navigation -->
+            <div class="tab-nav" role="tablist">
+              <button class="aktif" data-tab="undo" role="tab">✏️ Undo Editor</button>
+              <button data-tab="gotong" role="tab">🤝 Gotong Royong</button>
+              <button data-tab="trace" role="tab">🐛 Stack Trace</button>
+            </div>
+
+            <!-- ===== TAB 1: UNDO EDITOR ===== -->
+            <div class="tab-panel aktif" id="tab-undo">
+              <h3 style="margin-top:0; color:#5c2f8a; font-size:1.1rem; border:none; padding:0;">✏️ Studi Kasus 1: Undo Editor</h3>
+              <p style="font-size:0.92rem; color:#3a2b3e; margin-bottom:0.9rem;">
+                Ketik di area editor, atau gunakan tombol <strong>+ Tambah Teks</strong> untuk menambahkan
+                potongan teks. Setiap perubahan masuk ke <strong>undo stack</strong>. Tekan
+                <strong>↶ Undo (Ctrl+Z)</strong> untuk membatalkan perubahan terakhir.
+              </p>
+
+              <div class="editor-wrap">
+                <div class="editor-toolbar">
+                  <button id="btnTambahTeks">➕ Tambah Teks</button>
+                  <button class="undo-btn" id="btnUndo" disabled>↶ Undo (Ctrl+Z)</button>
+                  <button id="btnResetUndo" style="border-color:#f4b942; color:#8a5e00;">🔄 Reset</button>
+                  <span class="info-undo" id="infoUndo">Undo stack: 0</span>
+                </div>
+                <div class="editor-area" id="editorArea" contenteditable="false"></div>
+              </div>
+
+              <div class="undo-stack-view" id="undoStackView">
+                <div class="label-stack">📚 Undo Stack (TOP di atas)</div>
+                <div class="stack-kosong">Undo stack kosong</div>
+              </div>
+
+              <div class="pesan-status" id="pesanUndo"></div>
+            </div>
+
+            <!-- ===== TAB 2: GOTONG ROYONG ===== -->
+            <div class="tab-panel" id="tab-gotong">
+              <h3 style="margin-top:0; color:#227a44; font-size:1.1rem; border:none; padding:0;">🤝 Studi Kasus 2: Gotong Royong di Sekolah</h3>
+              <p style="font-size:0.92rem; color:#3a2b3e; margin-bottom:0.9rem;">
+                Bayangkan kegiatan gotong royong membersihkan kelas. Setiap siswa yang selesai
+                membersihkan area, namanya dicatat di papan tulis (<strong>Push</strong>).
+                Ketika guru ingin memanggil siswa untuk membantu memindahkan meja, ia memanggil
+                siswa yang <strong>terakhir selesai</strong> (<strong>Pop</strong>) — karena siswa
+                tersebut masih berada di area dan siap membantu.
+              </p>
+
+              <div class="gotong-wrap">
+                <h3>📋 Papan Nama Siswa</h3>
+                <div class="papan-nama" id="papanNama">
+                  <div class="papan-kosong">Belum ada siswa yang selesai membersihkan.</div>
+                </div>
+                <div class="gotong-kontrol">
+                  <input type="text" id="inputNamaSiswa" placeholder="Nama siswa..." maxlength="25">
+                  <button class="btn-hijau" id="btnCatatSelesai">✅ Catat Selesai (Push)</button>
+                  <button class="btn-hijau" id="btnPanggilSiswa" style="background:linear-gradient(135deg,#f4b942,#d4a030); box-shadow:0 6px 16px rgba(244,185,66,0.30);">📢 Panggil Terakhir (Pop)</button>
+                </div>
+                <div class="pesan-status" id="pesanGotong"></div>
+              </div>
+            </div>
+
+            <!-- ===== TAB 3: STACK TRACE ===== -->
+            <div class="tab-panel" id="tab-trace">
+              <h3 style="margin-top:0; color:#5c2f8a; font-size:1.1rem; border:none; padding:0;">🐛 Studi Kasus 3: Stack Trace Program</h3>
+              <p style="font-size:0.92rem; color:#3a2b3e; margin-bottom:0.9rem;">
+                Saat sebuah program error, komputer menampilkan <strong>stack trace</strong> —
+                daftar fungsi yang sedang dipanggil, diurutkan dari yang <em>terakhir dipanggil</em>
+                (paling atas) sampai yang <em>pertama dipanggil</em> (paling bawah).
+              </p>
+
+              <div class="trace-wrap">
+                <h3>🐛 Stack Trace — Program Kalkulator</h3>
+                <div id="traceList"></div>
+                <div class="trace-info" id="traceInfo">
+                  Klik <strong>▶ Jalankan Program</strong> untuk melihat bagaimana fungsi dipanggil
+                  dan diselesaikan satu per satu.
+                </div>
+                <div class="trace-kontrol">
+                  <button id="btnJalankanTrace">▶ Jalankan Program</button>
+                  <button id="btnResetTrace">🔄 Reset</button>
+                </div>
+              </div>
+
+              <div class="pesan-status" id="pesanTrace"></div>
+            </div>
+
+            <!-- ===== TES PEMAHAMAN ===== -->
+            <div class="tes-box" id="tesBox">
+              <h2>📝 Tes Pemahaman — Bagian 4</h2>
+              <p class="sub">Minimal <strong>3 dari 4 soal</strong> benar untuk lanjut ke Bagian 5 (Kuis Akhir).</p>
+
+              <div id="soalWrap"></div>
+
+              <button class="btn-periksa-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+
+              <div class="hasil-tes" id="hasilTes"></div>
+              <div class="status-kirim" id="statusKirim"></div>
+            </div>
+
+            <!-- ===== NAVIGASI BAWAH ===== -->
+            <div class="nav-bottom">
+              <a class="secondary" href="aktivitasbk6c.html">← Bagian 3</a>
+              <button id="btnLanjut" disabled>Lanjut ke Bagian 5 (Kuis Akhir) →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" title="Kembali ke atas" aria-label="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI MODUL
+      // ============================================
+      const NAMA_SHEET = 'bk6';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
+      const KEY_PROGRESS = 'labbk6_progress';
+
+      // ============================================
+      // TAB NAVIGATION
+      // ============================================
+      const tabBtns = document.querySelectorAll('.tab-nav button');
+      const tabPanels = document.querySelectorAll('.tab-panel');
+
+      tabBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          tabBtns.forEach(function(b) { b.classList.remove('aktif'); });
+          tabPanels.forEach(function(p) { p.classList.remove('aktif'); });
+          btn.classList.add('aktif');
+          document.getElementById('tab-' + btn.dataset.tab).classList.add('aktif');
+        });
+      });
+
+      // ============================================
+      // PESAN STATUS HELPER
+      // ============================================
+      function showPesan(el, teks, tipe) {
+        el.textContent = teks;
+        el.className = 'pesan-status show ' + tipe;
+      }
+      function clearPesan(el) {
+        el.className = 'pesan-status';
+      }
+
+      // ============================================
+      // STUDI KASUS 1: UNDO EDITOR
+      // ============================================
+      const editorArea = document.getElementById('editorArea');
+      const undoStackView = document.getElementById('undoStackView');
+      const btnTambahTeks = document.getElementById('btnTambahTeks');
+      const btnUndo = document.getElementById('btnUndo');
+      const btnResetUndo = document.getElementById('btnResetUndo');
+      const infoUndo = document.getElementById('infoUndo');
+      const pesanUndo = document.getElementById('pesanUndo');
+
+      let teksSekarang = '';
+      let undoStack = [];   // setiap elemen = snapshot teks SEBELUM perubahan
+
+      const CONTOH_TEKS = [
+        'Halo',
+        'Tugas Informatika',
+        ' - Stack',
+        ' - LIFO',
+        ' - Push',
+        ' - Pop',
+        'Selesai!'
+      ];
+      let indexContoh = 0;
+
+      function renderEditor() {
+        editorArea.textContent = teksSekarang;
+        infoUndo.textContent = 'Undo stack: ' + undoStack.length;
+        btnUndo.disabled = undoStack.length === 0;
+
+        // Render undo stack
+        const labelStack = undoStackView.querySelector('.label-stack');
+        undoStackView.innerHTML = '';
+        undoStackView.appendChild(labelStack);
+
+        if (undoStack.length === 0) {
+          const kosong = document.createElement('div');
+          kosong.className = 'stack-kosong';
+          kosong.textContent = 'Undo stack kosong';
+          undoStackView.appendChild(kosong);
+          return;
+        }
+
+        for (let i = undoStack.length - 1; i >= 0; i--) {
+          const div = document.createElement('div');
+          div.className = 'undo-item';
+          if (i === undoStack.length - 1) div.classList.add('teratas');
+          const teks = undoStack[i] === '' ? '(kosong)' : undoStack[i];
+          div.textContent = (i === undoStack.length - 1 ? '⬇ ' : '   ') + '"' + teks + '"';
+          undoStackView.appendChild(div);
+        }
+      }
+
+      function tambahTeks() {
+        if (indexContoh >= CONTOH_TEKS.length) {
+          showPesan(pesanUndo, '⚠️ Semua contoh teks sudah ditambahkan. Klik Reset untuk mengulang.', 'warn');
+          return;
+        }
+        // Simpan snapshot SEBELUM perubahan
+        undoStack.push(teksSekarang);
+        // Tambahkan teks
+        teksSekarang = teksSekarang + (teksSekarang ? ' ' : '') + CONTOH_TEKS[indexContoh];
+        indexContoh++;
+        renderEditor();
+        showPesan(pesanUndo, '✓ Push ke undo stack: "' + teksSekarang + '"', 'ok');
+      }
+
+      function doUndo() {
+        if (undoStack.length === 0) {
+          showPesan(pesanUndo, '⚠️ Undo stack kosong! Tidak bisa Undo.', 'err');
+          return;
+        }
+        const sebelumnya = undoStack.pop();
+        const dibatalkan = teksSekarang;
+        teksSekarang = sebelumnya;
+        indexContoh = Math.max(0, indexContoh - 1);
+        renderEditor();
+        showPesan(pesanUndo, '↶ Undo: membatalkan "' + dibatalkan + '" → kembali ke "' + (sebelumnya || '(kosong)') + '"', 'info');
+      }
+
+      function resetUndo() {
+        teksSekarang = '';
+        undoStack = [];
+        indexContoh = 0;
+        renderEditor();
+        clearPesan(pesanUndo);
+        showPesan(pesanUndo, 'Editor direset.', 'info');
+      }
+
+      btnTambahTeks.addEventListener('click', tambahTeks);
+      btnUndo.addEventListener('click', doUndo);
+      btnResetUndo.addEventListener('click', resetUndo);
+      renderEditor();
+
+      // ============================================
+      // STUDI KASUS 2: GOTONG ROYONG
+      // ============================================
+      const papanNama = document.getElementById('papanNama');
+      const inputNamaSiswa = document.getElementById('inputNamaSiswa');
+      const btnCatatSelesai = document.getElementById('btnCatatSelesai');
+      const btnPanggilSiswa = document.getElementById('btnPanggilSiswa');
+      const pesanGotong = document.getElementById('pesanGotong');
+
+      let stackSiswa = [];  // index 0 = paling bawah
+
+      function renderPapanNama() {
+        papanNama.innerHTML = '';
+        if (stackSiswa.length === 0) {
+          const kosong = document.createElement('div');
+          kosong.className = 'papan-kosong';
+          kosong.textContent = 'Belum ada siswa yang selesai membersihkan.';
+          papanNama.appendChild(kosong);
+          return;
+        }
+
+        // Render dari atas ke bawah (index terbesar = terakhir selesai = paling atas)
+        for (let i = stackSiswa.length - 1; i >= 0; i--) {
+          const div = document.createElement('div');
+          div.className = 'nama-item';
+          if (i === stackSiswa.length - 1) div.classList.add('terakhir');
+          div.innerHTML = '<span>👤 ' + stackSiswa[i] + '</span>' +
+                          '<span class="urutan">' + (i === stackSiswa.length - 1 ? '⬇ TERAKHIR' : '#' + (i + 1)) + '</span>';
+          papanNama.appendChild(div);
+        }
+      }
+
+      function catatSelesai() {
+        const nama = inputNamaSiswa.value.trim();
+        if (!nama) {
+          showPesan(pesanGotong, '⚠️ Masukkan nama siswa terlebih dahulu.', 'warn');
+          inputNamaSiswa.focus();
+          return;
+        }
+        if (stackSiswa.length >= 10) {
+          showPesan(pesanGotong, '⚠️ Papan penuh (maks 10 nama).', 'err');
+          return;
+        }
+        stackSiswa.push(nama);
+        renderPapanNama();
+        inputNamaSiswa.value = '';
+        inputNamaSiswa.focus();
+        showPesan(pesanGotong, '✓ Push: "' + nama + '" dicatat di papan. Terakhir selesai: ' + stackSiswa[stackSiswa.length - 1], 'ok');
+      }
+
+      function panggilSiswa() {
+        if (stackSiswa.length === 0) {
+          showPesan(pesanGotong, '⚠️ Papan kosong! Tidak ada siswa yang bisa dipanggil.', 'err');
+          return;
+        }
+        const dipanggil = stackSiswa.pop();
+        renderPapanNama();
+        showPesan(pesanGotong, '📢 Pop: "' + dipanggil + '" dipanggil (terakhir selesai = pertama dipanggil).', 'info');
+      }
+
+      btnCatatSelesai.addEventListener('click', catatSelesai);
+      inputNamaSiswa.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') catatSelesai();
+      });
+      btnPanggilSiswa.addEventListener('click', panggilSiswa);
+      renderPapanNama();
+
+      // ============================================
+      // STUDI KASUS 3: STACK TRACE
+      // ============================================
+      const traceList = document.getElementById('traceList');
+      const traceInfo = document.getElementById('traceInfo');
+      const btnJalankanTrace = document.getElementById('btnJalankanTrace');
+      const btnResetTrace = document.getElementById('btnResetTrace');
+      const pesanTrace = document.getElementById('pesanTrace');
+
+      // Simulasi: main() → hitung() → kali() → error (pembagian dengan nol)
+      const TRACE_STEPS = [
+        { fungsi: 'main()',           aksi: 'memanggil hitung()' },
+        { fungsi: 'hitung()',         aksi: 'memanggil kali()' },
+        { fungsi: 'kali()',           aksi: 'memanggil bagi()' },
+        { fungsi: 'bagi(10, 0)',      aksi: 'ERROR: pembagian dengan nol!' }
+      ];
+
+      let traceState = [];  // stack fungsi yang sedang aktif
+
+      function renderTrace() {
+        traceList.innerHTML = '';
+        if (traceState.length === 0) {
+          traceList.innerHTML = '<div style="color:#7a6a80; font-style:italic; padding:1rem; text-align:center;">Stack trace kosong — klik ▶ Jalankan Program.</div>';
+          return;
+        }
+
+        // Render dari atas ke bawah (index terbesar = paling atas = terakhir dipanggil)
+        for (let i = traceState.length - 1; i >= 0; i--) {
+          const step = traceState[i];
+          const div = document.createElement('div');
+          div.className = 'trace-line aktif';
+          if (step.selesai) div.classList.add('selesai');
+
+          div.innerHTML = '<span class="nomor">' + (i + 1) + '.</span>' +
+                          '<span class="teks">' + step.fungsi + ' → ' + step.aksi + '</span>' +
+                          (step.selesai ? '<span class="status">✓ selesai</span>' : '<span class="status">⏳ aktif</span>');
+          traceList.appendChild(div);
+        }
+      }
+
+      function jalankanTrace() {
+        traceState = [];
+        let i = 0;
+        btnJalankanTrace.disabled = true;
+
+        function step() {
+          if (i >= TRACE_STEPS.length) {
+            // Selesai — tandai semua selesai
+            traceInfo.innerHTML = '<strong>✓ Program selesai (dengan error).</strong> Perhatikan: fungsi yang <em>terakhir dipanggil</em> (bagi) muncul paling atas. Inilah prinsip LIFO pada call stack.';
+            showPesan(pesanTrace, '✓ Simulasi stack trace selesai.', 'ok');
+            btnJalankanTrace.disabled = false;
+            return;
+          }
+
+          const stepData = TRACE_STEPS[i];
+          // Tandai semua yang sebelumnya selesai
+          traceState.forEach(function(s) { s.selesai = true; });
+          // Push fungsi baru
+          traceState.push({ fungsi: stepData.fungsi, aksi: stepData.aksi, selesai: false });
+          renderTrace();
+          traceInfo.innerHTML = '📌 <strong>' + stepData.fungsi + '</strong> — ' + stepData.aksi;
+          i++;
+          setTimeout(step, 900);
+        }
+        step();
+      }
+
+      function resetTrace() {
+        traceState = [];
+        renderTrace();
+        traceInfo.innerHTML = 'Klik <strong>▶ Jalankan Program</strong> untuk melihat bagaimana fungsi dipanggil dan diselesaikan satu per satu.';
+        clearPesan(pesanTrace);
+        btnJalankanTrace.disabled = false;
+      }
+
+      btnJalankanTrace.addEventListener('click', jalankanTrace);
+      btnResetTrace.addEventListener('click', resetTrace);
+      renderTrace();
+
+      // ============================================
+      // SOAL TES PEMAHAMAN (4 SOAL)
+      // ============================================
+      const SOAL = [
+        {
+          q: 'Pada fitur Undo (Ctrl+Z), mengapa aksi terakhir yang dibatalkan terlebih dahulu?',
+          o: [
+            'Karena Undo menggunakan prinsip FIFO',
+            'Karena Undo menggunakan prinsip stack (LIFO)',
+            'Karena Undo menyimpan aksi secara acak',
+            'Karena Undo hanya bisa membatalkan satu aksi'
+          ],
+          a: 1,
+          feedback: 'Undo menyimpan aksi dalam stack. Aksi terakhir = TOP, sehingga pertama dibatalkan.'
+        },
+        {
+          q: 'Dalam kegiatan gotong royong, guru memanggil siswa yang terakhir selesai membersihkan untuk membantu memindahkan meja. Mengapa?',
+          o: [
+            'Karena siswa tersebut paling kuat',
+            'Karena siswa tersebut masih berada di area dan siap membantu (prinsip LIFO)',
+            'Karena siswa tersebut yang pertama selesai',
+            'Karena urutan panggilan acak'
+          ],
+          a: 1,
+          feedback: 'Siswa terakhir selesai = TOP pada stack nama. Ia masih di area, jadi lebih siap membantu. Ini prinsip LIFO.'
+        },
+        {
+          q: 'Pada stack trace program, fungsi yang muncul paling atas adalah...',
+          o: [
+            'Fungsi yang pertama dipanggil',
+            'Fungsi yang terakhir dipanggil',
+            'Fungsi yang paling lama berjalan',
+            'Fungsi yang tidak error'
+          ],
+          a: 1,
+          feedback: 'Stack trace menampilkan fungsi terakhir dipanggil di paling atas (TOP), sesuai prinsip LIFO.'
+        },
+        {
+          q: 'Manakah pernyataan yang BENAR tentang stack?',
+          o: [
+            'Stack bisa mengakses elemen tengah secara langsung',
+            'Stack menggunakan prinsip LIFO — elemen terakhir masuk, pertama keluar',
+            'Stack dan queue menggunakan prinsip yang sama',
+            'Stack tidak bisa digunakan di pemrograman'
+          ],
+          a: 1,
+          feedback: 'Stack = LIFO. Queue = FIFO. Stack hanya bisa mengakses TOP, dan banyak digunakan di pemrograman.'
+        }
+      ];
+
+      let jawabanUser = new Array(SOAL.length).fill(null);
+
+      function renderSoal() {
+        soalWrap.innerHTML = '';
+        SOAL.forEach(function(soal, i) {
+          const div = document.createElement('div');
+          div.className = 'soal-item';
+
+          let html = '<div class="pertanyaan">' + (i + 1) + '. ' + soal.q + '</div><div class="opsi-tes">';
+          soal.o.forEach(function(opsi, j) {
+            html += '<label data-soal="' + i + '" data-opsi="' + j + '">' +
+                    '<input type="radio" name="soal' + i + '" value="' + j + '">' +
+                    '<span><strong>' + String.fromCharCode(65 + j) + '.</strong> ' + opsi + '</span>' +
+                    '</label>';
+          });
+          html += '</div>';
+          div.innerHTML = html;
+          soalWrap.appendChild(div);
+
+          div.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+              jawabanUser[i] = parseInt(radio.value, 10);
+            });
+          });
+        });
+      }
+
+      // ============================================
+      // PERIKSA TES
+      // ============================================
+      function periksaTes() {
+        const belumDijawab = jawabanUser.findIndex(function(j) { return j === null; });
+        if (belumDijawab !== -1) {
+          alert('Soal nomor ' + (belumDijawab + 1) + ' belum dijawab.');
+          return;
+        }
+
+        let benar = 0;
+        jawabanUser.forEach(function(jawab, i) {
+          if (jawab === SOAL[i].a) benar++;
+        });
+
+        soalWrap.querySelectorAll('label[data-soal]').forEach(function(label) {
+          const i = parseInt(label.dataset.soal, 10);
+          const j = parseInt(label.dataset.opsi, 10);
+          label.querySelector('input').disabled = true;
+          if (j === SOAL[i].a) {
+            label.classList.add('benar');
+          } else if (jawabanUser[i] === j) {
+            label.classList.add('salah');
+          }
+        });
+
+        const skor = Math.round(40 + (benar / SOAL.length) * 60);
+        const lulus = benar >= 3;
+
+        let html = '<h3>Hasil Tes Pemahaman — Bagian 4</h3>' +
+                   '<div class="skor-besar">' + skor + '</div>' +
+                   '<p><strong>Jawaban benar:</strong> ' + benar + ' / ' + SOAL.length + '</p>';
+
+        if (lulus) {
+          html += '<div class="pesan lulus">🎉 Selamat! Kamu lulus Bagian 4. Silakan lanjut ke Bagian 5 (Kuis Akhir).</div>';
+        } else {
+          html += '<div class="pesan gagal">📖 Belum lulus (minimal 3 benar). Silakan baca ulang materi singkat dan coba lagi.</div>';
+        }
+
+        hasilTes.innerHTML = html;
+        hasilTes.classList.add('show');
+        hasilTes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        if (lulus) {
+          btnLanjut.disabled = false;
+          simpanProgress(skor, benar, SOAL.length);
+          kirimNilai(skor);
+        } else {
+          btnLanjut.disabled = true;
+        }
+
+        btnPeriksaTes.disabled = true;
+      }
+
+      // ============================================
+      // SIMPAN PROGRESS
+      // ============================================
+      function simpanProgress(skor, benar, total) {
+        try {
+          const prog = JSON.parse(localStorage.getItem(KEY_PROGRESS) || '{}');
+          prog.bagian = 'd';
+          prog.skorBagian4 = skor;
+          prog.benarBagian4 = benar;
+          prog.totalBagian4 = total;
+          prog.waktuBagian4 = new Date().toISOString();
+          localStorage.setItem(KEY_PROGRESS, JSON.stringify(prog));
+        } catch (e) {
+          console.warn('Gagal simpan progress:', e);
+        }
+      }
+
+      // ============================================
+      // KIRIM NILAI (mode UPDATE)
+      // ============================================
+      async function kirimNilai(skor) {
+        statusKirim.textContent = '⏳ Mengirim nilai Bagian 4...';
+        statusKirim.className = 'status-kirim show info';
+
+        const hasil = await window.kirimNilaiBagian(
+          NAMA_SHEET,
+          'd',
+          skor,
+          TOTAL_BAGIAN
+        );
+
+        if (hasil.ok) {
+          statusKirim.textContent = '✅ Nilai Bagian 4 berhasil dikirim! Silakan lanjut ke Bagian 5 (Kuis Akhir).';
+          statusKirim.className = 'status-kirim show success';
+        } else {
+          statusKirim.textContent = '❌ Gagal mengirim nilai: ' + (hasil.error || 'Terjadi kesalahan') + '. Coba lagi.';
+          statusKirim.className = 'status-kirim show error';
+          btnLanjut.disabled = true;
+        }
+      }
+
+      // ============================================
+      // LANJUT KE BAGIAN 5
+      // ============================================
+      btnLanjut.addEventListener('click', function() {
+        if (btnLanjut.disabled) return;
+        btnLanjut.disabled = true;
+        btnLanjut.textContent = '⏳ Berpindah...';
+        setTimeout(function() {
+          window.location.href = 'aktivitasbk6e.html';
+        }, 800);
+      });
+
+      // ============================================
+      // EVENT LISTENERS
+      // ============================================
+      btnPeriksaTes.addEventListener('click', periksaTes);
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      renderSoal();
+
+    })();
+  </script>
+</body>
+</html>
