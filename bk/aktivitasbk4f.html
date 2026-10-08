@@ -369,10 +369,11 @@
 
     /* ===== STATUS API ===== */
     .status-api {
-      max-width: 480px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+      max-width: 520px; margin: 1rem auto; padding: 0.8rem 1.2rem;
       border-radius: 12px; font-size: 0.88rem; font-weight: 600;
-      line-height: 1.5; display: flex; align-items: center;
+      line-height: 1.5; display: none; align-items: center;
       gap: 0.6rem; text-align: left;
+      flex-wrap: wrap;
     }
     .status-api.info {
       background: #fdf2f5; border: 2px solid #f26d8a; color: #a01746;
@@ -385,6 +386,24 @@
       border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .status-api .btn-retry {
+      margin-left: auto;
+      padding: 0.35rem 1rem;
+      border-radius: 20px;
+      border: 2px solid currentColor;
+      background: transparent;
+      color: inherit;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .status-api .btn-retry:hover {
+      background: rgba(255,255,255,0.6);
+      transform: translateY(-1px);
+    }
 
     /* ===== SERTIFIKAT ===== */
     .sertifikat-box {
@@ -520,6 +539,7 @@
       .btn-sertifikat { justify-content: center; }
       .form-siswa-box { padding: 1.2rem 1rem; }
       .form-siswa-item input[type="text"] { min-width: 100px; }
+      .status-api .btn-retry { margin-left: 0; width: 100%; text-align: center; }
     }
   </style>
 </head>
@@ -762,7 +782,7 @@
       const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e', 'f'];
 
       // ============================================
-      // DATA KUIS (10 SOAL) — campuran semua bagian
+      // DATA KUIS (10 SOAL)
       // ============================================
       const dataKuis = [
         {
@@ -849,6 +869,10 @@
         bagian4: 0,
         bagian5: 0
       };
+
+      // State pengiriman nilai (timeout + retry)
+      let kirimTimeoutId = null;
+      let kirimSukses = false;
 
       // ============================================
       // DOM REFS
@@ -1209,29 +1233,86 @@
 
       // ============================================
       // KIRIM NILAI BAGIAN F + NILAI AKHIR
+      // DENGAN TIMEOUT 12 DETIK + TOMBOL RETRY
       // ============================================
       async function kirimNilaiKeAPI(namaGabung, kelas, nilaiAkhir) {
+        // Tampilkan status loading
         elStatusApi.style.display = 'flex';
         elStatusApi.className = 'status-api info';
-        elStatusApiText.textContent = 'Mengirim nilai Bagian 6 dan nilai akhir...';
+        elStatusApiText.innerHTML = 'Mengirim nilai Bagian 6 dan nilai akhir...';
 
-        const hasil = await window.kirimNilaiBagian(
-          NAMA_SHEET,
-          'f',
-          skorKuis,
-          TOTAL_BAGIAN,
-          nilaiAkhir
-        );
+        // Hapus tombol retry lama kalau ada
+        const oldRetry = elStatusApi.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
 
-        if (hasil && hasil.ok) {
-          elStatusApi.className = 'status-api success';
-          const idInfo = hasil.id ? ` <span style="opacity:0.7;">(ID: ${hasil.id})</span>` : '';
-          elStatusApiText.innerHTML = `✅ Nilai berhasil dikirim. Nilai akhir: <strong>${nilaiAkhir}</strong>${idInfo}`;
-        } else {
-          elStatusApi.className = 'status-api error';
-          const errMsg = (hasil && hasil.error) ? hasil.error : 'Tidak diketahui';
-          elStatusApiText.innerHTML = `⚠️ Gagal mengirim nilai (${errMsg}). Nilai tetap tercatat di sertifikat.`;
+        // Batalkan timeout lama kalau ada
+        if (kirimTimeoutId) {
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
         }
+
+        let selesaiKirim = false;
+
+        // Timeout 12 detik — kalau lewat, anggap gagal
+        kirimTimeoutId = setTimeout(() => {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          tampilkanGagalKirimAPI(namaGabung, kelas, nilaiAkhir, '⏱️ Koneksi lambat atau terputus. Nilai belum terkirim.');
+        }, 12000);
+
+        try {
+          const hasil = await window.kirimNilaiBagian(
+            NAMA_SHEET,
+            'f',
+            skorKuis,
+            TOTAL_BAGIAN,
+            nilaiAkhir
+          );
+
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+
+          if (hasil && hasil.ok) {
+            kirimSukses = true;
+            elStatusApi.className = 'status-api success';
+            const idInfo = hasil.id ? ` <span style="opacity:0.7;">(ID: ${hasil.id})</span>` : '';
+            elStatusApiText.innerHTML = `✅ Nilai berhasil dikirim. Nilai akhir: <strong>${nilaiAkhir}</strong>${idInfo}`;
+          } else {
+            const errMsg = (hasil && hasil.error) ? hasil.error : 'Tidak diketahui';
+            tampilkanGagalKirimAPI(namaGabung, kelas, nilaiAkhir, `Gagal mengirim nilai (${errMsg}).`);
+          }
+        } catch (err) {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+          tampilkanGagalKirimAPI(namaGabung, kelas, nilaiAkhir, err.message || 'Gagal terhubung.');
+        }
+      }
+
+      function tampilkanGagalKirimAPI(namaGabung, kelas, nilaiAkhir, pesan) {
+        elStatusApi.style.display = 'flex';
+        elStatusApi.className = 'status-api error';
+
+        // Hapus tombol retry lama
+        const oldRetry = elStatusApi.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
+
+        // Set teks status
+        elStatusApiText.innerHTML = `⚠️ ${pesan} Nilai akhir <strong>${nilaiAkhir}</strong> tetap tercatat di sertifikat.`;
+
+        // Tambah tombol retry
+        const btnRetry = document.createElement('button');
+        btnRetry.className = 'btn-retry';
+        btnRetry.type = 'button';
+        btnRetry.textContent = '🔄 Ulangi Kirim';
+        btnRetry.addEventListener('click', function() {
+          kirimSukses = false;
+          kirimNilaiKeAPI(namaGabung, kelas, nilaiAkhir);
+        });
+        elStatusApi.appendChild(btnRetry);
       }
 
       // ============================================
@@ -1418,7 +1499,7 @@
         updateKuisProgress();
       });
 
-      console.log('✅ BK4 Bagian 6: Kuis Akhir + Sertifikat siap!');
+      console.log('✅ BK4 Bagian 6: Kuis Akhir + Sertifikat siap! (v2 — timeout + retry)');
     })();
   </script>
 

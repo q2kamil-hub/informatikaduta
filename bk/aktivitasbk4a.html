@@ -477,6 +477,25 @@
     .btn-submit-tes:disabled {
       opacity: 0.5; cursor: not-allowed; transform: none !important;
     }
+
+    /* Tombol ulangi tes */
+    .btn-ulangi-tes {
+      display: none;
+      margin: 1rem auto 0;
+      padding: 0.7rem 2rem; border-radius: 30px;
+      background: #fff; color: #a01746;
+      border: 2px solid #f26d8a;
+      font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn-ulangi-tes.show { display: block; }
+    .btn-ulangi-tes:hover {
+      background: #fdf2f5;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.20);
+    }
+
     .hasil-tes {
       display: none; margin-top: 1.2rem; padding: 1.2rem;
       background: #fdf2f5; border-radius: 14px;
@@ -498,12 +517,12 @@
 
     /* ===== STATUS KIRIM ===== */
     .status-kirim {
-      max-width: 480px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+      max-width: 520px; margin: 1rem auto; padding: 0.8rem 1.2rem;
       border-radius: 12px; font-size: 0.88rem; font-weight: 600;
       line-height: 1.5; display: none; align-items: center;
       gap: 0.6rem; text-align: left;
     }
-    .status-kirim.show { display: flex; }
+    .status-kirim.show { display: flex; flex-wrap: wrap; }
     .status-kirim.info {
       background: #fdf2f5; border: 2px solid #f26d8a; color: #a01746;
     }
@@ -515,6 +534,24 @@
       border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .status-kirim .btn-retry {
+      margin-left: auto;
+      padding: 0.35rem 1rem;
+      border-radius: 20px;
+      border: 2px solid currentColor;
+      background: transparent;
+      color: inherit;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .status-kirim .btn-retry:hover {
+      background: rgba(255,255,255,0.6);
+      transform: translateY(-1px);
+    }
 
     /* ===== NAVIGASI ===== */
     .nav-bottom {
@@ -552,6 +589,7 @@
     }
     .nav-hint.locked { color: #d4a0a0; }
     .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+    .nav-hint.warn { color: #a84a3a; font-weight: 600; }
 
     /* ===== RESPONSIF ===== */
     @media (max-width: 820px) {
@@ -578,6 +616,7 @@
       .soal-kuis .opsi-kuis label { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
       .tes-header { flex-direction: column; align-items: flex-start; }
       .form-siswa-item input[type="text"] { min-width: 100px; }
+      .status-kirim .btn-retry { margin-left: 0; width: 100%; text-align: center; }
     }
   </style>
 </head>
@@ -801,6 +840,7 @@
             <div id="soalContainer"></div>
 
             <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+            <button class="btn-ulangi-tes" id="btnUlangiTes">🔄 Ulangi Tes Pemahaman</button>
           </div>
 
           <!-- ===== HASIL TES ===== -->
@@ -813,7 +853,7 @@
 
           <!-- Status kirim -->
           <div class="status-kirim info" id="statusKirim">
-            <span class="spinner"></span>
+            <span class="spinner" id="statusSpinner"></span>
             <span id="statusKirimText">Mengirim nilai...</span>
           </div>
 
@@ -852,6 +892,7 @@
       const NAMA_SHEET = 'bk4';
       const MODUL_KEY = 'bk4';
       const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e', 'f'];
+      const AMBANG_LULUS = 3; // minimal benar dari 4 soal
 
       // ============================================
       // DATA ITEM
@@ -929,6 +970,10 @@
       let daftarSiswa = [];
       let jumlahSiswaSekarang = 1;
 
+      // State untuk pengiriman nilai
+      let kirimTimeoutId = null;
+      let kirimSukses = false;
+
       // ============================================
       // DOM REFS
       // ============================================
@@ -958,11 +1003,13 @@
       const elSoalContainer = document.getElementById('soalContainer');
       const elTesProgress = document.getElementById('tesProgress');
       const elBtnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const elBtnUlangiTes = document.getElementById('btnUlangiTes');
       const elHasilTes = document.getElementById('hasilTes');
       const elBtnLanjutBagian2 = document.getElementById('btnLanjutBagian2');
       const elHintLanjut = document.getElementById('hintLanjut');
       const elStatusKirim = document.getElementById('statusKirim');
       const elStatusKirimText = document.getElementById('statusKirimText');
+      const elStatusSpinner = document.getElementById('statusSpinner');
 
       // ============================================
       // FORM IDENTITAS SISWA
@@ -1114,19 +1161,16 @@
         if (aktivitasSelesai) return;
         if (placedItems.has(id)) return;
 
-        // Toggle selection
         if (kartuDipilih === id) {
           kartuDipilih = null;
         } else {
           kartuDipilih = id;
         }
 
-        // Update visual
         elItemsPool.querySelectorAll('.item-draggable').forEach(el => {
           el.classList.toggle('selected', el.dataset.id === kartuDipilih);
         });
 
-        // Update feedback
         if (kartuDipilih) {
           const item = itemsData.find(i => i.id === kartuDipilih);
           showFeedback('info', '👆', `Kamu memilih "<strong>${item.label}</strong>". Sekarang klik himpunan tujuan (A atau B)!`);
@@ -1151,7 +1195,6 @@
         const isCorrect = (zone === 'A' && item.type === 'buah') ||
                           (zone === 'B' && item.type === 'hewan');
 
-        // Buat elemen di zone
         const el = document.createElement('div');
         el.className = 'item-placed';
         el.textContent = item.label;
@@ -1175,7 +1218,6 @@
           zoneEl.classList.add('wrong');
           setTimeout(() => zoneEl.classList.remove('wrong'), 600);
 
-          // Kembalikan ke pool
           placedItems.delete(item.id);
           if (zone === 'A') {
             const child = elZoneAItems.querySelector(`[data-id="${item.id}"]`);
@@ -1191,20 +1233,17 @@
           return;
         }
 
-        // Update pool & stats
         const poolEl = document.getElementById(item.id);
         if (poolEl) poolEl.classList.add('placed');
 
         renderPool();
         updateStats();
 
-        // Cek selesai
         if (placedItems.size === itemsData.length) {
           selesaiAktivitas();
         }
       };
 
-      // Hubungkan drop zone ke fungsi
       elDropZoneA.addEventListener('click', () => taruhKeZone('A'));
       elDropZoneB.addEventListener('click', () => taruhKeZone('B'));
 
@@ -1238,9 +1277,7 @@
         const progress = (placed / itemsData.length) * 100;
         elProgressFill.style.width = progress + '%';
 
-        // Hitung skor proporsional
-        const totalAttempts = correctCount + wrongCount;
-        const skor = totalAttempts > 0 ? Math.round((correctCount / itemsData.length) * 100) : 0;
+        const skor = correctCount > 0 ? Math.round((correctCount / itemsData.length) * 100) : 0;
         elSkorAktivitas.textContent = skor;
       }
 
@@ -1260,7 +1297,6 @@
         aktivitasSelesai = true;
 
         const skorAktivitas = Math.round((correctCount / itemsData.length) * 100);
-
         elSkorAktivitas.textContent = skorAktivitas;
 
         showFeedback('success', '🎉',
@@ -1336,7 +1372,7 @@
       }
 
       // ============================================
-      // PERIKSA TES
+      // PERIKSA TES (dengan mode highlight kondisional)
       // ============================================
       elBtnPeriksaTes.addEventListener('click', function() {
         if (soalSubmitted) return;
@@ -1348,55 +1384,78 @@
           return;
         }
 
+        // Hitung dulu berapa yang benar
         let correct = 0;
+        soalData.forEach((soal, idx) => {
+          if (soalJawaban[idx] === soal.kunci) correct++;
+        });
+
+        const lulus = correct >= AMBANG_LULUS;
+        soalBenar = correct;
+        soalSubmitted = true;
+
+        // Tandai jawaban — HANYA tampilkan kunci jika LULUS
         soalData.forEach((soal, idx) => {
           const selected = soalJawaban[idx];
           const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
           const labels = soalDiv.querySelectorAll('.opsi-kuis label');
           const feedback = document.getElementById(`feedback_soal_${idx}`);
+          const isThisCorrect = (selected === soal.kunci);
 
           labels.forEach((label, oi) => {
             label.classList.add('disabled');
-            if (oi === soal.kunci) {
+            label.querySelector('input').disabled = true;
+
+            // Selalu tandai jawaban yang dipilih siswa
+            if (oi === selected) {
+              if (isThisCorrect) {
+                label.classList.add('correct-answer');
+                label.querySelector('.check-icon').textContent = '✅';
+              } else {
+                label.classList.add('wrong-answer');
+                label.querySelector('.check-icon').textContent = '❌';
+              }
+            }
+
+            // Kunci jawaban HANYA ditampilkan jika LULUS
+            if (lulus && oi === soal.kunci && !isThisCorrect) {
               label.classList.add('correct-answer');
               label.querySelector('.check-icon').textContent = '✅';
             }
-            if (oi === selected && selected !== soal.kunci) {
-              label.classList.add('wrong-answer');
-              label.querySelector('.check-icon').textContent = '❌';
-            }
           });
 
-          if (selected === soal.kunci) {
+          // Feedback per soal
+          if (isThisCorrect) {
             soalDiv.classList.add('correct');
-            correct++;
             feedback.className = 'jawaban-feedback benar';
-            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.penjelasan}`;
+            feedback.innerHTML = `✅ <strong>Benar!</strong>`;
           } else {
             soalDiv.classList.add('wrong');
             feedback.className = 'jawaban-feedback salah';
-            feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+            if (lulus) {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+            } else {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Coba baca kembali materi dan pikirkan jawaban yang benar.`;
+            }
           }
         });
 
-        soalBenar = correct;
-        soalSubmitted = true;
         elBtnPeriksaTes.disabled = true;
         elBtnPeriksaTes.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
 
-        tampilkanHasilTes(correct, total);
+        tampilkanHasilTes(correct, total, lulus);
       });
 
       // ============================================
       // TAMPILKAN HASIL TES
       // ============================================
-      function tampilkanHasilTes(correct, total) {
+      function tampilkanHasilTes(correct, total, lulus) {
         setTimeout(() => {
           elHasilTes.classList.add('show');
 
           const skorBagian1 = Math.round(40 + (correct / total) * 60);
 
-          if (correct >= 3) {
+          if (lulus) {
             soalSelesai = true;
             elHasilTes.querySelector('#hasilIcon').textContent = '🏆';
             elHasilTes.querySelector('#hasilTitle').textContent = 'Selamat!';
@@ -1409,6 +1468,7 @@
             elHintLanjut.classList.remove('locked');
             elHintLanjut.classList.add('ready');
             elHintLanjut.textContent = '✅ Bagian 2 sudah terbuka! Klik untuk melanjutkan.';
+            elBtnUlangiTes.classList.remove('show');
 
             document.querySelectorAll('.step-dot').forEach((step, idx) => {
               if (idx === 0) {
@@ -1428,7 +1488,12 @@
             elHasilTes.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
             elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
             elHasilTes.querySelector('#hasilDesc').innerHTML =
-              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal 3 soal benar untuk membuka Bagian 2.<br><br>Coba pelajari kembali materinya!`;
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal ${AMBANG_LULUS} soal benar untuk membuka Bagian 2.<br><br>Pelajari kembali materinya, lalu klik <strong>🔄 Ulangi Tes Pemahaman</strong> di bawah.`;
+
+            elBtnUlangiTes.classList.add('show');
+            elHintLanjut.classList.remove('ready');
+            elHintLanjut.classList.add('warn');
+            elHintLanjut.textContent = '⚠️ Belum lulus — klik "Ulangi Tes Pemahaman" untuk mencoba lagi.';
           }
 
           setTimeout(() => {
@@ -1438,28 +1503,115 @@
       }
 
       // ============================================
-      // KIRIM NILAI BAGIAN 1
+      // ULANGI TES PEMAHAMAN
+      // ============================================
+      elBtnUlangiTes.addEventListener('click', function() {
+        // Reset state tes
+        soalJawaban = {};
+        soalSubmitted = false;
+        soalBenar = 0;
+        soalSelesai = false;
+
+        // Reset tombol
+        elBtnPeriksaTes.disabled = false;
+        elBtnPeriksaTes.textContent = '✅ Periksa Jawaban';
+        elBtnUlangiTes.classList.remove('show');
+
+        // Sembunyikan hasil
+        elHasilTes.classList.remove('show');
+
+        // Reset hint navigasi
+        elHintLanjut.classList.remove('ready', 'warn');
+        elHintLanjut.classList.add('locked');
+        elHintLanjut.textContent = '🔒 Selesaikan aktivitas dan tes pemahaman untuk membuka Bagian 2';
+
+        // Render ulang soal
+        renderSoal();
+        updateTesProgress();
+
+        // Scroll ke atas tes
+        elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      // ============================================
+      // KIRIM NILAI BAGIAN 1 — dengan timeout + retry
       // ============================================
       async function kirimNilaiBagian1() {
         const skorBagian1 = Math.round(40 + (soalBenar / soalData.length) * 60);
 
+        // Tampilkan status loading
         elStatusKirim.className = 'status-kirim info show';
-        elStatusKirimText.textContent = 'Mengirim nilai Bagian 1...';
+        elStatusSpinner.style.display = 'inline-block';
+        elStatusKirimText.innerHTML = `Mengirim nilai Bagian 1 (${skorBagian1})...`;
 
-        const hasil = await window.kirimNilaiBagian(
-          NAMA_SHEET,
-          'a',
-          skorBagian1,
-          TOTAL_BAGIAN
-        );
+        // Hapus tombol retry lama kalau ada
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
 
-        if (hasil && hasil.ok) {
-          elStatusKirim.className = 'status-kirim success show';
-          elStatusKirimText.innerHTML = `✅ Nilai Bagian 1 (<strong>${skorBagian1}</strong>) berhasil dikirim.`;
-        } else {
-          elStatusKirim.className = 'status-kirim error show';
-          elStatusKirimText.innerHTML = `⚠️ Gagal mengirim nilai. Tetap lanjut ke Bagian 2.`;
+        // Batalkan timeout lama kalau ada
+        if (kirimTimeoutId) {
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
         }
+
+        let selesaiKirim = false;
+
+        // Timeout 12 detik — kalau lewat, anggap gagal
+        kirimTimeoutId = setTimeout(() => {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          tampilkanGagalKirim(skorBagian1, '⏱️ Koneksi lambat atau terputus. Nilai belum terkirim.');
+        }, 12000);
+
+        try {
+          const hasil = await window.kirimNilaiBagian(
+            NAMA_SHEET,
+            'a',
+            skorBagian1,
+            TOTAL_BAGIAN
+          );
+
+          if (selesaiKirim) return; // sudah ditangani timeout
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+
+          if (hasil && hasil.ok) {
+            kirimSukses = true;
+            elStatusKirim.className = 'status-kirim success show';
+            elStatusSpinner.style.display = 'none';
+            elStatusKirimText.innerHTML = `✅ Nilai Bagian 1 (<strong>${skorBagian1}</strong>) berhasil dikirim.`;
+          } else {
+            tampilkanGagalKirim(skorBagian1, (hasil && hasil.error) || 'Terjadi kesalahan.');
+          }
+        } catch (err) {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+          tampilkanGagalKirim(skorBagian1, err.message || 'Gagal terhubung.');
+        }
+      }
+
+      function tampilkanGagalKirim(skor, pesan) {
+        elStatusKirim.className = 'status-kirim error show';
+        elStatusSpinner.style.display = 'none';
+        elStatusKirimText.innerHTML = `⚠️ ${pesan} Nilai: <strong>${skor}</strong>. Klik "Ulangi Kirim" untuk mencoba lagi.`;
+
+        // Hapus tombol retry lama
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
+
+        // Tambah tombol retry
+        const btnRetry = document.createElement('button');
+        btnRetry.className = 'btn-retry';
+        btnRetry.type = 'button';
+        btnRetry.textContent = '🔄 Ulangi Kirim';
+        btnRetry.addEventListener('click', function() {
+          kirimSukses = false;
+          kirimNilaiBagian1();
+        });
+        elStatusKirim.appendChild(btnRetry);
       }
 
       // ============================================
@@ -1471,13 +1623,30 @@
           return;
         }
 
-        elBtnLanjutBagian2.disabled = true;
-        await kirimNilaiBagian1();
+        // Kalau sudah sukses kirim → langsung pindah
+        if (kirimSukses) {
+          pindahKeBagian2();
+          return;
+        }
 
+        // Kalau belum sukses, coba kirim lagi (tanpa blokir)
+        elBtnLanjutBagian2.disabled = true;
+        elBtnLanjutBagian2.textContent = '⏳ Mengirim...';
+
+        // Kalau belum pernah kirim sama sekali, kirim sekarang
+        if (!elStatusKirim.classList.contains('show')) {
+          await kirimNilaiBagian1();
+        }
+
+        // Tunggu sebentar, lalu pindah (walau gagal, tetap boleh lanjut)
         setTimeout(() => {
-          window.location.href = 'aktivitasbk4b.html';
-        }, 800);
+          pindahKeBagian2();
+        }, 600);
       };
+
+      function pindahKeBagian2() {
+        window.location.href = 'aktivitasbk4b.html';
+      }
 
       // ============================================
       // INISIALISASI
@@ -1486,7 +1655,7 @@
         updateFormSiswa('1');
       });
 
-      console.log('✅ BK4 Bagian 1: Mengenal Anggota Himpunan siap!');
+      console.log('✅ BK4 Bagian 1: Mengenal Anggota Himpunan siap! (v2 — fix 3 masalah)');
     })();
   </script>
 

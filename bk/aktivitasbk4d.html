@@ -124,6 +124,9 @@
     .skenario-card.selected {
       border-color: #4d3829; background: #f5ede6;
     }
+    .skenario-card.locked {
+      opacity: 0.55; cursor: not-allowed; pointer-events: none;
+    }
     .skenario-card .skenario-icon {
       font-size: 2.5rem; display: block; margin-bottom: 0.3rem;
     }
@@ -139,6 +142,14 @@
       padding: 0.15rem 0.8rem; border-radius: 20px;
       font-size: 0.7rem; font-weight: 600;
       color: #4d3829; margin-top: 0.5rem;
+    }
+    .skenario-card .skenario-status {
+      display: inline-block; margin-top: 0.5rem;
+      padding: 0.15rem 0.8rem; border-radius: 20px;
+      font-size: 0.7rem; font-weight: 700;
+    }
+    .skenario-card .skenario-status.solved {
+      background: #d4e8cb; color: #2d5a1e;
     }
 
     /* ===== TEMPLATE MODEL ===== */
@@ -195,6 +206,9 @@
     }
     .template-row input.wrong-input {
       border-color: #b33c3c; background: #fde8e8;
+    }
+    .template-row input:disabled {
+      background: #e8f5ee; color: #2d5a1e; cursor: not-allowed;
     }
 
     /* ===== TOMBOL ===== */
@@ -334,6 +348,22 @@
     .btn-submit-tes:disabled {
       opacity: 0.5; cursor: not-allowed; transform: none !important;
     }
+    .btn-ulangi-tes {
+      display: none;
+      margin: 1rem auto 0;
+      padding: 0.7rem 2rem; border-radius: 30px;
+      background: #fff; color: #a01746;
+      border: 2px solid #f26d8a;
+      font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn-ulangi-tes.show { display: block; }
+    .btn-ulangi-tes:hover {
+      background: #fdf2f5;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.20);
+    }
     .hasil-tes {
       display: none; margin-top: 1.2rem; padding: 1.2rem;
       background: #fdf2f5; border-radius: 14px;
@@ -355,12 +385,12 @@
 
     /* ===== STATUS KIRIM ===== */
     .status-kirim {
-      max-width: 480px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+      max-width: 520px; margin: 1rem auto; padding: 0.8rem 1.2rem;
       border-radius: 12px; font-size: 0.88rem; font-weight: 600;
       line-height: 1.5; display: none; align-items: center;
       gap: 0.6rem; text-align: left;
     }
-    .status-kirim.show { display: flex; }
+    .status-kirim.show { display: flex; flex-wrap: wrap; }
     .status-kirim.info {
       background: #fdf2f5; border: 2px solid #f26d8a; color: #a01746;
     }
@@ -372,6 +402,24 @@
       border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .status-kirim .btn-retry {
+      margin-left: auto;
+      padding: 0.35rem 1rem;
+      border-radius: 20px;
+      border: 2px solid currentColor;
+      background: transparent;
+      color: inherit;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .status-kirim .btn-retry:hover {
+      background: rgba(255,255,255,0.6);
+      transform: translateY(-1px);
+    }
 
     /* ===== NAVIGASI ===== */
     .nav-bottom {
@@ -409,6 +457,7 @@
     }
     .nav-hint.locked { color: #d4a0a0; }
     .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+    .nav-hint.warn { color: #a84a3a; font-weight: 600; }
 
     /* ===== RESPONSIF ===== */
     @media (max-width: 820px) {
@@ -440,6 +489,7 @@
       .action-buttons { flex-direction: column; align-items: center; }
       .action-buttons .btn-check,
       .action-buttons .btn-reset-skenario { width: 100%; text-align: center; }
+      .status-kirim .btn-retry { margin-left: 0; width: 100%; text-align: center; }
     }
   </style>
 </head>
@@ -644,6 +694,7 @@
             <div id="soalContainer"></div>
 
             <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+            <button class="btn-ulangi-tes" id="btnUlangiTes">🔄 Ulangi Tes Pemahaman</button>
           </div>
 
           <!-- ===== HASIL TES ===== -->
@@ -656,7 +707,7 @@
 
           <!-- Status kirim -->
           <div class="status-kirim info" id="statusKirim">
-            <span class="spinner"></span>
+            <span class="spinner" id="statusSpinner"></span>
             <span id="statusKirimText">Mengirim nilai...</span>
           </div>
 
@@ -695,6 +746,7 @@
       // ============================================
       const NAMA_SHEET = 'bk4';
       const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e', 'f'];
+      const AMBANG_LULUS = 3; // minimal benar dari 4 soal
 
       // ============================================
       // DATA SKENARIO
@@ -791,11 +843,15 @@
       let currentSkenario = null;
       let isModelCorrect = false;
       let skorModel = 0;
+      let skenarioSelesai = new Set(); // menyimpan indeks skenario yang sudah berhasil
 
       let soalJawaban = {};
       let soalSubmitted = false;
       let soalBenar = 0;
       let soalSelesai = false;
+
+      let kirimTimeoutId = null;
+      let kirimSukses = false;
 
       // ============================================
       // DOM REFS
@@ -820,18 +876,19 @@
       const elSoalContainer = document.getElementById('soalContainer');
       const elTesProgress = document.getElementById('tesProgress');
       const elBtnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const elBtnUlangiTes = document.getElementById('btnUlangiTes');
       const elHasilTes = document.getElementById('hasilTes');
       const elBtnLanjutBagian5 = document.getElementById('btnLanjutBagian5');
       const elHintLanjut = document.getElementById('hintLanjut');
       const elStatusKirim = document.getElementById('statusKirim');
       const elStatusKirimText = document.getElementById('statusKirimText');
+      const elStatusSpinner = document.getElementById('statusSpinner');
 
       // ============================================
       // MULAI
       // ============================================
       document.addEventListener('DOMContentLoaded', function() {
         elAreaSimulasi.classList.add('active');
-        // Pilih skenario A secara default
         selectSkenario(0);
       });
 
@@ -866,6 +923,7 @@
         inputDitanyakan.value = '';
         document.querySelectorAll('.template-row input').forEach(inp => {
           inp.classList.remove('correct-input', 'wrong-input');
+          inp.disabled = false;
         });
       }
 
@@ -924,6 +982,14 @@
 
         if (allCorrect) {
           isModelCorrect = true;
+          // Catat skenario ini sebagai selesai
+          const idx = skenarioData.findIndex(s => s.id === currentSkenario.id);
+          if (idx !== -1) skenarioSelesai.add(idx);
+
+          // Kunci input agar tidak bisa diubah sembarangan
+          document.querySelectorAll('.template-row input').forEach(inp => inp.disabled = true);
+          btnCheckModel.disabled = true;
+
           feedbackModel.className = 'feedback-model show success';
           fbIconModel.textContent = '✅';
           fbTextModel.innerHTML = `
@@ -932,6 +998,9 @@
             <strong>Rumus:</strong> ${currentSkenario.rumus}<br>
             <strong>Jawaban:</strong> ${currentSkenario.jawaban}
           `;
+
+          // Update badge skenario
+          updateBadgeSkenario();
 
           // Aktifkan tes pemahaman
           setTimeout(() => {
@@ -961,11 +1030,28 @@
         }
       }
 
+      function updateBadgeSkenario() {
+        skenarioCards.forEach((card, i) => {
+          if (skenarioSelesai.has(i)) {
+            card.classList.add('locked');
+            // Tambah badge solved jika belum ada
+            let badge = card.querySelector('.skenario-status');
+            if (!badge) {
+              badge = document.createElement('span');
+              badge.className = 'skenario-status solved';
+              badge.textContent = '✓ Selesai';
+              card.appendChild(badge);
+            }
+          }
+        });
+      }
+
       // ============================================
       // EVENT LISTENERS
       // ============================================
       skenarioCards.forEach((card, index) => {
         card.addEventListener('click', function() {
+          if (card.classList.contains('locked')) return;
           selectSkenario(index);
         });
       });
@@ -973,18 +1059,14 @@
       btnCheckModel.addEventListener('click', checkModel);
 
       btnResetModel.addEventListener('click', function() {
-        if (currentSkenario) {
-          resetForm();
-          feedbackModel.className = 'feedback-model';
-          fbTextModel.textContent = 'Form telah direset. Isi ulang modelmu!';
-          isModelCorrect = false;
-          document.querySelectorAll('.step-dot').forEach((step, idx) => {
-            if (idx === 3) {
-              step.classList.add('active');
-              step.classList.remove('completed');
-            }
-          });
+        if (!currentSkenario) return;
+        if (isModelCorrect) {
+          // Kalau sudah benar, tidak boleh reset
+          return;
         }
+        resetForm();
+        feedbackModel.className = 'feedback-model';
+        fbTextModel.textContent = 'Form telah direset. Isi ulang modelmu!';
       });
 
       document.querySelectorAll('.template-row input').forEach(inp => {
@@ -1066,7 +1148,7 @@
       }
 
       // ============================================
-      // PERIKSA TES
+      // PERIKSA TES (highlight kondisional)
       // ============================================
       elBtnPeriksaTes.addEventListener('click', function() {
         if (soalSubmitted) return;
@@ -1078,58 +1160,76 @@
           return;
         }
 
+        // Hitung dulu
         let correct = 0;
+        soalData.forEach((soal, idx) => {
+          if (soalJawaban[idx] === soal.kunci) correct++;
+        });
+
+        const lulus = correct >= AMBANG_LULUS;
+        soalBenar = correct;
+        soalSubmitted = true;
+
         soalData.forEach((soal, idx) => {
           const selected = soalJawaban[idx];
           const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
           const labels = soalDiv.querySelectorAll('.opsi-kuis label');
           const feedback = document.getElementById(`feedback_soal_${idx}`);
+          const isThisCorrect = (selected === soal.kunci);
 
           labels.forEach((label, oi) => {
             label.classList.add('disabled');
-            if (oi === soal.kunci) {
+            label.querySelector('input').disabled = true;
+
+            if (oi === selected) {
+              if (isThisCorrect) {
+                label.classList.add('correct-answer');
+                label.querySelector('.check-icon').textContent = '✅';
+              } else {
+                label.classList.add('wrong-answer');
+                label.querySelector('.check-icon').textContent = '❌';
+              }
+            }
+
+            if (lulus && oi === soal.kunci && !isThisCorrect) {
               label.classList.add('correct-answer');
               label.querySelector('.check-icon').textContent = '✅';
             }
-            if (oi === selected && selected !== soal.kunci) {
-              label.classList.add('wrong-answer');
-              label.querySelector('.check-icon').textContent = '❌';
-            }
           });
 
-          if (selected === soal.kunci) {
+          if (isThisCorrect) {
             soalDiv.classList.add('correct');
-            correct++;
             feedback.className = 'jawaban-feedback benar';
-            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.penjelasan}`;
+            feedback.innerHTML = `✅ <strong>Benar!</strong>`;
           } else {
             soalDiv.classList.add('wrong');
             feedback.className = 'jawaban-feedback salah';
-            feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+            if (lulus) {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+            } else {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Coba baca kembali materi dan pikirkan jawaban yang benar.`;
+            }
           }
         });
 
-        soalBenar = correct;
-        soalSubmitted = true;
         elBtnPeriksaTes.disabled = true;
         elBtnPeriksaTes.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
 
-        tampilkanHasilTes(correct, total);
+        tampilkanHasilTes(correct, total, lulus);
       });
 
       // ============================================
       // TAMPILKAN HASIL TES
       // ============================================
-      function tampilkanHasilTes(correct, total) {
+      function tampilkanHasilTes(correct, total, lulus) {
         setTimeout(() => {
           elHasilTes.classList.add('show');
 
-          // Skor Bagian 4 = 100 (karena model benar) × 0.5 + skor tes × 0.5
           const skorModelAkhir = isModelCorrect ? 100 : 60;
           const skorTes = Math.round(40 + (correct / total) * 60);
           const skorBagian4 = Math.round((skorModelAkhir * 0.5) + (skorTes * 0.5));
 
-          if (correct >= 3) {
+          if (lulus) {
             soalSelesai = true;
             elHasilTes.querySelector('#hasilIcon').textContent = '🏆';
             elHasilTes.querySelector('#hasilTitle').textContent = 'Selamat!';
@@ -1139,9 +1239,10 @@
 
             elBtnLanjutBagian5.classList.remove('locked');
             elBtnLanjutBagian5.classList.add('primary');
-            elHintLanjut.classList.remove('locked');
+            elHintLanjut.classList.remove('locked', 'warn');
             elHintLanjut.classList.add('ready');
             elHintLanjut.textContent = '✅ Bagian 5 sudah terbuka! Klik untuk melanjutkan.';
+            elBtnUlangiTes.classList.remove('show');
 
             document.querySelectorAll('.step-dot').forEach((step, idx) => {
               if (idx === 3) {
@@ -1161,7 +1262,12 @@
             elHasilTes.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
             elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
             elHasilTes.querySelector('#hasilDesc').innerHTML =
-              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal 3 soal benar untuk membuka Bagian 5.<br><br>Coba pelajari kembali materinya!`;
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal ${AMBANG_LULUS} soal benar untuk membuka Bagian 5.<br><br>Pelajari kembali materinya, lalu klik <strong>🔄 Ulangi Tes Pemahaman</strong> di bawah.<br><em>Pemodelanmu yang sudah benar tetap tersimpan.</em>`;
+
+            elBtnUlangiTes.classList.add('show');
+            elHintLanjut.classList.remove('ready');
+            elHintLanjut.classList.add('warn');
+            elHintLanjut.textContent = '⚠️ Belum lulus — klik "Ulangi Tes Pemahaman" untuk mencoba lagi.';
           }
 
           setTimeout(() => {
@@ -1171,7 +1277,32 @@
       }
 
       // ============================================
-      // KIRIM NILAI BAGIAN 4
+      // ULANGI TES (pemodelan TETAP tersimpan)
+      // ============================================
+      elBtnUlangiTes.addEventListener('click', function() {
+        soalJawaban = {};
+        soalSubmitted = false;
+        soalBenar = 0;
+        soalSelesai = false;
+
+        elBtnPeriksaTes.disabled = false;
+        elBtnPeriksaTes.textContent = '✅ Periksa Jawaban';
+        elBtnUlangiTes.classList.remove('show');
+
+        elHasilTes.classList.remove('show');
+
+        elHintLanjut.classList.remove('ready', 'warn');
+        elHintLanjut.classList.add('locked');
+        elHintLanjut.textContent = '🔒 Selesaikan pemodelan & tes pemahaman untuk membuka Bagian 5';
+
+        renderSoal();
+        updateTesProgress();
+
+        elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      // ============================================
+      // KIRIM NILAI BAGIAN 4 — dengan timeout + retry
       // ============================================
       async function kirimNilaiBagian4() {
         const skorModelAkhir = isModelCorrect ? 100 : 60;
@@ -1179,22 +1310,72 @@
         const skorBagian4 = Math.round((skorModelAkhir * 0.5) + (skorTes * 0.5));
 
         elStatusKirim.className = 'status-kirim info show';
-        elStatusKirimText.textContent = 'Mengirim nilai Bagian 4...';
+        elStatusSpinner.style.display = 'inline-block';
+        elStatusKirimText.innerHTML = `Mengirim nilai Bagian 4 (${skorBagian4})...`;
 
-        const hasil = await window.kirimNilaiBagian(
-          NAMA_SHEET,
-          'd',
-          skorBagian4,
-          TOTAL_BAGIAN
-        );
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
 
-        if (hasil && hasil.ok) {
-          elStatusKirim.className = 'status-kirim success show';
-          elStatusKirimText.innerHTML = `✅ Nilai Bagian 4 (<strong>${skorBagian4}</strong>) berhasil dikirim.`;
-        } else {
-          elStatusKirim.className = 'status-kirim error show';
-          elStatusKirimText.innerHTML = `⚠️ Gagal mengirim nilai. Tetap lanjut ke Bagian 5.`;
+        if (kirimTimeoutId) {
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
         }
+
+        let selesaiKirim = false;
+
+        kirimTimeoutId = setTimeout(() => {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          tampilkanGagalKirim(skorBagian4, '⏱️ Koneksi lambat atau terputus. Nilai belum terkirim.');
+        }, 12000);
+
+        try {
+          const hasil = await window.kirimNilaiBagian(
+            NAMA_SHEET,
+            'd',
+            skorBagian4,
+            TOTAL_BAGIAN
+          );
+
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+
+          if (hasil && hasil.ok) {
+            kirimSukses = true;
+            elStatusKirim.className = 'status-kirim success show';
+            elStatusSpinner.style.display = 'none';
+            elStatusKirimText.innerHTML = `✅ Nilai Bagian 4 (<strong>${skorBagian4}</strong>) berhasil dikirim.`;
+          } else {
+            tampilkanGagalKirim(skorBagian4, (hasil && hasil.error) || 'Terjadi kesalahan.');
+          }
+        } catch (err) {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+          tampilkanGagalKirim(skorBagian4, err.message || 'Gagal terhubung.');
+        }
+      }
+
+      function tampilkanGagalKirim(skor, pesan) {
+        elStatusKirim.className = 'status-kirim error show';
+        elStatusSpinner.style.display = 'none';
+        elStatusKirimText.innerHTML = `⚠️ ${pesan} Nilai: <strong>${skor}</strong>. Klik "Ulangi Kirim" untuk mencoba lagi.`;
+
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
+
+        const btnRetry = document.createElement('button');
+        btnRetry.className = 'btn-retry';
+        btnRetry.type = 'button';
+        btnRetry.textContent = '🔄 Ulangi Kirim';
+        btnRetry.addEventListener('click', function() {
+          kirimSukses = false;
+          kirimNilaiBagian4();
+        });
+        elStatusKirim.appendChild(btnRetry);
       }
 
       // ============================================
@@ -1206,15 +1387,28 @@
           return;
         }
 
+        if (kirimSukses) {
+          pindahKeBagian5();
+          return;
+        }
+
         elBtnLanjutBagian5.disabled = true;
-        await kirimNilaiBagian4();
+        elBtnLanjutBagian5.textContent = '⏳ Mengirim...';
+
+        if (!elStatusKirim.classList.contains('show')) {
+          await kirimNilaiBagian4();
+        }
 
         setTimeout(() => {
-          window.location.href = 'aktivitasbk4e.html';
-        }, 800);
+          pindahKeBagian5();
+        }, 600);
       };
 
-      console.log('✅ BK4 Bagian 4: Pemodelan Masalah Nyata siap!');
+      function pindahKeBagian5() {
+        window.location.href = 'aktivitasbk4e.html';
+      }
+
+      console.log('✅ BK4 Bagian 4: Pemodelan Masalah Nyata siap! (v2 — fix 3 masalah)');
     })();
   </script>
 
