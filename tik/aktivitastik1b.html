@@ -1595,15 +1595,15 @@
         cekLapis1Selesai();
       }
 
-      // Pasang listener ke semua komponen
+      // Pasang listener ke semua komponen — pakai data-komponen
       KOMPONEN.forEach(function(komp) {
-        const el = document.getElementById('comp' + komp.id.charAt(0).toUpperCase() + komp.id.slice(1));
-        if (el) {
+        const els = document.querySelectorAll('[data-komponen="' + komp.id + '"]');
+        els.forEach(function(el) {
           el.addEventListener('click', function(e) {
             e.stopPropagation();
             handleKlikKomponen(komp.id, this);
           });
-        }
+        });
       });
 
       // ============================================
