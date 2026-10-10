@@ -3,1073 +3,1489 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Lab GUI · Bagian 3: Komponen Input · Informatika DUTA</title>
-  <!-- CSS di root, naik satu level dari folder tik/ -->
+  <title>GUI Lab · Bagian 3: Interaksi dengan GUI · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
   <style>
-    /* ===== GAYA MATERI RINGKAS ===== */
-    .materi-ringkas {
-      max-width: 820px;
-      margin: 0 auto 1.5rem;
-      background: #f8f4ef;
-      border-radius: 16px;
-      padding: 1.5rem 1.8rem;
-      border-left: 6px solid #8ab4d4;
-      border: 2px solid #e5dbd0;
+    /* ===== PROGRESS BAR VISUAL (LAPIS) ===== */
+    .progress-lapis {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.4rem; margin: 1.2rem auto 1.5rem;
+      flex-wrap: wrap; max-width: 700px;
     }
-
-    .materi-ringkas h2 {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #3b2b1e;
-      margin-bottom: 0.6rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    .progress-lapis .pl-step {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.45rem 1rem; border-radius: 30px;
+      background: #f5ede6; border: 2px solid #e5dbd0;
+      font-size: 0.78rem; font-weight: 700; color: #7a6656;
+      transition: all 0.3s ease; white-space: nowrap;
     }
-
-    .materi-ringkas h2 .badge {
-      background: #8ab4d4;
-      color: #fff;
+    .progress-lapis .pl-step.active {
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      border-color: #ff8a5b; color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 138, 91, 0.25);
+    }
+    .progress-lapis .pl-step.done {
+      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
+    }
+    .progress-lapis .pl-step .pl-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      display: flex; align-items: center; justify-content: center;
       font-size: 0.7rem;
-      padding: 0.15rem 0.6rem;
-      border-radius: 20px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+    }
+    .progress-lapis .pl-sep {
+      color: #c79bd9; font-weight: 700; font-size: 0.9rem;
     }
 
-    .materi-ringkas h3 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: #4d3829;
-      margin: 1rem 0 0.4rem;
+    /* ===== HEADER LAPIS ===== */
+    .lapis-header {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.7rem 1.2rem; margin: 1.2rem 0 1rem;
+      border-radius: 14px; font-weight: 700;
+      font-size: 0.95rem; color: #fff;
+    }
+    .lapis-header.lapis-1 { background: linear-gradient(135deg, #4fb0c6, #3a8aa0); }
+    .lapis-header.lapis-2 { background: linear-gradient(135deg, #f4b942, #d4a030); }
+    .lapis-header.lapis-3 { background: linear-gradient(135deg, #6ecb8f, #4fa86a); }
+    .lapis-header .lapis-num {
+      background: rgba(255,255,255,0.3); padding: 0.15rem 0.7rem;
+      border-radius: 20px; font-size: 0.75rem; letter-spacing: 0.5px;
     }
 
-    .materi-ringkas p {
-      font-size: 0.92rem;
+    /* ===== AREA SIMULASI ===== */
+    #area-simulasi { display: none; margin-top: 0.5rem; }
+    #area-simulasi.active { display: block; }
+
+    .scenario-panel {
+      background: #fffffffa; border-radius: 24px;
+      border: 2px solid #e5dbd0; padding: 2rem;
+      min-height: 400px; position: relative; transition: all 0.3s ease;
+    }
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.3rem;
+    }
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem; color: #5c4638; background: #fff5f0;
+      padding: 0.8rem 1.2rem; border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid #ff8a5b;
       line-height: 1.7;
-      color: #2f2822;
-      margin-bottom: 0.6rem;
     }
 
-    .materi-ringkas ul {
-      margin: 0.3rem 0 0.8rem 1.5rem;
-      font-size: 0.9rem;
+    /* ===== FORM IDENTITAS SISWA ===== */
+    .form-siswa-box {
+      background: #fff; border-radius: 20px; padding: 1.5rem 1.8rem;
+      margin: 1.5rem 0; border: 3px solid #ff8a5b;
+      box-shadow: 0 6px 20px rgba(255, 138, 91, 0.15); position: relative;
     }
-
-    .materi-ringkas li {
-      margin-bottom: 0.25rem;
-      line-height: 1.6;
+    .form-siswa-box::before {
+      content: '📝'; position: absolute; top: -18px; left: 1.5rem;
+      background: #fff; padding: 0 0.5rem; font-size: 1.5rem;
     }
-
-    .materi-ringkas .info-box {
-      background: #fff;
-      border-radius: 12px;
-      padding: 0.8rem 1.2rem;
-      border: 2px solid #e5dbd0;
-      margin: 0.6rem 0;
-      font-size: 0.88rem;
-      line-height: 1.6;
+    .form-siswa-box .form-title {
+      font-size: 1.1rem; font-weight: 700; color: #b34614; margin-bottom: 0.3rem;
     }
-
-    .materi-ringkas .info-box strong {
-      color: #4d3829;
+    .form-siswa-box .form-desc {
+      font-size: 0.85rem; color: #5c4638; margin-bottom: 1.2rem; line-height: 1.6;
     }
-
-    .materi-ringkas .link-materi {
-      display: inline-block;
-      margin-top: 0.5rem;
-      color: #5c4638;
-      font-size: 0.85rem;
-      text-decoration: none;
-      font-weight: 600;
-      border-bottom: 2px dotted #bfaa9a;
-      transition: all 0.2s ease;
+    .form-sekolah-wrapper,
+    .form-jumlah-wrapper,
+    .form-kelas-wrapper {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 1rem; flex-wrap: wrap;
     }
-
-    .materi-ringkas .link-materi:hover {
-      color: #4d3829;
-      border-bottom-color: #7a5f4c;
+    .form-sekolah-wrapper { padding-bottom: 1rem; border-bottom: 2px dashed #e5dbd0; }
+    .form-jumlah-wrapper { padding-bottom: 1rem; border-bottom: 2px dashed #e5dbd0; }
+    .form-kelas-wrapper { padding-top: 1rem; border-top: 2px dashed #e5dbd0; }
+    .form-sekolah-wrapper label,
+    .form-jumlah-wrapper label,
+    .form-kelas-wrapper label {
+      font-weight: 700; color: #4d3829; font-size: 0.95rem; min-width: 90px;
     }
-
-    /* ===== GAYA AKTIVITAS ===== */
-    .aktivitas-container {
-      max-width: 1000px;
-      margin: 0 auto;
+    .form-sekolah-wrapper input[type="text"],
+    .form-kelas-wrapper input[type="text"] {
+      flex: 1; min-width: 180px; max-width: 320px;
+      padding: 0.6rem 1rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; background: #fcfaf7;
+      font-size: 0.95rem; font-weight: 600; color: #3d2c1f;
+      outline: none; transition: all 0.15s; font-family: inherit;
     }
-
-    /* Progress Bagian */
-    .bagian-progress {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      justify-content: center;
-      margin: 0.5rem 0 1.5rem;
+    .form-sekolah-wrapper input[type="text"]:focus,
+    .form-kelas-wrapper input[type="text"]:focus {
+      border-color: #ff8a5b; background: #fff;
+      box-shadow: 0 0 0 3px rgba(255, 138, 91, 0.15);
     }
-
-    .bagian-progress .step {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.35rem 0.9rem;
-      border-radius: 30px;
-      background: #f5ede6;
-      border: 2px solid #e5dbd0;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #7a6656;
-      transition: all 0.3s ease;
+    .form-jumlah-wrapper select {
+      padding: 0.5rem 1rem; border-radius: 10px;
+      border: 2px solid #ff8a5b; background: #fff5f0;
+      font-size: 1rem; font-weight: 700; color: #b34614;
+      cursor: pointer; font-family: inherit; transition: all 0.15s;
     }
-
-    .bagian-progress .step.active {
-      background: #4d3829;
-      border-color: #4d3829;
-      color: #fff;
+    .form-jumlah-wrapper select:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 138, 91, 0.25);
     }
-
-    .bagian-progress .step.completed {
-      background: #8aaa7a;
-      border-color: #8aaa7a;
-      color: #fff;
+    .form-siswa-list {
+      display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1rem;
     }
-
-    .bagian-progress .step .num {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.65rem;
+    .form-siswa-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      flex-wrap: wrap; animation: slideIn 0.3s ease;
     }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .form-siswa-item .siswa-num {
+      background: #ff8a5b; color: #fff;
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+    }
+    .form-siswa-item input[type="text"] {
+      flex: 1; min-width: 180px; padding: 0.6rem 1rem;
+      border-radius: 10px; border: 2px solid #e5dbd0;
+      background: #fcfaf7; font-size: 0.92rem; color: #3d2c1f;
+      outline: none; transition: all 0.15s; font-family: inherit;
+    }
+    .form-siswa-item input[type="text"]:focus {
+      border-color: #ff8a5b; background: #fff;
+      box-shadow: 0 0 0 3px rgba(255, 138, 91, 0.15);
+    }
+    .form-error {
+      display: none; background: #fdf0f0; border: 2px solid #d4a0a0;
+      color: #a84a3a; padding: 0.6rem 1rem; border-radius: 10px;
+      font-size: 0.88rem; font-weight: 600; margin-top: 0.8rem;
+    }
+    .form-error.show { display: block; animation: slideIn 0.3s ease; }
+    .btn-mulai {
+      padding: 1rem 3rem; font-size: 1.1rem;
+      font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      border-radius: 50px; border: none; cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 24px rgba(255, 138, 91, 0.3);
+      text-decoration: none; font-family: inherit;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-mulai:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 32px rgba(255, 138, 91, 0.35);
+    }
+    .btn-mulai:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+    .btn-wrapper-mulai { text-align: center; margin-top: 1.2rem; }
 
-    /* ===== NAVIGASI AKTIVITAS ===== */
-    .nav-aktivitas {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      padding: 0.8rem 1rem;
-      background: #f5f0ea;
+    /* ===== DESKTOP TIRUAN ===== */
+    .desktop-sim {
+      background: linear-gradient(135deg, #4a7a9b, #2f5575);
       border-radius: 16px;
-      border: 2px solid #e5dbd0;
-    }
-    .nav-aktivitas .btn-nav {
-      padding: 0.5rem 1.5rem;
-      border-radius: 30px;
-      border: 2px solid #cbb5a2;
-      background: #fcf9f6;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.15s ease;
-      color: #4d3829;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: inherit;
-    }
-    .nav-aktivitas .btn-nav:hover {
-      background: #e8dcd0;
-      transform: translateY(-2px);
-    }
-    .nav-aktivitas .btn-nav.primary {
-      background: #6b8c5e;
-      border-color: #4d7a3b;
-      color: #fff;
-    }
-    .nav-aktivitas .btn-nav.primary:hover {
-      background: #4d7a3b;
-    }
-    .nav-aktivitas .btn-nav.danger {
-      background: #e87a6a;
-      border-color: #d45a4a;
-      color: #fff;
-    }
-    .nav-aktivitas .btn-nav.danger:hover {
-      background: #d45a4a;
-    }
-    .nav-aktivitas .info-aktivitas {
-      font-size: 0.85rem;
-      color: #5a4a3a;
-      font-weight: 500;
-    }
-
-    /* ===== SIMULASI WINDOW ===== */
-    .simulasi-window {
-      background: #ffffff;
-      border-radius: 16px;
-      border: 2px solid #d0c4b8;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      border: 4px solid #2f2822;
+      padding: 1.5rem;
+      min-height: 320px;
+      position: relative;
+      margin: 1rem 0;
       overflow: hidden;
-      margin: 0.5rem 0 1.5rem;
-      position: relative;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
     }
-
-    .window-titlebar {
-      background: #e8ddd0;
-      padding: 0.5rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 2px solid #d0c4b8;
-      user-select: none;
-    }
-    .window-titlebar .judul-window {
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #3b2b1e;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 8px;
-      transition: background 0.15s;
-    }
-    .window-titlebar .judul-window .ikon-window {
-      font-size: 1.1rem;
-    }
-    .window-controls {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .window-controls button {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: none;
-      font-size: 0.7rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #d5c8ba;
-      color: #4d3829;
-      font-weight: 700;
-    }
-    .window-controls button:hover {
-      transform: scale(1.1);
-    }
-    .window-controls .btn-minimize { background: #f5c542; }
-    .window-controls .btn-maximize { background: #7dbd7d; }
-    .window-controls .btn-close { background: #e87a6a; color: #fff; }
-    .window-controls .btn-close:hover { background: #d45a4a; }
-
-    .window-body {
-      display: flex;
-      min-height: 380px;
-      background: #fcfaf7;
-      position: relative;
-    }
-
-    .nav-pane {
-      width: 200px;
-      min-width: 140px;
-      background: #f5f0ea;
-      padding: 0.8rem 0.6rem;
-      border-right: 2px solid #e5dbd0;
-      flex-shrink: 0;
-    }
-    .nav-pane .nav-item {
-      padding: 0.4rem 0.8rem;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      transition: background 0.1s ease;
-      color: #3d2c1f;
-    }
-    .nav-pane .nav-item:hover {
-      background: #e5dbd0;
-    }
-    .nav-pane .nav-item .nav-icon {
-      font-size: 1.1rem;
-    }
-    .nav-pane .nav-item.active {
-      background: #d9cdbf;
-      font-weight: 600;
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 1.2rem 1.5rem;
-      overflow: auto;
-      position: relative;
-    }
-
-    .address-bar-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: #fff;
-      border: 2px solid #e5dbd0;
-      border-radius: 30px;
-      padding: 0.2rem 0.2rem 0.2rem 1rem;
-      margin-bottom: 1rem;
-    }
-    .address-bar-wrapper .label-address {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: #8a7a6a;
-      letter-spacing: 0.05em;
-    }
-    .address-bar-wrapper input {
-      flex: 1;
-      border: none;
-      padding: 0.3rem 0;
-      font-size: 0.85rem;
-      background: transparent;
-      outline: none;
-      color: #3d2c1f;
-      min-width: 60px;
-      font-family: inherit;
-    }
-    .address-bar-wrapper .btn-go {
-      background: #6b8c5e;
-      color: #fff;
-      border: none;
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.75rem;
-      transition: background 0.15s;
-      font-family: inherit;
-    }
-    .address-bar-wrapper .btn-go:hover {
-      background: #4d7a3b;
-    }
-
-    .menu-bar-sim {
-      display: flex;
-      gap: 0.2rem;
-      background: #f5f0ea;
-      padding: 0.2rem 0.5rem;
-      border-bottom: 2px solid #e5dbd0;
-      flex-wrap: wrap;
-    }
-    .menu-bar-sim .menu-item {
-      padding: 0.3rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #3d2c1f;
-      transition: background 0.1s ease;
-      position: relative;
-    }
-    .menu-bar-sim .menu-item:hover {
-      background: #e5dbd0;
-    }
-    .menu-bar-sim .menu-item .dropdown {
-      display: none;
+    .desktop-sim::before {
+      content: '';
       position: absolute;
-      top: 100%;
-      left: 0;
-      background: #fff;
-      border: 2px solid #d9cdbf;
-      border-radius: 8px;
-      min-width: 160px;
-      padding: 0.3rem 0;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-      z-index: 10;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,0.05) 0 3px, transparent 4px),
+        radial-gradient(circle at 85% 70%, rgba(255,255,255,0.05) 0 2px, transparent 3px);
+      pointer-events: none;
     }
-    .menu-bar-sim .menu-item:hover .dropdown {
-      display: block;
+    .desktop-area {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 1rem;
+      position: relative;
+      z-index: 1;
     }
-    .menu-bar-sim .menu-item .dropdown li {
-      list-style: none;
-      padding: 0.3rem 1.2rem;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: background 0.1s;
-    }
-    .menu-bar-sim .menu-item .dropdown li:hover {
-      background: #f5ede6;
-    }
-
-    .toolbar-sim {
-      display: flex;
-      gap: 0.3rem;
-      padding: 0.4rem 0.6rem;
-      background: #faf8f5;
-      border-bottom: 2px solid #e5dbd0;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .toolbar-sim .tool-btn {
-      padding: 0.3rem 0.7rem;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      background: transparent;
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: all 0.1s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      color: #3d2c1f;
-      font-family: inherit;
-    }
-    .toolbar-sim .tool-btn:hover {
-      background: #e8dcd0;
-      border-color: #d0c4b8;
-    }
-    .toolbar-sim .tool-btn .tool-icon {
-      font-size: 1.1rem;
-    }
-    .toolbar-sim .separator {
-      width: 2px;
-      height: 24px;
-      background: #e5dbd0;
-      margin: 0 0.2rem;
-    }
-
-    .text-area-sim {
-      border: 2px solid #e5dbd0;
-      border-radius: 12px;
-      padding: 0.8rem 1rem;
-      min-height: 120px;
-      background: #fff;
-      margin: 0.8rem 0;
-      font-size: 0.95rem;
-      color: #3d2c1f;
-      outline: none;
-      width: 100%;
-      resize: vertical;
-      font-family: inherit;
-      transition: border-color 0.15s;
-      box-sizing: border-box;
-    }
-    .text-area-sim:focus {
-      border-color: #b09b88;
-    }
-
-    .pengaturan-area {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.2rem 2rem;
-      background: #f5f0ea;
-      padding: 0.8rem 1.2rem;
-      border-radius: 12px;
-      margin: 0.8rem 0;
-      border: 2px solid #e5dbd0;
-    }
-    .pengaturan-area .group-label {
-      font-weight: 600;
-      font-size: 0.8rem;
-      color: #5a4a3a;
-      display: block;
-      margin-bottom: 0.2rem;
-    }
-    .pengaturan-area .opsi-group {
+    .file-item {
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.7rem 0.4rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      border: 2px solid transparent;
+      color: #fff;
+      text-align: center;
     }
-    .pengaturan-area .opsi-group label {
+    .file-item:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .file-item.selected {
+      background: rgba(79, 176, 198, 0.4);
+      border-color: #4fb0c6;
+    }
+    .file-item.renaming {
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .file-item.opened {
+      background: rgba(45, 125, 70, 0.3);
+      border-color: #2d7d46;
+    }
+    .file-item .fi-icon {
+      font-size: 2rem;
+      line-height: 1;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+    .file-item .fi-name {
+      font-size: 0.75rem;
+      color: #fff;
+      word-break: break-word;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+      line-height: 1.3;
+    }
+    .file-item .fi-rename-input {
+      width: 100%;
+      border: 2px solid #4fb0c6;
+      border-radius: 4px;
+      padding: 0.2rem 0.3rem;
+      font-size: 0.72rem;
+      font-family: inherit;
+      text-align: center;
+      color: #2f2822;
+      outline: none;
+      background: #fff;
+    }
+
+    /* Folder tujuan (drop zone) */
+    .folder-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.7rem 0.4rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      border: 2px dashed transparent;
+      color: #fff;
+      text-align: center;
+      position: relative;
+    }
+    .folder-item:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .folder-item.drop-target {
+      background: rgba(244, 185, 66, 0.35);
+      border-color: #f4b942;
+      border-style: solid;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(244, 185, 66, 0.6);
+    }
+    .folder-item .fi-icon { font-size: 2.2rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+    .folder-item .fi-name {
+      font-size: 0.75rem;
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    }
+    .folder-item .fi-count {
+      position: absolute;
+      top: 0.2rem;
+      right: 0.2rem;
+      background: #f4b942;
+      color: #3b2b1e;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.1rem 0.4rem;
+      border-radius: 10px;
+    }
+
+    /* Taskbar */
+    .taskbar-sim {
+      background: rgba(20, 20, 30, 0.85);
+      border-radius: 12px;
+      padding: 0.6rem 1rem;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      color: #fff;
+    }
+    .taskbar-sim .tb-item {
+      background: rgba(255,255,255,0.15);
+      padding: 0.3rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .taskbar-sim .tb-item.active {
+      background: #4fb0c6;
+      color: #fff;
+      font-weight: 700;
+    }
+    .taskbar-sim .tb-icon {
+      background: rgba(255,255,255,0.2);
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+    .taskbar-sim .tb-icon.active {
+      background: #4fb0c6;
+    }
+
+    /* Modal mini untuk konfirmasi delete, dll */
+    .mini-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 20, 30, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .mini-modal.show { display: flex; animation: fadeIn 0.2s ease; }
+    .mini-modal .mm-box {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.3rem 1.6rem;
+      max-width: 380px;
+      width: 100%;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .mini-modal .mm-icon { font-size: 2.2rem; margin-bottom: 0.3rem; }
+    .mini-modal .mm-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 1.05rem;
+      margin-bottom: 0.4rem;
+    }
+    .mini-modal .mm-desc {
+      font-size: 0.88rem;
+      color: #5c4638;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .mini-modal .mm-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .mini-modal .mm-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 20px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      color: #4d3829;
+      font-weight: 700;
       font-size: 0.85rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    .mini-modal .mm-btn:hover { background: #f5ede6; }
+    .mini-modal .mm-btn.primary {
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      color: #fff;
+      border-color: #ff8a5b;
+    }
+    .mini-modal .mm-btn.primary:hover { transform: translateY(-1px); }
+
+    /* ===== MISI PANEL ===== */
+    .misi-panel {
+      background: #fff;
+      border-radius: 14px;
+      border: 2px solid #e5dbd0;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+    }
+    .misi-panel .mp-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 0.9rem;
+      margin-bottom: 0.6rem;
       display: flex;
       align-items: center;
       gap: 0.4rem;
-      cursor: pointer;
-      color: #3d2c1f;
     }
-    .pengaturan-area .opsi-group input[type="checkbox"],
-    .pengaturan-area .opsi-group input[type="radio"] {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      accent-color: #6b8c5e;
-    }
-    .pengaturan-area input[type="range"] {
-      width: 140px;
-      accent-color: #6b8c5e;
-      cursor: pointer;
-    }
-    .pengaturan-area .nilai-slider {
-      font-weight: 600;
-      color: #4d7a3b;
-      min-width: 30px;
-      display: inline-block;
-    }
-
-    .btn-aksi {
-      padding: 0.5rem 1.8rem;
-      border-radius: 30px;
-      border: none;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      background: #e8dcd0;
-      color: #3d2c1f;
-      margin-right: 0.5rem;
-      margin-bottom: 0.3rem;
-      font-family: inherit;
-    }
-    .btn-aksi:hover {
-      background: #d9cdbf;
-      transform: translateY(-1px);
-    }
-    .btn-aksi.primary {
-      background: #6b8c5e;
-      color: #fff;
-    }
-    .btn-aksi.primary:hover {
-      background: #4d7a3b;
-    }
-
-    /* ===== HIGHLIGHT KOMPONEN ===== */
-    .komponen-highlight {
-      outline: 3px dashed #f5c542 !important;
-      outline-offset: 3px;
-      animation: pulseHighlight 1.5s ease-in-out infinite;
-      cursor: pointer !important;
-      position: relative;
-      z-index: 5;
-    }
-
-    @keyframes pulseHighlight {
-      0%, 100% { outline-color: #f5c542; }
-      50% { outline-color: #e8a020; }
-    }
-
-    .komponen-highlight:hover {
-      outline-style: solid !important;
-      outline-width: 4px !important;
-      background: rgba(245, 200, 66, 0.15) !important;
-    }
-
-    /* ===== AREA TANTANGAN ===== */
-    #area-tantangan {
-      display: none;
-      margin: 1.5rem 0;
-      padding: 1.2rem 1.8rem;
-      background: #f5ede6;
-      border-radius: 20px;
-      border-left: 6px solid #dbb9a6;
-    }
-    #area-tantangan.active {
-      display: block;
-    }
-
-    .tantangan-header {
+    .misi-list-vert {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.8rem;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 0.5rem;
     }
-
-    .tantangan-header .tantangan-progress {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #4d3829;
-      background: #fff;
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
+    .misi-card {
+      background: #f8f4ef;
       border: 2px solid #e5dbd0;
-    }
-
-    .tantangan-header .tantangan-skor {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #2d5a1e;
-      background: #e8f5e0;
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
-      border: 2px solid #8aaa7a;
-    }
-
-    .soal-tantangan {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #3b2b1e;
-      margin-bottom: 0.5rem;
-      line-height: 1.6;
-    }
-
-    .petunjuk-tantangan {
-      color: #5a4a3a;
-      margin-bottom: 0.8rem;
-      font-size: 0.9rem;
-      padding: 0.5rem 1rem;
-      background: #fff;
       border-radius: 10px;
-      border-left: 4px solid #8ab4d4;
+      padding: 0.6rem 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
     }
-
-    .feedback-tantangan {
-      padding: 0.8rem 1.2rem;
-      border-radius: 12px;
-      margin-top: 0.8rem;
-      font-weight: 600;
-      display: none;
-      font-size: 0.95rem;
+    .misi-card.done {
+      background: #f0f8eb;
+      border-color: #8aaa7a;
     }
-    .feedback-tantangan.benar {
-      display: block;
-      background: #d4e8cb;
-      color: #3d6b2c;
-      border: 2px solid #6b8c5e;
+    .misi-card .mc-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
     }
-    .feedback-tantangan.salah {
-      display: block;
-      background: #f5d6d0;
-      color: #a84a3a;
-      border: 2px solid #d97a6a;
+    .misi-card .mc-text {
+      flex: 1;
+      color: #2f2822;
+      line-height: 1.4;
     }
-
-    .btn-skip {
-      margin-top: 0.5rem;
-      padding: 0.3rem 1.2rem;
+    .misi-card .mc-text strong { color: #3b2b1e; }
+    .misi-card.done .mc-text { color: #2d5a1e; }
+    .misi-card .mc-status {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.6rem;
       border-radius: 20px;
-      border: 2px solid #cbb5a2;
-      background: #fcf9f6;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.8rem;
-      color: #5a4a3a;
-      transition: all 0.15s;
+      background: #d9cdbf;
+      color: #5c4638;
+      flex-shrink: 0;
+    }
+    .misi-card.done .mc-status {
+      background: #8aaa7a;
+      color: #fff;
+    }
+
+    /* ===== STATS BAR ===== */
+    .stats-bar {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      justify-content: space-between; align-items: center;
+      padding: 0.8rem 1.2rem; background: #fff;
+      border-radius: 16px; border: 2px solid #e5dbd0;
+      margin-bottom: 1rem;
+    }
+    .stats-bar .stat {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.88rem; color: #4d3829;
+      flex-wrap: wrap;
+    }
+    .stats-bar .stat .num {
+      font-weight: 700; font-size: 1.1rem; color: #3b2b1e;
+    }
+    .stats-bar .stat .num.benar { color: #2d7d46; }
+
+    /* ===== FEEDBACK ===== */
+    .feedback-box {
+      background: #f5ede6; border-radius: 16px;
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      border-left: 8px solid #dbb9a6;
+      display: none; animation: fadeIn 0.4s ease;
+    }
+    .feedback-box.show { display: block; }
+    .feedback-box.success { border-color: #2d7d46; background: #e8f5ee; }
+    .feedback-box.error { border-color: #b33c3c; background: #fde8e8; }
+    .feedback-box.info { border-color: #ff8a5b; background: #fff5f0; }
+    .feedback-box.warn { border-color: #d4a030; background: #fff8e6; }
+    .feedback-box .fb-icon { font-size: 1.5rem; margin-right: 0.5rem; }
+    .feedback-box .fb-text { color: #2f2822; line-height: 1.6; }
+    .feedback-box .fb-text strong { color: #4d3829; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== TOMBOL ===== */
+    .btn-game {
+      padding: 0.6rem 1.8rem; border-radius: 30px; border: none;
+      font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; display: inline-flex;
+      align-items: center; gap: 0.4rem;
+    }
+    .btn-game.primary {
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      color: #fff; box-shadow: 0 4px 14px rgba(255, 138, 91, 0.25);
+    }
+    .btn-game.primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 138, 91, 0.35);
+    }
+    .btn-game.secondary {
+      background: #f5ede6; color: #4d3829; border: 2px solid #d9cdbf;
+    }
+    .btn-game.secondary:hover { background: #e8dcd0; transform: translateY(-2px); }
+    .btn-game:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+    .game-actions {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      justify-content: center; margin-top: 1rem;
+    }
+
+    /* ===== MOMEN MINDFUL ===== */
+    .mindful-box {
+      background: linear-gradient(135deg, #e6f4ff, #f0f9ff);
+      border: 2px dashed #4fb0c6;
+      border-radius: 16px; padding: 1rem 1.5rem;
+      margin: 1.2rem 0; display: none;
+    }
+    .mindful-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .mindful-box .mb-icon { font-size: 1.4rem; margin-right: 0.4rem; }
+    .mindful-box .mb-title {
+      font-weight: 700; color: #1f6b7d; font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+    .mindful-box .mb-text {
+      font-size: 0.92rem; color: #2f2822; line-height: 1.6;
+      margin-bottom: 0.6rem;
+    }
+    .mindful-box textarea {
+      width: 100%; padding: 0.6rem 0.9rem;
+      border: 2px solid #b8d4e8; border-radius: 10px;
+      font-family: inherit; font-size: 0.9rem;
+      color: #2f2822; background: #fff; resize: vertical;
+      min-height: 60px; outline: none;
+    }
+    .mindful-box textarea:focus {
+      border-color: #4fb0c6;
+      box-shadow: 0 0 0 3px rgba(79, 176, 198, 0.15);
+    }
+
+    /* ===== TANTANGAN ===== */
+    .tantangan-list {
+      display: flex; flex-direction: column; gap: 0.8rem;
+      margin: 1rem 0;
+    }
+    .tantangan-item {
+      background: #fff; border-radius: 14px;
+      padding: 1rem 1.3rem; border: 2px solid #e5dbd0;
+      transition: all 0.3s ease;
+    }
+    .tantangan-item.selesai {
+      border-color: #8aaa7a; background: #f0f8eb;
+    }
+    .tantangan-item .t-header {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-weight: 700; color: #3b2b1e; margin-bottom: 0.4rem;
+    }
+    .tantangan-item .t-num {
+      background: #4d3829; color: #fff;
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; flex-shrink: 0;
+    }
+    .tantangan-item .t-text {
+      font-size: 0.92rem; color: #2f2822; line-height: 1.6;
+      margin-bottom: 0.6rem;
+    }
+    .tantangan-item .t-input-row {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      align-items: center;
+    }
+    .tantangan-item .t-input-row textarea {
+      flex: 1; min-width: 200px;
+      padding: 0.5rem 0.9rem; border-radius: 10px;
+      border: 2px solid #d9cdbf; font-family: inherit;
+      font-size: 0.88rem; color: #2f2822; background: #fcfaf7;
+      outline: none; min-height: 70px; resize: vertical;
+    }
+    .tantangan-item .t-input-row textarea:focus {
+      border-color: #6b4f3a; background: #fff;
+    }
+    .tantangan-item .t-input-row button {
+      padding: 0.5rem 1.4rem; border-radius: 20px;
+      border: none; font-weight: 700; font-size: 0.85rem;
+      cursor: pointer; background: #4d3829; color: #fff;
+      font-family: inherit; transition: all 0.2s ease;
+      align-self: flex-end;
+    }
+    .tantangan-item .t-input-row button:hover:not(:disabled) {
+      background: #6b4f3a; transform: translateY(-1px);
+    }
+    .tantangan-item .t-input-row button:disabled {
+      opacity: 0.5; cursor: not-allowed;
+    }
+    .tantangan-item .t-feedback {
+      margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+      border-radius: 8px; font-size: 0.85rem;
+      line-height: 1.5; display: none;
+    }
+    .tantangan-item .t-feedback.show { display: block; }
+    .tantangan-item .t-feedback.ok {
+      background: #d4e8cb; color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+    .tantangan-item .t-feedback.hint {
+      background: #fff3d6; color: #8a5e00;
+      border-left: 4px solid #f4b942;
+    }
+    .tantangan-item .t-feedback.no {
+      background: #f5d6d0; color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+    .tantangan-item .t-opsi-col {
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .tantangan-item .t-opsi-col label {
+      display: flex; gap: 0.5rem; padding: 0.5rem 0.8rem;
+      border: 2px solid #d9cdbf; border-radius: 10px;
+      cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+      background: #fff; transition: all 0.15s ease;
+    }
+    .tantangan-item .t-opsi-col label:hover { border-color: #6b4f3a; }
+    .tantangan-item .t-opsi-col input[type="radio"] { accent-color: #ff8a5b; }
+
+    /* ===== PENAMAAN (LAPIS 3) ===== */
+    .penamaan-box {
+      background: linear-gradient(135deg, #e8f5ee, #d4ebd8);
+      border-radius: 16px; padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0; border: 2px solid #8aaa7a;
+      display: none;
+    }
+    .penamaan-box.show { display: block; animation: fadeIn 0.6s ease; }
+    .penamaan-box h3 {
+      font-size: 1.1rem; color: #2d5a1e; margin-bottom: 0.6rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .penamaan-box .notasi-box {
+      background: #fff; border-radius: 12px;
+      padding: 0.8rem 1.2rem; margin: 0.6rem 0;
+      border: 2px dashed #8aaa7a;
+      font-size: 0.95rem; color: #2f2822; line-height: 1.7;
+    }
+    .penamaan-box .notasi-box strong { color: #2d5a1e; }
+    .penamaan-box .notasi-box table {
+      width: 100%; border-collapse: collapse;
+      margin-top: 0.5rem; font-size: 0.88rem;
+    }
+    .penamaan-box .notasi-box table th {
+      background: #e8f5ee; color: #2d5a1e;
+      padding: 0.5rem 0.7rem; text-align: left;
+      border-bottom: 2px solid #8aaa7a;
+      font-weight: 700;
+    }
+    .penamaan-box .notasi-box table td {
+      padding: 0.5rem 0.7rem;
+      border-bottom: 1px solid #e5dbd0;
+      vertical-align: top;
+    }
+    .penamaan-box .koneksi {
+      background: #fff8e6; border-left: 5px solid #f4b942;
+      border-radius: 10px; padding: 0.8rem 1.2rem;
+      margin-top: 0.8rem; font-size: 0.9rem;
+      color: #5c3400; line-height: 1.6;
+    }
+    .penamaan-box .koneksi strong { color: #8a5e00; }
+
+    .link-materi-bawah {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      margin: 1rem auto 0;
+      padding: 0.7rem 1.8rem; border-radius: 30px;
+      background: #fff; color: #b34614;
+      border: 2px solid #ff8a5b; text-decoration: none;
+      font-weight: 700; font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    .link-materi-bawah:hover {
+      background: #fff5f0;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 138, 91, 0.25);
+    }
+    .link-materi-wrapper { text-align: center; margin-top: 1rem; }
+
+    /* ===== KUIS KILAT ===== */
+    .kuis-kilat-box {
+      background: #fff; border-radius: 16px;
+      padding: 1.3rem 1.6rem; margin: 1.5rem 0;
+      border: 2px solid #ff8a5b;
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.1);
+      display: none;
+    }
+    .kuis-kilat-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .kuis-kilat-box .kk-title {
+      font-weight: 700; color: #b34614; font-size: 1rem;
+      margin-bottom: 0.8rem; display: flex;
+      align-items: center; gap: 0.5rem;
+    }
+    .kuis-kilat-box .kk-title .badge {
+      background: #ff8a5b; color: #fff; font-size: 0.65rem;
+      padding: 0.15rem 0.6rem; border-radius: 20px;
+    }
+    .kuis-kilat-box .kk-soal {
+      background: #fff5f0; border-radius: 10px;
+      padding: 0.8rem 1.1rem; margin-bottom: 0.8rem;
+    }
+    .kuis-kilat-box .kk-soal .kk-q {
+      font-weight: 600; color: #3b2b1e;
+      font-size: 0.92rem; margin-bottom: 0.5rem;
+    }
+    .kuis-kilat-box .kk-opsi {
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .kuis-kilat-box .kk-opsi label {
+      display: flex; align-items: center; gap: 0.5rem;
+      cursor: pointer; font-size: 0.87rem; color: #3d2c1f;
+      padding: 0.4rem 0.8rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; transition: all 0.15s;
+    }
+    .kuis-kilat-box .kk-opsi label:hover:not(.disabled) {
+      background: #fff5f0; border-color: #ff8a5b;
+    }
+    .kuis-kilat-box .kk-opsi label.disabled { cursor: default; }
+    .kuis-kilat-box .kk-opsi label.benar {
+      border-color: #8aaa7a; background: #e8f5e0;
+    }
+    .kuis-kilat-box .kk-opsi label.salah {
+      border-color: #d4a0a0; background: #f5e0e0;
+    }
+    .kuis-kilat-box .kk-opsi input[type="radio"] { accent-color: #ff8a5b; }
+    .kuis-kilat-box .kk-opsi .check-icon {
+      margin-left: auto; font-size: 0.9rem;
+    }
+    .kuis-kilat-box .kk-hasil {
+      background: #f5ede6; border-radius: 10px;
+      padding: 0.7rem 1rem; margin-top: 0.6rem;
+      font-size: 0.88rem; color: #4d3829;
+      display: none; text-align: center; font-weight: 600;
+    }
+    .kuis-kilat-box .kk-hasil.show { display: block; }
+
+    /* ===== TES PEMAHAMAN ===== */
+    .tes-section {
+      margin-top: 1.8rem; padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0; display: none;
+    }
+    .tes-section.active { display: block; animation: fadeIn 0.4s ease; }
+    .tes-header {
+      background: #fff5f0; border-radius: 12px;
+      padding: 0.9rem 1.2rem; margin-bottom: 1rem;
+      border-left: 5px solid #ff8a5b;
+      display: flex; flex-wrap: wrap; justify-content: space-between;
+      align-items: center; gap: 0.5rem;
+    }
+    .tes-header .tes-info {
+      font-size: 0.95rem; color: #3b2b1e; font-weight: 600;
+    }
+    .tes-header .tes-progress {
+      font-size: 0.82rem; color: #4d7a3b; font-weight: 700;
+      background: #fff; padding: 0.25rem 0.9rem;
+      border-radius: 30px; border: 2px solid #e5dbd0;
+    }
+    .soal-kuis {
+      background: #fff; padding: 1.1rem 1.3rem;
+      border-radius: 14px; border: 2px solid #e5dbd0;
+      margin-bottom: 0.9rem; transition: all 0.3s ease;
+    }
+    .soal-kuis.correct { border-color: #8aaa7a; background: #f0f8eb; }
+    .soal-kuis.wrong { border-color: #d4a0a0; background: #fdf0f0; }
+    .soal-kuis .pertanyaan {
+      font-weight: 600; font-size: 0.95rem; color: #3b2b1e;
+      margin-bottom: 0.5rem; display: flex; gap: 0.5rem;
+      align-items: flex-start; line-height: 1.6;
+    }
+    .soal-kuis .pertanyaan .soal-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #ff8a5b; color: #fff;
+      width: 24px; height: 24px; border-radius: 50%;
+      font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis {
+      display: flex; flex-direction: column; gap: 0.35rem; padding-left: 0.2rem;
+    }
+    .soal-kuis .opsi-kuis label {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+      padding: 0.45rem 0.8rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; transition: all 0.15s; line-height: 1.5;
+    }
+    .soal-kuis .opsi-kuis label:hover:not(.disabled) {
+      background: #fff5f0; border-color: #ff8a5b;
+    }
+    .soal-kuis .opsi-kuis label.disabled { cursor: default; }
+    .soal-kuis .opsi-kuis label.selected {
+      border-color: #ff8a5b; background: #fff5f0;
+    }
+    .soal-kuis .opsi-kuis label.correct-answer {
+      border-color: #8aaa7a; background: #e8f5e0;
+    }
+    .soal-kuis .opsi-kuis label.wrong-answer {
+      border-color: #d4a0a0; background: #f5e0e0;
+    }
+    .soal-kuis .opsi-kuis input[type="radio"] {
+      accent-color: #ff8a5b;
+      width: 16px; height: 16px;
+      margin-top: 0.15rem; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis .check-icon {
+      margin-left: auto; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .soal-kuis .jawaban-feedback {
+      margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+      border-radius: 8px; display: none;
+      font-size: 0.85rem; line-height: 1.5;
+    }
+    .soal-kuis .jawaban-feedback.benar {
+      display: block; background: #d4e8cb; color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+    .soal-kuis .jawaban-feedback.salah {
+      display: block; background: #f5d6d0; color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+    .soal-kuis .jawaban-feedback .kunci { font-weight: 700; color: #4d7a3b; }
+    .btn-submit-tes {
+      display: block; margin: 1.2rem auto 0;
+      padding: 0.7rem 2.5rem; border-radius: 30px; border: none;
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      color: #fff; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+    }
+    .btn-submit-tes:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(255, 138, 91, 0.35);
+    }
+    .btn-submit-tes:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    }
+    .btn-ulangi-tes {
+      display: none; margin: 1rem auto 0;
+      padding: 0.7rem 2rem; border-radius: 30px;
+      background: #fff; color: #b34614;
+      border: 2px solid #ff8a5b;
+      font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s ease;
       font-family: inherit;
     }
-    .btn-skip:hover {
-      background: #e8dcd0;
+    .btn-ulangi-tes.show { display: block; }
+    .btn-ulangi-tes:hover {
+      background: #fff5f0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.20);
     }
+    .hasil-tes {
+      display: none; margin-top: 1.2rem; padding: 1.2rem;
+      background: #fff5f0; border-radius: 14px;
+      border: 3px double #ff8a5b; text-align: center;
+    }
+    .hasil-tes.show { display: block; animation: fadeIn 0.4s ease; }
+    .hasil-tes .hasil-icon { font-size: 2.8rem; margin-bottom: 0.3rem; }
+    .hasil-tes .hasil-title {
+      font-size: 1.15rem; font-weight: 700;
+      color: #3b2b1e; margin-bottom: 0.2rem;
+    }
+    .hasil-tes .hasil-skor {
+      font-size: 2rem; font-weight: 800; color: #4d7a3b; margin: 0.3rem 0;
+    }
+    .hasil-tes .hasil-desc {
+      font-size: 0.9rem; color: #5c4638;
+      margin-bottom: 0.8rem; line-height: 1.5;
+    }
+
+    /* ===== REFLEKSI 4F ===== */
+    .refleksi-box {
+      background: linear-gradient(135deg, #f0e6ff, #e6f0ff);
+      border: 2px solid #b07be0; border-radius: 16px;
+      padding: 1.3rem 1.6rem; margin: 1.5rem 0;
+      display: none;
+    }
+    .refleksi-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .refleksi-box h3 {
+      color: #5c2f8a; font-size: 1.05rem; margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .refleksi-box .refleksi-item { margin-bottom: 0.8rem; }
+    .refleksi-box .refleksi-item label {
+      display: block; font-weight: 700;
+      color: #5c2f8a; font-size: 0.88rem; margin-bottom: 0.3rem;
+    }
+    .refleksi-box .refleksi-item label .tag {
+      background: #b07be0; color: #fff;
+      padding: 0.1rem 0.6rem; border-radius: 20px;
+      font-size: 0.65rem; margin-right: 0.4rem;
+    }
+    .refleksi-box textarea {
+      width: 100%; padding: 0.6rem 0.9rem;
+      border: 2px solid #d4c0e8; border-radius: 10px;
+      font-family: inherit; font-size: 0.88rem;
+      color: #2f2822; background: #fff;
+      resize: vertical; min-height: 50px; outline: none;
+    }
+    .refleksi-box textarea:focus {
+      border-color: #b07be0;
+      box-shadow: 0 0 0 3px rgba(176, 123, 224, 0.15);
+    }
+    .refleksi-box .exit-ticket {
+      background: #fff; border-radius: 12px;
+      padding: 0.9rem 1.2rem; margin-top: 1rem;
+      border: 2px dashed #b07be0;
+    }
+    .refleksi-box .exit-ticket .et-title {
+      font-weight: 700; color: #5c2f8a;
+      font-size: 0.9rem; margin-bottom: 0.4rem;
+    }
+    .refleksi-box .exit-ticket textarea { border-color: #d4c0e8; }
 
     /* ===== STATUS KIRIM ===== */
     .status-kirim {
-      max-width: 480px;
-      margin: 1rem auto;
-      padding: 0.8rem 1.2rem;
-      border-radius: 12px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      line-height: 1.5;
-      display: none;
-      align-items: center;
-      gap: 0.6rem;
-      text-align: left;
+      max-width: 520px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+      border-radius: 12px; font-size: 0.88rem; font-weight: 600;
+      line-height: 1.5; display: none; align-items: center;
+      gap: 0.6rem; text-align: left;
     }
-    .status-kirim.show { display: flex; }
-    .status-kirim.info { background: #e3edf5; border: 2px solid #8ab4d4; color: #1a4a6b; }
+    .status-kirim.show { display: flex; flex-wrap: wrap; }
+    .status-kirim.info {
+      background: #fff5f0; border: 2px solid #ff8a5b; color: #b34614;
+    }
     .status-kirim.success { background: #d4e8cb; border: 2px solid #8aaa7a; color: #2d5a1e; }
     .status-kirim.error { background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a; }
     .status-kirim .spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid currentColor;
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      flex-shrink: 0;
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ===== NAVIGASI BAWAH ===== */
-    .nav-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 2px solid #e5dbd0;
+    .status-kirim .btn-retry {
+      margin-left: auto; padding: 0.35rem 1rem;
+      border-radius: 20px; border: 2px solid currentColor;
+      background: transparent; color: inherit;
+      font-weight: 700; font-size: 0.82rem;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.15s ease; white-space: nowrap;
+    }
+    .status-kirim .btn-retry:hover {
+      background: rgba(255,255,255,0.6);
+      transform: translateY(-1px);
     }
 
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem; margin-top: 2rem;
+      padding-top: 1.5rem; border-top: 2px solid #e5dbd0;
+    }
     .btn-nav-bawah {
-      padding: 0.6rem 1.8rem;
-      border-radius: 30px;
-      border: 2px solid #d9cdbf;
-      background: #fff;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: #3b2b1e;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: inherit;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      padding: 0.6rem 1.8rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 600; font-size: 0.9rem; color: #3b2b1e;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.4rem;
     }
     .btn-nav-bawah:hover {
-      background: #f5ede6;
-      border-color: #b09b88;
+      background: #fff5f0; border-color: #ff8a5b;
       transform: translateY(-2px);
     }
     .btn-nav-bawah.primary {
-      background: #4d3829;
-      border-color: #4d3829;
-      color: #fff;
+      background: #4d3829; border-color: #4d3829; color: #fff;
     }
     .btn-nav-bawah.primary:hover {
-      background: #6b4f3a;
-      border-color: #6b4f3a;
+      background: #6b4f3a; border-color: #6b4f3a;
     }
-    .btn-nav-bawah:disabled,
     .btn-nav-bawah.locked {
-      opacity: 0.4;
-      cursor: not-allowed;
-      transform: none !important;
-      pointer-events: none;
+      opacity: 0.4; cursor: not-allowed;
+      transform: none !important; pointer-events: none;
     }
-    .btn-nav-bawah .back-arrow {
-      font-size: 1.2rem;
-    }
+    .btn-nav-bawah .back-arrow { font-size: 1.2rem; }
     .nav-hint {
-      font-size: 0.8rem;
-      color: #7a6656;
-      text-align: center;
-      width: 100%;
-      margin-top: 0.3rem;
+      font-size: 0.8rem; color: #7a6656; text-align: center;
+      width: 100%; margin-top: 0.3rem;
     }
-    .nav-hint.locked {
-      color: #d4a0a0;
-    }
-    .nav-hint.ready {
-      color: #2d5a1e;
-      font-weight: 600;
-    }
+    .nav-hint.locked { color: #d4a0a0; }
+    .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+    .nav-hint.warn { color: #a84a3a; font-weight: 600; }
 
     /* ===== RESPONSIF ===== */
     @media (max-width: 820px) {
-      .window-body {
-        flex-direction: column;
-      }
-      .nav-pane {
-        width: 100%;
-        min-width: unset;
-        border-right: none;
-        border-bottom: 2px solid #e5dbd0;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.1rem;
-        padding: 0.4rem 0.6rem;
-      }
-      .nav-pane .nav-item {
-        padding: 0.2rem 0.6rem;
-        font-size: 0.75rem;
-      }
-      .main-content {
-        padding: 0.8rem 1rem;
-      }
-      .pengaturan-area {
-        flex-direction: column;
-        gap: 0.8rem;
-      }
-      .nav-aktivitas {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.5rem;
-      }
-      .nav-aktivitas .btn-nav {
-        justify-content: center;
-      }
-      .bagian-progress .step {
-        font-size: 0.65rem;
-        padding: 0.25rem 0.6rem;
-      }
-      .bagian-progress .step .num {
-        width: 16px;
-        height: 16px;
-        font-size: 0.55rem;
-      }
+      .scenario-panel { padding: 1.2rem; }
+      .form-siswa-box { padding: 1.2rem 1rem; }
+      .penamaan-box { padding: 1rem 1.2rem; }
+      .kuis-kilat-box { padding: 1rem 1.2rem; }
+      .refleksi-box { padding: 1rem 1.2rem; }
+      .progress-lapis { gap: 0.3rem; }
+      .progress-lapis .pl-step { font-size: 0.7rem; padding: 0.35rem 0.8rem; }
     }
     @media (max-width: 480px) {
-      .window-titlebar .judul-window {
-        font-size: 0.8rem;
-      }
-      .window-controls button {
-        width: 24px;
-        height: 24px;
-        font-size: 0.6rem;
-      }
-      .toolbar-sim .tool-btn {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.4rem;
-      }
-      .menu-bar-sim .menu-item {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.6rem;
-      }
-      .nav-bottom {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .btn-nav-bawah {
-        justify-content: center;
-      }
-      .materi-ringkas {
-        padding: 1rem 1.2rem;
-      }
-      .materi-ringkas h2 {
-        font-size: 1.1rem;
-      }
-      #area-tantangan {
-        padding: 1rem 1.2rem;
-      }
-      .soal-tantangan {
-        font-size: 0.95rem;
-      }
+      .scenario-panel { padding: 0.8rem; }
+      .scenario-panel .scenario-title { font-size: 1.1rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav-bawah { justify-content: center; }
+      .soal-kuis { padding: 1rem; }
+      .soal-kuis .pertanyaan { font-size: 0.92rem; }
+      .soal-kuis .opsi-kuis label { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
+      .tes-header { flex-direction: column; align-items: flex-start; }
+      .form-siswa-item input[type="text"] { min-width: 100px; }
+      .status-kirim .btn-retry { margin-left: 0; width: 100%; text-align: center; }
+      .lapis-header { font-size: 0.85rem; padding: 0.6rem 1rem; }
+      .progress-lapis .pl-step .pl-label { display: none; }
+      .progress-lapis .pl-step { padding: 0.35rem 0.6rem; }
+      .desktop-area { grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: 0.7rem; }
+      .desktop-sim { padding: 1rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER (dinamis dari script.js — banner saja) -->
   <header id="header-utama"></header>
 
-  <!-- BREADCRUMB (statis, 4 level) -->
   <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
     <ol class="breadcrumb">
       <li><a href="../index.html">Beranda</a></li>
       <li><a href="materitik.html">Teknologi Informasi dan Komunikasi</a></li>
-      <li><a href="tik1.html">Antarmuka GUI</a></li>
-      <li>Lab GUI · Bagian 3</li>
+      <li><a href="tik1.html">Menjelaskan Antarmuka Berbasis Grafis</a></li>
+      <li>Bagian 3: Interaksi dengan GUI</li>
     </ol>
   </nav>
 
-  <!-- KONTEN UTAMA -->
   <main class="container" id="konten-utama">
     <article class="card">
-      <div class="aktivitas-container">
+      <div class="aktivitas-wrapper">
 
-        <!-- ===== PROGRESS BAGIAN ===== -->
-        <div class="bagian-progress">
-          <span class="step completed"><span class="num">✓</span> Eksplorasi</span>
-          <span class="step completed"><span class="num">✓</span> Komponen Dasar</span>
-          <span class="step active"><span class="num">3</span> Komponen Input</span>
-          <span class="step"><span class="num">4</span> Komponen Lanjutan</span>
-          <span class="step"><span class="num">5</span> Kuis Akhir</span>
+        <!-- ===== PROGRESS BAR VISUAL (LAPIS) ===== -->
+        <div class="progress-lapis" id="progressLapis">
+          <span class="pl-step active" data-step="lapis1">
+            <span class="pl-num">1</span>
+            <span class="pl-label">Menjelajah</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis2">
+            <span class="pl-num">2</span>
+            <span class="pl-label">Tantangan</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis3">
+            <span class="pl-num">3</span>
+            <span class="pl-label">Penamaan</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="tes">
+            <span class="pl-num">4</span>
+            <span class="pl-label">Tes Pemahaman</span>
+          </span>
         </div>
 
-        <!-- ===== MATERI RINGKAS ===== -->
-        <div class="materi-ringkas">
-          <h2>📖 Materi Singkat <span class="badge">Bagian 3</span></h2>
-
-          <h3>1. Address Bar (Bilah Alamat)</h3>
-          <p>
-            <strong>Address Bar</strong> adalah komponen yang menunjukkan <strong>lokasi folder</strong> atau <strong>alamat web</strong> yang sedang diakses. Biasanya ditemukan di File Explorer atau peramban web.
-          </p>
-          <div class="info-box">
-            💡 <strong>Contoh:</strong> Di File Explorer, Address Bar menunjukkan <code>C:\Users\Siswa\Documents</code>. Di browser, menunjukkan <code>https://www.google.com</code>.
+        <!-- ===== FORM IDENTITAS SISWA ===== -->
+        <div class="form-siswa-box" id="formSiswaBox">
+          <div class="form-title">📝 Identitas Siswa</div>
+          <div class="form-desc">
+            Isi identitas sebelum memulai. Nama akan tercantum di sertifikat digital.
+            Bisa diisi beberapa nama: <em>Budi &amp; Siti &amp; Raka</em>.
           </div>
 
-          <h3>2. Navigation Pane (Panel Navigasi)</h3>
-          <p>
-            <strong>Navigation Pane</strong> adalah area di <strong>sisi kiri window</strong> yang memudahkan akses ke folder-folder penting seperti Documents, Pictures, Music, Downloads, dan Trash.
-          </p>
-          <div class="info-box">
-            💡 <strong>Analogi:</strong> Seperti <strong>peta atau daftar ruangan</strong> di sebuah gedung — membantu kamu menemukan lokasi dengan cepat.
+          <div class="form-sekolah-wrapper">
+            <label for="inputSekolah">Sekolah:</label>
+            <input type="text" id="inputSekolah" placeholder="SMPN 2 Talegong" maxlength="60" autocomplete="off" spellcheck="false" oninput="cekFormSiswa()">
           </div>
 
-          <h3>3. Text Field (Kotak Teks)</h3>
-          <p>
-            <strong>Text Field</strong> adalah area tempat pengguna dapat <strong>mengetikkan teks atau angka</strong>. Bisa berupa satu baris (input) atau beberapa baris (textarea).
-          </p>
-          <div class="info-box">
-            💡 <strong>Contoh:</strong> Kolom pencarian di Google, kolom komentar di media sosial, area menulis di Microsoft Word.
+          <div class="form-jumlah-wrapper">
+            <label for="jumlahSiswa">Jumlah Siswa:</label>
+            <select id="jumlahSiswa" onchange="updateFormSiswa(this.value)">
+              <option value="1" selected>1 orang</option>
+              <option value="2">2 orang</option>
+              <option value="3">3 orang</option>
+              <option value="4">4 orang</option>
+              <option value="5">5 orang</option>
+            </select>
           </div>
 
-          <h3>4. Checkbox (Kotak Centang)</h3>
-          <p>
-            <strong>Checkbox</strong> adalah kotak centang yang memungkinkan pengguna memilih <strong>satu atau lebih opsi</strong> dari beberapa pilihan yang tersedia. Berbeda dengan Radio Button yang hanya bisa memilih satu.
-          </p>
-          <div class="info-box">
-            💡 <strong>Analogi:</strong> Seperti <strong>daftar belanja</strong> yang dicentang saat sudah dibeli. Kamu bisa mencentang beberapa item sekaligus.
+          <div class="form-siswa-list" id="formSiswaList"></div>
+
+          <div class="form-kelas-wrapper">
+            <label for="inputKelas">Kelas:</label>
+            <input type="text" id="inputKelas" placeholder="Contoh: 7A" maxlength="10" autocomplete="off" oninput="cekFormSiswa()">
           </div>
 
-          <a href="materitik1.html" class="link-materi">
-            📚 Baca materi lengkap di sini →
-          </a>
-        </div>
-
-        <!-- ===== NAVIGASI AKTIVITAS ===== -->
-        <div class="nav-aktivitas">
-          <a href="aktivitastik1b.html" class="btn-nav">⬅ Bagian Sebelumnya</a>
-          <span class="info-aktivitas" id="infoAktivitas">🎯 Misi 2: Kenali Komponen Input</span>
-          <a href="tik1.html" class="btn-nav">🏠 Portal</a>
-        </div>
-
-        <!-- ===== AREA TANTANGAN ===== -->
-        <div id="area-tantangan" class="active">
-          <div class="tantangan-header">
-            <span class="tantangan-progress" id="tantanganProgress">Soal 1 dari 4</span>
-            <span class="tantangan-skor" id="tantanganSkor">Skor: 0</span>
+          <div class="form-error" id="formError">
+            ⚠️ Semua nama, kelas, dan sekolah harus diisi sebelum memulai!
           </div>
-          <div class="soal-tantangan" id="soalTantangan">🔍 Memuat soal...</div>
-          <div class="petunjuk-tantangan" id="petunjukTantangan">Petunjuk akan muncul di sini.</div>
-          <div class="feedback-tantangan" id="feedbackTantangan"></div>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.8rem;">
-            <button class="btn-aksi primary" id="btnTantanganBerikutnya" style="display:none;">Soal Berikutnya →</button>
-            <button class="btn-skip" id="btnSkipTantangan">⏭️ Lewati Soal</button>
+
+          <div class="btn-wrapper-mulai">
+            <button class="btn-mulai" id="btnMulai" onclick="mulaiAktivitas()" disabled>
+              🚀 Mulai Aktivitas
+            </button>
           </div>
         </div>
 
-        <!-- ===== SIMULASI WINDOW ===== -->
-        <div class="simulasi-window" id="simulasiWindow">
+        <!-- ===== AREA SIMULASI ===== -->
+        <div id="area-simulasi">
+          <div class="scenario-panel">
 
-          <!-- Title Bar -->
-          <div class="window-titlebar" id="titleBar">
-            <span class="judul-window">
-              <span class="ikon-window">📄</span>
-              <span id="windowTitle">Dokumen Simulasi - Editor TIK</span>
-            </span>
-            <div class="window-controls">
-              <button class="btn-minimize" title="Minimize">─</button>
-              <button class="btn-maximize" title="Maximize">☐</button>
-              <button class="btn-close" title="Close">✕</button>
-            </div>
-          </div>
-
-          <!-- Menu Bar -->
-          <div class="menu-bar-sim" id="menuBar">
-            <span class="menu-item">
-              📁 File
-              <ul class="dropdown">
-                <li>📄 New</li>
-                <li>📂 Open</li>
-                <li>💾 Save</li>
-                <li>🖨️ Print</li>
-              </ul>
-            </span>
-            <span class="menu-item">
-              ✏️ Edit
-              <ul class="dropdown">
-                <li>↩️ Undo</li>
-                <li>↪️ Redo</li>
-                <li>✂️ Cut</li>
-                <li>📋 Copy</li>
-                <li>📌 Paste</li>
-              </ul>
-            </span>
-            <span class="menu-item">
-              ⚙️ Settings
-              <ul class="dropdown">
-                <li>🔧 Preferences</li>
-                <li>🎨 Theme</li>
-                <li>🔒 Privacy</li>
-              </ul>
-            </span>
-            <span class="menu-item">
-              ❓ Help
-              <ul class="dropdown">
-                <li>📖 User Guide</li>
-                <li>ℹ️ About</li>
-              </ul>
-            </span>
-          </div>
-
-          <!-- Toolbar -->
-          <div class="toolbar-sim" id="toolbar">
-            <button class="tool-btn" title="New"><span class="tool-icon">📄</span> New</button>
-            <button class="tool-btn" title="Open"><span class="tool-icon">📂</span> Open</button>
-            <button class="tool-btn" title="Save" id="btnSave"><span class="tool-icon">💾</span> Save</button>
-            <span class="separator"></span>
-            <button class="tool-btn" title="Undo"><span class="tool-icon">↩️</span> Undo</button>
-            <button class="tool-btn" title="Redo"><span class="tool-icon">↪️</span> Redo</button>
-            <span class="separator"></span>
-            <button class="tool-btn" title="Print"><span class="tool-icon">🖨️</span> Print</button>
-            <button class="tool-btn" title="Settings" id="btnSettings"><span class="tool-icon">⚙️</span> Settings</button>
-          </div>
-
-          <!-- Body Window -->
-          <div class="window-body">
-
-            <!-- Navigation Pane -->
-            <div class="nav-pane" id="navPane" data-komponen="nav-pane">
-              <div class="nav-item active" data-komponen="nav-pane"><span class="nav-icon">📁</span> My Documents</div>
-              <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon">🖼️</span> Pictures</div>
-              <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon">🎵</span> Music</div>
-              <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon">🎬</span> Videos</div>
-              <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon">⬇️</span> Downloads</div>
-              <div class="nav-item" data-komponen="nav-pane"><span class="nav-icon">🗑️</span> Trash</div>
+            <div class="scenario-title">🖱️ Aktivitas: Tiga Gerakan Ajaib — Klik, Geser, Ketik</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Dewi ingin memindahkan file foto dari folder
+              "Gambar" ke folder "Tugas". Ada dua cara: klik kanan → cut → paste, atau
+              drag-and-drop (klik + geser + lepas).
+              <br><br>
+              Keduanya berhasil. Tapi Dewi bertanya: <em>"Apa bedanya? Kapan sebaiknya
+              pakai cara pertama, kapan pakai cara kedua?"</em>
+              <br><br>
+              Sekarang kamu yang mencoba! Selesaikan <strong>5 misi interaksi</strong>
+              di desktop tiruan di bawah.
             </div>
 
-            <!-- Main Content -->
-            <div class="main-content">
+            <!-- ===== LAPIS 1: MENJELAJAH BEBAS ===== -->
+            <div class="lapis-header lapis-1">
+              <span class="lapis-num">LAPIS 1</span>
+              <span>🖐️ Menjelajah Bebas — Selesaikan 5 Misi</span>
+            </div>
 
-              <!-- Address Bar -->
-              <div class="address-bar-wrapper" id="addressBar" data-komponen="address-bar">
-                <span class="label-address">📍</span>
-                <input type="text" placeholder="C:\Users\Siswa\Documents\TIK" value="C:\Users\Siswa\Documents\TIK" id="addressInput">
-                <button class="btn-go">Go</button>
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              <strong>Instruksi:</strong> Lakukan <strong>5 misi interaksi</strong> di bawah
+              ini pada desktop tiruan. Setiap interaksi yang benar akan menandai misi
+              sebagai <strong>selesai</strong>. Perhatikan <em>cara</em> kamu berinteraksi!
+            </p>
+
+            <!-- Stats -->
+            <div class="stats-bar">
+              <div class="stat">
+                <span>🎯</span>
+                <span class="label">Misi Selesai:</span>
+                <span class="num benar" id="totalSelesai">0</span>
+                <span class="label">/ 5</span>
+              </div>
+              <div class="stat">
+                <span>🖱️</span>
+                <span class="label">Total Aksi:</span>
+                <span class="num" id="totalAksi">0</span>
+              </div>
+            </div>
+
+            <!-- Misi Panel -->
+            <div class="misi-panel">
+              <div class="mp-title">📋 Daftar Misi:</div>
+              <div class="misi-list-vert" id="misiList">
+                <div class="misi-card" data-misi="buka">
+                  <span class="mc-icon">📂</span>
+                  <div class="mc-text"><strong>Misi 1:</strong> Buka file <strong>foto_liburan.jpg</strong> (klik dua kali)</div>
+                  <span class="mc-status">Belum</span>
+                </div>
+                <div class="misi-card" data-misi="pindah">
+                  <span class="mc-icon">📁</span>
+                  <div class="mc-text"><strong>Misi 2:</strong> Pindahkan <strong>tugas.docx</strong> ke folder <strong>Tugas</strong> (drag-and-drop)</div>
+                  <span class="mc-status">Belum</span>
+                </div>
+                <div class="misi-card" data-misi="rename">
+                  <span class="mc-icon">✏️</span>
+                  <div class="mc-text"><strong>Misi 3:</strong> Ubah nama <strong>draft.txt</strong> menjadi <strong>laporan.txt</strong> (klik + ketik)</div>
+                  <span class="mc-status">Belum</span>
+                </div>
+                <div class="misi-card" data-misi="pilih3">
+                  <span class="mc-icon">☑️</span>
+                  <div class="mc-text"><strong>Misi 4:</strong> Pilih <strong>3 file sekaligus</strong> dengan Ctrl + klik</div>
+                  <span class="mc-status">Belum</span>
+                </div>
+                <div class="misi-card" data-misi="hapus">
+                  <span class="mc-icon">🗑️</span>
+                  <div class="mc-text"><strong>Misi 5:</strong> Hapus file <strong>sampah.txt</strong> (klik + Delete)</div>
+                  <span class="mc-status">Belum</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Desktop Tiruan -->
+            <div class="desktop-sim">
+              <div class="desktop-area" id="desktopArea">
+                <!-- Folder Tugas (drop zone) -->
+                <div class="folder-item" id="folderTugas" data-folder="tugas">
+                  <span class="fi-icon">📁</span>
+                  <span class="fi-name">Tugas</span>
+                  <span class="fi-count" id="folderTugasCount">0</span>
+                </div>
+
+                <!-- File-file -->
+                <div class="file-item" id="fileFoto" data-file="foto_liburan.jpg" data-type="foto">
+                  <span class="fi-icon">🖼️</span>
+                  <span class="fi-name">foto_liburan.jpg</span>
+                </div>
+                <div class="file-item" id="fileTugas" data-file="tugas.docx" data-type="doc" draggable="true">
+                  <span class="fi-icon">📄</span>
+                  <span class="fi-name">tugas.docx</span>
+                </div>
+                <div class="file-item" id="fileDraft" data-file="draft.txt" data-type="text">
+                  <span class="fi-icon">📝</span>
+                  <span class="fi-name">draft.txt</span>
+                </div>
+                <div class="file-item" id="fileFoto2" data-file="pemandangan.jpg" data-type="foto">
+                  <span class="fi-icon">🏞️</span>
+                  <span class="fi-name">pemandangan.jpg</span>
+                </div>
+                <div class="file-item" id="fileMusik" data-file="lagu.mp3" data-type="musik">
+                  <span class="fi-icon">🎵</span>
+                  <span class="fi-name">lagu.mp3</span>
+                </div>
+                <div class="file-item" id="fileSampah" data-file="sampah.txt" data-type="text">
+                  <span class="fi-icon">📃</span>
+                  <span class="fi-name">sampah.txt</span>
+                </div>
               </div>
 
-              <!-- Text Area -->
-              <textarea class="text-area-sim" id="textArea" data-komponen="text-field" placeholder="Ketik di sini...">Selamat belajar GUI! 🎉
-Ini adalah simulasi aplikasi perkantoran.
-Coba cari dan kenali setiap komponen GUI di sekitarmu!</textarea>
+              <!-- Taskbar -->
+              <div class="taskbar-sim" id="taskbarSim">
+                <div class="tb-icon">🪟</div>
+                <div style="font-weight:700; font-size:0.78rem;">Desktop Simulator</div>
+                <div style="flex:1;"></div>
+                <div id="taskbarApps" style="display:flex; gap:0.4rem;"></div>
+              </div>
+            </div>
 
-              <!-- Pengaturan -->
-              <div class="pengaturan-area" id="pengaturanArea">
-                <div>
-                  <span class="group-label">☑️ Pengaturan Tampilan</span>
-                  <div class="opsi-group">
-                    <label><input type="checkbox" data-komponen="checkbox"> Mode Gelap</label>
-                    <label><input type="checkbox" data-komponen="checkbox"> Tampilkan Grid</label>
-                    <label><input type="checkbox" data-komponen="checkbox"> Auto-save</label>
-                  </div>
-                </div>
-                <div>
-                  <span class="group-label">🔘 Pilihan Format</span>
-                  <div class="opsi-group">
-                    <label><input type="radio" name="format" checked> .docx</label>
-                    <label><input type="radio" name="format"> .pdf</label>
-                    <label><input type="radio" name="format"> .txt</label>
-                  </div>
-                </div>
-                <div>
-                  <span class="group-label">📊 Ukuran Font</span>
-                  <div style="display:flex; align-items:center; gap:0.5rem;">
-                    <input type="range" min="8" max="24" value="14" id="sliderFont">
-                    <span class="nilai-slider" id="nilaiSlider">14</span>
-                  </div>
-                </div>
+            <!-- Feedback -->
+            <div class="feedback-box info show" id="feedbackBox">
+              <span class="fb-icon" id="fbIcon">💡</span>
+              <span class="fb-text" id="fbText">Mulai dari Misi 1: klik dua kali foto_liburan.jpg untuk membukanya.</span>
+            </div>
+
+            <div class="game-actions">
+              <button class="btn-game secondary" onclick="resetInteraksi()">🔄 Ulangi dari Awal</button>
+              <button class="btn-game primary" id="btnSelesaiLapis1" onclick="selesaiLapis1()" disabled>
+                ✅ Selesai Menjelajah
+              </button>
+            </div>
+
+            <!-- Momen Mindful 1 -->
+            <div class="mindful-box" id="mindful1">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 1</div>
+              <div class="mb-text">
+                <strong>Interaksi mana yang paling sering kamu gunakan?</strong>
+                Apakah ada misi yang butuh <strong>lebih dari satu jenis interaksi</strong>?
+                Tulis pengamatanmu.
+              </div>
+              <textarea id="mindful1Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+          </div>
+        </div><!-- end area-simulasi -->
+
+        <!-- ===== LAPIS 2 ===== -->
+        <div id="areaLapis2" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-2">
+              <span class="lapis-num">LAPIS 2</span>
+              <span>🎯 Tantangan Terarah — Uji Pemahamanmu</span>
+            </div>
+
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              Sekarang kamu akan diberi <strong>3 tantangan</strong>. Jawab dengan teliti!
+              Sistem hanya memberi umpan balik, bukan jawaban langsung.
+            </p>
+
+            <div class="tantangan-list" id="tantanganList"></div>
+
+            <!-- Momen Mindful 2 -->
+            <div class="mindful-box" id="mindful2" style="display:none;">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 2</div>
+              <div class="mb-text">
+                <strong>Refleksi:</strong> Apakah <strong>drag-and-drop</strong> selalu bisa
+                menggantikan <strong>klik kanan → cut → paste</strong>? Kapan drag-and-drop
+                <strong>tidak bisa</strong> digunakan? Mengapa?
+              </div>
+              <textarea id="mindful2Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis3" onclick="lanjutKeLapis3()" disabled>
+                ➡️ Lanjut ke Penamaan Konsep
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== LAPIS 3: PENAMAAN KONSEP ===== -->
+        <div id="areaLapis3" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-3">
+              <span class="lapis-num">LAPIS 3</span>
+              <span>📖 Penamaan Konsep — Istilah Resmi</span>
+            </div>
+
+            <div class="penamaan-box show">
+              <h3>🏷️ Sekarang, Kita Beri Nama!</h3>
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822;">
+                Semua yang kamu lakukan tadi punya <strong>nama resmi</strong> dalam
+                ilmu komputer. Inilah saatnya menghubungkan pengalamanmu dengan
+                istilah formal.
+              </p>
+
+              <div class="notasi-box">
+                <strong>🖱️ Interaksi GUI</strong> adalah <strong>"bahasa tubuh"</strong>
+                antara manusia dan komputer. Ada beberapa jenis:
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Interaksi</th>
+                      <th>Fungsi</th>
+                      <th>Kapan Digunakan</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Klik</strong></td>
+                      <td>Memilih, membuka</td>
+                      <td>Hampir semua aksi</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Klik dua kali</strong></td>
+                      <td>Membuka file/aplikasi</td>
+                      <td>File dan folder</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Klik kanan</strong></td>
+                      <td>Menampilkan menu konteks</td>
+                      <td>Pilihan tambahan</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Drag-and-drop</strong></td>
+                      <td>Memindahkan objek</td>
+                      <td>File, ikon, teks</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Scroll</strong></td>
+                      <td>Menggeser tampilan</td>
+                      <td>Halaman panjang</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Ketik</strong></td>
+                      <td>Memasukkan teks</td>
+                      <td>Kolom pencarian, editor</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Tekan tombol</strong></td>
+                      <td>Aksi khusus</td>
+                      <td>Delete, Enter, Ctrl+C</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br>
+                <strong>Prinsip penting:</strong>
+                <ul style="margin:0.4rem 0 0 1.2rem; line-height:1.7;">
+                  <li><strong>Setiap interaksi punya konteks</strong> — drag-and-drop untuk memindahkan, klik untuk memilih.</li>
+                  <li><strong>Ada lebih dari satu cara</strong> — cut-paste dan drag-drop sama-sama bisa memindahkan file.</li>
+                  <li><strong>Efisiensi tergantung situasi</strong> — pilih cara yang paling cepat untuk kondisi tertentu.</li>
+                </ul>
               </div>
 
-              <!-- Tombol aksi -->
-              <div style="display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.3rem;">
-                <button class="btn-aksi primary" id="btnSimpan">💾 Simpan</button>
-                <button class="btn-aksi" id="btnBatal">↩️ Batal</button>
-                <button class="btn-aksi" id="btnCetak">🖨️ Cetak</button>
-                <button class="btn-aksi" id="btnTentang">ℹ️ Tentang</button>
+              <div class="koneksi">
+                <strong>💡 Koneksi Konteks Lokal:</strong><br>
+                Saat kamu menggunakan <strong>Gojek</strong>, kamu <em>klik</em> tombol
+                "Pesan", <em>ketik</em> alamat tujuan, <em>scroll</em> daftar layanan.
+                Saat kamu menggunakan <strong>Tokopedia</strong>, kamu <em>drag</em> gambar
+                untuk melihat dari sudut lain, <em>klik</em> tombol "Beli", <em>ketik</em>
+                alamat pengiriman. Semua itu adalah interaksi GUI.
               </div>
+            </div>
 
-            </div><!-- end main-content -->
-          </div><!-- end window-body -->
-        </div><!-- end simulasi-window -->
+            <!-- Link materi lengkap -->
+            <div class="link-materi-wrapper">
+              <a href="materitik1.html" target="_blank" rel="noopener" class="link-materi-bawah">
+                📚 Baca Materi Lengkap (buka tab baru)
+              </a>
+            </div>
 
-        <!-- Status kirim nilai ke API -->
+            <!-- Momen Mindful 3 -->
+            <div class="mindful-box" id="mindful3">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 3</div>
+              <div class="mb-text">
+                Dengan istilah resmi: <strong>mengapa ada lebih dari satu cara</strong>
+                untuk melakukan aksi yang sama (mis. memindahkan file)? Tulis dengan
+                bahasamu sendiri, sebutkan satu contoh.
+              </div>
+              <textarea id="mindful3Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <!-- Kuis Kilat -->
+            <div class="kuis-kilat-box" id="kuisKilatBox">
+              <div class="kk-title">
+                ⚡ Kuis Kilat
+                <span class="badge">2 SOAL</span>
+              </div>
+              <div id="kuisKilatContent"></div>
+              <div class="kk-hasil" id="kkHasil"></div>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutTes" onclick="lanjutKeTesPemahaman()" disabled>
+                ➡️ Lanjut ke Tes Pemahaman
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TES PEMAHAMAN ===== -->
+        <div class="tes-section" id="tesSection">
+          <div class="tes-header">
+            <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 4 soal · Minimal 3 benar untuk lanjut</div>
+            <div class="tes-progress" id="tesProgress">Terjawab: 0 / 4</div>
+          </div>
+
+          <div id="soalContainer"></div>
+
+          <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+          <button class="btn-ulangi-tes" id="btnUlangiTes">🔄 Ulangi Tes Pemahaman</button>
+        </div>
+
+        <!-- ===== HASIL TES ===== -->
+        <div class="hasil-tes" id="hasilTes">
+          <div class="hasil-icon" id="hasilIcon">🏆</div>
+          <div class="hasil-title" id="hasilTitle">Selamat!</div>
+          <div class="hasil-skor" id="hasilSkor">0 / 4</div>
+          <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 3.</div>
+        </div>
+
+        <!-- ===== REFLEKSI 4F ===== -->
+        <div class="refleksi-box" id="refleksiBox">
+          <h3>🪞 Refleksi 4F</h3>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FACT</span> Apa yang tadi saya lakukan saat berinteraksi dengan GUI?</label>
+            <textarea id="refFact" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FEELING</span> Bagian mana yang paling menantang?</label>
+            <textarea id="refFeeling" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FINDING</span> Apa pola yang saya temukan tentang jenis-jenis interaksi?</label>
+            <textarea id="refFinding" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FUTURE</span> Di mana lagi saya bisa menggunakan pemahaman tentang interaksi GUI?</label>
+            <textarea id="refFuture" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="exit-ticket">
+            <div class="et-title">🎫 Exit Ticket</div>
+            <p style="font-size:0.85rem; color:#5c4638; margin-bottom:0.4rem;">
+              Sebutkan <strong>satu interaksi GUI</strong> yang baru kamu pelajari hari ini.
+              Kapan kamu akan menggunakannya?
+            </p>
+            <textarea id="exitTicket" placeholder="Contoh: drag-and-drop — saat memindahkan file antar folder..."></textarea>
+          </div>
+        </div>
+
+        <!-- Status kirim -->
         <div class="status-kirim info" id="statusKirim">
-          <span class="spinner"></span>
+          <span class="spinner" id="statusSpinner"></span>
           <span id="statusKirimText">Mengirim nilai...</span>
         </div>
 
         <!-- ===== NAVIGASI BAWAH ===== -->
         <div class="nav-bottom">
           <a href="aktivitastik1b.html" class="btn-nav-bawah">
-            <span class="back-arrow">←</span> Bagian 2
+            <span class="back-arrow">←</span> Kembali ke Bagian 2
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
             <button class="btn-nav-bawah primary locked" id="btnLanjutBagian4" onclick="lanjutKeBagian4()">
-              Lanjut ke Bagian 4: Komponen Lanjutan →
+              Lanjut ke Bagian 4: Kuis Akhir &amp; Sertifikat →
             </button>
           </div>
           <div class="nav-hint locked" id="hintLanjut">
-            🔒 Selesaikan semua 4 soal tantangan untuk membuka Bagian 4
+            🔒 Selesaikan semua tahap untuk membuka Bagian 4
           </div>
         </div>
 
@@ -1077,346 +1493,1246 @@ Coba cari dan kenali setiap komponen GUI di sekitarmu!</textarea>
     </article>
   </main>
 
-  <!-- FOOTER -->
   <footer id="footer-utama"></footer>
-
-  <!-- tombol floating -->
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
 
-  <!-- ===== SCRIPT AKTIVITAS ===== -->
   <script>
     (function() {
       "use strict";
 
-      // ---- DATA TANTANGAN (4 KOMPONEN INPUT) ----
-      const tantanganSoal = [
+      // ============================================
+      // KONFIGURASI MODUL
+      // ============================================
+      const NAMA_SHEET = 'tik1';
+      const MODUL_KEY = 'tik1';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd'];
+      const AMBANG_LULUS = 3;
+
+      // ============================================
+      // STATE
+      // ============================================
+      let misiSelesai = [];   // array id misi yang selesai
+      let totalAksiCount = 0;
+      let lapis1Selesai = false;
+      let lapis2Selesai = false;
+
+      let fileTerbuka = null;         // file yang sudah dibuka
+      let fileRenamed = null;         // file yang sudah di-rename
+      let fileDipilihMulti = [];      // array file yang dipilih multi
+      let fileDihapus = null;         // file yang sudah dihapus
+      let fileDipindah = null;        // file yang sudah dipindah
+
+      let jawabanKuisKilat = {};
+      let kuisKilatSubmitted = false;
+      let kuisKilatBenar = 0;
+
+      let jawabanTes = {};
+      let tesSubmitted = false;
+      let tesBenar = 0;
+      let tesSelesai = false;
+
+      let daftarSiswa = [];
+      let jumlahSiswaSekarang = 1;
+
+      let kirimTimeoutId = null;
+      let kirimSukses = false;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const elFormSiswaBox = document.getElementById('formSiswaBox');
+      const elFormSiswaList = document.getElementById('formSiswaList');
+      const elInputSekolah = document.getElementById('inputSekolah');
+      const elInputKelas = document.getElementById('inputKelas');
+      const elFormError = document.getElementById('formError');
+      const elBtnMulai = document.getElementById('btnMulai');
+      const elAreaSimulasi = document.getElementById('area-simulasi');
+      const elAreaLapis2 = document.getElementById('areaLapis2');
+      const elAreaLapis3 = document.getElementById('areaLapis3');
+      const elProgressLapis = document.getElementById('progressLapis');
+
+      const elMisiList = document.getElementById('misiList');
+      const elDesktopArea = document.getElementById('desktopArea');
+      const elFolderTugas = document.getElementById('folderTugas');
+      const elFolderTugasCount = document.getElementById('folderTugasCount');
+      const elTaskbarApps = document.getElementById('taskbarApps');
+
+      const elFileFoto = document.getElementById('fileFoto');
+      const elFileTugas = document.getElementById('fileTugas');
+      const elFileDraft = document.getElementById('fileDraft');
+      const elFileFoto2 = document.getElementById('fileFoto2');
+      const elFileMusik = document.getElementById('fileMusik');
+      const elFileSampah = document.getElementById('fileSampah');
+
+      const elTotalSelesai = document.getElementById('totalSelesai');
+      const elTotalAksi = document.getElementById('totalAksi');
+      const elFeedbackBox = document.getElementById('feedbackBox');
+      const elFbIcon = document.getElementById('fbIcon');
+      const elFbText = document.getElementById('fbText');
+      const elBtnSelesaiLapis1 = document.getElementById('btnSelesaiLapis1');
+      const elMindful1 = document.getElementById('mindful1');
+
+      const elTantanganList = document.getElementById('tantanganList');
+      const elMindful2 = document.getElementById('mindful2');
+      const elBtnLanjutLapis3 = document.getElementById('btnLanjutLapis3');
+
+      const elMindful3 = document.getElementById('mindful3');
+      const elKuisKilatBox = document.getElementById('kuisKilatBox');
+      const elKuisKilatContent = document.getElementById('kuisKilatContent');
+      const elKkHasil = document.getElementById('kkHasil');
+      const elBtnLanjutTes = document.getElementById('btnLanjutTes');
+
+      const elTesSection = document.getElementById('tesSection');
+      const elSoalContainer = document.getElementById('soalContainer');
+      const elTesProgress = document.getElementById('tesProgress');
+      const elBtnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const elBtnUlangiTes = document.getElementById('btnUlangiTes');
+      const elHasilTes = document.getElementById('hasilTes');
+      const elRefleksiBox = document.getElementById('refleksiBox');
+
+      const elBtnLanjutBagian4 = document.getElementById('btnLanjutBagian4');
+      const elHintLanjut = document.getElementById('hintLanjut');
+      const elStatusKirim = document.getElementById('statusKirim');
+      const elStatusKirimText = document.getElementById('statusKirimText');
+      const elStatusSpinner = document.getElementById('statusSpinner');
+
+      // ============================================
+      // PROGRESS LAPIS
+      // ============================================
+      function updateProgressLapis(step) {
+        const steps = ['lapis1', 'lapis2', 'lapis3', 'tes'];
+        const targetIdx = steps.indexOf(step);
+        if (targetIdx === -1) return;
+
+        elProgressLapis.querySelectorAll('.pl-step').forEach((el, i) => {
+          el.classList.remove('active', 'done');
+          if (i < targetIdx) el.classList.add('done');
+          else if (i === targetIdx) el.classList.add('active');
+        });
+      }
+
+      // ============================================
+      // FORM IDENTITAS
+      // ============================================
+      window.updateFormSiswa = function(jumlah) {
+        jumlahSiswaSekarang = parseInt(jumlah);
+        elFormSiswaList.innerHTML = '';
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const div = document.createElement('div');
+          div.className = 'form-siswa-item';
+          div.innerHTML = `
+            <span class="siswa-num">${i + 1}</span>
+            <input type="text" id="namaSiswa_${i}"
+                   placeholder="Nama lengkap siswa ${i + 1}"
+                   maxlength="40"
+                   autocomplete="off"
+                   oninput="cekFormSiswa()">
+          `;
+          elFormSiswaList.appendChild(div);
+        }
+        cekFormSiswa();
+      };
+
+      window.cekFormSiswa = function() {
+        const sekolah = elInputSekolah.value.trim();
+        const kelas = elInputKelas.value.trim();
+        let semuaNama = true;
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const inp = document.getElementById('namaSiswa_' + i);
+          if (!inp || inp.value.trim() === '') { semuaNama = false; break; }
+        }
+        elBtnMulai.disabled = !(semuaNama && kelas !== '' && sekolah !== '');
+        elFormError.classList.remove('show');
+      };
+
+      function validasiFormSiswa() {
+        const sekolah = elInputSekolah.value.trim();
+        const kelas = elInputKelas.value.trim();
+        if (sekolah === '') { tampilErr('Sekolah harus diisi!'); return false; }
+        if (kelas === '') { tampilErr('Kelas harus diisi!'); return false; }
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const inp = document.getElementById('namaSiswa_' + i);
+          if (!inp || inp.value.trim() === '') { tampilErr('Nama siswa ' + (i+1) + ' harus diisi!'); return false; }
+        }
+        elFormError.classList.remove('show');
+        return true;
+      }
+      function tampilErr(msg) {
+        elFormError.textContent = '⚠️ ' + msg;
+        elFormError.classList.add('show');
+      }
+
+      function formatNamaSiswa(daftar) {
+        if (!daftar || daftar.length === 0) return 'Siswa Informatika';
+        if (daftar.length === 1) return daftar[0].nama;
+        if (daftar.length === 2) return daftar[0].nama + ' & ' + daftar[1].nama;
+        const names = daftar.map(s => s.nama);
+        const last = names.pop();
+        return names.join(', ') + ' & ' + last;
+      }
+
+      // ============================================
+      // MULAI AKTIVITAS
+      // ============================================
+      window.mulaiAktivitas = async function() {
+        if (!validasiFormSiswa()) return;
+
+        daftarSiswa = [];
+        const sekolah = elInputSekolah.value.trim();
+        const kelas = elInputKelas.value.trim();
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const inp = document.getElementById('namaSiswa_' + i);
+          daftarSiswa.push({ nama: inp.value.trim(), kelas: kelas, sekolah: sekolah });
+        }
+
+        const namaGabung = formatNamaSiswa(daftarSiswa);
+
+        if (window.simpanIdentitasSiswa) {
+          window.simpanIdentitasSiswa(sekolah, namaGabung, kelas);
+        }
+        try { localStorage.setItem('labtik1_siswa', JSON.stringify(daftarSiswa)); } catch (e) {}
+
+        elBtnMulai.disabled = true;
+        elBtnMulai.textContent = '⏳ Menyiapkan sesi...';
+
+        const hasilSesi = await window.dutaPastikanPunyaKode(sekolah, namaGabung, kelas);
+        if (!hasilSesi || !hasilSesi.ok) {
+          alert('⚠️ Gagal menyiapkan sesi: ' + ((hasilSesi && hasilSesi.error) || 'Tidak diketahui'));
+          elBtnMulai.disabled = false;
+          elBtnMulai.textContent = '🚀 Mulai Aktivitas';
+          return;
+        }
+
+        if (window.simpanIdModul) {
+          window.simpanIdModul(MODUL_KEY, hasilSesi.user_id);
+        }
+
+        elFormSiswaBox.style.display = 'none';
+        elAreaSimulasi.classList.add('active');
+
+        updateStats();
+        tampilFeedback('info', '💡', 'Mulai dari Misi 1: <strong>klik dua kali</strong> foto_liburan.jpg untuk membukanya.');
+
+        if (hasilSesi.tipe === 'tamu' && !hasilSesi.sudah_ada) {
+          setTimeout(() => {
+            alert('🎭 Kamu masuk sebagai Tamu dengan kode: ' + hasilSesi.user_id +
+                  '\n\nSimpan kode ini jika ingin melanjutkan nanti. Jika kode hilang, progres bisa hilang.');
+          }, 300);
+        }
+
+        setTimeout(() => {
+          elAreaSimulasi.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      };
+
+      // ============================================
+      // UPDATE STATS
+      // ============================================
+      function updateStats() {
+        elTotalSelesai.textContent = misiSelesai.length;
+        elTotalAksi.textContent = totalAksiCount;
+      }
+
+      // ============================================
+      // UPDATE MISI CARD
+      // ============================================
+      function updateMisiCard(idMisi) {
+        const card = elMisiList.querySelector('[data-misi="' + idMisi + '"]');
+        if (!card) return;
+        if (misiSelesai.indexOf(idMisi) !== -1) {
+          card.classList.add('done');
+          card.querySelector('.mc-status').textContent = '✓ Selesai';
+        }
+      }
+
+      function selesaikanMisi(idMisi, pesanFeedback) {
+        if (misiSelesai.indexOf(idMisi) !== -1) return;
+        misiSelesai.push(idMisi);
+        updateMisiCard(idMisi);
+        updateStats();
+
+        if (pesanFeedback) {
+          tampilFeedback('success', '✅', pesanFeedback);
+        }
+
+        if (misiSelesai.length >= 5) {
+          cekLapis1Selesai();
+        }
+      }
+
+      // ============================================
+      // MISI 1: BUKA FILE (KLIK DUA KALI)
+      // ============================================
+      let lastClickTime = {};
+      const DOUBLE_CLICK_DELAY = 500; // ms
+
+      elFileFoto.addEventListener('click', function() {
+        totalAksiCount++;
+        updateStats();
+
+        const now = Date.now();
+        if (lastClickTime['foto'] && (now - lastClickTime['foto']) < DOUBLE_CLICK_DELAY) {
+          // Double click terdeteksi
+          if (fileTerbuka === 'foto_liburan.jpg') return;
+          fileTerbuka = 'foto_liburan.jpg';
+          this.classList.add('opened');
+
+          // Munculkan di taskbar
+          tambahTaskbarApp('🖼️', 'Foto Viewer');
+
+          selesaikanMisi('buka', '<strong>Misi 1 selesai!</strong> Kamu membuka foto dengan <em>klik dua kali</em> — ini interaksi untuk membuka file/aplikasi.');
+          lastClickTime['foto'] = null;
+        } else {
+          lastClickTime['foto'] = now;
+          tampilFeedback('info', '👆', 'Kamu baru <strong>klik sekali</strong>. Coba <strong>klik dua kali</strong> untuk membuka file foto!');
+        }
+      });
+
+      function tambahTaskbarApp(emoji, nama) {
+        // Cek sudah ada
+        const existing = elTaskbarApps.querySelector('[data-app="' + nama + '"]');
+        if (existing) return;
+
+        const el = document.createElement('div');
+        el.className = 'tb-item active';
+        el.dataset.app = nama;
+        el.innerHTML = '<span>' + emoji + '</span><span>' + nama + '</span>';
+        elTaskbarApps.appendChild(el);
+      }
+
+      // ============================================
+      // MISI 2: DRAG-AND-DROP
+      // ============================================
+      // Drag dari fileTugas ke folderTugas
+      elFileTugas.addEventListener('dragstart', function(e) {
+        if (fileDipindah) {
+          e.preventDefault();
+          return;
+        }
+        e.dataTransfer.setData('text/plain', 'tugas.docx');
+        e.dataTransfer.effectAllowed = 'move';
+        this.style.opacity = '0.5';
+      });
+
+      elFileTugas.addEventListener('dragend', function() {
+        this.style.opacity = '1';
+        elFolderTugas.classList.remove('drop-target');
+      });
+
+      elFolderTugas.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        if (!fileDipindah) {
+          this.classList.add('drop-target');
+        }
+      });
+
+      elFolderTugas.addEventListener('dragleave', function() {
+        this.classList.remove('drop-target');
+      });
+
+      elFolderTugas.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('drop-target');
+        totalAksiCount++;
+        updateStats();
+
+        if (fileDipindah) return;
+        fileDipindah = true;
+
+        // Animasi: pindah file
+        elFileTugas.style.transition = 'all 0.4s ease';
+        elFileTugas.style.opacity = '0';
+        elFileTugas.style.transform = 'scale(0.3)';
+        setTimeout(() => {
+          elFileTugas.style.display = 'none';
+          elFolderTugasCount.textContent = parseInt(elFolderTugasCount.textContent) + 1;
+        }, 400);
+
+        selesaikanMisi('pindah', '<strong>Misi 2 selesai!</strong> Kamu memindahkan file dengan <em>drag-and-drop</em> — klik tahan, geser, lepas.');
+      });
+
+      // ============================================
+      // MISI 3: RENAME (KLIK + KETIK)
+      // ============================================
+      elFileDraft.addEventListener('click', function(e) {
+        if (fileRenamed) return;
+        if (e.detail >= 2) return; // abaikan double click
+
+        // Mode edit
+        const currentName = this.querySelector('.fi-name').textContent;
+        const oldNameEl = this.querySelector('.fi-name');
+        const iconEl = this.querySelector('.fi-icon');
+
+        oldNameEl.style.display = 'none';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'fi-rename-input';
+        input.value = currentName.replace('.txt', '');
+        input.id = 'renameInput';
+
+        this.appendChild(input);
+        this.classList.add('renaming');
+        input.focus();
+        input.select();
+
+        tampilFeedback('info', '✏️', 'Ketik nama baru: <strong>laporan</strong>. Lalu tekan <strong>Enter</strong> untuk menyimpan.');
+
+        input.addEventListener('keydown', function(ev) {
+          if (ev.key === 'Enter') {
+            ev.preventDefault();
+            const namaBaru = input.value.trim();
+            if (!namaBaru) {
+              input.remove();
+              oldNameEl.style.display = 'block';
+              return;
+            }
+            totalAksiCount++;
+            updateStats();
+
+            fileRenamed = namaBaru + '.txt';
+            oldNameEl.textContent = fileRenamed;
+            oldNameEl.style.display = 'block';
+            input.remove();
+            elFileDraft.classList.remove('renaming');
+
+            selesaikanMisi('rename', '<strong>Misi 3 selesai!</strong> Kamu mengubah nama file dengan <em>klik + ketik + Enter</em>.');
+          } else if (ev.key === 'Escape') {
+            input.remove();
+            oldNameEl.style.display = 'block';
+            elFileDraft.classList.remove('renaming');
+          }
+        });
+      });
+
+      // ============================================
+      // MISI 4: PILIH 3 FILE DENGAN CTRL + KLIK
+      // ============================================
+      // File-file yang bisa dipilih multi
+      const fileMultiSelect = [
+        { el: elFileFoto, id: 'foto_liburan.jpg' },
+        { el: elFileFoto2, id: 'pemandangan.jpg' },
+        { el: elFileMusik, id: 'lagu.mp3' }
+      ];
+
+      fileMultiSelect.forEach(function(item) {
+        item.el.addEventListener('click', function(e) {
+          if (fileDipilihMulti.length >= 3 && fileDipilihMulti.indexOf(item.id) === -1) return;
+
+          // Cek: apakah user pakai Ctrl?
+          const pakaiCtrl = e.ctrlKey || e.metaKey;
+          const misiSudahSelesai = misiSelesai.indexOf('pilih3') !== -1;
+
+          if (misiSudahSelesai) return;
+
+          totalAksiCount++;
+          updateStats();
+
+          if (!pakaiCtrl) {
+            // Reset pilihan
+            fileDipilihMulti = [];
+            fileMultiSelect.forEach(function(f) { f.el.classList.remove('selected'); });
+            this.classList.add('selected');
+            fileDipilihMulti.push(item.id);
+
+            if (fileDipilihMulti.length === 1) {
+              tampilFeedback('info', '👆', 'Kamu klik <strong>1 file</strong>. Untuk pilih 3 file sekaligus, tahan <strong>Ctrl</strong> sambil klik file lain.');
+            }
+          } else {
+            // Ctrl + klik
+            const idx = fileDipilihMulti.indexOf(item.id);
+            if (idx === -1) {
+              fileDipilihMulti.push(item.id);
+              this.classList.add('selected');
+            } else {
+              fileDipilihMulti.splice(idx, 1);
+              this.classList.remove('selected');
+            }
+
+            if (fileDipilihMulti.length === 3) {
+              selesaikanMisi('pilih3', '<strong>Misi 4 selesai!</strong> Kamu memilih 3 file dengan <em>Ctrl + klik</em> — interaksi untuk memilih beberapa objek sekaligus.');
+            } else {
+              tampilFeedback('info', '☑️', 'Kamu pilih <strong>' + fileDipilihMulti.length + ' file</strong>. Teruskan Ctrl + klik sampai 3 file terpilih.');
+            }
+          }
+        });
+      });
+
+      // ============================================
+      // MISI 5: HAPUS FILE (KLIK + DELETE)
+      // ============================================
+      elFileSampah.addEventListener('click', function(e) {
+        if (fileDihapus) return;
+        if (e.detail >= 2) return; // abaikan double click
+
+        // Simpan referensi
+        const that = this;
+        // Fokus agar bisa terima keydown
+        this.tabIndex = 0;
+        this.focus();
+
+        this.style.outline = '3px solid #f4b942';
+
+        tampilFeedback('info', '⌨️', 'File <strong>sampah.txt</strong> terpilih. Sekarang tekan tombol <strong>Delete</strong> di keyboard untuk menghapusnya.');
+
+        const hapusHandler = function(ev) {
+          if (ev.key === 'Delete') {
+            ev.preventDefault();
+            totalAksiCount++;
+            updateStats();
+            fileDihapus = true;
+
+            that.style.transition = 'all 0.4s ease';
+            that.style.opacity = '0';
+            that.style.transform = 'scale(0.3)';
+            setTimeout(() => {
+              that.style.display = 'none';
+            }, 400);
+
+            document.removeEventListener('keydown', hapusHandler);
+            selesaikanMisi('hapus', '<strong>Misi 5 selesai!</strong> Kamu menghapus file dengan <em>klik + Delete</em> — interaksi untuk aksi khusus.');
+          }
+        };
+        document.addEventListener('keydown', hapusHandler);
+      });
+
+      // ============================================
+      // CEK LAPIS 1 SELESAI
+      // ============================================
+      function cekLapis1Selesai() {
+        if (misiSelesai.length >= 5) {
+          elBtnSelesaiLapis1.disabled = false;
+          elMindful1.classList.add('show');
+          tampilFeedback('success', '🎉', '<strong>Luar biasa!</strong> Kamu menyelesaikan 5 misi interaksi. Sekarang isi Jeda Sadar 1, lalu klik "Selesai Menjelajah"!');
+        }
+      }
+
+      // ============================================
+      // RESET
+      // ============================================
+      window.resetInteraksi = function() {
+        if (lapis1Selesai) return;
+        if (!confirm('Reset aktivitas? Semua progres akan dihapus.')) return;
+
+        misiSelesai = [];
+        totalAksiCount = 0;
+        fileTerbuka = null;
+        fileRenamed = null;
+        fileDipilihMulti = [];
+        fileDihapus = null;
+        fileDipindah = null;
+        lastClickTime = {};
+
+        // Reset visual file
+        [elFileFoto, elFileFoto2, elFileMusik, elFileTugas, elFileDraft, elFileSampah].forEach(function(f) {
+          f.style.display = '';
+          f.style.opacity = '1';
+          f.style.transform = 'scale(1)';
+          f.style.outline = '';
+          f.classList.remove('opened', 'selected', 'renaming');
+        });
+
+        elFileDraft.querySelector('.fi-name').textContent = 'draft.txt';
+        elFolderTugasCount.textContent = '0';
+        elTaskbarApps.innerHTML = '';
+        elFolderTugas.classList.remove('drop-target');
+
+        // Reset misi cards
+        elMisiList.querySelectorAll('.misi-card').forEach(function(c) {
+          c.classList.remove('done');
+          c.querySelector('.mc-status').textContent = 'Belum';
+        });
+
+        updateStats();
+        elBtnSelesaiLapis1.disabled = true;
+        elMindful1.classList.remove('show');
+        tampilFeedback('info', '💡', 'Mulai dari Misi 1: <strong>klik dua kali</strong> foto_liburan.jpg untuk membukanya.');
+      };
+
+      // ============================================
+      // FEEDBACK
+      // ============================================
+      function tampilFeedback(type, icon, text) {
+        elFeedbackBox.className = 'feedback-box show ' + type;
+        elFbIcon.textContent = icon || '💡';
+        elFbText.innerHTML = text;
+      }
+
+      // ============================================
+      // SELESAI LAPIS 1
+      // ============================================
+      window.selesaiLapis1 = function() {
+        if (misiSelesai.length < 5) {
+          alert('⚠️ Selesaikan dulu semua 5 misi!');
+          return;
+        }
+
+        const mindfulJawab = document.getElementById('mindful1Jawab').value.trim();
+        if (mindfulJawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 1 sebelum lanjut!');
+          document.getElementById('mindful1Jawab').focus();
+          return;
+        }
+
+        lapis1Selesai = true;
+        elAreaLapis2.style.display = 'block';
+        elBtnSelesaiLapis1.disabled = true;
+        elBtnSelesaiLapis1.textContent = '✅ Lapis 1 Selesai';
+
+        updateProgressLapis('lapis2');
+
+        setTimeout(() => {
+          elAreaLapis2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+
+        buildTantangan();
+      };
+
+      // ============================================
+      // LAPIS 2 — TANTANGAN
+      // ============================================
+      const tantanganData = [
         {
-          soal: '🔍 <strong>Misi 1 dari 4:</strong> Klik pada <strong>Address Bar</strong> — komponen yang menunjukkan lokasi folder "C:\\Users\\Siswa\\Documents\\TIK".',
-          petunjuk: '💡 Petunjuk: Address Bar biasanya berbentuk kotak panjang dengan ikon 📍 dan berisi alamat/lokasi. Cari di bagian atas area konten utama.',
-          target: 'address-bar'
+          id: 'T1',
+          teks: 'Interaksi apa yang digunakan untuk <strong>memindahkan file ke folder</strong>?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Klik' },
+            { v: 'B', label: 'Drag-and-drop' },
+            { v: 'C', label: 'Scroll' },
+            { v: 'D', label: 'Ketik' }
+          ],
+          kunci: 'B',
+          hint: 'Pikirkan: interaksi yang melibatkan "geser".',
+          feedbackSalah: 'Drag-and-drop (klik tahan + geser + lepas) adalah interaksi untuk memindahkan objek.'
         },
         {
-          soal: '🔍 <strong>Misi 2 dari 4:</strong> Klik pada <strong>Navigation Pane</strong> — panel di sisi kiri yang berisi folder My Documents, Pictures, Music, dll.',
-          petunjuk: '💡 Petunjuk: Navigation Pane adalah panel yang berisi daftar folder seperti My Documents, Pictures, Music. Klik pada salah satu item di panel kiri.',
-          target: 'nav-pane'
+          id: 'T2',
+          teks: 'Kapan <strong>drag-and-drop tidak bisa</strong> digunakan?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Saat folder tujuan terlihat' },
+            { v: 'B', label: 'Saat folder tujuan tidak terlihat' },
+            { v: 'C', label: 'Saat file berukuran besar' },
+            { v: 'D', label: 'Saat file berukuran kecil' }
+          ],
+          kunci: 'B',
+          hint: 'Pikirkan: drag-and-drop butuh kedua folder terlihat bersamaan.',
+          feedbackSalah: 'Drag-and-drop butuh folder tujuan <strong>terlihat di layar</strong>. Kalau folder tujuan tidak terlihat (mis. di drive lain), pakai cut-paste.'
         },
         {
-          soal: '🔍 <strong>Misi 3 dari 4:</strong> Klik pada <strong>Text Field</strong> — area besar untuk mengetik teks "Selamat belajar GUI!".',
-          petunjuk: '💡 Petunjuk: Text Field adalah area besar berbentuk kotak yang berisi tulisan "Selamat belajar GUI!". Coba klik di area tersebut.',
-          target: 'text-field'
-        },
-        {
-          soal: '🔍 <strong>Misi 4 dari 4:</strong> Klik pada <strong>Checkbox</strong> — kotak centang untuk opsi seperti "Mode Gelap", "Tampilkan Grid", atau "Auto-save".',
-          petunjuk: '💡 Petunjuk: Checkbox berbentuk kotak kecil yang bisa dicentang. Cari di area pengaturan dengan label "Mode Gelap", "Tampilkan Grid", atau "Auto-save".',
-          target: 'checkbox'
+          id: 'T3',
+          teks: '<strong>Batas Konsep:</strong> Mengapa ada <strong>lebih dari satu cara</strong> untuk melakukan aksi yang sama (mis. memindahkan file)?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Karena komputer bingung' },
+            { v: 'B', label: 'Karena setiap cara punya konteks dan efisiensi berbeda' },
+            { v: 'C', label: 'Karena guru meminta' },
+            { v: 'D', label: 'Karena file berbeda' }
+          ],
+          kunci: 'B',
+          hint: 'Pikirkan: setiap interaksi punya konteks terbaiknya sendiri.',
+          feedbackSalah: 'Setiap interaksi punya <strong>konteks dan efisiensi berbeda</strong>. Drag-and-drop cepat kalau folder terlihat; cut-paste lebih fleksibel kalau folder tersembunyi.'
         }
       ];
 
-      // ---- STATE ----
-      let tantanganIndex = 0;
-      let skor = 0;
-      let tantanganSelesai = false;
-      let menungguJawaban = false;
+      function buildTantangan() {
+        elTantanganList.innerHTML = '';
 
-      // ---- DOM REFS ----
-      const elSoalTantangan = document.getElementById('soalTantangan');
-      const elPetunjukTantangan = document.getElementById('petunjukTantangan');
-      const elFeedbackTantangan = document.getElementById('feedbackTantangan');
-      const elBtnTantanganBerikutnya = document.getElementById('btnTantanganBerikutnya');
-      const elBtnSkipTantangan = document.getElementById('btnSkipTantangan');
-      const elTantanganProgress = document.getElementById('tantanganProgress');
-      const elTantanganSkor = document.getElementById('tantanganSkor');
-      const elInfoAktivitas = document.getElementById('infoAktivitas');
-      const elBtnLanjutBagian4 = document.getElementById('btnLanjutBagian4');
-      const elHintLanjut = document.getElementById('hintLanjut');
+        tantanganData.forEach((t, idx) => {
+          const div = document.createElement('div');
+          div.className = 'tantangan-item';
+          div.id = 'tantangan_' + t.id;
+          div.dataset.id = t.id;
 
-      const elStatusKirim = document.getElementById('statusKirim');
-      const elStatusKirimText = document.getElementById('statusKirimText');
+          let inputHtml = '<div class="t-opsi-col">';
+          t.opsi.forEach(o => {
+            inputHtml += `
+              <label>
+                <input type="radio" name="opsi_${t.id}" value="${o.v}">
+                <span>${o.label}</span>
+              </label>
+            `;
+          });
+          inputHtml += '</div><div class="t-input-row" style="justify-content:flex-end; margin-top:0.5rem;"><button id="btn_' + t.id + '">Periksa</button></div>';
 
-      // ---- RENDER SOAL ----
-      function tampilkanSoal() {
-        if (tantanganIndex >= tantanganSoal.length) {
-          selesaiTantangan();
+          div.innerHTML = `
+            <div class="t-header">
+              <span class="t-num">${idx + 1}</span>
+              <span>Tantangan ${idx + 1}</span>
+            </div>
+            <div class="t-text">${t.teks}</div>
+            ${inputHtml}
+            <div class="t-feedback" id="fb_${t.id}"></div>
+          `;
+
+          elTantanganList.appendChild(div);
+
+          const btn = document.getElementById('btn_' + t.id);
+          btn.addEventListener('click', () => periksaTantangan(t));
+        });
+      }
+
+      function periksaTantangan(t) {
+        const fb = document.getElementById('fb_' + t.id);
+        const item = document.getElementById('tantangan_' + t.id);
+
+        const selected = document.querySelector('input[name="opsi_' + t.id + '"]:checked');
+        if (!selected) {
+          fb.className = 't-feedback show hint';
+          fb.innerHTML = '⚠️ Pilih salah satu jawaban dulu!';
+          return;
+        }
+        if (selected.value === t.kunci) {
+          fb.className = 't-feedback show ok';
+          fb.innerHTML = '✅ <strong>Benar!</strong>';
+          item.classList.add('selesai');
+          document.getElementById('btn_' + t.id).disabled = true;
+        } else {
+          fb.className = 't-feedback show no';
+          fb.innerHTML = '❌ ' + t.feedbackSalah;
+        }
+
+        cekSemuaTantangan();
+      }
+
+      function cekSemuaTantangan() {
+        const items = document.querySelectorAll('.tantangan-item');
+        const semuaSelesai = Array.from(items).every(i => i.classList.contains('selesai'));
+        if (semuaSelesai) {
+          elMindful2.classList.add('show');
+          elMindful2.style.display = 'block';
+          elBtnLanjutLapis3.disabled = false;
+        }
+      }
+
+      // ============================================
+      // LANJUT KE LAPIS 3
+      // ============================================
+      window.lanjutKeLapis3 = function() {
+        const jawab = document.getElementById('mindful2Jawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 2 sebelum lanjut!');
+          document.getElementById('mindful2Jawab').focus();
           return;
         }
 
-        const soal = tantanganSoal[tantanganIndex];
-        elSoalTantangan.innerHTML = soal.soal;
-        elPetunjukTantangan.innerHTML = soal.petunjuk;
-        elFeedbackTantangan.className = 'feedback-tantangan';
-        elFeedbackTantangan.style.display = 'none';
-        elBtnTantanganBerikutnya.style.display = 'none';
-        elBtnSkipTantangan.style.display = 'inline-block';
+        lapis2Selesai = true;
+        elAreaLapis3.style.display = 'block';
+        elBtnLanjutLapis3.disabled = true;
+        elBtnLanjutLapis3.textContent = '✅ Lapis 2 Selesai';
 
-        elTantanganProgress.textContent = `Soal ${tantanganIndex + 1} dari ${tantanganSoal.length}`;
-        elInfoAktivitas.textContent = `🎯 Misi ${tantanganIndex + 1}/${tantanganSoal.length}: Kenali Komponen Input`;
+        updateProgressLapis('lapis3');
+        elMindful3.classList.add('show');
+
+        buildKuisKilat();
 
         setTimeout(() => {
-          highlightKomponenTarget(soal.target);
-        }, 5000);
+          elAreaLapis3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      };
 
-        menungguJawaban = true;
+      // ============================================
+      // KUIS KILAT
+      // ============================================
+      const kuisKilatData = [
+        {
+          pertanyaan: 'Interaksi apa yang digunakan untuk memindahkan file ke folder?',
+          opsi: [
+            'Klik',
+            'Drag-and-drop',
+            'Scroll',
+            'Ketik'
+          ],
+          kunci: 1,
+          penjelasan: 'Drag-and-drop (klik tahan + geser + lepas) adalah interaksi untuk memindahkan objek.'
+        },
+        {
+          pertanyaan: 'Kapan drag-and-drop tidak bisa digunakan?',
+          opsi: [
+            'Saat folder tujuan terlihat',
+            'Saat folder tujuan tidak terlihat',
+            'Saat file berukuran besar',
+            'Saat file berukuran kecil'
+          ],
+          kunci: 1,
+          penjelasan: 'Drag-and-drop butuh folder tujuan terlihat di layar. Kalau tidak terlihat, gunakan cut-paste.'
+        }
+      ];
+
+      function buildKuisKilat() {
+        elKuisKilatContent.innerHTML = '';
+        elKuisKilatBox.classList.add('show');
+
+        kuisKilatData.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'kk-soal';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            opsiHtml += `
+              <label id="kk_label_${idx}_${oi}">
+                <input type="radio" name="kk_soal_${idx}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          div.innerHTML = `
+            <div class="kk-q"><strong>Soal ${idx + 1}.</strong> ${soal.pertanyaan}</div>
+            <div class="kk-opsi">${opsiHtml}</div>
+          `;
+          elKuisKilatContent.appendChild(div);
+
+          div.querySelectorAll('label').forEach((lbl, oi) => {
+            lbl.addEventListener('click', () => {
+              if (kuisKilatSubmitted) return;
+              jawabanKuisKilat[idx] = oi;
+              div.querySelectorAll('label').forEach((l2, oi2) => {
+                l2.style.background = oi2 === oi ? '#fff5f0' : '#fff';
+                l2.style.borderColor = oi2 === oi ? '#ff8a5b' : '#e5dbd0';
+                l2.querySelector('input').checked = (oi2 === oi);
+              });
+              cekKuisKilatSiap();
+            });
+          });
+        });
       }
 
-      // ---- HIGHLIGHT KOMPONEN ----
-      let highlightTimeout;
-      function highlightKomponenTarget(target) {
-        document.querySelectorAll('.komponen-highlight').forEach(el => {
-          el.classList.remove('komponen-highlight');
-        });
-
-        const elements = document.querySelectorAll(`[data-komponen="${target}"]`);
-        elements.forEach(el => {
-          el.classList.add('komponen-highlight');
-        });
-
-        clearTimeout(highlightTimeout);
-        highlightTimeout = setTimeout(() => {
-          document.querySelectorAll('.komponen-highlight').forEach(el => {
-            el.classList.remove('komponen-highlight');
-          });
-        }, 3000);
+      function cekKuisKilatSiap() {
+        if (Object.keys(jawabanKuisKilat).length === kuisKilatData.length && !kuisKilatSubmitted) {
+          setTimeout(() => {
+            if (kuisKilatSubmitted) return;
+            submitKuisKilat();
+          }, 300);
+        }
       }
 
-      // ---- KLIK KOMPONEN ----
-      function handleKomponenClick(e, key) {
-        if (!menungguJawaban) return;
+      function submitKuisKilat() {
+        kuisKilatSubmitted = true;
+        kuisKilatBenar = 0;
 
-        e.stopPropagation();
-        e.preventDefault();
+        kuisKilatData.forEach((soal, idx) => {
+          const selected = jawabanKuisKilat[idx];
+          const div = elKuisKilatContent.querySelector(`[data-index="${idx}"]`);
+          const labels = div.querySelectorAll('label');
+          const benar = (selected === soal.kunci);
 
-        const soal = tantanganSoal[tantanganIndex];
-        if (!soal) return;
-
-        if (key === soal.target) {
-          // JAWABAN BENAR
-          menungguJawaban = false;
-          skor += 25;
-          elTantanganSkor.textContent = `Skor: ${skor}`;
-
-          elFeedbackTantangan.className = 'feedback-tantangan benar';
-          elFeedbackTantangan.innerHTML = '✅ <strong>Benar!</strong> Kamu berhasil menemukan komponen ini!';
-          elFeedbackTantangan.style.display = 'block';
-
-          elBtnTantanganBerikutnya.style.display = 'inline-block';
-          elBtnSkipTantangan.style.display = 'none';
-
-          document.querySelectorAll('.komponen-highlight').forEach(el => {
-            el.classList.remove('komponen-highlight');
+          labels.forEach((lbl, oi) => {
+            lbl.classList.add('disabled');
+            lbl.querySelector('input').disabled = true;
+            if (oi === selected) {
+              lbl.classList.add(benar ? 'benar' : 'salah');
+              lbl.querySelector('.check-icon').textContent = benar ? '✅' : '❌';
+            }
+            if (oi === soal.kunci && !benar) {
+              lbl.classList.add('benar');
+              lbl.querySelector('.check-icon').textContent = '✅';
+            }
           });
 
-        } else {
-          // JAWABAN SALAH
-          elFeedbackTantangan.className = 'feedback-tantangan salah';
-          elFeedbackTantangan.innerHTML = '❌ <strong>Belum tepat.</strong> ' + soal.petunjuk;
-          elFeedbackTantangan.style.display = 'block';
+          if (benar) kuisKilatBenar++;
+        });
+
+        elKkHasil.classList.add('show');
+        elKkHasil.innerHTML = `✅ Kuis Kilat selesai! Kamu benar <strong>${kuisKilatBenar}</strong> dari <strong>${kuisKilatData.length}</strong>.`;
+
+        elBtnLanjutTes.disabled = false;
+      }
+
+      // ============================================
+      // LANJUT KE TES
+      // ============================================
+      window.lanjutKeTesPemahaman = function() {
+        const jawab = document.getElementById('mindful3Jawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 3 sebelum lanjut!');
+          document.getElementById('mindful3Jawab').focus();
+          return;
+        }
+
+        elTesSection.classList.add('active');
+        elRefleksiBox.classList.add('show');
+        renderSoal();
+        updateTesProgress();
+
+        updateProgressLapis('tes');
+
+        setTimeout(() => {
+          elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      };
+
+      // ============================================
+      // TES PEMAHAMAN
+      // ============================================
+      const soalData = [
+        {
+          pertanyaan: 'Apa fungsi klik kanan?',
+          opsi: [
+            'Membuka file',
+            'Menampilkan menu konteks',
+            'Menghapus file',
+            'Mengganti nama'
+          ],
+          kunci: 1,
+          penjelasan: 'Klik kanan berfungsi menampilkan menu konteks — daftar pilihan tambahan yang sesuai dengan objek yang diklik.'
+        },
+        {
+          pertanyaan: 'Interaksi mana yang paling tepat untuk menggulir halaman web?',
+          opsi: [
+            'Klik',
+            'Drag-and-drop',
+            'Scroll',
+            'Ketik'
+          ],
+          kunci: 2,
+          penjelasan: 'Scroll (menggunakan scrollbar atau roda mouse) adalah interaksi untuk menggulir tampilan.'
+        },
+        {
+          pertanyaan: 'Mengapa ada lebih dari satu cara untuk memindahkan file?',
+          opsi: [
+            'Karena komputer bingung',
+            'Karena setiap cara punya konteks dan efisiensi berbeda',
+            'Karena guru meminta',
+            'Karena file berbeda'
+          ],
+          kunci: 1,
+          penjelasan: 'Setiap interaksi punya konteks dan efisiensi berbeda. Drag-and-drop cepat kalau folder terlihat, cut-paste lebih fleksibel kalau tidak.'
+        },
+        {
+          pertanyaan: 'Apa yang dimaksud dengan "interaksi GUI"?',
+          opsi: [
+            'Cara manusia berinteraksi dengan komputer melalui elemen grafis',
+            'Cara komputer berinteraksi dengan internet',
+            'Cara file berinteraksi satu sama lain',
+            'Cara aplikasi berinteraksi dengan hardware'
+          ],
+          kunci: 0,
+          penjelasan: 'Interaksi GUI adalah cara manusia berinteraksi dengan komputer melalui elemen grafis — klik, geser, ketik, scroll, dll.'
+        }
+      ];
+
+      function renderSoal() {
+        elSoalContainer.innerHTML = '';
+        soalData.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'soal-kuis';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            const id = `soal${idx}_opt${oi}`;
+            opsiHtml += `
+              <label for="${id}" onclick="pilihJawabanTes(${idx}, ${oi})" id="label_${idx}_${oi}">
+                <input type="radio" name="soal${idx}" id="${id}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          div.innerHTML = `
+            <div class="pertanyaan">
+              <span class="soal-num">${idx + 1}</span>
+              <span>${soal.pertanyaan}</span>
+            </div>
+            <div class="opsi-kuis">${opsiHtml}</div>
+            <div class="jawaban-feedback" id="feedback_soal_${idx}"></div>
+          `;
+
+          elSoalContainer.appendChild(div);
+        });
+      }
+
+      window.pilihJawabanTes = function(soalIndex, optIndex) {
+        if (tesSubmitted) return;
+        const soalDiv = document.querySelector(`.soal-kuis[data-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+
+        jawabanTes[soalIndex] = optIndex;
+        updateTesProgress();
+      };
+
+      function updateTesProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(jawabanTes).length;
+        elTesProgress.textContent = `Terjawab: ${answered} / ${total}`;
+      }
+
+      elBtnPeriksaTes.addEventListener('click', function() {
+        if (tesSubmitted) return;
+        const total = soalData.length;
+        const answered = Object.keys(jawabanTes).length;
+
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
+          return;
+        }
+
+        let correct = 0;
+        soalData.forEach((soal, idx) => {
+          if (jawabanTes[idx] === soal.kunci) correct++;
+        });
+
+        const lulus = correct >= AMBANG_LULUS;
+        tesBenar = correct;
+        tesSubmitted = true;
+
+        soalData.forEach((soal, idx) => {
+          const selected = jawabanTes[idx];
+          const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
+          const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+          const feedback = document.getElementById(`feedback_soal_${idx}`);
+          const isThisCorrect = (selected === soal.kunci);
+
+          labels.forEach((label, oi) => {
+            label.classList.add('disabled');
+            label.querySelector('input').disabled = true;
+
+            if (oi === selected) {
+              if (isThisCorrect) {
+                label.classList.add('correct-answer');
+                label.querySelector('.check-icon').textContent = '✅';
+              } else {
+                label.classList.add('wrong-answer');
+                label.querySelector('.check-icon').textContent = '❌';
+              }
+            }
+
+            if (lulus && oi === soal.kunci && !isThisCorrect) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+          });
+
+          if (isThisCorrect) {
+            soalDiv.classList.add('correct');
+            feedback.className = 'jawaban-feedback benar';
+            feedback.innerHTML = `✅ <strong>Benar!</strong>`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.className = 'jawaban-feedback salah';
+            if (lulus) {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+            } else {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Coba baca kembali materi dan pikirkan jawaban yang benar.`;
+            }
+          }
+        });
+
+        elBtnPeriksaTes.disabled = true;
+        elBtnPeriksaTes.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+
+        tampilkanHasilTes(correct, total, lulus);
+      });
+
+      function tampilkanHasilTes(correct, total, lulus) {
+        setTimeout(() => {
+          elHasilTes.classList.add('show');
+
+          if (lulus) {
+            tesSelesai = true;
+            elHasilTes.querySelector('#hasilIcon').textContent = '🏆';
+            elHasilTes.querySelector('#hasilTitle').textContent = 'Selamat!';
+            elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilTes.querySelector('#hasilDesc').innerHTML =
+              `Kamu berhasil menyelesaikan Bagian 3!<br><br>Bagian 4 (Kuis Akhir &amp; Sertifikat) sekarang terbuka!`;
+
+            elBtnLanjutBagian4.classList.remove('locked');
+            elBtnLanjutBagian4.classList.add('primary');
+            elHintLanjut.classList.remove('locked', 'warn');
+            elHintLanjut.classList.add('ready');
+            elHintLanjut.textContent = '✅ Bagian 4 sudah terbuka! Klik untuk melanjutkan.';
+            elBtnUlangiTes.classList.remove('show');
+
+            simpanSkorBagian3(correct, total);
+          } else {
+            elHasilTes.querySelector('#hasilIcon').textContent = '📖';
+            elHasilTes.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
+            elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
+            elHasilTes.querySelector('#hasilDesc').innerHTML =
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal ${AMBANG_LULUS} soal benar untuk membuka Bagian 4.<br><br>Pelajari kembali materinya, lalu klik <strong>🔄 Ulangi Tes Pemahaman</strong> di bawah.`;
+
+            elBtnUlangiTes.classList.add('show');
+            elHintLanjut.classList.remove('ready');
+            elHintLanjut.classList.add('warn');
+            elHintLanjut.textContent = '⚠️ Belum lulus — klik "Ulangi Tes Pemahaman" untuk mencoba lagi.';
+          }
 
           setTimeout(() => {
-            if (menungguJawaban) {
-              elFeedbackTantangan.style.display = 'none';
-            }
-          }, 3000);
-        }
+            elHasilTes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 200);
+        }, 700);
       }
 
-      // ---- NEXT SOAL ----
-      function nextSoal() {
-        tantanganIndex++;
-        if (tantanganIndex < tantanganSoal.length) {
-          tampilkanSoal();
-        } else {
-          selesaiTantangan();
-        }
-      }
-
-      // ---- SKIP SOAL ----
-      function skipSoal() {
-        menungguJawaban = false;
-        const soal = tantanganSoal[tantanganIndex];
-        elFeedbackTantangan.className = 'feedback-tantangan salah';
-        elFeedbackTantangan.innerHTML = '⏭️ <strong>Soal dilewati.</strong> Komponen yang dicari: <strong>' + 
-          (soal.target === 'address-bar' ? 'Address Bar' :
-           soal.target === 'nav-pane' ? 'Navigation Pane' :
-           soal.target === 'text-field' ? 'Text Field' : 'Checkbox') + '</strong>';
-        elFeedbackTantangan.style.display = 'block';
-
-        elBtnTantanganBerikutnya.style.display = 'inline-block';
-        elBtnSkipTantangan.style.display = 'none';
-
-        document.querySelectorAll('.komponen-highlight').forEach(el => {
-          el.classList.remove('komponen-highlight');
-        });
-      }
-
-      // ---- SELESAI TANTANGAN ----
-      function selesaiTantangan() {
-        tantanganSelesai = true;
-        elSoalTantangan.innerHTML = '🎉 <strong>Selamat!</strong> Kamu telah menyelesaikan Misi 2: Kenali Komponen Input!';
-        elPetunjukTantangan.innerHTML = 'Kamu berhasil mengidentifikasi 4 komponen input GUI: <strong>Address Bar, Navigation Pane, Text Field, dan Checkbox</strong>.';
-        elFeedbackTantangan.className = 'feedback-tantangan benar';
-        elFeedbackTantangan.innerHTML = '✅ Total Skor: <strong>' + skor + '</strong> poin';
-        elFeedbackTantangan.style.display = 'block';
-        elBtnTantanganBerikutnya.style.display = 'none';
-        elBtnSkipTantangan.style.display = 'none';
-
-        elBtnLanjutBagian4.classList.remove('locked');
-        elBtnLanjutBagian4.classList.add('primary');
-        elHintLanjut.classList.remove('locked');
-        elHintLanjut.classList.add('ready');
-        elHintLanjut.textContent = '✅ Bagian 4 sudah terbuka! Klik untuk melanjutkan.';
-
-        elInfoAktivitas.textContent = '🎉 Misi 2 Selesai!';
-
-        // Simpan skor ke localStorage (0-100): skor mentah 0-100
+      function simpanSkorBagian3(correct, total) {
+        const skorBagian3 = Math.round(40 + (correct / total) * 60);
         try {
-          const progress = JSON.parse(localStorage.getItem('labgui_progress') || '{}');
-          progress.skorBagian3 = skor;
-          progress.bagian = 3;
-          localStorage.setItem('labgui_progress', JSON.stringify(progress));
-        } catch (e) {
-          console.warn('localStorage tidak tersedia:', e);
+          const prev = JSON.parse(localStorage.getItem('labtik1_progress') || '{}');
+          prev.bagian = 3;
+          prev.skorBagian3 = skorBagian3;
+          localStorage.setItem('labtik1_progress', JSON.stringify(prev));
+        } catch (e) {}
+
+        if (window.dutaSimpanProgress) {
+          const skorObj = { c: skorBagian3 };
+          window.dutaSimpanProgress(MODUL_KEY, 'c', skorObj).catch(() => {});
         }
       }
 
-      // ---- REGISTRASI KLIK KOMPONEN ----
-      function registerKomponenKlik() {
-        document.querySelectorAll('[data-komponen]').forEach(el => {
-          el.addEventListener('click', function(e) {
-            const key = el.dataset.komponen;
-            if (key) handleKomponenClick(e, key);
-          });
-        });
-      }
+      elBtnUlangiTes.addEventListener('click', function() {
+        jawabanTes = {};
+        tesSubmitted = false;
+        tesBenar = 0;
+        tesSelesai = false;
 
-      // ---- KIRIM NILAI BAGIAN 3 ----
+        elBtnPeriksaTes.disabled = false;
+        elBtnPeriksaTes.textContent = '✅ Periksa Jawaban';
+        elBtnUlangiTes.classList.remove('show');
+        elHasilTes.classList.remove('show');
+
+        elHintLanjut.classList.remove('ready', 'warn');
+        elHintLanjut.classList.add('locked');
+        elHintLanjut.textContent = '🔒 Selesaikan semua tahap untuk membuka Bagian 4';
+
+        renderSoal();
+        updateTesProgress();
+
+        elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      // ============================================
+      // KIRIM NILAI BAGIAN 3
+      // ============================================
       async function kirimNilaiBagian3() {
-        const skorBagian3 = skor; // 0-100
+        const skorBagian3 = Math.round(40 + (tesBenar / soalData.length) * 60);
 
         elStatusKirim.className = 'status-kirim info show';
-        elStatusKirimText.textContent = 'Mengirim nilai Bagian 3...';
+        elStatusSpinner.style.display = 'inline-block';
+        elStatusKirimText.innerHTML = `Mengirim nilai Bagian 3 (${skorBagian3})...`;
 
-        const hasil = await window.kirimNilaiBagian(
-          'tik1',
-          'c',
-          skorBagian3,
-          ['a', 'b', 'c', 'd', 'e']
-        );
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
 
-        if (hasil && hasil.ok) {
-          elStatusKirim.className = 'status-kirim success show';
-          elStatusKirimText.innerHTML = `✅ Nilai Bagian 3 (<strong>${skorBagian3}</strong>) berhasil dikirim.`;
-        } else {
-          elStatusKirim.className = 'status-kirim error show';
-          elStatusKirimText.innerHTML = `⚠️ Gagal mengirim nilai. Tetap lanjut ke Bagian 4.`;
+        if (kirimTimeoutId) {
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+        }
+
+        let selesaiKirim = false;
+
+        kirimTimeoutId = setTimeout(() => {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          tampilkanGagalKirim(skorBagian3, '⏱️ Koneksi lambat atau terputus.');
+        }, 12000);
+
+        try {
+          const hasil = await window.kirimNilaiBagian(
+            NAMA_SHEET, 'c', skorBagian3, TOTAL_BAGIAN
+          );
+
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+
+          if (hasil && hasil.ok) {
+            kirimSukses = true;
+            elStatusKirim.className = 'status-kirim success show';
+            elStatusSpinner.style.display = 'none';
+            elStatusKirimText.innerHTML = `✅ Nilai Bagian 3 (<strong>${skorBagian3}</strong>) berhasil dikirim.`;
+          } else {
+            tampilkanGagalKirim(skorBagian3, (hasil && hasil.error) || 'Terjadi kesalahan.');
+          }
+        } catch (err) {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+          tampilkanGagalKirim(skorBagian3, err.message || 'Gagal terhubung.');
         }
       }
 
-      // ---- LANJUT KE BAGIAN 4 ----
+      function tampilkanGagalKirim(skor, pesan) {
+        elStatusKirim.className = 'status-kirim error show';
+        elStatusSpinner.style.display = 'none';
+        elStatusKirimText.innerHTML = `⚠️ ${pesan} Nilai: <strong>${skor}</strong>. Klik "Ulangi Kirim" untuk mencoba lagi.`;
+
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
+
+        const btnRetry = document.createElement('button');
+        btnRetry.className = 'btn-retry';
+        btnRetry.type = 'button';
+        btnRetry.textContent = '🔄 Ulangi Kirim';
+        btnRetry.addEventListener('click', function() {
+          kirimSukses = false;
+          kirimNilaiBagian3();
+        });
+        elStatusKirim.appendChild(btnRetry);
+      }
+
+      // ============================================
+      // LANJUT KE BAGIAN 4
+      // ============================================
       window.lanjutKeBagian4 = async function() {
-        if (!tantanganSelesai) {
-          alert('🔒 Selesaikan semua 4 soal tantangan terlebih dahulu!');
+        if (!tesSelesai) {
+          alert('🔒 Selesaikan tes pemahaman dengan benar terlebih dahulu!');
           return;
         }
 
-        // Kirim nilai Bagian 3 dulu, baru pindah halaman
+        if (kirimSukses) {
+          pindahKeBagian4();
+          return;
+        }
+
         elBtnLanjutBagian4.disabled = true;
-        await kirimNilaiBagian3();
+        elBtnLanjutBagian4.textContent = '⏳ Mengirim...';
+
+        if (!elStatusKirim.classList.contains('show')) {
+          await kirimNilaiBagian3();
+        }
+
+        elBtnLanjutBagian4.disabled = false;
+        elBtnLanjutBagian4.textContent = 'Lanjut ke Bagian 4: Kuis Akhir & Sertifikat →';
 
         setTimeout(() => {
-          window.location.href = 'aktivitastik1d.html';
+          pindahKeBagian4();
         }, 800);
       };
 
-      // ---- SLIDER & TOMBOL SIMULASI ----
-      document.getElementById('sliderFont').addEventListener('input', function() {
-        document.getElementById('nilaiSlider').textContent = this.value;
-        document.getElementById('textArea').style.fontSize = this.value + 'px';
+      function pindahKeBagian4() {
+        window.location.href = 'aktivitastik1d.html';
+      }
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        updateFormSiswa('1');
       });
 
-      document.getElementById('btnSimpan').addEventListener('click', function(e) {
-        e.stopPropagation();
-        alert('💾 Dokumen berhasil disimpan! (simulasi)');
-      });
-
-      document.getElementById('btnBatal').addEventListener('click', function(e) {
-        e.stopPropagation();
-        alert('↩️ Perubahan dibatalkan. (simulasi)');
-      });
-
-      document.getElementById('btnCetak').addEventListener('click', function(e) {
-        e.stopPropagation();
-        alert('🖨️ Mencetak dokumen... (simulasi)');
-      });
-
-      document.getElementById('btnTentang').addEventListener('click', function(e) {
-        e.stopPropagation();
-        alert('ℹ️ Lab GUI - Simulasi Antarmuka\nDibuat untuk pembelajaran Informatika SMP.\n\nVersi 1.0');
-      });
-
-      // ---- EVENT LISTENERS ----
-      elBtnTantanganBerikutnya.addEventListener('click', nextSoal);
-      elBtnSkipTantangan.addEventListener('click', skipSoal);
-
-      // ---- INISIALISASI ----
-      registerKomponenKlik();
-      tampilkanSoal();
-      elTantanganSkor.textContent = 'Skor: 0';
-
-      console.log('✅ Lab GUI Bagian 3: Komponen Input siap!');
+      console.log('✅ TIK1 Bagian 3: Interaksi dengan GUI siap!');
     })();
   </script>
-
-  <!-- 
-    ============================================================
-    CATATAN UNTUK AI (tidak tampil di halaman)
-    ============================================================
-    1. HALAMAN INI = BAGIAN KETIGA MODUL tik1.
-       Berisi:
-       a. Materi singkat komponen input GUI
-       b. Aktivitas tantangan klik komponen (4 misi)
-       c. Skor tantangan (0-100, 25 per jawaban benar)
-       d. Kirim nilai bagian 'c' ke sheet 'tik1' (via window.kirimNilaiBagian)
-       e. Tombol lanjut ke Bagian 4 (terkunci sampai tantangan selesai)
-
-    2. ALUR BAGIAN (5 file):
-       a → Eksplorasi Bebas
-       b → Komponen Dasar
-       c → Komponen Input          ← file ini
-       d → Komponen Lanjutan
-       e → Kuis Akhir + Sertifikat
-
-    3. SKOR BAGIAN 3:
-       - Skor = (jumlah jawaban benar / 4) × 100 → 0-100
-       - Dikirim ke sheet 'tik1' sebagai kolom 'c'
-       - Minimal 4/4 soal untuk lanjut (bisa skip, tapi skor berkurang)
-
-    4. KIRIM NILAI:
-       - Pakai window.kirimNilaiBagian('tik1', 'c', skor, ['a','b','c','d','e'])
-       - Karena ID sudah tersimpan dari Bagian 1, mode = UPDATE
-       - Setelah kirim → lanjut ke aktivitastik1d.html
-
-    5. BREADCRUMB STATIS (4 level):
-       - Beranda (../index.html)
-       - Teknologi Informasi dan Komunikasi (materitik.html)
-       - Antarmuka GUI (tik1.html)
-       - Lab GUI · Bagian 3
-
-    6. PATH RELATIF (file ini di ./tik/):
-       - CSS & JS: ../desain.css, ../script.js
-       - Link ke root: ../index.html
-       - Link ke kartu sesama folder: nama-file.html
-       - Link ke materi lengkap: materitik1.html
-
-    7. MENU BAR: Dihapus total. Header hanya banner.
-
-    8. KONSISTENSI: Pola ini dipakai di SEMUA file aktivitastik1X.html.
-       Bagian e (terakhir) akan mengirim nilai 'e' + nilai_akhir (bobot dari script.js).
-
-    9. NAMA SHEET: 'tik1' (lihat window.kirimNilaiBagian di script.js).
-    ============================================================
-  -->
 
 </body>
 </html>

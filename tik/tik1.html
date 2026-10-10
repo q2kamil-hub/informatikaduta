@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Antarmuka GUI · Portal · Informatika DUTA</title>
-  <!-- CSS di root, naik satu level dari folder tik/ -->
+  <title>Antarmuka Berbasis Grafis (GUI) · Portal · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
   <style>
     /* ===== GAYA PORTAL ===== */
@@ -29,12 +28,12 @@
     .portal-title {
       font-size: 2rem;
       font-weight: 700;
-      color: #3b2b1e;
-      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      background: linear-gradient(135deg, #ff6b6b, #f4b942, #4fb0c6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       margin-bottom: 0.5rem;
+      line-height: 1.2;
     }
 
     .portal-sub {
@@ -48,18 +47,40 @@
       font-size: 0.95rem;
       color: #5c4638;
       line-height: 1.8;
-      max-width: 620px;
+      max-width: 660px;
       margin: 0 auto 2rem;
-      background: #f5ede6;
+      background: #fff5f0;
       padding: 1.2rem 1.8rem;
       border-radius: 16px;
-      border-left: 6px solid #dbb9a6;
+      border-left: 6px solid #ff8a5b;
       text-align: left;
     }
 
-    .portal-desc strong {
-      color: #4d3829;
+    .portal-desc strong { color: #b34614; }
+    .portal-desc ul { margin: 0.5rem 0 0 1.2rem; }
+    .portal-desc ul li { margin-bottom: 0.3rem; }
+
+    /* Peta konsep mini */
+    .mini-map {
+      background: #2f2822;
+      border-radius: 16px;
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      border: 3px solid #ff8a5b;
     }
+    .mini-map pre {
+      font-family: 'Courier New', monospace;
+      color: #e5dbd0;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      text-align: left;
+      margin: 0;
+    }
+    .mini-map .hl-1 { color: #ffb890; font-weight: bold; }
+    .mini-map .hl-2 { color: #b8d4f5; font-weight: bold; }
+    .mini-map .hl-3 { color: #b8f5d4; font-weight: bold; }
+    .mini-map .hl-4 { color: #f5b8d4; font-weight: bold; }
 
     .portal-buttons {
       display: flex;
@@ -95,10 +116,7 @@
       border-color: #b09b88;
     }
 
-    .portal-btn .btn-icon {
-      font-size: 3rem;
-      margin-bottom: 0.3rem;
-    }
+    .portal-btn .btn-icon { font-size: 3rem; margin-bottom: 0.3rem; }
 
     .portal-btn .btn-title {
       font-size: 1.1rem;
@@ -113,36 +131,73 @@
       line-height: 1.4;
     }
 
+    /* Tombol Materi — warna aksen TIK (oranye) */
     .portal-btn.btn-materi {
-      border-color: #8ab4d4;
-      background: #f0f7fb;
+      border-color: #ff8a5b;
+      background: #fff5f0;
     }
-
     .portal-btn.btn-materi:hover {
-      border-color: #6a94b4;
-      background: #e5f0f8;
+      border-color: #e06a3b;
+      background: #ffe9dd;
     }
+    .portal-btn.btn-materi .btn-title { color: #b34614; }
 
-    .portal-btn.btn-materi .btn-title {
-      color: #1a4a6b;
-    }
-
+    /* Tombol Aktivitas — hijau mint */
     .portal-btn.btn-aktivitas {
       border-color: #8aaa7a;
       background: #f0f8eb;
     }
-
     .portal-btn.btn-aktivitas:hover {
       border-color: #6a8a5a;
       background: #e5f2dc;
     }
+    .portal-btn.btn-aktivitas .btn-title { color: #2d5a1e; }
 
-    .portal-btn.btn-aktivitas .btn-title {
-      color: #2d5a1e;
+    /* Kotak info daftar file aktivitas */
+    .file-list {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin-top: 1.5rem;
+      border: 2px dashed #d9cdbf;
+      text-align: left;
     }
+    .file-list .fl-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 0.95rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .file-list ol {
+      margin: 0 0 0 1.2rem;
+      padding: 0;
+      list-style: none;
+      counter-reset: fl-counter;
+    }
+    .file-list li {
+      counter-increment: fl-counter;
+      margin-bottom: 0.6rem;
+      font-size: 0.88rem;
+      color: #2f2822;
+      line-height: 1.5;
+      padding-left: 0.2rem;
+    }
+    .file-list li::before {
+      content: counter(fl-counter) ".";
+      display: inline-block;
+      width: 1.4rem;
+      font-weight: 700;
+      color: #ff8a5b;
+      margin-right: 0.3rem;
+    }
+    .file-list li strong { color: #3b2b1e; }
+    .file-list li .file-desc { color: #7a6656; font-size: 0.82rem; }
 
     .portal-info {
-      margin-top: 2.5rem;
+      margin-top: 2rem;
       font-size: 0.85rem;
       color: #7a6656;
       padding: 0.8rem 1.2rem;
@@ -150,33 +205,41 @@
       border-radius: 12px;
       border: 1px dashed #d9cdbf;
       display: inline-block;
-      max-width: 600px;
+      max-width: 640px;
       line-height: 1.6;
     }
 
-    .portal-info strong {
-      color: #4d3829;
+    .portal-info strong { color: #4d3829; }
+
+    /* ===== TOMBOL LANJUTKAN BELAJAR ===== */
+    #duta-lanjut-container {
+      margin: 1.5rem auto 0.5rem;
+      max-width: 620px;
+      display: none;
     }
 
     /* ===== RESPONSIF ===== */
     @media (max-width: 720px) {
-      .portal-title { font-size: 1.6rem; }
+      .portal-title { font-size: 1.5rem; }
       .portal-icon { font-size: 3.5rem; }
       .portal-btn { min-width: unset; padding: 1.4rem 1.2rem; }
       .portal-btn .btn-icon { font-size: 2.4rem; }
       .portal-btn .btn-title { font-size: 1rem; }
       .portal-desc { padding: 1rem 1.2rem; font-size: 0.9rem; }
+      .mini-map pre { font-size: 0.6rem; }
     }
 
     @media (max-width: 480px) {
       .portal-buttons { flex-direction: column; align-items: stretch; }
       .portal-btn { max-width: unset; }
+      .file-list { padding: 1rem 1.1rem; }
+      .file-list li { font-size: 0.82rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER (dinamis dari script.js — banner saja) -->
+  <!-- HEADER (dinamis dari script.js) -->
   <header id="header-utama"></header>
 
   <!-- BREADCRUMB (statis, 3 level) -->
@@ -184,7 +247,7 @@
     <ol class="breadcrumb">
       <li><a href="../index.html">Beranda</a></li>
       <li><a href="materitik.html">Teknologi Informasi dan Komunikasi</a></li>
-      <li>Antarmuka GUI</li>
+      <li>Menjelaskan Antarmuka Berbasis Grafis</li>
     </ol>
   </nav>
 
@@ -194,22 +257,65 @@
       <div class="portal-wrapper">
 
         <div class="portal-icon">🖥️</div>
-        <div class="portal-title">Antarmuka Berbasis Grafis (GUI)</div>
-        <div class="portal-sub">dan Komponen-Komponennya</div>
+        <div class="portal-title">Antarmuka Berbasis Grafis (GUI) &amp; Komponennya</div>
+        <div class="portal-sub">Jembatan Manusia–Komputer · Komponen GUI · Interaksi dengan GUI</div>
 
         <div class="portal-desc">
-          <strong>📚 Selamat datang!</strong> Modul ini akan membimbingmu memahami <strong>Antarmuka Berbasis Grafis (GUI)</strong> — antarmuka yang menggunakan ikon, tombol, dan elemen visual untuk berinteraksi dengan komputer.
+          <strong>📚 Selamat datang!</strong> Modul ini akan membimbingmu memahami bagaimana
+          <strong>antarmuka berbasis grafis (GUI)</strong> menjadi jembatan antara manusia
+          dan komputer — mulai dari mengenali perbedaan antarmuka teks (CLI) dengan
+          antarmuka grafis (GUI), menemukan komponen-komponen GUI, hingga mempraktikkan
+          berbagai interaksi dengan GUI.
           <br><br>
-          Kamu akan mempelajari komponen-komponen GUI seperti <strong>Window, Icon, Menu, Pointer (WIMP)</strong>, serta komponen pendukung lainnya.
-          <br><br>
+          Kamu akan mempelajari:
+          <ul>
+            <li><strong>Antarmuka</strong> — "jembatan" antara manusia dan komputer (CLI vs GUI)</li>
+            <li><strong>Komponen GUI</strong> — title bar, menu bar, toolbar, area kerja, scrollbar, tombol kontrol</li>
+            <li><strong>Interaksi GUI</strong> — klik, double-click, klik kanan, drag-and-drop, scroll, ketik</li>
+            <li><strong>Kontekstualisasi</strong> — bagaimana GUI dipakai di Gojek, Ruangguru, Tokopedia, ATM</li>
+          </ul>
+          <br>
           Silakan pilih mode pembelajaran yang kamu inginkan:
         </div>
+
+        <!-- Peta konsep mini -->
+        <div class="mini-map">
+<pre>
+              ┌──────────────────────────────────────┐
+              │    ANTARMUKA BERBASIS GRAFIS (GUI)   │
+              └──────────────────┬───────────────────┘
+                                 │
+     ┌───────────────────────────┼───────────────────────────┐
+     │                           │                           │
+     ▼                           ▼                           ▼
+<span class="hl-1">┌───────────┐</span>             <span class="hl-2">┌───────────┐</span>             <span class="hl-3">┌───────────┐</span>
+<span class="hl-1">│ BAGIAN 1  │</span>────────────▶<span class="hl-2">│ BAGIAN 2  │</span>────────────▶<span class="hl-3">│ BAGIAN 3  │</span>
+<span class="hl-1">│ Antarmuka │</span>             <span class="hl-2">│ Komponen  │</span>             <span class="hl-3">│ Interaksi │</span>
+<span class="hl-1">│ Jembatan  │</span>             <span class="hl-2">│  GUI      │</span>             <span class="hl-3">│ dengan GUI│</span>
+<span class="hl-1">└───────────┘</span>             <span class="hl-2">└───────────┘</span>             <span class="hl-3">└───────────┘</span>
+     │                           │                           │
+     ▼                           ▼                           ▼
+"CLI vs GUI:              "Title bar, menu bar,       "Klik, geser,
+ mengapa GUI               toolbar, scrollbar,         ketik — kapan
+ lebih ramah?"             tombol kontrol"            pakai yang mana?"
+     │                           │                           │
+     └───────────────────────────┼───────────────────────────┘
+                                 ▼
+                      ┌─────────────────────┐
+                      │  <span class="hl-4">KUIS AKHIR (10)</span>    │
+                      │  Level & Sertifikat │
+                      └─────────────────────┘
+</pre>
+        </div>
+
+        <!-- ===== TOMBOL LANJUTKAN BELAJAR (dinamis) ===== -->
+        <div id="duta-lanjut-container"></div>
 
         <div class="portal-buttons">
           <a href="materitik1.html" class="portal-btn btn-materi">
             <span class="btn-icon">📖</span>
-            <span class="btn-title">Materi Antarmuka GUI dan Komponennya</span>
-            <span class="btn-desc">Baca materi lengkap tanpa aktivitas</span>
+            <span class="btn-title">Materi Lengkap</span>
+            <span class="btn-desc">Baca materi tanpa aktivitas</span>
           </a>
 
           <a href="aktivitastik1a.html" class="portal-btn btn-aktivitas">
@@ -219,8 +325,33 @@
           </a>
         </div>
 
+        <!-- Daftar file aktivitas -->
+        <div class="file-list">
+          <div class="fl-title">📂 Daftar Aktivitas dalam Modul Ini</div>
+          <ol>
+            <li>
+              <strong>Antarmuka — CLI vs GUI</strong>
+              <div class="file-desc">🖥️ "Dua Dunia: Teks vs Grafis" — mencoba dua antarmuka &amp; menemukan polanya</div>
+            </li>
+            <li>
+              <strong>Komponen-Komponen GUI</strong>
+              <div class="file-desc">🔍 "Bedah Jendela: Temukan Komponennya" — menemukan &amp; menamai komponen</div>
+            </li>
+            <li>
+              <strong>Interaksi dengan GUI</strong>
+              <div class="file-desc">🖱️ "Tiga Gerakan Ajaib: Klik, Geser, Ketik" — mencoba berbagai interaksi GUI</div>
+            </li>
+            <li>
+              <strong>Kuis Akhir &amp; Sertifikat</strong>
+              <div class="file-desc">🏆 10 soal · lulus ≥7 · sertifikat digital (Emas/Perak/Perunggu/Dasar)</div>
+            </li>
+          </ol>
+        </div>
+
         <div class="portal-info">
-          💡 <strong>Rekomendasi:</strong> Pilih <strong>"Materi + Aktivitas"</strong> untuk pengalaman belajar yang lebih lengkap dan interaktif. Kamu akan menjelajahi simulasi aplikasi dan mengenali setiap komponen GUI secara langsung!
+          💡 <strong>Rekomendasi:</strong> Pilih <strong>"Materi + Aktivitas"</strong> untuk
+          pengalaman belajar yang lebih lengkap dan interaktif. Kamu akan menjelajahi
+          <strong>GUI Lab</strong> dan menyelesaikan tantangan antarmuka!
         </div>
 
       </div>
@@ -230,47 +361,81 @@
   <!-- FOOTER -->
   <footer id="footer-utama"></footer>
 
-  <!-- tombol floating panah ke atas -->
+  <!-- Tombol floating -->
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
-  <!-- script.js (header, footer, scroll) -->
+  <!-- script.js + root -->
   <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
 
-  <!-- 
-    ============================================================
-    CATATAN UNTUK AI (tidak tampil di halaman)
-    ============================================================
-    1. STRUKTUR PORTAL MODUL:
-       tik1.html (halaman ini) = portal dengan 2 tombol:
-       - Materi → materitik1.html
-       - Materi + Aktivitas → aktivitastik1a.html (bagian pertama)
+  <!-- ===== RENDER TOMBOL "LANJUTKAN BELAJAR" ===== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Tunggu script.js selesai init
+      await new Promise(r => setTimeout(r, 100));
 
-    2. ALUR AKTIVITAS (5 file):
-       aktivitastik1a.html → Eksplorasi Bebas
-       aktivitastik1b.html → Komponen Dasar (Title Bar, Window Controls, Menu Bar, Toolbar)
-       aktivitastik1c.html → Komponen Input (Address Bar, Navigation Pane, Text Field, Checkbox)
-       aktivitastik1d.html → Komponen Lanjutan (Radio Button, Slider, Button, Icon)
-       aktivitastik1e.html → Kuis Akhir + Form Identitas + Kirim Nilai (API)
+      // Hanya render kalau user sudah login / tamu berkode
+      if (!window.ambilSession || !window.ambilSession()) return;
 
-    3. BREADCRUMB STATIS (3 level untuk halaman portal kartu):
-       - Beranda (link ../index.html)
-       - [Mapel] (link materitik.html)
-       - [Nama Kartu]
+      const container = document.getElementById('duta-lanjut-container');
+      if (!container) return;
 
-    4. PATH RELATIF (file ini di ./tik/):
-       - CSS & JS: ../desain.css, ../script.js
-       - Link ke root: ../index.html
-       - Link ke kartu sesama folder: nama-file.html
+      // Ambil progress modul 'tik1' dari sheet
+      let progress = null;
+      try {
+        const hasil = await window.dutaAmbilProgress('tik1');
+        if (hasil && hasil.ok && hasil.progress && hasil.progress.length > 0) {
+          progress = hasil.progress[0];
+        }
+      } catch (e) {
+        return;
+      }
 
-    5. MENU BAR: Dihapus total. Header hanya banner.
+      if (!progress) return;
 
-    6. TEMA MODUL: Antarmuka Berbasis Grafis (GUI).
-       Warna aksen: #dbb9a6 (coklat pastel).
+      const bagianTerakhir = (progress.bagian_terakhir || '').toLowerCase();
+      const nilaiAkhir = Number(progress.nilai_akhir) || 0;
 
-    7. NAMA SHEET untuk modul tik1 (di aktivitastik1e.html):
-       NAMA_SHEET = 'tik1'
-    ============================================================
-  -->
+      // Map bagian → file
+      const mapFile = {
+        a: 'aktivitastik1a.html',
+        b: 'aktivitastik1b.html',
+        c: 'aktivitastik1c.html',
+        d: 'aktivitastik1d.html'
+      };
+
+      // Kalau sudah selesai semua (d / nilai_akhir > 0) → tawarkan ulang modul
+      const selesai = (bagianTerakhir === 'd') || (nilaiAkhir > 0);
+
+      let teks, tujuan;
+      if (selesai) {
+        teks = '🔄 <strong>Ulangi Modul Ini</strong> — Nilai akhir: ' + nilaiAkhir;
+        tujuan = 'aktivitastik1a.html';
+      } else if (bagianTerakhir && mapFile[bagianTerakhir]) {
+        const urutan = ['a', 'b', 'c', 'd'];
+        const idx = urutan.indexOf(bagianTerakhir);
+        const berikutnya = (idx >= 0 && idx < urutan.length - 1) ? urutan[idx + 1] : bagianTerakhir;
+        teks = '▶️ <strong>Lanjutkan dari Bagian ' + berikutnya.toUpperCase() + '</strong> — Progres tersimpan';
+        tujuan = mapFile[berikutnya] || mapFile[bagianTerakhir];
+      } else {
+        return;
+      }
+
+      // Render tombol
+      const btn = document.createElement('a');
+      btn.className = 'duta-lanjut-btn';
+      btn.href = tujuan;
+      btn.innerHTML = teks;
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = tujuan;
+      });
+
+      container.innerHTML = '';
+      container.appendChild(btn);
+      container.style.display = 'block';
+    });
+  </script>
 
 </body>
 </html>

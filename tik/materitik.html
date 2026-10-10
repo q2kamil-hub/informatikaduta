@@ -25,6 +25,7 @@
       box-shadow: 0 6px 18px rgba(0,0,0,0.02);
       overflow: hidden;
       height: 100%;
+      position: relative;
     }
     .kartu-link:hover {
       transform: translateY(-5px);
@@ -161,83 +162,45 @@
         </a>
       </div>
 
-      <!-- 
+      <!--
         ============================================================
-        CATATAN UNTUK AI (tidak tampil di halaman)
+        CATATAN INTERNAL (tidak tampil di halaman)
         ============================================================
-        1. FORMAT PENAMAAN HALAMAN KARTU:
-           Format: [kode-halaman][nomor].html
-           - [kode-halaman] = kode unik halaman induk
-             (tik, sk, jki, dsi, ad, bk, ap)
-           - [nomor] = nomor urut kartu (1, 2, 3, ...)
-           
-           Contoh:
-           - halaman materitik.html: tik1.html, tik2.html, ..., tik12.html
-           - halaman materibk.html: bk1.html, bk2.html, ..., bk9.html
-           - halaman materidsi.html: dsi1.html, dsi2.html, ..., dsi9.html
-           
-           LOKASI: semua file HTML kartu berada di folder yang sama 
-           dengan file materitik.html (di dalam subfolder ./tik/).
 
-        2. POLA PENAMAAN GAMBAR:
-           Format: [kode-halaman]-kartu[nomor].jpg
-           LOKASI: semua gambar disimpan di folder ./tik/gambar/
-           (setiap subfolder mapel punya folder gambar/ sendiri).
+        📁 STRUKTUR FOLDER
+        Root/
+        ├── index.html · desain.css · script.js · login.html · daftar.html
+        ├── dashboard/  (guru.html, siswa.html)
+        ├── tik/        (materitik.html ← file ini, tik1.html…tikN.html, gambar/)
+        ├── sk/         (materisk.html, sk1.html…skN.html, gambar/)
+        ├── jki/        (pola sama)
+        ├── dsi/        (pola sama)
+        ├── ad/         (pola sama)
+        ├── bk/         (pola sama)
+        ├── ap/         (pola sama)
+        └── ujian/      (daftarujian.html)
 
-        3. STRUKTUR FOLDER PORTAL (KONDISI SAAT INI):
-           Root/
-           ├── index.html              (portal utama)
-           ├── desain.css
-           ├── script.js
-           ├── tik/
-           │   ├── materitik.html      ← file ini
-           │   ├── tik1.html ... tik12.html
-           │   └── gambar/
-           ├── sk/
-           │   ├── materisk.html
-           │   ├── sk1.html ... skN.html
-           │   └── gambar/
-           ├── jki/  (pola sama)
-           ├── dsi/  (pola sama)
-           ├── ad/   (pola sama)
-           ├── bk/   (pola sama)
-           ├── ap/   (pola sama)
-           └── ujian/
-               └── daftarujian.html    (halaman daftar ujian, bukan kartu)
+        📄 FORMAT PENAMAAN
+        - File kartu   : [kode][nomor].html → tik1.html, bk4.html, dsi2.html
+        - File gambar  : [kode]-kartu[nomor].jpg → tik-kartu1.jpg, bk-kartu4.jpg
+        - Lokasi kartu : folder yang sama dengan materi[mapel].html
+        - Lokasi gambar: ./[kode]/gambar/
 
-        4. KONSISTENSI:
-           Pola ini harus digunakan di SEMUA halaman konten 
-           (materitik.html, materisk.html, materijki.html, materidsi.html,
-            materiad.html, materibk.html, materidap.html)
-           dengan kode halaman masing-masing, dan masing-masing berada
-           di dalam subfolder kode-nya.
+        📌 STATUS MODUL TIK (per update terakhir)
+        - ✅ tik1.html  Antarmuka Berbasis Grafis
+        - ✅ tik2.html  Surel
+        - ✅ tik3.html  Peramban & Pencarian
+        - ✅ tik4.html s/d tik12.html (asumsi: sudah dibuat semua)
 
-        5. BREADCRUMB (STATIS):
-           Breadcrumb TIDAK lagi dirender oleh script.js. Setiap halaman
-           menuliskan breadcrumb-nya sendiri di HTML, tepat setelah
-           <header id="header-utama">.
+        🧭 BREADCRUMB STATIS
+        - index.html      : 1 level
+        - materitik.html  : 2 level (file ini)
+        - tikN.html       : 3 level
+        - daftarujian.html: 2 level
 
-           Aturan isi breadcrumb:
-           - index.html          : 1 level  → "Beranda"
-           - materitik.html      : 2 level  → "Beranda" (link ../index.html) → "Teknologi Informasi dan Komunikasi"
-           - tik1.html dst.      : 3 level  → "Beranda" (link ../index.html) → "[Nama Mapel]" (link materitik.html) → "Kartu N"
-           - daftarujian.html    : 2 level  → "Beranda" (link ../index.html) → "Ujian Aktif"
-
-           Karena menu bar dihapus total, breadcrumb adalah satu-satunya
-           navigasi untuk kembali ke portal.
-
-        6. PATH RELATIF:
-           - CSS & JS berada di root, sehingga menggunakan '../desain.css'
-             dan '../script.js'.
-           - Link ke file kartu (tik1.html dst.) berada dalam folder yang
-             sama dengan file ini, sehingga cukup nama filenya saja.
-           - Link ke gambar menggunakan 'gambar/tik-kartuN.jpg'.
-           - Link breadcrumb ke portal: '../index.html'.
-
-        7. MENU BAR:
-           Menu bar TIDAK dirender lagi (dihapus total dari renderHeader()).
-           Navigasi antar mapel hanya melalui kartu portal di index.html.
-           Header hanya menampilkan banner "📡 Informatika DUTA · SMPN 2 Talegong".
+        ⚠️ SETIAP HALAMAN WAJIB SET window.DUTA_ROOT
+        - Root        : <script>window.DUTA_ROOT = '';</script>
+        - Subfolder   : <script>window.DUTA_ROOT = '../';</script>
         ============================================================
       -->
 
@@ -250,8 +213,9 @@
   <!-- tombol floating panah ke atas -->
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
-  <!-- script.js (header, footer, scroll) -->
+  <!-- script.js (header, footer, scroll) + root -->
   <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
 
 </body>
 </html>
