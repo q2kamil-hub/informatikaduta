@@ -3,94 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Peramban & Pencarian · Bagian 3: Teknik Pencarian Dasar · Informatika DUTA</title>
+  <title>Search Lab · Bagian 3: Mencari untuk Tugas · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
   <style>
-    /* ===== MATERI RINGKAS ===== */
-    .materi-ringkas {
-      max-width: 820px; margin: 0 auto 1.5rem;
-      background: #f8f4ef; border-radius: 16px;
-      padding: 1.5rem 1.8rem; border-left: 6px solid var(--c-tik, #ff8a5b);
-      border: 2px solid #e5dbd0;
-    }
-    .materi-ringkas h2 {
-      font-size: 1.3rem; font-weight: 700; color: #3b2b1e;
-      margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;
-    }
-    .materi-ringkas h2 .badge {
-      background: var(--c-tik, #ff8a5b); color: #fff; font-size: 0.7rem;
-      padding: 0.15rem 0.6rem; border-radius: 20px; font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-    .materi-ringkas h3 {
-      font-size: 1.05rem; font-weight: 600; color: #4d3829; margin: 1rem 0 0.4rem;
-    }
-    .materi-ringkas p {
-      font-size: 0.92rem; line-height: 1.7; color: #2f2822; margin-bottom: 0.6rem;
-    }
-    .materi-ringkas ul {
-      margin: 0.3rem 0 0.8rem 1.5rem; font-size: 0.9rem;
-    }
-    .materi-ringkas li { margin-bottom: 0.25rem; line-height: 1.6; }
-    .materi-ringkas .info-box {
-      background: #fff; border-radius: 12px; padding: 0.8rem 1.2rem;
-      border: 2px solid #e5dbd0; margin: 0.6rem 0;
-      font-size: 0.88rem; line-height: 1.6;
-    }
-    .materi-ringkas .info-box strong { color: #4d3829; }
-    .materi-ringkas .info-box code {
-      background: #f0ece6; padding: 0.1rem 0.4rem; border-radius: 4px;
-      font-family: 'Courier New', monospace; font-size: 0.85rem;
-      color: #a01746; font-weight: 600;
-    }
-    .materi-ringkas .link-materi {
-      display: inline-block; margin-top: 0.5rem; color: #5c4638;
-      font-size: 0.85rem; text-decoration: none; font-weight: 600;
-      border-bottom: 2px dotted #bfaa9a; transition: all 0.2s ease;
-    }
-    .materi-ringkas .link-materi:hover { color: #4d3829; border-bottom-color: #7a5f4c; }
-
-    .aktivitas-wrapper { max-width: 1000px; margin: 0 auto; }
-
-    /* ===== STEP INDICATOR ===== */
-    .step-indicator {
-      display: flex; justify-content: space-between; align-items: center;
-      margin: 1.5rem 0 2rem 0; position: relative;
-      padding: 0 0.5rem; flex-wrap: wrap; gap: 0.3rem;
-    }
-    .step-indicator::before {
-      content: ''; position: absolute; top: 50%;
-      left: 30px; right: 30px; height: 3px;
-      background: #e5dbd0; transform: translateY(-50%); z-index: 0;
-    }
-    .step-dot {
-      display: flex; flex-direction: column; align-items: center;
-      z-index: 1; cursor: pointer; background: transparent;
-      border: none; padding: 0; font-family: inherit;
-      flex: 1; min-width: 50px;
-    }
-    .step-dot .circle {
-      width: 38px; height: 38px; border-radius: 50%;
-      background: #f5ede6; border: 3px solid #d9cdbf;
+    /* ===== PROGRESS BAR VISUAL (LAPIS) ===== */
+    .progress-lapis {
       display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 0.8rem; color: #7a6656;
-      transition: all 0.3s ease;
+      gap: 0.4rem; margin: 1.2rem auto 1.5rem;
+      flex-wrap: wrap; max-width: 700px;
     }
-    .step-dot.active .circle {
-      background: var(--c-tik, #ff8a5b); border-color: var(--c-tik, #ff8a5b);
-      color: #fff; transform: scale(1.1);
-      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.3);
+    .progress-lapis .pl-step {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.45rem 1rem; border-radius: 30px;
+      background: #f5ede6; border: 2px solid #e5dbd0;
+      font-size: 0.78rem; font-weight: 700; color: #7a6656;
+      transition: all 0.3s ease; white-space: nowrap;
     }
-    .step-dot.completed .circle {
+    .progress-lapis .pl-step.active {
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      border-color: #ff8a5b; color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 138, 91, 0.25);
+    }
+    .progress-lapis .pl-step.done {
       background: #8aaa7a; border-color: #8aaa7a; color: #fff;
     }
-    .step-dot .label {
-      font-size: 0.55rem; margin-top: 0.3rem; color: #7a6656;
-      text-align: center; max-width: 70px; font-weight: 500;
+    .progress-lapis .pl-step .pl-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
     }
-    .step-dot.active .label { color: #3b2b1e; font-weight: 600; }
-    .step-dot.locked .circle { opacity: 0.4; cursor: not-allowed; }
-    .step-dot.locked .label { opacity: 0.4; }
+    .progress-lapis .pl-sep {
+      color: #c79bd9; font-weight: 700; font-size: 0.9rem;
+    }
+
+    /* ===== HEADER LAPIS ===== */
+    .lapis-header {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.7rem 1.2rem; margin: 1.2rem 0 1rem;
+      border-radius: 14px; font-weight: 700;
+      font-size: 0.95rem; color: #fff;
+    }
+    .lapis-header.lapis-1 { background: linear-gradient(135deg, #4fb0c6, #3a8aa0); }
+    .lapis-header.lapis-2 { background: linear-gradient(135deg, #f4b942, #d4a030); }
+    .lapis-header.lapis-3 { background: linear-gradient(135deg, #6ecb8f, #4fa86a); }
+    .lapis-header .lapis-num {
+      background: rgba(255,255,255,0.3); padding: 0.15rem 0.7rem;
+      border-radius: 20px; font-size: 0.75rem; letter-spacing: 0.5px;
+    }
 
     /* ===== AREA SIMULASI ===== */
     #area-simulasi { display: none; margin-top: 0.5rem; }
@@ -105,234 +65,429 @@
       font-size: 1.4rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.3rem;
     }
     .scenario-panel .scenario-story {
-      font-size: 0.95rem; color: #5c4638; background: #fff5ee;
+      font-size: 0.95rem; color: #5c4638; background: #fff5f0;
       padding: 0.8rem 1.2rem; border-radius: 12px;
-      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid var(--c-tik, #ff8a5b);
-    }
-
-    /* ===== MISI PROGRESS ===== */
-    .misi-progress {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 0.5rem; margin: 1rem 0 1.5rem;
-    }
-    .misi-item {
-      display: flex; align-items: center; gap: 0.4rem;
-      padding: 0.4rem 1rem; border-radius: 30px;
-      background: #f5ede6; border: 2px solid #e5dbd0;
-      font-size: 0.78rem; font-weight: 600; color: #7a6656;
-      transition: all 0.3s ease;
-    }
-    .misi-item .misi-num {
-      width: 22px; height: 22px; border-radius: 50%;
-      background: #e5dbd0; color: #4d3829;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.7rem; font-weight: 700;
-    }
-    .misi-item.active {
-      background: var(--c-tik, #ff8a5b); border-color: var(--c-tik, #ff8a5b); color: #fff;
-    }
-    .misi-item.active .misi-num {
-      background: rgba(255,255,255,0.3); color: #fff;
-    }
-    .misi-item.completed {
-      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
-    }
-    .misi-item.completed .misi-num {
-      background: rgba(255,255,255,0.3); color: #fff;
-    }
-
-    /* ===== MISI CONTENT ===== */
-    .misi-content { display: none; }
-    .misi-content.active { display: block; animation: fadeIn 0.4s ease; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .misi-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 1.5rem 1.8rem;
-      border: 2px solid #e5dbd0;
-      margin: 1rem 0;
-    }
-    .misi-card .misi-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #3b2b1e;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .misi-card .misi-situation {
-      background: #fff5ee;
-      padding: 0.9rem 1.2rem;
-      border-radius: 12px;
-      border-left: 5px solid var(--c-tik, #ff8a5b);
-      margin-bottom: 1rem;
-      font-size: 0.92rem;
-      color: #2f2822;
+      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid #ff8a5b;
       line-height: 1.7;
     }
-    .misi-card .misi-situation strong {
+
+    /* ===== 3-LANGKAH TAB ===== */
+    .langkah-tabs {
+      display: flex; gap: 0.5rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    .langkah-tab {
+      flex: 1; min-width: 140px;
+      padding: 0.7rem 1rem;
+      border-radius: 14px;
+      border: 2px solid #e5dbd0;
+      background: #f8f4ef;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #7a6656;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 0.2rem;
+    }
+    .langkah-tab .lt-num {
+      font-size: 0.65rem; letter-spacing: 1px;
+      background: #d9cdbf; color: #5c4638;
+      padding: 0.1rem 0.5rem; border-radius: 10px;
+    }
+    .langkah-tab .lt-title {
+      font-size: 0.9rem; color: #3b2b1e;
+    }
+    .langkah-tab.active {
+      border-color: #ff8a5b;
+      background: #fff5f0;
       color: #b34614;
+      box-shadow: 0 4px 12px rgba(255, 138, 91, 0.15);
+    }
+    .langkah-tab.active .lt-num {
+      background: #ff8a5b; color: #fff;
+    }
+    .langkah-tab.active .lt-title { color: #b34614; }
+    .langkah-tab.done {
+      border-color: #8aaa7a;
+      background: #f0f8eb;
+    }
+    .langkah-tab.done .lt-num {
+      background: #8aaa7a; color: #fff;
+    }
+    .langkah-tab.done .lt-title { color: #2d5a1e; }
+    .langkah-tab.locked {
+      opacity: 0.5; cursor: not-allowed;
     }
 
-    /* ===== SIMULASI SEARCH BAR ===== */
-    .search-sim {
-      background: #f8f3ee;
-      border-radius: 16px;
+    /* ===== PANEL KONTEN LANGKAH ===== */
+    .langkah-panel {
+      display: none;
+      margin-top: 1rem;
+      animation: fadeIn 0.4s ease;
+    }
+    .langkah-panel.active { display: block; }
+
+    /* ===== LANGKAH 1: CARI ===== */
+    .search-engine-mini {
+      background: #fff; border-radius: 16px;
+      border: 3px solid #e5dbd0;
       padding: 1rem 1.2rem;
       margin: 1rem 0;
-      border: 2px solid #e5dbd0;
     }
-    .search-bar {
-      display: flex;
+    .search-engine-mini .se-title {
+      font-size: 1rem; font-weight: 700;
+      color: #3b2b1e; margin-bottom: 0.6rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .search-input-mini {
+      display: flex; gap: 0.4rem;
       align-items: center;
-      gap: 0.5rem;
-      background: #fff;
+      background: #f8f4ef;
       border: 2px solid #e5dbd0;
       border-radius: 30px;
-      padding: 0.5rem 1rem;
-      margin-bottom: 1rem;
+      padding: 0.3rem 0.3rem 0.3rem 1rem;
     }
-    .search-bar:focus-within {
-      border-color: var(--c-tik, #ff8a5b);
-      box-shadow: 0 0 0 3px rgba(255, 138, 91, 0.15);
-    }
-    .search-bar .search-icon {
-      font-size: 1.2rem;
-      color: #a0968c;
-    }
-    .search-bar input {
-      flex: 1;
-      border: none;
-      background: transparent;
-      font-size: 1rem;
-      font-family: 'Courier New', monospace;
+    .search-input-mini input {
+      flex: 1; border: none; background: transparent;
+      font-family: inherit; font-size: 0.9rem;
+      outline: none; padding: 0.5rem 0.3rem;
       color: #2f2822;
-      outline: none;
-      padding: 0.4rem 0;
     }
-    .search-bar button {
-      padding: 0.5rem 1.5rem;
-      border-radius: 30px;
-      border: none;
-      background: var(--c-tik, #ff8a5b);
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-      font-size: 0.9rem;
+    .search-input-mini button {
+      padding: 0.55rem 1.2rem;
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      color: #fff; border: none; border-radius: 25px;
+      font-weight: 700; font-size: 0.82rem;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.2s ease;
     }
-    .search-bar button:hover {
-      background: #e77645;
-      transform: translateY(-2px);
+    .search-input-mini button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 138, 91, 0.30);
+    }
+    .search-input-mini button:disabled {
+      opacity: 0.5; cursor: not-allowed;
     }
 
-    .search-results {
-      max-height: 320px;
-      overflow-y: auto;
+    /* ===== HASIL PENCARIAN ===== */
+    .hasil-search {
+      margin-top: 0.8rem;
+      max-height: 380px; overflow-y: auto;
       padding-right: 0.3rem;
     }
-    .search-result {
+    .hasil-search::-webkit-scrollbar { width: 6px; }
+    .hasil-search::-webkit-scrollbar-thumb { background: #d9cdbf; border-radius: 3px; }
+    .hasil-search::-webkit-scrollbar-track { background: #f5ede6; border-radius: 3px; }
+
+    .hasil-item {
       background: #fff;
       border: 2px solid #e5dbd0;
-      border-radius: 12px;
-      padding: 0.9rem 1.2rem;
-      margin-bottom: 0.6rem;
-      transition: all 0.2s;
-      opacity: 0;
-      transform: translateY(10px);
-      animation: slideUp 0.4s ease forwards;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
     }
-    @keyframes slideUp {
-      to { opacity: 1; transform: translateY(0); }
+    .hasil-item:hover {
+      border-color: #ff8a5b;
+      transform: translateX(3px);
+      box-shadow: 0 3px 10px rgba(255, 138, 91, 0.10);
     }
-    .search-result .result-title {
-      color: #1a4a6b;
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 0.2rem;
+    .hasil-item.terpilih {
+      border-color: #2d7d46;
+      background: #f0f8eb;
+      box-shadow: 0 3px 10px rgba(45, 125, 70, 0.15);
     }
-    .search-result .result-url {
-      color: #2d5a1e;
-      font-size: 0.75rem;
-      margin-bottom: 0.3rem;
+    .hasil-item.terpilih::after {
+      content: '✓';
+      position: absolute; top: 0.5rem; right: 0.7rem;
+      background: #2d7d46; color: #fff;
+      width: 20px; height: 20px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700;
+    }
+    .hasil-item.locked { cursor: default; opacity: 0.85; }
+    .hasil-item.locked:hover { transform: none; border-color: #e5dbd0; box-shadow: none; }
+
+    .hasil-item .hi-url {
+      font-size: 0.72rem; color: #2d7d46;
       font-family: 'Courier New', monospace;
+      margin-bottom: 0.15rem;
+      display: flex; align-items: center; gap: 0.4rem;
+      flex-wrap: wrap;
     }
-    .search-result .result-desc {
-      color: #5c4638;
-      font-size: 0.85rem;
+    .hasil-item .hi-url .hi-tag {
+      background: #e8f5e0; color: #2d5a1e;
+      padding: 0.05rem 0.4rem; border-radius: 8px;
+      font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .hasil-item .hi-url .hi-tag.buruk {
+      background: #fde8e8; color: #a84a3a;
+    }
+    .hasil-item .hi-title {
+      font-weight: 700; color: #1a4a6b;
+      font-size: 0.9rem; margin-bottom: 0.15rem;
+      line-height: 1.35;
+    }
+    .hasil-item .hi-desc {
+      font-size: 0.78rem; color: #5c4638;
       line-height: 1.5;
     }
-    .search-result .result-count {
-      display: inline-block;
-      background: var(--c-tik, #ff8a5b);
-      color: #fff;
-      padding: 0.15rem 0.6rem;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      margin-bottom: 0.4rem;
+
+    /* ===== INFO MISI ===== */
+    .misi-info {
+      background: linear-gradient(135deg, #fff5f0, #ffe9dd);
+      border: 2px solid #ff8a5b;
+      border-radius: 12px;
+      padding: 0.8rem 1.1rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.88rem;
+      color: #5c3400;
+      line-height: 1.6;
     }
-    .search-result .result-count.good {
-      background: #8aaa7a;
+    .misi-info strong { color: #b34614; }
+    .misi-info .mi-label {
+      font-size: 0.65rem; letter-spacing: 1.5px;
+      font-weight: 700; text-transform: uppercase;
+      color: #a05a00; margin-bottom: 0.2rem;
     }
 
-    /* ===== PILIHAN ===== */
-    .pilihan-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 0.6rem;
+    /* ===== LANGKAH 2: PILAH ===== */
+    .pilah-list {
+      display: flex; flex-direction: column; gap: 0.8rem;
       margin: 1rem 0;
     }
-    .pilihan-btn {
+    .pilah-card {
       background: #fff;
+      border: 2px solid #e5dbd0;
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      transition: all 0.3s ease;
+    }
+    .pilah-card.diperiksa {
+      background: #fcfaf7;
+    }
+    .pilah-card .pc-head {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .pilah-card .pc-num {
+      background: #4d3829; color: #fff;
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+    }
+    .pilah-card .pc-info { flex: 1; min-width: 0; }
+    .pilah-card .pc-source {
+      font-size: 0.78rem; color: #7a6656;
+      margin-bottom: 0.15rem;
+    }
+    .pilah-card .pc-title {
+      font-weight: 700; color: #3b2b1e;
+      font-size: 0.92rem; line-height: 1.35;
+    }
+    .pilah-card .pc-desc {
+      font-size: 0.82rem; color: #5c4638;
+      line-height: 1.55;
+      margin-top: 0.3rem;
+    }
+
+    /* Checklist 5 pertanyaan */
+    .checklist {
+      background: #f8f4ef;
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      margin-top: 0.6rem;
+      border: 2px dashed #d9cdbf;
+    }
+    .checklist .ck-title {
+      font-size: 0.8rem; font-weight: 700;
+      color: #4d3829; margin-bottom: 0.4rem;
+    }
+    .checklist .ck-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.25rem 0;
+      font-size: 0.82rem; color: #2f2822;
+    }
+    .checklist .ck-item .ck-box {
+      width: 18px; height: 18px; border-radius: 4px;
+      border: 2px solid #d9cdbf;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .checklist .ck-item.ya .ck-box {
+      background: #d4e8cb; border-color: #8aaa7a; color: #2d5a1e;
+    }
+    .checklist .ck-item.tidak .ck-box {
+      background: #fde8e8; border-color: #d4a0a0; color: #a84a3a;
+    }
+    .checklist .ck-item .ck-label { flex: 1; }
+
+    .pilah-aksi {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+      margin-top: 0.8rem;
+    }
+    .pilah-aksi button {
+      flex: 1; min-width: 140px;
+      padding: 0.6rem 1rem;
+      border-radius: 20px;
+      border: 2px solid #d9cdbf;
+      background: #fff; color: #4d3829;
+      font-weight: 700; font-size: 0.85rem;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .pilah-aksi button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .pilah-aksi button.pilih-ya {
+      border-color: #8aaa7a; color: #2d5a1e;
+      background: #f0f8eb;
+    }
+    .pilah-aksi button.pilih-ya:hover:not(:disabled) {
+      background: #e5f2dc;
+      box-shadow: 0 4px 12px rgba(45, 125, 70, 0.15);
+    }
+    .pilah-aksi button.pilih-ya.aktif {
+      background: #2d7d46; color: #fff;
+      border-color: #2d7d46;
+    }
+    .pilah-aksi button.pilih-tidak {
+      border-color: #d4a0a0; color: #a84a3a;
+      background: #fdf0f0;
+    }
+    .pilah-aksi button.pilih-tidak:hover:not(:disabled) {
+      background: #f5d6d0;
+      box-shadow: 0 4px 12px rgba(180, 60, 60, 0.15);
+    }
+    .pilah-aksi button.pilih-tidak.aktif {
+      background: #a84a3a; color: #fff;
+      border-color: #a84a3a;
+    }
+    .pilah-aksi button:disabled {
+      opacity: 0.55; cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .pilah-hasil {
+      margin-top: 0.6rem;
+      padding: 0.6rem 0.9rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      display: none;
+    }
+    .pilah-hasil.show { display: block; animation: fadeIn 0.4s ease; }
+    .pilah-hasil.benar {
+      background: #d4e8cb; color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+    .pilah-hasil.salah {
+      background: #f5d6d0; color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+
+    /* ===== LANGKAH 3: SUSUN ===== */
+    .susun-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.7rem;
+      margin: 1rem 0;
+    }
+    .susun-card {
+      background: #f8f4ef;
       border: 2px solid #e5dbd0;
       border-radius: 12px;
       padding: 0.8rem 1rem;
       cursor: pointer;
       transition: all 0.2s ease;
-      font-size: 0.88rem;
-      color: #2f2822;
-      font-weight: 500;
-      font-family: 'Courier New', monospace;
-      text-align: left;
-      line-height: 1.4;
+      position: relative;
     }
-    .pilihan-btn:hover:not(:disabled) {
-      border-color: var(--c-tik, #ff8a5b);
-      background: #fff5ee;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255, 138, 91, 0.15);
+    .susun-card:hover {
+      border-color: #ff8a5b;
+      background: #fff5f0;
     }
-    .pilihan-btn.selected {
-      border-color: var(--c-tik, #ff8a5b);
-      background: #fff5ee;
-      box-shadow: 0 4px 12px rgba(255, 138, 91, 0.2);
+    .susun-card.terpilih {
+      border-color: #2d7d46;
+      background: #f0f8eb;
     }
-    .pilihan-btn.correct {
-      border-color: #8aaa7a;
-      background: #e8f5ee;
-      color: #2d5a1e;
+    .susun-card.terpilih::after {
+      content: '✓'; position: absolute;
+      top: 0.5rem; right: 0.7rem;
+      color: #2d7d46; font-weight: 700;
+      font-size: 1rem;
     }
-    .pilihan-btn.wrong {
-      border-color: #d4a0a0;
-      background: #fde8e8;
-      color: #a84a3a;
+    .susun-card .sc-source {
+      font-size: 0.7rem; color: #7a6656;
+      margin-bottom: 0.2rem;
     }
-    .pilihan-btn:disabled {
-      cursor: default;
+    .susun-card .sc-fact {
+      font-size: 0.85rem; color: #2f2822;
+      line-height: 1.5;
+      font-weight: 600;
     }
 
-    /* ===== GAME ACTIONS ===== */
-    .game-actions {
-      display: flex; flex-wrap: wrap; gap: 0.6rem;
-      justify-content: center; margin-top: 1.2rem;
+    .susun-laporan {
+      background: #fff;
+      border: 3px solid #d9cdbf;
+      border-radius: 14px;
+      padding: 1rem 1.3rem;
+      margin-top: 1rem;
     }
+    .susun-laporan .sl-title {
+      font-weight: 700; color: #3b2b1e;
+      font-size: 0.95rem; margin-bottom: 0.5rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .susun-laporan .sl-list {
+      list-style: none; padding: 0;
+      margin: 0 0 0.8rem 0;
+    }
+    .susun-laporan .sl-list li {
+      background: #f8f4ef;
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      border-left: 3px solid #ff8a5b;
+      margin-bottom: 0.4rem;
+      font-size: 0.85rem;
+      color: #2f2822;
+      line-height: 1.5;
+    }
+    .susun-laporan .sl-empty {
+      font-style: italic;
+      color: #b09b88;
+      font-size: 0.82rem;
+    }
+
+    /* ===== FEEDBACK BOX ===== */
+    .feedback-box {
+      background: #f5ede6; border-radius: 16px;
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      border-left: 8px solid #dbb9a6;
+      display: none; animation: fadeIn 0.4s ease;
+    }
+    .feedback-box.show { display: block; }
+    .feedback-box.success { border-color: #2d7d46; background: #e8f5ee; }
+    .feedback-box.error { border-color: #b33c3c; background: #fde8e8; }
+    .feedback-box.info { border-color: #ff8a5b; background: #fff5f0; }
+    .feedback-box.warn { border-color: #d4a030; background: #fff8e6; }
+    .feedback-box .fb-icon { font-size: 1.5rem; margin-right: 0.5rem; }
+    .feedback-box .fb-text { color: #2f2822; line-height: 1.6; }
+    .feedback-box .fb-text strong { color: #4d3829; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== TOMBOL ===== */
     .btn-game {
       padding: 0.6rem 1.8rem; border-radius: 30px; border: none;
       font-weight: 700; font-size: 0.9rem;
@@ -341,7 +496,7 @@
       align-items: center; gap: 0.4rem;
     }
     .btn-game.primary {
-      background: linear-gradient(135deg, var(--c-tik, #ff8a5b), #d4a030);
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
       color: #fff; box-shadow: 0 4px 14px rgba(255, 138, 91, 0.25);
     }
     .btn-game.primary:hover:not(:disabled) {
@@ -352,35 +507,230 @@
       background: #f5ede6; color: #4d3829; border: 2px solid #d9cdbf;
     }
     .btn-game.secondary:hover { background: #e8dcd0; transform: translateY(-2px); }
-    .btn-game:disabled {
-      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    .btn-game:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+    .game-actions {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      justify-content: center; margin-top: 1rem;
     }
 
-    /* ===== FEEDBACK ===== */
-    .feedback-box {
-      background: #fff5ee; border-radius: 16px;
-      padding: 1rem 1.5rem; margin: 1.2rem 0;
-      border-left: 8px solid var(--c-tik, #ff8a5b);
-      display: none; animation: fadeIn 0.4s ease;
+    /* ===== MOMEN MINDFUL ===== */
+    .mindful-box {
+      background: linear-gradient(135deg, #e6f4ff, #f0f9ff);
+      border: 2px dashed #4fb0c6;
+      border-radius: 16px; padding: 1rem 1.5rem;
+      margin: 1.2rem 0; display: none;
     }
-    .feedback-box.show { display: block; }
-    .feedback-box.success {
-      border-color: #2d7d46; background: #e8f5ee;
+    .mindful-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .mindful-box .mb-icon { font-size: 1.4rem; margin-right: 0.4rem; }
+    .mindful-box .mb-title {
+      font-weight: 700; color: #1f6b7d; font-size: 1rem;
+      margin-bottom: 0.4rem;
     }
-    .feedback-box.error {
-      border-color: #b33c3c; background: #fde8e8;
+    .mindful-box .mb-text {
+      font-size: 0.92rem; color: #2f2822; line-height: 1.6;
+      margin-bottom: 0.6rem;
     }
-    .feedback-box.info {
-      border-color: var(--c-tik, #ff8a5b); background: #fff5ee;
+    .mindful-box textarea {
+      width: 100%; padding: 0.6rem 0.9rem;
+      border: 2px solid #b8d4e8; border-radius: 10px;
+      font-family: inherit; font-size: 0.9rem;
+      color: #2f2822; background: #fff; resize: vertical;
+      min-height: 60px; outline: none;
     }
-    .feedback-box .fb-icon { font-size: 1.5rem; margin-right: 0.5rem; }
-    .feedback-box .fb-text { color: #2f2822; line-height: 1.6; }
-    .feedback-box .fb-text strong { color: #4d3829; }
-    .feedback-box .fb-text code {
-      background: rgba(0,0,0,0.05); padding: 0.1rem 0.4rem;
-      border-radius: 4px; font-family: 'Courier New', monospace;
-      font-size: 0.85rem;
+    .mindful-box textarea:focus {
+      border-color: #4fb0c6;
+      box-shadow: 0 0 0 3px rgba(79, 176, 198, 0.15);
     }
+
+    /* ===== TANTANGAN ===== */
+    .tantangan-list {
+      display: flex; flex-direction: column; gap: 0.8rem;
+      margin: 1rem 0;
+    }
+    .tantangan-item {
+      background: #fff; border-radius: 14px;
+      padding: 1rem 1.3rem; border: 2px solid #e5dbd0;
+      transition: all 0.3s ease;
+    }
+    .tantangan-item.selesai {
+      border-color: #8aaa7a; background: #f0f8eb;
+    }
+    .tantangan-item .t-header {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-weight: 700; color: #3b2b1e; margin-bottom: 0.4rem;
+    }
+    .tantangan-item .t-num {
+      background: #4d3829; color: #fff;
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; flex-shrink: 0;
+    }
+    .tantangan-item .t-text {
+      font-size: 0.92rem; color: #2f2822; line-height: 1.6;
+      margin-bottom: 0.6rem;
+    }
+    .tantangan-item .t-input-row {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      align-items: center;
+    }
+    .tantangan-item .t-input-row textarea {
+      flex: 1; min-width: 200px;
+      padding: 0.5rem 0.9rem; border-radius: 10px;
+      border: 2px solid #d9cdbf; font-family: inherit;
+      font-size: 0.88rem; color: #2f2822; background: #fcfaf7;
+      outline: none; min-height: 70px; resize: vertical;
+    }
+    .tantangan-item .t-input-row textarea:focus {
+      border-color: #6b4f3a; background: #fff;
+    }
+    .tantangan-item .t-input-row button {
+      padding: 0.5rem 1.4rem; border-radius: 20px;
+      border: none; font-weight: 700; font-size: 0.85rem;
+      cursor: pointer; background: #4d3829; color: #fff;
+      font-family: inherit; transition: all 0.2s ease;
+      align-self: flex-end;
+    }
+    .tantangan-item .t-input-row button:hover:not(:disabled) {
+      background: #6b4f3a; transform: translateY(-1px);
+    }
+    .tantangan-item .t-input-row button:disabled {
+      opacity: 0.5; cursor: not-allowed;
+    }
+    .tantangan-item .t-feedback {
+      margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+      border-radius: 8px; font-size: 0.85rem;
+      line-height: 1.5; display: none;
+    }
+    .tantangan-item .t-feedback.show { display: block; }
+    .tantangan-item .t-feedback.ok {
+      background: #d4e8cb; color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+    .tantangan-item .t-feedback.hint {
+      background: #fff3d6; color: #8a5e00;
+      border-left: 4px solid #f4b942;
+    }
+    .tantangan-item .t-feedback.no {
+      background: #f5d6d0; color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+    .tantangan-item .t-opsi-col {
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .tantangan-item .t-opsi-col label {
+      display: flex; gap: 0.5rem; padding: 0.5rem 0.8rem;
+      border: 2px solid #d9cdbf; border-radius: 10px;
+      cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+      background: #fff; transition: all 0.15s ease;
+    }
+    .tantangan-item .t-opsi-col label:hover { border-color: #6b4f3a; }
+    .tantangan-item .t-opsi-col input[type="radio"] { accent-color: #ff8a5b; }
+
+    /* ===== PENAMAAN (LAPIS 3) ===== */
+    .penamaan-box {
+      background: linear-gradient(135deg, #e8f5ee, #d4ebd8);
+      border-radius: 16px; padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0; border: 2px solid #8aaa7a;
+      display: none;
+    }
+    .penamaan-box.show { display: block; animation: fadeIn 0.6s ease; }
+    .penamaan-box h3 {
+      font-size: 1.1rem; color: #2d5a1e; margin-bottom: 0.6rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .penamaan-box .notasi-box {
+      background: #fff; border-radius: 12px;
+      padding: 0.8rem 1.2rem; margin: 0.6rem 0;
+      border: 2px dashed #8aaa7a;
+      font-size: 0.95rem; color: #2f2822; line-height: 1.7;
+    }
+    .penamaan-box .notasi-box strong { color: #2d5a1e; }
+    .penamaan-box .notasi-box ol {
+      margin: 0.4rem 0 0 1.2rem; line-height: 1.7;
+    }
+    .penamaan-box .notasi-box ul {
+      margin: 0.4rem 0 0 1.2rem; line-height: 1.7;
+    }
+    .penamaan-box .koneksi {
+      background: #fff8e6; border-left: 5px solid #f4b942;
+      border-radius: 10px; padding: 0.8rem 1.2rem;
+      margin-top: 0.8rem; font-size: 0.9rem;
+      color: #5c3400; line-height: 1.6;
+    }
+    .penamaan-box .koneksi strong { color: #8a5e00; }
+
+    .link-materi-bawah {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      margin: 1rem auto 0;
+      padding: 0.7rem 1.8rem; border-radius: 30px;
+      background: #fff; color: #b34614;
+      border: 2px solid #ff8a5b; text-decoration: none;
+      font-weight: 700; font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    .link-materi-bawah:hover {
+      background: #fff5f0;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 138, 91, 0.25);
+    }
+    .link-materi-wrapper { text-align: center; margin-top: 1rem; }
+
+    /* ===== KUIS KILAT ===== */
+    .kuis-kilat-box {
+      background: #fff; border-radius: 16px;
+      padding: 1.3rem 1.6rem; margin: 1.5rem 0;
+      border: 2px solid #ff8a5b;
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.1);
+      display: none;
+    }
+    .kuis-kilat-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .kuis-kilat-box .kk-title {
+      font-weight: 700; color: #b34614; font-size: 1rem;
+      margin-bottom: 0.8rem; display: flex;
+      align-items: center; gap: 0.5rem;
+    }
+    .kuis-kilat-box .kk-title .badge {
+      background: #ff8a5b; color: #fff; font-size: 0.65rem;
+      padding: 0.15rem 0.6rem; border-radius: 20px;
+    }
+    .kuis-kilat-box .kk-soal {
+      background: #fff5f0; border-radius: 10px;
+      padding: 0.8rem 1.1rem; margin-bottom: 0.8rem;
+    }
+    .kuis-kilat-box .kk-soal .kk-q {
+      font-weight: 600; color: #3b2b1e;
+      font-size: 0.92rem; margin-bottom: 0.5rem;
+    }
+    .kuis-kilat-box .kk-opsi {
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .kuis-kilat-box .kk-opsi label {
+      display: flex; align-items: center; gap: 0.5rem;
+      cursor: pointer; font-size: 0.87rem; color: #3d2c1f;
+      padding: 0.4rem 0.8rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; transition: all 0.15s;
+    }
+    .kuis-kilat-box .kk-opsi label:hover:not(.disabled) {
+      background: #fff5f0; border-color: #ff8a5b;
+    }
+    .kuis-kilat-box .kk-opsi label.disabled { cursor: default; }
+    .kuis-kilat-box .kk-opsi label.benar {
+      border-color: #8aaa7a; background: #e8f5e0;
+    }
+    .kuis-kilat-box .kk-opsi label.salah {
+      border-color: #d4a0a0; background: #f5e0e0;
+    }
+    .kuis-kilat-box .kk-opsi input[type="radio"] { accent-color: #ff8a5b; }
+    .kuis-kilat-box .kk-opsi .check-icon {
+      margin-left: auto; font-size: 0.9rem;
+    }
+    .kuis-kilat-box .kk-hasil {
+      background: #f5ede6; border-radius: 10px;
+      padding: 0.7rem 1rem; margin-top: 0.6rem;
+      font-size: 0.88rem; color: #4d3829;
+      display: none; text-align: center; font-weight: 600;
+    }
+    .kuis-kilat-box .kk-hasil.show { display: block; }
 
     /* ===== TES PEMAHAMAN ===== */
     .tes-section {
@@ -389,9 +739,9 @@
     }
     .tes-section.active { display: block; animation: fadeIn 0.4s ease; }
     .tes-header {
-      background: #fff5ee; border-radius: 12px;
+      background: #fff5f0; border-radius: 12px;
       padding: 0.9rem 1.2rem; margin-bottom: 1rem;
-      border-left: 5px solid var(--c-tik, #ff8a5b);
+      border-left: 5px solid #ff8a5b;
       display: flex; flex-wrap: wrap; justify-content: space-between;
       align-items: center; gap: 0.5rem;
     }
@@ -399,7 +749,7 @@
       font-size: 0.95rem; color: #3b2b1e; font-weight: 600;
     }
     .tes-header .tes-progress {
-      font-size: 0.82rem; color: #2d5a1e; font-weight: 700;
+      font-size: 0.82rem; color: #4d7a3b; font-weight: 700;
       background: #fff; padding: 0.25rem 0.9rem;
       border-radius: 30px; border: 2px solid #e5dbd0;
     }
@@ -417,7 +767,7 @@
     }
     .soal-kuis .pertanyaan .soal-num {
       display: inline-flex; align-items: center; justify-content: center;
-      background: var(--c-tik, #ff8a5b); color: #fff;
+      background: #ff8a5b; color: #fff;
       width: 24px; height: 24px; border-radius: 50%;
       font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
     }
@@ -431,11 +781,11 @@
       border: 2px solid #e5dbd0; transition: all 0.15s; line-height: 1.5;
     }
     .soal-kuis .opsi-kuis label:hover:not(.disabled) {
-      background: #fff5ee; border-color: var(--c-tik, #ff8a5b);
+      background: #fff5f0; border-color: #ff8a5b;
     }
     .soal-kuis .opsi-kuis label.disabled { cursor: default; }
     .soal-kuis .opsi-kuis label.selected {
-      border-color: var(--c-tik, #ff8a5b); background: #fff5ee;
+      border-color: #ff8a5b; background: #fff5f0;
     }
     .soal-kuis .opsi-kuis label.correct-answer {
       border-color: #8aaa7a; background: #e8f5e0;
@@ -444,7 +794,7 @@
       border-color: #d4a0a0; background: #f5e0e0;
     }
     .soal-kuis .opsi-kuis input[type="radio"] {
-      accent-color: var(--c-tik, #ff8a5b);
+      accent-color: #ff8a5b;
       width: 16px; height: 16px;
       margin-top: 0.15rem; flex-shrink: 0;
     }
@@ -468,7 +818,7 @@
     .btn-submit-tes {
       display: block; margin: 1.2rem auto 0;
       padding: 0.7rem 2.5rem; border-radius: 30px; border: none;
-      background: linear-gradient(135deg, var(--c-tik, #ff8a5b), #d4a030);
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
       color: #fff; font-weight: 700; font-size: 0.95rem;
       cursor: pointer; transition: all 0.2s ease; font-family: inherit;
     }
@@ -479,10 +829,25 @@
     .btn-submit-tes:disabled {
       opacity: 0.5; cursor: not-allowed; transform: none !important;
     }
+    .btn-ulangi-tes {
+      display: none; margin: 1rem auto 0;
+      padding: 0.7rem 2rem; border-radius: 30px;
+      background: #fff; color: #b34614;
+      border: 2px solid #ff8a5b;
+      font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn-ulangi-tes.show { display: block; }
+    .btn-ulangi-tes:hover {
+      background: #fff5f0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.20);
+    }
     .hasil-tes {
       display: none; margin-top: 1.2rem; padding: 1.2rem;
-      background: #fff5ee; border-radius: 14px;
-      border: 3px double var(--c-tik, #ff8a5b); text-align: center;
+      background: #fff5f0; border-radius: 14px;
+      border: 3px double #ff8a5b; text-align: center;
     }
     .hasil-tes.show { display: block; animation: fadeIn 0.4s ease; }
     .hasil-tes .hasil-icon { font-size: 2.8rem; margin-bottom: 0.3rem; }
@@ -498,16 +863,60 @@
       margin-bottom: 0.8rem; line-height: 1.5;
     }
 
+    /* ===== REFLEKSI 4F ===== */
+    .refleksi-box {
+      background: linear-gradient(135deg, #f0e6ff, #e6f0ff);
+      border: 2px solid #b07be0; border-radius: 16px;
+      padding: 1.3rem 1.6rem; margin: 1.5rem 0;
+      display: none;
+    }
+    .refleksi-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .refleksi-box h3 {
+      color: #5c2f8a; font-size: 1.05rem; margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .refleksi-box .refleksi-item { margin-bottom: 0.8rem; }
+    .refleksi-box .refleksi-item label {
+      display: block; font-weight: 700;
+      color: #5c2f8a; font-size: 0.88rem; margin-bottom: 0.3rem;
+    }
+    .refleksi-box .refleksi-item label .tag {
+      background: #b07be0; color: #fff;
+      padding: 0.1rem 0.6rem; border-radius: 20px;
+      font-size: 0.65rem; margin-right: 0.4rem;
+    }
+    .refleksi-box textarea {
+      width: 100%; padding: 0.6rem 0.9rem;
+      border: 2px solid #d4c0e8; border-radius: 10px;
+      font-family: inherit; font-size: 0.88rem;
+      color: #2f2822; background: #fff;
+      resize: vertical; min-height: 50px; outline: none;
+    }
+    .refleksi-box textarea:focus {
+      border-color: #b07be0;
+      box-shadow: 0 0 0 3px rgba(176, 123, 224, 0.15);
+    }
+    .refleksi-box .exit-ticket {
+      background: #fff; border-radius: 12px;
+      padding: 0.9rem 1.2rem; margin-top: 1rem;
+      border: 2px dashed #b07be0;
+    }
+    .refleksi-box .exit-ticket .et-title {
+      font-weight: 700; color: #5c2f8a;
+      font-size: 0.9rem; margin-bottom: 0.4rem;
+    }
+    .refleksi-box .exit-ticket textarea { border-color: #d4c0e8; }
+
     /* ===== STATUS KIRIM ===== */
     .status-kirim {
-      max-width: 480px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+      max-width: 520px; margin: 1rem auto; padding: 0.8rem 1.2rem;
       border-radius: 12px; font-size: 0.88rem; font-weight: 600;
       line-height: 1.5; display: none; align-items: center;
       gap: 0.6rem; text-align: left;
     }
-    .status-kirim.show { display: flex; }
+    .status-kirim.show { display: flex; flex-wrap: wrap; }
     .status-kirim.info {
-      background: #fff5ee; border: 2px solid var(--c-tik, #ff8a5b); color: #b34614;
+      background: #fff5f0; border: 2px solid #ff8a5b; color: #b34614;
     }
     .status-kirim.success { background: #d4e8cb; border: 2px solid #8aaa7a; color: #2d5a1e; }
     .status-kirim.error { background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a; }
@@ -517,6 +926,18 @@
       border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .status-kirim .btn-retry {
+      margin-left: auto; padding: 0.35rem 1rem;
+      border-radius: 20px; border: 2px solid currentColor;
+      background: transparent; color: inherit;
+      font-weight: 700; font-size: 0.82rem;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.15s ease; white-space: nowrap;
+    }
+    .status-kirim .btn-retry:hover {
+      background: rgba(255,255,255,0.6);
+      transform: translateY(-1px);
+    }
 
     /* ===== NAVIGASI ===== */
     .nav-bottom {
@@ -533,16 +954,15 @@
       display: inline-flex; align-items: center; gap: 0.4rem;
     }
     .btn-nav-bawah:hover {
-      background: #fff5ee; border-color: var(--c-tik, #ff8a5b);
+      background: #fff5f0; border-color: #ff8a5b;
       transform: translateY(-2px);
     }
     .btn-nav-bawah.primary {
-      background: var(--c-tik, #ff8a5b); border-color: var(--c-tik, #ff8a5b); color: #fff;
+      background: #4d3829; border-color: #4d3829; color: #fff;
     }
     .btn-nav-bawah.primary:hover {
-      background: #e77645; border-color: #e77645;
+      background: #6b4f3a; border-color: #6b4f3a;
     }
-    .btn-nav-bawah:disabled,
     .btn-nav-bawah.locked {
       opacity: 0.4; cursor: not-allowed;
       transform: none !important; pointer-events: none;
@@ -554,36 +974,33 @@
     }
     .nav-hint.locked { color: #d4a0a0; }
     .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+    .nav-hint.warn { color: #a84a3a; font-weight: 600; }
 
     /* ===== RESPONSIF ===== */
     @media (max-width: 820px) {
-      .step-dot .circle { width: 30px; height: 30px; font-size: 0.7rem; }
-      .step-dot .label { font-size: 0.45rem; max-width: 50px; }
-      .step-indicator::before { left: 15px; right: 15px; }
       .scenario-panel { padding: 1.2rem; }
-      .misi-item { font-size: 0.72rem; padding: 0.35rem 0.8rem; }
+      .penamaan-box { padding: 1rem 1.2rem; }
+      .kuis-kilat-box { padding: 1rem 1.2rem; }
+      .refleksi-box { padding: 1rem 1.2rem; }
+      .progress-lapis { gap: 0.3rem; }
+      .progress-lapis .pl-step { font-size: 0.7rem; padding: 0.35rem 0.8rem; }
     }
     @media (max-width: 480px) {
-      .step-indicator { flex-wrap: wrap; justify-content: center; gap: 0.2rem; }
-      .step-indicator::before { display: none; }
-      .step-dot { min-width: 35px; flex: unset; }
-      .step-dot .circle { width: 26px; height: 26px; font-size: 0.6rem; }
-      .step-dot .label { display: none; }
       .scenario-panel { padding: 0.8rem; }
       .scenario-panel .scenario-title { font-size: 1.1rem; }
       .nav-bottom { flex-direction: column; align-items: stretch; }
       .btn-nav-bawah { justify-content: center; }
-      .materi-ringkas { padding: 1rem 1.2rem; }
-      .materi-ringkas h2 { font-size: 1.1rem; }
       .soal-kuis { padding: 1rem; }
       .soal-kuis .pertanyaan { font-size: 0.92rem; }
       .soal-kuis .opsi-kuis label { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
       .tes-header { flex-direction: column; align-items: flex-start; }
-      .misi-progress { gap: 0.3rem; }
-      .misi-item { padding: 0.3rem 0.6rem; font-size: 0.68rem; }
-      .misi-item .misi-num { width: 18px; height: 18px; font-size: 0.6rem; }
-      .misi-card { padding: 1rem 1.2rem; }
-      .pilihan-grid { grid-template-columns: 1fr; }
+      .status-kirim .btn-retry { margin-left: 0; width: 100%; text-align: center; }
+      .lapis-header { font-size: 0.85rem; padding: 0.6rem 1rem; }
+      .progress-lapis .pl-step .pl-label { display: none; }
+      .progress-lapis .pl-step { padding: 0.35rem 0.6rem; }
+      .langkah-tabs { flex-direction: column; }
+      .langkah-tab { flex-direction: row; justify-content: center; gap: 0.5rem; }
+      .susun-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -595,8 +1012,8 @@
     <ol class="breadcrumb">
       <li><a href="../index.html">Beranda</a></li>
       <li><a href="materitik.html">Teknologi Informasi dan Komunikasi</a></li>
-      <li><a href="tik3.html">Peramban & Pencarian Informasi</a></li>
-      <li>Bagian 3: Teknik Pencarian</li>
+      <li><a href="tik3.html">Menggunakan Peramban</a></li>
+      <li>Bagian 3: Mencari untuk Tugas Sekolah</li>
     </ol>
   </nav>
 
@@ -604,265 +1021,362 @@
     <article class="card">
       <div class="aktivitas-wrapper">
 
-        <div class="bagian-progress">
-          <span class="step completed"><span class="num">✓</span> Peramban vs Mesin Pencari</span>
-          <span class="step completed"><span class="num">✓</span> Cara Kerja Mesin Pencari</span>
-          <span class="step active"><span class="num">3</span> Teknik Pencarian</span>
-          <span class="step"><span class="num">4</span> Memilah Informasi</span>
-          <span class="step"><span class="num">5</span> Kuis Akhir</span>
-        </div>
-
-        <div class="materi-ringkas">
-          <h2>📖 Materi Singkat <span class="badge">Bagian 3</span></h2>
-
-          <h3>1. Mengapa Teknik Pencarian Penting?</h3>
-          <p>
-            Kata kunci yang tepat membuat hasil pencarian <strong>lebih relevan</strong> dan <strong>lebih sedikit</strong>. Kamu tidak perlu membuang waktu menyaring ribuan hasil yang tidak relevan.
-          </p>
-
-          <h3>2. Teknik Pencarian Dasar</h3>
-          <div class="info-box">
-            • <strong>Tanda kutip</strong> <code>"..."</code> → mencari frasa persis<br>
-            • <strong>Operator minus</strong> <code>-</code> → mengecualikan kata<br>
-            • <strong>Site</strong> <code>site:</code> → mencari di situs tertentu<br>
-            • <strong>Filetype</strong> <code>filetype:</code> → mencari tipe file tertentu
-          </div>
-
-          <h3>3. Contoh Cerdas</h3>
-          <div class="info-box">
-            ❌ <code>kue</code> → terlalu luas<br>
-            ✅ <code>resep kue cokelat</code> → lebih spesifik<br>
-            ⭐ <code>"resep kue cokelat" filetype:pdf</code> → paling presisi
-          </div>
-
-          <a href="materitik3.html" class="link-materi">📚 Baca materi lengkap di sini →</a>
+        <!-- ===== PROGRESS BAR VISUAL ===== -->
+        <div class="progress-lapis" id="progressLapis">
+          <span class="pl-step active" data-step="lapis1">
+            <span class="pl-num">1</span>
+            <span class="pl-label">Menjelajah</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis2">
+            <span class="pl-num">2</span>
+            <span class="pl-label">Tantangan</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis3">
+            <span class="pl-num">3</span>
+            <span class="pl-label">Penamaan</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="tes">
+            <span class="pl-num">4</span>
+            <span class="pl-label">Tes Pemahaman</span>
+          </span>
         </div>
 
         <!-- ===== AREA SIMULASI ===== -->
-        <div id="area-simulasi">
-
-          <div class="step-indicator" id="stepIndicator">
-            <button class="step-dot completed" data-step="0">
-              <span class="circle">✓</span>
-              <span class="label">Peramban vs Mesin Pencari</span>
-            </button>
-            <button class="step-dot completed" data-step="1">
-              <span class="circle">✓</span>
-              <span class="label">Cara Kerja Mesin Pencari</span>
-            </button>
-            <button class="step-dot active" data-step="2">
-              <span class="circle">3</span>
-              <span class="label">Teknik Pencarian</span>
-            </button>
-            <button class="step-dot locked" data-step="3">
-              <span class="circle">4</span>
-              <span class="label">Memilah Informasi</span>
-            </button>
-            <button class="step-dot locked" data-step="4">
-              <span class="circle">🏆</span>
-              <span class="label">Kuis Akhir</span>
-            </button>
-          </div>
-
+        <div id="area-simulasi" class="active">
           <div class="scenario-panel">
-            <div class="scenario-title">🔍 Aktivitas 3: "Pencarian Presisi"</div>
+
+            <div class="scenario-title">🎯 Aktivitas: Misi Pencarian — Laporan Banjir</div>
             <div class="scenario-story">
-              📖 <strong>Cerita:</strong> Kamu akan berlatih menggunakan <strong>teknik pencarian dasar</strong> untuk menemukan informasi dengan lebih presisi! Ada <strong>4 misi</strong> yang harus diselesaikan.
+              📖 <strong>Cerita:</strong> Kelompok Budi mendapat tugas: <em>"Buat laporan tentang
+              penyebab banjir di Indonesia."</em> Budi mengetik <strong>"banjir"</strong> —
+              hasilnya berita banjir hari ini, foto banjir, jual perahu karet.
+              <br><br>
+              Sekarang kamu yang mengerjakan misi ini! Ada <strong>3 langkah</strong>:
+              <strong>CARI</strong> (temukan 3 sumber terpercaya) →
+              <strong>PILAH</strong> (nilai tiap sumber dengan 5 pertanyaan detektif) →
+              <strong>SUSUN</strong> (pilih fakta &amp; buat laporan mini).
             </div>
 
-            <!-- Misi Progress -->
-            <div class="misi-progress" id="misiProgress">
-              <span class="misi-item active" id="misi1Item">
-                <span class="misi-num">1</span> Spesifik
-              </span>
-              <span class="misi-item" id="misi2Item">
-                <span class="misi-num">2</span> Frasa Persis
-              </span>
-              <span class="misi-item" id="misi3Item">
-                <span class="misi-num">3</span> Site Search
-              </span>
-              <span class="misi-item" id="misi4Item">
-                <span class="misi-num">4</span> Tantangan Kilat
-              </span>
+            <!-- ===== LAPIS 1 ===== -->
+            <div class="lapis-header lapis-1">
+              <span class="lapis-num">LAPIS 1</span>
+              <span>🖐️ Menjelajah Bebas — 3 Langkah Misi</span>
             </div>
 
-            <!-- ===== MISI 1: SPESIFIK ===== -->
-            <div class="misi-content active" id="misi1Content">
-              <div class="misi-card">
-                <div class="misi-title">🎯 Misi 1: Pencarian Biasa vs Spesifik</div>
-                <div class="misi-situation">
-                  <strong>Situasi:</strong> Kamu ingin mencari resep kue cokelat. Coba bandingkan hasil pencarian dengan kata kunci <code>kue</code> vs <code>resep kue cokelat</code>!
-                </div>
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              <strong>Instruksi:</strong> Kerjakan <strong>3 langkah</strong> berurutan.
+              Langkah berikutnya terbuka setelah langkah sebelumnya selesai.
+            </p>
 
-                <div class="search-sim">
-                  <div class="search-bar">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="inputMisi1" placeholder="Ketik kata kunci..." value="kue">
-                    <button onclick="cariMisi1()">Cari</button>
-                  </div>
-
-                  <div class="search-results" id="hasilMisi1">
-                    <p style="text-align:center; color:#a0968c; font-style:italic; font-size:0.9rem; padding:0.5rem;">
-                      💡 Klik "Cari" untuk membandingkan hasil pencarian.
-                    </p>
-                  </div>
-                </div>
-
-                <p style="font-weight:600; color:#4d3829; font-size:0.95rem; margin-top:1rem;">
-                  ❓ Kata kunci mana yang lebih efektif?
-                </p>
-
-                <div class="pilihan-grid" id="pilihanMisi1">
-                  <button class="pilihan-btn" data-value="A" onclick="pilihMisi1(this, 'A')">
-                    A. <code>kue</code> — karena singkat
-                  </button>
-                  <button class="pilihan-btn" data-value="B" onclick="pilihMisi1(this, 'B')">
-                    B. <code>resep kue cokelat</code> — karena lebih spesifik
-                  </button>
-                  <button class="pilihan-btn" data-value="C" onclick="pilihMisi1(this, 'C')">
-                    C. Tidak ada bedanya
-                  </button>
-                </div>
-
-                <div class="feedback-box" id="feedbackMisi1"></div>
+            <!-- Tabs -->
+            <div class="langkah-tabs" id="langkahTabs">
+              <div class="langkah-tab active" data-step="cari" id="tabCari">
+                <span class="lt-num">LANGKAH 1</span>
+                <span class="lt-title">🔍 Cari</span>
+              </div>
+              <div class="langkah-tab locked" data-step="pilah" id="tabPilah">
+                <span class="lt-num">LANGKAH 2</span>
+                <span class="lt-title">📋 Pilah</span>
+              </div>
+              <div class="langkah-tab locked" data-step="susun" id="tabSusun">
+                <span class="lt-num">LANGKAH 3</span>
+                <span class="lt-title">📝 Susun</span>
               </div>
             </div>
 
-            <!-- ===== MISI 2: FRASA PERSIS ===== -->
-            <div class="misi-content" id="misi2Content">
-              <div class="misi-card">
-                <div class="misi-title">🎯 Misi 2: Frasa Persis dengan Tanda Kutip</div>
-                <div class="misi-situation">
-                  <strong>Situasi:</strong> Kamu mencari kutipan dari sebuah buku: <em>"manusia diciptakan untuk saling melengkapi"</em>. Gunakan tanda kutip agar hasilnya persis!
+            <!-- ===== LANGKAH 1: CARI ===== -->
+            <div class="langkah-panel active" id="panelCari">
+              <div class="misi-info">
+                <div class="mi-label">MISI</div>
+                <strong>Buat laporan tentang penyebab banjir di Indonesia.</strong><br>
+                Tugasmu: cari <strong>3 sumber terpercaya</strong> dari daftar di bawah.
+              </div>
+
+              <div class="search-engine-mini">
+                <div class="se-title">🔎 SearchLab</div>
+                <div class="search-input-mini">
+                  <input type="text" id="searchInput" placeholder="Ketik kata kunci untuk mencari sumber..." maxlength="100" autocomplete="off">
+                  <button id="btnCari" onclick="cariSumber()">Cari</button>
                 </div>
 
-                <div class="search-sim">
-                  <div class="search-bar">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="inputMisi2" placeholder="Ketik kata kunci..." value="manusia diciptakan untuk saling melengkapi">
-                    <button onclick="cariMisi2()">Cari</button>
+                <div class="hasil-search" id="hasilSearch">
+                  <div style="text-align:center; padding:1.5rem; color:#7a6656; font-style:italic; font-size:0.85rem;">
+                    Ketik kata kunci untuk menampilkan sumber-sumber.
                   </div>
-
-                  <div class="search-results" id="hasilMisi2">
-                    <p style="text-align:center; color:#a0968c; font-style:italic; font-size:0.9rem; padding:0.5rem;">
-                      💡 Klik "Cari" untuk melihat hasil pencarian tanpa tanda kutip.
-                    </p>
-                  </div>
                 </div>
+              </div>
 
-                <p style="font-weight:600; color:#4d3829; font-size:0.95rem; margin-top:1rem;">
-                  ❓ Bagaimana cara membuat pencarian lebih persis?
-                </p>
-
-                <div class="pilihan-grid" id="pilihanMisi2">
-                  <button class="pilihan-btn" data-value="A" onclick="pilihMisi2(this, 'A')">
-                    A. Tambahkan kata "<code>kutipan</code>"
-                  </button>
-                  <button class="pilihan-btn" data-value="B" onclick="pilihMisi2(this, 'B')">
-                    B. Bungkus dengan tanda kutip: <code>"manusia diciptakan untuk saling melengkapi"</code>
-                  </button>
-                  <button class="pilihan-btn" data-value="C" onclick="pilihMisi2(this, 'C')">
-                    C. Gunakan huruf kapital semua
-                  </button>
+              <div class="stats-bar" style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-between; align-items:center; padding:0.8rem 1.2rem; background:#fff; border-radius:16px; border:2px solid #e5dbd0; margin-top:1rem;">
+                <div class="stat" style="display:flex; align-items:center; gap:0.4rem; font-size:0.88rem; color:#4d3829;">
+                  <span>📚</span>
+                  <span>Sumber Dipilih:</span>
+                  <span class="num" id="totalSumberDipilih" style="font-weight:700; font-size:1.1rem; color:#2d7d46;">0</span>
+                  <span>/ 3</span>
                 </div>
+              </div>
 
-                <div class="feedback-box" id="feedbackMisi2"></div>
+              <div class="game-actions" style="margin-top:1rem;">
+                <button class="btn-game primary" id="btnLanjutPilah" onclick="lanjutKePilah()" disabled>
+                  ➡️ Lanjut ke Langkah 2: Pilah
+                </button>
               </div>
             </div>
 
-            <!-- ===== MISI 3: SITE SEARCH ===== -->
-            <div class="misi-content" id="misi3Content">
-              <div class="misi-card">
-                <div class="misi-title">🎯 Misi 3: Pencarian di Situs Tertentu</div>
-                <div class="misi-situation">
-                  <strong>Situasi:</strong> Kamu hanya ingin mencari informasi beasiswa di situs <code>unsyiah.ac.id</code>. Gunakan operator <code>site:</code>!
-                </div>
+            <!-- ===== LANGKAH 2: PILAH ===== -->
+            <div class="langkah-panel" id="panelPilah">
+              <div class="misi-info">
+                <div class="mi-label">LANGKAH 2</div>
+                <strong>Pilah 3 sumber yang kamu pilih</strong><br>
+                Nilai setiap sumber dengan <strong>5 pertanyaan detektif</strong>:
+                Siapa? Kapan? Dari mana? Apa buktinya? Mengapa?
+              </div>
 
-                <p style="font-weight:600; color:#4d3829; font-size:0.95rem; margin: 1rem 0 0.5rem;">
-                  ❓ Kata kunci mana yang tepat?
-                </p>
+              <div class="pilah-list" id="pilahList">
+                <!-- Akan di-render lewat JS -->
+              </div>
 
-                <div class="pilihan-grid" id="pilihanMisi3">
-                  <button class="pilihan-btn" data-value="A" onclick="pilihMisi3(this, 'A')">
-                    A. <code>beasiswa unsyiah.ac.id</code>
-                  </button>
-                  <button class="pilihan-btn" data-value="B" onclick="pilihMisi3(this, 'B')">
-                    B. <code>beasiswa site:unsyiah.ac.id</code>
-                  </button>
-                  <button class="pilihan-btn" data-value="C" onclick="pilihMisi3(this, 'C')">
-                    C. <code>"beasiswa" unsyiah</code>
-                  </button>
-                  <button class="pilihan-btn" data-value="D" onclick="pilihMisi3(this, 'D')">
-                    D. <code>beasiswa filetype:unsyiah</code>
-                  </button>
-                </div>
-
-                <div class="feedback-box" id="feedbackMisi3"></div>
+              <div class="game-actions" style="margin-top:1rem;">
+                <button class="btn-game primary" id="btnLanjutSusun" onclick="lanjutKeSusun()" disabled>
+                  ➡️ Lanjut ke Langkah 3: Susun
+                </button>
               </div>
             </div>
 
-            <!-- ===== MISI 4: TANTANGAN KILAT ===== -->
-            <div class="misi-content" id="misi4Content">
-              <div class="misi-card">
-                <div class="misi-title">🎯 Misi 4: Tantangan Kilat</div>
-                <div class="misi-situation">
-                  <strong>Situasi:</strong> Kamu ditantang memilih kata kunci paling tepat untuk 3 situasi berbeda. Pilih jawaban yang paling <strong>presisi</strong>!
-                </div>
+            <!-- ===== LANGKAH 3: SUSUN ===== -->
+            <div class="langkah-panel" id="panelSusun">
+              <div class="misi-info">
+                <div class="mi-label">LANGKAH 3</div>
+                <strong>Susun laporan mini</strong><br>
+                Pilih <strong>3 fakta</strong> dari sumber yang sudah kamu pilah, lalu susun
+                laporan mini tentang penyebab banjir di Indonesia.
+              </div>
 
-                <div id="tantanganContainer"></div>
+              <p style="font-size:0.88rem; color:#5c4638; margin-bottom:0.6rem;">
+                <strong>Pilih 3 fakta</strong> dari sumber-sumber di bawah:
+              </p>
 
-                <div class="game-actions">
-                  <button class="btn-game primary" id="btnPeriksaTantangan" onclick="periksaTantangan()" disabled>
-                    ✅ Periksa Jawaban
-                  </button>
-                </div>
+              <div class="susun-grid" id="susunGrid">
+                <!-- Akan di-render lewat JS -->
+              </div>
 
-                <div class="feedback-box" id="feedbackMisi4"></div>
+              <div class="susun-laporan">
+                <div class="sl-title">📄 Laporan Mini Kamu</div>
+                <ul class="sl-list" id="laporanList">
+                  <li class="sl-empty">Belum ada fakta dipilih. Klik fakta di atas untuk menambahkan.</li>
+                </ul>
+              </div>
+
+              <div class="game-actions" style="margin-top:1rem;">
+                <button class="btn-game primary" id="btnSelesaiLapis1" onclick="selesaiLapis1()" disabled>
+                  ✅ Selesai Menjelajah
+                </button>
               </div>
             </div>
 
-          </div>
-
-          <!-- ===== TES PEMAHAMAN ===== -->
-          <div class="tes-section" id="tesSection">
-            <div class="tes-header">
-              <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 4 soal pilihan ganda</div>
-              <div class="tes-progress" id="tesProgress">Terjawab: 0 / 4</div>
+            <!-- Momen Mindful 1 -->
+            <div class="mindful-box" id="mindful1">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 1</div>
+              <div class="mb-text">
+                <strong>Pola apa yang kamu lihat?</strong> Apa <strong>kriteria</strong> kamu
+                memilih sumber itu? Apakah kamu memilih karena <em>judulnya menarik</em>,
+                <em>sumbernya dikenal</em>, atau <em>isinya relevan</em>? Tulis pengamatanmu.
+              </div>
+              <textarea id="mindful1Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
             </div>
 
-            <div id="soalContainer"></div>
-
-            <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
           </div>
-
-          <!-- ===== HASIL TES ===== -->
-          <div class="hasil-tes" id="hasilTes">
-            <div class="hasil-icon" id="hasilIcon">🏆</div>
-            <div class="hasil-title" id="hasilTitle">Selamat!</div>
-            <div class="hasil-skor" id="hasilSkor">0 / 4</div>
-            <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 3.</div>
-          </div>
-
-          <!-- Status kirim -->
-          <div class="status-kirim info" id="statusKirim">
-            <span class="spinner"></span>
-            <span id="statusKirimText">Mengirim nilai...</span>
-          </div>
-
         </div><!-- end area-simulasi -->
 
+        <!-- ===== LAPIS 2 ===== -->
+        <div id="areaLapis2" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-2">
+              <span class="lapis-num">LAPIS 2</span>
+              <span>🎯 Tantangan Terarah — Uji Pemahamanmu</span>
+            </div>
+
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              Sekarang kamu akan diberi <strong>3 tantangan</strong>. Jawab dengan teliti!
+              Sistem hanya memberi umpan balik, bukan jawaban langsung.
+            </p>
+
+            <div class="tantangan-list" id="tantanganList"></div>
+
+            <!-- Momen Mindful 2 -->
+            <div class="mindful-box" id="mindful2" style="display:none;">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 2</div>
+              <div class="mb-text">
+                <strong>Refleksi:</strong> Jika dua sumber <strong>saling bertentangan</strong>,
+                apa yang harus kamu lakukan? Misalnya: Sumber A bilang "penyebab utama banjir
+                adalah sampah", Sumber B bilang "penyebab utama banjir adalah curah hujan tinggi".
+                Mana yang benar? Mengapa?
+              </div>
+              <textarea id="mindful2Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis3" onclick="lanjutKeLapis3()" disabled>
+                ➡️ Lanjut ke Penamaan Konsep
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== LAPIS 3: PENAMAAN KONSEP ===== -->
+        <div id="areaLapis3" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-3">
+              <span class="lapis-num">LAPIS 3</span>
+              <span>📖 Penamaan Konsep — Istilah Resmi</span>
+            </div>
+
+            <div class="penamaan-box show">
+              <h3>🏷️ Sekarang, Kita Beri Nama!</h3>
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822;">
+                Semua yang kamu lakukan tadi punya <strong>nama resmi</strong> dalam
+                literasi digital. Inilah saatnya menghubungkan pengalamanmu dengan
+                istilah formal.
+              </p>
+
+              <div class="notasi-box">
+                <strong>🎯 Mencari &amp; memilah informasi untuk tugas</strong> adalah proses
+                <strong>tiga langkah</strong>:
+                <ol>
+                  <li><strong>Cari</strong> — gunakan kata kunci spesifik, tanda kutip, dan konteks.</li>
+                  <li><strong>Pilah</strong> — periksa sumber, penulis, tanggal, bukti, dan tujuan.</li>
+                  <li><strong>Susun</strong> — ambil fakta dari <strong>beberapa sumber</strong>, bandingkan, lalu buat kesimpulan.</li>
+                </ol>
+                <br>
+                <strong>Prinsip penting:</strong>
+                <ul>
+                  <li><strong>Satu sumber tidak cukup</strong> — selalu bandingkan minimal 2–3 sumber.</li>
+                  <li><strong>Sumber resmi bukan berarti selalu benar</strong> — tetap periksa buktinya.</li>
+                  <li><strong>Sumber berbeda bisa sama-sama benar</strong> — tergantung konteks.</li>
+                </ul>
+              </div>
+
+              <div class="koneksi">
+                <strong>💡 Koneksi Konteks Lokal Indonesia:</strong><br>
+                Untuk tugas sekolah tentang Indonesia, prioritaskan sumber seperti
+                <strong>Kemendikbud.go.id</strong>, <strong>BMKG.go.id</strong>,
+                <strong>BPS.go.id</strong>, <strong>Detik.com</strong>,
+                <strong>Kompas.com</strong>, dan <strong>jurnal universitas Indonesia</strong>.
+                Hindari sumber tanpa penulis, tanpa tanggal, atau yang hanya berisi opini
+                tanpa data.
+              </div>
+            </div>
+
+            <!-- Link materi lengkap -->
+            <div class="link-materi-wrapper">
+              <a href="materitik3.html" target="_blank" rel="noopener" class="link-materi-bawah">
+                📚 Baca Materi Lengkap (buka tab baru)
+              </a>
+            </div>
+
+            <!-- Momen Mindful 3 -->
+            <div class="mindful-box" id="mindful3">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 3</div>
+              <div class="mb-text">
+                Dengan istilah resmi: <strong>mengapa satu sumber tidak cukup untuk
+                laporan tugas sekolah</strong>? Tulis dengan bahasamu sendiri.
+              </div>
+              <textarea id="mindful3Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <!-- Kuis Kilat -->
+            <div class="kuis-kilat-box" id="kuisKilatBox">
+              <div class="kk-title">
+                ⚡ Kuis Kilat
+                <span class="badge">2 SOAL</span>
+              </div>
+              <div id="kuisKilatContent"></div>
+              <div class="kk-hasil" id="kkHasil"></div>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutTes" onclick="lanjutKeTesPemahaman()" disabled>
+                ➡️ Lanjut ke Tes Pemahaman
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TES PEMAHAMAN ===== -->
+        <div class="tes-section" id="tesSection">
+          <div class="tes-header">
+            <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 4 soal · Minimal 3 benar untuk lanjut</div>
+            <div class="tes-progress" id="tesProgress">Terjawab: 0 / 4</div>
+          </div>
+
+          <div id="soalContainer"></div>
+
+          <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+          <button class="btn-ulangi-tes" id="btnUlangiTes">🔄 Ulangi Tes Pemahaman</button>
+        </div>
+
+        <!-- ===== HASIL TES ===== -->
+        <div class="hasil-tes" id="hasilTes">
+          <div class="hasil-icon" id="hasilIcon">🏆</div>
+          <div class="hasil-title" id="hasilTitle">Selamat!</div>
+          <div class="hasil-skor" id="hasilSkor">0 / 4</div>
+          <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 3.</div>
+        </div>
+
+        <!-- ===== REFLEKSI 4F ===== -->
+        <div class="refleksi-box" id="refleksiBox">
+          <h3>🪞 Refleksi 4F</h3>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FACT</span> Apa yang tadi saya lakukan saat mencari dan memilah informasi?</label>
+            <textarea id="refFact" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FEELING</span> Bagian mana yang paling menantang?</label>
+            <textarea id="refFeeling" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FINDING</span> Apa pola yang saya temukan tentang sumber yang dapat dipercaya?</label>
+            <textarea id="refFinding" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FUTURE</span> Di mana lagi saya bisa menggunakan keterampilan ini?</label>
+            <textarea id="refFuture" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="exit-ticket">
+            <div class="et-title">🎫 Exit Ticket</div>
+            <p style="font-size:0.85rem; color:#5c4638; margin-bottom:0.4rem;">
+              Pilih <strong>satu topik</strong> yang ingin kamu cari tahu. Tuliskan:
+              <strong>Kata kunci apa yang akan kamu gunakan? Sumber apa yang akan kamu cari? Mengapa?</strong>
+            </p>
+            <textarea id="exitTicket" placeholder="Tulis rencanamu di sini..." style="min-height:90px;"></textarea>
+          </div>
+        </div>
+
+        <!-- Status kirim -->
+        <div class="status-kirim info" id="statusKirim">
+          <span class="spinner" id="statusSpinner"></span>
+          <span id="statusKirimText">Mengirim nilai...</span>
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
         <div class="nav-bottom">
           <a href="aktivitastik3b.html" class="btn-nav-bawah">
-            <span class="back-arrow">←</span> Bagian Sebelumnya
+            <span class="back-arrow">←</span> Kembali ke Bagian 2
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-            <a href="tik3.html" class="btn-nav-bawah">🏠 Portal</a>
             <button class="btn-nav-bawah primary locked" id="btnLanjutBagian4" onclick="lanjutKeBagian4()">
-              Lanjut ke Bagian 4: Memilah Informasi →
+              Lanjut ke Bagian 4: Kuis Akhir &amp; Sertifikat →
             </button>
           </div>
           <div class="nav-hint locked" id="hintLanjut">
-            🔒 Selesaikan 4 misi & tes pemahaman untuk membuka Bagian 4
+            🔒 Selesaikan semua tahap untuk membuka Bagian 4
           </div>
         </div>
 
@@ -874,6 +1388,7 @@
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
 
   <script>
     (function() {
@@ -883,508 +1398,976 @@
       // KONFIGURASI MODUL
       // ============================================
       const NAMA_SHEET = 'tik3';
-      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
+      const MODUL_KEY = 'tik3';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd'];
+      const AMBANG_LULUS = 3;
 
       // ============================================
-      // DATA SOAL TES (4 SOAL)
+      // DATA SUMBER (untuk Langkah 1: CARI)
       // ============================================
-      const soalData = [
+      // 'kualitas': 'baik' | 'sedang' | 'buruk'
+      const sumberData = [
         {
-          pertanyaan: 'Apa fungsi tanda kutip (" ") dalam pencarian?',
-          opsi: [
-            'Menghapus hasil pencarian',
-            'Mencari frasa yang persis sama',
-            'Mempercepat pencarian',
-            'Mencari gambar saja'
-          ],
-          kunci: 1,
-          penjelasan: 'Tanda kutip (" ") digunakan untuk mencari frasa yang persis sama dengan yang ada di dalam tanda kutip.'
+          id: 's1',
+          url: 'detik.com',
+          tag: 'BERITA',
+          title: 'Banjir Jakarta Hari Ini: Update Terkini',
+          desc: 'Berita aktual tentang banjir yang sedang terjadi di Jakarta.',
+          kualitas: 'sedang',
+          keywordCocok: ['banjir jakarta', 'banjir hari ini', 'banjir terkini']
         },
         {
-          pertanyaan: 'Jika kamu ingin mencari file PDF tentang "sejarah Indonesia", kata kunci yang tepat adalah...',
-          opsi: [
-            'sejarah Indonesia',
-            'sejarah Indonesia pdf',
-            'sejarah Indonesia filetype:pdf',
-            'file sejarah Indonesia'
-          ],
-          kunci: 2,
-          penjelasan: 'Operator filetype:pdf digunakan untuk mencari file dengan tipe PDF secara spesifik.'
+          id: 's2',
+          url: 'jurnal.ui.ac.id',
+          tag: 'AKADEMIK',
+          title: 'Analisis Penyebab Banjir di Indonesia (2023)',
+          desc: 'Studi akademik dengan data curah hujan, tata guna lahan, dan faktor lain.',
+          kualitas: 'baik',
+          keywordCocok: ['penyebab banjir', 'analisis banjir', 'jurnal banjir', 'penyebab banjir indonesia']
         },
         {
-          pertanyaan: 'Operator site: digunakan untuk...',
-          opsi: [
-            'Mencari di seluruh internet',
-            'Mencari hanya di situs tertentu',
-            'Mencari gambar',
-            'Mencari video'
-          ],
-          kunci: 1,
-          penjelasan: 'Operator site: digunakan untuk membatasi hasil pencarian hanya pada situs/domain tertentu.'
+          id: 's3',
+          url: 'blogpribadi.xyz',
+          tag: 'BLOG',
+          title: 'Pengalaman Saya Kena Banjir',
+          desc: 'Cerita pribadi seseorang yang pernah mengalami banjir.',
+          kualitas: 'buruk',
+          keywordCocok: []
         },
         {
-          pertanyaan: 'Mengapa kata kunci yang spesifik lebih baik daripada kata kunci umum?',
-          opsi: [
-            'Karena lebih cepat diketik',
-            'Karena memberikan hasil yang lebih relevan dan tidak terlalu banyak',
-            'Karena mesin pencari menyukai kata panjang',
-            'Karena kata umum tidak diindeks'
-          ],
-          kunci: 1,
-          penjelasan: 'Kata kunci spesifik memberikan hasil yang lebih relevan dan tidak terlalu banyak, sehingga lebih efisien.'
+          id: 's4',
+          url: 'bmkg.go.id',
+          tag: 'RESMI',
+          title: 'Data Curah Hujan Indonesia — BMKG',
+          desc: 'Data resmi curah hujan seluruh wilayah Indonesia dari BMKG.',
+          kualitas: 'baik',
+          keywordCocok: ['curah hujan', 'data banjir', 'bmkg', 'penyebab banjir indonesia']
+        },
+        {
+          id: 's5',
+          url: 'forumdiskusi.com',
+          tag: 'FORUM',
+          title: 'Kenapa Sih Banjir Terus?',
+          desc: 'Diskusi santai di forum online tentang banjir.',
+          kualitas: 'buruk',
+          keywordCocok: []
+        },
+        {
+          id: 's6',
+          url: 'kompas.com',
+          tag: 'BERITA',
+          title: '5 Faktor Penyebab Banjir di Indonesia',
+          desc: 'Artikel analisis dari Kompas tentang penyebab banjir.',
+          kualitas: 'baik',
+          keywordCocok: ['penyebab banjir', 'faktor banjir', 'penyebab banjir indonesia']
+        },
+        {
+          id: 's7',
+          url: 'youtube.com',
+          tag: 'VIDEO',
+          title: 'Detik-detik Banjir Melanda Jakarta',
+          desc: 'Video detik-detik banjir melanda Jakarta.',
+          kualitas: 'sedang',
+          keywordCocok: ['banjir jakarta', 'video banjir']
+        },
+        {
+          id: 's8',
+          url: 'kemenpupr.go.id',
+          tag: 'RESMI',
+          title: 'Tata Kelola Air dan Pencegahan Banjir',
+          desc: 'Panduan resmi dari Kementerian PUPR tentang pengelolaan air.',
+          kualitas: 'baik',
+          keywordCocok: ['penyebab banjir', 'pencegahan banjir', 'tata kelola air']
+        },
+        {
+          id: 's9',
+          url: 'tokopedia.com',
+          tag: 'TOKO',
+          title: 'Jual Perahu Karet - Diskon!',
+          desc: 'Perahu karet untuk keadaan darurat banjir.',
+          kualitas: 'buruk',
+          keywordCocok: []
+        },
+        {
+          id: 's10',
+          url: 'bps.go.id',
+          tag: 'RESMI',
+          title: 'Statistik Bencana Banjir Indonesia',
+          desc: 'Data statistik resmi BPS tentang bencana banjir Indonesia.',
+          kualitas: 'baik',
+          keywordCocok: ['statistik banjir', 'data banjir', 'penyebab banjir indonesia']
         }
       ];
 
-      // ============================================
-      // DATA TANTANGAN KILAT (Misi 4)
-      // ============================================
-      const tantanganData = [
-        {
-          id: 1,
-          situasi: 'Cari file PDF tentang fotosintesis',
-          pilihan: [
-            { text: 'fotosintesis', correct: false },
-            { text: 'fotosintesis filetype:pdf', correct: true },
-            { text: 'file fotosintesis pdf', correct: false }
-          ]
-        },
-        {
-          id: 2,
-          situasi: 'Cari informasi beasiswa hanya di situs kemdikbud.go.id',
-          pilihan: [
-            { text: 'beasiswa kemdikbud.go.id', correct: false },
-            { text: 'beasiswa site:kemdikbud.go.id', correct: true },
-            { text: '"beasiswa" kemdikbud', correct: false }
-          ]
-        },
-        {
-          id: 3,
-          situasi: 'Cari kutipan persis "pendidikan adalah senjata paling ampuh"',
-          pilihan: [
-            { text: 'pendidikan adalah senjata paling ampuh', correct: false },
-            { text: '"pendidikan adalah senjata paling ampuh"', correct: true },
-            { text: 'kutipan pendidikan senjata ampuh', correct: false }
-          ]
-        }
-      ];
+      // Fakta per sumber (untuk Langkah 3: SUSUN)
+      const faktaPerSumber = {
+        s2: 'Faktor utama banjir di Indonesia adalah kombinasi curah hujan tinggi, drainase buruk, dan berkurangnya area resapan air.',
+        s4: 'Curah hujan ekstrem (>150 mm/hari) di wilayah DKI Jakarta sering memicu banjir besar.',
+        s6: '5 faktor penyebab banjir: curah hujan tinggi, sampah, drainase buruk, alih fungsi lahan, dan penurunan tanah (land subsidence).',
+        s8: 'Pengelolaan tata air yang buruk dan tidak terintegrasi memperparah banjir di kota-kota besar Indonesia.',
+        s10: 'Statistik BPS menunjukkan frekuensi banjir di Indonesia cenderung meningkat dalam 10 tahun terakhir.'
+      };
 
       // ============================================
       // STATE
       // ============================================
-      let currentMisi = 1;
-      let misiSelesai = { 1: false, 2: false, 3: false, 4: false };
-      let aktivitasSelesai = false;
+      let langkahAktif = 'cari';
+      let sumberDipilih = [];       // array of sumber id (maks 3)
+      let pilahSelesai = false;     // apakah semua sumber sudah dinilai
+      let penilaian = {};           // { sumberId: { 1: 'ya'|'tidak', 2: ..., ..., 5: ... } }
+      let pilahTerbuka = false;     // apakah user sudah pernah klik "Periksa"? (untuk unlock tombol lanjut)
+      let faktaTerpilih = [];       // array of sumber id untuk fakta (maks 3)
+      let lapis1Selesai = false;
+      let lapis2Selesai = false;
 
-      // Misi 4 state
-      let tantanganJawaban = {};
+      let jawabanKuisKilat = {};
+      let kuisKilatSubmitted = false;
+      let kuisKilatBenar = 0;
 
-      // Soal state
-      let soalJawaban = {};
-      let soalSubmitted = false;
-      let soalBenar = 0;
-      let soalSelesai = false;
+      let jawabanTes = {};
+      let tesSubmitted = false;
+      let tesBenar = 0;
+      let tesSelesai = false;
+
+      let daftarSiswa = [];
+      let jumlahSiswaSekarang = 1;
+
+      let kirimTimeoutId = null;
+      let kirimSukses = false;
 
       // ============================================
       // DOM REFS
       // ============================================
       const elAreaSimulasi = document.getElementById('area-simulasi');
-      const elHasilMisi1 = document.getElementById('hasilMisi1');
-      const elHasilMisi2 = document.getElementById('hasilMisi2');
-      const elFeedbackMisi1 = document.getElementById('feedbackMisi1');
-      const elFeedbackMisi2 = document.getElementById('feedbackMisi2');
-      const elFeedbackMisi3 = document.getElementById('feedbackMisi3');
-      const elFeedbackMisi4 = document.getElementById('feedbackMisi4');
-      const elTantanganContainer = document.getElementById('tantanganContainer');
-      const elBtnPeriksaTantangan = document.getElementById('btnPeriksaTantangan');
+      const elAreaLapis2 = document.getElementById('areaLapis2');
+      const elAreaLapis3 = document.getElementById('areaLapis3');
+      const elProgressLapis = document.getElementById('progressLapis');
+
+      const elTabCari = document.getElementById('tabCari');
+      const elTabPilah = document.getElementById('tabPilah');
+      const elTabSusun = document.getElementById('tabSusun');
+      const elPanelCari = document.getElementById('panelCari');
+      const elPanelPilah = document.getElementById('panelPilah');
+      const elPanelSusun = document.getElementById('panelSusun');
+
+      const elSearchInput = document.getElementById('searchInput');
+      const elBtnCari = document.getElementById('btnCari');
+      const elHasilSearch = document.getElementById('hasilSearch');
+      const elTotalSumberDipilih = document.getElementById('totalSumberDipilih');
+      const elBtnLanjutPilah = document.getElementById('btnLanjutPilah');
+
+      const elPilahList = document.getElementById('pilahList');
+      const elBtnLanjutSusun = document.getElementById('btnLanjutSusun');
+
+      const elSusunGrid = document.getElementById('susunGrid');
+      const elLaporanList = document.getElementById('laporanList');
+      const elBtnSelesaiLapis1 = document.getElementById('btnSelesaiLapis1');
+
+      const elMindful1 = document.getElementById('mindful1');
+
+      const elTantanganList = document.getElementById('tantanganList');
+      const elMindful2 = document.getElementById('mindful2');
+      const elBtnLanjutLapis3 = document.getElementById('btnLanjutLapis3');
+
+      const elMindful3 = document.getElementById('mindful3');
+      const elKuisKilatBox = document.getElementById('kuisKilatBox');
+      const elKuisKilatContent = document.getElementById('kuisKilatContent');
+      const elKkHasil = document.getElementById('kkHasil');
+      const elBtnLanjutTes = document.getElementById('btnLanjutTes');
 
       const elTesSection = document.getElementById('tesSection');
       const elSoalContainer = document.getElementById('soalContainer');
       const elTesProgress = document.getElementById('tesProgress');
       const elBtnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const elBtnUlangiTes = document.getElementById('btnUlangiTes');
       const elHasilTes = document.getElementById('hasilTes');
+      const elRefleksiBox = document.getElementById('refleksiBox');
+
       const elBtnLanjutBagian4 = document.getElementById('btnLanjutBagian4');
       const elHintLanjut = document.getElementById('hintLanjut');
       const elStatusKirim = document.getElementById('statusKirim');
       const elStatusKirimText = document.getElementById('statusKirimText');
+      const elStatusSpinner = document.getElementById('statusSpinner');
 
       // ============================================
-      // INISIALISASI
+      // PROGRESS LAPIS
       // ============================================
-      document.addEventListener('DOMContentLoaded', function() {
-        elAreaSimulasi.classList.add('active');
-        initTantanganMisi4();
+      function updateProgressLapis(step) {
+        const steps = ['lapis1', 'lapis2', 'lapis3', 'tes'];
+        const targetIdx = steps.indexOf(step);
+        if (targetIdx === -1) return;
+
+        elProgressLapis.querySelectorAll('.pl-step').forEach((el, i) => {
+          el.classList.remove('active', 'done');
+          if (i < targetIdx) el.classList.add('done');
+          else if (i === targetIdx) el.classList.add('active');
+        });
+      }
+
+      // ============================================
+      // TAB LANGKAH
+      // ============================================
+      function setLangkah(step) {
+        langkahAktif = step;
+
+        // Tabs
+        [elTabCari, elTabPilah, elTabSusun].forEach(t => t.classList.remove('active'));
+        elTabCari.classList.add('done');
+        if (step === 'cari') {
+          elTabCari.classList.add('active');
+          elTabCari.classList.remove('done');
+        } else if (step === 'pilah') {
+          elTabPilah.classList.add('active');
+          elTabPilah.classList.remove('locked');
+        } else if (step === 'susun') {
+          elTabPilah.classList.add('done');
+          elTabPilah.classList.remove('active');
+          elTabSusun.classList.add('active');
+          elTabSusun.classList.remove('locked');
+        }
+
+        // Panels
+        [elPanelCari, elPanelPilah, elPanelSusun].forEach(p => p.classList.remove('active'));
+        if (step === 'cari') elPanelCari.classList.add('active');
+        else if (step === 'pilah') elPanelPilah.classList.add('active');
+        else if (step === 'susun') elPanelSusun.classList.add('active');
+
+        // Scroll ke area
+        setTimeout(() => {
+          elAreaSimulasi.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+
+      // ============================================
+      // LANGKAH 1: CARI
+      // ============================================
+      window.cariSumber = function() {
+        if (lapis1Selesai) return;
+
+        const kw = elSearchInput.value.trim();
+        if (!kw) {
+          alert('⚠️ Ketik kata kunci dulu!');
+          elSearchInput.focus();
+          return;
+        }
+
+        const lower = kw.toLowerCase();
+
+        // Filter sumber berdasarkan keyword yang cocok
+        let sumberTampil = sumberData.filter(s => {
+          if (s.kualitas === 'baik' || s.kualitas === 'sedang') {
+            // Cek keyword cocok
+            return s.keywordCocok.some(k => lower.includes(k) || k.includes(lower));
+          }
+          // Sumber buruk: hanya muncul kalau keyword terlalu umum atau cocok
+          return lower.length <= 8 || lower === 'banjir';
+        });
+
+        // Kalau keyword terlalu umum, tampilkan semua (termasuk yang buruk)
+        if (lower.length <= 8 || lower === 'banjir' || lower === 'indonesia') {
+          sumberTampil = sumberData.slice();
+        }
+
+        // Kalau tidak ada yang cocok, tampilkan semua baik+sedang
+        if (sumberTampil.length === 0) {
+          sumberTampil = sumberData.filter(s => s.kualitas !== 'buruk');
+        }
+
+        renderHasilSumber(sumberTampil);
+      };
+
+      elSearchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          cariSumber();
+        }
       });
 
-      // ============================================
-      // MISI 1: CARI & BANDINGKAN
-      // ============================================
-      window.cariMisi1 = function() {
-        const keyword = document.getElementById('inputMisi1').value.trim().toLowerCase();
-        if (!keyword) return;
+      function renderHasilSumber(sumberArr) {
+        elHasilSearch.innerHTML = '';
 
-        let hasil = '';
-        if (keyword === 'kue') {
-          hasil = `
-            <div class="search-result" style="animation-delay:0s;">
-              <span class="result-count">± 1.230.000.000 hasil</span>
-              <div class="result-title">Resep Kue Kering Lebaran</div>
-              <div class="result-url">tokokue.com/resep</div>
-              <div class="result-desc">Aneka resep kue kering untuk lebaran...</div>
-            </div>
-            <div class="search-result" style="animation-delay:0.15s;">
-              <span class="result-count">± 1.230.000.000 hasil</span>
-              <div class="result-title">Toko Kue Online Terdekat</div>
-              <div class="result-url">tokokueonline.com</div>
-              <div class="result-desc">Pesan kue ulang tahun custom...</div>
-            </div>
-            <div class="search-result" style="animation-delay:0.3s;">
-              <span class="result-count">± 1.230.000.000 hasil</span>
-              <div class="result-title">Kue Tradisional Indonesia</div>
-              <div class="result-url">budaya.kemdikbud.go.id/kue</div>
-              <div class="result-desc">Mengenal kue tradisional dari berbagai daerah...</div>
-            </div>
-            <p style="color:#b33c3c; font-size:0.85rem; margin-top:0.5rem; font-weight:600;">
-              ⚠️ Hasil sangat banyak dan tidak semua relevan dengan kebutuhanmu.
-            </p>
-          `;
-        } else if (keyword === 'resep kue cokelat' || keyword.includes('resep') && keyword.includes('cokelat')) {
-          hasil = `
-            <div class="search-result" style="animation-delay:0s;">
-              <span class="result-count good">± 25.000.000 hasil</span>
-              <div class="result-title">Resep Kue Cokelat Lembut - Sajian Sedap</div>
-              <div class="result-url">sajiansedap.com/resep/kue-cokelat</div>
-              <div class="result-desc">Resep lengkap dengan bahan dan langkah membuat kue cokelat lembut...</div>
-            </div>
-            <div class="search-result" style="animation-delay:0.15s;">
-              <span class="result-count good">± 25.000.000 hasil</span>
-              <div class="result-title">Resep Kue Cokelat Mudah untuk Pemula</div>
-              <div class="result-url">resepkoki.id/kue-cokelat-pemula</div>
-              <div class="result-desc">Cara membuat kue cokelat hanya dengan 5 bahan sederhana...</div>
-            </div>
-            <div class="search-result" style="animation-delay:0.3s;">
-              <span class="result-count good">± 25.000.000 hasil</span>
-              <div class="result-title">5 Variasi Resep Kue Cokelat</div>
-              <div class="result-url">dapurumi.com/kue-cokelat</div>
-              <div class="result-desc">Dari brownies hingga cookies cokelat, semua ada di sini...</div>
-            </div>
-            <p style="color:#2d5a1e; font-size:0.85rem; margin-top:0.5rem; font-weight:600;">
-              ✅ Hasil lebih sedikit, tetapi lebih relevan dengan kebutuhanmu!
-            </p>
-          `;
-        } else {
-          hasil = `
-            <div class="search-result" style="animation-delay:0s;">
-              <span class="result-count">± 500.000.000 hasil</span>
-              <div class="result-title">Hasil Pencarian untuk "${keyword}"</div>
-              <div class="result-url">contoh.com/hasil</div>
-              <div class="result-desc">Contoh hasil pencarian...</div>
-            </div>
-          `;
+        if (sumberArr.length === 0) {
+          elHasilSearch.innerHTML = '<div style="text-align:center; padding:1.5rem; color:#7a6656; font-style:italic; font-size:0.85rem;">Tidak ada hasil. Coba kata kunci lain.</div>';
+          return;
         }
 
-        elHasilMisi1.innerHTML = hasil;
-      };
+        const countDiv = document.createElement('div');
+        countDiv.style.fontSize = '0.78rem';
+        countDiv.style.color = '#7a6656';
+        countDiv.style.marginBottom = '0.5rem';
+        countDiv.style.fontStyle = 'italic';
+        countDiv.innerHTML = 'Menampilkan <strong>' + sumberArr.length + '</strong> hasil';
+        elHasilSearch.appendChild(countDiv);
 
-      window.pilihMisi1 = function(btn, value) {
-        if (misiSelesai[1]) return;
+        sumberArr.forEach(s => {
+          const div = document.createElement('div');
+          div.className = 'hasil-item';
+          div.dataset.id = s.id;
+          if (sumberDipilih.includes(s.id)) div.classList.add('terpilih');
+          if (lapis1Selesai) div.classList.add('locked');
 
-        // Reset pilihan
-        document.querySelectorAll('#pilihanMisi1 .pilihan-btn').forEach(b => {
-          b.classList.remove('selected', 'correct', 'wrong');
+          div.innerHTML = `
+            <div class="hi-url">
+              <span>🌐</span>
+              <span>${escapeHtml(s.url)}</span>
+              <span class="hi-tag">${escapeHtml(s.tag)}</span>
+            </div>
+            <div class="hi-title">${escapeHtml(s.title)}</div>
+            <div class="hi-desc">${escapeHtml(s.desc)}</div>
+          `;
+
+          if (!lapis1Selesai) {
+            div.addEventListener('click', () => togglePilihSumber(s.id));
+          }
+
+          elHasilSearch.appendChild(div);
+        });
+      }
+
+      function togglePilihSumber(id) {
+        if (lapis1Selesai) return;
+
+        const pos = sumberDipilih.indexOf(id);
+        if (pos >= 0) {
+          sumberDipilih.splice(pos, 1);
+        } else {
+          if (sumberDipilih.length >= 3) {
+            alert('⚠️ Kamu hanya boleh memilih 3 sumber.');
+            return;
+          }
+          sumberDipilih.push(id);
+        }
+
+        // Re-render
+        const items = elHasilSearch.querySelectorAll('.hasil-item');
+        items.forEach(item => {
+          item.classList.toggle('terpilih', sumberDipilih.includes(item.dataset.id));
         });
 
-        btn.classList.add('selected');
+        elTotalSumberDipilih.textContent = sumberDipilih.length;
 
-        if (value === 'B') {
-          btn.classList.add('correct');
-          elFeedbackMisi1.className = 'feedback-box show success';
-          elFeedbackMisi1.innerHTML = `
-            <span class="fb-icon">✅</span>
-            <span class="fb-text"><strong>Benar!</strong> Kata kunci yang spesifik (<code>resep kue cokelat</code>) memberikan hasil yang lebih relevan dan tidak terlalu banyak dibanding kata kunci umum (<code>kue</code>).</span>
-          `;
-          misiSelesai[1] = true;
-          updateMisiProgress();
-
-          setTimeout(() => {
-            currentMisi = 2;
-            switchMisi(2);
-          }, 2000);
+        if (sumberDipilih.length === 3) {
+          elBtnLanjutPilah.disabled = false;
         } else {
-          btn.classList.add('wrong');
-          elFeedbackMisi1.className = 'feedback-box show error';
-          elFeedbackMisi1.innerHTML = `
-            <span class="fb-icon">❌</span>
-            <span class="fb-text"><strong>Belum tepat.</strong> Coba bandingkan jumlah hasil di simulasi di atas. Kata kunci mana yang memberikan hasil lebih relevan?</span>
-          `;
+          elBtnLanjutPilah.disabled = true;
         }
+      }
+
+      window.lanjutKePilah = function() {
+        if (sumberDipilih.length !== 3) {
+          alert('⚠️ Pilih tepat 3 sumber dulu ya!');
+          return;
+        }
+        setLangkah('pilah');
+        renderPilah();
       };
 
       // ============================================
-      // MISI 2: FRASA PERSIS
+      // LANGKAH 2: PILAH
       // ============================================
-      window.cariMisi2 = function() {
-        const keyword = document.getElementById('inputMisi2').value.trim();
-        if (!keyword) return;
+      function renderPilah() {
+        elPilahList.innerHTML = '';
 
-        // Cek apakah pakai tanda kutip
-        const pakaiKutip = keyword.startsWith('"') && keyword.endsWith('"');
+        sumberDipilih.forEach((id, idx) => {
+          const s = sumberData.find(x => x.id === id);
+          if (!s) return;
 
-        if (pakaiKutip) {
-          elHasilMisi2.innerHTML = `
-            <div class="search-result" style="animation-delay:0s;">
-              <span class="result-count good">± 1.200 hasil (frasa persis)</span>
-              <div class="result-title">Kumpulan Kutipan Bijak tentang Kehidupan</div>
-              <div class="result-url">kutipanbijak.com/hidup</div>
-              <div class="result-desc">"...manusia diciptakan untuk saling melengkapi..." — semua hasil memuat frasa ini persis.</div>
+          const div = document.createElement('div');
+          div.className = 'pilah-card';
+          div.dataset.id = s.id;
+          div.id = 'pilah_' + s.id;
+
+          // Cek apakah sudah dinilai
+          const sudahDinilai = penilaian[s.id] !== undefined;
+
+          div.innerHTML = `
+            <div class="pc-head">
+              <span class="pc-num">${idx + 1}</span>
+              <div class="pc-info">
+                <div class="pc-source">🌐 ${escapeHtml(s.url)} — ${escapeHtml(s.tag)}</div>
+                <div class="pc-title">${escapeHtml(s.title)}</div>
+              </div>
             </div>
-            <div class="search-result" style="animation-delay:0.15s;">
-              <span class="result-count good">± 1.200 hasil (frasa persis)</span>
-              <div class="result-title">Buku: Manusia dan Kebermaknaan</div>
-              <div class="result-url">bukubagus.id/manusia</div>
-              <div class="result-desc">Mengutip: "manusia diciptakan untuk saling melengkapi" dalam bab 3.</div>
+            <div class="pc-desc">${escapeHtml(s.desc)}</div>
+
+            <div class="checklist" id="checklist_${s.id}">
+              <div class="ck-title">🕵️ Lima Pertanyaan Detektif:</div>
+              <div class="ck-item" data-q="1">
+                <div class="ck-box">?</div>
+                <div class="ck-label"><strong>Siapa</strong> yang menulis? (Penulis jelas?)</div>
+              </div>
+              <div class="ck-item" data-q="2">
+                <div class="ck-box">?</div>
+                <div class="ck-label"><strong>Kapan</strong> ditulis? (Ada tanggal?)</div>
+              </div>
+              <div class="ck-item" data-q="3">
+                <div class="ck-box">?</div>
+                <div class="ck-label"><strong>Dari mana</strong> sumbernya? (Resmi/akademik?)</div>
+              </div>
+              <div class="ck-item" data-q="4">
+                <div class="ck-box">?</div>
+                <div class="ck-label"><strong>Apa</strong> buktinya? (Ada data/referensi?)</div>
+              </div>
+              <div class="ck-item" data-q="5">
+                <div class="ck-box">?</div>
+                <div class="ck-label"><strong>Mengapa</strong> ditulis? (Untuk informasi, bukan jualan?)</div>
+              </div>
             </div>
-            <p style="color:#2d5a1e; font-size:0.85rem; margin-top:0.5rem; font-weight:600;">
-              ✅ Dengan tanda kutip, hasil hanya yang memuat frasa tersebut secara persis.
-            </p>
+
+            <div class="pilah-aksi" id="aksi_${s.id}">
+              <button class="pilih-ya" onclick="pilihSumber('${s.id}', 'ya')">👍 Bisa Dipercaya</button>
+              <button class="pilih-tidak" onclick="pilihSumber('${s.id}', 'tidak')">👎 Tidak Bisa Dipercaya</button>
+            </div>
+
+            <div class="pilah-hasil" id="hasil_${s.id}"></div>
           `;
-        } else {
-          elHasilMisi2.innerHTML = `
-            <div class="search-result" style="animation-delay:0s;">
-              <span class="result-count">± 250.000.000 hasil</span>
-              <div class="result-title">Manusia Diciptakan untuk Saling Melengkapi</div>
-              <div class="result-url">blogmotivasi.com/manusia</div>
-              <div class="result-desc">Artikel motivasi tentang peran manusia...</div>
-            </div>
-            <div class="search-result" style="animation-delay:0.15s;">
-              <span class="result-count">± 250.000.000 hasil</span>
-              <div class="result-title">Melengkapi Satu Sama Lain dalam Tim</div>
-              <div class="result-url">timsukses.id/melengkapi</div>
-              <div class="result-desc">Tips membangun tim yang solid...</div>
-            </div>
-            <div class="search-result" style="animation-delay:0.3s;">
-              <span class="result-count">± 250.000.000 hasil</span>
-              <div class="result-title">Ciptaan Tuhan yang Saling Melengkapi</div>
-              <div class="result-url">renungan.com/ciptaan</div>
-              <div class="result-desc">Renungan tentang keindahan ciptaan...</div>
-            </div>
-            <p style="color:#b33c3c; font-size:0.85rem; margin-top:0.5rem; font-weight:600;">
-              ⚠️ Hasil sangat banyak dan beragam, tidak semua memuat frasa persis.
-            </p>
-          `;
-        }
 
-        elFeedbackMisi2.className = 'feedback-box show info';
-        elFeedbackMisi2.innerHTML = `
-          <span class="fb-icon">💡</span>
-          <span class="fb-text">Bandingkan hasil tanpa tanda kutip vs dengan tanda kutip. Mana yang lebih persis?</span>
-        `;
-      };
+          elPilahList.appendChild(div);
 
-      window.pilihMisi2 = function(btn, value) {
-        if (misiSelesai[2]) return;
-
-        document.querySelectorAll('#pilihanMisi2 .pilihan-btn').forEach(b => {
-          b.classList.remove('selected', 'correct', 'wrong');
+          // Kalau sudah dinilai, tampilkan hasilnya
+          if (sudahDinilai) {
+            tampilkanHasilPilah(s.id);
+          }
         });
 
-        btn.classList.add('selected');
+        cekLanjutSusun();
+      }
 
-        if (value === 'B') {
-          btn.classList.add('correct');
-          elFeedbackMisi2.className = 'feedback-box show success';
-          elFeedbackMisi2.innerHTML = `
-            <span class="fb-icon">✅</span>
-            <span class="fb-text"><strong>Benar!</strong> Dengan membungkus frasa dalam tanda kutip (<code>"..."</code>), mesin pencari hanya menampilkan hasil yang memuat frasa tersebut secara persis.</span>
-          `;
-          misiSelesai[2] = true;
-          updateMisiProgress();
+      window.pilihSumber = function(id, pilihan) {
+        if (pilmpSelesai_cek()) return;
 
-          setTimeout(() => {
-            currentMisi = 3;
-            switchMisi(3);
-          }, 2000);
-        } else {
-          btn.classList.add('wrong');
-          elFeedbackMisi2.className = 'feedback-box show error';
-          elFeedbackMisi2.innerHTML = `
-            <span class="fb-icon">❌</span>
-            <span class="fb-text"><strong>Belum tepat.</strong> Ingat, tanda kutip digunakan untuk mencari frasa yang persis sama.</span>
-          `;
-        }
-      };
+        const s = sumberData.find(x => x.id === id);
+        if (!s) return;
 
-      // ============================================
-      // MISI 3: SITE SEARCH
-      // ============================================
-      window.pilihMisi3 = function(btn, value) {
-        if (misiSelesai[3]) return;
+        // Simpan pilihan
+        if (!penilaian[id]) penilaian[id] = {};
+        penilaian[id].pilihan = pilihan;
 
-        document.querySelectorAll('#pilihanMisi3 .pilihan-btn').forEach(b => {
-          b.classList.remove('selected', 'correct', 'wrong');
+        // Render checklist otomatis berdasarkan kualitas sumber
+        const checklist = document.getElementById('checklist_' + id);
+        checklist.querySelectorAll('.ck-item').forEach(item => {
+          const q = item.dataset.q;
+          // Cek: apakah pertanyaan ini "ya" untuk sumber ini?
+          const hasil = cekPertanyaan(s, q);
+          item.classList.remove('ya', 'tidak');
+          item.classList.add(hasil ? 'ya' : 'tidak');
+          item.querySelector('.ck-box').textContent = hasil ? '✓' : '✗';
         });
 
-        btn.classList.add('selected');
+        // Tampilkan hasil
+        tampilkanHasilPilah(id);
 
-        if (value === 'B') {
-          btn.classList.add('correct');
-          elFeedbackMisi3.className = 'feedback-box show success';
-          elFeedbackMisi3.innerHTML = `
-            <span class="fb-icon">✅</span>
-            <span class="fb-text"><strong>Benar!</strong> Operator <code>site:</code> digunakan untuk mencari hanya di situs tertentu. Contoh: <code>beasiswa site:unsyiah.ac.id</code>.</span>
-          `;
-          misiSelesai[3] = true;
-          updateMisiProgress();
+        // Update tombol aksi (aktifkan yang dipilih, disable semua)
+        const aksi = document.getElementById('aksi_' + id);
+        const btnYa = aksi.querySelector('.pilih-ya');
+        const btnTidak = aksi.querySelector('.pilih-tidak');
+        btnYa.disabled = true;
+        btnTidak.disabled = true;
+        if (pilihan === 'ya') btnYa.classList.add('aktif');
+        else btnTidak.classList.add('aktif');
 
-          setTimeout(() => {
-            currentMisi = 4;
-            switchMisi(4);
-          }, 2000);
-        } else {
-          btn.classList.add('wrong');
-          elFeedbackMisi3.className = 'feedback-box show error';
-          elFeedbackMisi3.innerHTML = `
-            <span class="fb-icon">❌</span>
-            <span class="fb-text"><strong>Belum tepat.</strong> Gunakan operator <code>site:</code> diikuti domain untuk membatasi pencarian pada situs tertentu.</span>
-          `;
+        // Cek semua selesai
+        cekLanjutSusun();
+      };
+
+      function cekPertanyaan(s, q) {
+        // Pertanyaan detektif dijawab berdasarkan kualitas sumber
+        // q: '1'..'5'
+        if (s.kualitas === 'baik') return true;
+        if (s.kualitas === 'sedang') {
+          // Sedang: sebagian "ya"
+          return q !== '5'; // mis. tidak ada bukti mendalam
         }
+        // Buruk: sebagian besar "tidak"
+        return false;
+      }
+
+      function tampilkanHasilPilah(id) {
+        const s = sumberData.find(x => x.id === id);
+        if (!s) return;
+        const hasilDiv = document.getElementById('hasil_' + id);
+        if (!hasilDiv) return;
+
+        const pilihan = penilaian[id] && penilaian[id].pilihan;
+        const benar = (pilihan === s.kualitas) ||
+                      (pilihan === 'ya' && s.kualitas === 'sedang') ||
+                      (pilihan === 'tidak' && s.kualitas === 'buruk');
+
+        if (benar) {
+          hasilDiv.className = 'pilah-hasil benar show';
+          hasilDiv.innerHTML = '✅ <strong>Penilaianmu tepat!</strong> ' +
+            (s.kualitas === 'baik' ? 'Sumber ini memang <em>bisa dipercaya</em>.' :
+             s.kualitas === 'buruk' ? 'Sumber ini memang <em>tidak bisa dipercaya</em>.' :
+             'Sumber ini <em>cukup</em> — bisa dipakai untuk konteks, tapi bukan sumber utama.');
+        } else {
+          hasilDiv.className = 'pilah-hasil salah show';
+          hasilDiv.innerHTML = '❌ <strong>Perhatikan lagi.</strong> ' +
+            (s.kualitas === 'baik' ? 'Sumber ini <em>bisa dipercaya</em> — penulis jelas, tanggal jelas, sumber resmi/akademik.' :
+             s.kualitas === 'buruk' ? 'Sumber ini <em>tidak bisa dipercaya</em> — cek 5 pertanyaan detektif, sebagian besar tidak terpenuhi.' :
+             'Sumber ini <em>cukup</em> — beberapa pertanyaan terpenuhi, tapi tidak semuanya.');
+        }
+      }
+
+      function pilmpSelesai_cek() {
+        return lapis1Selesai;
+      }
+
+      function cekLanjutSusun() {
+        const jumlahDinilai = Object.keys(penilaian).length;
+        if (jumlahDinilai >= 3) {
+          elBtnLanjutSusun.disabled = false;
+          pilahTerbuka = true;
+        } else {
+          elBtnLanjutSusun.disabled = true;
+        }
+      }
+
+      window.lanjutKeSusun = function() {
+        if (Object.keys(penilaian).length < 3) {
+          alert('⚠️ Nilai semua 3 sumber dulu ya!');
+          return;
+        }
+        setLangkah('susun');
+        renderSusun();
       };
 
       // ============================================
-      // MISI 4: TANTANGAN KILAT
+      // LANGKAH 3: SUSUN
       // ============================================
-      function initTantanganMisi4() {
-        elTantanganContainer.innerHTML = '';
-        tantanganJawaban = {};
+      function renderSusun() {
+        elSusunGrid.innerHTML = '';
+        faktaTerpilih = [];
+
+        // Hanya tampilkan fakta dari sumber yang dinilai "bisa dipercaya" atau "sedang"
+        const sumberFakta = sumberDipilih.filter(id => {
+          const s = sumberData.find(x => x.id === id);
+          return s && s.kualitas !== 'buruk';
+        });
+
+        if (sumberFakta.length === 0) {
+          elSusunGrid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:1rem; color:#7a6656; font-style:italic;">Tidak ada sumber yang layak. Kamu memilih 3 sumber yang tidak bisa dipercaya.</div>';
+          return;
+        }
+
+        sumberFakta.forEach(id => {
+          const s = sumberData.find(x => x.id === id);
+          const fakta = faktaPerSumber[id];
+          if (!fakta) return;
+
+          const div = document.createElement('div');
+          div.className = 'susun-card';
+          div.dataset.id = id;
+          div.innerHTML = `
+            <div class="sc-source">📌 ${escapeHtml(s.url)} — ${escapeHtml(s.tag)}</div>
+            <div class="sc-fact">${escapeHtml(fakta)}</div>
+          `;
+          div.addEventListener('click', () => toggleFakta(id));
+          elSusunGrid.appendChild(div);
+        });
+      }
+
+      function toggleFakta(id) {
+        if (lapis1Selesai) return;
+
+        const pos = faktaTerpilih.indexOf(id);
+        if (pos >= 0) {
+          faktaTerpilih.splice(pos, 1);
+        } else {
+          if (faktaTerpilih.length >= 3) {
+            alert('⚠️ Kamu hanya boleh memilih 3 fakta.');
+            return;
+          }
+          faktaTerpilih.push(id);
+        }
+
+        // Update visual
+        elSusunGrid.querySelectorAll('.susun-card').forEach(card => {
+          card.classList.toggle('terpilih', faktaTerpilih.includes(card.dataset.id));
+        });
+
+        renderLaporan();
+      }
+
+      function renderLaporan() {
+        elLaporanList.innerHTML = '';
+        if (faktaTerpilih.length === 0) {
+          elLaporanList.innerHTML = '<li class="sl-empty">Belum ada fakta dipilih. Klik fakta di atas untuk menambahkan.</li>';
+          elBtnSelesaiLapis1.disabled = true;
+          return;
+        }
+
+        faktaTerpilih.forEach(id => {
+          const s = sumberData.find(x => x.id === id);
+          const fakta = faktaPerSumber[id];
+          if (!fakta) return;
+
+          const li = document.createElement('li');
+          li.innerHTML = '<strong>[' + escapeHtml(s.url) + ']</strong> ' + escapeHtml(fakta);
+          elLaporanList.appendChild(li);
+        });
+
+        if (faktaTerpilih.length === 3) {
+          elBtnSelesaiLapis1.disabled = false;
+        } else {
+          elBtnSelesaiLapis1.disabled = true;
+        }
+      }
+
+      // ============================================
+      // SELESAI LAPIS 1
+      // ============================================
+      window.selesaiLapis1 = function() {
+        if (faktaTerpilih.length !== 3) {
+          alert('⚠️ Pilih 3 fakta dulu ya!');
+          return;
+        }
+
+        const mindfulJawab = document.getElementById('mindful1Jawab').value.trim();
+        if (mindfulJawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 1 sebelum lanjut!');
+          document.getElementById('mindful1Jawab').focus();
+          return;
+        }
+
+        lapis1Selesai = true;
+        elAreaLapis2.style.display = 'block';
+        elBtnSelesaiLapis1.disabled = true;
+        elBtnSelesaiLapis1.textContent = '✅ Lapis 1 Selesai';
+
+        updateProgressLapis('lapis2');
+
+        setTimeout(() => {
+          elAreaLapis2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+
+        buildTantangan();
+      };
+
+      // ============================================
+      // LAPIS 2 — TANTANGAN
+      // ============================================
+      const tantanganData = [
+        {
+          id: 'T1',
+          teks: 'Manakah sumber yang <strong>paling tepat</strong> untuk laporan tentang penyebab banjir?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Blog pribadi "Pengalaman Saya Kena Banjir"', benar: false },
+            { v: 'B', label: 'Jurnal Universitas Indonesia tentang analisis banjir', benar: true },
+            { v: 'C', label: 'Forum online "Kenapa sih banjir terus?"', benar: false },
+            { v: 'D', label: 'Status WhatsApp teman', benar: false }
+          ],
+          hint: 'Untuk tugas sekolah, prioritaskan sumber akademik atau data resmi.',
+          feedbackSalah: 'Blog pribadi, forum online, dan status WhatsApp bukan sumber tepat untuk laporan. Jurnal universitas adalah sumber akademik yang paling tepat.'
+        },
+        {
+          id: 'T2',
+          teks: 'Jika dua sumber <strong>saling bertentangan</strong>, apa yang sebaiknya dilakukan?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Pilih yang paling baru', benar: false },
+            { v: 'B', label: 'Pilih yang paling panjang', benar: false },
+            { v: 'C', label: 'Bandingkan konteks dan cari sumber ketiga', benar: true },
+            { v: 'D', label: 'Abaikan keduanya', benar: false }
+          ],
+          hint: 'Pikirkan: mungkin keduanya benar untuk konteks yang berbeda.',
+          feedbackSalah: 'Sumber berbeda bisa sama-sama benar untuk konteks yang berbeda. Cara terbaik: bandingkan konteks dan cari sumber ketiga untuk klarifikasi.'
+        },
+        {
+          id: 'T3',
+          teks: '<strong>Batas Konsep:</strong> Apa yang harus dilakukan <strong>setelah</strong> mengambil fakta dari beberapa sumber?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Langsung kirim ke guru', benar: false },
+            { v: 'B', label: 'Bandingkan dan buat kesimpulan', benar: true },
+            { v: 'C', label: 'Copy semua ke laporan', benar: false },
+            { v: 'D', label: 'Hapus yang tidak suka', benar: false }
+          ],
+          hint: 'Cari → Pilah → lalu... Susun! Fakta dari beberapa sumber perlu dibandingkan sebelum disusun jadi kesimpulan.',
+          feedbackSalah: 'Setelah mengambil fakta, langkah selanjutnya adalah <strong>membandingkan</strong> dan <strong>membuat kesimpulan</strong> — bukan langsung dikirim atau dicopy mentah.'
+        }
+      ];
+
+      function buildTantangan() {
+        elTantanganList.innerHTML = '';
 
         tantanganData.forEach((t, idx) => {
           const div = document.createElement('div');
-          div.style.cssText = 'margin-bottom:1.5rem; padding:1rem 1.2rem; background:#f8f3ee; border-radius:12px; border:2px solid #e5dbd0;';
+          div.className = 'tantangan-item';
+          div.id = 'tantangan_' + t.id;
+          div.dataset.id = t.id;
 
-          let pilihanHtml = '';
-          t.pilihan.forEach((p, pIdx) => {
-            const isCorrect = p.correct;
-            pilihanHtml += `
-              <button class="pilihan-btn" data-tantangan="${t.id}" data-pilihan="${pIdx}" data-correct="${isCorrect}"
-                      onclick="pilihTantangan(this)" style="margin-bottom:0.4rem; width:100%;">
-                ${p.text}
-              </button>
+          let inputHtml = '<div class="t-opsi-col">';
+          t.opsi.forEach(o => {
+            inputHtml += `
+              <label>
+                <input type="radio" name="opsi_${t.id}" value="${o.v}">
+                <span>${o.label}</span>
+              </label>
+            `;
+          });
+          inputHtml += '</div><div class="t-input-row" style="justify-content:flex-end; margin-top:0.5rem;"><button id="btn_' + t.id + '">Periksa</button></div>';
+
+          div.innerHTML = `
+            <div class="t-header">
+              <span class="t-num">${idx + 1}</span>
+              <span>Tantangan ${idx + 1}</span>
+            </div>
+            <div class="t-text">${t.teks}</div>
+            ${inputHtml}
+            <div class="t-feedback" id="fb_${t.id}"></div>
+          `;
+
+          elTantanganList.appendChild(div);
+
+          const btn = document.getElementById('btn_' + t.id);
+          btn.addEventListener('click', () => periksaTantangan(t));
+        });
+      }
+
+      function periksaTantangan(t) {
+        const fb = document.getElementById('fb_' + t.id);
+        const item = document.getElementById('tantangan_' + t.id);
+
+        const selected = document.querySelector('input[name="opsi_' + t.id + '"]:checked');
+        if (!selected) {
+          fb.className = 't-feedback show hint';
+          fb.innerHTML = '⚠️ Pilih salah satu jawaban dulu!';
+          return;
+        }
+        const opsi = t.opsi.find(o => o.v === selected.value);
+        if (opsi.benar) {
+          fb.className = 't-feedback show ok';
+          fb.innerHTML = '✅ <strong>Benar!</strong>';
+          item.classList.add('selesai');
+          document.getElementById('btn_' + t.id).disabled = true;
+        } else {
+          fb.className = 't-feedback show no';
+          fb.innerHTML = '❌ ' + t.feedbackSalah;
+        }
+
+        cekSemuaTantangan();
+      }
+
+      function cekSemuaTantangan() {
+        const items = document.querySelectorAll('.tantangan-item');
+        const semuaSelesai = Array.from(items).every(i => i.classList.contains('selesai'));
+        if (semuaSelesai) {
+          elMindful2.classList.add('show');
+          elMindful2.style.display = 'block';
+          elBtnLanjutLapis3.disabled = false;
+        }
+      }
+
+      // ============================================
+      // LANJUT KE LAPIS 3
+      // ============================================
+      window.lanjutKeLapis3 = function() {
+        const jawab = document.getElementById('mindful2Jawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 2 sebelum lanjut!');
+          document.getElementById('mindful2Jawab').focus();
+          return;
+        }
+
+        lapis2Selesai = true;
+        elAreaLapis3.style.display = 'block';
+        elBtnLanjutLapis3.disabled = true;
+        elBtnLanjutLapis3.textContent = '✅ Lapis 2 Selesai';
+
+        updateProgressLapis('lapis3');
+        elMindful3.classList.add('show');
+
+        buildKuisKilat();
+
+        setTimeout(() => {
+          elAreaLapis3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      };
+
+      // ============================================
+      // KUIS KILAT
+      // ============================================
+      const kuisKilatData = [
+        {
+          pertanyaan: 'Apa <strong>tiga langkah</strong> mencari dan memilah informasi untuk tugas?',
+          opsi: [
+            'Cari, pilah, susun',
+            'Baca, tulis, kirim',
+            'Buka, klik, copy',
+            'Tanya, jawab, selesai'
+          ],
+          kunci: 0,
+          penjelasan: 'Tiga langkah: Cari → Pilah → Susun.'
+        },
+        {
+          pertanyaan: 'Mengapa satu sumber tidak cukup untuk tugas sekolah?',
+          opsi: [
+            'Karena guru meminta banyak',
+            'Karena informasi perlu dibandingkan dan diverifikasi',
+            'Karena internet lambat',
+            'Karena satu sumber selalu salah'
+          ],
+          kunci: 1,
+          penjelasan: 'Informasi perlu dibandingkan dan diverifikasi dari beberapa sumber agar kesimpulan lebih kuat.'
+        }
+      ];
+
+      function buildKuisKilat() {
+        elKuisKilatContent.innerHTML = '';
+        elKuisKilatBox.classList.add('show');
+
+        kuisKilatData.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'kk-soal';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            opsiHtml += `
+              <label id="kk_label_${idx}_${oi}">
+                <input type="radio" name="kk_soal_${idx}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
             `;
           });
 
           div.innerHTML = `
-            <div style="font-weight:700; color:#3b2b1e; margin-bottom:0.5rem;">
-              Soal ${idx + 1}: ${t.situasi}
-            </div>
-            <div style="display:flex; flex-direction:column; gap:0.4rem;">
-              ${pilihanHtml}
-            </div>
+            <div class="kk-q"><strong>Soal ${idx + 1}.</strong> ${soal.pertanyaan}</div>
+            <div class="kk-opsi">${opsiHtml}</div>
           `;
-          elTantanganContainer.appendChild(div);
-        });
+          elKuisKilatContent.appendChild(div);
 
-        elBtnPeriksaTantangan.disabled = true;
+          div.querySelectorAll('label').forEach((lbl, oi) => {
+            lbl.addEventListener('click', () => {
+              if (kuisKilatSubmitted) return;
+              jawabanKuisKilat[idx] = oi;
+              div.querySelectorAll('label').forEach((l2, oi2) => {
+                l2.style.background = oi2 === oi ? '#fff5f0' : '#fff';
+                l2.style.borderColor = oi2 === oi ? '#ff8a5b' : '#e5dbd0';
+                l2.querySelector('input').checked = (oi2 === oi);
+              });
+              cekKuisKilatSiap();
+            });
+          });
+        });
       }
 
-      window.pilihTantangan = function(btn) {
-        if (misiSelesai[4]) return;
+      function cekKuisKilatSiap() {
+        if (Object.keys(jawabanKuisKilat).length === kuisKilatData.length && !kuisKilatSubmitted) {
+          setTimeout(() => {
+            if (kuisKilatSubmitted) return;
+            submitKuisKilat();
+          }, 300);
+        }
+      }
 
-        const tantanganId = btn.dataset.tantangan;
+      function submitKuisKilat() {
+        kuisKilatSubmitted = true;
+        kuisKilatBenar = 0;
 
-        // Reset pilihan di soal yang sama
-        document.querySelectorAll(`.pilihan-btn[data-tantangan="${tantanganId}"]`).forEach(b => {
-          b.classList.remove('selected');
-        });
+        kuisKilatData.forEach((soal, idx) => {
+          const selected = jawabanKuisKilat[idx];
+          const div = elKuisKilatContent.querySelector(`[data-index="${idx}"]`);
+          const labels = div.querySelectorAll('label');
+          const benar = (selected === soal.kunci);
 
-        btn.classList.add('selected');
-        tantanganJawaban[tantanganId] = {
-          pilihan: btn.dataset.pilihan,
-          correct: btn.dataset.correct === 'true'
-        };
-
-        // Cek apakah semua terjawab
-        const semuaTerjawab = tantanganData.every(t => tantanganJawaban[t.id]);
-        elBtnPeriksaTantangan.disabled = !semuaTerjawab;
-      };
-
-      window.periksaTantangan = function() {
-        if (misiSelesai[4]) return;
-
-        let semuaBenar = true;
-
-        tantanganData.forEach(t => {
-          const jawaban = tantanganJawaban[t.id];
-          const btn = document.querySelector(`.pilihan-btn[data-tantangan="${t.id}"][data-pilihan="${jawaban.pilihan}"]`);
-          if (btn) {
-            if (jawaban.correct) {
-              btn.classList.add('correct');
-            } else {
-              btn.classList.add('wrong');
-              semuaBenar = false;
-
-              // Tandai jawaban yang benar
-              const btnBenar = document.querySelector(`.pilihan-btn[data-tantangan="${t.id}"][data-correct="true"]`);
-              if (btnBenar) btnBenar.classList.add('correct');
+          labels.forEach((lbl, oi) => {
+            lbl.classList.add('disabled');
+            lbl.querySelector('input').disabled = true;
+            if (oi === selected) {
+              lbl.classList.add(benar ? 'benar' : 'salah');
+              lbl.querySelector('.check-icon').textContent = benar ? '✅' : '❌';
             }
-          }
+            if (oi === soal.kunci && !benar) {
+              lbl.classList.add('benar');
+              lbl.querySelector('.check-icon').textContent = '✅';
+            }
+          });
+
+          if (benar) kuisKilatBenar++;
         });
 
-        if (semuaBenar) {
-          elFeedbackMisi4.className = 'feedback-box show success';
-          elFeedbackMisi4.innerHTML = `
-            <span class="fb-icon">🎉</span>
-            <span class="fb-text"><strong>Luar biasa!</strong> Kamu berhasil memilih kata kunci paling tepat untuk semua situasi!</span>
-          `;
-          misiSelesai[4] = true;
-          elBtnPeriksaTantangan.disabled = true;
-          updateMisiProgress();
+        elKkHasil.classList.add('show');
+        elKkHasil.innerHTML = `✅ Kuis Kilat selesai! Kamu benar <strong>${kuisKilatBenar}</strong> dari <strong>${kuisKilatData.length}</strong>.`;
 
-          // Cek semua misi selesai
-          if (misiSelesai[1] && misiSelesai[2] && misiSelesai[3] && misiSelesai[4]) {
-            aktivitasSelesai = true;
-            setTimeout(() => {
-              elTesSection.classList.add('active');
-              renderSoal();
-              updateTesProgress();
-              elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 1200);
-          }
-        } else {
-          elFeedbackMisi4.className = 'feedback-box show error';
-          elFeedbackMisi4.innerHTML = `
-            <span class="fb-icon">❌</span>
-            <span class="fb-text"><strong>Ada yang belum tepat.</strong> Perhatikan kata kunci dengan operator yang sesuai. Jawaban yang benar sudah ditandai hijau.</span>
-          `;
+        elBtnLanjutTes.disabled = false;
+      }
+
+      // ============================================
+      // LANJUT KE TES
+      // ============================================
+      window.lanjutKeTesPemahaman = function() {
+        const jawab = document.getElementById('mindful3Jawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 3 sebelum lanjut!');
+          document.getElementById('mindful3Jawab').focus();
+          return;
         }
+
+        elTesSection.classList.add('active');
+        elRefleksiBox.classList.add('show');
+        renderSoal();
+        updateTesProgress();
+
+        updateProgressLapis('tes');
+
+        setTimeout(() => {
+          elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
       };
 
       // ============================================
-      // SWITCH MISI
+      // TES PEMAHAMAN
       // ============================================
-      function switchMisi(misi) {
-        currentMisi = misi;
-        document.querySelectorAll('.misi-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('misi' + misi + 'Content').classList.add('active');
-        updateMisiProgress();
-
-        const elProgress = document.getElementById('misiProgress');
-        if (elProgress) {
-          window.scrollTo({ top: elProgress.offsetTop - 100, behavior: 'smooth' });
+      const soalData = [
+        {
+          pertanyaan: 'Manakah sumber yang paling tepat untuk laporan tentang penyebab banjir?',
+          opsi: [
+            'Blog pribadi "Pengalaman Saya Kena Banjir"',
+            'Jurnal Universitas Indonesia tentang analisis banjir',
+            'Forum online "Kenapa sih banjir terus?"',
+            'Status WhatsApp teman'
+          ],
+          kunci: 1,
+          penjelasan: 'Untuk laporan sekolah, prioritaskan sumber akademik (jurnal universitas) atau data resmi pemerintah.'
+        },
+        {
+          pertanyaan: 'Jika dua sumber saling bertentangan, apa yang sebaiknya dilakukan?',
+          opsi: [
+            'Pilih yang paling baru',
+            'Pilih yang paling panjang',
+            'Bandingkan konteks dan cari sumber ketiga',
+            'Abaikan keduanya'
+          ],
+          kunci: 2,
+          penjelasan: 'Sumber berbeda bisa sama-sama benar untuk konteks berbeda. Bandingkan konteks, lalu cari sumber ketiga untuk klarifikasi.'
+        },
+        {
+          pertanyaan: 'Apa yang harus dilakukan setelah mengambil fakta dari beberapa sumber?',
+          opsi: [
+            'Langsung kirim ke guru',
+            'Bandingkan dan buat kesimpulan',
+            'Copy semua ke laporan',
+            'Hapus yang tidak suka'
+          ],
+          kunci: 1,
+          penjelasan: 'Setelah mengambil fakta, langkah selanjutnya: bandingkan, lalu buat kesimpulan.'
+        },
+        {
+          pertanyaan: 'Mengapa sumber resmi tetap perlu diperiksa?',
+          opsi: [
+            'Karena sumber resmi selalu salah',
+            'Karena bahkan sumber resmi bisa keliru atau sudah tidak berlaku',
+            'Karena sumber resmi tidak punya data',
+            'Karena sumber resmi terlalu panjang'
+          ],
+          kunci: 1,
+          penjelasan: 'Bahkan sumber resmi bisa keliru atau sudah tidak berlaku. Yang penting: periksa buktinya dan bandingkan.'
         }
-      }
+      ];
 
-      function updateMisiProgress() {
-        for (let i = 1; i <= 4; i++) {
-          const el = document.getElementById('misi' + i + 'Item');
-          if (!el) continue;
-          el.classList.remove('active', 'completed');
-          if (misiSelesai[i]) el.classList.add('completed');
-          else if (i === currentMisi) el.classList.add('active');
-        }
-      }
-
-      // ============================================
-      // RENDER SOAL TES
-      // ============================================
       function renderSoal() {
         elSoalContainer.innerHTML = '';
         soalData.forEach((soal, idx) => {
@@ -1396,7 +2379,7 @@
           soal.opsi.forEach((opsi, oi) => {
             const id = `soal${idx}_opt${oi}`;
             opsiHtml += `
-              <label for="${id}" onclick="pilihJawaban(${idx}, ${oi})" id="label_${idx}_${oi}">
+              <label for="${id}" onclick="pilihJawabanTes(${idx}, ${oi})" id="label_${idx}_${oi}">
                 <input type="radio" name="soal${idx}" id="${id}" value="${oi}">
                 <span>${opsi}</span>
                 <span class="check-icon"></span>
@@ -1417,8 +2400,8 @@
         });
       }
 
-      window.pilihJawaban = function(soalIndex, optIndex) {
-        if (soalSubmitted) return;
+      window.pilihJawabanTes = function(soalIndex, optIndex) {
+        if (tesSubmitted) return;
         const soalDiv = document.querySelector(`.soal-kuis[data-index="${soalIndex}"]`);
         const labels = soalDiv.querySelectorAll('.opsi-kuis label');
 
@@ -1432,23 +2415,20 @@
           }
         });
 
-        soalJawaban[soalIndex] = optIndex;
+        jawabanTes[soalIndex] = optIndex;
         updateTesProgress();
       };
 
       function updateTesProgress() {
         const total = soalData.length;
-        const answered = Object.keys(soalJawaban).length;
+        const answered = Object.keys(jawabanTes).length;
         elTesProgress.textContent = `Terjawab: ${answered} / ${total}`;
       }
 
-      // ============================================
-      // PERIKSA TES
-      // ============================================
       elBtnPeriksaTes.addEventListener('click', function() {
-        if (soalSubmitted) return;
+        if (tesSubmitted) return;
         const total = soalData.length;
-        const answered = Object.keys(soalJawaban).length;
+        const answered = Object.keys(jawabanTes).length;
 
         if (answered < total) {
           alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
@@ -1457,85 +2437,92 @@
 
         let correct = 0;
         soalData.forEach((soal, idx) => {
-          const selected = soalJawaban[idx];
+          if (jawabanTes[idx] === soal.kunci) correct++;
+        });
+
+        const lulus = correct >= AMBANG_LULUS;
+        tesBenar = correct;
+        tesSubmitted = true;
+
+        soalData.forEach((soal, idx) => {
+          const selected = jawabanTes[idx];
           const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
           const labels = soalDiv.querySelectorAll('.opsi-kuis label');
           const feedback = document.getElementById(`feedback_soal_${idx}`);
+          const isThisCorrect = (selected === soal.kunci);
 
           labels.forEach((label, oi) => {
             label.classList.add('disabled');
-            if (oi === soal.kunci) {
+            label.querySelector('input').disabled = true;
+
+            if (oi === selected) {
+              if (isThisCorrect) {
+                label.classList.add('correct-answer');
+                label.querySelector('.check-icon').textContent = '✅';
+              } else {
+                label.classList.add('wrong-answer');
+                label.querySelector('.check-icon').textContent = '❌';
+              }
+            }
+
+            if (lulus && oi === soal.kunci && !isThisCorrect) {
               label.classList.add('correct-answer');
               label.querySelector('.check-icon').textContent = '✅';
             }
-            if (oi === selected && selected !== soal.kunci) {
-              label.classList.add('wrong-answer');
-              label.querySelector('.check-icon').textContent = '❌';
-            }
           });
 
-          if (selected === soal.kunci) {
+          if (isThisCorrect) {
             soalDiv.classList.add('correct');
-            correct++;
             feedback.className = 'jawaban-feedback benar';
-            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.penjelasan}`;
+            feedback.innerHTML = `✅ <strong>Benar!</strong>`;
           } else {
             soalDiv.classList.add('wrong');
             feedback.className = 'jawaban-feedback salah';
-            feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+            if (lulus) {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+            } else {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Coba baca kembali materi dan pikirkan jawaban yang benar.`;
+            }
           }
         });
 
-        soalBenar = correct;
-        soalSubmitted = true;
         elBtnPeriksaTes.disabled = true;
         elBtnPeriksaTes.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
 
-        tampilkanHasilTes(correct, total);
+        tampilkanHasilTes(correct, total, lulus);
       });
 
-      // ============================================
-      // TAMPILKAN HASIL TES
-      // ============================================
-      function tampilkanHasilTes(correct, total) {
+      function tampilkanHasilTes(correct, total, lulus) {
         setTimeout(() => {
           elHasilTes.classList.add('show');
 
-          const skorBagian3 = Math.round(40 + (correct / total) * 60);
-
-          if (correct >= 3) {
-            soalSelesai = true;
+          if (lulus) {
+            tesSelesai = true;
             elHasilTes.querySelector('#hasilIcon').textContent = '🏆';
             elHasilTes.querySelector('#hasilTitle').textContent = 'Selamat!';
             elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
             elHasilTes.querySelector('#hasilDesc').innerHTML =
-              `Kamu berhasil menyelesaikan Bagian 3!<br><br>Bagian 4 sekarang terbuka!`;
+              `Kamu berhasil menyelesaikan Bagian 3!<br><br>Bagian 4 (Kuis Akhir &amp; Sertifikat) sekarang terbuka!`;
 
             elBtnLanjutBagian4.classList.remove('locked');
             elBtnLanjutBagian4.classList.add('primary');
-            elHintLanjut.classList.remove('locked');
+            elHintLanjut.classList.remove('locked', 'warn');
             elHintLanjut.classList.add('ready');
             elHintLanjut.textContent = '✅ Bagian 4 sudah terbuka! Klik untuk melanjutkan.';
+            elBtnUlangiTes.classList.remove('show');
 
-            document.querySelectorAll('.step-dot').forEach((step, idx) => {
-              if (idx === 2) {
-                step.classList.add('completed');
-                step.classList.remove('active');
-              }
-            });
-
-            try {
-              const prev = JSON.parse(localStorage.getItem('labtik3_progress') || '{}');
-              prev.bagian = 3;
-              prev.skorBagian3 = skorBagian3;
-              localStorage.setItem('labtik3_progress', JSON.stringify(prev));
-            } catch (e) {}
+            simpanSkorBagian3(correct, total);
           } else {
             elHasilTes.querySelector('#hasilIcon').textContent = '📖';
             elHasilTes.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
             elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
             elHasilTes.querySelector('#hasilDesc').innerHTML =
-              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal 3 soal benar untuk membuka Bagian 4.<br><br>Coba pelajari kembali materinya!`;
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal ${AMBANG_LULUS} soal benar untuk membuka Bagian 4.<br><br>Pelajari kembali materinya, lalu klik <strong>🔄 Ulangi Tes Pemahaman</strong> di bawah.`;
+
+            elBtnUlangiTes.classList.add('show');
+            elHintLanjut.classList.remove('ready');
+            elHintLanjut.classList.add('warn');
+            elHintLanjut.textContent = '⚠️ Belum lulus — klik "Ulangi Tes Pemahaman" untuk mencoba lagi.';
           }
 
           setTimeout(() => {
@@ -1544,49 +2531,173 @@
         }, 700);
       }
 
+      function simpanSkorBagian3(correct, total) {
+        const skorBagian3 = Math.round(40 + (correct / total) * 60);
+        try {
+          const prev = JSON.parse(localStorage.getItem('labtik3_progress') || '{}');
+          prev.bagian = 3;
+          prev.skorBagian3 = skorBagian3;
+          localStorage.setItem('labtik3_progress', JSON.stringify(prev));
+        } catch (e) {}
+
+        if (window.dutaSimpanProgress) {
+          const skorObj = { c: skorBagian3 };
+          window.dutaSimpanProgress(MODUL_KEY, 'c', skorObj).catch(() => {});
+        }
+      }
+
+      elBtnUlangiTes.addEventListener('click', function() {
+        jawabanTes = {};
+        tesSubmitted = false;
+        tesBenar = 0;
+        tesSelesai = false;
+
+        elBtnPeriksaTes.disabled = false;
+        elBtnPeriksaTes.textContent = '✅ Periksa Jawaban';
+        elBtnUlangiTes.classList.remove('show');
+        elHasilTes.classList.remove('show');
+
+        elHintLanjut.classList.remove('ready', 'warn');
+        elHintLanjut.classList.add('locked');
+        elHintLanjut.textContent = '🔒 Selesaikan semua tahap untuk membuka Bagian 4';
+
+        renderSoal();
+        updateTesProgress();
+
+        elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
       // ============================================
       // KIRIM NILAI BAGIAN 3
       // ============================================
       async function kirimNilaiBagian3() {
-        const skorBagian3 = Math.round(40 + (soalBenar / soalData.length) * 60);
+        const skorBagian3 = Math.round(40 + (tesBenar / soalData.length) * 60);
 
         elStatusKirim.className = 'status-kirim info show';
-        elStatusKirimText.textContent = 'Mengirim nilai Bagian 3...';
+        elStatusSpinner.style.display = 'inline-block';
+        elStatusKirimText.innerHTML = `Mengirim nilai Bagian 3 (${skorBagian3})...`;
 
-        const hasil = await window.kirimNilaiBagian(
-          NAMA_SHEET,
-          'c',
-          skorBagian3,
-          TOTAL_BAGIAN
-        );
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
 
-        if (hasil && hasil.ok) {
-          elStatusKirim.className = 'status-kirim success show';
-          elStatusKirimText.innerHTML = `✅ Nilai Bagian 3 (<strong>${skorBagian3}</strong>) berhasil dikirim.`;
-        } else {
-          elStatusKirim.className = 'status-kirim error show';
-          elStatusKirimText.innerHTML = `⚠️ Gagal mengirim nilai. Tetap lanjut ke Bagian 4.`;
+        if (kirimTimeoutId) {
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
         }
+
+        let selesaiKirim = false;
+
+        kirimTimeoutId = setTimeout(() => {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          tampilkanGagalKirim(skorBagian3, '⏱️ Koneksi lambat atau terputus.');
+        }, 12000);
+
+        try {
+          const hasil = await window.kirimNilaiBagian(
+            NAMA_SHEET, 'c', skorBagian3, TOTAL_BAGIAN
+          );
+
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+
+          if (hasil && hasil.ok) {
+            kirimSukses = true;
+            elStatusKirim.className = 'status-kirim success show';
+            elStatusSpinner.style.display = 'none';
+            elStatusKirimText.innerHTML = `✅ Nilai Bagian 3 (<strong>${skorBagian3}</strong>) berhasil dikirim.`;
+          } else {
+            tampilkanGagalKirim(skorBagian3, (hasil && hasil.error) || 'Terjadi kesalahan.');
+          }
+        } catch (err) {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+          tampilkanGagalKirim(skorBagian3, err.message || 'Gagal terhubung.');
+        }
+      }
+
+      function tampilkanGagalKirim(skor, pesan) {
+        elStatusKirim.className = 'status-kirim error show';
+        elStatusSpinner.style.display = 'none';
+        elStatusKirimText.innerHTML = `⚠️ ${pesan} Nilai: <strong>${skor}</strong>. Klik "Ulangi Kirim" untuk mencoba lagi.`;
+
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
+
+        const btnRetry = document.createElement('button');
+        btnRetry.className = 'btn-retry';
+        btnRetry.type = 'button';
+        btnRetry.textContent = '🔄 Ulangi Kirim';
+        btnRetry.addEventListener('click', function() {
+          kirimSukses = false;
+          kirimNilaiBagian3();
+        });
+        elStatusKirim.appendChild(btnRetry);
       }
 
       // ============================================
       // LANJUT KE BAGIAN 4
       // ============================================
       window.lanjutKeBagian4 = async function() {
-        if (!soalSelesai) {
+        if (!tesSelesai) {
           alert('🔒 Selesaikan tes pemahaman dengan benar terlebih dahulu!');
           return;
         }
 
+        if (kirimSukses) {
+          pindahKeBagian4();
+          return;
+        }
+
         elBtnLanjutBagian4.disabled = true;
-        await kirimNilaiBagian3();
+        elBtnLanjutBagian4.textContent = '⏳ Mengirim...';
+
+        if (!elStatusKirim.classList.contains('show')) {
+          await kirimNilaiBagian3();
+        }
+
+        elBtnLanjutBagian4.disabled = false;
+        elBtnLanjutBagian4.textContent = 'Lanjut ke Bagian 4: Kuis Akhir & Sertifikat →';
 
         setTimeout(() => {
-          window.location.href = 'aktivitastik3d.html';
+          pindahKeBagian4();
         }, 800);
       };
 
-      console.log('✅ TIK3 Bagian 3: Teknik Pencarian Dasar siap!');
+      function pindahKeBagian4() {
+        window.location.href = 'aktivitastik3d.html';
+      }
+
+      // ============================================
+      // HELPER
+      // ============================================
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        // Tabs
+        elTabCari.addEventListener('click', function() {
+          if (!this.classList.contains('locked')) setLangkah('cari');
+        });
+        elTabPilah.addEventListener('click', function() {
+          if (!this.classList.contains('locked')) setLangkah('pilah');
+        });
+        elTabSusun.addEventListener('click', function() {
+          if (!this.classList.contains('locked')) setLangkah('susun');
+        });
+      });
+
+      console.log('✅ TIK3 Bagian 3: Mencari & Memilah untuk Tugas siap!');
     })();
   </script>
 

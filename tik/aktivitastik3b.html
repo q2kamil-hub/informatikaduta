@@ -3,89 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Peramban & Pencarian · Bagian 2: Cara Kerja Mesin Pencari · Informatika DUTA</title>
+  <title>Search Lab · Bagian 2: Memilah Informasi · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
   <style>
-    /* ===== MATERI RINGKAS ===== */
-    .materi-ringkas {
-      max-width: 820px; margin: 0 auto 1.5rem;
-      background: #f8f4ef; border-radius: 16px;
-      padding: 1.5rem 1.8rem; border-left: 6px solid var(--c-tik, #ff8a5b);
-      border: 2px solid #e5dbd0;
-    }
-    .materi-ringkas h2 {
-      font-size: 1.3rem; font-weight: 700; color: #3b2b1e;
-      margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;
-    }
-    .materi-ringkas h2 .badge {
-      background: var(--c-tik, #ff8a5b); color: #fff; font-size: 0.7rem;
-      padding: 0.15rem 0.6rem; border-radius: 20px; font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-    .materi-ringkas h3 {
-      font-size: 1.05rem; font-weight: 600; color: #4d3829; margin: 1rem 0 0.4rem;
-    }
-    .materi-ringkas p {
-      font-size: 0.92rem; line-height: 1.7; color: #2f2822; margin-bottom: 0.6rem;
-    }
-    .materi-ringkas ul, .materi-ringkas ol {
-      margin: 0.3rem 0 0.8rem 1.5rem; font-size: 0.9rem;
-    }
-    .materi-ringkas li { margin-bottom: 0.25rem; line-height: 1.6; }
-    .materi-ringkas .info-box {
-      background: #fff; border-radius: 12px; padding: 0.8rem 1.2rem;
-      border: 2px solid #e5dbd0; margin: 0.6rem 0;
-      font-size: 0.88rem; line-height: 1.6;
-    }
-    .materi-ringkas .info-box strong { color: #4d3829; }
-    .materi-ringkas .link-materi {
-      display: inline-block; margin-top: 0.5rem; color: #5c4638;
-      font-size: 0.85rem; text-decoration: none; font-weight: 600;
-      border-bottom: 2px dotted #bfaa9a; transition: all 0.2s ease;
-    }
-    .materi-ringkas .link-materi:hover { color: #4d3829; border-bottom-color: #7a5f4c; }
-
-    .aktivitas-wrapper { max-width: 1000px; margin: 0 auto; }
-
-    /* ===== STEP INDICATOR ===== */
-    .step-indicator {
-      display: flex; justify-content: space-between; align-items: center;
-      margin: 1.5rem 0 2rem 0; position: relative;
-      padding: 0 0.5rem; flex-wrap: wrap; gap: 0.3rem;
-    }
-    .step-indicator::before {
-      content: ''; position: absolute; top: 50%;
-      left: 30px; right: 30px; height: 3px;
-      background: #e5dbd0; transform: translateY(-50%); z-index: 0;
-    }
-    .step-dot {
-      display: flex; flex-direction: column; align-items: center;
-      z-index: 1; cursor: pointer; background: transparent;
-      border: none; padding: 0; font-family: inherit;
-      flex: 1; min-width: 50px;
-    }
-    .step-dot .circle {
-      width: 38px; height: 38px; border-radius: 50%;
-      background: #f5ede6; border: 3px solid #d9cdbf;
+    /* ===== PROGRESS BAR VISUAL (LAPIS) ===== */
+    .progress-lapis {
       display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 0.8rem; color: #7a6656;
-      transition: all 0.3s ease;
+      gap: 0.4rem; margin: 1.2rem auto 1.5rem;
+      flex-wrap: wrap; max-width: 700px;
     }
-    .step-dot.active .circle {
-      background: var(--c-tik, #ff8a5b); border-color: var(--c-tik, #ff8a5b);
-      color: #fff; transform: scale(1.1);
-      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.3);
+    .progress-lapis .pl-step {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.45rem 1rem; border-radius: 30px;
+      background: #f5ede6; border: 2px solid #e5dbd0;
+      font-size: 0.78rem; font-weight: 700; color: #7a6656;
+      transition: all 0.3s ease; white-space: nowrap;
     }
-    .step-dot.completed .circle {
+    .progress-lapis .pl-step.active {
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      border-color: #ff8a5b; color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 138, 91, 0.25);
+    }
+    .progress-lapis .pl-step.done {
       background: #8aaa7a; border-color: #8aaa7a; color: #fff;
     }
-    .step-dot .label {
-      font-size: 0.55rem; margin-top: 0.3rem; color: #7a6656;
-      text-align: center; max-width: 70px; font-weight: 500;
+    .progress-lapis .pl-step .pl-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
     }
-    .step-dot.active .label { color: #3b2b1e; font-weight: 600; }
-    .step-dot.locked .circle { opacity: 0.4; cursor: not-allowed; }
-    .step-dot.locked .label { opacity: 0.4; }
+    .progress-lapis .pl-sep {
+      color: #c79bd9; font-weight: 700; font-size: 0.9rem;
+    }
+
+    /* ===== HEADER LAPIS ===== */
+    .lapis-header {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.7rem 1.2rem; margin: 1.2rem 0 1rem;
+      border-radius: 14px; font-weight: 700;
+      font-size: 0.95rem; color: #fff;
+    }
+    .lapis-header.lapis-1 { background: linear-gradient(135deg, #4fb0c6, #3a8aa0); }
+    .lapis-header.lapis-2 { background: linear-gradient(135deg, #f4b942, #d4a030); }
+    .lapis-header.lapis-3 { background: linear-gradient(135deg, #6ecb8f, #4fa86a); }
+    .lapis-header .lapis-num {
+      background: rgba(255,255,255,0.3); padding: 0.15rem 0.7rem;
+      border-radius: 20px; font-size: 0.75rem; letter-spacing: 0.5px;
+    }
 
     /* ===== AREA SIMULASI ===== */
     #area-simulasi { display: none; margin-top: 0.5rem; }
@@ -100,319 +65,198 @@
       font-size: 1.4rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.3rem;
     }
     .scenario-panel .scenario-story {
-      font-size: 0.95rem; color: #5c4638; background: #fff5ee;
+      font-size: 0.95rem; color: #5c4638; background: #fff5f0;
       padding: 0.8rem 1.2rem; border-radius: 12px;
-      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid var(--c-tik, #ff8a5b);
+      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid #ff8a5b;
+      line-height: 1.7;
     }
 
-    /* ===== TAHAP SUB-PROGRESS ===== */
-    .tahap-progress {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 0.6rem; margin: 1rem 0 1.5rem 0;
+    /* ===== KARTU INFORMASI ===== */
+    .kartu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0.9rem;
+      margin: 1rem 0;
     }
-    .tahap-item {
-      display: flex; align-items: center; gap: 0.4rem;
-      padding: 0.5rem 1.1rem; border-radius: 30px;
-      background: #f5ede6; border: 2px solid #e5dbd0;
-      font-size: 0.82rem; font-weight: 600; color: #7a6656;
-      transition: all 0.3s ease;
+    @media (max-width: 620px) {
+      .kartu-grid { grid-template-columns: 1fr; }
     }
-    .tahap-item .tahap-num {
-      width: 22px; height: 22px; border-radius: 50%;
-      background: #e5dbd0; color: #4d3829;
-      display: flex; align-items: center; justify-content: center;
+
+    .kartu {
+      background: #fff;
+      border: 2px solid #e5dbd0;
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .kartu:hover {
+      border-color: #ff8a5b;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(255, 138, 91, 0.12);
+    }
+    .kartu.terpilih {
+      border-color: #ff8a5b;
+      background: #fff5f0;
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.18);
+    }
+    .kartu.locked {
+      cursor: default;
+      opacity: 0.85;
+    }
+    .kartu.locked:hover { transform: none; border-color: #e5dbd0; box-shadow: none; }
+
+    .kartu .kt-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 0.4rem; flex-wrap: wrap;
+    }
+    .kartu .kt-label {
       font-size: 0.7rem; font-weight: 700;
+      background: #f5ede6; color: #7a6656;
+      padding: 0.15rem 0.6rem; border-radius: 20px;
+      letter-spacing: 0.5px;
     }
-    .tahap-item.active {
-      background: var(--c-tik, #ff8a5b); border-color: var(--c-tik, #ff8a5b); color: #fff;
+    .kartu .kt-badge {
+      font-size: 0.65rem; font-weight: 700;
+      padding: 0.15rem 0.6rem; border-radius: 20px;
+      display: none;
     }
-    .tahap-item.active .tahap-num {
-      background: rgba(255,255,255,0.3); color: #fff;
+    .kartu.locked .kt-badge { display: inline-block; }
+    .kartu .kt-badge.dipercaya { background: #e8f5e0; color: #2d5a1e; }
+    .kartu .kt-badge.tidak { background: #fde8e8; color: #a84a3a; }
+    .kartu .kt-title {
+      font-weight: 700; font-size: 0.95rem;
+      color: #3b2b1e; line-height: 1.4;
     }
-    .tahap-item.completed {
-      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
+    .kartu .kt-meta {
+      font-size: 0.78rem; color: #7a6656;
+      line-height: 1.5;
     }
-    .tahap-item.completed .tahap-num {
-      background: rgba(255,255,255,0.3); color: #fff;
+    .kartu .kt-meta .kt-row {
+      display: flex; gap: 0.4rem;
+      align-items: flex-start;
+      margin-bottom: 0.15rem;
+    }
+    .kartu .kt-meta .kt-row .ic {
+      flex-shrink: 0;
+      font-size: 0.85rem;
+    }
+    .kartu .kt-klaim {
+      font-size: 0.85rem; color: #2f2822;
+      line-height: 1.55;
+      padding: 0.5rem 0.7rem;
+      background: #f8f4ef;
+      border-radius: 8px;
+      border-left: 3px solid #ff8a5b;
+      font-style: italic;
+      margin-top: 0.3rem;
+    }
+    .kartu .kt-tag-pilih {
+      position: absolute;
+      top: 0.5rem; right: 0.6rem;
+      display: none;
+      background: #ff8a5b;
+      color: #fff;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .kartu.terpilih .kt-tag-pilih { display: flex; }
+
+    /* ===== ZONA KLASIFIKASI ===== */
+    .zona-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+    @media (max-width: 620px) {
+      .zona-wrapper { grid-template-columns: 1fr; }
+    }
+    .zona-box {
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      min-height: 90px;
+      transition: all 0.2s ease;
+    }
+    .zona-box.dipercaya {
+      background: linear-gradient(135deg, #e8f5e0, #d4ebd8);
+      border: 2px dashed #8aaa7a;
+    }
+    .zona-box.tidak {
+      background: linear-gradient(135deg, #fdf0f0, #f5d6d0);
+      border: 2px dashed #f26d8a;
+    }
+    .zona-box .zb-title {
+      font-weight: 700; font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .zona-box.dipercaya .zb-title { color: #2d5a1e; }
+    .zona-box.tidak .zb-title { color: #a84a3a; }
+    .zona-box .zb-list {
+      display: flex; flex-wrap: wrap; gap: 0.35rem;
+    }
+    .zona-box .zb-chip {
+      background: #fff; border-radius: 20px;
+      padding: 0.25rem 0.7rem;
+      font-size: 0.78rem; font-weight: 700;
+      color: #3b2b1e;
+      border: 2px solid currentColor;
+    }
+    .zona-box.dipercaya .zb-chip { border-color: #8aaa7a; color: #2d5a1e; }
+    .zona-box.tidak .zb-chip { border-color: #f26d8a; color: #a84a3a; }
+    .zona-box .zb-empty {
+      font-size: 0.78rem; font-style: italic;
+      color: #b09b88;
     }
 
-    /* ===== KONTEN TAHAP ===== */
-    .tahap-content { display: none; }
-    .tahap-content.active { display: block; animation: fadeIn 0.4s ease; }
+    /* ===== STATS BAR ===== */
+    .stats-bar {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      justify-content: space-between; align-items: center;
+      padding: 0.8rem 1.2rem; background: #fff;
+      border-radius: 16px; border: 2px solid #e5dbd0;
+      margin-bottom: 1rem;
+    }
+    .stats-bar .stat {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.88rem; color: #4d3829;
+      flex-wrap: wrap;
+    }
+    .stats-bar .stat .num {
+      font-weight: 700; font-size: 1.1rem; color: #3b2b1e;
+    }
+    .stats-bar .stat .num.benar { color: #2d7d46; }
+    .stats-bar .stat .num.salah { color: #b33c3c; }
+
+    /* ===== FEEDBACK ===== */
+    .feedback-box {
+      background: #f5ede6; border-radius: 16px;
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      border-left: 8px solid #dbb9a6;
+      display: none; animation: fadeIn 0.4s ease;
+    }
+    .feedback-box.show { display: block; }
+    .feedback-box.success { border-color: #2d7d46; background: #e8f5ee; }
+    .feedback-box.error { border-color: #b33c3c; background: #fde8e8; }
+    .feedback-box.info { border-color: #ff8a5b; background: #fff5f0; }
+    .feedback-box.warn { border-color: #d4a030; background: #fff8e6; }
+    .feedback-box .fb-icon { font-size: 1.5rem; margin-right: 0.5rem; }
+    .feedback-box .fb-text { color: #2f2822; line-height: 1.6; }
+    .feedback-box .fb-text strong { color: #4d3829; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== SORTABLE LIST (untuk Tahap 1 - urutkan) ===== */
-    .sortable-container {
-      background: #fff;
-      border-radius: 20px;
-      padding: 1.5rem;
-      border: 2px solid #e5dbd0;
-      margin: 1rem 0;
-    }
-    .sortable-title {
-      font-weight: 700;
-      color: #4d3829;
-      font-size: 1rem;
-      margin-bottom: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .sortable-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-    .sortable-item {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      background: #f8f3ee;
-      border: 2px solid #e5dbd0;
-      border-radius: 12px;
-      padding: 0.9rem 1.2rem;
-      transition: all 0.2s ease;
-    }
-    .sortable-item:hover {
-      border-color: var(--c-tik, #ff8a5b);
-      background: #fff5ee;
-    }
-    .sortable-item.dragging {
-      opacity: 0.4;
-    }
-    .sortable-item .drag-handle {
-      cursor: grab;
-      font-size: 1.3rem;
-      color: #a0968c;
-      user-select: none;
-      padding: 0.2rem 0.4rem;
-    }
-    .sortable-item .drag-handle:active { cursor: grabbing; }
-    .sortable-item .item-icon {
-      font-size: 1.5rem;
-      flex-shrink: 0;
-    }
-    .sortable-item .item-text {
-      flex: 1;
-    }
-    .sortable-item .item-text strong {
-      display: block;
-      color: #3b2b1e;
-      font-size: 0.95rem;
-      margin-bottom: 0.2rem;
-    }
-    .sortable-item .item-text .desc {
-      color: #5c4638;
-      font-size: 0.82rem;
-      line-height: 1.4;
-    }
-    .sortable-item .btn-geser {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-    .sortable-item .btn-geser button {
-      width: 28px;
-      height: 22px;
-      border-radius: 6px;
-      border: 2px solid #d9cdbf;
-      background: #fff;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.15s;
-      font-family: inherit;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #4d3829;
-      font-weight: 700;
-    }
-    .sortable-item .btn-geser button:hover:not(:disabled) {
-      background: var(--c-tik, #ff8a5b);
-      border-color: var(--c-tik, #ff8a5b);
-      color: #fff;
-    }
-    .sortable-item .btn-geser button:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-    .sortable-item.correct {
-      border-color: #8aaa7a;
-      background: #e8f5ee;
-    }
-    .sortable-item.wrong {
-      border-color: #d4a0a0;
-      background: #fde8e8;
-      animation: shake 0.4s ease;
-    }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-10px); }
-      40% { transform: translateX(10px); }
-      60% { transform: translateX(-6px); }
-      80% { transform: translateX(6px); }
-    }
-
-    /* ===== MATCHING (untuk Tahap 2) ===== */
-    .matching-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin: 1.5rem 0;
-    }
-    @media (max-width: 720px) {
-      .matching-container { grid-template-columns: 1fr; gap: 1rem; }
-    }
-    .match-column {
-      background: #fff;
-      border-radius: 20px;
-      padding: 1.2rem;
-      border: 2px solid #e5dbd0;
-    }
-    .match-column .column-title {
-      font-weight: 700;
-      color: #4d3829;
-      font-size: 0.95rem;
-      margin-bottom: 0.8rem;
-      text-align: center;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid #e5dbd0;
-    }
-    .match-item {
-      background: #f8f3ee;
-      border: 2px solid #e5dbd0;
-      border-radius: 12px;
-      padding: 0.8rem 1rem;
-      margin-bottom: 0.6rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-size: 0.88rem;
-      color: #2f2822;
-      line-height: 1.5;
-    }
-    .match-item:hover:not(.matched) {
-      border-color: var(--c-tik, #ff8a5b);
-      background: #fff5ee;
-      transform: translateX(4px);
-    }
-    .match-item.selected {
-      border-color: var(--c-tik, #ff8a5b);
-      background: #fff5ee;
-      box-shadow: 0 4px 12px rgba(255, 138, 91, 0.2);
-    }
-    .match-item.matched {
-      border-color: #8aaa7a;
-      background: #e8f5ee;
-      cursor: default;
-      opacity: 0.85;
-    }
-    .match-item.matched::after {
-      content: ' ✅';
-      color: #2d5a1e;
-    }
-
-    /* ===== SIMULASI MESIN PENCARI (Tahap 3) ===== */
-    .search-sim {
-      background: #fff;
-      border-radius: 20px;
-      padding: 1.5rem;
-      border: 2px solid #e5dbd0;
-      margin: 1rem 0;
-    }
-    .search-bar {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: #f8f3ee;
-      border: 2px solid #e5dbd0;
-      border-radius: 30px;
-      padding: 0.5rem 1rem;
-      margin-bottom: 1rem;
-    }
-    .search-bar .search-icon {
-      font-size: 1.2rem;
-      color: #a0968c;
-    }
-    .search-bar input {
-      flex: 1;
-      border: none;
-      background: transparent;
-      font-size: 1rem;
-      font-family: inherit;
-      color: #2f2822;
-      outline: none;
-      padding: 0.4rem 0;
-    }
-    .search-bar button {
-      padding: 0.5rem 1.5rem;
-      border-radius: 30px;
-      border: none;
-      background: var(--c-tik, #ff8a5b);
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-      font-size: 0.9rem;
-    }
-    .search-bar button:hover {
-      background: #e77645;
-      transform: translateY(-2px);
-    }
-    .search-results {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-    .search-result {
-      background: #f8f3ee;
-      border: 2px solid #e5dbd0;
-      border-radius: 12px;
-      padding: 0.9rem 1.2rem;
-      transition: all 0.2s;
-      opacity: 0;
-      transform: translateY(10px);
-      animation: slideUp 0.4s ease forwards;
-    }
-    @keyframes slideUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .search-result .result-title {
-      color: #1a4a6b;
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 0.2rem;
-    }
-    .search-result .result-url {
-      color: #2d5a1e;
-      font-size: 0.75rem;
-      margin-bottom: 0.3rem;
-      font-family: 'Courier New', monospace;
-    }
-    .search-result .result-desc {
-      color: #5c4638;
-      font-size: 0.85rem;
-      line-height: 1.5;
-    }
-    .search-result .result-rank {
-      display: inline-block;
-      background: var(--c-tik, #ff8a5b);
-      color: #fff;
-      padding: 0.15rem 0.6rem;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      margin-bottom: 0.4rem;
-    }
-
-    /* ===== GAME ACTIONS ===== */
-    .game-actions {
-      display: flex; flex-wrap: wrap; gap: 0.6rem;
-      justify-content: center; margin-top: 1.2rem;
-    }
+    /* ===== TOMBOL ===== */
     .btn-game {
       padding: 0.6rem 1.8rem; border-radius: 30px; border: none;
       font-weight: 700; font-size: 0.9rem;
@@ -421,7 +265,7 @@
       align-items: center; gap: 0.4rem;
     }
     .btn-game.primary {
-      background: linear-gradient(135deg, var(--c-tik, #ff8a5b), #d4a030);
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
       color: #fff; box-shadow: 0 4px 14px rgba(255, 138, 91, 0.25);
     }
     .btn-game.primary:hover:not(:disabled) {
@@ -432,30 +276,241 @@
       background: #f5ede6; color: #4d3829; border: 2px solid #d9cdbf;
     }
     .btn-game.secondary:hover { background: #e8dcd0; transform: translateY(-2px); }
-    .btn-game:disabled {
-      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    .btn-game:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+    .game-actions {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      justify-content: center; margin-top: 1rem;
     }
 
-    /* ===== FEEDBACK ===== */
-    .feedback-box {
-      background: #fff5ee; border-radius: 16px;
-      padding: 1rem 1.5rem; margin: 1.2rem 0;
-      border-left: 8px solid var(--c-tik, #ff8a5b);
-      display: none; animation: fadeIn 0.4s ease;
+    /* ===== MOMEN MINDFUL ===== */
+    .mindful-box {
+      background: linear-gradient(135deg, #e6f4ff, #f0f9ff);
+      border: 2px dashed #4fb0c6;
+      border-radius: 16px; padding: 1rem 1.5rem;
+      margin: 1.2rem 0; display: none;
     }
-    .feedback-box.show { display: block; }
-    .feedback-box.success {
-      border-color: #2d7d46; background: #e8f5ee;
+    .mindful-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .mindful-box .mb-icon { font-size: 1.4rem; margin-right: 0.4rem; }
+    .mindful-box .mb-title {
+      font-weight: 700; color: #1f6b7d; font-size: 1rem;
+      margin-bottom: 0.4rem;
     }
-    .feedback-box.error {
-      border-color: #b33c3c; background: #fde8e8;
+    .mindful-box .mb-text {
+      font-size: 0.92rem; color: #2f2822; line-height: 1.6;
+      margin-bottom: 0.6rem;
     }
-    .feedback-box.info {
-      border-color: var(--c-tik, #ff8a5b); background: #fff5ee;
+    .mindful-box textarea {
+      width: 100%; padding: 0.6rem 0.9rem;
+      border: 2px solid #b8d4e8; border-radius: 10px;
+      font-family: inherit; font-size: 0.9rem;
+      color: #2f2822; background: #fff; resize: vertical;
+      min-height: 60px; outline: none;
     }
-    .feedback-box .fb-icon { font-size: 1.5rem; margin-right: 0.5rem; }
-    .feedback-box .fb-text { color: #2f2822; line-height: 1.6; }
-    .feedback-box .fb-text strong { color: #4d3829; }
+    .mindful-box textarea:focus {
+      border-color: #4fb0c6;
+      box-shadow: 0 0 0 3px rgba(79, 176, 198, 0.15);
+    }
+
+    /* ===== TANTANGAN ===== */
+    .tantangan-list {
+      display: flex; flex-direction: column; gap: 0.8rem;
+      margin: 1rem 0;
+    }
+    .tantangan-item {
+      background: #fff; border-radius: 14px;
+      padding: 1rem 1.3rem; border: 2px solid #e5dbd0;
+      transition: all 0.3s ease;
+    }
+    .tantangan-item.selesai {
+      border-color: #8aaa7a; background: #f0f8eb;
+    }
+    .tantangan-item .t-header {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-weight: 700; color: #3b2b1e; margin-bottom: 0.4rem;
+    }
+    .tantangan-item .t-num {
+      background: #4d3829; color: #fff;
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; flex-shrink: 0;
+    }
+    .tantangan-item .t-text {
+      font-size: 0.92rem; color: #2f2822; line-height: 1.6;
+      margin-bottom: 0.6rem;
+    }
+    .tantangan-item .t-input-row {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      align-items: center;
+    }
+    .tantangan-item .t-input-row textarea {
+      flex: 1; min-width: 200px;
+      padding: 0.5rem 0.9rem; border-radius: 10px;
+      border: 2px solid #d9cdbf; font-family: inherit;
+      font-size: 0.88rem; color: #2f2822; background: #fcfaf7;
+      outline: none; min-height: 70px; resize: vertical;
+    }
+    .tantangan-item .t-input-row textarea:focus {
+      border-color: #6b4f3a; background: #fff;
+    }
+    .tantangan-item .t-input-row button {
+      padding: 0.5rem 1.4rem; border-radius: 20px;
+      border: none; font-weight: 700; font-size: 0.85rem;
+      cursor: pointer; background: #4d3829; color: #fff;
+      font-family: inherit; transition: all 0.2s ease;
+      align-self: flex-end;
+    }
+    .tantangan-item .t-input-row button:hover:not(:disabled) {
+      background: #6b4f3a; transform: translateY(-1px);
+    }
+    .tantangan-item .t-input-row button:disabled {
+      opacity: 0.5; cursor: not-allowed;
+    }
+    .tantangan-item .t-feedback {
+      margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+      border-radius: 8px; font-size: 0.85rem;
+      line-height: 1.5; display: none;
+    }
+    .tantangan-item .t-feedback.show { display: block; }
+    .tantangan-item .t-feedback.ok {
+      background: #d4e8cb; color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+    .tantangan-item .t-feedback.hint {
+      background: #fff3d6; color: #8a5e00;
+      border-left: 4px solid #f4b942;
+    }
+    .tantangan-item .t-feedback.no {
+      background: #f5d6d0; color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+    .tantangan-item .t-opsi-col {
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .tantangan-item .t-opsi-col label {
+      display: flex; gap: 0.5rem; padding: 0.5rem 0.8rem;
+      border: 2px solid #d9cdbf; border-radius: 10px;
+      cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+      background: #fff; transition: all 0.15s ease;
+    }
+    .tantangan-item .t-opsi-col label:hover { border-color: #6b4f3a; }
+    .tantangan-item .t-opsi-col input[type="radio"] { accent-color: #ff8a5b; }
+
+    /* ===== PENAMAAN (LAPIS 3) ===== */
+    .penamaan-box {
+      background: linear-gradient(135deg, #e8f5ee, #d4ebd8);
+      border-radius: 16px; padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0; border: 2px solid #8aaa7a;
+      display: none;
+    }
+    .penamaan-box.show { display: block; animation: fadeIn 0.6s ease; }
+    .penamaan-box h3 {
+      font-size: 1.1rem; color: #2d5a1e; margin-bottom: 0.6rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .penamaan-box .notasi-box {
+      background: #fff; border-radius: 12px;
+      padding: 0.8rem 1.2rem; margin: 0.6rem 0;
+      border: 2px dashed #8aaa7a;
+      font-size: 0.95rem; color: #2f2822; line-height: 1.7;
+    }
+    .penamaan-box .notasi-box strong { color: #2d5a1e; }
+    .penamaan-box .notasi-box ul {
+      margin: 0.4rem 0 0 1.2rem; line-height: 1.7;
+    }
+    .penamaan-box .notasi-box table {
+      width: 100%; border-collapse: collapse;
+      margin-top: 0.6rem; font-size: 0.88rem;
+    }
+    .penamaan-box .notasi-box table th {
+      background: #e8f5ee; color: #2d5a1e;
+      padding: 0.5rem 0.8rem; text-align: left;
+      border-bottom: 2px solid #8aaa7a;
+    }
+    .penamaan-box .notasi-box table td {
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid #e5dbd0;
+      vertical-align: top;
+    }
+    .penamaan-box .koneksi {
+      background: #fff8e6; border-left: 5px solid #f4b942;
+      border-radius: 10px; padding: 0.8rem 1.2rem;
+      margin-top: 0.8rem; font-size: 0.9rem;
+      color: #5c3400; line-height: 1.6;
+    }
+    .penamaan-box .koneksi strong { color: #8a5e00; }
+
+    .link-materi-bawah {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      margin: 1rem auto 0;
+      padding: 0.7rem 1.8rem; border-radius: 30px;
+      background: #fff; color: #b34614;
+      border: 2px solid #ff8a5b; text-decoration: none;
+      font-weight: 700; font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    .link-materi-bawah:hover {
+      background: #fff5f0;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 138, 91, 0.25);
+    }
+    .link-materi-wrapper { text-align: center; margin-top: 1rem; }
+
+    /* ===== KUIS KILAT ===== */
+    .kuis-kilat-box {
+      background: #fff; border-radius: 16px;
+      padding: 1.3rem 1.6rem; margin: 1.5rem 0;
+      border: 2px solid #ff8a5b;
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.1);
+      display: none;
+    }
+    .kuis-kilat-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .kuis-kilat-box .kk-title {
+      font-weight: 700; color: #b34614; font-size: 1rem;
+      margin-bottom: 0.8rem; display: flex;
+      align-items: center; gap: 0.5rem;
+    }
+    .kuis-kilat-box .kk-title .badge {
+      background: #ff8a5b; color: #fff; font-size: 0.65rem;
+      padding: 0.15rem 0.6rem; border-radius: 20px;
+    }
+    .kuis-kilat-box .kk-soal {
+      background: #fff5f0; border-radius: 10px;
+      padding: 0.8rem 1.1rem; margin-bottom: 0.8rem;
+    }
+    .kuis-kilat-box .kk-soal .kk-q {
+      font-weight: 600; color: #3b2b1e;
+      font-size: 0.92rem; margin-bottom: 0.5rem;
+    }
+    .kuis-kilat-box .kk-opsi {
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .kuis-kilat-box .kk-opsi label {
+      display: flex; align-items: center; gap: 0.5rem;
+      cursor: pointer; font-size: 0.87rem; color: #3d2c1f;
+      padding: 0.4rem 0.8rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; transition: all 0.15s;
+    }
+    .kuis-kilat-box .kk-opsi label:hover:not(.disabled) {
+      background: #fff5f0; border-color: #ff8a5b;
+    }
+    .kuis-kilat-box .kk-opsi label.disabled { cursor: default; }
+    .kuis-kilat-box .kk-opsi label.benar {
+      border-color: #8aaa7a; background: #e8f5e0;
+    }
+    .kuis-kilat-box .kk-opsi label.salah {
+      border-color: #d4a0a0; background: #f5e0e0;
+    }
+    .kuis-kilat-box .kk-opsi input[type="radio"] { accent-color: #ff8a5b; }
+    .kuis-kilat-box .kk-opsi .check-icon {
+      margin-left: auto; font-size: 0.9rem;
+    }
+    .kuis-kilat-box .kk-hasil {
+      background: #f5ede6; border-radius: 10px;
+      padding: 0.7rem 1rem; margin-top: 0.6rem;
+      font-size: 0.88rem; color: #4d3829;
+      display: none; text-align: center; font-weight: 600;
+    }
+    .kuis-kilat-box .kk-hasil.show { display: block; }
 
     /* ===== TES PEMAHAMAN ===== */
     .tes-section {
@@ -464,9 +519,9 @@
     }
     .tes-section.active { display: block; animation: fadeIn 0.4s ease; }
     .tes-header {
-      background: #fff5ee; border-radius: 12px;
+      background: #fff5f0; border-radius: 12px;
       padding: 0.9rem 1.2rem; margin-bottom: 1rem;
-      border-left: 5px solid var(--c-tik, #ff8a5b);
+      border-left: 5px solid #ff8a5b;
       display: flex; flex-wrap: wrap; justify-content: space-between;
       align-items: center; gap: 0.5rem;
     }
@@ -474,7 +529,7 @@
       font-size: 0.95rem; color: #3b2b1e; font-weight: 600;
     }
     .tes-header .tes-progress {
-      font-size: 0.82rem; color: #2d5a1e; font-weight: 700;
+      font-size: 0.82rem; color: #4d7a3b; font-weight: 700;
       background: #fff; padding: 0.25rem 0.9rem;
       border-radius: 30px; border: 2px solid #e5dbd0;
     }
@@ -492,7 +547,7 @@
     }
     .soal-kuis .pertanyaan .soal-num {
       display: inline-flex; align-items: center; justify-content: center;
-      background: var(--c-tik, #ff8a5b); color: #fff;
+      background: #ff8a5b; color: #fff;
       width: 24px; height: 24px; border-radius: 50%;
       font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
     }
@@ -506,11 +561,11 @@
       border: 2px solid #e5dbd0; transition: all 0.15s; line-height: 1.5;
     }
     .soal-kuis .opsi-kuis label:hover:not(.disabled) {
-      background: #fff5ee; border-color: var(--c-tik, #ff8a5b);
+      background: #fff5f0; border-color: #ff8a5b;
     }
     .soal-kuis .opsi-kuis label.disabled { cursor: default; }
     .soal-kuis .opsi-kuis label.selected {
-      border-color: var(--c-tik, #ff8a5b); background: #fff5ee;
+      border-color: #ff8a5b; background: #fff5f0;
     }
     .soal-kuis .opsi-kuis label.correct-answer {
       border-color: #8aaa7a; background: #e8f5e0;
@@ -519,7 +574,7 @@
       border-color: #d4a0a0; background: #f5e0e0;
     }
     .soal-kuis .opsi-kuis input[type="radio"] {
-      accent-color: var(--c-tik, #ff8a5b);
+      accent-color: #ff8a5b;
       width: 16px; height: 16px;
       margin-top: 0.15rem; flex-shrink: 0;
     }
@@ -543,7 +598,7 @@
     .btn-submit-tes {
       display: block; margin: 1.2rem auto 0;
       padding: 0.7rem 2.5rem; border-radius: 30px; border: none;
-      background: linear-gradient(135deg, var(--c-tik, #ff8a5b), #d4a030);
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
       color: #fff; font-weight: 700; font-size: 0.95rem;
       cursor: pointer; transition: all 0.2s ease; font-family: inherit;
     }
@@ -554,10 +609,25 @@
     .btn-submit-tes:disabled {
       opacity: 0.5; cursor: not-allowed; transform: none !important;
     }
+    .btn-ulangi-tes {
+      display: none; margin: 1rem auto 0;
+      padding: 0.7rem 2rem; border-radius: 30px;
+      background: #fff; color: #b34614;
+      border: 2px solid #ff8a5b;
+      font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn-ulangi-tes.show { display: block; }
+    .btn-ulangi-tes:hover {
+      background: #fff5f0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.20);
+    }
     .hasil-tes {
       display: none; margin-top: 1.2rem; padding: 1.2rem;
-      background: #fff5ee; border-radius: 14px;
-      border: 3px double var(--c-tik, #ff8a5b); text-align: center;
+      background: #fff5f0; border-radius: 14px;
+      border: 3px double #ff8a5b; text-align: center;
     }
     .hasil-tes.show { display: block; animation: fadeIn 0.4s ease; }
     .hasil-tes .hasil-icon { font-size: 2.8rem; margin-bottom: 0.3rem; }
@@ -573,16 +643,60 @@
       margin-bottom: 0.8rem; line-height: 1.5;
     }
 
+    /* ===== REFLEKSI 4F ===== */
+    .refleksi-box {
+      background: linear-gradient(135deg, #f0e6ff, #e6f0ff);
+      border: 2px solid #b07be0; border-radius: 16px;
+      padding: 1.3rem 1.6rem; margin: 1.5rem 0;
+      display: none;
+    }
+    .refleksi-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .refleksi-box h3 {
+      color: #5c2f8a; font-size: 1.05rem; margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .refleksi-box .refleksi-item { margin-bottom: 0.8rem; }
+    .refleksi-box .refleksi-item label {
+      display: block; font-weight: 700;
+      color: #5c2f8a; font-size: 0.88rem; margin-bottom: 0.3rem;
+    }
+    .refleksi-box .refleksi-item label .tag {
+      background: #b07be0; color: #fff;
+      padding: 0.1rem 0.6rem; border-radius: 20px;
+      font-size: 0.65rem; margin-right: 0.4rem;
+    }
+    .refleksi-box textarea {
+      width: 100%; padding: 0.6rem 0.9rem;
+      border: 2px solid #d4c0e8; border-radius: 10px;
+      font-family: inherit; font-size: 0.88rem;
+      color: #2f2822; background: #fff;
+      resize: vertical; min-height: 50px; outline: none;
+    }
+    .refleksi-box textarea:focus {
+      border-color: #b07be0;
+      box-shadow: 0 0 0 3px rgba(176, 123, 224, 0.15);
+    }
+    .refleksi-box .exit-ticket {
+      background: #fff; border-radius: 12px;
+      padding: 0.9rem 1.2rem; margin-top: 1rem;
+      border: 2px dashed #b07be0;
+    }
+    .refleksi-box .exit-ticket .et-title {
+      font-weight: 700; color: #5c2f8a;
+      font-size: 0.9rem; margin-bottom: 0.4rem;
+    }
+    .refleksi-box .exit-ticket textarea { border-color: #d4c0e8; }
+
     /* ===== STATUS KIRIM ===== */
     .status-kirim {
-      max-width: 480px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+      max-width: 520px; margin: 1rem auto; padding: 0.8rem 1.2rem;
       border-radius: 12px; font-size: 0.88rem; font-weight: 600;
       line-height: 1.5; display: none; align-items: center;
       gap: 0.6rem; text-align: left;
     }
-    .status-kirim.show { display: flex; }
+    .status-kirim.show { display: flex; flex-wrap: wrap; }
     .status-kirim.info {
-      background: #fff5ee; border: 2px solid var(--c-tik, #ff8a5b); color: #b34614;
+      background: #fff5f0; border: 2px solid #ff8a5b; color: #b34614;
     }
     .status-kirim.success { background: #d4e8cb; border: 2px solid #8aaa7a; color: #2d5a1e; }
     .status-kirim.error { background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a; }
@@ -592,6 +706,18 @@
       border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .status-kirim .btn-retry {
+      margin-left: auto; padding: 0.35rem 1rem;
+      border-radius: 20px; border: 2px solid currentColor;
+      background: transparent; color: inherit;
+      font-weight: 700; font-size: 0.82rem;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.15s ease; white-space: nowrap;
+    }
+    .status-kirim .btn-retry:hover {
+      background: rgba(255,255,255,0.6);
+      transform: translateY(-1px);
+    }
 
     /* ===== NAVIGASI ===== */
     .nav-bottom {
@@ -608,16 +734,15 @@
       display: inline-flex; align-items: center; gap: 0.4rem;
     }
     .btn-nav-bawah:hover {
-      background: #fff5ee; border-color: var(--c-tik, #ff8a5b);
+      background: #fff5f0; border-color: #ff8a5b;
       transform: translateY(-2px);
     }
     .btn-nav-bawah.primary {
-      background: var(--c-tik, #ff8a5b); border-color: var(--c-tik, #ff8a5b); color: #fff;
+      background: #4d3829; border-color: #4d3829; color: #fff;
     }
     .btn-nav-bawah.primary:hover {
-      background: #e77645; border-color: #e77645;
+      background: #6b4f3a; border-color: #6b4f3a;
     }
-    .btn-nav-bawah:disabled,
     .btn-nav-bawah.locked {
       opacity: 0.4; cursor: not-allowed;
       transform: none !important; pointer-events: none;
@@ -629,38 +754,30 @@
     }
     .nav-hint.locked { color: #d4a0a0; }
     .nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+    .nav-hint.warn { color: #a84a3a; font-weight: 600; }
 
     /* ===== RESPONSIF ===== */
     @media (max-width: 820px) {
-      .step-dot .circle { width: 30px; height: 30px; font-size: 0.7rem; }
-      .step-dot .label { font-size: 0.45rem; max-width: 50px; }
-      .step-indicator::before { left: 15px; right: 15px; }
       .scenario-panel { padding: 1.2rem; }
-      .tahap-item { font-size: 0.75rem; padding: 0.4rem 0.8rem; }
-      .sortable-item { padding: 0.7rem 0.9rem; }
+      .penamaan-box { padding: 1rem 1.2rem; }
+      .kuis-kilat-box { padding: 1rem 1.2rem; }
+      .refleksi-box { padding: 1rem 1.2rem; }
+      .progress-lapis { gap: 0.3rem; }
+      .progress-lapis .pl-step { font-size: 0.7rem; padding: 0.35rem 0.8rem; }
     }
     @media (max-width: 480px) {
-      .step-indicator { flex-wrap: wrap; justify-content: center; gap: 0.2rem; }
-      .step-indicator::before { display: none; }
-      .step-dot { min-width: 35px; flex: unset; }
-      .step-dot .circle { width: 26px; height: 26px; font-size: 0.6rem; }
-      .step-dot .label { display: none; }
       .scenario-panel { padding: 0.8rem; }
       .scenario-panel .scenario-title { font-size: 1.1rem; }
       .nav-bottom { flex-direction: column; align-items: stretch; }
       .btn-nav-bawah { justify-content: center; }
-      .materi-ringkas { padding: 1rem 1.2rem; }
-      .materi-ringkas h2 { font-size: 1.1rem; }
       .soal-kuis { padding: 1rem; }
       .soal-kuis .pertanyaan { font-size: 0.92rem; }
       .soal-kuis .opsi-kuis label { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
       .tes-header { flex-direction: column; align-items: flex-start; }
-      .tahap-progress { gap: 0.3rem; }
-      .tahap-item { padding: 0.3rem 0.6rem; font-size: 0.7rem; }
-      .tahap-item .tahap-num { width: 18px; height: 18px; font-size: 0.6rem; }
-      .sortable-item .item-icon { font-size: 1.2rem; }
-      .sortable-item .item-text strong { font-size: 0.85rem; }
-      .sortable-item .item-text .desc { font-size: 0.75rem; }
+      .status-kirim .btn-retry { margin-left: 0; width: 100%; text-align: center; }
+      .lapis-header { font-size: 0.85rem; padding: 0.6rem 1rem; }
+      .progress-lapis .pl-step .pl-label { display: none; }
+      .progress-lapis .pl-step { padding: 0.35rem 0.6rem; }
     }
   </style>
 </head>
@@ -672,8 +789,8 @@
     <ol class="breadcrumb">
       <li><a href="../index.html">Beranda</a></li>
       <li><a href="materitik.html">Teknologi Informasi dan Komunikasi</a></li>
-      <li><a href="tik3.html">Peramban & Pencarian Informasi</a></li>
-      <li>Bagian 2: Cara Kerja Mesin Pencari</li>
+      <li><a href="tik3.html">Menggunakan Peramban</a></li>
+      <li>Bagian 2: Memilah Informasi</li>
     </ol>
   </nav>
 
@@ -681,218 +798,345 @@
     <article class="card">
       <div class="aktivitas-wrapper">
 
-        <div class="bagian-progress">
-          <span class="step completed"><span class="num">✓</span> Peramban vs Mesin Pencari</span>
-          <span class="step active"><span class="num">2</span> Cara Kerja Mesin Pencari</span>
-          <span class="step"><span class="num">3</span> Teknik Pencarian</span>
-          <span class="step"><span class="num">4</span> Memilah Informasi</span>
-          <span class="step"><span class="num">5</span> Kuis Akhir</span>
-        </div>
-
-        <div class="materi-ringkas">
-          <h2>📖 Materi Singkat <span class="badge">Bagian 2</span></h2>
-
-          <h3>1. Tiga Tahap Utama Mesin Pencari</h3>
-          <p>
-            Mesin pencari seperti Google tidak "menjelajahi internet langsung" setiap kali kamu mencari. Ada <strong>3 tahap</strong>:
-          </p>
-          <ul>
-            <li><strong>Crawling</strong> — bot/spider menelusuri halaman web dan mengumpulkan informasi</li>
-            <li><strong>Indexing</strong> — informasi diorganisir dalam database raksasa (seperti katalog perpustakaan)</li>
-            <li><strong>Ranking</strong> — hasil pencarian diurutkan berdasarkan relevansi & kualitas</li>
-          </ul>
-
-          <h3>2. Analogi Sederhana</h3>
-          <div class="info-box">
-            🕷️ <strong>Crawling</strong> = petugas perpustakaan yang berkeliling mencari buku baru<br>
-            📚 <strong>Indexing</strong> = katalog yang mencatat semua buku berdasarkan judul/penulis/topik<br>
-            🏆 <strong>Ranking</strong> = urutan buku terbaik yang paling relevan dengan kebutuhanmu
-          </div>
-
-          <h3>3. Faktor Peringkat (Ranking)</h3>
-          <ul>
-            <li>Kualitas konten</li>
-            <li>Struktur tautan (backlink)</li>
-            <li>Perilaku pengguna (klik, durasi)</li>
-            <li>Relevansi kata kunci</li>
-          </ul>
-
-          <a href="materitik3.html" class="link-materi">📚 Baca materi lengkap di sini →</a>
+        <!-- ===== PROGRESS BAR VISUAL ===== -->
+        <div class="progress-lapis" id="progressLapis">
+          <span class="pl-step active" data-step="lapis1">
+            <span class="pl-num">1</span>
+            <span class="pl-label">Menjelajah</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis2">
+            <span class="pl-num">2</span>
+            <span class="pl-label">Tantangan</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis3">
+            <span class="pl-num">3</span>
+            <span class="pl-label">Penamaan</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="tes">
+            <span class="pl-num">4</span>
+            <span class="pl-label">Tes Pemahaman</span>
+          </span>
         </div>
 
         <!-- ===== AREA SIMULASI ===== -->
-        <div id="area-simulasi">
-
-          <div class="step-indicator" id="stepIndicator">
-            <button class="step-dot completed" data-step="0">
-              <span class="circle">✓</span>
-              <span class="label">Peramban vs Mesin Pencari</span>
-            </button>
-            <button class="step-dot active" data-step="1">
-              <span class="circle">2</span>
-              <span class="label">Cara Kerja Mesin Pencari</span>
-            </button>
-            <button class="step-dot locked" data-step="2">
-              <span class="circle">3</span>
-              <span class="label">Teknik Pencarian</span>
-            </button>
-            <button class="step-dot locked" data-step="3">
-              <span class="circle">4</span>
-              <span class="label">Memilah Informasi</span>
-            </button>
-            <button class="step-dot locked" data-step="4">
-              <span class="circle">🏆</span>
-              <span class="label">Kuis Akhir</span>
-            </button>
-          </div>
-
+        <div id="area-simulasi" class="active">
           <div class="scenario-panel">
-            <div class="scenario-title">🕷️ Aktivitas 2: "Perjalanan Sebuah Pencarian"</div>
+
+            <div class="scenario-title">🕵️ Aktivitas: Detektif Informasi — Cek Sebelum Percaya</div>
             <div class="scenario-story">
-              📖 <strong>Cerita:</strong> Ikuti perjalanan mesin pencari dari <strong>crawling</strong> hingga <strong>ranking</strong>! Ada 3 tahap yang harus kamu selesaikan. Setiap tahap punya tantangannya sendiri.
+              📖 <strong>Cerita:</strong> Aurel menemukan artikel di internet:
+              <em>"Minum air lemon setiap hari bisa menyembuhkan segala penyakit!"</em>
+              Artikel itu dibagikan <strong>50.000 kali</strong> di media sosial, tapi
+              ditulis di blog pribadi <strong>tanpa nama penulis, tanpa tanggal, tanpa sumber</strong>.
+              <br><br>
+              Di sisi lain, Aurel juga menemukan artikel dari <strong>situs resmi Kementerian
+              Kesehatan</strong> yang menyatakan: <em>"Air lemon memang sehat, tetapi tidak
+              menyembuhkan segala penyakit."</em>
+              <br><br>
+              Sekarang giliranmu menjadi <strong>Detektif Informasi</strong>! Ada
+              <strong>6 kartu informasi</strong> tentang topik yang sama.
+              Tugasmu: tentukan mana yang <strong>bisa dipercaya</strong> dan mana yang
+              <strong>tidak</strong>.
             </div>
 
-            <!-- Sub-progress tahap -->
-            <div class="tahap-progress" id="tahapProgress">
-              <span class="tahap-item active" id="tahap1Item">
-                <span class="tahap-num">1</span> Urutkan Tahap
-              </span>
-              <span class="tahap-item" id="tahap2Item">
-                <span class="tahap-num">2</span> Cocokkan Proses
-              </span>
-              <span class="tahap-item" id="tahap3Item">
-                <span class="tahap-num">3</span> Simulasi Ranking
-              </span>
+            <!-- ===== LAPIS 1 ===== -->
+            <div class="lapis-header lapis-1">
+              <span class="lapis-num">LAPIS 1</span>
+              <span>🖐️ Menjelajah Bebas — Pilih 2 Terpercaya &amp; 2 Tidak</span>
             </div>
 
-            <!-- ===== TAHAP 1: URUTKAN ===== -->
-            <div class="tahap-content active" id="tahap1Content">
-              <div class="sortable-container">
-                <div class="sortable-title">
-                  🎯 Tahap 1: Urutkan 3 tahap mesin pencari dari awal hingga akhir!
-                </div>
-                <p style="font-size:0.85rem; color:#5c4638; margin-bottom:1rem;">
-                  Gunakan tombol <strong>↑</strong> dan <strong>↓</strong> untuk menggeser urutan. Pastikan urutan benar dari tahap pertama hingga terakhir.
-                </p>
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              <strong>Instruksi:</strong> Klik salah satu kartu untuk memilih. Pilih
+              <strong>2 kartu yang paling bisa dipercaya</strong> dan
+              <strong>2 kartu yang paling tidak bisa dipercaya</strong>.
+              Setelah 4 kartu dipilih, klik <strong>"Buka Penilaian"</strong> untuk
+              melihat hasilnya.
+            </p>
 
-                <div class="sortable-list" id="sortableList"></div>
+            <!-- Topik -->
+            <div style="background:#fff5f0; border-left:4px solid #ff8a5b; padding:0.7rem 1rem; border-radius:10px; margin-bottom:1rem; font-size:0.9rem;">
+              📌 <strong>Topik:</strong> Apakah makan mi instan setiap hari berbahaya?
+            </div>
 
-                <div class="game-actions">
-                  <button class="btn-game primary" id="btnPeriksaTahap1" onclick="periksaTahap1()">
-                    ✅ Periksa Urutan
-                  </button>
-                  <button class="btn-game secondary" onclick="resetTahap1()">
-                    🔄 Reset
-                  </button>
-                </div>
-
-                <div class="feedback-box" id="feedbackTahap1"></div>
+            <!-- Stats -->
+            <div class="stats-bar">
+              <div class="stat">
+                <span>📇</span>
+                <span class="label">Total Kartu:</span>
+                <span class="num" id="totalKartu">6</span>
+              </div>
+              <div class="stat">
+                <span>✅</span>
+                <span class="label">Dipilih:</span>
+                <span class="num" id="totalDipilih">0</span>
+                <span class="label">/ 4</span>
               </div>
             </div>
 
-            <!-- ===== TAHAP 2: COCOKKAN ===== -->
-            <div class="tahap-content" id="tahap2Content">
-              <div class="sortable-title">
-                🎯 Tahap 2: Cocokkan setiap istilah dengan penjelasannya!
-              </div>
-              <p style="font-size:0.85rem; color:#5c4638; margin-bottom:1rem;">
-                Klik istilah di kolom kiri, lalu klik penjelasan di kolom kanan yang sesuai.
-              </p>
+            <!-- Grid Kartu -->
+            <div class="kartu-grid" id="kartuGrid"></div>
 
-              <div class="matching-container">
-                <div class="match-column">
-                  <div class="column-title">📌 Istilah</div>
-                  <div id="matchLeft"></div>
-                </div>
-                <div class="match-column">
-                  <div class="column-title">💡 Penjelasan</div>
-                  <div id="matchRight"></div>
+            <!-- Zona Klasifikasi -->
+            <div class="zona-wrapper">
+              <div class="zona-box dipercaya">
+                <div class="zb-title">✅ Bisa Dipercaya</div>
+                <div class="zb-list" id="zonaDipercaya">
+                  <span class="zb-empty">Belum ada kartu dipilih</span>
                 </div>
               </div>
-
-              <div class="game-actions">
-                <button class="btn-game secondary" onclick="resetTahap2()">
-                  🔄 Reset
-                </button>
+              <div class="zona-box tidak">
+                <div class="zb-title">❌ Tidak Bisa Dipercaya</div>
+                <div class="zb-list" id="zonaTidak">
+                  <span class="zb-empty">Belum ada kartu dipilih</span>
+                </div>
               </div>
-
-              <div class="feedback-box" id="feedbackTahap2"></div>
             </div>
 
-            <!-- ===== TAHAP 3: SIMULASI RANKING ===== -->
-            <div class="tahap-content" id="tahap3Content">
-              <div class="sortable-title">
-                🎯 Tahap 3: Simulasi Pencarian — Lihat bagaimana ranking bekerja!
+            <!-- Feedback -->
+            <div class="feedback-box info show" id="feedbackBox">
+              <span class="fb-icon" id="fbIcon">💡</span>
+              <span class="fb-text" id="fbText">Klik kartu untuk memilih. Pilih 2 terpercaya &amp; 2 tidak terpercaya.</span>
+            </div>
+
+            <div class="game-actions">
+              <button class="btn-game secondary" onclick="resetPilih()">🔄 Ulangi Pilih</button>
+              <button class="btn-game primary" id="btnBukaPenilaian" onclick="bukaPenilaian()" disabled>
+                👁️ Buka Penilaian
+              </button>
+            </div>
+
+            <!-- Momen Mindful 1 -->
+            <div class="mindful-box" id="mindful1">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 1</div>
+              <div class="mb-text">
+                <strong>Perhatikan pola!</strong> Apa <strong>alasan</strong> kamu memilih kartu itu?
+                Apakah kamu melihat <em>siapa penulisnya</em>? <em>Kapan ditulis</em>?
+                <em>Dari mana sumbernya</em>? Tulis pengamatanmu.
               </div>
-              <p style="font-size:0.85rem; color:#5c4638; margin-bottom:1rem;">
-                Ketik kata kunci (mis. <code>"resep kue"</code>, <code>"cara belajar"</code>) lalu tekan Cari. Perhatikan bagaimana hasil pencarian muncul dengan peringkat.
-              </p>
+              <textarea id="mindful1Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
 
-              <div class="search-sim">
-                <div class="search-bar">
-                  <span class="search-icon">🔍</span>
-                  <input type="text" id="searchInput" placeholder="Ketik kata kunci..." onkeypress="if(event.key==='Enter') simulasiCari()">
-                  <button onclick="simulasiCari()">Cari</button>
-                </div>
-
-                <div class="search-results" id="searchResults">
-                  <p style="text-align:center; color:#a0968c; font-style:italic; font-size:0.9rem; padding:1rem;">
-                    💡 Ketik kata kunci dan tekan "Cari" untuk melihat simulasi hasil pencarian.
-                  </p>
-                </div>
-              </div>
-
-              <div class="feedback-box" id="feedbackTahap3"></div>
-
-              <div class="game-actions">
-                <button class="btn-game primary" id="btnTahap3Selesai" onclick="selesaikanTahap3()" disabled>
-                  ✅ Selesai & Lanjut Tes
-                </button>
-              </div>
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnSelesaiLapis1" onclick="selesaiLapis1()" disabled>
+                ✅ Selesai Menjelajah
+              </button>
             </div>
 
           </div>
-
-          <!-- ===== TES PEMAHAMAN ===== -->
-          <div class="tes-section" id="tesSection">
-            <div class="tes-header">
-              <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 3 soal pilihan ganda</div>
-              <div class="tes-progress" id="tesProgress">Terjawab: 0 / 3</div>
-            </div>
-
-            <div id="soalContainer"></div>
-
-            <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
-          </div>
-
-          <!-- ===== HASIL TES ===== -->
-          <div class="hasil-tes" id="hasilTes">
-            <div class="hasil-icon" id="hasilIcon">🏆</div>
-            <div class="hasil-title" id="hasilTitle">Selamat!</div>
-            <div class="hasil-skor" id="hasilSkor">0 / 3</div>
-            <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 2.</div>
-          </div>
-
-          <!-- Status kirim -->
-          <div class="status-kirim info" id="statusKirim">
-            <span class="spinner"></span>
-            <span id="statusKirimText">Mengirim nilai...</span>
-          </div>
-
         </div><!-- end area-simulasi -->
 
+        <!-- ===== LAPIS 2 ===== -->
+        <div id="areaLapis2" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-2">
+              <span class="lapis-num">LAPIS 2</span>
+              <span>🎯 Tantangan Terarah — Uji Pemahamanmu</span>
+            </div>
+
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              Sekarang kamu akan diberi <strong>3 tantangan</strong>. Jawab dengan teliti!
+              Sistem hanya memberi umpan balik, bukan jawaban langsung.
+            </p>
+
+            <div class="tantangan-list" id="tantanganList"></div>
+
+            <!-- Momen Mindful 2 -->
+            <div class="mindful-box" id="mindful2" style="display:none;">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 2</div>
+              <div class="mb-text">
+                <strong>Refleksi:</strong> Apakah informasi dari <strong>situs resmi pemerintah</strong>
+                selalu benar? Apakah informasi dari <strong>blog pribadi</strong> selalu salah?
+                Mengapa? Tulis pendapatmu.
+              </div>
+              <textarea id="mindful2Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis3" onclick="lanjutKeLapis3()" disabled>
+                ➡️ Lanjut ke Penamaan Konsep
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== LAPIS 3: PENAMAAN KONSEP ===== -->
+        <div id="areaLapis3" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-3">
+              <span class="lapis-num">LAPIS 3</span>
+              <span>📖 Penamaan Konsep — Istilah Resmi</span>
+            </div>
+
+            <div class="penamaan-box show">
+              <h3>🏷️ Sekarang, Kita Beri Nama!</h3>
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822;">
+                Semua yang kamu lakukan tadi punya <strong>nama resmi</strong> dalam
+                literasi digital. Inilah saatnya menghubungkan pengalamanmu dengan
+                istilah formal.
+              </p>
+
+              <div class="notasi-box">
+                <strong>🕵️ Memilah informasi</strong> adalah keterampilan <strong>"menjadi
+                detektif"</strong> — tidak langsung percaya, tetapi memeriksa bukti.
+                <br><br>
+                <strong>Lima pertanyaan detektif informasi:</strong>
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width:40%;">Pertanyaan</th>
+                      <th>Mengapa Penting</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Siapa</strong> yang menulis?</td>
+                      <td>Penulis ahli lebih dapat dipercaya</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Kapan</strong> ditulis?</td>
+                      <td>Informasi lama bisa sudah tidak berlaku</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Dari mana</strong> sumbernya?</td>
+                      <td>Situs resmi, jurnal, atau blog pribadi?</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Apa</strong> buktinya?</td>
+                      <td>Ada data, referensi, atau hanya klaim?</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Mengapa</strong> ditulis?</td>
+                      <td>Untuk memberi informasi, atau untuk menjual sesuatu?</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="koneksi">
+                <strong>💡 Koneksi Konteks Lokal Indonesia:</strong><br>
+                Di Indonesia, berita hoaks sering tersebar lewat <strong>WhatsApp
+                berantai</strong> dan <strong>media sosial</strong>. Ciri-cirinya:
+                huruf kapital semua, tanda seru berlebihan, ajakan "sebarkan!",
+                tanpa sumber jelas. Sebaliknya, situs seperti <strong>Detik.com</strong>,
+                <strong>Kompas.com</strong>, <strong>Kemendikbud.go.id</strong>, dan
+                <strong>Bebras Indonesia</strong> memiliki proses editorial yang
+                membuat informasinya lebih dapat dipercaya.
+              </div>
+            </div>
+
+            <!-- Link materi lengkap -->
+            <div class="link-materi-wrapper">
+              <a href="materitik3.html" target="_blank" rel="noopener" class="link-materi-bawah">
+                📚 Baca Materi Lengkap (buka tab baru)
+              </a>
+            </div>
+
+            <!-- Momen Mindful 3 -->
+            <div class="mindful-box" id="mindful3">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 3</div>
+              <div class="mb-text">
+                Dengan istilah resmi: <strong>mengapa artikel yang dibagikan 50.000 kali
+                belum tentu benar</strong>? Tulis dengan bahasamu sendiri, sebutkan
+                minimal satu pertanyaan detektif.
+              </div>
+              <textarea id="mindful3Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <!-- Kuis Kilat -->
+            <div class="kuis-kilat-box" id="kuisKilatBox">
+              <div class="kk-title">
+                ⚡ Kuis Kilat
+                <span class="badge">2 SOAL</span>
+              </div>
+              <div id="kuisKilatContent"></div>
+              <div class="kk-hasil" id="kkHasil"></div>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutTes" onclick="lanjutKeTesPemahaman()" disabled>
+                ➡️ Lanjut ke Tes Pemahaman
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TES PEMAHAMAN ===== -->
+        <div class="tes-section" id="tesSection">
+          <div class="tes-header">
+            <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 4 soal · Minimal 3 benar untuk lanjut</div>
+            <div class="tes-progress" id="tesProgress">Terjawab: 0 / 4</div>
+          </div>
+
+          <div id="soalContainer"></div>
+
+          <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+          <button class="btn-ulangi-tes" id="btnUlangiTes">🔄 Ulangi Tes Pemahaman</button>
+        </div>
+
+        <!-- ===== HASIL TES ===== -->
+        <div class="hasil-tes" id="hasilTes">
+          <div class="hasil-icon" id="hasilIcon">🏆</div>
+          <div class="hasil-title" id="hasilTitle">Selamat!</div>
+          <div class="hasil-skor" id="hasilSkor">0 / 4</div>
+          <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 2.</div>
+        </div>
+
+        <!-- ===== REFLEKSI 4F ===== -->
+        <div class="refleksi-box" id="refleksiBox">
+          <h3>🪞 Refleksi 4F</h3>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FACT</span> Apa yang tadi saya lakukan saat menjadi detektif informasi?</label>
+            <textarea id="refFact" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FEELING</span> Bagian mana yang membuat saya ragu atau yakin?</label>
+            <textarea id="refFeeling" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FINDING</span> Apa pola yang saya temukan tentang informasi yang dapat dipercaya?</label>
+            <textarea id="refFinding" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FUTURE</span> Di mana lagi saya bisa menggunakan keterampilan memilah informasi?</label>
+            <textarea id="refFuture" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="exit-ticket">
+            <div class="et-title">🎫 Exit Ticket</div>
+            <p style="font-size:0.85rem; color:#5c4638; margin-bottom:0.4rem;">
+              Temukan <strong>satu informasi</strong> yang kamu lihat hari ini (di media sosial,
+              WhatsApp, atau berita). Tuliskan: <strong>Apa informasinya? Siapa yang menulis?
+              Apakah kamu percaya? Mengapa?</strong>
+            </p>
+            <textarea id="exitTicket" placeholder="Tulis pengamatanmu di sini..." style="min-height:100px;"></textarea>
+          </div>
+        </div>
+
+        <!-- Status kirim -->
+        <div class="status-kirim info" id="statusKirim">
+          <span class="spinner" id="statusSpinner"></span>
+          <span id="statusKirimText">Mengirim nilai...</span>
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
         <div class="nav-bottom">
           <a href="aktivitastik3a.html" class="btn-nav-bawah">
-            <span class="back-arrow">←</span> Bagian Sebelumnya
+            <span class="back-arrow">←</span> Kembali ke Bagian 1
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-            <a href="tik3.html" class="btn-nav-bawah">🏠 Portal</a>
             <button class="btn-nav-bawah primary locked" id="btnLanjutBagian3" onclick="lanjutKeBagian3()">
-              Lanjut ke Bagian 3: Teknik Pencarian →
+              Lanjut ke Bagian 3: Mencari untuk Tugas →
             </button>
           </div>
           <div class="nav-hint locked" id="hintLanjut">
-            🔒 Selesaikan 3 tahap aktivitas & tes pemahaman untuk membuka Bagian 3
+            🔒 Selesaikan semua tahap untuk membuka Bagian 3
           </div>
         </div>
 
@@ -904,6 +1148,7 @@
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
 
   <script>
     (function() {
@@ -913,464 +1158,796 @@
       // KONFIGURASI MODUL
       // ============================================
       const NAMA_SHEET = 'tik3';
-      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
+      const MODUL_KEY = 'tik3';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd'];
+      const AMBANG_LULUS = 3;
 
       // ============================================
-      // DATA SOAL TES (3 SOAL)
+      // DATA KARTU
       // ============================================
-      const soalData = [
+      // 'kategori': 'dipercaya' | 'tidak'
+      // Skor kredibilitas dari 5 pertanyaan detektif (0-5)
+      const kartuData = [
         {
-          pertanyaan: 'Apa urutan yang benar dari 3 tahap cara kerja mesin pencari?',
-          opsi: [
-            'Indexing → Crawling → Ranking',
-            'Crawling → Indexing → Ranking',
-            'Ranking → Indexing → Crawling',
-            'Crawling → Ranking → Indexing'
-          ],
-          kunci: 1,
-          penjelasan: 'Urutan yang benar: (1) Crawling — bot menelusuri halaman web, (2) Indexing — informasi diorganisir dalam database, (3) Ranking — hasil diurutkan berdasarkan relevansi.'
+          id: 'k1',
+          label: 'KARTU A',
+          title: 'Mi instan menyebabkan kanker!',
+          penulis: 'Tidak ada',
+          tanggal: 'Tidak ada',
+          sumber: 'Blog pribadi (blogsehatku.xyz)',
+          bukti: 'Hanya klaim, tidak ada data',
+          tujuan: 'Menakut-nakuti pembaca',
+          kategori: 'tidak',
+          skor: 0,
+          alasan: '❌ Tidak ada penulis, tidak ada tanggal, sumber blog pribadi tidak jelas, hanya klaim tanpa data. Hanya 0 dari 5 pertanyaan detektif yang terpenuhi.'
         },
         {
-          pertanyaan: 'Apa yang dilakukan bot/spider pada tahap crawling?',
-          opsi: [
-            'Mengurutkan hasil pencarian',
-            'Menelusuri halaman web dan mengumpulkan informasi',
-            'Menyimpan data ke hard disk pengguna',
-            'Menghapus halaman web yang tidak berguna'
-          ],
-          kunci: 1,
-          penjelasan: 'Pada tahap crawling, bot/spider menelusuri halaman-halaman web dan mengumpulkan informasi dengan mengikuti tautan dari satu halaman ke halaman lain.'
+          id: 'k2',
+          label: 'KARTU B',
+          title: 'Konsumsi mi instan berlebihan meningkatkan risiko hipertensi',
+          penulis: 'dr. Andini, Sp.GK',
+          tanggal: '12 Maret 2024',
+          sumber: 'Kompas.com (portal berita nasional)',
+          bukti: 'Data dari penelitian gizi',
+          tujuan: 'Memberi informasi kepada publik',
+          kategori: 'dipercaya',
+          skor: 5,
+          alasan: '✅ Penulis jelas (dokter spesialis gizi), tanggal jelas, sumber portal berita nasional, ada data penelitian, tujuan informatif. 5 dari 5 pertanyaan detektif terpenuhi.'
         },
         {
-          pertanyaan: 'Mengapa hasil pencarian diurutkan berdasarkan ranking?',
-          opsi: [
-            'Agar tampilan lebih cantik',
-            'Agar pengguna mendapatkan hasil paling relevan dan berkualitas di atas',
-            'Agar lebih cepat diakses',
-            'Agar iklan muncul lebih banyak'
-          ],
-          kunci: 1,
-          penjelasan: 'Ranking membantu menampilkan hasil paling relevan dan berkualitas di posisi atas, sehingga pengguna lebih mudah menemukan informasi yang dibutuhkan.'
+          id: 'k3',
+          label: 'KARTU C',
+          title: 'AWAS! Mi instan mengandung plastik!',
+          penulis: 'Tidak jelas',
+          tanggal: 'Tidak ada',
+          sumber: 'Pesan berantai WhatsApp',
+          bukti: 'Tidak ada bukti, hanya klaim',
+          tujuan: 'Menyebarkan ketakutan',
+          kategori: 'tidak',
+          skor: 0,
+          alasan: '❌ Huruf kapital semua, tanda seru berlebihan, sumber tidak jelas (pesan berantai), tidak ada bukti, tujuan menakut-nakuti. Ciri khas hoaks!'
+        },
+        {
+          id: 'k4',
+          label: 'KARTU D',
+          title: 'Konsumsi mi instan sesekali masih aman',
+          penulis: 'Tim Gizi Kemendikbud',
+          tanggal: '5 Januari 2024',
+          sumber: 'Kemendikbud.go.id (situs resmi)',
+          bukti: 'Referensi dari pedoman gizi',
+          tujuan: 'Edukasi gizi untuk siswa',
+          kategori: 'dipercaya',
+          skor: 5,
+          alasan: '✅ Sumber resmi (kemendikbud.go.id), tim penulis jelas, tanggal jelas, ada referensi pedoman gizi, tujuan edukasi. 5 dari 5 pertanyaan detektif terpenuhi.'
+        },
+        {
+          id: 'k5',
+          label: 'KARTU E',
+          title: 'Saya makan mi instan 10 tahun, sehat!',
+          penulis: '"User123" (anonim)',
+          tanggal: '2020',
+          sumber: 'Forum online',
+          bukti: 'Hanya pengalaman pribadi',
+          tujuan: 'Opini pribadi',
+          kategori: 'tidak',
+          skor: 1,
+          alasan: '❌ Penulis anonim, tanggal lama (2020), sumber forum online, hanya pengalaman pribadi (bukan data), tujuan opini. Hanya 1 dari 5 pertanyaan terpenuhi (tanggal).'
+        },
+        {
+          id: 'k6',
+          label: 'KARTU F',
+          title: 'Konsumsi mi instan >3x/minggu berkorelasi dengan hipertensi',
+          penulis: 'Prof. Santoso, PhD',
+          tanggal: '2023',
+          sumber: 'Jurnal Universitas Indonesia',
+          bukti: 'Studi akademik dengan data',
+          tujuan: 'Kontribusi akademik',
+          kategori: 'dipercaya',
+          skor: 5,
+          alasan: '✅ Penulis jelas (profesor), tanggal jelas, sumber jurnal akademik, ada data studi, tujuan akademik. 5 dari 5 pertanyaan detektif terpenuhi.'
         }
       ];
-
-      // ============================================
-      // DATA TAHAP 1: URUTKAN
-      // ============================================
-      const urutanBenar = ['crawling', 'indexing', 'ranking'];
-
-      const urutanData = {
-        crawling: {
-          icon: '🕷️',
-          title: 'Crawling',
-          desc: 'Bot/spider menelusuri halaman-halaman web dan mengumpulkan informasi.'
-        },
-        indexing: {
-          icon: '📚',
-          title: 'Indexing',
-          desc: 'Informasi diorganisir dan disimpan dalam database raksasa.'
-        },
-        ranking: {
-          icon: '🏆',
-          title: 'Ranking',
-          desc: 'Hasil pencarian diurutkan berdasarkan relevansi dan kualitas.'
-        }
-      };
-
-      // ============================================
-      // DATA TAHAP 2: MATCHING
-      // ============================================
-      const matchData = [
-        { id: 'crawling', istilah: '🕷️ Crawling', penjelasan: 'Bot/spider menelusuri halaman web' },
-        { id: 'indexing', istilah: '📚 Indexing', penjelasan: 'Informasi diorganisir dalam database raksasa' },
-        { id: 'ranking', istilah: '🏆 Ranking', penjelasan: 'Hasil diurutkan berdasarkan relevansi & kualitas' },
-        { id: 'bot', istilah: '🤖 Bot / Spider', penjelasan: 'Program otomatis yang menjelajahi web' }
-      ];
-
-      // ============================================
-      // DATA TAHAP 3: SIMULASI HASIL
-      // ============================================
-      const simulasiDatabase = {
-        'resep kue': [
-          { title: 'Resep Kue Cokelat Lembut - Sajian Sedap', url: 'sajiansedap.com/resep/kue-cokelat', desc: 'Resep lengkap dengan bahan dan langkah membuat kue cokelat lembut...' },
-          { title: '5 Resep Kue Sederhana untuk Pemula', url: 'resepkoki.id/kue-pemula', desc: 'Kumpulan resep kue yang mudah dibuat pemula, hanya butuh 30 menit...' },
-          { title: 'Resep Kue Kering Lebaran - Ny. Liem', url: 'nyliew.com/resep-kue-kering', desc: 'Aneka resep kue kering untuk lebaran, dari nastar hingga kastengel...' },
-          { title: 'Toko Kue Online - Kue Ulang Tahun', url: 'tokokueonline.com', desc: 'Pesan kue ulang tahun custom, pengiriman same-day...' }
-        ],
-        'cara belajar': [
-          { title: '10 Cara Belajar Efektif untuk Pelajar', url: 'zenius.com/cara-belajar-efektif', desc: 'Tips belajar efektif dengan metode Pomodoro dan active recall...' },
-          { title: 'Teknik Belajar Cepat untuk Ujian', url: 'ruangguru.com/teknik-belajar', desc: 'Strategi belajar cepat menghadapi ujian sekolah...' },
-          { title: 'Cara Belajar Bahasa Inggris Otodidak', url: 'englishcourse.id/belajar-otodidak', desc: 'Panduan belajar bahasa Inggris sendiri dari nol...' },
-          { title: 'Mengapa Belajar Itu Penting?', url: 'blogpendidikan.com/pentingnya-belajar', desc: 'Artikel motivasi tentang pentingnya belajar sepanjang hayat...' }
-        ],
-        'default': [
-          { title: 'Hasil Pencarian untuk Kata Kunci Anda', url: 'contoh-situs.com/hasil-1', desc: 'Situs pertama yang relevan dengan kata kunci Anda...' },
-          { title: 'Artikel Terkait - Sumber Terpercaya', url: 'sumberterpercaya.com/artikel', desc: 'Artikel mendalam yang membahas topik yang Anda cari...' },
-          { title: 'Panduan Lengkap untuk Pemula', url: 'panduanlengkap.id/pemula', desc: 'Panduan langkah demi langkah untuk pemula...' },
-          { title: 'Forum Diskusi - Tanya Jawab', url: 'forumtanyajawab.com/topik', desc: 'Diskusi komunitas seputar topik yang Anda cari...' }
-        ]
-      };
 
       // ============================================
       // STATE
       // ============================================
-      let currentTahap = 1;
-      let tahapSelesai = { 1: false, 2: false, 3: false };
-      let aktivitasSelesai = false;
+      let kartuDipilih = [];  // array of kartu id (maks 4)
+      let penilaianDibuka = false;
+      let lapis1Selesai = false;
+      let lapis2Selesai = false;
 
-      // Tahap 1 state
-      let urutanSekarang = [];
+      let jawabanKuisKilat = {};
+      let kuisKilatSubmitted = false;
+      let kuisKilatBenar = 0;
 
-      // Tahap 2 state
-      let matchSelectedLeft = null;
-      let matchMatched = new Set();
-      let matchCorrect = 0;
+      let jawabanTes = {};
+      let tesSubmitted = false;
+      let tesBenar = 0;
+      let tesSelesai = false;
 
-      // Soal state
-      let soalJawaban = {};
-      let soalSubmitted = false;
-      let soalBenar = 0;
-      let soalSelesai = false;
+      let daftarSiswa = [];
+      let jumlahSiswaSekarang = 1;
+
+      let kirimTimeoutId = null;
+      let kirimSukses = false;
 
       // ============================================
       // DOM REFS
       // ============================================
       const elAreaSimulasi = document.getElementById('area-simulasi');
-      const elSortableList = document.getElementById('sortableList');
-      const elFeedbackTahap1 = document.getElementById('feedbackTahap1');
-      const elBtnPeriksaTahap1 = document.getElementById('btnPeriksaTahap1');
-      const elMatchLeft = document.getElementById('matchLeft');
-      const elMatchRight = document.getElementById('matchRight');
-      const elFeedbackTahap2 = document.getElementById('feedbackTahap2');
-      const elSearchInput = document.getElementById('searchInput');
-      const elSearchResults = document.getElementById('searchResults');
-      const elFeedbackTahap3 = document.getElementById('feedbackTahap3');
-      const elBtnTahap3Selesai = document.getElementById('btnTahap3Selesai');
+      const elAreaLapis2 = document.getElementById('areaLapis2');
+      const elAreaLapis3 = document.getElementById('areaLapis3');
+      const elProgressLapis = document.getElementById('progressLapis');
+
+      const elKartuGrid = document.getElementById('kartuGrid');
+      const elZonaDipercaya = document.getElementById('zonaDipercaya');
+      const elZonaTidak = document.getElementById('zonaTidak');
+      const elTotalKartu = document.getElementById('totalKartu');
+      const elTotalDipilih = document.getElementById('totalDipilih');
+      const elFeedbackBox = document.getElementById('feedbackBox');
+      const elFbIcon = document.getElementById('fbIcon');
+      const elFbText = document.getElementById('fbText');
+      const elBtnBukaPenilaian = document.getElementById('btnBukaPenilaian');
+      const elMindful1 = document.getElementById('mindful1');
+      const elBtnSelesaiLapis1 = document.getElementById('btnSelesaiLapis1');
+
+      const elTantanganList = document.getElementById('tantanganList');
+      const elMindful2 = document.getElementById('mindful2');
+      const elBtnLanjutLapis3 = document.getElementById('btnLanjutLapis3');
+
+      const elMindful3 = document.getElementById('mindful3');
+      const elKuisKilatBox = document.getElementById('kuisKilatBox');
+      const elKuisKilatContent = document.getElementById('kuisKilatContent');
+      const elKkHasil = document.getElementById('kkHasil');
+      const elBtnLanjutTes = document.getElementById('btnLanjutTes');
 
       const elTesSection = document.getElementById('tesSection');
       const elSoalContainer = document.getElementById('soalContainer');
       const elTesProgress = document.getElementById('tesProgress');
       const elBtnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const elBtnUlangiTes = document.getElementById('btnUlangiTes');
       const elHasilTes = document.getElementById('hasilTes');
+      const elRefleksiBox = document.getElementById('refleksiBox');
+
       const elBtnLanjutBagian3 = document.getElementById('btnLanjutBagian3');
       const elHintLanjut = document.getElementById('hintLanjut');
       const elStatusKirim = document.getElementById('statusKirim');
       const elStatusKirimText = document.getElementById('statusKirimText');
+      const elStatusSpinner = document.getElementById('statusSpinner');
 
       // ============================================
-      // INISIALISASI
+      // PROGRESS LAPIS
       // ============================================
-      document.addEventListener('DOMContentLoaded', function() {
-        elAreaSimulasi.classList.add('active');
-        initTahap1();
-        initTahap2();
-      });
+      function updateProgressLapis(step) {
+        const steps = ['lapis1', 'lapis2', 'lapis3', 'tes'];
+        const targetIdx = steps.indexOf(step);
+        if (targetIdx === -1) return;
 
-      // ============================================
-      // TAHAP 1: URUTKAN
-      // ============================================
-      function initTahap1() {
-        // Acak urutan
-        urutanSekarang = [...urutanBenar].sort(() => Math.random() - 0.5);
-        // Pastikan tidak langsung benar
-        if (JSON.stringify(urutanSekarang) === JSON.stringify(urutanBenar)) {
-          urutanSekarang.reverse();
-        }
-        renderTahap1();
-      }
-
-      function renderTahap1() {
-        elSortableList.innerHTML = '';
-        urutanSekarang.forEach((key, index) => {
-          const data = urutanData[key];
-          const item = document.createElement('div');
-          item.className = 'sortable-item';
-          item.dataset.key = key;
-          item.innerHTML = `
-            <span class="item-icon">${data.icon}</span>
-            <div class="item-text">
-              <strong>${data.title}</strong>
-              <div class="desc">${data.desc}</div>
-            </div>
-            <div class="btn-geser">
-              <button onclick="geserUrutan(${index}, -1)" ${index === 0 ? 'disabled' : ''} aria-label="Naik">↑</button>
-              <button onclick="geserUrutan(${index}, 1)" ${index === urutanSekarang.length - 1 ? 'disabled' : ''} aria-label="Turun">↓</button>
-            </div>
-          `;
-          elSortableList.appendChild(item);
+        elProgressLapis.querySelectorAll('.pl-step').forEach((el, i) => {
+          el.classList.remove('active', 'done');
+          if (i < targetIdx) el.classList.add('done');
+          else if (i === targetIdx) el.classList.add('active');
         });
       }
 
-      window.geserUrutan = function(index, arah) {
-        if (tahapSelesai[1]) return;
-        const newIndex = index + arah;
-        if (newIndex < 0 || newIndex >= urutanSekarang.length) return;
-        [urutanSekarang[index], urutanSekarang[newIndex]] = [urutanSekarang[newIndex], urutanSekarang[index]];
-        renderTahap1();
-        elFeedbackTahap1.classList.remove('show');
-      };
+      // ============================================
+      // RENDER KARTU
+      // ============================================
+      function renderKartu() {
+        elKartuGrid.innerHTML = '';
 
-      window.periksaTahap1 = function() {
-        if (tahapSelesai[1]) return;
+        kartuData.forEach(kartu => {
+          const div = document.createElement('div');
+          div.className = 'kartu';
+          div.dataset.id = kartu.id;
 
-        const benar = JSON.stringify(urutanSekarang) === JSON.stringify(urutanBenar);
-        const allItems = elSortableList.querySelectorAll('.sortable-item');
+          if (kartuDipilih.includes(kartu.id)) div.classList.add('terpilih');
+          if (penilaianDibuka) div.classList.add('locked');
 
-        allItems.forEach((item, idx) => {
-          item.classList.remove('correct', 'wrong');
-          if (urutanSekarang[idx] === urutanBenar[idx]) {
-            item.classList.add('correct');
-          } else {
-            item.classList.add('wrong');
+          const badgeHtml = penilaianDibuka
+            ? '<span class="kt-badge ' + (kartu.kategori === 'dipercaya' ? 'dipercaya' : 'tidak') + '">'
+              + (kartu.kategori === 'dipercaya' ? '✅ Bisa Dipercaya' : '❌ Tidak Bisa Dipercaya')
+              + '</span>'
+            : '';
+
+          div.innerHTML = `
+            <div class="kt-tag-pilih">✓</div>
+            <div class="kt-head">
+              <span class="kt-label">${escapeHtml(kartu.label)}</span>
+              ${badgeHtml}
+            </div>
+            <div class="kt-title">${escapeHtml(kartu.title)}</div>
+            <div class="kt-meta">
+              <div class="kt-row"><span class="ic">👤</span><span>Penulis: <strong>${escapeHtml(kartu.penulis)}</strong></span></div>
+              <div class="kt-row"><span class="ic">📅</span><span>Tanggal: <strong>${escapeHtml(kartu.tanggal)}</strong></span></div>
+              <div class="kt-row"><span class="ic">🌐</span><span>Sumber: <strong>${escapeHtml(kartu.sumber)}</strong></span></div>
+              <div class="kt-row"><span class="ic">📊</span><span>Bukti: <strong>${escapeHtml(kartu.bukti)}</strong></span></div>
+              <div class="kt-row"><span class="ic">🎯</span><span>Tujuan: <strong>${escapeHtml(kartu.tujuan)}</strong></span></div>
+            </div>
+          `;
+
+          if (!penilaianDibuka) {
+            div.addEventListener('click', () => togglePilihKartu(kartu.id));
           }
+
+          elKartuGrid.appendChild(div);
         });
-
-        if (benar) {
-          elFeedbackTahap1.className = 'feedback-box show success';
-          elFeedbackTahap1.innerHTML = `
-            <span class="fb-icon">🎉</span>
-            <span class="fb-text"><strong>Benar!</strong> Urutan yang tepat adalah: <strong>Crawling → Indexing → Ranking</strong>.</span>
-          `;
-          tahapSelesai[1] = true;
-          elBtnPeriksaTahap1.disabled = true;
-          updateTahapProgress();
-
-          setTimeout(() => {
-            currentTahap = 2;
-            switchTahap(2);
-          }, 1800);
-        } else {
-          elFeedbackTahap1.className = 'feedback-box show error';
-          elFeedbackTahap1.innerHTML = `
-            <span class="fb-icon">❌</span>
-            <span class="fb-text"><strong>Belum tepat.</strong> Perhatikan kembali urutan tahap mesin pencari: mana yang <em>pertama kali</em> terjadi?</span>
-          `;
-        }
-      };
-
-      window.resetTahap1 = function() {
-        if (tahapSelesai[1]) return;
-        initTahap1();
-        elFeedbackTahap1.classList.remove('show');
-        elBtnPeriksaTahap1.disabled = false;
-      };
-
-      // ============================================
-      // TAHAP 2: MATCHING
-      // ============================================
-      function initTahap2() {
-        matchSelectedLeft = null;
-        matchMatched = new Set();
-        matchCorrect = 0;
-
-        // Render kiri (istilah)
-        elMatchLeft.innerHTML = '';
-        const istilahShuffled = [...matchData].sort(() => Math.random() - 0.5);
-        istilahShuffled.forEach(item => {
-          const div = document.createElement('div');
-          div.className = 'match-item';
-          div.dataset.id = item.id;
-          div.dataset.side = 'left';
-          div.textContent = item.istilah;
-          div.onclick = function() { pilihMatch(this, 'left'); };
-          elMatchLeft.appendChild(div);
-        });
-
-        // Render kanan (penjelasan)
-        elMatchRight.innerHTML = '';
-        const penjelasanShuffled = [...matchData].sort(() => Math.random() - 0.5);
-        penjelasanShuffled.forEach(item => {
-          const div = document.createElement('div');
-          div.className = 'match-item';
-          div.dataset.id = item.id;
-          div.dataset.side = 'right';
-          div.textContent = item.penjelasan;
-          div.onclick = function() { pilihMatch(this, 'right'); };
-          elMatchRight.appendChild(div);
-        });
-
-        elFeedbackTahap2.classList.remove('show');
       }
 
-      window.pilihMatch = function(el, side) {
-        if (tahapSelesai[2]) return;
-        if (el.classList.contains('matched')) return;
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
 
-        if (side === 'left') {
-          // Pilih istilah kiri
-          document.querySelectorAll('.match-item[data-side="left"]').forEach(item => {
-            item.classList.remove('selected');
-          });
-          el.classList.add('selected');
-          matchSelectedLeft = el;
-          elFeedbackTahap2.className = 'feedback-box show info';
-          elFeedbackTahap2.innerHTML = `
-            <span class="fb-icon">👆</span>
-            <span class="fb-text">Kamu memilih "<strong>${el.textContent}</strong>". Sekarang klik penjelasan yang sesuai di kolom kanan.</span>
-          `;
-        } else if (side === 'right') {
-          if (!matchSelectedLeft) {
-            elFeedbackTahap2.className = 'feedback-box show info';
-            elFeedbackTahap2.innerHTML = `
-              <span class="fb-icon">👉</span>
-              <span class="fb-text">Pilih dulu istilah di kolom kiri, lalu klik penjelasannya.</span>
-            `;
+      // ============================================
+      // PILIH KARTU
+      // ============================================
+      function togglePilihKartu(id) {
+        if (penilaianDibuka) return;
+
+        const idx = kartuDipilih.indexOf(id);
+        if (idx >= 0) {
+          kartuDipilih.splice(idx, 1);
+        } else {
+          if (kartuDipilih.length >= 4) {
+            tampilFeedback('warn', '⚠️', 'Kamu hanya boleh memilih <strong>4 kartu</strong>. Klik kartu yang sudah dipilih untuk membatalkan.');
             return;
           }
-
-          const leftId = matchSelectedLeft.dataset.id;
-          const rightId = el.dataset.id;
-          const cocok = leftId === rightId;
-
-          if (cocok) {
-            matchSelectedLeft.classList.remove('selected');
-            matchSelectedLeft.classList.add('matched');
-            el.classList.add('matched');
-            matchMatched.add(leftId);
-            matchCorrect++;
-
-            elFeedbackTahap2.className = 'feedback-box show success';
-            elFeedbackTahap2.innerHTML = `
-              <span class="fb-icon">✅</span>
-              <span class="fb-text"><strong>Cocok!</strong> ${matchSelectedLeft.textContent} = ${el.textContent}</span>
-            `;
-          } else {
-            matchSelectedLeft.classList.remove('selected');
-            el.classList.add('wrong-flash');
-            setTimeout(() => el.classList.remove('wrong-flash'), 600);
-            elFeedbackTahap2.className = 'feedback-box show error';
-            elFeedbackTahap2.innerHTML = `
-              <span class="fb-icon">❌</span>
-              <span class="fb-text"><strong>Belum cocok.</strong> Coba pasangkan dengan penjelasan yang lebih tepat.</span>
-            `;
-          }
-
-          matchSelectedLeft = null;
-
-          if (matchMatched.size === matchData.length) {
-            tahapSelesai[2] = true;
-            updateTahapProgress();
-            elFeedbackTahap2.className = 'feedback-box show success';
-            elFeedbackTahap2.innerHTML = `
-              <span class="fb-icon">🎉</span>
-              <span class="fb-text"><strong>Semua cocok!</strong> Kamu telah menyelesaikan Tahap 2.</span>
-            `;
-            setTimeout(() => {
-              currentTahap = 3;
-              switchTahap(3);
-            }, 1500);
-          }
+          kartuDipilih.push(id);
         }
-      };
 
-      window.resetTahap2 = function() {
-        if (tahapSelesai[2]) return;
-        initTahap2();
-      };
+        renderKartu();
+        renderZona();
+        updateStats();
+
+        if (kartuDipilih.length === 4) {
+          elBtnBukaPenilaian.disabled = false;
+          tampilFeedback('info', '👌', 'Kamu sudah memilih 4 kartu. Klik <strong>"Buka Penilaian"</strong> untuk melihat hasilnya.');
+        } else {
+          elBtnBukaPenilaian.disabled = true;
+        }
+      }
 
       // ============================================
-      // TAHAP 3: SIMULASI RANKING
+      // RENDER ZONA
       // ============================================
-      window.simulasiCari = function() {
-        const keyword = elSearchInput.value.trim().toLowerCase();
-        if (!keyword) {
-          elFeedbackTahap3.className = 'feedback-box show info';
-          elFeedbackTahap3.innerHTML = `
-            <span class="fb-icon">💡</span>
-            <span class="fb-text">Ketik dulu kata kunci di kotak pencarian.</span>
-          `;
+      function renderZona() {
+        const dipercaya = [];
+        const tidak = [];
+
+        kartuDipilih.forEach(id => {
+          const k = kartuData.find(x => x.id === id);
+          if (!k) return;
+          if (k.kategori === 'dipercaya') dipercaya.push(k);
+          else tidak.push(k);
+        });
+
+        // Zona dipercaya
+        if (dipercaya.length === 0) {
+          elZonaDipercaya.innerHTML = '<span class="zb-empty">Belum ada kartu dipilih</span>';
+        } else {
+          elZonaDipercaya.innerHTML = '';
+          dipercaya.forEach(k => {
+            const chip = document.createElement('span');
+            chip.className = 'zb-chip';
+            chip.textContent = k.label;
+            elZonaDipercaya.appendChild(chip);
+          });
+        }
+
+        // Zona tidak
+        if (tidak.length === 0) {
+          elZonaTidak.innerHTML = '<span class="zb-empty">Belum ada kartu dipilih</span>';
+        } else {
+          elZonaTidak.innerHTML = '';
+          tidak.forEach(k => {
+            const chip = document.createElement('span');
+            chip.className = 'zb-chip';
+            chip.textContent = k.label;
+            elZonaTidak.appendChild(chip);
+          });
+        }
+      }
+
+      // ============================================
+      // UPDATE STATS
+      // ============================================
+      function updateStats() {
+        elTotalKartu.textContent = kartuData.length;
+        elTotalDipilih.textContent = kartuDipilih.length;
+      }
+
+      // ============================================
+      // BUKA PENILAIAN
+      // ============================================
+      window.bukaPenilaian = function() {
+        if (kartuDipilih.length !== 4) {
+          alert('⚠️ Pilih tepat 4 kartu dulu ya!');
           return;
         }
 
-        // Cari di database (cari kecocokan)
-        let results = simulasiDatabase['default'];
-        for (const key in simulasiDatabase) {
-          if (key !== 'default' && keyword.includes(key.split(' ')[0])) {
-            results = simulasiDatabase[key];
-            break;
+        penilaianDibuka = true;
+        renderKartu();
+
+        // Hitung berapa kartu yang dipilih benar (sesuai kategori)
+        const dipilihBenar = kartuDipilih.filter(id => {
+          const k = kartuData.find(x => x.id === id);
+          // Anggap "benar" kalau:
+          // - kartu kategori dipercaya (karena user seharusnya memilih kartu yang bisa dipercaya)
+          // - atau kartu kategori tidak (karena user juga bisa memilih yang tidak, dan itu pilihan yang valid untuk dievaluasi)
+          return k !== undefined;
+        }).length;
+
+        // Hitung berapa kartu "dipercaya" yang dipilih
+        const dipilihDipercaya = kartuDipilih.filter(id => {
+          const k = kartuData.find(x => x.id === id);
+          return k && k.kategori === 'dipercaya';
+        }).length;
+
+        // Pesan feedback berdasarkan komposisi pilihan
+        let pesan = '';
+        if (dipilihDipercaya === 2) {
+          pesan = '🎉 <strong>Bagus!</strong> Kamu memilih <strong>2 kartu bisa dipercaya</strong> dan <strong>2 kartu tidak bisa dipercaya</strong> — komposisi yang tepat untuk dibandingkan. Sekarang perhatikan alasan mengapa masing-masing kartu masuk kategori tersebut!';
+        } else if (dipilihDipercaya === 4) {
+          pesan = '🤔 <strong>Perhatikan!</strong> Kamu memilih <strong>4 kartu bisa dipercaya</strong>. Padahal ada kartu yang seharusnya <em>tidak</em> bisa dipercaya (misalnya yang dari blog pribadi tanpa penulis). Coba periksa lagi!';
+        } else if (dipilihDipercaya === 0) {
+          pesan = '🤔 <strong>Perhatikan!</strong> Kamu memilih <strong>4 kartu tidak bisa dipercaya</strong>. Padahal ada kartu yang <em>jelas</em> bisa dipercaya (misalnya dari jurnal universitas). Coba periksa lagi!';
+        } else {
+          pesan = '👍 <strong>Menarik!</strong> Kamu memilih <strong>' + dipilihDipercaya + ' kartu bisa dipercaya</strong> dan <strong>' + (4 - dipilihDipercaya) + ' kartu tidak bisa dipercaya</strong>. Perhatikan alasan masing-masing kartu di bawah!';
+        }
+        tampilFeedback('info', '🔍', pesan);
+
+        // Tampilkan alasan untuk setiap kartu yang dipilih
+        tampilkanAlasanKartuDipilih();
+
+        elBtnBukaPenilaian.disabled = true;
+        elBtnBukaPenilaian.textContent = '👁️ Sudah Dibuka';
+        elMindful1.classList.add('show');
+        elBtnSelesaiLapis1.disabled = false;
+      };
+
+      function tampilkanAlasanKartuDipilih() {
+        // Cari container untuk alasan, kalau belum ada, buat baru setelah zona
+        let alasanBox = document.getElementById('alasanBox');
+        if (!alasanBox) {
+          alasanBox = document.createElement('div');
+          alasanBox.id = 'alasanBox';
+          alasanBox.style.marginTop = '1.5rem';
+          elZonaTidak.parentElement.parentElement.after(alasanBox);
+        }
+
+        alasanBox.innerHTML = '<h4 style="font-weight:700; color:#3b2b1e; margin-bottom:0.6rem; font-size:0.95rem;">📖 Alasan untuk setiap kartu yang kamu pilih:</h4>';
+
+        kartuDipilih.forEach(id => {
+          const k = kartuData.find(x => x.id === id);
+          if (!k) return;
+
+          const div = document.createElement('div');
+          div.style.background = k.kategori === 'dipercaya' ? '#f0f8eb' : '#fdf0f0';
+          div.style.border = '2px solid ' + (k.kategori === 'dipercaya' ? '#8aaa7a' : '#f26d8a');
+          div.style.borderRadius = '10px';
+          div.style.padding = '0.7rem 1rem';
+          div.style.marginBottom = '0.5rem';
+          div.style.fontSize = '0.86rem';
+          div.style.lineHeight = '1.55';
+          div.innerHTML = '<strong>' + escapeHtml(k.label) + '</strong> — ' + escapeHtml(k.alasan);
+          alasanBox.appendChild(div);
+        });
+      }
+
+      // ============================================
+      // RESET PILIH
+      // ============================================
+      window.resetPilih = function() {
+        if (penilaianDibuka) return;
+        if (!confirm('Reset pilihan? Semua kartu yang dipilih akan dihapus.')) return;
+        kartuDipilih = [];
+        renderKartu();
+        renderZona();
+        updateStats();
+        elBtnBukaPenilaian.disabled = true;
+        tampilFeedback('info', '💡', 'Klik kartu untuk memilih. Pilih 2 terpercaya &amp; 2 tidak terpercaya.');
+      };
+
+      // ============================================
+      // FEEDBACK
+      // ============================================
+      function tampilFeedback(type, icon, text) {
+        elFeedbackBox.className = 'feedback-box show ' + type;
+        elFbIcon.textContent = icon || '💡';
+        elFbText.innerHTML = text;
+      }
+
+      // ============================================
+      // SELESAI LAPIS 1
+      // ============================================
+      window.selesaiLapis1 = function() {
+        if (!penilaianDibuka) {
+          alert('⚠️ Buka dulu penilaian kartu yang kamu pilih!');
+          return;
+        }
+
+        const mindfulJawab = document.getElementById('mindful1Jawab').value.trim();
+        if (mindfulJawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 1 sebelum lanjut!');
+          document.getElementById('mindful1Jawab').focus();
+          return;
+        }
+
+        lapis1Selesai = true;
+        elAreaLapis2.style.display = 'block';
+        elBtnSelesaiLapis1.disabled = true;
+        elBtnSelesaiLapis1.textContent = '✅ Lapis 1 Selesai';
+
+        updateProgressLapis('lapis2');
+
+        setTimeout(() => {
+          elAreaLapis2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+
+        buildTantangan();
+      };
+
+      // ============================================
+      // LAPIS 2 — TANTANGAN
+      // ============================================
+      const tantanganData = [
+        {
+          id: 'T1',
+          teks: 'Artikel di <strong>blog pribadi tanpa nama penulis dan tanpa tanggal</strong>. Apa masalah utamanya? Tulis dengan singkat.',
+          tipe: 'teks',
+          validasi: function(val) {
+            const lower = val.toLowerCase();
+            const adaKata = /tidak bisa|tidak dapat|sulit|susah|tidak jelas|tidak ada|tidak terverifikasi|tidak terpercaya|tidak kredibel|tidak dapat diverifikasi|tidak bisa diverifikasi|tidak jelas siapa|penulis tidak/i.test(lower);
+            const cukupPanjang = val.length >= 20;
+            return adaKata && cukupPanjang;
+          },
+          hint: 'Masalah utamanya: <strong>tidak ada cara memverifikasi kebenarannya</strong> — karena penulis anonim dan tanggal tidak ada, kita tidak bisa memeriksa siapa yang menulis dan kapan.',
+          feedbackSalah: 'Coba pikirkan: kalau tidak ada nama penulis dan tidak ada tanggal, bagaimana kita tahu informasi itu benar dan masih berlaku?'
+        },
+        {
+          id: 'T2',
+          teks: 'Manakah yang <strong>paling tidak bisa dipercaya</strong>?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Artikel di jurnal universitas', benar: false },
+            { v: 'B', label: 'Situs resmi pemerintah', benar: false },
+            { v: 'C', label: 'Pesan berantai WhatsApp tanpa sumber', benar: true },
+            { v: 'D', label: 'Berita di Kompas.com', benar: false }
+          ],
+          hint: 'Pesan berantai tanpa sumber adalah ciri khas hoaks — tidak ada penulis, tidak ada tanggal, tidak ada bukti.',
+          feedbackSalah: 'Yang paling tidak bisa dipercaya adalah pesan berantai WhatsApp tanpa sumber — tidak ada penulis, tanggal, maupun bukti.'
+        },
+        {
+          id: 'T3',
+          teks: '<strong>Batas Konsep:</strong> Apakah informasi dari <strong>situs resmi pemerintah</strong> selalu benar? Apakah informasi dari <strong>blog pribadi</strong> selalu salah?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Ya, situs resmi selalu benar, blog pribadi selalu salah', benar: false },
+            { v: 'B', label: 'Tidak — sumber resmi bisa keliru, dan blog pribadi bisa benar jika penulisnya ahli', benar: true },
+            { v: 'C', label: 'Ya, hanya situs resmi yang boleh dipercaya', benar: false },
+            { v: 'D', label: 'Blog pribadi selalu benar, situs resmi selalu salah', benar: false }
+          ],
+          hint: 'Pikirkan: bahkan sumber resmi bisa keliru. Dan blog pribadi bisa benar jika penulisnya ahli. Jadi, apa yang paling penting?',
+          feedbackSalah: 'Yang penting bukan <em>jenis</em> sumbernya, tapi apakah <strong>lima pertanyaan detektif</strong> terpenuhi.'
+        }
+      ];
+
+      function buildTantangan() {
+        elTantanganList.innerHTML = '';
+
+        tantanganData.forEach((t, idx) => {
+          const div = document.createElement('div');
+          div.className = 'tantangan-item';
+          div.id = 'tantangan_' + t.id;
+          div.dataset.id = t.id;
+
+          let inputHtml = '';
+          if (t.tipe === 'teks') {
+            inputHtml = `
+              <div class="t-input-row">
+                <textarea id="input_${t.id}" placeholder="Tulis jawabanmu di sini..." maxlength="300"></textarea>
+                <button id="btn_${t.id}">Periksa</button>
+              </div>
+            `;
+          } else if (t.tipe === 'pilihan') {
+            inputHtml = '<div class="t-opsi-col">';
+            t.opsi.forEach(o => {
+              inputHtml += `
+                <label>
+                  <input type="radio" name="opsi_${t.id}" value="${o.v}">
+                  <span>${o.label}</span>
+                </label>
+              `;
+            });
+            inputHtml += '</div><div class="t-input-row" style="justify-content:flex-end; margin-top:0.5rem;"><button id="btn_' + t.id + '">Periksa</button></div>';
+          }
+
+          div.innerHTML = `
+            <div class="t-header">
+              <span class="t-num">${idx + 1}</span>
+              <span>Tantangan ${idx + 1}</span>
+            </div>
+            <div class="t-text">${t.teks}</div>
+            ${inputHtml}
+            <div class="t-feedback" id="fb_${t.id}"></div>
+          `;
+
+          elTantanganList.appendChild(div);
+
+          const btn = document.getElementById('btn_' + t.id);
+          btn.addEventListener('click', () => periksaTantangan(t));
+        });
+      }
+
+      function periksaTantangan(t) {
+        const fb = document.getElementById('fb_' + t.id);
+        const item = document.getElementById('tantangan_' + t.id);
+
+        if (t.tipe === 'teks') {
+          const inp = document.getElementById('input_' + t.id);
+          const val = inp.value.trim();
+          if (!val) {
+            fb.className = 't-feedback show hint';
+            fb.innerHTML = '⚠️ Tulis jawabanmu dulu ya!';
+            return;
+          }
+          if (val.length < 15) {
+            fb.className = 't-feedback show hint';
+            fb.innerHTML = '🤔 Jawabanmu terlalu pendek. ' + t.hint;
+            return;
+          }
+          if (t.validasi(val)) {
+            fb.className = 't-feedback show ok';
+            fb.innerHTML = '✅ <strong>Bagus!</strong> Jawabanmu sudah menyentuh inti masalahnya.';
+            item.classList.add('selesai');
+            document.getElementById('btn_' + t.id).disabled = true;
+          } else {
+            fb.className = 't-feedback show no';
+            fb.innerHTML = '❌ ' + t.feedbackSalah + '<br><br>💡 ' + t.hint;
+          }
+        } else if (t.tipe === 'pilihan') {
+          const selected = document.querySelector('input[name="opsi_' + t.id + '"]:checked');
+          if (!selected) {
+            fb.className = 't-feedback show hint';
+            fb.innerHTML = '⚠️ Pilih salah satu jawaban dulu!';
+            return;
+          }
+          const opsi = t.opsi.find(o => o.v === selected.value);
+          if (opsi.benar) {
+            fb.className = 't-feedback show ok';
+            fb.innerHTML = '✅ <strong>Benar!</strong>';
+            item.classList.add('selesai');
+            document.getElementById('btn_' + t.id).disabled = true;
+          } else {
+            fb.className = 't-feedback show no';
+            fb.innerHTML = '❌ ' + t.feedbackSalah;
           }
         }
 
-        // Render hasil
-        elSearchResults.innerHTML = '';
-        results.forEach((result, index) => {
+        cekSemuaTantangan();
+      }
+
+      function cekSemuaTantangan() {
+        const items = document.querySelectorAll('.tantangan-item');
+        const semuaSelesai = Array.from(items).every(i => i.classList.contains('selesai'));
+        if (semuaSelesai) {
+          elMindful2.classList.add('show');
+          elMindful2.style.display = 'block';
+          elBtnLanjutLapis3.disabled = false;
+        }
+      }
+
+      // ============================================
+      // LANJUT KE LAPIS 3
+      // ============================================
+      window.lanjutKeLapis3 = function() {
+        const jawab = document.getElementById('mindful2Jawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 2 sebelum lanjut!');
+          document.getElementById('mindful2Jawab').focus();
+          return;
+        }
+
+        lapis2Selesai = true;
+        elAreaLapis3.style.display = 'block';
+        elBtnLanjutLapis3.disabled = true;
+        elBtnLanjutLapis3.textContent = '✅ Lapis 2 Selesai';
+
+        updateProgressLapis('lapis3');
+        elMindful3.classList.add('show');
+
+        buildKuisKilat();
+
+        setTimeout(() => {
+          elAreaLapis3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      };
+
+      // ============================================
+      // KUIS KILAT
+      // ============================================
+      const kuisKilatData = [
+        {
+          pertanyaan: 'Manakah yang <strong>paling tidak</strong> dapat dipercaya?',
+          opsi: [
+            'Artikel di jurnal universitas',
+            'Situs resmi pemerintah',
+            'Pesan berantai WhatsApp tanpa sumber',
+            'Berita di Kompas.com'
+          ],
+          kunci: 2,
+          penjelasan: 'Pesan berantai tanpa sumber adalah ciri khas hoaks — tidak ada penulis, tanggal, maupun bukti.'
+        },
+        {
+          pertanyaan: 'Apa <strong>lima</strong> pertanyaan detektif informasi?',
+          opsi: [
+            'Siapa, kapan, dari mana, apa buktinya, mengapa',
+            'Apa, di mana, kapan, siapa, bagaimana',
+            'Siapa, apa, kapan, di mana, mengapa',
+            'Apa, siapa, mengapa, bagaimana, berapa'
+          ],
+          kunci: 0,
+          penjelasan: 'Lima pertanyaan detektif: Siapa, Kapan, Dari mana, Apa buktinya, Mengapa.'
+        }
+      ];
+
+      function buildKuisKilat() {
+        elKuisKilatContent.innerHTML = '';
+        elKuisKilatBox.classList.add('show');
+
+        kuisKilatData.forEach((soal, idx) => {
           const div = document.createElement('div');
-          div.className = 'search-result';
-          div.style.animationDelay = (index * 0.15) + 's';
+          div.className = 'kk-soal';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            opsiHtml += `
+              <label id="kk_label_${idx}_${oi}">
+                <input type="radio" name="kk_soal_${idx}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
           div.innerHTML = `
-            <span class="result-rank">#${index + 1}</span>
-            <div class="result-title">${result.title}</div>
-            <div class="result-url">${result.url}</div>
-            <div class="result-desc">${result.desc}</div>
+            <div class="kk-q"><strong>Soal ${idx + 1}.</strong> ${soal.pertanyaan}</div>
+            <div class="kk-opsi">${opsiHtml}</div>
           `;
-          elSearchResults.appendChild(div);
+          elKuisKilatContent.appendChild(div);
+
+          div.querySelectorAll('label').forEach((lbl, oi) => {
+            lbl.addEventListener('click', () => {
+              if (kuisKilatSubmitted) return;
+              jawabanKuisKilat[idx] = oi;
+              div.querySelectorAll('label').forEach((l2, oi2) => {
+                l2.style.background = oi2 === oi ? '#fff5f0' : '#fff';
+                l2.style.borderColor = oi2 === oi ? '#ff8a5b' : '#e5dbd0';
+                l2.querySelector('input').checked = (oi2 === oi);
+              });
+              cekKuisKilatSiap();
+            });
+          });
+        });
+      }
+
+      function cekKuisKilatSiap() {
+        if (Object.keys(jawabanKuisKilat).length === kuisKilatData.length && !kuisKilatSubmitted) {
+          setTimeout(() => {
+            if (kuisKilatSubmitted) return;
+            submitKuisKilat();
+          }, 300);
+        }
+      }
+
+      function submitKuisKilat() {
+        kuisKilatSubmitted = true;
+        kuisKilatBenar = 0;
+
+        kuisKilatData.forEach((soal, idx) => {
+          const selected = jawabanKuisKilat[idx];
+          const div = elKuisKilatContent.querySelector(`[data-index="${idx}"]`);
+          const labels = div.querySelectorAll('label');
+          const benar = (selected === soal.kunci);
+
+          labels.forEach((lbl, oi) => {
+            lbl.classList.add('disabled');
+            lbl.querySelector('input').disabled = true;
+            if (oi === selected) {
+              lbl.classList.add(benar ? 'benar' : 'salah');
+              lbl.querySelector('.check-icon').textContent = benar ? '✅' : '❌';
+            }
+            if (oi === soal.kunci && !benar) {
+              lbl.classList.add('benar');
+              lbl.querySelector('.check-icon').textContent = '✅';
+            }
+          });
+
+          if (benar) kuisKilatBenar++;
         });
 
-        elFeedbackTahap3.className = 'feedback-box show info';
-        elFeedbackTahap3.innerHTML = `
-          <span class="fb-icon">🔍</span>
-          <span class="fb-text">
-            Hasil pencarian untuk "<strong>${keyword}</strong>" muncul dengan peringkat. Perhatikan bagaimana hasil teratas cenderung paling relevan dan berkualitas.
-          </span>
-        `;
+        elKkHasil.classList.add('show');
+        elKkHasil.innerHTML = `✅ Kuis Kilat selesai! Kamu benar <strong>${kuisKilatBenar}</strong> dari <strong>${kuisKilatData.length}</strong>.`;
 
-        // Aktifkan tombol selesai setelah pencarian pertama
-        if (!tahapSelesai[3]) {
-          elBtnTahap3Selesai.disabled = false;
-        }
-      };
-
-      window.selesaikanTahap3 = function() {
-        if (tahapSelesai[3]) return;
-        tahapSelesai[3] = true;
-        updateTahapProgress();
-        elBtnTahap3Selesai.disabled = true;
-        elFeedbackTahap3.className = 'feedback-box show success';
-        elFeedbackTahap3.innerHTML = `
-          <span class="fb-icon">🎉</span>
-          <span class="fb-text"><strong>Hebat!</strong> Kamu telah menyelesaikan semua tahap. Lanjut ke tes pemahaman!</span>
-        `;
-
-        // Cek semua tahap selesai
-        if (tahapSelesai[1] && tahapSelesai[2] && tahapSelesai[3]) {
-          aktivitasSelesai = true;
-          setTimeout(() => {
-            elTesSection.classList.add('active');
-            renderSoal();
-            updateTesProgress();
-            elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 1000);
-        }
-      };
-
-      // ============================================
-      // SWITCH TAHAP
-      // ============================================
-      function switchTahap(tahap) {
-        currentTahap = tahap;
-        document.querySelectorAll('.tahap-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('tahap' + tahap + 'Content').classList.add('active');
-        updateTahapProgress();
-
-        const elProgress = document.getElementById('tahapProgress');
-        if (elProgress) {
-          window.scrollTo({ top: elProgress.offsetTop - 100, behavior: 'smooth' });
-        }
-      }
-
-      function updateTahapProgress() {
-        for (let i = 1; i <= 3; i++) {
-          const el = document.getElementById('tahap' + i + 'Item');
-          if (!el) continue;
-          el.classList.remove('active', 'completed');
-          if (tahapSelesai[i]) el.classList.add('completed');
-          else if (i === currentTahap) el.classList.add('active');
-        }
+        elBtnLanjutTes.disabled = false;
       }
 
       // ============================================
-      // RENDER SOAL TES
+      // LANJUT KE TES
       // ============================================
+      window.lanjutKeTesPemahaman = function() {
+        const jawab = document.getElementById('mindful3Jawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 3 sebelum lanjut!');
+          document.getElementById('mindful3Jawab').focus();
+          return;
+        }
+
+        elTesSection.classList.add('active');
+        elRefleksiBox.classList.add('show');
+        renderSoal();
+        updateTesProgress();
+
+        updateProgressLapis('tes');
+
+        setTimeout(() => {
+          elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      };
+
+      // ============================================
+      // TES PEMAHAMAN
+      // ============================================
+      const soalData = [
+        {
+          pertanyaan: 'Artikel di blog pribadi tanpa nama penulis dan tanpa tanggal. Apa masalah utamanya?',
+          opsi: [
+            'Terlalu panjang',
+            'Tidak ada cara memverifikasi kebenarannya',
+            'Menggunakan bahasa asing',
+            'Tidak ada gambar'
+          ],
+          kunci: 1,
+          penjelasan: 'Tanpa penulis dan tanggal, kita tidak bisa memverifikasi kebenaran dan kemutakhiran informasi.'
+        },
+        {
+          pertanyaan: 'Mengapa tanggal publikasi penting dalam memilah informasi?',
+          opsi: [
+            'Agar terlihat baru',
+            'Karena informasi bisa sudah tidak berlaku',
+            'Karena tanggal menentukan panjang artikel',
+            'Karena tanggal menunjukkan penulis'
+          ],
+          kunci: 1,
+          penjelasan: 'Informasi dari tahun lalu bisa sudah tidak berlaku — misalnya data, kebijakan, atau temuan yang sudah diperbarui.'
+        },
+        {
+          pertanyaan: 'Apa ciri khas berita hoaks yang sering tersebar di WhatsApp?',
+          opsi: [
+            'Huruf kapital semua, tanda seru berlebihan, ajakan "sebarkan!"',
+            'Panjang dan detail',
+            'Menggunakan bahasa formal',
+            'Ada nama penulis'
+          ],
+          kunci: 0,
+          penjelasan: 'Ciri khas hoaks WhatsApp: huruf kapital semua, tanda seru berlebihan, ajakan menyebarkan, tanpa sumber jelas.'
+        },
+        {
+          pertanyaan: 'Jika informasi dari situs resmi pemerintah bisa keliru, apa yang harus tetap dilakukan?',
+          opsi: [
+            'Tetap percaya sepenuhnya',
+            'Memeriksa bukti dan sumber lain',
+            'Mengabaikan semua informasi',
+            'Hanya percaya pada blog pribadi'
+          ],
+          kunci: 1,
+          penjelasan: 'Bahkan sumber resmi bisa keliru. Yang penting: periksa bukti dan bandingkan dengan sumber lain.'
+        }
+      ];
+
       function renderSoal() {
         elSoalContainer.innerHTML = '';
         soalData.forEach((soal, idx) => {
@@ -1382,7 +1959,7 @@
           soal.opsi.forEach((opsi, oi) => {
             const id = `soal${idx}_opt${oi}`;
             opsiHtml += `
-              <label for="${id}" onclick="pilihJawaban(${idx}, ${oi})" id="label_${idx}_${oi}">
+              <label for="${id}" onclick="pilihJawabanTes(${idx}, ${oi})" id="label_${idx}_${oi}">
                 <input type="radio" name="soal${idx}" id="${id}" value="${oi}">
                 <span>${opsi}</span>
                 <span class="check-icon"></span>
@@ -1403,8 +1980,8 @@
         });
       }
 
-      window.pilihJawaban = function(soalIndex, optIndex) {
-        if (soalSubmitted) return;
+      window.pilihJawabanTes = function(soalIndex, optIndex) {
+        if (tesSubmitted) return;
         const soalDiv = document.querySelector(`.soal-kuis[data-index="${soalIndex}"]`);
         const labels = soalDiv.querySelectorAll('.opsi-kuis label');
 
@@ -1418,23 +1995,20 @@
           }
         });
 
-        soalJawaban[soalIndex] = optIndex;
+        jawabanTes[soalIndex] = optIndex;
         updateTesProgress();
       };
 
       function updateTesProgress() {
         const total = soalData.length;
-        const answered = Object.keys(soalJawaban).length;
+        const answered = Object.keys(jawabanTes).length;
         elTesProgress.textContent = `Terjawab: ${answered} / ${total}`;
       }
 
-      // ============================================
-      // PERIKSA TES
-      // ============================================
       elBtnPeriksaTes.addEventListener('click', function() {
-        if (soalSubmitted) return;
+        if (tesSubmitted) return;
         const total = soalData.length;
-        const answered = Object.keys(soalJawaban).length;
+        const answered = Object.keys(jawabanTes).length;
 
         if (answered < total) {
           alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
@@ -1443,85 +2017,92 @@
 
         let correct = 0;
         soalData.forEach((soal, idx) => {
-          const selected = soalJawaban[idx];
+          if (jawabanTes[idx] === soal.kunci) correct++;
+        });
+
+        const lulus = correct >= AMBANG_LULUS;
+        tesBenar = correct;
+        tesSubmitted = true;
+
+        soalData.forEach((soal, idx) => {
+          const selected = jawabanTes[idx];
           const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
           const labels = soalDiv.querySelectorAll('.opsi-kuis label');
           const feedback = document.getElementById(`feedback_soal_${idx}`);
+          const isThisCorrect = (selected === soal.kunci);
 
           labels.forEach((label, oi) => {
             label.classList.add('disabled');
-            if (oi === soal.kunci) {
+            label.querySelector('input').disabled = true;
+
+            if (oi === selected) {
+              if (isThisCorrect) {
+                label.classList.add('correct-answer');
+                label.querySelector('.check-icon').textContent = '✅';
+              } else {
+                label.classList.add('wrong-answer');
+                label.querySelector('.check-icon').textContent = '❌';
+              }
+            }
+
+            if (lulus && oi === soal.kunci && !isThisCorrect) {
               label.classList.add('correct-answer');
               label.querySelector('.check-icon').textContent = '✅';
             }
-            if (oi === selected && selected !== soal.kunci) {
-              label.classList.add('wrong-answer');
-              label.querySelector('.check-icon').textContent = '❌';
-            }
           });
 
-          if (selected === soal.kunci) {
+          if (isThisCorrect) {
             soalDiv.classList.add('correct');
-            correct++;
             feedback.className = 'jawaban-feedback benar';
-            feedback.innerHTML = `✅ <strong>Benar!</strong> ${soal.penjelasan}`;
+            feedback.innerHTML = `✅ <strong>Benar!</strong>`;
           } else {
             soalDiv.classList.add('wrong');
             feedback.className = 'jawaban-feedback salah';
-            feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+            if (lulus) {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+            } else {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Coba baca kembali materi dan pikirkan jawaban yang benar.`;
+            }
           }
         });
 
-        soalBenar = correct;
-        soalSubmitted = true;
         elBtnPeriksaTes.disabled = true;
         elBtnPeriksaTes.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
 
-        tampilkanHasilTes(correct, total);
+        tampilkanHasilTes(correct, total, lulus);
       });
 
-      // ============================================
-      // TAMPILKAN HASIL TES
-      // ============================================
-      function tampilkanHasilTes(correct, total) {
+      function tampilkanHasilTes(correct, total, lulus) {
         setTimeout(() => {
           elHasilTes.classList.add('show');
 
-          const skorBagian2 = Math.round(40 + (correct / total) * 60);
-
-          if (correct === total) {
-            soalSelesai = true;
+          if (lulus) {
+            tesSelesai = true;
             elHasilTes.querySelector('#hasilIcon').textContent = '🏆';
             elHasilTes.querySelector('#hasilTitle').textContent = 'Selamat!';
             elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
             elHasilTes.querySelector('#hasilDesc').innerHTML =
-              `Kamu berhasil menyelesaikan Bagian 2!<br><br>Bagian 3 sekarang terbuka!`;
+              `Kamu berhasil menyelesaikan Bagian 2!<br><br>Bagian 3 (Mencari untuk Tugas Sekolah) sekarang terbuka!`;
 
             elBtnLanjutBagian3.classList.remove('locked');
             elBtnLanjutBagian3.classList.add('primary');
-            elHintLanjut.classList.remove('locked');
+            elHintLanjut.classList.remove('locked', 'warn');
             elHintLanjut.classList.add('ready');
             elHintLanjut.textContent = '✅ Bagian 3 sudah terbuka! Klik untuk melanjutkan.';
+            elBtnUlangiTes.classList.remove('show');
 
-            document.querySelectorAll('.step-dot').forEach((step, idx) => {
-              if (idx === 1) {
-                step.classList.add('completed');
-                step.classList.remove('active');
-              }
-            });
-
-            try {
-              const prev = JSON.parse(localStorage.getItem('labtik3_progress') || '{}');
-              prev.bagian = 2;
-              prev.skorBagian2 = skorBagian2;
-              localStorage.setItem('labtik3_progress', JSON.stringify(prev));
-            } catch (e) {}
+            simpanSkorBagian2(correct, total);
           } else {
             elHasilTes.querySelector('#hasilIcon').textContent = '📖';
             elHasilTes.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
             elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
             elHasilTes.querySelector('#hasilDesc').innerHTML =
-              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Semua soal harus benar untuk membuka Bagian 3.<br><br>Coba pelajari kembali materinya!`;
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal ${AMBANG_LULUS} soal benar untuk membuka Bagian 3.<br><br>Pelajari kembali materinya, lalu klik <strong>🔄 Ulangi Tes Pemahaman</strong> di bawah.`;
+
+            elBtnUlangiTes.classList.add('show');
+            elHintLanjut.classList.remove('ready');
+            elHintLanjut.classList.add('warn');
+            elHintLanjut.textContent = '⚠️ Belum lulus — klik "Ulangi Tes Pemahaman" untuk mencoba lagi.';
           }
 
           setTimeout(() => {
@@ -1530,49 +2111,157 @@
         }, 700);
       }
 
+      function simpanSkorBagian2(correct, total) {
+        const skorBagian2 = Math.round(40 + (correct / total) * 60);
+        try {
+          const prev = JSON.parse(localStorage.getItem('labtik3_progress') || '{}');
+          prev.bagian = 2;
+          prev.skorBagian2 = skorBagian2;
+          localStorage.setItem('labtik3_progress', JSON.stringify(prev));
+        } catch (e) {}
+
+        if (window.dutaSimpanProgress) {
+          const skorObj = { b: skorBagian2 };
+          window.dutaSimpanProgress(MODUL_KEY, 'b', skorObj).catch(() => {});
+        }
+      }
+
+      elBtnUlangiTes.addEventListener('click', function() {
+        jawabanTes = {};
+        tesSubmitted = false;
+        tesBenar = 0;
+        tesSelesai = false;
+
+        elBtnPeriksaTes.disabled = false;
+        elBtnPeriksaTes.textContent = '✅ Periksa Jawaban';
+        elBtnUlangiTes.classList.remove('show');
+        elHasilTes.classList.remove('show');
+
+        elHintLanjut.classList.remove('ready', 'warn');
+        elHintLanjut.classList.add('locked');
+        elHintLanjut.textContent = '🔒 Selesaikan semua tahap untuk membuka Bagian 3';
+
+        renderSoal();
+        updateTesProgress();
+
+        elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
       // ============================================
       // KIRIM NILAI BAGIAN 2
       // ============================================
       async function kirimNilaiBagian2() {
-        const skorBagian2 = Math.round(40 + (soalBenar / soalData.length) * 60);
+        const skorBagian2 = Math.round(40 + (tesBenar / soalData.length) * 60);
 
         elStatusKirim.className = 'status-kirim info show';
-        elStatusKirimText.textContent = 'Mengirim nilai Bagian 2...';
+        elStatusSpinner.style.display = 'inline-block';
+        elStatusKirimText.innerHTML = `Mengirim nilai Bagian 2 (${skorBagian2})...`;
 
-        const hasil = await window.kirimNilaiBagian(
-          NAMA_SHEET,
-          'b',
-          skorBagian2,
-          TOTAL_BAGIAN
-        );
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
 
-        if (hasil && hasil.ok) {
-          elStatusKirim.className = 'status-kirim success show';
-          elStatusKirimText.innerHTML = `✅ Nilai Bagian 2 (<strong>${skorBagian2}</strong>) berhasil dikirim.`;
-        } else {
-          elStatusKirim.className = 'status-kirim error show';
-          elStatusKirimText.innerHTML = `⚠️ Gagal mengirim nilai. Tetap lanjut ke Bagian 3.`;
+        if (kirimTimeoutId) {
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
         }
+
+        let selesaiKirim = false;
+
+        kirimTimeoutId = setTimeout(() => {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          tampilkanGagalKirim(skorBagian2, '⏱️ Koneksi lambat atau terputus.');
+        }, 12000);
+
+        try {
+          const hasil = await window.kirimNilaiBagian(
+            NAMA_SHEET, 'b', skorBagian2, TOTAL_BAGIAN
+          );
+
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+
+          if (hasil && hasil.ok) {
+            kirimSukses = true;
+            elStatusKirim.className = 'status-kirim success show';
+            elStatusSpinner.style.display = 'none';
+            elStatusKirimText.innerHTML = `✅ Nilai Bagian 2 (<strong>${skorBagian2}</strong>) berhasil dikirim.`;
+          } else {
+            tampilkanGagalKirim(skorBagian2, (hasil && hasil.error) || 'Terjadi kesalahan.');
+          }
+        } catch (err) {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+          tampilkanGagalKirim(skorBagian2, err.message || 'Gagal terhubung.');
+        }
+      }
+
+      function tampilkanGagalKirim(skor, pesan) {
+        elStatusKirim.className = 'status-kirim error show';
+        elStatusSpinner.style.display = 'none';
+        elStatusKirimText.innerHTML = `⚠️ ${pesan} Nilai: <strong>${skor}</strong>. Klik "Ulangi Kirim" untuk mencoba lagi.`;
+
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
+
+        const btnRetry = document.createElement('button');
+        btnRetry.className = 'btn-retry';
+        btnRetry.type = 'button';
+        btnRetry.textContent = '🔄 Ulangi Kirim';
+        btnRetry.addEventListener('click', function() {
+          kirimSukses = false;
+          kirimNilaiBagian2();
+        });
+        elStatusKirim.appendChild(btnRetry);
       }
 
       // ============================================
       // LANJUT KE BAGIAN 3
       // ============================================
       window.lanjutKeBagian3 = async function() {
-        if (!soalSelesai) {
+        if (!tesSelesai) {
           alert('🔒 Selesaikan tes pemahaman dengan benar terlebih dahulu!');
           return;
         }
 
+        if (kirimSukses) {
+          pindahKeBagian3();
+          return;
+        }
+
         elBtnLanjutBagian3.disabled = true;
-        await kirimNilaiBagian2();
+        elBtnLanjutBagian3.textContent = '⏳ Mengirim...';
+
+        if (!elStatusKirim.classList.contains('show')) {
+          await kirimNilaiBagian2();
+        }
+
+        elBtnLanjutBagian3.disabled = false;
+        elBtnLanjutBagian3.textContent = 'Lanjut ke Bagian 3: Mencari untuk Tugas →';
 
         setTimeout(() => {
-          window.location.href = 'aktivitastik3c.html';
+          pindahKeBagian3();
         }, 800);
       };
 
-      console.log('✅ TIK3 Bagian 2: Cara Kerja Mesin Pencari siap!');
+      function pindahKeBagian3() {
+        window.location.href = 'aktivitastik3c.html';
+      }
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        renderKartu();
+        renderZona();
+        updateStats();
+      });
+
+      console.log('✅ TIK3 Bagian 2: Memilah Informasi siap!');
     })();
   </script>
 
