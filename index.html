@@ -4,29 +4,76 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Portal Informatika DUTA · SMPN 2 Talegong</title>
-  <!-- desain.css -->
   <link rel="stylesheet" href="desain.css">
-  <!-- script.js akan dimuat di akhir body -->
+  <style>
+    /* ===== KARTU DASHBOARD (khusus, dinamis) ===== */
+    .portal-card.dashboard-card {
+      background: linear-gradient(135deg, #fff5f8, #f0e6ff);
+      border: 2px solid #b07be0;
+      position: relative;
+      overflow: hidden;
+      display: none; /* default: hidden, JS akan tampilkan */
+    }
+    .portal-card.dashboard-card.show {
+      display: flex;
+      animation: slideDown 0.4s ease;
+    }
+    .portal-card.dashboard-card::before {
+      background: linear-gradient(180deg, #b07be0, #f26d8a);
+    }
+    .portal-card.dashboard-card h2 {
+      color: #5c2f8a;
+    }
+    .portal-card.dashboard-card:hover {
+      border-color: #8a4bbf;
+      box-shadow: 0 18px 36px rgba(138, 75, 191, 0.2);
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Label kecil untuk peran (siswa/guru) */
+    .portal-card.dashboard-card .role-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      background: #fff;
+      border: 2px solid #b07be0;
+      color: #5c2f8a;
+    }
+    .portal-card.dashboard-card .role-badge.guru {
+      border-color: #d4a030;
+      color: #8a5e00;
+      background: #fffbf0;
+    }
+  </style>
 </head>
 <body>
-  <!-- HEADER DINAMIS (diisi oleh script.js — banner saja, tanpa menu bar) -->
+
+  <!-- HEADER DINAMIS (banner + bar user, diisi script.js) -->
   <header id="header-utama"></header>
 
-  <!-- BREADCRUMB (statis, ditulis langsung di HTML) -->
+  <!-- BREADCRUMB -->
   <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
     <ol class="breadcrumb">
       <li>Beranda</li>
     </ol>
   </nav>
 
-  <!-- KONTEN UTAMA (index.html) — PORTAL -->
   <main class="container" id="konten-utama">
 
+    <!-- ===== HERO ===== -->
     <section class="hero">
       <h1>📡 Portal Informatika DUTA</h1>
       <p class="lead">Pilih salah satu kartu di bawah untuk mulai menjelajah materi, atau ikuti ujian yang sedang aktif.</p>
 
-      <!-- Info website — collapsible -->
       <div class="info-collapsible" id="info-collapsible">
         <div class="info-content" id="info-content">
           <h2>📘 Mengapa Informatika DUTA?</h2>
@@ -58,7 +105,16 @@
       </div>
     </section>
 
+    <!-- ===== PORTAL GRID ===== -->
     <section class="portal-grid" aria-label="Menu utama portal">
+
+      <!-- ===== KARTU DASHBOARD (muncul kalau login siswa/guru) ===== -->
+      <a class="portal-card dashboard-card" id="kartuDashboard" href="#">
+        <span class="role-badge" id="roleBadge">—</span>
+        <span class="ikon" aria-hidden="true">📊</span>
+        <h2 id="dashTitle">Dashboard Saya</h2>
+        <p id="dashDesc">Lihat progres belajar dan nilai yang sudah kamu capai.</p>
+      </a>
 
       <a class="portal-card" href="./tik/materitik.html">
         <span class="ikon" aria-hidden="true">🖥️</span>
@@ -112,47 +168,75 @@
 
   </main>
 
-  <!-- FOOTER DINAMIS (diisi script.js) -->
+  <!-- FOOTER -->
   <footer id="footer-utama"></footer>
 
-  <!-- tombol floating panah ke atas -->
+  <!-- TOMBOL FLOATING -->
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
-  <!-- script.js dimuat di akhir -->
+  <!-- PENANDA POSISI HALAMAN + SCRIPT GLOBAL -->
   <script src="script.js"></script>
+  <script>window.DUTA_ROOT = '';</script>
 
-  <!-- clear localStorage modul saat index.html dibuka -->
+  <!-- ===== SCRIPT KHUSUS: KARTU DASHBOARD ===== -->
   <script>
     (function() {
       "use strict";
 
-      // Daftar prefix key yang dipakai modul-modul
-      const PREFIXES = [
-        'lab',        // labtik1_siswa, labtik1_progress, labbk3_progress, dll.
-        'duta'        // duta_siswa, duta_id_tik1, duta_id_bk3, dll.
-      ];
+      function tampilkanKartuDashboard() {
+        const kartu = document.getElementById('kartuDashboard');
+        const roleBadge = document.getElementById('roleBadge');
+        const dashTitle = document.getElementById('dashTitle');
+        const dashDesc = document.getElementById('dashDesc');
+        if (!kartu) return;
 
-      try {
-        const keysToRemove = [];
+        // ===== 1) Cek guru (sessionStorage.duta_guru) =====
+        let guru = null;
+        try {
+          guru = JSON.parse(sessionStorage.getItem('duta_guru') || 'null');
+        } catch (e) { guru = null; }
 
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (!key) continue;
-
-          const cocok = PREFIXES.some(p => key.startsWith(p));
-          if (cocok) keysToRemove.push(key);
+        if (guru && guru.username) {
+          kartu.href = 'dashboard/guru.html';
+          kartu.classList.add('show');
+          roleBadge.textContent = 'Guru';
+          roleBadge.classList.add('guru');
+          dashTitle.textContent = 'Dashboard Guru';
+          dashDesc.textContent = 'Lihat progres seluruh siswa, nilai, dan status belajar mereka.';
+          return;
         }
 
-        keysToRemove.forEach(k => localStorage.removeItem(k));
+        // ===== 2) Cek siswa login (localStorage.duta_session tipe 'login') =====
+        const session = window.ambilSession && window.ambilSession();
+        if (session && session.tipe === 'login') {
+          kartu.href = 'dashboard/siswa.html';
+          kartu.classList.add('show');
+          roleBadge.textContent = 'Siswa';
+          dashTitle.textContent = 'Dashboard Saya';
+          dashDesc.textContent = 'Lihat progres belajar, nilai, dan status modul yang sudah kamu ikuti.';
+          return;
+        }
 
-        console.log(`🧹 Reset localStorage: ${keysToRemove.length} key dihapus.`);
-      } catch (e) {
-        console.warn('Gagal reset localStorage:', e);
+        // ===== 3) Tamu berkode (tipe 'tamu') → TIDAK tampil =====
+        // ===== 4) Tamu anonim → TIDAK tampil =====
+        // (kartu tetap hidden)
       }
+
+      // Jalankan setelah DOM + script.js selesai init
+      document.addEventListener('DOMContentLoaded', function() {
+        // Beri jeda kecil supaya script.js selesai render header/session
+        setTimeout(tampilkanKartuDashboard, 150);
+      });
+
+      // Kalau user login/logout di tab lain, refresh tampilan
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'duta_session' || e.key === 'duta_guru') {
+          tampilkanKartuDashboard();
+        }
+      });
+
     })();
   </script>
-  <!-- catatan: script.js berisi header, footer, dan logika tombol -->
-  <!-- AI: tidak menambah fitur tambahan di luar permintaan. Konsistensi antar halaman dijaga. -->
-  <!-- encoding UTF-8 telah ditetapkan di meta charset -->
+
 </body>
 </html>

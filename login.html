@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Login · Portal Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="index.html">Beranda</a></li>
+      <li>Login</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <div class="auth-wrapper">
+
+      <span class="auth-icon" aria-hidden="true">🔑</span>
+      <h1 class="auth-title">Login</h1>
+      <p class="auth-sub">Masuk sebagai siswa atau guru</p>
+
+      <div class="auth-error" id="authError"></div>
+      <div class="auth-success" id="authSuccess"></div>
+
+      <form id="formLogin" autocomplete="off" novalidate>
+        <div class="auth-form-group">
+          <label for="inputUsername">Username</label>
+          <input
+            type="text"
+            id="inputUsername"
+            placeholder="Contoh: budi7a"
+            maxlength="30"
+            autocomplete="off"
+            autocapitalize="none"
+            spellcheck="false">
+        </div>
+
+        <div class="auth-form-group">
+          <label for="inputPassword">Password</label>
+          <input
+            type="password"
+            id="inputPassword"
+            placeholder="Masukkan password"
+            maxlength="50"
+            autocomplete="off">
+        </div>
+
+        <button type="submit" class="btn-auth" id="btnLogin">
+          🔑 Masuk
+        </button>
+      </form>
+
+      <div class="auth-divider">atau</div>
+
+      <a href="index.html" class="btn-auth-secondary">
+        🎭 Lanjut sebagai Tamu
+      </a>
+
+      <p class="auth-footer-text">
+        Belum punya akun? <a href="daftar.html">Daftar di sini</a>
+      </p>
+
+    </div>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="script.js"></script>
+  <script>window.DUTA_ROOT = '';</script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // Sembunyikan bar user di halaman login (belum login)
+      const styleHide = document.createElement('style');
+      styleHide.textContent = '#duta-user-bar { display: none !important; }';
+      document.head.appendChild(styleHide);
+
+      const elForm = document.getElementById('formLogin');
+      const elUsername = document.getElementById('inputUsername');
+      const elPassword = document.getElementById('inputPassword');
+      const elBtn = document.getElementById('btnLogin');
+      const elError = document.getElementById('authError');
+      const elSuccess = document.getElementById('authSuccess');
+
+      // Kalau sudah login siswa, langsung redirect
+      document.addEventListener('DOMContentLoaded', function() {
+        const session = window.ambilSession && window.ambilSession();
+        if (session && session.tipe === 'login') {
+          redirectSetelahLogin();
+        }
+        // Kalau sudah login guru, langsung ke dashboard guru
+        try {
+          const guru = JSON.parse(sessionStorage.getItem('duta_guru') || 'null');
+          if (guru && guru.username) {
+            window.location.href = 'dashboard/guru.html';
+          }
+        } catch (e) {}
+      });
+
+      function tampilError(pesan) {
+        elError.textContent = '⚠️ ' + pesan;
+        elError.classList.add('show');
+        elSuccess.classList.remove('show');
+      }
+
+      function tampilSukses(pesan) {
+        elSuccess.textContent = '✅ ' + pesan;
+        elSuccess.classList.add('show');
+        elError.classList.remove('show');
+      }
+
+      function sembunyikanPesan() {
+        elError.classList.remove('show');
+        elSuccess.classList.remove('show');
+      }
+
+      // Redirect setelah login siswa: kembali ke halaman asal, atau index.html
+      function redirectSetelahLogin() {
+        let tujuan = 'index.html';
+        try {
+          const simpan = sessionStorage.getItem('duta_redirect_after_login');
+          if (simpan) {
+            sessionStorage.removeItem('duta_redirect_after_login');
+            tujuan = simpan;
+          }
+        } catch (e) {}
+        window.location.href = tujuan;
+      }
+
+      elForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        sembunyikanPesan();
+
+        const username = elUsername.value.trim().toLowerCase();
+        const password = elPassword.value;
+
+        // Validasi dasar
+        if (!username) {
+          tampilError('Username wajib diisi.');
+          elUsername.focus();
+          return;
+        }
+        if (!password) {
+          tampilError('Password wajib diisi.');
+          elPassword.focus();
+          return;
+        }
+
+        elBtn.disabled = true;
+        elBtn.textContent = '⏳ Memproses...';
+
+        try {
+          // ===== 1) Coba login sebagai SISWA dulu (sheet Users) =====
+          const hasilSiswa = await window.dutaLogin(username, password);
+
+          if (hasilSiswa && hasilSiswa.ok) {
+            tampilSukses('Login berhasil. Mengalihkan...');
+            setTimeout(redirectSetelahLogin, 700);
+            return;
+          }
+
+          // ===== 2) Kalau gagal, coba login sebagai GURU (sheet Guru) =====
+          const hasilGuru = await window.dutaFetch({
+            action: 'loginGuru',
+            username: username,
+            password: password
+          });
+
+          if (hasilGuru && hasilGuru.ok && hasilGuru.tipe === 'guru') {
+            // Simpan session guru di sessionStorage
+            try {
+              sessionStorage.setItem('duta_guru', JSON.stringify({
+                username: hasilGuru.user_id,
+                nama: hasilGuru.nama,
+                password: password   // untuk refresh di dashboard/guru.html
+              }));
+            } catch (e) {}
+
+            tampilSukses('Login guru berhasil. Mengalihkan...');
+            setTimeout(function() {
+              window.location.href = 'dashboard/guru.html';
+            }, 700);
+            return;
+          }
+
+          // ===== 3) Dua-duanya gagal =====
+          // Prioritaskan pesan dari siswa, kecuali pesan siswa generik
+          let pesan = 'Username atau password salah.';
+
+          if (hasilSiswa && hasilSiswa.error === 'Password salah') {
+            // Username ada di Users tapi password salah
+            pesan = 'Password salah.';
+          } else if (hasilGuru && hasilGuru.error === 'Password salah') {
+            // Username ada di Guru tapi password salah
+            pesan = 'Password salah.';
+          } else if (hasilSiswa && hasilSiswa.error === 'Username tidak ditemukan' &&
+                     hasilGuru && hasilGuru.error === 'Bukan akun guru') {
+            // Tidak ada di dua-duanya
+            pesan = 'Username tidak ditemukan. Pastikan sudah daftar atau hubungi guru.';
+          }
+
+          tampilError(pesan);
+          elBtn.disabled = false;
+          elBtn.textContent = '🔑 Masuk';
+
+        } catch (err) {
+          tampilError('Gagal terhubung ke server.');
+          elBtn.disabled = false;
+          elBtn.textContent = '🔑 Masuk';
+        }
+      });
+
+      // Enter di password otomatis submit
+      elPassword.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          elForm.requestSubmit ? elForm.requestSubmit() : elForm.dispatchEvent(new Event('submit'));
+        }
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

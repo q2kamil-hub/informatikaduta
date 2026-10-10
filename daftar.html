@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Daftar Akun · Portal Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="index.html">Beranda</a></li>
+      <li>Daftar Akun</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <div class="auth-wrapper">
+
+      <span class="auth-icon" aria-hidden="true">📝</span>
+      <h1 class="auth-title">Daftar Akun</h1>
+      <p class="auth-sub">Buat akun untuk menyimpan progres belajarmu</p>
+
+      <div class="auth-error" id="authError"></div>
+      <div class="auth-success" id="authSuccess"></div>
+
+      <form id="formDaftar" autocomplete="off" novalidate>
+
+        <div class="auth-form-group">
+          <label for="inputNama">Nama Lengkap</label>
+          <input
+            type="text"
+            id="inputNama"
+            placeholder="Contoh: Budi Santoso"
+            maxlength="40"
+            autocomplete="name">
+          <div class="hint">Nama akan muncul di sertifikat digital.</div>
+        </div>
+
+        <div class="auth-form-group">
+          <label for="inputKelas">Kelas</label>
+          <input
+            type="text"
+            id="inputKelas"
+            placeholder="Contoh: 7A"
+            maxlength="10">
+        </div>
+
+        <div class="auth-form-group">
+          <label for="inputSekolah">Nama Sekolah</label>
+          <input
+            type="text"
+            id="inputSekolah"
+            placeholder="Contoh: SMPN 2 Talegong"
+            maxlength="60">
+          <div class="hint">Nama sekolah akan tercantum di sertifikat digital.</div>
+        </div>
+
+        <div class="auth-form-group">
+          <label for="inputUsername">Username</label>
+          <input
+            type="text"
+            id="inputUsername"
+            placeholder="Contoh: budi7a"
+            maxlength="30"
+            autocomplete="username"
+            autocapitalize="none"
+            spellcheck="false">
+          <div class="hint">Min 3 karakter. Huruf, angka, titik, garis bawah, strip.</div>
+        </div>
+
+        <div class="auth-form-group">
+          <label for="inputPassword">Password</label>
+          <input
+            type="password"
+            id="inputPassword"
+            placeholder="Min 4 karakter"
+            maxlength="50"
+            autocomplete="new-password">
+          <div class="hint">Min 4 karakter. Tidak boleh sama dengan username.</div>
+        </div>
+
+        <div class="auth-form-group">
+          <label for="inputPassword2">Ulangi Password</label>
+          <input
+            type="password"
+            id="inputPassword2"
+            placeholder="Ketik ulang password"
+            maxlength="50"
+            autocomplete="new-password">
+        </div>
+
+        <button type="submit" class="btn-auth" id="btnDaftar">
+          ✨ Daftar Sekarang
+        </button>
+      </form>
+
+      <div class="auth-divider">atau</div>
+
+      <a href="index.html" class="btn-auth-secondary">
+        🎭 Lanjut sebagai Tamu
+      </a>
+
+      <p class="auth-footer-text">
+        Sudah punya akun? <a href="login.html">Login di sini</a>
+      </p>
+
+    </div>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="script.js"></script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // Sembunyikan bar user di halaman daftar (belum login)
+      const styleHide = document.createElement('style');
+      styleHide.textContent = '#duta-user-bar { display: none !important; }';
+      document.head.appendChild(styleHide);
+
+      const elForm = document.getElementById('formDaftar');
+      const elNama = document.getElementById('inputNama');
+      const elKelas = document.getElementById('inputKelas');
+      const elSekolah = document.getElementById('inputSekolah');
+      const elUsername = document.getElementById('inputUsername');
+      const elPassword = document.getElementById('inputPassword');
+      const elPassword2 = document.getElementById('inputPassword2');
+      const elBtn = document.getElementById('btnDaftar');
+      const elError = document.getElementById('authError');
+      const elSuccess = document.getElementById('authSuccess');
+
+      function tampilError(pesan) {
+        elError.textContent = '⚠️ ' + pesan;
+        elError.classList.add('show');
+        elSuccess.classList.remove('show');
+      }
+      function tampilSukses(pesan) {
+        elSuccess.textContent = '✅ ' + pesan;
+        elSuccess.classList.add('show');
+        elError.classList.remove('show');
+      }
+      function sembunyikanPesan() {
+        elError.classList.remove('show');
+        elSuccess.classList.remove('show');
+      }
+
+      // ==== VALIDASI CLIENT-SIDE ====
+      function validasiUsername(u) {
+        if (!u) return 'Username wajib diisi.';
+        if (u.length < 3) return 'Username minimal 3 karakter.';
+        if (u.length > 30) return 'Username maksimal 30 karakter.';
+        if (!/^[a-zA-Z0-9._-]+$/.test(u)) return 'Username hanya boleh huruf, angka, titik, garis bawah, dan strip.';
+        return null;
+      }
+
+      function validasiPassword(p, u) {
+        if (!p) return 'Password wajib diisi.';
+        if (p.length < 4) return 'Password minimal 4 karakter.';
+        if (p.length > 50) return 'Password maksimal 50 karakter.';
+        if (p.toLowerCase() === u.toLowerCase()) return 'Password tidak boleh sama dengan username.';
+        return null;
+      }
+
+      elForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        sembunyikanPesan();
+
+        const nama = elNama.value.trim();
+        const kelas = elKelas.value.trim();
+        const sekolah = elSekolah.value.trim();
+        const username = elUsername.value.trim().toLowerCase();
+        const password = elPassword.value;
+        const password2 = elPassword2.value;
+
+        // Validasi nama
+        if (!nama) {
+          tampilError('Nama lengkap wajib diisi.');
+          elNama.focus();
+          return;
+        }
+        if (nama.length < 2) {
+          tampilError('Nama minimal 2 karakter.');
+          elNama.focus();
+          return;
+        }
+
+        // Validasi kelas
+        if (!kelas) {
+          tampilError('Kelas wajib diisi.');
+          elKelas.focus();
+          return;
+        }
+        if (kelas.length > 10) {
+          tampilError('Kelas maksimal 10 karakter.');
+          elKelas.focus();
+          return;
+        }
+
+        // Validasi sekolah
+        if (!sekolah) {
+          tampilError('Nama sekolah wajib diisi.');
+          elSekolah.focus();
+          return;
+        }
+        if (sekolah.length < 3) {
+          tampilError('Nama sekolah minimal 3 karakter.');
+          elSekolah.focus();
+          return;
+        }
+        if (sekolah.length > 60) {
+          tampilError('Nama sekolah maksimal 60 karakter.');
+          elSekolah.focus();
+          return;
+        }
+
+        // Validasi username
+        const errU = validasiUsername(username);
+        if (errU) {
+          tampilError(errU);
+          elUsername.focus();
+          return;
+        }
+
+        // Validasi password
+        const errP = validasiPassword(password, username);
+        if (errP) {
+          tampilError(errP);
+          elPassword.focus();
+          return;
+        }
+
+        // Cocokkan password
+        if (password !== password2) {
+          tampilError('Password dan ulangi password tidak sama.');
+          elPassword2.focus();
+          return;
+        }
+
+        elBtn.disabled = true;
+        elBtn.textContent = '⏳ Memeriksa...';
+
+        try {
+          // 1. Cek username tersedia dulu
+          const cek = await window.dutaCekUser(username);
+
+          if (!cek || !cek.ok) {
+            const pesan = (cek && cek.error) || 'Gagal memeriksa username.';
+            tampilError(pesan);
+            elBtn.disabled = false;
+            elBtn.textContent = '✨ Daftar Sekarang';
+            return;
+          }
+
+          if (!cek.tersedia) {
+            tampilError('Username "' + username + '" sudah terpakai. Coba yang lain.');
+            elUsername.focus();
+            elBtn.disabled = false;
+            elBtn.textContent = '✨ Daftar Sekarang';
+            return;
+          }
+
+          // 2. Proses daftar (dengan sekolah)
+          elBtn.textContent = '⏳ Mendaftar...';
+          const hasil = await window.dutaDaftar(username, password, nama, kelas, sekolah);
+
+          if (hasil && hasil.ok) {
+            tampilSukses('Pendaftaran berhasil! Mengarahkan ke halaman login...');
+            setTimeout(function() {
+              window.location.href = 'login.html';
+            }, 1200);
+          } else {
+            const pesan = (hasil && hasil.error) || 'Pendaftaran gagal. Coba lagi.';
+            tampilError(pesan);
+            elBtn.disabled = false;
+            elBtn.textContent = '✨ Daftar Sekarang';
+          }
+
+        } catch (err) {
+          tampilError('Gagal terhubung ke server.');
+          elBtn.disabled = false;
+          elBtn.textContent = '✨ Daftar Sekarang';
+        }
+      });
+
+      // Enter di password2 langsung submit
+      elPassword2.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          elForm.requestSubmit ? elForm.requestSubmit() : elForm.dispatchEvent(new Event('submit'));
+        }
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
