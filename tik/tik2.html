@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Menerapkan Surel · Portal · Informatika DUTA</title>
-  <!-- CSS di root, naik satu level dari folder tik/ -->
+  <title>Menerapkan Surel dengan Baik & Santun · Portal · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
   <style>
     /* ===== GAYA PORTAL ===== */
@@ -30,7 +29,7 @@
       font-size: 2rem;
       font-weight: 700;
       color: #3b2b1e;
-      background: linear-gradient(135deg, #3b2b1e, #6b4f3a);
+      background: linear-gradient(135deg, #ff6b6b, #f4b942, #4fb0c6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -48,18 +47,18 @@
       font-size: 0.95rem;
       color: #5c4638;
       line-height: 1.8;
-      max-width: 620px;
+      max-width: 640px;
       margin: 0 auto 2rem;
-      background: #f5ede6;
+      background: #fdf2f5;
       padding: 1.2rem 1.8rem;
       border-radius: 16px;
-      border-left: 6px solid #dbb9a6;
+      border-left: 6px solid #ff8a5b;
       text-align: left;
     }
 
-    .portal-desc strong {
-      color: #4d3829;
-    }
+    .portal-desc strong { color: #b34614; }
+    .portal-desc ul { margin: 0.5rem 0 0 1.2rem; }
+    .portal-desc ul li { margin-bottom: 0.2rem; }
 
     .portal-buttons {
       display: flex;
@@ -95,10 +94,7 @@
       border-color: #b09b88;
     }
 
-    .portal-btn .btn-icon {
-      font-size: 3rem;
-      margin-bottom: 0.3rem;
-    }
+    .portal-btn .btn-icon { font-size: 3rem; margin-bottom: 0.3rem; }
 
     .portal-btn .btn-title {
       font-size: 1.1rem;
@@ -113,33 +109,27 @@
       line-height: 1.4;
     }
 
+    /* Tombol Materi — warna aksen TIK (oranye) */
     .portal-btn.btn-materi {
-      border-color: #8ab4d4;
-      background: #f0f7fb;
+      border-color: #ff8a5b;
+      background: #fff5f0;
     }
-
     .portal-btn.btn-materi:hover {
-      border-color: #6a94b4;
-      background: #e5f0f8;
+      border-color: #e06a3b;
+      background: #ffe9dd;
     }
+    .portal-btn.btn-materi .btn-title { color: #b34614; }
 
-    .portal-btn.btn-materi .btn-title {
-      color: #1a4a6b;
-    }
-
+    /* Tombol Aktivitas — hijau mint */
     .portal-btn.btn-aktivitas {
       border-color: #8aaa7a;
       background: #f0f8eb;
     }
-
     .portal-btn.btn-aktivitas:hover {
       border-color: #6a8a5a;
       background: #e5f2dc;
     }
-
-    .portal-btn.btn-aktivitas .btn-title {
-      color: #2d5a1e;
-    }
+    .portal-btn.btn-aktivitas .btn-title { color: #2d5a1e; }
 
     .portal-info {
       margin-top: 2.5rem;
@@ -150,12 +140,17 @@
       border-radius: 12px;
       border: 1px dashed #d9cdbf;
       display: inline-block;
-      max-width: 600px;
+      max-width: 620px;
       line-height: 1.6;
     }
 
-    .portal-info strong {
-      color: #4d3829;
+    .portal-info strong { color: #4d3829; }
+
+    /* ===== TOMBOL LANJUTKAN BELAJAR ===== */
+    #duta-lanjut-container {
+      margin: 1.5rem auto 0.5rem;
+      max-width: 620px;
+      display: none;
     }
 
     /* ===== RESPONSIF ===== */
@@ -176,7 +171,7 @@
 </head>
 <body>
 
-  <!-- HEADER (dinamis dari script.js — banner saja) -->
+  <!-- HEADER (dinamis dari script.js) -->
   <header id="header-utama"></header>
 
   <!-- BREADCRUMB (statis, 3 level) -->
@@ -184,7 +179,7 @@
     <ol class="breadcrumb">
       <li><a href="../index.html">Beranda</a></li>
       <li><a href="materitik.html">Teknologi Informasi dan Komunikasi</a></li>
-      <li>Menerapkan Surel</li>
+      <li>Menerapkan Surel dengan Baik &amp; Santun</li>
     </ol>
   </nav>
 
@@ -194,21 +189,33 @@
       <div class="portal-wrapper">
 
         <div class="portal-icon">📧</div>
-        <div class="portal-title">Menerapkan Surel untuk Berkomunikasi</div>
-        <div class="portal-sub">dengan Baik dan Santun</div>
+        <div class="portal-title">Menerapkan Surel dengan Baik &amp; Santun</div>
+        <div class="portal-sub">Berkomunikasi Lewat Email yang Sopan, Jelas, dan Efektif</div>
 
         <div class="portal-desc">
-          <strong>📚 Selamat datang!</strong> Modul ini akan membimbingmu memahami cara menggunakan <strong>surel (surat elektronik)</strong> untuk berkomunikasi dengan baik dan santun, terutama dalam konteks resmi dan profesional.
+          <strong>📚 Selamat datang!</strong> Modul ini akan membimbingmu memahami bagaimana
+          <strong>menerapkan surel (surat elektronik)</strong> untuk berkomunikasi dengan baik
+          dan santun — mulai dari menulis subjek yang jelas, memperkenalkan diri, menyusun isi
+          pesan yang hormat, hingga menutup email dengan sopan.
           <br><br>
-          Kamu akan mempelajari <strong>komponen surel, etika komunikasi digital (netiket), struktur surel formal</strong>, serta cara menulis surel yang baik dan santun.
-          <br><br>
+          Kamu akan mempelajari:
+          <ul>
+            <li><strong>Subjek email</strong> — "judul" yang membuat orang mau membuka</li>
+            <li><strong>Salam pembuka &amp; perkenalan diri</strong> — kartu nama digital</li>
+            <li><strong>Isi pesan, penutup, &amp; bahasa</strong> — menyampaikan maksud dengan hormat</li>
+            <li><strong>Etika komunikasi digital</strong> — konteks lokal Indonesia</li>
+          </ul>
+          <br>
           Silakan pilih mode pembelajaran yang kamu inginkan:
         </div>
+
+        <!-- ===== TOMBOL LANJUTKAN BELAJAR (dinamis) ===== -->
+        <div id="duta-lanjut-container"></div>
 
         <div class="portal-buttons">
           <a href="materitik2.html" class="portal-btn btn-materi">
             <span class="btn-icon">📖</span>
-            <span class="btn-title">Materi Menerapkan Surel untuk Berkomunikasi dengan Baik dan Santun</span>
+            <span class="btn-title">Materi Surel</span>
             <span class="btn-desc">Baca materi lengkap tanpa aktivitas</span>
           </a>
 
@@ -220,7 +227,9 @@
         </div>
 
         <div class="portal-info">
-          💡 <strong>Rekomendasi:</strong> Pilih <strong>"Materi + Aktivitas"</strong> untuk pengalaman belajar yang lebih lengkap dan interaktif. Kamu akan berlatih menulis surel yang baik dan santun melalui simulasi!
+          💡 <strong>Rekomendasi:</strong> Pilih <strong>"Materi + Aktivitas"</strong> untuk
+          pengalaman belajar yang lebih lengkap dan interaktif. Kamu akan menjelajahi
+          <strong>Surel Lab</strong> dan menyelesaikan tantangan komunikasi digital!
         </div>
 
       </div>
@@ -230,46 +239,84 @@
   <!-- FOOTER -->
   <footer id="footer-utama"></footer>
 
-  <!-- tombol floating panah ke atas -->
+  <!-- Tombol floating -->
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
-  <!-- script.js (header, footer, scroll) -->
+  <!-- script.js + root -->
   <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
 
-  <!-- 
-    ============================================================
-    CATATAN UNTUK AI (tidak tampil di halaman)
-    ============================================================
-    1. STRUKTUR PORTAL MODUL:
-       tik2.html (halaman ini) = portal dengan 2 tombol:
-       - Materi → materitik2.html
-       - Materi + Aktivitas → aktivitastik2a.html (bagian pertama)
+  <!-- ===== RENDER TOMBOL "LANJUTKAN BELAJAR" ===== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Tunggu script.js selesai init
+      await new Promise(r => setTimeout(r, 100));
 
-    2. ALUR AKTIVITAS (4 file):
-       aktivitastik2a.html → Surel atau Bukan? (Kuis Skenario)
-       aktivitastik2b.html → Komponen & Etika (Susun, Perbaiki, Etika)
-       aktivitastik2c.html → Menulis Surel (Kirim Tugas, Balas, Perbaiki)
-       aktivitastik2d.html → Kuis Akhir + Sertifikat
+      // Hanya render kalau user sudah login / tamu berkode
+      if (!window.ambilSession || !window.ambilSession()) return;
 
-    3. BREADCRUMB STATIS (3 level untuk halaman portal kartu):
-       - Beranda (link ../index.html)
-       - [Mapel] (link materitik.html)
-       - [Nama Kartu]
+      const container = document.getElementById('duta-lanjut-container');
+      if (!container) return;
 
-    4. PATH RELATIF (file ini di ./tik/):
-       - CSS & JS: ../desain.css, ../script.js
-       - Link ke root: ../index.html
-       - Link ke kartu sesama folder: nama-file.html
+      // Ambil progress modul 'tik2' dari sheet
+      let progress = null;
+      try {
+        const hasil = await window.dutaAmbilProgress('tik2');
+        if (hasil && hasil.ok && hasil.progress && hasil.progress.length > 0) {
+          progress = hasil.progress[0];
+        }
+      } catch (e) {
+        return; // gagal ambil progress → jangan tampilkan tombol
+      }
 
-    5. MENU BAR: Dihapus total. Header hanya banner.
+      if (!progress) return;
 
-    6. TEMA MODUL: Menerapkan Surel untuk Berkomunikasi dengan Baik dan Santun.
-       Warna aksen: #dbb9a6 (coklat pastel).
+      const bagianTerakhir = (progress.bagian_terakhir || '').toLowerCase();
+      const nilaiAkhir = Number(progress.nilai_akhir) || 0;
 
-    7. NAMA SHEET untuk modul tik2 (di aktivitastik2d.html):
-       NAMA_SHEET = 'tik2'
-    ============================================================
-  -->
+      // Map bagian → file (sesuaikan kalau struktur file TIK2 berbeda)
+      const mapFile = {
+        a: 'aktivitastik2a.html',
+        b: 'aktivitastik2b.html',
+        c: 'aktivitastik2c.html',
+        d: 'aktivitastik2d.html',
+        e: 'aktivitastik2e.html',
+        f: 'aktivitastik2f.html',
+        g: 'aktivitastik2g.html'
+      };
+
+      // Kalau sudah selesai semua (g / nilai_akhir > 0) → tawarkan ulang modul
+      const selesai = (bagianTerakhir === 'g') || (nilaiAkhir > 0);
+
+      let teks, tujuan;
+      if (selesai) {
+        teks = '🔄 <strong>Ulangi Modul Ini</strong> — Nilai akhir: ' + nilaiAkhir;
+        tujuan = 'aktivitastik2a.html';
+      } else if (bagianTerakhir && mapFile[bagianTerakhir]) {
+        const urutan = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+        const idx = urutan.indexOf(bagianTerakhir);
+        const berikutnya = (idx >= 0 && idx < urutan.length - 1) ? urutan[idx + 1] : bagianTerakhir;
+        teks = '▶️ <strong>Lanjutkan dari Bagian ' + berikutnya.toUpperCase() + '</strong> — Progres tersimpan';
+        tujuan = mapFile[berikutnya] || mapFile[bagianTerakhir];
+      } else {
+        return; // tidak ada bagian valid → sembunyikan
+      }
+
+      // Render tombol
+      const btn = document.createElement('a');
+      btn.className = 'duta-lanjut-btn';
+      btn.href = tujuan;
+      btn.innerHTML = teks;
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = tujuan;
+      });
+
+      container.innerHTML = '';
+      container.appendChild(btn);
+      container.style.display = 'block';
+    });
+  </script>
 
 </body>
 </html>

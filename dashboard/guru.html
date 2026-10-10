@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Dashboard Guru · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    .guru-wrapper { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+
+    /* ===== AKSES DITOLAK ===== */
+    .akses-ditolak {
+      max-width: 460px; margin: 3rem auto;
+      background: #fff; border-radius: 24px;
+      padding: 2rem; border: 3px solid #f0e6ff;
+      box-shadow: 0 12px 40px rgba(80,40,100,0.12);
+      text-align: center;
+    }
+    .akses-ditolak .ad-icon { font-size: 3.5rem; margin-bottom: 0.5rem; }
+    .akses-ditolak .ad-title {
+      font-size: 1.4rem; font-weight: 800;
+      color: #3b2b1e; margin-bottom: 0.5rem;
+    }
+    .akses-ditolak .ad-desc {
+      font-size: 0.92rem; color: #5c4638;
+      line-height: 1.6; margin-bottom: 1.2rem;
+    }
+    .akses-ditolak .ad-btn {
+      display: inline-block; padding: 0.7rem 1.6rem;
+      border-radius: 30px; background: linear-gradient(135deg, #f26d8a, #b07be0);
+      color: #fff; text-decoration: none;
+      font-weight: 700; font-size: 0.9rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 18px rgba(180,70,140,0.25);
+    }
+    .akses-ditolak .ad-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(180,70,140,0.4);
+    }
+
+    /* ===== DASHBOARD ===== */
+    #dashboardArea { display: none; }
+    #dashboardArea.show { display: block; }
+
+    .dash-header {
+      background: linear-gradient(135deg, #fff8e6, #ffe8c2);
+      border: 2px solid #f0c896;
+      border-radius: 20px;
+      padding: 1.2rem 1.6rem;
+      margin-bottom: 1.5rem;
+      display: flex; flex-wrap: wrap;
+      justify-content: space-between; align-items: center;
+      gap: 0.8rem;
+    }
+    .dash-header .dh-info {
+      font-size: 0.95rem; color: #5c3400;
+    }
+    .dash-header .dh-info strong { color: #3b2b1e; }
+    .dash-header .dh-actions {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+    }
+    .btn-dash {
+      padding: 0.5rem 1.2rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 700; font-size: 0.85rem;
+      color: #4d3829; cursor: pointer;
+      font-family: inherit; transition: all 0.2s ease;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-dash:hover {
+      background: #f5ede6; transform: translateY(-2px);
+    }
+    .btn-dash.primary {
+      background: #4d3829; border-color: #4d3829; color: #fff;
+    }
+    .btn-dash.primary:hover { background: #6b4f3a; border-color: #6b4f3a; }
+    .btn-dash:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; }
+
+    /* ===== STATS ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: #fff; border-radius: 16px;
+      padding: 1rem 1.2rem; border: 2px solid #e5dbd0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .stat-card .sc-label {
+      font-size: 0.78rem; color: #7a6656;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      font-weight: 700; margin-bottom: 0.3rem;
+    }
+    .stat-card .sc-value {
+      font-size: 1.6rem; font-weight: 800; color: #3b2b1e;
+    }
+
+    /* ===== FILTER ===== */
+    .filter-bar {
+      background: #f8f4ef; border-radius: 14px;
+      padding: 0.9rem 1.2rem; margin-bottom: 1rem;
+      border: 2px solid #e5dbd0;
+      display: flex; flex-wrap: wrap;
+      gap: 0.6rem 1rem; align-items: center;
+    }
+    .filter-bar label {
+      font-size: 0.85rem; font-weight: 700;
+      color: #4d3829;
+    }
+    .filter-bar input, .filter-bar select {
+      padding: 0.45rem 0.8rem; border-radius: 8px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-family: inherit; font-size: 0.88rem;
+      color: #3d2c1f; outline: none;
+    }
+    .filter-bar input:focus, .filter-bar select:focus {
+      border-color: #f26d8a;
+    }
+
+    /* ===== TABEL ===== */
+    .tabel-wrapper {
+      background: #fff; border-radius: 16px;
+      border: 2px solid #e5dbd0;
+      overflow-x: auto;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    }
+    .tabel-progres {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem; min-width: 900px;
+    }
+    .tabel-progres thead {
+      background: #4d3829; color: #fff;
+      position: sticky; top: 0; z-index: 1;
+    }
+    .tabel-progres th {
+      padding: 0.7rem 0.8rem; text-align: left;
+      font-weight: 700; font-size: 0.78rem;
+      white-space: nowrap;
+    }
+    .tabel-progres td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid #e5dbd0;
+      color: #2f2822; vertical-align: middle;
+    }
+    .tabel-progres tbody tr:hover td { background: #f8f3ee; }
+    .tabel-progres .badge-modul {
+      display: inline-block; padding: 0.15rem 0.55rem;
+      border-radius: 12px; font-size: 0.7rem;
+      font-weight: 700; background: #f0e6ff;
+      color: #5c2f8a; text-transform: uppercase;
+    }
+    .tabel-progres .badge-tipe {
+      display: inline-block; padding: 0.1rem 0.5rem;
+      border-radius: 10px; font-size: 0.65rem;
+      font-weight: 700; margin-left: 0.3rem;
+    }
+    .tabel-progres .badge-tipe.login {
+      background: #d4e8cb; color: #2d5a1e;
+    }
+    .tabel-progres .badge-tipe.tamu {
+      background: #fff3d6; color: #8a5e00;
+    }
+    .tabel-progres .skor-cell {
+      text-align: center; font-weight: 600;
+      font-family: 'Courier New', monospace;
+    }
+    .tabel-progres .skor-cell.kosong { color: #b09b88; }
+    .tabel-progres .nilai-akhir {
+      font-weight: 800; color: #4d7a3b;
+      text-align: center;
+    }
+    .tabel-progres .nilai-akhir.kosong { color: #b09b88; }
+    .empty-state {
+      text-align: center; padding: 2rem;
+      color: #7a6656; font-style: italic;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .dash-header { padding: 1rem 1.2rem; }
+      .dash-header .dh-actions { width: 100%; }
+      .btn-dash { flex: 1; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li>Dashboard Guru</li>
+    </ol>
+  </nav>
+
+  <main class="guru-wrapper">
+
+    <!-- ===== AKSES DITOLAK ===== -->
+    <div class="akses-ditolak" id="aksesDitolak" style="display:none;">
+      <div class="ad-icon">🔒</div>
+      <div class="ad-title">Akses Ditolak</div>
+      <div class="ad-desc">
+        Halaman ini khusus untuk guru. Silakan login terlebih dahulu lewat halaman login.
+      </div>
+      <a href="../login.html" class="ad-btn">🔑 Ke Halaman Login</a>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="dashboardArea">
+
+      <div class="dash-header">
+        <div class="dh-info">
+          👋 Selamat datang, <strong id="namaGuru">Guru</strong>.
+          <span id="infoTotal" style="margin-left:0.5rem;"></span>
+        </div>
+        <div class="dh-actions">
+          <button class="btn-dash" id="btnMuatUlang">🔄 Muat Ulang</button>
+          <button class="btn-dash" id="btnLogout">🚪 Keluar</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="sc-label">Total Baris Progres</div>
+          <div class="sc-value" id="statTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Siswa Login</div>
+          <div class="sc-value" id="statLogin">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Siswa Tamu</div>
+          <div class="sc-value" id="statTamu">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Selesai (Nilai Akhir &gt; 0)</div>
+          <div class="sc-value" id="statSelesai">0</div>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="filter-bar">
+        <label>🔍 Cari:</label>
+        <input type="text" id="filterCari" placeholder="Nama / user_id / kelas" style="min-width:200px;">
+        <label>Modul:</label>
+        <select id="filterModul">
+          <option value="">Semua</option>
+        </select>
+        <label>Status:</label>
+        <select id="filterStatus">
+          <option value="">Semua</option>
+          <option value="selesai">Selesai</option>
+          <option value="berlangsung">Berlangsung</option>
+        </select>
+      </div>
+
+      <!-- Tabel -->
+      <div class="tabel-wrapper">
+        <table class="tabel-progres">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Kelas</th>
+              <th>User ID</th>
+              <th>Modul</th>
+              <th>Bagian</th>
+              <th>a</th>
+              <th>b</th>
+              <th>c</th>
+              <th>d</th>
+              <th>e</th>
+              <th>f</th>
+              <th>Kuis</th>
+              <th>Nilai Akhir</th>
+              <th>Update</th>
+            </tr>
+          </thead>
+          <tbody id="tabelBody">
+            <tr><td colspan="14" class="empty-state">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      let semuaData = [];
+      let dataGuru = null;
+
+      const elAksesDitolak = document.getElementById('aksesDitolak');
+      const elDash = document.getElementById('dashboardArea');
+      const elBody = document.getElementById('tabelBody');
+      const elNamaGuru = document.getElementById('namaGuru');
+      const elInfoTotal = document.getElementById('infoTotal');
+      const elBtnMuatUlang = document.getElementById('btnMuatUlang');
+      const elBtnLogout = document.getElementById('btnLogout');
+
+      // ===== CEK SESSION =====
+      function ambilSessionGuru() {
+        try {
+          return JSON.parse(sessionStorage.getItem('duta_guru') || 'null');
+        } catch (e) { return null; }
+      }
+
+      // ===== MUAT DATA =====
+      async function muatData() {
+        if (!dataGuru || !dataGuru.username) return;
+
+        elBody.innerHTML = '<tr><td colspan="14" class="empty-state">Memuat data...</td></tr>';
+
+        const hasil = await window.dutaFetch({
+          action: 'getAllProgress',
+          username: dataGuru.username,
+          password: dataGuru.password || ''
+        });
+
+        if (!hasil || !hasil.ok) {
+          elBody.innerHTML = '<tr><td colspan="14" class="empty-state">⚠️ ' +
+            ((hasil && hasil.error) || 'Gagal memuat data') + '</td></tr>';
+          return;
+        }
+
+        // Update nama guru dari server (kalau ada)
+        if (hasil.guru && hasil.guru.nama) {
+          dataGuru.nama = hasil.guru.nama;
+          try {
+            sessionStorage.setItem('duta_guru', JSON.stringify(dataGuru));
+          } catch (e) {}
+        }
+
+        semuaData = hasil.progress || [];
+        elNamaGuru.textContent = dataGuru.nama || dataGuru.username;
+        elInfoTotal.textContent = '(' + semuaData.length + ' baris data)';
+
+        isiFilterModul();
+        renderStats();
+        renderTabel();
+      }
+
+      // ===== FILTER MODUL =====
+      function isiFilterModul() {
+        const elModul = document.getElementById('filterModul');
+        const moduls = [...new Set(semuaData.map(d => d.modul).filter(Boolean))].sort();
+        elModul.innerHTML = '<option value="">Semua</option>' +
+          moduls.map(m => '<option value="' + m + '">' + m.toUpperCase() + '</option>').join('');
+      }
+
+      // ===== STATS =====
+      function renderStats() {
+        const total = semuaData.length;
+        const login = semuaData.filter(d => d.tipe === 'login').length;
+        const tamu = semuaData.filter(d => d.tipe === 'tamu').length;
+        const selesai = semuaData.filter(d => d.nilai_akhir > 0).length;
+
+        document.getElementById('statTotal').textContent = total;
+        document.getElementById('statLogin').textContent = login;
+        document.getElementById('statTamu').textContent = tamu;
+        document.getElementById('statSelesai').textContent = selesai;
+      }
+
+      // ===== FILTER EVENTS =====
+      ['filterCari', 'filterModul', 'filterStatus'].forEach(function(id) {
+        const el = document.getElementById(id);
+        el.addEventListener('input', renderTabel);
+        el.addEventListener('change', renderTabel);
+      });
+
+      // ===== TABEL =====
+      function renderTabel() {
+        const cari = document.getElementById('filterCari').value.trim().toLowerCase();
+        const modul = document.getElementById('filterModul').value;
+        const status = document.getElementById('filterStatus').value;
+
+        const filtered = semuaData.filter(function(d) {
+          if (cari) {
+            const teks = (d.nama + ' ' + d.user_id + ' ' + d.kelas).toLowerCase();
+            if (teks.indexOf(cari) === -1) return false;
+          }
+          if (modul && d.modul !== modul) return false;
+          if (status === 'selesai' && !(d.nilai_akhir > 0)) return false;
+          if (status === 'berlangsung' && (d.nilai_akhir > 0)) return false;
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          elBody.innerHTML = '<tr><td colspan="14" class="empty-state">Tidak ada data yang cocok.</td></tr>';
+          return;
+        }
+
+        elBody.innerHTML = filtered.map(function(d) {
+          const nama = d.nama || d.nama_siswa || '(tanpa nama)';
+          const tipeBadge = d.tipe === 'login'
+            ? '<span class="badge-tipe login">login</span>'
+            : d.tipe === 'tamu'
+              ? '<span class="badge-tipe tamu">tamu</span>'
+              : '';
+
+          function skorCell(v) {
+            return v > 0
+              ? '<td class="skor-cell">' + v + '</td>'
+              : '<td class="skor-cell kosong">–</td>';
+          }
+
+          return '<tr>' +
+            '<td><strong>' + escapeHtml(nama) + '</strong>' + tipeBadge + '</td>' +
+            '<td>' + escapeHtml(d.kelas || '–') + '</td>' +
+            '<td style="font-size:0.78rem; color:#7a6656;">' + escapeHtml(d.user_id) + '</td>' +
+            '<td><span class="badge-modul">' + escapeHtml(d.modul) + '</span></td>' +
+            '<td style="text-align:center; font-weight:700;">' + (d.bagian_terakhir || '–').toUpperCase() + '</td>' +
+            skorCell(d.skor_a) +
+            skorCell(d.skor_b) +
+            skorCell(d.skor_c) +
+            skorCell(d.skor_d) +
+            skorCell(d.skor_e) +
+            skorCell(d.skor_f) +
+            skorCell(d.skor_kuis) +
+            (d.nilai_akhir > 0
+              ? '<td class="nilai-akhir">' + d.nilai_akhir + '</td>'
+              : '<td class="nilai-akhir kosong">–</td>') +
+            '<td style="font-size:0.75rem; color:#7a6656; white-space:nowrap;">' + (d.waktu_update || '–') + '</td>' +
+          '</tr>';
+        }).join('');
+      }
+
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      // ===== TOMBOL MUAT ULANG =====
+      elBtnMuatUlang.addEventListener('click', async function() {
+        elBtnMuatUlang.disabled = true;
+        elBtnMuatUlang.textContent = '⏳ Memuat...';
+        await muatData();
+        elBtnMuatUlang.disabled = false;
+        elBtnMuatUlang.textContent = '🔄 Muat Ulang';
+      });
+
+      // ===== TOMBOL LOGOUT =====
+      elBtnLogout.addEventListener('click', function() {
+        if (!confirm('Keluar dari dashboard guru?')) return;
+        try { sessionStorage.removeItem('duta_guru'); } catch (e) {}
+        window.location.href = '../index.html';
+      });
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        dataGuru = ambilSessionGuru();
+
+        if (!dataGuru || !dataGuru.username) {
+          // Belum login guru → tampilkan akses ditolak
+          elAksesDitolak.style.display = 'block';
+          return;
+        }
+
+        // Sudah login guru → tampilkan dashboard
+        elDash.classList.add('show');
+        elNamaGuru.textContent = dataGuru.nama || dataGuru.username;
+        muatData();
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

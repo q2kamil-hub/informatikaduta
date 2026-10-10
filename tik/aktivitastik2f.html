@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Surel Lab · Bagian 6: Kuis Akhir &amp; Sertifikat · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== PROGRESS BAR VISUAL ===== */
+    .progress-lapis {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.4rem; margin: 1.2rem auto 1.5rem;
+      flex-wrap: wrap; max-width: 700px;
+    }
+    .progress-lapis .pl-step {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.45rem 1rem; border-radius: 30px;
+      background: #f5ede6; border: 2px solid #e5dbd0;
+      font-size: 0.78rem; font-weight: 700; color: #7a6656;
+      transition: all 0.3s ease; white-space: nowrap;
+    }
+    .progress-lapis .pl-step.active {
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      border-color: #ff8a5b; color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 138, 91, 0.25);
+    }
+    .progress-lapis .pl-step .pl-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+    }
+
+    /* ===== AREA ===== */
+    .scenario-panel {
+      background: #fffffffa; border-radius: 24px;
+      border: 2px solid #e5dbd0; padding: 2rem;
+      min-height: 400px; position: relative;
+    }
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.3rem;
+    }
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem; color: #5c4638; background: #fff5f0;
+      padding: 0.8rem 1.2rem; border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid #ff8a5b;
+    }
+
+    /* ===== FORM IDENTITAS SISWA ===== */
+    .form-siswa-box {
+      background: #fff; border-radius: 20px; padding: 1.5rem 1.8rem;
+      margin: 1.5rem 0; border: 3px solid #ff8a5b;
+      box-shadow: 0 6px 20px rgba(255, 138, 91, 0.15); position: relative;
+    }
+    .form-siswa-box::before {
+      content: '📝'; position: absolute; top: -18px; left: 1.5rem;
+      background: #fff; padding: 0 0.5rem; font-size: 1.5rem;
+    }
+    .form-siswa-box .form-title {
+      font-size: 1.1rem; font-weight: 700; color: #b34614; margin-bottom: 0.3rem;
+    }
+    .form-siswa-box .form-desc {
+      font-size: 0.85rem; color: #5c4638; margin-bottom: 1.2rem; line-height: 1.6;
+    }
+    .form-sekolah-wrapper,
+    .form-jumlah-wrapper,
+    .form-kelas-wrapper {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .form-sekolah-wrapper { padding-bottom: 1rem; border-bottom: 2px dashed #e5dbd0; }
+    .form-jumlah-wrapper { padding-bottom: 1rem; border-bottom: 2px dashed #e5dbd0; }
+    .form-kelas-wrapper { padding-top: 1rem; border-top: 2px dashed #e5dbd0; }
+    .form-sekolah-wrapper label,
+    .form-jumlah-wrapper label,
+    .form-kelas-wrapper label {
+      font-weight: 700; color: #4d3829; font-size: 0.95rem; min-width: 90px;
+    }
+    .form-sekolah-wrapper input[type="text"],
+    .form-kelas-wrapper input[type="text"] {
+      flex: 1; min-width: 180px; max-width: 320px;
+      padding: 0.6rem 1rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; background: #fcfaf7;
+      font-size: 0.95rem; font-weight: 600; color: #3d2c1f;
+      outline: none; transition: all 0.15s; font-family: inherit;
+    }
+    .form-sekolah-wrapper input[type="text"]:focus,
+    .form-kelas-wrapper input[type="text"]:focus {
+      border-color: #ff8a5b; background: #fff;
+      box-shadow: 0 0 0 3px rgba(255, 138, 91, 0.15);
+    }
+    .form-jumlah-wrapper select {
+      padding: 0.5rem 1rem; border-radius: 10px;
+      border: 2px solid #ff8a5b; background: #fff5f0;
+      font-size: 1rem; font-weight: 700; color: #b34614;
+      cursor: pointer; font-family: inherit; transition: all 0.15s;
+    }
+    .form-jumlah-wrapper select:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 138, 91, 0.25);
+    }
+    .form-siswa-list {
+      display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1rem;
+    }
+    .form-siswa-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      flex-wrap: wrap; animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .form-siswa-item .siswa-num {
+      background: #ff8a5b; color: #fff;
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+    }
+    .form-siswa-item input[type="text"] {
+      flex: 1; min-width: 180px; padding: 0.6rem 1rem;
+      border-radius: 10px; border: 2px solid #e5dbd0;
+      background: #fcfaf7; font-size: 0.92rem; color: #3d2c1f;
+      outline: none; transition: all 0.15s; font-family: inherit;
+    }
+    .form-siswa-item input[type="text"]:focus {
+      border-color: #ff8a5b; background: #fff;
+      box-shadow: 0 0 0 3px rgba(255, 138, 91, 0.15);
+    }
+    .form-error {
+      display: none; background: #fdf0f0; border: 2px solid #d4a0a0;
+      color: #a84a3a; padding: 0.6rem 1rem; border-radius: 10px;
+      font-size: 0.88rem; font-weight: 600; margin-top: 0.8rem;
+    }
+    .form-error.show { display: block; animation: slideIn 0.3s ease; }
+    .btn-mulai {
+      padding: 1rem 3rem; font-size: 1.1rem;
+      font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      border-radius: 50px; border: none; cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 24px rgba(255, 138, 91, 0.3);
+      text-decoration: none; font-family: inherit;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-mulai:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 32px rgba(255, 138, 91, 0.35);
+    }
+    .btn-mulai:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+    .btn-wrapper-mulai { text-align: center; margin-top: 1.2rem; }
+
+    /* ===== SOAL ===== */
+    .tes-header {
+      background: #fff5f0; border-radius: 12px;
+      padding: 0.9rem 1.2rem; margin-bottom: 1rem;
+      border-left: 5px solid #ff8a5b;
+      display: flex; flex-wrap: wrap; justify-content: space-between;
+      align-items: center; gap: 0.5rem;
+    }
+    .tes-header .tes-info {
+      font-size: 0.95rem; color: #3b2b1e; font-weight: 600;
+    }
+    .tes-header .tes-progress {
+      font-size: 0.82rem; color: #4d7a3b; font-weight: 700;
+      background: #fff; padding: 0.25rem 0.9rem;
+      border-radius: 30px; border: 2px solid #e5dbd0;
+    }
+    .soal-kuis {
+      background: #fff; padding: 1.1rem 1.3rem;
+      border-radius: 14px; border: 2px solid #e5dbd0;
+      margin-bottom: 0.9rem; transition: all 0.3s ease;
+    }
+    .soal-kuis.correct { border-color: #8aaa7a; background: #f0f8eb; }
+    .soal-kuis.wrong { border-color: #d4a0a0; background: #fdf0f0; }
+    .soal-kuis .pertanyaan {
+      font-weight: 600; font-size: 0.95rem; color: #3b2b1e;
+      margin-bottom: 0.5rem; display: flex; gap: 0.5rem;
+      align-items: flex-start; line-height: 1.6;
+    }
+    .soal-kuis .pertanyaan .soal-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #ff8a5b; color: #fff;
+      width: 24px; height: 24px; border-radius: 50%;
+      font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis {
+      display: flex; flex-direction: column; gap: 0.35rem; padding-left: 0.2rem;
+    }
+    .soal-kuis .opsi-kuis label {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+      padding: 0.45rem 0.8rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; transition: all 0.15s; line-height: 1.5;
+    }
+    .soal-kuis .opsi-kuis label:hover:not(.disabled) {
+      background: #fff5f0; border-color: #ff8a5b;
+    }
+    .soal-kuis .opsi-kuis label.disabled { cursor: default; }
+    .soal-kuis .opsi-kuis label.selected {
+      border-color: #ff8a5b; background: #fff5f0;
+    }
+    .soal-kuis .opsi-kuis label.correct-answer {
+      border-color: #8aaa7a; background: #e8f5e0;
+    }
+    .soal-kuis .opsi-kuis label.wrong-answer {
+      border-color: #d4a0a0; background: #f5e0e0;
+    }
+    .soal-kuis .opsi-kuis input[type="radio"] {
+      accent-color: #ff8a5b;
+      width: 16px; height: 16px;
+      margin-top: 0.15rem; flex-shrink: 0;
+    }
+    .soal-kuis .opsi-kuis .check-icon {
+      margin-left: auto; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .soal-kuis .jawaban-feedback {
+      margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+      border-radius: 8px; display: none;
+      font-size: 0.85rem; line-height: 1.5;
+    }
+    .soal-kuis .jawaban-feedback.benar {
+      display: block; background: #d4e8cb; color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+    .soal-kuis .jawaban-feedback.salah {
+      display: block; background: #f5d6d0; color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+    .soal-kuis .jawaban-feedback .kunci { font-weight: 700; color: #4d7a3b; }
+
+    /* ===== TOMBOL ===== */
+    .btn-submit-tes {
+      display: block; margin: 1.2rem auto 0;
+      padding: 0.7rem 2.5rem; border-radius: 30px; border: none;
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      color: #fff; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+    }
+    .btn-submit-tes:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(255, 138, 91, 0.35);
+    }
+    .btn-submit-tes:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    }
+    .btn-ulangi-tes {
+      display: none; margin: 1rem auto 0;
+      padding: 0.7rem 2rem; border-radius: 30px;
+      background: #fff; color: #b34614;
+      border: 2px solid #ff8a5b;
+      font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn-ulangi-tes.show { display: block; }
+    .btn-ulangi-tes:hover {
+      background: #fff5f0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.20);
+    }
+
+    /* ===== SERTIFIKAT ===== */
+    .sertifikat-wrapper {
+      display: none; margin: 1.5rem 0;
+    }
+    .sertifikat-wrapper.show { display: block; animation: fadeIn 0.6s ease; }
+
+    .sertifikat-box {
+      background: linear-gradient(135deg, #fffbef, #fff5e6, #fff9f0);
+      border: 6px double #d4a030;
+      border-radius: 20px;
+      padding: 2rem 2.4rem;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 12px 32px rgba(180, 120, 30, 0.15);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .sertifikat-box::before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 2px solid #e8c890;
+      border-radius: 12px;
+      pointer-events: none;
+    }
+    .sertifikat-box .sf-header {
+      font-size: 0.85rem; letter-spacing: 4px;
+      text-transform: uppercase; color: #8a5e00;
+      margin-bottom: 0.4rem; font-weight: 700;
+    }
+    .sertifikat-box .sf-title {
+      font-size: 1.6rem; font-weight: 800; color: #5c3400;
+      margin-bottom: 0.8rem; letter-spacing: 1px;
+    }
+    .sertifikat-box .sf-divider {
+      width: 80px; height: 3px;
+      background: linear-gradient(90deg, #d4a030, #f4b942, #d4a030);
+      margin: 0.8rem auto 1rem;
+      border-radius: 3px;
+    }
+    .sertifikat-box .sf-label {
+      font-size: 0.8rem; color: #8a5e00;
+      text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 0.3rem;
+    }
+    .sertifikat-box .sf-nama {
+      font-size: 1.7rem; font-weight: 800; color: #3b2b1e;
+      margin-bottom: 0.3rem; line-height: 1.3;
+    }
+    .sertifikat-box .sf-kelas {
+      font-size: 0.95rem; color: #5c4638;
+      margin-bottom: 1.2rem;
+    }
+    .sertifikat-box .sf-level-badge {
+      display: inline-block;
+      padding: 0.5rem 1.6rem;
+      border-radius: 40px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin: 0.5rem 0 0.8rem;
+      letter-spacing: 1px;
+    }
+    .sertifikat-box .sf-level-badge.emas {
+      background: linear-gradient(135deg, #ffd700, #ffb800);
+      color: #5c3400;
+      box-shadow: 0 6px 18px rgba(255, 184, 0, 0.4);
+    }
+    .sertifikat-box .sf-level-badge.perak {
+      background: linear-gradient(135deg, #e8e8e8, #b8b8b8);
+      color: #3a3a3a;
+      box-shadow: 0 6px 18px rgba(180, 180, 180, 0.4);
+    }
+    .sertifikat-box .sf-level-badge.perunggu {
+      background: linear-gradient(135deg, #e8a87c, #c88a5a);
+      color: #4d2a10;
+      box-shadow: 0 6px 18px rgba(200, 138, 90, 0.4);
+    }
+    .sertifikat-box .sf-level-badge.dasar {
+      background: linear-gradient(135deg, #b8d4e8, #8ab4d4);
+      color: #1a4a6b;
+      box-shadow: 0 6px 18px rgba(138, 180, 212, 0.4);
+    }
+    .sertifikat-box .sf-skor {
+      font-size: 1.1rem; color: #5c4638;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    .sertifikat-box .sf-skor strong { color: #8a5e00; font-size: 1.3rem; }
+    .sertifikat-box .sf-meta {
+      display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem;
+      justify-content: center; margin-top: 1.2rem;
+      padding-top: 1rem; border-top: 2px dashed #e8c890;
+      font-size: 0.82rem; color: #7a6656;
+    }
+    .sertifikat-box .sf-meta div { text-align: center; }
+    .sertifikat-box .sf-meta .m-label {
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 1px; color: #a08674;
+    }
+    .sertifikat-box .sf-meta .m-val {
+      font-weight: 700; color: #5c3400;
+      font-size: 0.9rem;
+    }
+    .sertifikat-actions {
+      display: flex; flex-wrap: wrap; gap: 0.8rem;
+      justify-content: center; margin-top: 1.2rem;
+    }
+    .btn-sertifikat {
+      padding: 0.7rem 1.8rem; border-radius: 30px;
+      border: 2px solid #d4a030; background: #fff;
+      color: #8a5e00; font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.2s ease;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      text-decoration: none;
+    }
+    .btn-sertifikat:hover {
+      background: #fff8e6; transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(212, 160, 48, 0.25);
+    }
+
+    /* ===== GAGAL ===== */
+    .gagal-box {
+      display: none; margin-top: 1.5rem;
+      background: #fdf0f0; border: 3px solid #d4a0a0;
+      border-radius: 20px; padding: 1.8rem 2rem;
+      text-align: center;
+    }
+    .gagal-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .gagal-box .gb-icon { font-size: 3rem; margin-bottom: 0.4rem; }
+    .gagal-box .gb-title {
+      font-size: 1.2rem; font-weight: 700; color: #a84a3a;
+      margin-bottom: 0.4rem;
+    }
+    .gagal-box .gb-desc {
+      font-size: 0.92rem; color: #5c4638;
+      line-height: 1.6; margin-bottom: 1rem;
+    }
+
+    /* ===== NAVIGASI ===== */
+    .nav-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem; margin-top: 2rem;
+      padding-top: 1.5rem; border-top: 2px solid #e5dbd0;
+    }
+    .btn-nav-bawah {
+      padding: 0.6rem 1.8rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 600; font-size: 0.9rem; color: #3b2b1e;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-nav-bawah:hover {
+      background: #fff5f0; border-color: #ff8a5b;
+      transform: translateY(-2px);
+    }
+    .btn-nav-bawah.primary {
+      background: #4d3829; border-color: #4d3829; color: #fff;
+    }
+    .btn-nav-bawah.primary:hover {
+      background: #6b4f3a; border-color: #6b4f3a;
+    }
+    .btn-nav-bawah .back-arrow { font-size: 1.2rem; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== STATUS KIRIM ===== */
+    .status-kirim {
+      max-width: 520px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+      border-radius: 12px; font-size: 0.88rem; font-weight: 600;
+      line-height: 1.5; display: none; align-items: center;
+      gap: 0.6rem; text-align: left;
+    }
+    .status-kirim.show { display: flex; flex-wrap: wrap; }
+    .status-kirim.info {
+      background: #fff5f0; border: 2px solid #ff8a5b; color: #b34614;
+    }
+    .status-kirim.success { background: #d4e8cb; border: 2px solid #8aaa7a; color: #2d5a1e; }
+    .status-kirim.error { background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a; }
+    .status-kirim .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status-kirim .btn-retry {
+      margin-left: auto; padding: 0.35rem 1rem;
+      border-radius: 20px; border: 2px solid currentColor;
+      background: transparent; color: inherit;
+      font-weight: 700; font-size: 0.82rem;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.15s ease; white-space: nowrap;
+    }
+    .status-kirim .btn-retry:hover {
+      background: rgba(255,255,255,0.6);
+      transform: translateY(-1px);
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .scenario-panel { padding: 1.2rem; }
+      .form-siswa-box { padding: 1.2rem 1rem; }
+      .sertifikat-box { padding: 1.5rem 1.2rem; }
+      .sertifikat-box .sf-nama { font-size: 1.4rem; }
+      .sertifikat-box .sf-title { font-size: 1.3rem; }
+    }
+    @media (max-width: 480px) {
+      .scenario-panel { padding: 0.8rem; }
+      .scenario-panel .scenario-title { font-size: 1.1rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav-bawah { justify-content: center; }
+      .soal-kuis { padding: 1rem; }
+      .soal-kuis .pertanyaan { font-size: 0.92rem; }
+      .soal-kuis .opsi-kuis label { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
+      .tes-header { flex-direction: column; align-items: flex-start; }
+      .form-siswa-item input[type="text"] { min-width: 100px; }
+      .status-kirim .btn-retry { margin-left: 0; width: 100%; text-align: center; }
+      .sertifikat-box .sf-nama { font-size: 1.2rem; }
+      .sertifikat-box .sf-title { font-size: 1.15rem; }
+      .sertifikat-box .sf-level-badge { font-size: 0.9rem; padding: 0.4rem 1.2rem; }
+      .sertifikat-actions { flex-direction: column; }
+      .btn-sertifikat { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materitik.html">Teknologi Informasi dan Komunikasi</a></li>
+      <li><a href="tik2.html">Menerapkan Surel</a></li>
+      <li>Bagian 6: Kuis Akhir &amp; Sertifikat</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <!-- ===== PROGRESS BAR ===== -->
+        <div class="progress-lapis">
+          <span class="pl-step active" data-step="kuis">
+            <span class="pl-num">🏆</span>
+            <span>Kuis Akhir &amp; Sertifikat</span>
+          </span>
+        </div>
+
+        <!-- ===== AREA KUIS ===== -->
+        <div class="scenario-panel" id="panelKuis">
+
+          <div class="scenario-title">🏆 Kuis Akhir: Menerapkan Surel dengan Baik &amp; Santun</div>
+          <div class="scenario-story">
+            📖 <strong>Petunjuk:</strong> Ini adalah <strong>Kuis Akhir</strong> dari modul
+            "Menerapkan Surel untuk Berkomunikasi dengan Baik dan Santun".
+            Ada <strong>10 soal pilihan ganda</strong> yang mencakup seluruh materi Bagian 1–5.
+            <br><br>
+            <strong>Minimal 7 dari 10 soal benar</strong> untuk lulus dan mendapatkan sertifikat digital.
+            Setelah lulus, kamu akan menerima <strong>level</strong> dan <strong>sertifikat</strong>
+            sesuai skormu. Jika belum lulus, kamu bisa mengulang kuis ini.
+          </div>
+
+          <!-- ===== FORM IDENTITAS (untuk sertifikat) ===== -->
+          <div class="form-siswa-box" id="formSiswaBox">
+            <div class="form-title">📝 Identitas Penerima Sertifikat</div>
+            <div class="form-desc">
+              Isi identitas sebelum memulai. Nama akan tercantum di sertifikat digital.
+              Bisa diisi beberapa nama: <em>Budi &amp; Siti &amp; Raka</em>.
+            </div>
+
+            <div class="form-sekolah-wrapper">
+              <label for="inputSekolah">Sekolah:</label>
+              <input type="text" id="inputSekolah" placeholder="SMPN 2 Talegong" maxlength="60" autocomplete="off" oninput="cekFormSiswa()">
+            </div>
+
+            <div class="form-jumlah-wrapper">
+              <label for="jumlahSiswa">Jumlah Siswa:</label>
+              <select id="jumlahSiswa" onchange="updateFormSiswa(this.value)">
+                <option value="1" selected>1 orang</option>
+                <option value="2">2 orang</option>
+                <option value="3">3 orang</option>
+                <option value="4">4 orang</option>
+                <option value="5">5 orang</option>
+              </select>
+            </div>
+
+            <div class="form-siswa-list" id="formSiswaList"></div>
+
+            <div class="form-kelas-wrapper">
+              <label for="inputKelas">Kelas:</label>
+              <input type="text" id="inputKelas" placeholder="Contoh: 7A" maxlength="10" autocomplete="off" oninput="cekFormSiswa()">
+            </div>
+
+            <div class="form-error" id="formError">
+              ⚠️ Semua nama, kelas, dan sekolah harus diisi sebelum memulai!
+            </div>
+
+            <div class="btn-wrapper-mulai">
+              <button class="btn-mulai" id="btnMulai" onclick="mulaiKuis()" disabled>
+                🏆 Mulai Kuis Akhir
+              </button>
+            </div>
+          </div>
+
+          <!-- ===== SOAL (muncul setelah form diisi) ===== -->
+          <div id="areaKuis" style="display:none;">
+            <div class="tes-header">
+              <div class="tes-info">🏆 <strong>Kuis Akhir:</strong> 10 soal · Minimal 7 benar untuk lulus</div>
+              <div class="tes-progress" id="tesProgress">Terjawab: 0 / 10</div>
+            </div>
+
+            <div id="soalContainer"></div>
+
+            <button class="btn-submit-tes" id="btnPeriksaKuis">✅ Periksa Jawaban</button>
+            <button class="btn-ulangi-tes" id="btnUlangiKuis">🔄 Ulangi Kuis Akhir</button>
+          </div>
+
+          <!-- ===== SERTIFIKAT ===== -->
+          <div class="sertifikat-wrapper" id="sertifikatWrapper">
+            <div class="sertifikat-box" id="sertifikatBox">
+              <div class="sf-header">Sertifikat Pencapaian</div>
+              <div class="sf-title">Menerapkan Surel dengan Baik &amp; Santun</div>
+              <div class="sf-divider"></div>
+              <div class="sf-label">Diberikan kepada</div>
+              <div class="sf-nama" id="sfNama">Nama Siswa</div>
+              <div class="sf-kelas" id="sfKelas">Kelas · Sekolah</div>
+              <div class="sf-level-badge" id="sfBadge">🏆 Ahli</div>
+              <div class="sf-skor" id="sfSkor">Skor: <strong>10 / 10</strong></div>
+              <div class="sf-meta">
+                <div>
+                  <div class="m-label">Elemen</div>
+                  <div class="m-val">Teknologi Informasi &amp; Komunikasi</div>
+                </div>
+                <div>
+                  <div class="m-label">Tujuan</div>
+                  <div class="m-val">Menerapkan surel dengan baik &amp; santun</div>
+                </div>
+                <div>
+                  <div class="m-label">Tanggal</div>
+                  <div class="m-val" id="sfTanggal">—</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sertifikat-actions">
+              <button class="btn-sertifikat" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+              <a href="tik2.html" class="btn-sertifikat">🏠 Kembali ke Portal</a>
+            </div>
+          </div>
+
+          <!-- ===== GAGAL ===== -->
+          <div class="gagal-box" id="gagalBox">
+            <div class="gb-icon">📖</div>
+            <div class="gb-title">Belum Lulus</div>
+            <div class="gb-desc" id="gagalDesc">
+              Kamu baru menjawab benar ... dari 10 soal.<br>
+              Minimal 7 soal benar untuk lulus. Pelajari kembali materinya, lalu klik
+              <strong>🔄 Ulangi Kuis Akhir</strong> di bawah.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Status kirim -->
+        <div class="status-kirim info" id="statusKirim">
+          <span class="spinner" id="statusSpinner"></span>
+          <span id="statusKirimText">Mengirim nilai...</span>
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom">
+          <a href="aktivitastik2e.html" class="btn-nav-bawah">
+            <span class="back-arrow">←</span> Kembali ke Bagian 5
+          </a>
+          <a href="tik2.html" class="btn-nav-bawah primary">
+            🏠 Selesai — Kembali ke Portal
+          </a>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI
+      // ============================================
+      const NAMA_SHEET = 'tik2';
+      const MODUL_KEY = 'tik2';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e', 'f'];
+      const AMBANG_LULUS = 7;
+
+      // ============================================
+      // STATE
+      // ============================================
+      let daftarSiswa = [];
+      let jumlahSiswaSekarang = 1;
+
+      let jawabanKuis = {};
+      let kuisSubmitted = false;
+      let kuisBenar = 0;
+      let kuisSelesai = false;
+      let lulus = false;
+
+      let kirimTimeoutId = null;
+      let kirimSukses = false;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const elFormSiswaBox = document.getElementById('formSiswaBox');
+      const elFormSiswaList = document.getElementById('formSiswaList');
+      const elInputSekolah = document.getElementById('inputSekolah');
+      const elInputKelas = document.getElementById('inputKelas');
+      const elFormError = document.getElementById('formError');
+      const elBtnMulai = document.getElementById('btnMulai');
+      const elAreaKuis = document.getElementById('areaKuis');
+
+      const elSoalContainer = document.getElementById('soalContainer');
+      const elTesProgress = document.getElementById('tesProgress');
+      const elBtnPeriksaKuis = document.getElementById('btnPeriksaKuis');
+      const elBtnUlangiKuis = document.getElementById('btnUlangiKuis');
+
+      const elSertifikatWrapper = document.getElementById('sertifikatWrapper');
+      const elSfNama = document.getElementById('sfNama');
+      const elSfKelas = document.getElementById('sfKelas');
+      const elSfBadge = document.getElementById('sfBadge');
+      const elSfSkor = document.getElementById('sfSkor');
+      const elSfTanggal = document.getElementById('sfTanggal');
+
+      const elGagalBox = document.getElementById('gagalBox');
+      const elGagalDesc = document.getElementById('gagalDesc');
+
+      const elStatusKirim = document.getElementById('statusKirim');
+      const elStatusKirimText = document.getElementById('statusKirimText');
+      const elStatusSpinner = document.getElementById('statusSpinner');
+
+      // ============================================
+      // FORM IDENTITAS
+      // ============================================
+      window.updateFormSiswa = function(jumlah) {
+        jumlahSiswaSekarang = parseInt(jumlah);
+        elFormSiswaList.innerHTML = '';
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const div = document.createElement('div');
+          div.className = 'form-siswa-item';
+          div.innerHTML = `
+            <span class="siswa-num">${i + 1}</span>
+            <input type="text" id="namaSiswa_${i}"
+                   placeholder="Nama lengkap siswa ${i + 1}"
+                   maxlength="40"
+                   autocomplete="off"
+                   oninput="cekFormSiswa()">
+          `;
+          elFormSiswaList.appendChild(div);
+        }
+        cekFormSiswa();
+      };
+
+      window.cekFormSiswa = function() {
+        const sekolah = elInputSekolah.value.trim();
+        const kelas = elInputKelas.value.trim();
+        let semuaNama = true;
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const inp = document.getElementById('namaSiswa_' + i);
+          if (!inp || inp.value.trim() === '') { semuaNama = false; break; }
+        }
+        elBtnMulai.disabled = !(semuaNama && kelas !== '' && sekolah !== '');
+        elFormError.classList.remove('show');
+      };
+
+      function validasiFormSiswa() {
+        const sekolah = elInputSekolah.value.trim();
+        const kelas = elInputKelas.value.trim();
+        if (sekolah === '') { tampilErr('Sekolah harus diisi!'); return false; }
+        if (kelas === '') { tampilErr('Kelas harus diisi!'); return false; }
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const inp = document.getElementById('namaSiswa_' + i);
+          if (!inp || inp.value.trim() === '') { tampilErr('Nama siswa ' + (i+1) + ' harus diisi!'); return false; }
+        }
+        elFormError.classList.remove('show');
+        return true;
+      }
+      function tampilErr(msg) {
+        elFormError.textContent = '⚠️ ' + msg;
+        elFormError.classList.add('show');
+      }
+
+      function formatNamaSiswa(daftar) {
+        if (!daftar || daftar.length === 0) return 'Siswa Informatika';
+        if (daftar.length === 1) return daftar[0].nama;
+        if (daftar.length === 2) return daftar[0].nama + ' & ' + daftar[1].nama;
+        const names = daftar.map(s => s.nama);
+        const last = names.pop();
+        return names.join(', ') + ' & ' + last;
+      }
+
+      // ============================================
+      // MULAI KUIS
+      // ============================================
+      window.mulaiKuis = async function() {
+        if (!validasiFormSiswa()) return;
+
+        daftarSiswa = [];
+        const sekolah = elInputSekolah.value.trim();
+        const kelas = elInputKelas.value.trim();
+        for (let i = 0; i < jumlahSiswaSekarang; i++) {
+          const inp = document.getElementById('namaSiswa_' + i);
+          daftarSiswa.push({ nama: inp.value.trim(), kelas: kelas, sekolah: sekolah });
+        }
+
+        const namaGabung = formatNamaSiswa(daftarSiswa);
+
+        if (window.simpanIdentitasSiswa) {
+          window.simpanIdentitasSiswa(sekolah, namaGabung, kelas);
+        }
+        try { localStorage.setItem('labtik2_siswa', JSON.stringify(daftarSiswa)); } catch (e) {}
+
+        elBtnMulai.disabled = true;
+        elBtnMulai.textContent = '⏳ Menyiapkan sesi...';
+
+        // Pastikan user punya sesi (login / tamu berkode)
+        const hasilSesi = await window.dutaPastikanPunyaKode(sekolah, namaGabung, kelas);
+        if (!hasilSesi || !hasilSesi.ok) {
+          alert('⚠️ Gagal menyiapkan sesi: ' + ((hasilSesi && hasilSesi.error) || 'Tidak diketahui'));
+          elBtnMulai.disabled = false;
+          elBtnMulai.textContent = '🏆 Mulai Kuis Akhir';
+          return;
+        }
+
+        if (window.simpanIdModul) {
+          window.simpanIdModul(MODUL_KEY, hasilSesi.user_id);
+        }
+
+        elFormSiswaBox.style.display = 'none';
+        elAreaKuis.style.display = 'block';
+        renderSoal();
+        updateProgress();
+
+        setTimeout(() => {
+          elAreaKuis.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 200);
+      };
+
+      // ============================================
+      // 10 SOAL KUIS AKHIR
+      // ============================================
+      const soalData = [
+        {
+          pertanyaan: 'Apa fungsi utama subjek email?',
+          opsi: [
+            'Hiasan agar email terlihat cantik',
+            'Memberi tahu isi pesan sebelum dibuka',
+            'Formalitas yang tidak penting',
+            'Memenuhi aturan sekolah'
+          ],
+          kunci: 1,
+          penjelasan: 'Subjek email berfungsi seperti "judul" — memberi tahu penerima isi pesan sebelum membuka.'
+        },
+        {
+          pertanyaan: 'Raka ingin mengirim tugas kelompoknya ke Bu Dewi. Subjek mana yang paling tepat?',
+          opsi: [
+            '"Halo Bu"',
+            '"Tugas"',
+            '"Tugas Informatika Kelompok 3 — Raka"',
+            '"Penting"'
+          ],
+          kunci: 2,
+          penjelasan: 'Subjek yang baik harus singkat, spesifik, dan mengidentifikasi pengirim.'
+        },
+        {
+          pertanyaan: 'Alamat email yang baik untuk komunikasi sekolah adalah…',
+          opsi: [
+            'dragon_slayer_999@email.com',
+            'budi.santoso@email.com',
+            'cutegirl_2008@email.com',
+            'anonim@email.com'
+          ],
+          kunci: 1,
+          penjelasan: 'Alamat email yang baik mencerminkan identitas yang serius dan profesional.'
+        },
+        {
+          pertanyaan: 'Manakah salam pembuka yang paling tepat untuk email kepada guru?',
+          opsi: [
+            '"Hey Bu!"',
+            '"Yth. Ibu Dewi,"',
+            '"Halo"',
+            '"Dear Bu"'
+          ],
+          kunci: 1,
+          penjelasan: '"Yth. Ibu Dewi," adalah salam pembuka formal yang tepat untuk email kepada guru.'
+        },
+        {
+          pertanyaan: 'Apa yang <strong>wajib</strong> ada saat memperkenalkan diri di email?',
+          opsi: [
+            'Hobi dan cita-cita',
+            'Nama, kelas, konteks',
+            'Alamat rumah',
+            'Nama orang tua'
+          ],
+          kunci: 1,
+          penjelasan: 'Perkenalan diri yang baik mencakup nama, kelas, dan konteks (mata pelajaran / kegiatan).'
+        },
+        {
+          pertanyaan: 'Email yang baik memiliki isi yang…',
+          opsi: [
+            'Panjang dan detail',
+            'Jelas, ringkas, hormat',
+            'Singkat tanpa salam',
+            'Formal dan kaku'
+          ],
+          kunci: 1,
+          penjelasan: 'Isi email yang baik adalah jelas, ringkas, dan hormat.'
+        },
+        {
+          pertanyaan: '<em>"Bu, tolong perpanjang tugas saya."</em> — Apa masalah pesan ini?',
+          opsi: [
+            'Terlalu panjang',
+            'Nada menuntut',
+            'Tidak ada salam',
+            'B dan C benar'
+          ],
+          kunci: 3,
+          penjelasan: 'Kata "tolong perpanjang" terdengar menuntut. Tidak ada salam pembuka juga.'
+        },
+        {
+          pertanyaan: 'Kapan email <strong>boleh</strong> sangat singkat?',
+          opsi: [
+            'Saat pertama kali menghubungi guru',
+            'Saat membalas email yang sudah jelas',
+            'Saat mengirim tugas',
+            'Tidak pernah'
+          ],
+          kunci: 1,
+          penjelasan: 'Email boleh sangat singkat saat membalas email yang sudah jelas — komunikasi sudah terjalin.'
+        },
+        {
+          pertanyaan: 'Apa itu <strong>etika digital</strong>?',
+          opsi: [
+            'Aturan menggunakan internet',
+            'Prinsip perilaku bertanggung jawab di ruang digital',
+            'Cara membuat email',
+            'Aplikasi chatting'
+          ],
+          kunci: 1,
+          penjelasan: 'Etika digital adalah prinsip perilaku bertanggung jawab di ruang digital.'
+        },
+        {
+          pertanyaan: 'Manakah yang <strong>bukan</strong> bagian dari email formal yang baik?',
+          opsi: [
+            'Salam pembuka',
+            'Emotikon berlebihan',
+            'Ucapan terima kasih',
+            'Perkenalan diri'
+          ],
+          kunci: 1,
+          penjelasan: 'Emotikon berlebihan tidak tepat dalam email formal. Gunakan bahasa yang sopan dan profesional.'
+        }
+      ];
+
+      // ============================================
+      // RENDER SOAL
+      // ============================================
+      function renderSoal() {
+        elSoalContainer.innerHTML = '';
+        soalData.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'soal-kuis';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            const id = `soal${idx}_opt${oi}`;
+            opsiHtml += `
+              <label for="${id}" onclick="pilihJawabanKuis(${idx}, ${oi})" id="label_${idx}_${oi}">
+                <input type="radio" name="soal${idx}" id="${id}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          div.innerHTML = `
+            <div class="pertanyaan">
+              <span class="soal-num">${idx + 1}</span>
+              <span>${soal.pertanyaan}</span>
+            </div>
+            <div class="opsi-kuis">${opsiHtml}</div>
+            <div class="jawaban-feedback" id="feedback_soal_${idx}"></div>
+          `;
+
+          elSoalContainer.appendChild(div);
+        });
+      }
+
+      window.pilihJawabanKuis = function(soalIndex, optIndex) {
+        if (kuisSubmitted) return;
+        const soalDiv = document.querySelector(`.soal-kuis[data-index="${soalIndex}"]`);
+        const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+
+        labels.forEach((label, idx) => {
+          label.classList.remove('selected');
+          if (idx === optIndex) {
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
+          }
+        });
+
+        jawabanKuis[soalIndex] = optIndex;
+        updateProgress();
+      };
+
+      function updateProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(jawabanKuis).length;
+        elTesProgress.textContent = `Terjawab: ${answered} / ${total}`;
+      }
+
+      // ============================================
+      // PERIKSA KUIS
+      // ============================================
+      elBtnPeriksaKuis.addEventListener('click', function() {
+        if (kuisSubmitted) return;
+        const total = soalData.length;
+        const answered = Object.keys(jawabanKuis).length;
+
+        if (answered < total) {
+          alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal dulu ya!`);
+          return;
+        }
+
+        let correct = 0;
+        soalData.forEach((soal, idx) => {
+          if (jawabanKuis[idx] === soal.kunci) correct++;
+        });
+
+        kuisBenar = correct;
+        kuisSubmitted = true;
+        lulus = correct >= AMBANG_LULUS;
+
+        soalData.forEach((soal, idx) => {
+          const selected = jawabanKuis[idx];
+          const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
+          const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+          const feedback = document.getElementById(`feedback_soal_${idx}`);
+          const isThisCorrect = (selected === soal.kunci);
+
+          labels.forEach((label, oi) => {
+            label.classList.add('disabled');
+            label.querySelector('input').disabled = true;
+
+            if (oi === selected) {
+              if (isThisCorrect) {
+                label.classList.add('correct-answer');
+                label.querySelector('.check-icon').textContent = '✅';
+              } else {
+                label.classList.add('wrong-answer');
+                label.querySelector('.check-icon').textContent = '❌';
+              }
+            }
+
+            // Kunci hanya ditampilkan jika LULUS
+            if (lulus && oi === soal.kunci && !isThisCorrect) {
+              label.classList.add('correct-answer');
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+          });
+
+          if (isThisCorrect) {
+            soalDiv.classList.add('correct');
+            feedback.className = 'jawaban-feedback benar';
+            feedback.innerHTML = `✅ <strong>Benar!</strong>`;
+          } else {
+            soalDiv.classList.add('wrong');
+            feedback.className = 'jawaban-feedback salah';
+            if (lulus) {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">${soal.opsi[soal.kunci]}</span><br>${soal.penjelasan}`;
+            } else {
+              feedback.innerHTML = `❌ <strong>Kurang tepat.</strong> Coba baca kembali materi dan pikirkan jawaban yang benar.`;
+            }
+          }
+        });
+
+        elBtnPeriksaKuis.disabled = true;
+        elBtnPeriksaKuis.textContent = `📊 Skor: ${correct}/${total}`;
+
+        if (lulus) {
+          tampilkanSertifikat();
+        } else {
+          tampilkanGagal();
+        }
+
+        // Simpan nilai (baik lulus maupun tidak)
+        simpanNilaiKuis();
+      });
+
+      // ============================================
+      // SERTIFIKAT
+      // ============================================
+      function tampilkanSertifikat() {
+        const total = soalData.length;
+        const namaGabung = formatNamaSiswa(daftarSiswa);
+        const kelas = elInputKelas.value.trim();
+        const sekolah = elInputSekolah.value.trim();
+
+        // Level & badge
+        let badgeHtml = '';
+        let badgeClass = 'sf-level-badge ';
+        if (kuisBenar === 10) {
+          badgeHtml = '🏆 Ahli — Emas';
+          badgeClass += 'emas';
+        } else if (kuisBenar === 9) {
+          badgeHtml = '🥈 Mahir — Perak';
+          badgeClass += 'perak';
+        } else if (kuisBenar === 8) {
+          badgeHtml = '🥉 Terampil — Perunggu';
+          badgeClass += 'perunggu';
+        } else {
+          badgeHtml = '📜 Cukup — Dasar';
+          badgeClass += 'dasar';
+        }
+
+        elSfBadge.className = badgeClass;
+        elSfBadge.textContent = badgeHtml;
+        elSfNama.textContent = namaGabung;
+        elSfKelas.textContent = kelas + ' · ' + sekolah;
+        elSfSkor.innerHTML = 'Skor: <strong>' + kuisBenar + ' / ' + total + '</strong>';
+
+        // Tanggal
+        const now = new Date();
+        const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        elSfTanggal.textContent = now.getDate() + ' ' + bulan[now.getMonth()] + ' ' + now.getFullYear();
+
+        elSertifikatWrapper.classList.add('show');
+        elBtnUlangiKuis.classList.add('show');
+        elGagalBox.classList.remove('show');
+
+        setTimeout(() => {
+          elSertifikatWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      }
+
+      // ============================================
+      // GAGAL
+      // ============================================
+      function tampilkanGagal() {
+        elGagalDesc.innerHTML =
+          `Kamu baru menjawab benar <strong>${kuisBenar}</strong> dari ${soalData.length} soal.<br>` +
+          `Minimal ${AMBANG_LULUS} soal benar untuk lulus. Pelajari kembali materinya, lalu klik ` +
+          `<strong>🔄 Ulangi Kuis Akhir</strong> di bawah.`;
+        elGagalBox.classList.add('show');
+        elBtnUlangiKuis.classList.add('show');
+        elSertifikatWrapper.classList.remove('show');
+
+        setTimeout(() => {
+          elGagalBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      }
+
+      // ============================================
+      // ULANGI KUIS
+      // ============================================
+      elBtnUlangiKuis.addEventListener('click', function() {
+        jawabanKuis = {};
+        kuisSubmitted = false;
+        kuisBenar = 0;
+        kuisSelesai = false;
+        lulus = false;
+        kirimSukses = false;
+
+        elBtnPeriksaKuis.disabled = false;
+        elBtnPeriksaKuis.textContent = '✅ Periksa Jawaban';
+        elBtnUlangiKuis.classList.remove('show');
+        elSertifikatWrapper.classList.remove('show');
+        elGagalBox.classList.remove('show');
+        elStatusKirim.classList.remove('show');
+
+        renderSoal();
+        updateProgress();
+
+        elAreaKuis.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      // ============================================
+      // SIMPAN NILAI KUIS (skor_kuis + nilai_akhir)
+      // ============================================
+      async function simpanNilaiKuis() {
+        const skorKuis = Math.round(40 + (kuisBenar / soalData.length) * 60);
+
+        // Hitung nilai akhir: rata-rata skor a-e × 0.5 + skor kuis × 0.5
+        let nilaiAkhir = skorKuis;
+        try {
+          const prev = JSON.parse(localStorage.getItem('labtik2_progress') || '{}');
+          const arrAktivitas = [
+            Number(prev.skor) || 0,
+            Number(prev.skorBagian2) || 0,
+            Number(prev.skorBagian3) || 0,
+            Number(prev.skorBagian4) || 0,
+            Number(prev.skorBagian5) || 0
+          ].filter(v => v > 0);
+          if (arrAktivitas.length > 0) {
+            const rata = arrAktivitas.reduce((a, b) => a + b, 0) / arrAktivitas.length;
+            nilaiAkhir = Math.round((rata * 0.5) + (skorKuis * 0.5));
+          }
+        } catch (e) {}
+
+        // Simpan ke localStorage
+        try {
+          const prev = JSON.parse(localStorage.getItem('labtik2_progress') || '{}');
+          prev.skorKuis = skorKuis;
+          prev.nilaiAkhir = nilaiAkhir;
+          prev.lulus = lulus;
+          localStorage.setItem('labtik2_progress', JSON.stringify(prev));
+        } catch (e) {}
+
+        // Kirim ke sheet (Progress)
+        elStatusKirim.className = 'status-kirim info show';
+        elStatusSpinner.style.display = 'inline-block';
+        elStatusKirimText.innerHTML = `Mengirim nilai akhir (${nilaiAkhir})...`;
+
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
+
+        if (kirimTimeoutId) { clearTimeout(kirimTimeoutId); kirimTimeoutId = null; }
+        let selesaiKirim = false;
+
+        kirimTimeoutId = setTimeout(() => {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          tampilkanGagalKirim(nilaiAkhir, '⏱️ Koneksi lambat atau terputus.');
+        }, 12000);
+
+        try {
+          const hasil = await window.dutaSimpanProgress(
+            MODUL_KEY, 'f',
+            { kuis: skorKuis, e: 0 },
+            nilaiAkhir
+          );
+
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+
+          if (hasil && hasil.ok) {
+            kirimSukses = true;
+            elStatusKirim.className = 'status-kirim success show';
+            elStatusSpinner.style.display = 'none';
+            elStatusKirimText.innerHTML = `✅ Nilai akhir (<strong>${nilaiAkhir}</strong>) berhasil disimpan.`;
+          } else {
+            tampilkanGagalKirim(nilaiAkhir, (hasil && hasil.error) || 'Terjadi kesalahan.');
+          }
+        } catch (err) {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+          tampilkanGagalKirim(nilaiAkhir, err.message || 'Gagal terhubung.');
+        }
+      }
+
+      function tampilkanGagalKirim(skor, pesan) {
+        elStatusKirim.className = 'status-kirim error show';
+        elStatusSpinner.style.display = 'none';
+        elStatusKirimText.innerHTML = `⚠️ ${pesan} Nilai: <strong>${skor}</strong>. Klik "Ulangi Kirim" untuk mencoba lagi.`;
+
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
+
+        const btnRetry = document.createElement('button');
+        btnRetry.className = 'btn-retry';
+        btnRetry.type = 'button';
+        btnRetry.textContent = '🔄 Ulangi Kirim';
+        btnRetry.addEventListener('click', function() {
+          kirimSukses = false;
+          simpanNilaiKuis();
+        });
+        elStatusKirim.appendChild(btnRetry);
+      }
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        // Pre-fill dari localStorage (data dari Bagian 1)
+        let adaData = false;
+        try {
+          const siswa = JSON.parse(localStorage.getItem('labtik2_siswa') || '[]');
+          if (Array.isArray(siswa) && siswa.length > 0) {
+            const jml = Math.min(siswa.length, 5);
+            document.getElementById('jumlahSiswa').value = String(jml);
+            updateFormSiswa(jml);
+
+            siswa.forEach((s, i) => {
+              const inp = document.getElementById('namaSiswa_' + i);
+              if (inp) inp.value = s.nama || '';
+            });
+
+            if (siswa[0]) {
+              document.getElementById('inputKelas').value = siswa[0].kelas || '';
+              document.getElementById('inputSekolah').value = siswa[0].sekolah || '';
+            }
+
+            cekFormSiswa();
+            adaData = true;
+          }
+        } catch (e) {}
+
+        // Fallback kalau tidak ada data
+        if (!adaData) {
+          updateFormSiswa('1');
+        }
+      });
+
+      console.log('✅ TIK2 Bagian 6: Kuis Akhir & Sertifikat siap! (v1)');
+    })();
+  </script>
+
+</body>
+</html>

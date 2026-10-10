@@ -3,49 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Set Logic Lab · Bagian 1: Mengenal Anggota Himpunan · Informatika DUTA</title>
+  <title>Set Logic Lab · Bagian 1: Mengenal Kelompok · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
   <style>
-    /* ===== MATERI RINGKAS ===== */
-    .materi-ringkas {
-      max-width: 820px; margin: 0 auto 1.5rem;
-      background: #f8f4ef; border-radius: 16px;
-      padding: 1.5rem 1.8rem; border-left: 6px solid #f26d8a;
-      border: 2px solid #e5dbd0;
+    /* ===== PROGRESS BAR VISUAL (LAPIS) ===== */
+    .progress-lapis {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.4rem; margin: 1.2rem auto 1.5rem;
+      flex-wrap: wrap; max-width: 700px;
     }
-    .materi-ringkas h2 {
-      font-size: 1.3rem; font-weight: 700; color: #3b2b1e;
-      margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;
+    .progress-lapis .pl-step {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.45rem 1rem; border-radius: 30px;
+      background: #f5ede6; border: 2px solid #e5dbd0;
+      font-size: 0.78rem; font-weight: 700; color: #7a6656;
+      transition: all 0.3s ease; white-space: nowrap;
     }
-    .materi-ringkas h2 .badge {
-      background: #f26d8a; color: #fff; font-size: 0.7rem;
-      padding: 0.15rem 0.6rem; border-radius: 20px; font-weight: 600;
-      letter-spacing: 0.5px;
+    .progress-lapis .pl-step.active {
+      background: linear-gradient(135deg, #f26d8a, #b07be0);
+      border-color: #f26d8a; color: #fff;
+      box-shadow: 0 4px 12px rgba(242, 109, 138, 0.25);
     }
-    .materi-ringkas h3 {
-      font-size: 1.05rem; font-weight: 600; color: #4d3829; margin: 1rem 0 0.4rem;
+    .progress-lapis .pl-step.done {
+      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
     }
-    .materi-ringkas p {
-      font-size: 0.92rem; line-height: 1.7; color: #2f2822; margin-bottom: 0.6rem;
+    .progress-lapis .pl-step .pl-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
     }
-    .materi-ringkas ul, .materi-ringkas ol {
-      margin: 0.3rem 0 0.8rem 1.5rem; font-size: 0.9rem;
+    .progress-lapis .pl-sep {
+      color: #c79bd9; font-weight: 700; font-size: 0.9rem;
     }
-    .materi-ringkas li { margin-bottom: 0.25rem; line-height: 1.6; }
-    .materi-ringkas .info-box {
-      background: #fff; border-radius: 12px; padding: 0.8rem 1.2rem;
-      border: 2px solid #e5dbd0; margin: 0.6rem 0;
-      font-size: 0.88rem; line-height: 1.6;
-    }
-    .materi-ringkas .info-box strong { color: #4d3829; }
-    .materi-ringkas .link-materi {
-      display: inline-block; margin-top: 0.5rem; color: #5c4638;
-      font-size: 0.85rem; text-decoration: none; font-weight: 600;
-      border-bottom: 2px dotted #bfaa9a; transition: all 0.2s ease;
-    }
-    .materi-ringkas .link-materi:hover { color: #4d3829; border-bottom-color: #7a5f4c; }
 
-    .aktivitas-wrapper { max-width: 1000px; margin: 0 auto; }
+    /* ===== SIMULASI 3 LAPIS ===== */
+    .lapis-header {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.7rem 1.2rem; margin: 1.2rem 0 1rem;
+      border-radius: 14px; font-weight: 700;
+      font-size: 0.95rem; color: #fff;
+    }
+    .lapis-header.lapis-1 { background: linear-gradient(135deg, #4fb0c6, #3a8aa0); }
+    .lapis-header.lapis-2 { background: linear-gradient(135deg, #f4b942, #d4a030); }
+    .lapis-header.lapis-3 { background: linear-gradient(135deg, #6ecb8f, #4fa86a); }
+    .lapis-header .lapis-num {
+      background: rgba(255,255,255,0.3); padding: 0.15rem 0.7rem;
+      border-radius: 20px; font-size: 0.75rem; letter-spacing: 0.5px;
+    }
 
     /* ===== FORM IDENTITAS SISWA ===== */
     .form-siswa-box {
@@ -134,7 +139,7 @@
     }
     .form-error.show { display: block; animation: slideIn 0.3s ease; }
     .btn-mulai {
-      display: inline-block; padding: 1rem 3rem; font-size: 1.1rem;
+      padding: 1rem 3rem; font-size: 1.1rem;
       font-weight: 700; color: #fff;
       background: linear-gradient(135deg, #f26d8a, #b07be0);
       border-radius: 50px; border: none; cursor: pointer;
@@ -149,46 +154,6 @@
     }
     .btn-mulai:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
     .btn-wrapper-mulai { text-align: center; margin-top: 1.2rem; }
-
-    /* ===== STEP INDICATOR ===== */
-    .step-indicator {
-      display: flex; justify-content: space-between; align-items: center;
-      margin: 1.5rem 0 2rem 0; position: relative;
-      padding: 0 0.5rem; flex-wrap: wrap; gap: 0.3rem;
-    }
-    .step-indicator::before {
-      content: ''; position: absolute; top: 50%;
-      left: 30px; right: 30px; height: 3px;
-      background: #e5dbd0; transform: translateY(-50%); z-index: 0;
-    }
-    .step-dot {
-      display: flex; flex-direction: column; align-items: center;
-      z-index: 1; cursor: pointer; background: transparent;
-      border: none; padding: 0; font-family: inherit;
-      flex: 1; min-width: 50px;
-    }
-    .step-dot .circle {
-      width: 38px; height: 38px; border-radius: 50%;
-      background: #f5ede6; border: 3px solid #d9cdbf;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 0.8rem; color: #7a6656;
-      transition: all 0.3s ease;
-    }
-    .step-dot.active .circle {
-      background: #f26d8a; border-color: #f26d8a;
-      color: #fff; transform: scale(1.1);
-      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.3);
-    }
-    .step-dot.completed .circle {
-      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
-    }
-    .step-dot .label {
-      font-size: 0.55rem; margin-top: 0.3rem; color: #7a6656;
-      text-align: center; max-width: 70px; font-weight: 500;
-    }
-    .step-dot.active .label { color: #3b2b1e; font-weight: 600; }
-    .step-dot.locked .circle { opacity: 0.4; cursor: not-allowed; }
-    .step-dot.locked .label { opacity: 0.4; }
 
     /* ===== AREA SIMULASI ===== */
     #area-simulasi { display: none; margin-top: 0.5rem; }
@@ -236,96 +201,59 @@
       border-radius: 10px; transition: width 0.5s ease; width: 0%;
     }
 
-    /* ===== DROP ZONES ===== */
-    .drop-zones {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 1.5rem; margin: 1.5rem 0;
-    }
-    @media (max-width: 680px) { .drop-zones { grid-template-columns: 1fr; } }
-
-    .drop-zone {
-      background: #fffffffa; border: 3px dashed #dbb9a6;
-      border-radius: 20px; padding: 1.5rem 1rem;
-      min-height: 200px; transition: all 0.3s ease; position: relative;
-    }
-    .drop-zone.drag-over {
-      border-color: #6b4f3a; background: #f5ede6; transform: scale(1.02);
-    }
-    .drop-zone.correct {
-      border-color: #2d7d46; background: #e8f5ee;
-    }
-    .drop-zone.wrong {
-      border-color: #b33c3c; background: #fde8e8;
-      animation: shake 0.4s ease;
-    }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-12px); }
-      40% { transform: translateX(12px); }
-      60% { transform: translateX(-8px); }
-      80% { transform: translateX(8px); }
-    }
-    .drop-zone .zone-title {
-      font-weight: 700; color: #4d3829; font-size: 1.05rem;
-      text-align: center; margin-bottom: 0.8rem;
-      padding-bottom: 0.5rem; border-bottom: 2px solid #e5dbd0;
-    }
-    .drop-zone .zone-title .badge {
-      background: #4d3829; color: #fff;
-      padding: 0.1rem 0.6rem; border-radius: 20px;
-      font-size: 0.7rem; margin-left: 0.3rem;
-    }
-    .drop-zone .zone-items {
-      display: flex; flex-wrap: wrap; gap: 0.6rem;
-      min-height: 80px; padding: 0.5rem; align-content: flex-start;
-    }
-    .drop-zone .zone-items .item-placed {
-      background: #4d3829; color: #fff;
-      padding: 0.4rem 1rem; border-radius: 30px;
-      font-size: 0.9rem; font-weight: 500;
-      animation: popIn 0.3s ease; cursor: default; user-select: none;
-    }
-    @keyframes popIn {
-      0% { transform: scale(0.5); opacity: 0; }
-      70% { transform: scale(1.1); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    .drop-zone .zone-hint {
-      font-size: 0.8rem; color: #a08674;
-      text-align: center; margin-top: 0.5rem; font-style: italic;
-    }
-
-    /* ===== ITEMS POOL ===== */
-    .items-pool {
-      background: #f8f3ee; border-radius: 20px;
-      padding: 1.5rem; margin: 1rem 0 1.5rem 0;
+    /* ===== VENN INTERAKTIF ===== */
+    .venn-box {
+      position: relative; width: 100%; max-width: 640px;
+      aspect-ratio: 1 / 0.82; margin: 1rem auto;
+      background: #fcfaf7; border-radius: 16px;
       border: 2px solid #e5dbd0;
     }
-    .items-pool .pool-title {
+    .venn-box svg { width: 100%; height: 100%; display: block; }
+
+    /* ===== KARTU NAMA ===== */
+    .pool-kartu {
+      background: #f8f3ee; border-radius: 16px;
+      padding: 1.2rem; margin: 1rem 0 1.5rem 0;
+      border: 2px solid #e5dbd0;
+    }
+    .pool-kartu .pool-title {
       font-weight: 600; color: #4d3829;
       margin-bottom: 0.8rem; font-size: 0.95rem;
     }
-    .items-pool .pool-items {
-      display: flex; flex-wrap: wrap; gap: 0.8rem;
+    .pool-kartu .pool-items {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
     }
-    .item-draggable {
-      background: #fff; padding: 0.5rem 1.2rem;
+    .kartu-nama {
+      background: #fff; padding: 0.5rem 1.1rem;
       border-radius: 30px; border: 2px solid #dbb9a6;
-      font-size: 0.95rem; font-weight: 500; color: #2f2822;
+      font-size: 0.9rem; font-weight: 600; color: #2f2822;
       cursor: pointer; transition: all 0.2s ease;
       user-select: none; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-    .item-draggable:hover {
+    .kartu-nama:hover {
       transform: translateY(-2px) scale(1.04);
       box-shadow: 0 6px 16px rgba(0,0,0,0.08);
       border-color: #6b4f3a;
     }
-    .item-draggable.selected {
+    .kartu-nama.selected {
       background: #f26d8a; color: #fff; border-color: #f26d8a;
       transform: scale(1.06);
       box-shadow: 0 6px 18px rgba(242, 109, 138, 0.35);
     }
-    .item-draggable.placed { display: none; }
+    .kartu-nama.placed { display: none; }
+
+    /* ===== ZONA LINGKARAN ===== */
+    .lingkaran-label {
+      font-size: 0.85rem; font-weight: 700;
+      fill: #3b2b1e; pointer-events: none;
+    }
+    .lingkaran-label-small {
+      font-size: 0.65rem; fill: #5c4638;
+      pointer-events: none; font-style: italic;
+    }
+    .lingkaran { cursor: pointer; transition: all 0.3s ease; }
+    .lingkaran:hover { opacity: 0.85; }
+    .lingkaran.target { stroke-width: 5; stroke-dasharray: 8 4; }
 
     /* ===== FEEDBACK ===== */
     .feedback-box {
@@ -335,15 +263,10 @@
       display: none; animation: fadeIn 0.4s ease;
     }
     .feedback-box.show { display: block; }
-    .feedback-box.success {
-      border-color: #2d7d46; background: #e8f5ee;
-    }
-    .feedback-box.error {
-      border-color: #b33c3c; background: #fde8e8;
-    }
-    .feedback-box.info {
-      border-color: #f26d8a; background: #fdf2f5;
-    }
+    .feedback-box.success { border-color: #2d7d46; background: #e8f5ee; }
+    .feedback-box.error { border-color: #b33c3c; background: #fde8e8; }
+    .feedback-box.info { border-color: #f26d8a; background: #fdf2f5; }
+    .feedback-box.warn { border-color: #d4a030; background: #fff8e6; }
     .feedback-box .fb-icon { font-size: 1.5rem; margin-right: 0.5rem; }
     .feedback-box .fb-text { color: #2f2822; line-height: 1.6; }
     .feedback-box .fb-text strong { color: #4d3829; }
@@ -352,11 +275,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== GAME ACTIONS ===== */
-    .game-actions {
-      display: flex; flex-wrap: wrap; gap: 0.6rem;
-      justify-content: center; margin-top: 1rem;
-    }
+    /* ===== TOMBOL ===== */
     .btn-game {
       padding: 0.6rem 1.8rem; border-radius: 30px; border: none;
       font-weight: 700; font-size: 0.9rem;
@@ -376,9 +295,218 @@
       background: #f5ede6; color: #4d3829; border: 2px solid #d9cdbf;
     }
     .btn-game.secondary:hover { background: #e8dcd0; transform: translateY(-2px); }
-    .btn-game:disabled {
-      opacity: 0.5; cursor: not-allowed; transform: none !important;
+    .btn-game:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+    .game-actions {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      justify-content: center; margin-top: 1rem;
     }
+
+    /* ===== MOMEN MINDFUL ===== */
+    .mindful-box {
+      background: linear-gradient(135deg, #e6f4ff, #f0f9ff);
+      border: 2px dashed #4fb0c6;
+      border-radius: 16px; padding: 1rem 1.5rem;
+      margin: 1.2rem 0; display: none;
+    }
+    .mindful-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .mindful-box .mb-icon { font-size: 1.4rem; margin-right: 0.4rem; }
+    .mindful-box .mb-title {
+      font-weight: 700; color: #1f6b7d; font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+    .mindful-box .mb-text {
+      font-size: 0.92rem; color: #2f2822; line-height: 1.6;
+      margin-bottom: 0.6rem;
+    }
+    .mindful-box textarea {
+      width: 100%; padding: 0.6rem 0.9rem;
+      border: 2px solid #b8d4e8; border-radius: 10px;
+      font-family: inherit; font-size: 0.9rem;
+      color: #2f2822; background: #fff; resize: vertical;
+      min-height: 60px; outline: none;
+    }
+    .mindful-box textarea:focus {
+      border-color: #4fb0c6;
+      box-shadow: 0 0 0 3px rgba(79, 176, 198, 0.15);
+    }
+
+    /* ===== TANTANGAN ===== */
+    .tantangan-list {
+      display: flex; flex-direction: column; gap: 0.8rem;
+      margin: 1rem 0;
+    }
+    .tantangan-item {
+      background: #fff; border-radius: 14px;
+      padding: 1rem 1.3rem; border: 2px solid #e5dbd0;
+      transition: all 0.3s ease;
+    }
+    .tantangan-item.aktif {
+      border-color: #f4b942; background: #fffbf0;
+      box-shadow: 0 4px 14px rgba(244, 185, 66, 0.15);
+    }
+    .tantangan-item.selesai {
+      border-color: #8aaa7a; background: #f0f8eb;
+    }
+    .tantangan-item .t-header {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-weight: 700; color: #3b2b1e; margin-bottom: 0.4rem;
+    }
+    .tantangan-item .t-num {
+      background: #4d3829; color: #fff;
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; flex-shrink: 0;
+    }
+    .tantangan-item .t-text {
+      font-size: 0.92rem; color: #2f2822; line-height: 1.6;
+      margin-bottom: 0.6rem;
+    }
+    .tantangan-item .t-input-row {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      align-items: center;
+    }
+    .tantangan-item .t-input-row input {
+      flex: 1; min-width: 120px;
+      padding: 0.5rem 0.9rem; border-radius: 10px;
+      border: 2px solid #d9cdbf; font-family: inherit;
+      font-size: 0.9rem; color: #2f2822; background: #fcfaf7;
+      outline: none;
+    }
+    .tantangan-item .t-input-row input:focus {
+      border-color: #6b4f3a; background: #fff;
+    }
+    .tantangan-item .t-input-row button {
+      padding: 0.5rem 1.4rem; border-radius: 20px;
+      border: none; font-weight: 700; font-size: 0.85rem;
+      cursor: pointer; background: #4d3829; color: #fff;
+      font-family: inherit; transition: all 0.2s ease;
+    }
+    .tantangan-item .t-input-row button:hover:not(:disabled) {
+      background: #6b4f3a; transform: translateY(-1px);
+    }
+    .tantangan-item .t-input-row button:disabled {
+      opacity: 0.5; cursor: not-allowed;
+    }
+    .tantangan-item .t-feedback {
+      margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+      border-radius: 8px; font-size: 0.85rem;
+      line-height: 1.5; display: none;
+    }
+    .tantangan-item .t-feedback.show { display: block; }
+    .tantangan-item .t-feedback.ok {
+      background: #d4e8cb; color: #3d6b2c;
+      border-left: 4px solid #6b8c5e;
+    }
+    .tantangan-item .t-feedback.hint {
+      background: #fff3d6; color: #8a5e00;
+      border-left: 4px solid #f4b942;
+    }
+    .tantangan-item .t-feedback.no {
+      background: #f5d6d0; color: #a84a3a;
+      border-left: 4px solid #d97a6a;
+    }
+
+    /* ===== PENAMAAN (LAPIS 3) ===== */
+    .penamaan-box {
+      background: linear-gradient(135deg, #e8f5ee, #d4ebd8);
+      border-radius: 16px; padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0; border: 2px solid #8aaa7a;
+      display: none;
+    }
+    .penamaan-box.show { display: block; animation: fadeIn 0.6s ease; }
+    .penamaan-box h3 {
+      font-size: 1.1rem; color: #2d5a1e; margin-bottom: 0.6rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .penamaan-box .notasi-box {
+      background: #fff; border-radius: 12px;
+      padding: 0.8rem 1.2rem; margin: 0.6rem 0;
+      border: 2px dashed #8aaa7a;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem; color: #2f2822; line-height: 1.7;
+    }
+    .penamaan-box .notasi-box strong { color: #2d5a1e; }
+    .penamaan-box .koneksi {
+      background: #fff8e6; border-left: 5px solid #f4b942;
+      border-radius: 10px; padding: 0.8rem 1.2rem;
+      margin-top: 0.8rem; font-size: 0.9rem;
+      color: #5c3400; line-height: 1.6;
+    }
+    .penamaan-box .koneksi strong { color: #8a5e00; }
+
+    /* Link materi lengkap */
+    .link-materi-bawah {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      margin: 1rem auto 0;
+      padding: 0.7rem 1.8rem; border-radius: 30px;
+      background: #fff; color: #5c2f8a;
+      border: 2px solid #b07be0; text-decoration: none;
+      font-weight: 700; font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    .link-materi-bawah:hover {
+      background: #f0e6ff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(176, 123, 224, 0.25);
+    }
+    .link-materi-wrapper { text-align: center; margin-top: 1rem; }
+
+    /* ===== KUIS KILAT ===== */
+    .kuis-kilat-box {
+      background: #fff; border-radius: 16px;
+      padding: 1.3rem 1.6rem; margin: 1.5rem 0;
+      border: 2px solid #f26d8a;
+      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.1);
+      display: none;
+    }
+    .kuis-kilat-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .kuis-kilat-box .kk-title {
+      font-weight: 700; color: #a01746; font-size: 1rem;
+      margin-bottom: 0.8rem; display: flex;
+      align-items: center; gap: 0.5rem;
+    }
+    .kuis-kilat-box .kk-title .badge {
+      background: #f26d8a; color: #fff; font-size: 0.65rem;
+      padding: 0.15rem 0.6rem; border-radius: 20px;
+    }
+    .kuis-kilat-box .kk-soal {
+      background: #fdf2f5; border-radius: 10px;
+      padding: 0.8rem 1.1rem; margin-bottom: 0.8rem;
+    }
+    .kuis-kilat-box .kk-soal .kk-q {
+      font-weight: 600; color: #3b2b1e;
+      font-size: 0.92rem; margin-bottom: 0.5rem;
+    }
+    .kuis-kilat-box .kk-opsi {
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .kuis-kilat-box .kk-opsi label {
+      display: flex; align-items: center; gap: 0.5rem;
+      cursor: pointer; font-size: 0.87rem; color: #3d2c1f;
+      padding: 0.4rem 0.8rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; transition: all 0.15s;
+    }
+    .kuis-kilat-box .kk-opsi label:hover:not(.disabled) {
+      background: #fdf2f5; border-color: #f26d8a;
+    }
+    .kuis-kilat-box .kk-opsi label.disabled { cursor: default; }
+    .kuis-kilat-box .kk-opsi label.benar {
+      border-color: #8aaa7a; background: #e8f5e0;
+    }
+    .kuis-kilat-box .kk-opsi label.salah {
+      border-color: #d4a0a0; background: #f5e0e0;
+    }
+    .kuis-kilat-box .kk-opsi input[type="radio"] { accent-color: #f26d8a; }
+    .kuis-kilat-box .kk-opsi .check-icon {
+      margin-left: auto; font-size: 0.9rem;
+    }
+    .kuis-kilat-box .kk-hasil {
+      background: #f5ede6; border-radius: 10px;
+      padding: 0.7rem 1rem; margin-top: 0.6rem;
+      font-size: 0.88rem; color: #4d3829;
+      display: none; text-align: center; font-weight: 600;
+    }
+    .kuis-kilat-box .kk-hasil.show { display: block; }
 
     /* ===== TES PEMAHAMAN ===== */
     .tes-section {
@@ -477,11 +605,8 @@
     .btn-submit-tes:disabled {
       opacity: 0.5; cursor: not-allowed; transform: none !important;
     }
-
-    /* Tombol ulangi tes */
     .btn-ulangi-tes {
-      display: none;
-      margin: 1rem auto 0;
+      display: none; margin: 1rem auto 0;
       padding: 0.7rem 2rem; border-radius: 30px;
       background: #fff; color: #a01746;
       border: 2px solid #f26d8a;
@@ -495,7 +620,6 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 14px rgba(242, 109, 138, 0.20);
     }
-
     .hasil-tes {
       display: none; margin-top: 1.2rem; padding: 1.2rem;
       background: #fdf2f5; border-radius: 14px;
@@ -514,6 +638,50 @@
       font-size: 0.9rem; color: #5c4638;
       margin-bottom: 0.8rem; line-height: 1.5;
     }
+
+    /* ===== REFLEKSI 4F ===== */
+    .refleksi-box {
+      background: linear-gradient(135deg, #f0e6ff, #e6f0ff);
+      border: 2px solid #b07be0; border-radius: 16px;
+      padding: 1.3rem 1.6rem; margin: 1.5rem 0;
+      display: none;
+    }
+    .refleksi-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .refleksi-box h3 {
+      color: #5c2f8a; font-size: 1.05rem; margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .refleksi-box .refleksi-item { margin-bottom: 0.8rem; }
+    .refleksi-box .refleksi-item label {
+      display: block; font-weight: 700;
+      color: #5c2f8a; font-size: 0.88rem; margin-bottom: 0.3rem;
+    }
+    .refleksi-box .refleksi-item label .tag {
+      background: #b07be0; color: #fff;
+      padding: 0.1rem 0.6rem; border-radius: 20px;
+      font-size: 0.65rem; margin-right: 0.4rem;
+    }
+    .refleksi-box textarea {
+      width: 100%; padding: 0.6rem 0.9rem;
+      border: 2px solid #d4c0e8; border-radius: 10px;
+      font-family: inherit; font-size: 0.88rem;
+      color: #2f2822; background: #fff;
+      resize: vertical; min-height: 50px; outline: none;
+    }
+    .refleksi-box textarea:focus {
+      border-color: #b07be0;
+      box-shadow: 0 0 0 3px rgba(176, 123, 224, 0.15);
+    }
+    .refleksi-box .exit-ticket {
+      background: #fff; border-radius: 12px;
+      padding: 0.9rem 1.2rem; margin-top: 1rem;
+      border: 2px dashed #b07be0;
+    }
+    .refleksi-box .exit-ticket .et-title {
+      font-weight: 700; color: #5c2f8a;
+      font-size: 0.9rem; margin-bottom: 0.4rem;
+    }
+    .refleksi-box .exit-ticket textarea { border-color: #d4c0e8; }
 
     /* ===== STATUS KIRIM ===== */
     .status-kirim {
@@ -535,18 +703,12 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .status-kirim .btn-retry {
-      margin-left: auto;
-      padding: 0.35rem 1rem;
-      border-radius: 20px;
-      border: 2px solid currentColor;
-      background: transparent;
-      color: inherit;
-      font-weight: 700;
-      font-size: 0.82rem;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.15s ease;
-      white-space: nowrap;
+      margin-left: auto; padding: 0.35rem 1rem;
+      border-radius: 20px; border: 2px solid currentColor;
+      background: transparent; color: inherit;
+      font-weight: 700; font-size: 0.82rem;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.15s ease; white-space: nowrap;
     }
     .status-kirim .btn-retry:hover {
       background: rgba(255,255,255,0.6);
@@ -577,7 +739,6 @@
     .btn-nav-bawah.primary:hover {
       background: #6b4f3a; border-color: #6b4f3a;
     }
-    .btn-nav-bawah:disabled,
     .btn-nav-bawah.locked {
       opacity: 0.4; cursor: not-allowed;
       transform: none !important; pointer-events: none;
@@ -593,30 +754,29 @@
 
     /* ===== RESPONSIF ===== */
     @media (max-width: 820px) {
-      .step-dot .circle { width: 30px; height: 30px; font-size: 0.7rem; }
-      .step-dot .label { font-size: 0.45rem; max-width: 50px; }
-      .step-indicator::before { left: 15px; right: 15px; }
       .scenario-panel { padding: 1.2rem; }
       .form-siswa-box { padding: 1.2rem 1rem; }
+      .venn-box { max-width: 100%; }
+      .penamaan-box { padding: 1rem 1.2rem; }
+      .kuis-kilat-box { padding: 1rem 1.2rem; }
+      .refleksi-box { padding: 1rem 1.2rem; }
+      .progress-lapis { gap: 0.3rem; }
+      .progress-lapis .pl-step { font-size: 0.7rem; padding: 0.35rem 0.8rem; }
     }
     @media (max-width: 480px) {
-      .step-indicator { flex-wrap: wrap; justify-content: center; gap: 0.2rem; }
-      .step-indicator::before { display: none; }
-      .step-dot { min-width: 35px; flex: unset; }
-      .step-dot .circle { width: 26px; height: 26px; font-size: 0.6rem; }
-      .step-dot .label { display: none; }
       .scenario-panel { padding: 0.8rem; }
       .scenario-panel .scenario-title { font-size: 1.1rem; }
       .nav-bottom { flex-direction: column; align-items: stretch; }
       .btn-nav-bawah { justify-content: center; }
-      .materi-ringkas { padding: 1rem 1.2rem; }
-      .materi-ringkas h2 { font-size: 1.1rem; }
       .soal-kuis { padding: 1rem; }
       .soal-kuis .pertanyaan { font-size: 0.92rem; }
       .soal-kuis .opsi-kuis label { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
       .tes-header { flex-direction: column; align-items: flex-start; }
       .form-siswa-item input[type="text"] { min-width: 100px; }
       .status-kirim .btn-retry { margin-left: 0; width: 100%; text-align: center; }
+      .lapis-header { font-size: 0.85rem; padding: 0.6rem 1rem; }
+      .progress-lapis .pl-step .pl-label { display: none; }
+      .progress-lapis .pl-step { padding: 0.35rem 0.6rem; }
     }
   </style>
 </head>
@@ -629,7 +789,7 @@
       <li><a href="../index.html">Beranda</a></li>
       <li><a href="materibk.html">Berpikir Komputasional</a></li>
       <li><a href="bk4.html">Memodelkan Persoalan Logika</a></li>
-      <li>Bagian 1: Anggota Himpunan</li>
+      <li>Bagian 1: Mengenal Kelompok</li>
     </ol>
   </nav>
 
@@ -637,70 +797,40 @@
     <article class="card">
       <div class="aktivitas-wrapper">
 
-        <div class="bagian-progress">
-          <span class="step active"><span class="num">1</span> Anggota</span>
-          <span class="step"><span class="num">2</span> Venn</span>
-          <span class="step"><span class="num">3</span> Operasi</span>
-          <span class="step"><span class="num">4</span> Model</span>
-          <span class="step"><span class="num">5</span> Boolean</span>
-          <span class="step"><span class="num">6</span> Kuis</span>
-        </div>
-
-        <div class="materi-ringkas">
-          <h2>📖 Materi Singkat <span class="badge">Bagian 1</span></h2>
-
-          <h3>1. Apa Itu Himpunan?</h3>
-          <p>
-            <strong>Himpunan (set)</strong> adalah kumpulan objek-objek yang terdefinisi dengan jelas dan memiliki sifat atau karakteristik yang sama. Objek di dalam himpunan disebut <strong>anggota</strong> atau <strong>elemen</strong>.
-          </p>
-
-          <h3>2. Notasi Himpunan</h3>
-          <p>Himpunan ditulis dengan <strong>huruf kapital</strong> dan anggotanya diapit <strong>kurung kurawal {}</strong>.</p>
-          <ul>
-            <li><strong>A = {1, 2, 3, 4, 5}</strong> → himpunan angka 1 sampai 5</li>
-            <li><strong>B = {apel, jeruk, mangga}</strong> → himpunan nama buah</li>
-            <li><strong>C = {2, 4, 6, 8, ...}</strong> → himpunan bilangan genap</li>
-          </ul>
-
-          <h3>3. Keanggotaan</h3>
-          <p>
-            Simbol <strong>∈</strong> = "anggota dari" &nbsp;·&nbsp; simbol <strong>∉</strong> = "bukan anggota dari"
-          </p>
-          <div class="info-box">
-            <strong>Contoh:</strong> Jika A = {1, 2, 3, 4, 5}, maka<br>
-            • 3 ∈ A (3 adalah anggota A)<br>
-            • 7 ∉ A (7 bukan anggota A)
-          </div>
-
-          <h3>4. Himpunan Semesta</h3>
-          <p>
-            <strong>Himpunan semesta (S)</strong> adalah himpunan yang memuat semua objek yang sedang dibicarakan.
-          </p>
-          <div class="info-box">
-            Contoh: Jika membahas buah, maka S = {apel, jeruk, mangga, pisang, anggur, ...}
-          </div>
-
-          <h3>5. Himpunan Kosong</h3>
-          <p>
-            <strong>Himpunan kosong (∅)</strong> adalah himpunan yang tidak memiliki anggota.
-          </p>
-          <div class="info-box">
-            Contoh: H = {bilangan ganjil yang habis dibagi 2} → H = ∅
-          </div>
-
-          <a href="materibk4.html" class="link-materi">📚 Baca materi lengkap di sini →</a>
+        <!-- ===== PROGRESS BAR VISUAL (LAPIS) ===== -->
+        <div class="progress-lapis" id="progressLapis">
+          <span class="pl-step active" data-step="lapis1">
+            <span class="pl-num">1</span>
+            <span class="pl-label">Menjelajah</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis2">
+            <span class="pl-num">2</span>
+            <span class="pl-label">Tantangan</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis3">
+            <span class="pl-num">3</span>
+            <span class="pl-label">Penamaan</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="tes">
+            <span class="pl-num">4</span>
+            <span class="pl-label">Tes Pemahaman</span>
+          </span>
         </div>
 
         <!-- ===== FORM IDENTITAS SISWA ===== -->
         <div class="form-siswa-box" id="formSiswaBox">
           <div class="form-title">📝 Identitas Siswa</div>
           <div class="form-desc">
-            Isi identitas siswa sebelum memulai aktivitas. Nama akan tercantum pada sertifikat digital di akhir modul.
+            Isi identitas sebelum memulai. Nama akan tercantum di sertifikat digital.
+            Bisa diisi beberapa nama: <em>Budi &amp; Siti &amp; Raka</em>.
           </div>
 
           <div class="form-sekolah-wrapper">
             <label for="inputSekolah">Sekolah:</label>
-            <input type="text" id="inputSekolah" placeholder="SMPN 2 Talegong" maxlength="60" oninput="cekFormSiswa()">
+            <input type="text" id="inputSekolah" placeholder="SMPN 2 Talegong" maxlength="60" autocomplete="off" spellcheck="false" oninput="cekFormSiswa()">
           </div>
 
           <div class="form-jumlah-wrapper">
@@ -718,7 +848,7 @@
 
           <div class="form-kelas-wrapper">
             <label for="inputKelas">Kelas:</label>
-            <input type="text" id="inputKelas" placeholder="Contoh: 7A" maxlength="10" oninput="cekFormSiswa()">
+            <input type="text" id="inputKelas" placeholder="Contoh: 8A" maxlength="10" autocomplete="off" oninput="cekFormSiswa()">
           </div>
 
           <div class="form-error" id="formError">
@@ -734,142 +864,301 @@
 
         <!-- ===== AREA SIMULASI ===== -->
         <div id="area-simulasi">
-
-          <div class="step-indicator" id="stepIndicator">
-            <button class="step-dot active" data-step="0">
-              <span class="circle">1</span>
-              <span class="label">Anggota</span>
-            </button>
-            <button class="step-dot locked" data-step="1">
-              <span class="circle">2</span>
-              <span class="label">Venn</span>
-            </button>
-            <button class="step-dot locked" data-step="2">
-              <span class="circle">3</span>
-              <span class="label">Operasi</span>
-            </button>
-            <button class="step-dot locked" data-step="3">
-              <span class="circle">4</span>
-              <span class="label">Model</span>
-            </button>
-            <button class="step-dot locked" data-step="4">
-              <span class="circle">5</span>
-              <span class="label">Boolean</span>
-            </button>
-            <button class="step-dot locked" data-step="5">
-              <span class="circle">🏆</span>
-              <span class="label">Kuis</span>
-            </button>
-          </div>
-
           <div class="scenario-panel">
-            <div class="scenario-title">🎯 Aktivitas 1: Kelompokkan Anggota Himpunan!</div>
+
+            <div class="scenario-title">🃏 Aktivitas: Kartu Nama Ajaib</div>
             <div class="scenario-story">
-              📖 <strong>Cerita:</strong> Selamat datang di Set Logic Lab! Kamu akan membantu <strong>Professor Set</strong> mengelompokkan benda-benda ke dalam himpunan yang tepat. <strong>Klik</strong> item di bank, lalu <strong>klik</strong> himpunan tujuan!
+			  📖 <strong>Cerita:</strong> Siti, ketua OSIS SMP Nusantara, mendapat data berantakan dari pembina ekstrakurikuler:
+			  <ul style="margin:0.5rem 0 0 1.2rem; font-size:0.9rem; line-height:1.7;">
+				<li><strong>Futsal:</strong> Raka, Budi, Dewi, Aurel, Fajar, Nadia, Bayu, Citra</li>
+				<li><strong>Basket:</strong> Budi, Dewi, Fajar, Gilang, Hana, Raka, Intan</li>
+				<li><strong>Paskibra:</strong> Dewi, Hana, Citra, Raka, Joko, Laras, Budi</li>
+			  </ul>
+			  Bantu Siti memilah siswa ke dalam kelompok yang tepat!
+			</div>
+
+            <!-- ===== LAPIS 1: MENJELAJAH BEBAS ===== -->
+            <div class="lapis-header lapis-1">
+              <span class="lapis-num">LAPIS 1</span>
+              <span>🖐️ Menjelajah Bebas — Coba dan Perhatikan</span>
             </div>
 
-            <!-- Stats -->
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              <strong>Instruksi:</strong> Klik kartu nama di bank, lalu klik lingkaran tujuan (Futsal / Basket / Paskibra). 
+              Tidak ada jawaban salah — coba dulu, dan perhatikan apa yang terjadi.
+            </p>
+
             <div class="stats-bar">
               <div class="stat">
-                <span>✅</span>
-                <span class="label">Tepat:</span>
-                <span class="num benar" id="correctCount">0</span>
-                <span class="label">/</span>
-                <span class="num" id="totalItems">0</span>
-              </div>
-              <div class="stat">
-                <span>❌</span>
-                <span class="label">Salah:</span>
-                <span class="num salah" id="wrongCount">0</span>
-              </div>
-              <div class="stat">
                 <span>🎯</span>
-                <span class="label">Skor:</span>
-                <span class="num" id="skorAktivitas">0</span>
+                <span class="label">Ditempatkan:</span>
+                <span class="num" id="totalDitempatkan">0</span>
+                <span class="label">/</span>
+                <span class="num" id="totalKartu">0</span>
+              </div>
+              <div class="stat">
+                <span>📦</span>
+                <span class="label">Sisa di Bank:</span>
+                <span class="num" id="sisaBank">0</span>
               </div>
             </div>
 
-            <!-- Progress Bar -->
             <div class="progress-bar-container">
               <div class="progress-fill" id="progressFill"></div>
             </div>
 
-            <!-- Drop Zones -->
-            <div class="drop-zones">
-              <div class="drop-zone" id="dropZoneA" data-zone="A">
-                <div class="zone-title">
-                  🍎 Himpunan A <span class="badge">Buah</span>
-                </div>
-                <div class="zone-items" id="zoneAItems"></div>
-                <div class="zone-hint">Klik di sini untuk menempatkan buah</div>
-              </div>
+            <!-- Venn Diagram -->
+            <div class="venn-box">
+              <svg viewBox="0 0 640 520" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="gradF" cx="35%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#f5d4b8" stop-opacity="0.7"/>
+                    <stop offset="100%" stop-color="#e8a87c" stop-opacity="0.4"/>
+                  </radialGradient>
+                  <radialGradient id="gradB" cx="65%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#b8d4f5" stop-opacity="0.7"/>
+                    <stop offset="100%" stop-color="#7cb8e8" stop-opacity="0.4"/>
+                  </radialGradient>
+                  <radialGradient id="gradP" cx="50%" cy="100%" r="50%">
+                    <stop offset="0%" stop-color="#c8f0d4" stop-opacity="0.7"/>
+                    <stop offset="100%" stop-color="#7ce8a8" stop-opacity="0.4"/>
+                  </radialGradient>
+                </defs>
 
-              <div class="drop-zone" id="dropZoneB" data-zone="B">
-                <div class="zone-title">
-                  🐾 Himpunan B <span class="badge">Hewan</span>
-                </div>
-                <div class="zone-items" id="zoneBItems"></div>
-                <div class="zone-hint">Klik di sini untuk menempatkan hewan</div>
-              </div>
+                <rect x="20" y="20" width="600" height="480"
+                      fill="none" stroke="#dbb9a6" stroke-width="3"
+                      stroke-dasharray="8 4" rx="12"/>
+                <text x="40" y="48" font-size="14" font-weight="700" fill="#7a6656">S — Himpunan Semesta</text>
+
+                <ellipse id="lingF" cx="220" cy="230" rx="130" ry="130"
+                         fill="url(#gradF)" stroke="#dbb9a6" stroke-width="3"
+                         class="lingkaran" data-set="F"/>
+                <text x="220" y="115" text-anchor="middle" class="lingkaran-label">Futsal</text>
+
+                <ellipse id="lingB" cx="420" cy="230" rx="130" ry="130"
+                         fill="url(#gradB)" stroke="#b8cfde" stroke-width="3"
+                         class="lingkaran" data-set="B"/>
+                <text x="420" y="115" text-anchor="middle" class="lingkaran-label">Basket</text>
+
+                <ellipse id="lingP" cx="320" cy="370" rx="130" ry="130"
+                         fill="url(#gradP)" stroke="#a8d8b8" stroke-width="3"
+                         class="lingkaran" data-set="P"/>
+                <text x="320" y="490" text-anchor="middle" class="lingkaran-label">Paskibra</text>
+
+                <text x="320" y="180" text-anchor="middle" class="lingkaran-label-small">F ∩ B</text>
+                <text x="220" y="320" text-anchor="middle" class="lingkaran-label-small">F ∩ P</text>
+                <text x="420" y="320" text-anchor="middle" class="lingkaran-label-small">B ∩ P</text>
+                <text x="320" y="290" text-anchor="middle" class="lingkaran-label-small">F ∩ B ∩ P</text>
+
+                <g id="kartuDiF"></g>
+                <g id="kartuDiB"></g>
+                <g id="kartuDiP"></g>
+              </svg>
             </div>
 
-            <!-- Items Pool -->
-            <div class="items-pool">
-              <div class="pool-title">📦 Bank Item (klik untuk memilih)</div>
-              <div class="pool-items" id="itemsPool"></div>
+            <!-- Bank Kartu -->
+            <div class="pool-kartu">
+              <div class="pool-title">📦 Bank Kartu Nama (klik untuk memilih)</div>
+              <div class="pool-items" id="poolItems"></div>
             </div>
 
             <!-- Feedback -->
-            <div class="feedback-box info" id="feedbackBox">
+            <div class="feedback-box info show" id="feedbackBox">
               <span class="fb-icon" id="fbIcon">💡</span>
-              <span class="fb-text" id="fbText">Klik item di bank, lalu klik himpunan tujuan!</span>
+              <span class="fb-text" id="fbText">Klik kartu nama di bank, lalu klik lingkaran tujuan!</span>
             </div>
 
             <div class="game-actions">
-              <button class="btn-game secondary" onclick="resetGame()">🔄 Ulangi</button>
-            </div>
-          </div>
-
-          <!-- ===== TES PEMAHAMAN ===== -->
-          <div class="tes-section" id="tesSection">
-            <div class="tes-header">
-              <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 4 soal pilihan ganda</div>
-              <div class="tes-progress" id="tesProgress">Terjawab: 0 / 4</div>
+              <button class="btn-game secondary" onclick="resetGame()">🔄 Ulangi dari Awal</button>
+              <button class="btn-game primary" id="btnSelesaiLapis1" onclick="selesaiLapis1()" disabled>
+                ✅ Selesai Menjelajah
+              </button>
             </div>
 
-            <div id="soalContainer"></div>
+            <!-- Momen Mindful 1 -->
+            <div class="mindful-box" id="mindful1">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 1</div>
+              <div class="mb-text">
+                <strong>Pola apa yang kamu lihat?</strong> Apa yang terjadi kalau satu nama dimasukkan ke dua lingkaran sekaligus?
+              </div>
+              <textarea id="mindful1Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
 
-            <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
-            <button class="btn-ulangi-tes" id="btnUlangiTes">🔄 Ulangi Tes Pemahaman</button>
           </div>
-
-          <!-- ===== HASIL TES ===== -->
-          <div class="hasil-tes" id="hasilTes">
-            <div class="hasil-icon" id="hasilIcon">🏆</div>
-            <div class="hasil-title" id="hasilTitle">Selamat!</div>
-            <div class="hasil-skor" id="hasilSkor">0 / 4</div>
-            <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 1.</div>
-          </div>
-
-          <!-- Status kirim -->
-          <div class="status-kirim info" id="statusKirim">
-            <span class="spinner" id="statusSpinner"></span>
-            <span id="statusKirimText">Mengirim nilai...</span>
-          </div>
-
         </div><!-- end area-simulasi -->
 
+        <!-- ===== LAPIS 2 ===== -->
+        <div id="areaLapis2" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-2">
+              <span class="lapis-num">LAPIS 2</span>
+              <span>🎯 Tantangan Terarah — Uji Pemahamanmu</span>
+            </div>
+
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              Sekarang kamu akan diberi <strong>3 tantangan</strong>. Jawab dengan teliti! 
+              Sistem hanya memberi umpan balik, bukan jawaban langsung.
+            </p>
+
+            <div class="tantangan-list" id="tantanganList"></div>
+
+            <!-- Momen Mindful 2 -->
+            <div class="mindful-box" id="mindful2" style="display:none;">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 2</div>
+              <div class="mb-text">
+                <strong>Refleksi:</strong> Apa perbedaan antara "nama yang muncul di catatan" dan "nama yang kamu taruh di lingkaran"?
+              </div>
+              <textarea id="mindful2Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis3" onclick="lanjutKeLapis3()" disabled>
+                ➡️ Lanjut ke Penamaan Konsep
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== LAPIS 3: PENAMAAN KONSEP ===== -->
+        <div id="areaLapis3" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-3">
+              <span class="lapis-num">LAPIS 3</span>
+              <span>📖 Penamaan Konsep — Istilah Resmi</span>
+            </div>
+
+            <div class="penamaan-box show">
+              <h3>🏷️ Sekarang, Kita Beri Nama!</h3>
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822;">
+                Semua yang kamu lakukan tadi punya <strong>nama resmi</strong> dalam matematika dan informatika. 
+                Inilah saatnya menghubungkan pengalamanmu dengan istilah formal.
+              </p>
+
+              <div class="notasi-box">
+                <strong>Himpunan Semesta (S)</strong> = semua objek yang sedang dibicarakan<br>
+                Contoh: S = {semua siswa SMP Nusantara}<br><br>
+
+                <strong>Anggota (∈)</strong> = objek yang termasuk dalam himpunan<br>
+                Contoh: <strong>Raka ∈ F</strong> artinya Raka anggota himpunan Futsal<br><br>
+
+                <strong>Bukan Anggota (∉)</strong> = objek yang tidak termasuk<br>
+                Contoh: <strong>Gilang ∉ F</strong> artinya Gilang bukan anggota Futsal
+              </div>
+
+              <div class="koneksi">
+                <strong>💡 Koneksi Dunia Nyata:</strong><br>
+                Di aplikasi seperti <strong>Ruangguru</strong> atau <strong>Tokopedia</strong>, kamu punya daftar "mata pelajaran favorit" 
+                dan "produk yang dilihat". Daftar itu adalah <strong>himpunan</strong>. Kalau kamu melihat Matematika dan Fisika, 
+                itu artinya kamu ada di <strong>irisan dua himpunan</strong> — konsep yang akan kita pelajari di Bagian 2!
+              </div>
+            </div>
+
+            <!-- Link materi lengkap (buka di tab baru) -->
+            <div class="link-materi-wrapper">
+              <a href="materibk4.html" target="_blank" rel="noopener" class="link-materi-bawah">
+                📚 Baca Materi Lengkap (buka tab baru)
+              </a>
+            </div>
+
+            <!-- Momen Mindful 3 -->
+            <div class="mindful-box" id="mindful3">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 3</div>
+              <div class="mb-text">
+                Dengan istilah resmi: <strong>apa itu himpunan semesta</strong> dalam kasus Siti? Tulis dengan bahasamu sendiri.
+              </div>
+              <textarea id="mindful3Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <!-- Kuis Kilat -->
+            <div class="kuis-kilat-box" id="kuisKilatBox">
+              <div class="kk-title">
+                ⚡ Kuis Kilat
+                <span class="badge">2 SOAL</span>
+              </div>
+              <div id="kuisKilatContent"></div>
+              <div class="kk-hasil" id="kkHasil"></div>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutTes" onclick="lanjutKeTesPemahaman()" disabled>
+                ➡️ Lanjut ke Tes Pemahaman
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TES PEMAHAMAN ===== -->
+        <div class="tes-section" id="tesSection">
+          <div class="tes-header">
+            <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 4 soal · Minimal 3 benar untuk lanjut</div>
+            <div class="tes-progress" id="tesProgress">Terjawab: 0 / 4</div>
+          </div>
+
+          <div id="soalContainer"></div>
+
+          <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+          <button class="btn-ulangi-tes" id="btnUlangiTes">🔄 Ulangi Tes Pemahaman</button>
+        </div>
+
+        <!-- ===== HASIL TES ===== -->
+        <div class="hasil-tes" id="hasilTes">
+          <div class="hasil-icon" id="hasilIcon">🏆</div>
+          <div class="hasil-title" id="hasilTitle">Selamat!</div>
+          <div class="hasil-skor" id="hasilSkor">0 / 4</div>
+          <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 1.</div>
+        </div>
+
+        <!-- ===== REFLEKSI 4F ===== -->
+        <div class="refleksi-box" id="refleksiBox">
+          <h3>🪞 Refleksi 4F</h3>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FACT</span> Apa yang tadi saya lakukan dengan kartu nama?</label>
+            <textarea id="refFact" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FEELING</span> Bagian mana yang membuat saya bingung? Bagian mana yang menyenangkan?</label>
+            <textarea id="refFeeling" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FINDING</span> Apa itu himpunan? Apa itu anggota? Apa itu himpunan semesta?</label>
+            <textarea id="refFinding" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">FUTURE</span> Di mana lagi saya bisa menggunakan cara berpikir "himpunan" dalam kehidupan sehari-hari?</label>
+            <textarea id="refFuture" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="exit-ticket">
+            <div class="et-title">🎫 Exit Ticket</div>
+            <p style="font-size:0.85rem; color:#5c4638; margin-bottom:0.4rem;">
+              Sebutkan satu contoh "himpunan" yang kamu temui dalam kehidupan sehari-hari di rumah atau di sekolah. Tuliskan tiga anggotanya.
+            </p>
+            <textarea id="exitTicket" placeholder="Contoh: Himpunan alat tulis di tas saya = {pulpen, pensil, penghapus}"></textarea>
+          </div>
+        </div>
+
+        <!-- Status kirim -->
+        <div class="status-kirim info" id="statusKirim">
+          <span class="spinner" id="statusSpinner"></span>
+          <span id="statusKirimText">Mengirim nilai...</span>
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
         <div class="nav-bottom">
           <a href="bk4.html" class="btn-nav-bawah">
             <span class="back-arrow">←</span> Kembali ke Portal
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
             <button class="btn-nav-bawah primary locked" id="btnLanjutBagian2" onclick="lanjutKeBagian2()">
-              Lanjut ke Bagian 2: Diagram Venn →
+              Lanjut ke Bagian 2: Irisan &amp; Gabungan →
             </button>
           </div>
           <div class="nav-hint locked" id="hintLanjut">
-            🔒 Selesaikan aktivitas dan tes pemahaman untuk membuka Bagian 2
+            🔒 Selesaikan semua tahap untuk membuka Bagian 2
           </div>
         </div>
 
@@ -881,6 +1170,7 @@
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
 
   <script>
     (function() {
@@ -891,86 +1181,50 @@
       // ============================================
       const NAMA_SHEET = 'bk4';
       const MODUL_KEY = 'bk4';
-      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e', 'f'];
-      const AMBANG_LULUS = 3; // minimal benar dari 4 soal
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+      const AMBANG_LULUS = 3;
 
       // ============================================
-      // DATA ITEM
+      // DATA KARTU NAMA
       // ============================================
-      const itemsData = [
-        { id: 'item1', label: '🍎 Apel', type: 'buah' },
-        { id: 'item2', label: '🍌 Pisang', type: 'buah' },
-        { id: 'item3', label: '🍇 Anggur', type: 'buah' },
-        { id: 'item4', label: '🍊 Jeruk', type: 'buah' },
-        { id: 'item5', label: '🐱 Kucing', type: 'hewan' },
-        { id: 'item6', label: '🐶 Anjing', type: 'hewan' },
-        { id: 'item7', label: '🐦 Burung', type: 'hewan' },
-        { id: 'item8', label: '🐟 Ikan', type: 'hewan' },
-      ];
-
-      // ============================================
-      // DATA SOAL TES (4 SOAL)
-      // ============================================
-      const soalData = [
-        {
-          pertanyaan: 'Apa yang dimaksud dengan himpunan?',
-          opsi: [
-            'Kumpulan objek yang terdefinisi dengan jelas',
-            'Kumpulan angka acak tanpa aturan',
-            'Urutan langkah-langkah penyelesaian',
-            'Proses memecah masalah besar'
-          ],
-          kunci: 0,
-          penjelasan: 'Himpunan adalah kumpulan objek yang terdefinisi dengan jelas dan memiliki sifat/karakteristik yang sama.'
-        },
-        {
-          pertanyaan: 'Jika A = {1, 2, 3, 4, 5}, manakah pernyataan yang BENAR?',
-          opsi: [
-            '3 ∈ A dan 7 ∉ A',
-            '3 ∉ A dan 7 ∈ A',
-            '3 ∈ A dan 7 ∈ A',
-            '3 ∉ A dan 7 ∉ A'
-          ],
-          kunci: 0,
-          penjelasan: '3 adalah anggota A (3 ∈ A), sedangkan 7 bukan anggota A (7 ∉ A).'
-        },
-        {
-          pertanyaan: 'Simbol ∈ dalam himpunan berarti...',
-          opsi: [
-            'anggota dari',
-            'bukan anggota dari',
-            'sama dengan',
-            'himpunan bagian dari'
-          ],
-          kunci: 0,
-          penjelasan: 'Simbol ∈ berarti "anggota dari". Sedangkan ∉ berarti "bukan anggota dari".'
-        },
-        {
-          pertanyaan: 'Himpunan kosong dilambangkan dengan...',
-          opsi: ['∅ atau {}', 'S', 'U', '∩'],
-          kunci: 0,
-          penjelasan: 'Himpunan kosong dilambangkan dengan ∅ atau {} (kurung kurawal kosong).'
-        }
+      const kartuData = [
+        { id: 'k1',  nama: 'Raka',   set: ['F', 'B', 'P'] },
+        { id: 'k2',  nama: 'Budi',   set: ['F', 'B', 'P'] },
+        { id: 'k3',  nama: 'Dewi',   set: ['F', 'B', 'P'] },
+        { id: 'k4',  nama: 'Aurel',  set: ['F'] },
+        { id: 'k5',  nama: 'Fajar',  set: ['F', 'B'] },
+        { id: 'k6',  nama: 'Nadia',  set: ['F'] },
+        { id: 'k7',  nama: 'Bayu',   set: ['F'] },
+        { id: 'k8',  nama: 'Citra',  set: ['F', 'P'] },
+        { id: 'k9',  nama: 'Gilang', set: ['B'] },
+        { id: 'k10', nama: 'Hana',   set: ['B', 'P'] },
+        { id: 'k11', nama: 'Intan',  set: ['B'] },
+        { id: 'k12', nama: 'Joko',   set: ['P'] },
+        { id: 'k13', nama: 'Laras',  set: ['P'] },
+        { id: 'k14', nama: 'Sinta',  set: [] },
+        { id: 'k15', nama: 'Tono',   set: [] }
       ];
 
       // ============================================
       // STATE
       // ============================================
-      let placedItems = new Set();
-      let correctCount = 0;
-      let wrongCount = 0;
-      let aktivitasSelesai = false;
+      let kartuDitempatkan = {};
       let kartuDipilih = null;
+      let lapis1Selesai = false;
+      let lapis2Selesai = false;
 
-      let soalJawaban = {};
-      let soalSubmitted = false;
-      let soalBenar = 0;
-      let soalSelesai = false;
+      let jawabanKuisKilat = {};
+      let kuisKilatSubmitted = false;
+      let kuisKilatBenar = 0;
+
+      let jawabanTes = {};
+      let tesSubmitted = false;
+      let tesBenar = 0;
+      let tesSelesai = false;
 
       let daftarSiswa = [];
       let jumlahSiswaSekarang = 1;
 
-      // State untuk pengiriman nilai
       let kirimTimeoutId = null;
       let kirimSukses = false;
 
@@ -984,20 +1238,36 @@
       const elFormError = document.getElementById('formError');
       const elBtnMulai = document.getElementById('btnMulai');
       const elAreaSimulasi = document.getElementById('area-simulasi');
+      const elAreaLapis2 = document.getElementById('areaLapis2');
+      const elAreaLapis3 = document.getElementById('areaLapis3');
+      const elProgressLapis = document.getElementById('progressLapis');
 
-      const elItemsPool = document.getElementById('itemsPool');
-      const elZoneAItems = document.getElementById('zoneAItems');
-      const elZoneBItems = document.getElementById('zoneBItems');
-      const elDropZoneA = document.getElementById('dropZoneA');
-      const elDropZoneB = document.getElementById('dropZoneB');
-      const elCorrectCount = document.getElementById('correctCount');
-      const elWrongCount = document.getElementById('wrongCount');
-      const elTotalItems = document.getElementById('totalItems');
-      const elSkorAktivitas = document.getElementById('skorAktivitas');
+      const elPoolItems = document.getElementById('poolItems');
+      const elKartuDiF = document.getElementById('kartuDiF');
+      const elKartuDiB = document.getElementById('kartuDiB');
+      const elKartuDiP = document.getElementById('kartuDiP');
+      const elLingF = document.getElementById('lingF');
+      const elLingB = document.getElementById('lingB');
+      const elLingP = document.getElementById('lingP');
+      const elTotalDitempatkan = document.getElementById('totalDitempatkan');
+      const elTotalKartu = document.getElementById('totalKartu');
+      const elSisaBank = document.getElementById('sisaBank');
       const elProgressFill = document.getElementById('progressFill');
       const elFeedbackBox = document.getElementById('feedbackBox');
       const elFbIcon = document.getElementById('fbIcon');
       const elFbText = document.getElementById('fbText');
+      const elBtnSelesaiLapis1 = document.getElementById('btnSelesaiLapis1');
+      const elMindful1 = document.getElementById('mindful1');
+
+      const elTantanganList = document.getElementById('tantanganList');
+      const elMindful2 = document.getElementById('mindful2');
+      const elBtnLanjutLapis3 = document.getElementById('btnLanjutLapis3');
+
+      const elMindful3 = document.getElementById('mindful3');
+      const elKuisKilatBox = document.getElementById('kuisKilatBox');
+      const elKuisKilatContent = document.getElementById('kuisKilatContent');
+      const elKkHasil = document.getElementById('kkHasil');
+      const elBtnLanjutTes = document.getElementById('btnLanjutTes');
 
       const elTesSection = document.getElementById('tesSection');
       const elSoalContainer = document.getElementById('soalContainer');
@@ -1005,6 +1275,8 @@
       const elBtnPeriksaTes = document.getElementById('btnPeriksaTes');
       const elBtnUlangiTes = document.getElementById('btnUlangiTes');
       const elHasilTes = document.getElementById('hasilTes');
+      const elRefleksiBox = document.getElementById('refleksiBox');
+
       const elBtnLanjutBagian2 = document.getElementById('btnLanjutBagian2');
       const elHintLanjut = document.getElementById('hintLanjut');
       const elStatusKirim = document.getElementById('statusKirim');
@@ -1012,23 +1284,38 @@
       const elStatusSpinner = document.getElementById('statusSpinner');
 
       // ============================================
-      // FORM IDENTITAS SISWA
+      // PROGRESS LAPIS
+      // ============================================
+      function updateProgressLapis(step) {
+        // step: 'lapis1' | 'lapis2' | 'lapis3' | 'tes'
+        const steps = ['lapis1', 'lapis2', 'lapis3', 'tes'];
+        const targetIdx = steps.indexOf(step);
+        if (targetIdx === -1) return;
+
+        elProgressLapis.querySelectorAll('.pl-step').forEach((el, i) => {
+          el.classList.remove('active', 'done');
+          if (i < targetIdx) el.classList.add('done');
+          else if (i === targetIdx) el.classList.add('active');
+        });
+      }
+
+      // ============================================
+      // FORM IDENTITAS
       // ============================================
       window.updateFormSiswa = function(jumlah) {
         jumlahSiswaSekarang = parseInt(jumlah);
         elFormSiswaList.innerHTML = '';
-
         for (let i = 0; i < jumlahSiswaSekarang; i++) {
           const div = document.createElement('div');
           div.className = 'form-siswa-item';
           div.innerHTML = `
-            <span class="siswa-num">${i + 1}</span>
-            <input type="text"
-                   id="namaSiswa_${i}"
-                   placeholder="Nama lengkap siswa ${i + 1}"
-                   maxlength="40"
-                   oninput="cekFormSiswa()">
-          `;
+			  <span class="siswa-num">${i + 1}</span>
+			  <input type="text" id="namaSiswa_${i}"
+					 placeholder="Nama lengkap siswa ${i + 1}"
+					 maxlength="40"
+					 autocomplete="off"
+					 oninput="cekFormSiswa()">
+			`;
           elFormSiswaList.appendChild(div);
         }
         cekFormSiswa();
@@ -1037,50 +1324,30 @@
       window.cekFormSiswa = function() {
         const sekolah = elInputSekolah.value.trim();
         const kelas = elInputKelas.value.trim();
-        let semuaNamaTerisi = true;
-
+        let semuaNama = true;
         for (let i = 0; i < jumlahSiswaSekarang; i++) {
-          const namaInput = document.getElementById('namaSiswa_' + i);
-          if (!namaInput || namaInput.value.trim() === '') {
-            semuaNamaTerisi = false;
-            break;
-          }
+          const inp = document.getElementById('namaSiswa_' + i);
+          if (!inp || inp.value.trim() === '') { semuaNama = false; break; }
         }
-
-        if (semuaNamaTerisi && kelas !== '' && sekolah !== '') {
-          elBtnMulai.disabled = false;
-          elFormError.classList.remove('show');
-        } else {
-          elBtnMulai.disabled = true;
-          elFormError.classList.remove('show');
-        }
+        elBtnMulai.disabled = !(semuaNama && kelas !== '' && sekolah !== '');
+        elFormError.classList.remove('show');
       };
 
       function validasiFormSiswa() {
         const sekolah = elInputSekolah.value.trim();
         const kelas = elInputKelas.value.trim();
-        const errorMsg = elFormError;
-
-        if (sekolah === '') {
-          errorMsg.textContent = '⚠️ Sekolah harus diisi!';
-          errorMsg.classList.add('show');
-          return false;
-        }
-        if (kelas === '') {
-          errorMsg.textContent = '⚠️ Kelas harus diisi!';
-          errorMsg.classList.add('show');
-          return false;
-        }
+        if (sekolah === '') { tampilErr('Sekolah harus diisi!'); return false; }
+        if (kelas === '') { tampilErr('Kelas harus diisi!'); return false; }
         for (let i = 0; i < jumlahSiswaSekarang; i++) {
-          const namaInput = document.getElementById('namaSiswa_' + i);
-          if (!namaInput || namaInput.value.trim() === '') {
-            errorMsg.textContent = `⚠️ Nama siswa ${i + 1} harus diisi!`;
-            errorMsg.classList.add('show');
-            return false;
-          }
+          const inp = document.getElementById('namaSiswa_' + i);
+          if (!inp || inp.value.trim() === '') { tampilErr('Nama siswa ' + (i+1) + ' harus diisi!'); return false; }
         }
-        errorMsg.classList.remove('show');
+        elFormError.classList.remove('show');
         return true;
+      }
+      function tampilErr(msg) {
+        elFormError.textContent = '⚠️ ' + msg;
+        elFormError.classList.add('show');
       }
 
       function formatNamaSiswa(daftar) {
@@ -1095,20 +1362,15 @@
       // ============================================
       // MULAI AKTIVITAS
       // ============================================
-      window.mulaiAktivitas = function() {
+      window.mulaiAktivitas = async function() {
         if (!validasiFormSiswa()) return;
 
         daftarSiswa = [];
         const sekolah = elInputSekolah.value.trim();
         const kelas = elInputKelas.value.trim();
-
         for (let i = 0; i < jumlahSiswaSekarang; i++) {
-          const namaInput = document.getElementById('namaSiswa_' + i);
-          daftarSiswa.push({
-            nama: namaInput.value.trim(),
-            kelas: kelas,
-            sekolah: sekolah
-          });
+          const inp = document.getElementById('namaSiswa_' + i);
+          daftarSiswa.push({ nama: inp.value.trim(), kelas: kelas, sekolah: sekolah });
         }
 
         const namaGabung = formatNamaSiswa(daftarSiswa);
@@ -1116,12 +1378,21 @@
         if (window.simpanIdentitasSiswa) {
           window.simpanIdentitasSiswa(sekolah, namaGabung, kelas);
         }
-        try {
-          localStorage.setItem('labbk4_siswa', JSON.stringify(daftarSiswa));
-        } catch (e) {}
+        try { localStorage.setItem('labbk4_siswa', JSON.stringify(daftarSiswa)); } catch (e) {}
 
-        if (window.hapusIdModul) {
-          window.hapusIdModul(MODUL_KEY);
+        elBtnMulai.disabled = true;
+        elBtnMulai.textContent = '⏳ Menyiapkan sesi...';
+
+        const hasilSesi = await window.dutaPastikanPunyaKode(sekolah, namaGabung, kelas);
+        if (!hasilSesi || !hasilSesi.ok) {
+          alert('⚠️ Gagal menyiapkan sesi: ' + ((hasilSesi && hasilSesi.error) || 'Tidak diketahui'));
+          elBtnMulai.disabled = false;
+          elBtnMulai.textContent = '🚀 Mulai Aktivitas';
+          return;
+        }
+
+        if (window.simpanIdModul) {
+          window.simpanIdModul(MODUL_KEY, hasilSesi.user_id);
         }
 
         elFormSiswaBox.style.display = 'none';
@@ -1129,6 +1400,13 @@
 
         renderPool();
         updateStats();
+
+        if (hasilSesi.tipe === 'tamu' && !hasilSesi.sudah_ada) {
+          setTimeout(() => {
+            alert('🎭 Kamu masuk sebagai Tamu dengan kode: ' + hasilSesi.user_id +
+                  '\n\nSimpan kode ini jika ingin melanjutkan nanti. Jika kode hilang, progres bisa hilang.');
+          }, 300);
+        }
 
         setTimeout(() => {
           elAreaSimulasi.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1139,181 +1417,570 @@
       // RENDER POOL
       // ============================================
       function renderPool() {
-        elItemsPool.innerHTML = '';
-        itemsData.forEach(item => {
-          if (placedItems.has(item.id)) return;
+        elPoolItems.innerHTML = '';
+        let sisa = 0;
+        kartuData.forEach(kartu => {
+          if (kartuDitempatkan[kartu.id]) return;
+          sisa++;
           const el = document.createElement('div');
-          el.className = 'item-draggable';
-          el.id = item.id;
-          el.textContent = item.label;
-          el.dataset.type = item.type;
-          el.dataset.id = item.id;
-          el.onclick = function() { pilihItem(item.id); };
-          elItemsPool.appendChild(el);
+          el.className = 'kartu-nama';
+          el.id = 'kartu_' + kartu.id;
+          el.textContent = kartu.nama;
+          el.dataset.id = kartu.id;
+          el.addEventListener('click', () => pilihKartu(kartu.id));
+          elPoolItems.appendChild(el);
         });
-        updateStats();
+        elSisaBank.textContent = sisa;
+        elTotalKartu.textContent = kartuData.length;
       }
 
       // ============================================
-      // PILIH ITEM
+      // PILIH KARTU
       // ============================================
-      window.pilihItem = function(id) {
-        if (aktivitasSelesai) return;
-        if (placedItems.has(id)) return;
+      function pilihKartu(id) {
+        if (lapis1Selesai) return;
+        if (kartuDitempatkan[id]) return;
 
-        if (kartuDipilih === id) {
-          kartuDipilih = null;
-        } else {
-          kartuDipilih = id;
-        }
+        if (kartuDipilih === id) kartuDipilih = null;
+        else kartuDipilih = id;
 
-        elItemsPool.querySelectorAll('.item-draggable').forEach(el => {
+        elPoolItems.querySelectorAll('.kartu-nama').forEach(el => {
           el.classList.toggle('selected', el.dataset.id === kartuDipilih);
         });
 
         if (kartuDipilih) {
-          const item = itemsData.find(i => i.id === kartuDipilih);
-          showFeedback('info', '👆', `Kamu memilih "<strong>${item.label}</strong>". Sekarang klik himpunan tujuan (A atau B)!`);
+          elLingF.classList.add('target');
+          elLingB.classList.add('target');
+          elLingP.classList.add('target');
+          const k = kartuData.find(x => x.id === kartuDipilih);
+          tampilFeedback('info', '👆', 'Kamu memilih "<strong>' + k.nama + '</strong>". Sekarang klik lingkaran tujuan!');
         } else {
-          showFeedback('info', '💡', 'Klik item di bank, lalu klik himpunan tujuan!');
+          elLingF.classList.remove('target');
+          elLingB.classList.remove('target');
+          elLingP.classList.remove('target');
+          tampilFeedback('info', '💡', 'Klik kartu nama di bank, lalu klik lingkaran tujuan!');
         }
-      };
+      }
 
       // ============================================
-      // TARUH KE ZONE
+      // TARUH KARTU
       // ============================================
-      window.taruhKeZone = function(zone) {
-        if (aktivitasSelesai) return;
+      function taruhKartu(setTarget) {
+        if (lapis1Selesai) return;
         if (!kartuDipilih) {
-          showFeedback('info', '👉', 'Pilih dulu item di bank, lalu klik himpunan tujuan.');
+          tampilFeedback('info', '👉', 'Pilih dulu kartu nama di bank!');
           return;
         }
 
-        const item = itemsData.find(i => i.id === kartuDipilih);
-        if (!item) return;
+        const kartu = kartuData.find(x => x.id === kartuDipilih);
+        if (!kartu) return;
 
-        const isCorrect = (zone === 'A' && item.type === 'buah') ||
-                          (zone === 'B' && item.type === 'hewan');
-
-        const el = document.createElement('div');
-        el.className = 'item-placed';
-        el.textContent = item.label;
-        el.dataset.id = item.id;
-
-        if (zone === 'A') elZoneAItems.appendChild(el);
-        else elZoneBItems.appendChild(el);
-
-        placedItems.add(item.id);
+        kartuDitempatkan[kartu.id] = setTarget;
         kartuDipilih = null;
 
-        if (isCorrect) {
-          correctCount++;
-          const zoneEl = zone === 'A' ? elDropZoneA : elDropZoneB;
-          zoneEl.classList.add('correct');
-          setTimeout(() => zoneEl.classList.remove('correct'), 600);
-          showFeedback('success', '✅', `<strong>Benar!</strong> "${item.label}" adalah ${item.type}.`);
-        } else {
-          wrongCount++;
-          const zoneEl = zone === 'A' ? elDropZoneA : elDropZoneB;
-          zoneEl.classList.add('wrong');
-          setTimeout(() => zoneEl.classList.remove('wrong'), 600);
+        renderKartuDiLingkaran();
 
-          placedItems.delete(item.id);
-          if (zone === 'A') {
-            const child = elZoneAItems.querySelector(`[data-id="${item.id}"]`);
-            if (child) child.remove();
-          } else {
-            const child = elZoneBItems.querySelector(`[data-id="${item.id}"]`);
-            if (child) child.remove();
-          }
-
-          showFeedback('error', '❌', `<strong>Ups!</strong> "${item.label}" bukan ${zone === 'A' ? 'buah' : 'hewan'}. Coba ke himpunan lain!`);
-          renderPool();
-          updateStats();
-          return;
-        }
-
-        const poolEl = document.getElementById(item.id);
-        if (poolEl) poolEl.classList.add('placed');
+        const elBank = document.getElementById('kartu_' + kartu.id);
+        if (elBank) elBank.remove();
 
         renderPool();
         updateStats();
 
-        if (placedItems.size === itemsData.length) {
-          selesaiAktivitas();
+        const namaSet = { F: 'Futsal', B: 'Basket', P: 'Paskibra' }[setTarget];
+        tampilFeedback('success', '✅', '"<strong>' + kartu.nama + '</strong>" ditempatkan di lingkaran ' + namaSet + '.');
+
+        elLingF.classList.remove('target');
+        elLingB.classList.remove('target');
+        elLingP.classList.remove('target');
+
+        if (Object.keys(kartuDitempatkan).length === kartuData.length) {
+          elBtnSelesaiLapis1.disabled = false;
+          elMindful1.classList.add('show');
         }
-      };
+      }
 
-      elDropZoneA.addEventListener('click', () => taruhKeZone('A'));
-      elDropZoneB.addEventListener('click', () => taruhKeZone('B'));
+      function renderKartuDiLingkaran() {
+        elKartuDiF.innerHTML = '';
+        elKartuDiB.innerHTML = '';
+        elKartuDiP.innerHTML = '';
 
-      // ============================================
-      // RESET GAME
-      // ============================================
-      window.resetGame = function() {
-        if (aktivitasSelesai) return;
-        placedItems.clear();
-        correctCount = 0;
-        wrongCount = 0;
-        kartuDipilih = null;
-        elZoneAItems.innerHTML = '';
-        elZoneBItems.innerHTML = '';
-        elDropZoneA.classList.remove('correct', 'wrong');
-        elDropZoneB.classList.remove('correct', 'wrong');
-        renderPool();
-        updateStats();
-        showFeedback('info', '💡', 'Klik item di bank, lalu klik himpunan tujuan!');
-      };
+        const diF = [], diB = [], diP = [];
+        Object.keys(kartuDitempatkan).forEach(kid => {
+          const kartu = kartuData.find(x => x.id === kid);
+          const set = kartuDitempatkan[kid];
+          if (set === 'F') diF.push(kartu);
+          if (set === 'B') diB.push(kartu);
+          if (set === 'P') diP.push(kartu);
+        });
+
+        const posF = [
+          [150, 180], [150, 210], [150, 240], [150, 270], [150, 300],
+          [180, 180], [180, 210], [180, 240], [180, 270]
+        ];
+        const posB = [
+          [490, 180], [490, 210], [490, 240], [490, 270], [490, 300],
+          [460, 180], [460, 210], [460, 240], [460, 270]
+        ];
+        const posP = [
+          [250, 420], [290, 420], [330, 420], [370, 420], [250, 450],
+          [290, 450], [330, 450], [370, 450], [310, 480]
+        ];
+
+        function renderSet(items, positions, grup) {
+          items.slice(0, positions.length).forEach((kartu, i) => {
+            const pos = positions[i] || positions[positions.length - 1];
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', pos[0]);
+            text.setAttribute('y', pos[1]);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('font-size', '11');
+            text.setAttribute('font-weight', '600');
+            text.setAttribute('fill', '#3b2b1e');
+            text.textContent = kartu.nama;
+            grup.appendChild(text);
+          });
+        }
+
+        renderSet(diF, posF, elKartuDiF);
+        renderSet(diB, posB, elKartuDiB);
+        renderSet(diP, posP, elKartuDiP);
+      }
 
       // ============================================
       // UPDATE STATS
       // ============================================
       function updateStats() {
-        elCorrectCount.textContent = correctCount;
-        elWrongCount.textContent = wrongCount;
-        elTotalItems.textContent = itemsData.length;
-
-        const placed = placedItems.size;
-        const progress = (placed / itemsData.length) * 100;
+        const total = Object.keys(kartuDitempatkan).length;
+        elTotalDitempatkan.textContent = total;
+        const progress = (total / kartuData.length) * 100;
         elProgressFill.style.width = progress + '%';
-
-        const skor = correctCount > 0 ? Math.round((correctCount / itemsData.length) * 100) : 0;
-        elSkorAktivitas.textContent = skor;
       }
 
       // ============================================
       // FEEDBACK
       // ============================================
-      function showFeedback(type, icon, text) {
+      function tampilFeedback(type, icon, text) {
         elFeedbackBox.className = 'feedback-box show ' + type;
         elFbIcon.textContent = icon || '💡';
         elFbText.innerHTML = text;
       }
 
       // ============================================
-      // SELESAI AKTIVITAS
+      // RESET GAME
       // ============================================
-      function selesaiAktivitas() {
-        aktivitasSelesai = true;
+      window.resetGame = function() {
+        if (lapis1Selesai) return;
+        if (!confirm('Reset aktivitas? Semua kartu akan kembali ke bank.')) return;
+        kartuDitempatkan = {};
+        kartuDipilih = null;
+        elKartuDiF.innerHTML = '';
+        elKartuDiB.innerHTML = '';
+        elKartuDiP.innerHTML = '';
+        elMindful1.classList.remove('show');
+        elBtnSelesaiLapis1.disabled = true;
+        renderPool();
+        updateStats();
+        tampilFeedback('info', '💡', 'Klik kartu nama di bank, lalu klik lingkaran tujuan!');
+      };
 
-        const skorAktivitas = Math.round((correctCount / itemsData.length) * 100);
-        elSkorAktivitas.textContent = skorAktivitas;
+      // ============================================
+      // SELESAI LAPIS 1
+      // ============================================
+      window.selesaiLapis1 = function() {
+        if (Object.keys(kartuDitempatkan).length !== kartuData.length) {
+          alert('⚠️ Masih ada kartu yang belum ditempatkan!');
+          return;
+        }
 
-        showFeedback('success', '🎉',
-          `<strong>Hebat!</strong> Semua item sudah dikelompokkan!<br>
-           Skor aktivitas: <strong>${skorAktivitas}</strong> dari 100`);
+        const mindfulJawab = document.getElementById('mindful1Jawab').value.trim();
+        if (mindfulJawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 1 sebelum lanjut!');
+          document.getElementById('mindful1Jawab').focus();
+          return;
+        }
+
+        lapis1Selesai = true;
+        elLingF.classList.remove('target');
+        elLingB.classList.remove('target');
+        elLingP.classList.remove('target');
+
+        elAreaLapis2.style.display = 'block';
+        elBtnSelesaiLapis1.disabled = true;
+        elBtnSelesaiLapis1.textContent = '✅ Lapis 1 Selesai';
+
+        updateProgressLapis('lapis2');
 
         setTimeout(() => {
-          elTesSection.classList.add('active');
-          renderSoal();
-          updateTesProgress();
-          elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 1200);
+          elAreaLapis2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+
+        buildTantangan();
+      };
+
+      // ============================================
+      // LAPIS 2
+      // ============================================
+      const tantanganData = [
+        {
+          id: 'T1',
+          teks: 'Berdasarkan <strong>data cerita Siti</strong>, berapa siswa yang ikut <strong>Futsal</strong>? (Tulis angka)',
+          tipe: 'angka',
+          kunci: 8,
+          hint: 'Hitung semua kartu yang kamu taruh di lingkaran Futsal (termasuk yang juga ada di lingkaran lain).',
+          feedbackSalah: 'Coba hitung ulang. Apakah semua nama Futsal sudah ada di lingkaran Futsal?'
+        },
+        {
+          id: 'T2',
+          teks: 'Berdasarkan <strong>data cerita Siti</strong>, sebutkan satu nama yang muncul di <strong>Futsal, Basket, DAN Paskibra</strong> sekaligus!',
+          tipe: 'teks',
+          kunci: ['Raka', 'Budi', 'Dewi'],
+          hint: 'Lihat bagian tengah Venn diagram — di situ ada nama yang muncul di tiga lingkaran.',
+          feedbackSalah: 'Nama itu ada di tiga lingkaran sekaligus. Coba cari di bagian tengah diagram!'
+        },
+        {
+          id: 'T3',
+          teks: '<strong>Batas Konsep:</strong> Bisakah kamu menaruh nama "Budi" di lingkaran Futsal <em>dan</em> lingkaran Basket <em>secara bersamaan</em> dalam satu simulasi?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Bisa, karena Budi ikut keduanya', benar: false },
+            { v: 'B', label: 'Bisa, karena setiap nama boleh ada di banyak lingkaran', benar: false },
+            { v: 'C', label: 'Tidak bisa di simulasi ini, karena satu kartu hanya di satu tempat. Tapi dalam kenyataan, Budi tetap anggota dua himpunan sekaligus.', benar: true },
+            { v: 'D', label: 'Tidak bisa, karena Budi hanya ikut satu ekstrakurikuler', benar: false }
+          ],
+          hint: 'Pikirkan: di simulasi, satu kartu = satu posisi. Tapi dalam kenyataan, seseorang bisa jadi anggota banyak himpunan.',
+          feedbackSalah: 'Pikirkan: apakah seseorang bisa berada di dua tempat pada waktu yang sama dalam satu daftar? Bagaimana dengan kenyataan bahwa Budi ikut dua ekskul?'
+        }
+      ];
+
+      function buildTantangan() {
+        elTantanganList.innerHTML = '';
+
+        tantanganData.forEach((t, idx) => {
+          const div = document.createElement('div');
+          div.className = 'tantangan-item';
+          div.id = 'tantangan_' + t.id;
+          div.dataset.id = t.id;
+
+          let inputHtml = '';
+          if (t.tipe === 'angka') {
+            inputHtml = `
+              <div class="t-input-row">
+                <input type="number" id="input_${t.id}" placeholder="Tulis angka" min="0" max="20">
+                <button id="btn_${t.id}">Periksa</button>
+              </div>
+            `;
+          } else if (t.tipe === 'teks') {
+            inputHtml = `
+              <div class="t-input-row">
+                <input type="text" id="input_${t.id}" placeholder="Tulis nama" maxlength="20">
+                <button id="btn_${t.id}">Periksa</button>
+              </div>
+            `;
+          } else if (t.tipe === 'pilihan') {
+            inputHtml = '<div class="t-input-row" style="flex-direction:column; align-items:stretch;">';
+            t.opsi.forEach(o => {
+              inputHtml += `
+                <label style="display:flex; gap:0.5rem; padding:0.5rem 0.8rem; border:2px solid #d9cdbf; border-radius:10px; cursor:pointer; font-size:0.88rem; color:#3d2c1f; background:#fff;">
+                  <input type="radio" name="opsi_${t.id}" value="${o.v}" style="accent-color:#f26d8a;">
+                  <span>${o.label}</span>
+                </label>
+              `;
+            });
+            inputHtml += `
+              </div>
+              <div class="t-input-row" style="justify-content:flex-end;">
+                <button id="btn_${t.id}">Periksa</button>
+              </div>
+            `;
+          }
+
+          div.innerHTML = `
+            <div class="t-header">
+              <span class="t-num">${idx + 1}</span>
+              <span>Tantangan ${idx + 1}</span>
+            </div>
+            <div class="t-text">${t.teks}</div>
+            ${inputHtml}
+            <div class="t-feedback" id="fb_${t.id}"></div>
+          `;
+
+          elTantanganList.appendChild(div);
+
+          const btn = document.getElementById('btn_' + t.id);
+          btn.addEventListener('click', () => periksaTantangan(t));
+        });
+      }
+
+      function periksaTantangan(t) {
+        const fb = document.getElementById('fb_' + t.id);
+        const item = document.getElementById('tantangan_' + t.id);
+
+        if (t.tipe === 'angka') {
+          const inp = document.getElementById('input_' + t.id);
+          const val = parseInt(inp.value);
+          if (isNaN(val)) {
+            fb.className = 't-feedback show hint';
+            fb.innerHTML = '⚠️ Tulis angka dulu ya!';
+            return;
+          }
+          if (val === t.kunci) {
+            fb.className = 't-feedback show ok';
+            fb.innerHTML = '✅ <strong>Benar!</strong> Jumlahnya ' + t.kunci + '.';
+            item.classList.add('selesai');
+            document.getElementById('btn_' + t.id).disabled = true;
+          } else {
+            fb.className = 't-feedback show no';
+            fb.innerHTML = '❌ ' + t.feedbackSalah;
+          }
+        } else if (t.tipe === 'teks') {
+          const inp = document.getElementById('input_' + t.id);
+          const val = inp.value.trim();
+          if (!val) {
+            fb.className = 't-feedback show hint';
+            fb.innerHTML = '⚠️ Tulis nama dulu ya!';
+            return;
+          }
+          const benar = t.kunci.some(k => k.toLowerCase() === val.toLowerCase());
+          if (benar) {
+            fb.className = 't-feedback show ok';
+            fb.innerHTML = '✅ <strong>Benar!</strong> Nama itu memang ada di tiga lingkaran.';
+            item.classList.add('selesai');
+            document.getElementById('btn_' + t.id).disabled = true;
+          } else {
+            fb.className = 't-feedback show no';
+            fb.innerHTML = '❌ ' + t.feedbackSalah;
+          }
+        } else if (t.tipe === 'pilihan') {
+          const selected = document.querySelector('input[name="opsi_' + t.id + '"]:checked');
+          if (!selected) {
+            fb.className = 't-feedback show hint';
+            fb.innerHTML = '⚠️ Pilih salah satu jawaban dulu!';
+            return;
+          }
+          const opsi = t.opsi.find(o => o.v === selected.value);
+          if (opsi.benar) {
+            fb.className = 't-feedback show ok';
+            fb.innerHTML = '✅ <strong>Tepat sekali!</strong> Satu kartu di simulasi hanya bisa di satu tempat, tapi dalam kenyataan seseorang bisa menjadi anggota beberapa himpunan sekaligus.';
+            item.classList.add('selesai');
+            document.getElementById('btn_' + t.id).disabled = true;
+          } else {
+            fb.className = 't-feedback show no';
+            fb.innerHTML = '❌ ' + t.feedbackSalah;
+          }
+        }
+
+        cekSemuaTantangan();
+      }
+
+      function cekSemuaTantangan() {
+        const items = document.querySelectorAll('.tantangan-item');
+        const semuaSelesai = Array.from(items).every(i => i.classList.contains('selesai'));
+        if (semuaSelesai) {
+          elMindful2.classList.add('show');
+          elMindful2.style.display = 'block';
+          elBtnLanjutLapis3.disabled = false;
+        }
       }
 
       // ============================================
-      // RENDER SOAL TES
+      // LANJUT KE LAPIS 3
       // ============================================
+      window.lanjutKeLapis3 = function() {
+        const jawab = document.getElementById('mindful2Jawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 2 sebelum lanjut!');
+          document.getElementById('mindful2Jawab').focus();
+          return;
+        }
+
+        lapis2Selesai = true;
+        elAreaLapis3.style.display = 'block';
+        elBtnLanjutLapis3.disabled = true;
+        elBtnLanjutLapis3.textContent = '✅ Lapis 2 Selesai';
+
+        updateProgressLapis('lapis3');
+		elMindful3.classList.add('show');
+
+        buildKuisKilat();
+
+        setTimeout(() => {
+          elAreaLapis3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      };
+
+      // ============================================
+      // KUIS KILAT
+      // ============================================
+      const kuisKilatData = [
+        {
+          pertanyaan: 'Manakah pernyataan yang benar tentang S = {semua siswa SMP Nusantara}?',
+          opsi: [
+            'S adalah himpunan kosong',
+            'S adalah himpunan semesta dalam kasus ini',
+            'S hanya berisi siswa yang ikut Futsal',
+            'S tidak bisa didefinisikan'
+          ],
+          kunci: 1,
+          penjelasan: 'S adalah himpunan semesta.'
+        },
+        {
+          pertanyaan: 'Jika Aurel ∈ F, apa artinya?',
+          opsi: [
+            'Aurel bukan anggota himpunan F',
+            'Aurel anggota himpunan F',
+            'Aurel anggota himpunan Basket',
+            'Aurel tidak ikut ekstrakurikuler'
+          ],
+          kunci: 1,
+          penjelasan: 'Simbol ∈ berarti "anggota dari".'
+        }
+      ];
+
+      function buildKuisKilat() {
+        elKuisKilatContent.innerHTML = '';
+        elKuisKilatBox.classList.add('show');
+
+        kuisKilatData.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'kk-soal';
+          div.dataset.index = idx;
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            opsiHtml += `
+              <label id="kk_label_${idx}_${oi}">
+                <input type="radio" name="kk_soal_${idx}" value="${oi}">
+                <span>${opsi}</span>
+                <span class="check-icon"></span>
+              </label>
+            `;
+          });
+
+          div.innerHTML = `
+            <div class="kk-q"><strong>Soal ${idx + 1}.</strong> ${soal.pertanyaan}</div>
+            <div class="kk-opsi">${opsiHtml}</div>
+          `;
+          elKuisKilatContent.appendChild(div);
+
+          div.querySelectorAll('label').forEach((lbl, oi) => {
+            lbl.addEventListener('click', () => {
+              if (kuisKilatSubmitted) return;
+              jawabanKuisKilat[idx] = oi;
+              div.querySelectorAll('label').forEach((l2, oi2) => {
+                l2.style.background = oi2 === oi ? '#fdf2f5' : '#fff';
+                l2.style.borderColor = oi2 === oi ? '#f26d8a' : '#e5dbd0';
+                l2.querySelector('input').checked = (oi2 === oi);
+              });
+              cekKuisKilatSiap();
+            });
+          });
+        });
+      }
+
+      function cekKuisKilatSiap() {
+        if (Object.keys(jawabanKuisKilat).length === kuisKilatData.length && !kuisKilatSubmitted) {
+          setTimeout(() => {
+            if (kuisKilatSubmitted) return;
+            submitKuisKilat();
+          }, 300);
+        }
+      }
+
+      function submitKuisKilat() {
+        kuisKilatSubmitted = true;
+        kuisKilatBenar = 0;
+
+        kuisKilatData.forEach((soal, idx) => {
+          const selected = jawabanKuisKilat[idx];
+          const div = elKuisKilatContent.querySelector(`[data-index="${idx}"]`);
+          const labels = div.querySelectorAll('label');
+          const benar = (selected === soal.kunci);
+
+          labels.forEach((lbl, oi) => {
+            lbl.classList.add('disabled');
+            lbl.querySelector('input').disabled = true;
+            if (oi === selected) {
+              lbl.classList.add(benar ? 'benar' : 'salah');
+              lbl.querySelector('.check-icon').textContent = benar ? '✅' : '❌';
+            }
+            if (oi === soal.kunci && !benar) {
+              lbl.classList.add('benar');
+              lbl.querySelector('.check-icon').textContent = '✅';
+            }
+          });
+
+          if (benar) kuisKilatBenar++;
+        });
+
+        elKkHasil.classList.add('show');
+        elKkHasil.innerHTML = `✅ Kuis Kilat selesai! Kamu benar <strong>${kuisKilatBenar}</strong> dari <strong>${kuisKilatData.length}</strong>.`;
+
+        elBtnLanjutTes.disabled = false;
+      }
+
+      // ============================================
+      // LANJUT KE TES
+      // ============================================
+      window.lanjutKeTesPemahaman = function() {
+        const jawab = document.getElementById('mindful3Jawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 3 sebelum lanjut!');
+          document.getElementById('mindful3Jawab').focus();
+          return;
+        }
+
+        elTesSection.classList.add('active');
+        elRefleksiBox.classList.add('show');
+        renderSoal();
+        updateTesProgress();
+
+        updateProgressLapis('tes');
+
+        setTimeout(() => {
+          elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      };
+
+      // ============================================
+      // TES PEMAHAMAN
+      // ============================================
+      const soalData = [
+        {
+          pertanyaan: 'Himpunan berikut yang anggotanya paling jelas terdefinisi adalah...',
+          opsi: [
+            'Himpunan siswa yang pintar',
+            'Himpunan siswa yang tingginya lebih dari 160 cm',
+            'Himpunan siswa yang baik hati',
+            'Himpunan siswa yang keren'
+          ],
+          kunci: 1,
+          penjelasan: 'Himpunan harus terdefinisi dengan jelas. "Tinggi lebih dari 160 cm" bisa diukur, sedangkan "pintar", "baik hati", "keren" bersifat subjektif.'
+        },
+        {
+          pertanyaan: 'Diketahui H = {2, 4, 6, 8}. Pernyataan yang benar adalah...',
+          opsi: ['3 ∈ H', '4 ∉ H', '8 ∈ H', '10 ∈ H'],
+          kunci: 2,
+          penjelasan: '8 adalah anggota H (8 ∈ H).'
+        },
+        {
+          pertanyaan: 'Dalam kasus Siti, himpunan semesta yang tepat adalah...',
+          opsi: [
+            '{Raka, Budi, Dewi}',
+            '{semua siswa yang ikut Futsal}',
+            '{semua siswa SMP Nusantara}',
+            '{semua pembina ekstrakurikuler}'
+          ],
+          kunci: 2,
+          penjelasan: 'Himpunan semesta memuat semua objek yang dibicarakan.'
+        },
+        {
+          pertanyaan: 'Simbol ∈ dalam himpunan berarti...',
+          opsi: ['bukan anggota dari', 'anggota dari', 'sama dengan', 'himpunan bagian dari'],
+          kunci: 1,
+          penjelasan: 'Simbol ∈ berarti "anggota dari".'
+        }
+      ];
+
       function renderSoal() {
         elSoalContainer.innerHTML = '';
         soalData.forEach((soal, idx) => {
@@ -1325,7 +1992,7 @@
           soal.opsi.forEach((opsi, oi) => {
             const id = `soal${idx}_opt${oi}`;
             opsiHtml += `
-              <label for="${id}" onclick="pilihJawaban(${idx}, ${oi})" id="label_${idx}_${oi}">
+              <label for="${id}" onclick="pilihJawabanTes(${idx}, ${oi})" id="label_${idx}_${oi}">
                 <input type="radio" name="soal${idx}" id="${id}" value="${oi}">
                 <span>${opsi}</span>
                 <span class="check-icon"></span>
@@ -1346,8 +2013,8 @@
         });
       }
 
-      window.pilihJawaban = function(soalIndex, optIndex) {
-        if (soalSubmitted) return;
+      window.pilihJawabanTes = function(soalIndex, optIndex) {
+        if (tesSubmitted) return;
         const soalDiv = document.querySelector(`.soal-kuis[data-index="${soalIndex}"]`);
         const labels = soalDiv.querySelectorAll('.opsi-kuis label');
 
@@ -1361,42 +2028,37 @@
           }
         });
 
-        soalJawaban[soalIndex] = optIndex;
+        jawabanTes[soalIndex] = optIndex;
         updateTesProgress();
       };
 
       function updateTesProgress() {
         const total = soalData.length;
-        const answered = Object.keys(soalJawaban).length;
+        const answered = Object.keys(jawabanTes).length;
         elTesProgress.textContent = `Terjawab: ${answered} / ${total}`;
       }
 
-      // ============================================
-      // PERIKSA TES (dengan mode highlight kondisional)
-      // ============================================
       elBtnPeriksaTes.addEventListener('click', function() {
-        if (soalSubmitted) return;
+        if (tesSubmitted) return;
         const total = soalData.length;
-        const answered = Object.keys(soalJawaban).length;
+        const answered = Object.keys(jawabanTes).length;
 
         if (answered < total) {
           alert(`⚠️ Kamu baru menjawab ${answered} dari ${total} soal. Selesaikan semua soal terlebih dahulu!`);
           return;
         }
 
-        // Hitung dulu berapa yang benar
         let correct = 0;
         soalData.forEach((soal, idx) => {
-          if (soalJawaban[idx] === soal.kunci) correct++;
+          if (jawabanTes[idx] === soal.kunci) correct++;
         });
 
         const lulus = correct >= AMBANG_LULUS;
-        soalBenar = correct;
-        soalSubmitted = true;
+        tesBenar = correct;
+        tesSubmitted = true;
 
-        // Tandai jawaban — HANYA tampilkan kunci jika LULUS
         soalData.forEach((soal, idx) => {
-          const selected = soalJawaban[idx];
+          const selected = jawabanTes[idx];
           const soalDiv = document.querySelector(`.soal-kuis[data-index="${idx}"]`);
           const labels = soalDiv.querySelectorAll('.opsi-kuis label');
           const feedback = document.getElementById(`feedback_soal_${idx}`);
@@ -1406,7 +2068,6 @@
             label.classList.add('disabled');
             label.querySelector('input').disabled = true;
 
-            // Selalu tandai jawaban yang dipilih siswa
             if (oi === selected) {
               if (isThisCorrect) {
                 label.classList.add('correct-answer');
@@ -1417,14 +2078,12 @@
               }
             }
 
-            // Kunci jawaban HANYA ditampilkan jika LULUS
             if (lulus && oi === soal.kunci && !isThisCorrect) {
               label.classList.add('correct-answer');
               label.querySelector('.check-icon').textContent = '✅';
             }
           });
 
-          // Feedback per soal
           if (isThisCorrect) {
             soalDiv.classList.add('correct');
             feedback.className = 'jawaban-feedback benar';
@@ -1446,17 +2105,12 @@
         tampilkanHasilTes(correct, total, lulus);
       });
 
-      // ============================================
-      // TAMPILKAN HASIL TES
-      // ============================================
       function tampilkanHasilTes(correct, total, lulus) {
         setTimeout(() => {
           elHasilTes.classList.add('show');
 
-          const skorBagian1 = Math.round(40 + (correct / total) * 60);
-
           if (lulus) {
-            soalSelesai = true;
+            tesSelesai = true;
             elHasilTes.querySelector('#hasilIcon').textContent = '🏆';
             elHasilTes.querySelector('#hasilTitle').textContent = 'Selamat!';
             elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
@@ -1465,24 +2119,12 @@
 
             elBtnLanjutBagian2.classList.remove('locked');
             elBtnLanjutBagian2.classList.add('primary');
-            elHintLanjut.classList.remove('locked');
+            elHintLanjut.classList.remove('locked', 'warn');
             elHintLanjut.classList.add('ready');
             elHintLanjut.textContent = '✅ Bagian 2 sudah terbuka! Klik untuk melanjutkan.';
             elBtnUlangiTes.classList.remove('show');
 
-            document.querySelectorAll('.step-dot').forEach((step, idx) => {
-              if (idx === 0) {
-                step.classList.add('completed');
-                step.classList.remove('active');
-              }
-            });
-
-            try {
-              const prev = JSON.parse(localStorage.getItem('labbk4_progress') || '{}');
-              prev.bagian = 1;
-              prev.skor = skorBagian1;
-              localStorage.setItem('labbk4_progress', JSON.stringify(prev));
-            } catch (e) {}
+            simpanSkorBagian1(correct, total);
           } else {
             elHasilTes.querySelector('#hasilIcon').textContent = '📖';
             elHasilTes.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
@@ -1502,53 +2144,55 @@
         }, 700);
       }
 
-      // ============================================
-      // ULANGI TES PEMAHAMAN
-      // ============================================
-      elBtnUlangiTes.addEventListener('click', function() {
-        // Reset state tes
-        soalJawaban = {};
-        soalSubmitted = false;
-        soalBenar = 0;
-        soalSelesai = false;
+      function simpanSkorBagian1(correct, total) {
+        const skorBagian1 = Math.round(40 + (correct / total) * 60);
+        try {
+          const prev = JSON.parse(localStorage.getItem('labbk4_progress') || '{}');
+          prev.bagian = 1;
+          prev.skor = skorBagian1;
+          localStorage.setItem('labbk4_progress', JSON.stringify(prev));
+        } catch (e) {}
 
-        // Reset tombol
+        if (window.dutaSimpanProgress) {
+          const skorObj = { a: skorBagian1 };
+          window.dutaSimpanProgress(MODUL_KEY, 'a', skorObj).catch(() => {});
+        }
+      }
+
+      elBtnUlangiTes.addEventListener('click', function() {
+        jawabanTes = {};
+        tesSubmitted = false;
+        tesBenar = 0;
+        tesSelesai = false;
+
         elBtnPeriksaTes.disabled = false;
         elBtnPeriksaTes.textContent = '✅ Periksa Jawaban';
         elBtnUlangiTes.classList.remove('show');
-
-        // Sembunyikan hasil
         elHasilTes.classList.remove('show');
 
-        // Reset hint navigasi
         elHintLanjut.classList.remove('ready', 'warn');
         elHintLanjut.classList.add('locked');
-        elHintLanjut.textContent = '🔒 Selesaikan aktivitas dan tes pemahaman untuk membuka Bagian 2';
+        elHintLanjut.textContent = '🔒 Selesaikan semua tahap untuk membuka Bagian 2';
 
-        // Render ulang soal
         renderSoal();
         updateTesProgress();
 
-        // Scroll ke atas tes
         elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
 
       // ============================================
-      // KIRIM NILAI BAGIAN 1 — dengan timeout + retry
+      // KIRIM NILAI BAGIAN 1
       // ============================================
       async function kirimNilaiBagian1() {
-        const skorBagian1 = Math.round(40 + (soalBenar / soalData.length) * 60);
+        const skorBagian1 = Math.round(40 + (tesBenar / soalData.length) * 60);
 
-        // Tampilkan status loading
         elStatusKirim.className = 'status-kirim info show';
         elStatusSpinner.style.display = 'inline-block';
         elStatusKirimText.innerHTML = `Mengirim nilai Bagian 1 (${skorBagian1})...`;
 
-        // Hapus tombol retry lama kalau ada
         const oldRetry = elStatusKirim.querySelector('.btn-retry');
         if (oldRetry) oldRetry.remove();
 
-        // Batalkan timeout lama kalau ada
         if (kirimTimeoutId) {
           clearTimeout(kirimTimeoutId);
           kirimTimeoutId = null;
@@ -1556,22 +2200,18 @@
 
         let selesaiKirim = false;
 
-        // Timeout 12 detik — kalau lewat, anggap gagal
         kirimTimeoutId = setTimeout(() => {
           if (selesaiKirim) return;
           selesaiKirim = true;
-          tampilkanGagalKirim(skorBagian1, '⏱️ Koneksi lambat atau terputus. Nilai belum terkirim.');
+          tampilkanGagalKirim(skorBagian1, '⏱️ Koneksi lambat atau terputus.');
         }, 12000);
 
         try {
           const hasil = await window.kirimNilaiBagian(
-            NAMA_SHEET,
-            'a',
-            skorBagian1,
-            TOTAL_BAGIAN
+            NAMA_SHEET, 'a', skorBagian1, TOTAL_BAGIAN
           );
 
-          if (selesaiKirim) return; // sudah ditangani timeout
+          if (selesaiKirim) return;
           selesaiKirim = true;
           clearTimeout(kirimTimeoutId);
           kirimTimeoutId = null;
@@ -1598,11 +2238,9 @@
         elStatusSpinner.style.display = 'none';
         elStatusKirimText.innerHTML = `⚠️ ${pesan} Nilai: <strong>${skor}</strong>. Klik "Ulangi Kirim" untuk mencoba lagi.`;
 
-        // Hapus tombol retry lama
         const oldRetry = elStatusKirim.querySelector('.btn-retry');
         if (oldRetry) oldRetry.remove();
 
-        // Tambah tombol retry
         const btnRetry = document.createElement('button');
         btnRetry.className = 'btn-retry';
         btnRetry.type = 'button';
@@ -1615,38 +2253,44 @@
       }
 
       // ============================================
-      // LANJUT KE BAGIAN 2
+      // LANJUT KE BAGIAN 2 (FIX BUG TOMBOL)
       // ============================================
       window.lanjutKeBagian2 = async function() {
-        if (!soalSelesai) {
-          alert('🔒 Selesaikan soal pemahaman dengan benar terlebih dahulu!');
+        if (!tesSelesai) {
+          alert('🔒 Selesaikan tes pemahaman dengan benar terlebih dahulu!');
           return;
         }
 
-        // Kalau sudah sukses kirim → langsung pindah
         if (kirimSukses) {
           pindahKeBagian2();
           return;
         }
 
-        // Kalau belum sukses, coba kirim lagi (tanpa blokir)
         elBtnLanjutBagian2.disabled = true;
         elBtnLanjutBagian2.textContent = '⏳ Mengirim...';
 
-        // Kalau belum pernah kirim sama sekali, kirim sekarang
         if (!elStatusKirim.classList.contains('show')) {
           await kirimNilaiBagian1();
         }
 
-        // Tunggu sebentar, lalu pindah (walau gagal, tetap boleh lanjut)
+        elBtnLanjutBagian2.disabled = false;
+        elBtnLanjutBagian2.textContent = 'Lanjut ke Bagian 2: Irisan & Gabungan →';
+
         setTimeout(() => {
           pindahKeBagian2();
-        }, 600);
+        }, 800);
       };
 
       function pindahKeBagian2() {
         window.location.href = 'aktivitasbk4b.html';
       }
+
+      // ============================================
+      // EVENT LISTENER LINGKARAN
+      // ============================================
+      elLingF.addEventListener('click', () => taruhKartu('F'));
+      elLingB.addEventListener('click', () => taruhKartu('B'));
+      elLingP.addEventListener('click', () => taruhKartu('P'));
 
       // ============================================
       // INISIALISASI
@@ -1655,7 +2299,7 @@
         updateFormSiswa('1');
       });
 
-      console.log('✅ BK4 Bagian 1: Mengenal Anggota Himpunan siap! (v2 — fix 3 masalah)');
+      console.log('✅ BK4 Bagian 1: Mengenal Kelompok siap! (v4 — hapus materi singkat & bagian-progress, tambah progress-lapis)');
     })();
   </script>
 

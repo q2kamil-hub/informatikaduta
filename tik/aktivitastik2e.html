@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Set Logic Lab · Bagian 2: Dunia yang Tumpang Tindih · Informatika DUTA</title>
+  <title>Surel Lab · Bagian 5: Etika &amp; Konteks Lokal · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
   <style>
     /* ===== PROGRESS BAR VISUAL (LAPIS) ===== */
@@ -20,9 +20,9 @@
       transition: all 0.3s ease; white-space: nowrap;
     }
     .progress-lapis .pl-step.active {
-      background: linear-gradient(135deg, #f26d8a, #b07be0);
-      border-color: #f26d8a; color: #fff;
-      box-shadow: 0 4px 12px rgba(242, 109, 138, 0.25);
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      border-color: #ff8a5b; color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 138, 91, 0.25);
     }
     .progress-lapis .pl-step.done {
       background: #8aaa7a; border-color: #8aaa7a; color: #fff;
@@ -52,109 +52,6 @@
       border-radius: 20px; font-size: 0.75rem; letter-spacing: 0.5px;
     }
 
-    /* ===== FORM IDENTITAS SISWA ===== */
-    .form-siswa-box {
-      background: #fff; border-radius: 20px; padding: 1.5rem 1.8rem;
-      margin: 1.5rem 0; border: 3px solid #f26d8a;
-      box-shadow: 0 6px 20px rgba(242, 109, 138, 0.15); position: relative;
-    }
-    .form-siswa-box::before {
-      content: '📝'; position: absolute; top: -18px; left: 1.5rem;
-      background: #fff; padding: 0 0.5rem; font-size: 1.5rem;
-    }
-    .form-siswa-box .form-title {
-      font-size: 1.1rem; font-weight: 700; color: #a01746; margin-bottom: 0.3rem;
-    }
-    .form-siswa-box .form-desc {
-      font-size: 0.85rem; color: #5c4638; margin-bottom: 1.2rem; line-height: 1.6;
-    }
-    .form-sekolah-wrapper,
-    .form-jumlah-wrapper,
-    .form-kelas-wrapper {
-      display: flex; align-items: center; gap: 0.8rem;
-      margin-bottom: 1rem; flex-wrap: wrap;
-    }
-    .form-sekolah-wrapper { padding-bottom: 1rem; border-bottom: 2px dashed #e5dbd0; }
-    .form-jumlah-wrapper { padding-bottom: 1rem; border-bottom: 2px dashed #e5dbd0; }
-    .form-kelas-wrapper { padding-top: 1rem; border-top: 2px dashed #e5dbd0; }
-    .form-sekolah-wrapper label,
-    .form-jumlah-wrapper label,
-    .form-kelas-wrapper label {
-      font-weight: 700; color: #4d3829; font-size: 0.95rem; min-width: 90px;
-    }
-    .form-sekolah-wrapper input[type="text"],
-    .form-kelas-wrapper input[type="text"] {
-      flex: 1; min-width: 180px; max-width: 320px;
-      padding: 0.6rem 1rem; border-radius: 10px;
-      border: 2px solid #e5dbd0; background: #fcfaf7;
-      font-size: 0.95rem; font-weight: 600; color: #3d2c1f;
-      outline: none; transition: all 0.15s; font-family: inherit;
-    }
-    .form-sekolah-wrapper input[type="text"]:focus,
-    .form-kelas-wrapper input[type="text"]:focus {
-      border-color: #f26d8a; background: #fff;
-      box-shadow: 0 0 0 3px rgba(242, 109, 138, 0.15);
-    }
-    .form-jumlah-wrapper select {
-      padding: 0.5rem 1rem; border-radius: 10px;
-      border: 2px solid #f26d8a; background: #fdf2f5;
-      font-size: 1rem; font-weight: 700; color: #a01746;
-      cursor: pointer; font-family: inherit; transition: all 0.15s;
-    }
-    .form-jumlah-wrapper select:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(242, 109, 138, 0.25);
-    }
-    .form-siswa-list {
-      display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1rem;
-    }
-    .form-siswa-item {
-      display: flex; align-items: center; gap: 0.6rem;
-      flex-wrap: wrap; animation: slideIn 0.3s ease;
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-10px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    .form-siswa-item .siswa-num {
-      background: #f26d8a; color: #fff;
-      width: 28px; height: 28px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
-    }
-    .form-siswa-item input[type="text"] {
-      flex: 1; min-width: 180px; padding: 0.6rem 1rem;
-      border-radius: 10px; border: 2px solid #e5dbd0;
-      background: #fcfaf7; font-size: 0.92rem; color: #3d2c1f;
-      outline: none; transition: all 0.15s; font-family: inherit;
-    }
-    .form-siswa-item input[type="text"]:focus {
-      border-color: #f26d8a; background: #fff;
-      box-shadow: 0 0 0 3px rgba(242, 109, 138, 0.15);
-    }
-    .form-error {
-      display: none; background: #fdf0f0; border: 2px solid #d4a0a0;
-      color: #a84a3a; padding: 0.6rem 1rem; border-radius: 10px;
-      font-size: 0.88rem; font-weight: 600; margin-top: 0.8rem;
-    }
-    .form-error.show { display: block; animation: slideIn 0.3s ease; }
-    .btn-mulai {
-      padding: 1rem 3rem; font-size: 1.1rem;
-      font-weight: 700; color: #fff;
-      background: linear-gradient(135deg, #f26d8a, #b07be0);
-      border-radius: 50px; border: none; cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 6px 24px rgba(242, 109, 138, 0.3);
-      text-decoration: none; font-family: inherit;
-      display: inline-flex; align-items: center; gap: 0.5rem;
-    }
-    .btn-mulai:hover:not(:disabled) {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 10px 32px rgba(242, 109, 138, 0.35);
-    }
-    .btn-mulai:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
-    .btn-wrapper-mulai { text-align: center; margin-top: 1.2rem; }
-
     /* ===== AREA SIMULASI ===== */
     #area-simulasi { display: none; margin-top: 0.5rem; }
     #area-simulasi.active { display: block; }
@@ -168,115 +65,122 @@
       font-size: 1.4rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.3rem;
     }
     .scenario-panel .scenario-story {
-      font-size: 0.95rem; color: #5c4638; background: #fdf2f5;
+      font-size: 0.95rem; color: #5c4638; background: #fff5f0;
       padding: 0.8rem 1.2rem; border-radius: 12px;
-      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid #f26d8a;
+      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid #ff8a5b;
     }
 
-    /* ===== STATS BAR ===== */
-    .stats-bar {
-      display: flex; flex-wrap: wrap; gap: 1rem;
-      justify-content: space-between; align-items: center;
-      padding: 0.8rem 1.2rem; background: #fff;
-      border-radius: 16px; border: 2px solid #e5dbd0;
-      margin-bottom: 1rem;
+    /* ===== SPECTRUM FORMALITAS ===== */
+    .spectrum-box {
+      background: linear-gradient(135deg, #fff5f0, #f0f7fb);
+      border: 2px solid #ff8a5b; border-radius: 18px;
+      padding: 1.2rem 1.4rem; margin: 1rem 0;
+      text-align: center;
     }
-    .stats-bar .stat {
-      display: flex; align-items: center; gap: 0.4rem;
-      font-size: 0.9rem; color: #4d3829;
+    .spectrum-title {
+      font-weight: 700; color: #3b2b1e;
+      font-size: 0.95rem; margin-bottom: 0.8rem;
     }
-    .stats-bar .stat .num {
-      font-weight: 700; font-size: 1.1rem; color: #3b2b1e;
-    }
-    .stats-bar .stat .num.benar { color: #2d7d46; }
-    .stats-bar .stat .num.salah { color: #b33c3c; }
-    .stats-bar .stat .label { color: #7a6656; font-size: 0.85rem; }
-
-    .progress-bar-container {
-      width: 100%; height: 8px; background: #e5dbd0;
-      border-radius: 10px; overflow: hidden; margin: 0.5rem 0 1rem 0;
-    }
-    .progress-bar-container .progress-fill {
-      height: 100%; background: linear-gradient(90deg, #f26d8a, #b07be0);
-      border-radius: 10px; transition: width 0.5s ease; width: 0%;
-    }
-
-    /* ===== KALENDER RAMADHAN ===== */
-    .kalender-wrapper {
-      background: #fcfaf7; border-radius: 20px;
-      border: 2px solid #e5dbd0; padding: 1.5rem;
-      margin: 1rem 0 1.5rem 0; overflow-x: auto;
-    }
-    .kalender-title {
-      font-weight: 700; color: #3b2b1e; font-size: 1rem;
-      margin-bottom: 1rem; text-align: center;
-    }
-    .kalender-grid {
+    .spectrum-levels {
       display: grid;
-      grid-template-columns: 60px repeat(29, 1fr);
-      gap: 4px;
-      min-width: 900px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem; margin-bottom: 0.8rem;
     }
-    .kalender-grid .kg-header {
-      font-size: 0.7rem; font-weight: 700; color: #4d3829;
-      text-align: center; padding: 0.3rem 0;
+    @media (max-width: 620px) {
+      .spectrum-levels { grid-template-columns: 1fr; }
     }
-    .kalender-grid .kg-label {
-      font-size: 0.75rem; font-weight: 700; color: #4d3829;
-      display: flex; align-items: center; padding-right: 0.5rem;
-      white-space: nowrap;
-    }
-    .kalender-grid .kg-label.abdi { color: #1a4a6b; }
-    .kalender-grid .kg-label.ali { color: #8a5e00; }
-    .kalender-grid .kg-cell {
-      aspect-ratio: 1; border-radius: 8px;
+    .spectrum-level {
+      padding: 0.6rem 0.5rem; border-radius: 12px;
       border: 2px solid #e5dbd0; background: #fff;
-      cursor: pointer; transition: all 0.15s ease;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.7rem; font-weight: 700; color: #7a6656;
-      user-select: none; position: relative;
+      cursor: pointer; transition: all 0.2s ease;
+      font-size: 0.75rem; font-weight: 700;
+      color: #3b2b1e; line-height: 1.3;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 0.3rem;
     }
-    .kalender-grid .kg-cell:hover {
-      transform: scale(1.1); border-color: #b09b88;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    .spectrum-level:hover:not(.locked) {
+      transform: translateY(-3px);
+      border-color: #ff8a5b;
+      box-shadow: 0 6px 16px rgba(255, 138, 91, 0.15);
     }
-    .kalender-grid .kg-cell.abdi-on {
-      background: #b8d4f5; border-color: #4a7a9b; color: #1a4a6b;
+    .spectrum-level .sl-icon { font-size: 1.4rem; }
+    .spectrum-level .sl-label { font-size: 0.7rem; }
+    .spectrum-level.active {
+      border-color: #ff8a5b; background: #fff5f0;
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.20);
+      transform: translateY(-2px);
     }
-    .kalender-grid .kg-cell.ali-on {
-      background: #f5d4b8; border-color: #d4a030; color: #8a5e00;
+    .spectrum-level.locked {
+      opacity: 0.4; cursor: not-allowed;
     }
-    .kalender-grid .kg-cell.keduanya {
-      background: linear-gradient(135deg, #b8d4f5 50%, #f5d4b8 50%);
-      border-color: #6a8a5a; color: #2d5a1e;
-      box-shadow: 0 0 0 3px rgba(106, 138, 90, 0.3);
+    .spectrum-level.level-1 { border-top: 4px solid #4fb0c6; }
+    .spectrum-level.level-2 { border-top: 4px solid #6ecb8f; }
+    .spectrum-level.level-3 { border-top: 4px solid #f4b942; }
+    .spectrum-level.level-4 { border-top: 4px solid #f26d8a; }
+    .spectrum-level.level-5 { border-top: 4px solid #8a4bbf; }
+
+    /* ===== SKENARIO ===== */
+    .skenario-box {
+      background: #fff; border-radius: 16px;
+      border: 2px solid #e5dbd0; padding: 1.2rem 1.4rem;
+      margin: 1rem 0; min-height: 120px;
     }
-    .kalender-grid .kg-cell .mark {
-      position: absolute; top: -6px; right: -6px;
-      font-size: 0.9rem; line-height: 1;
+    .skenario-box .sk-header {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.6rem;
     }
-    .kalender-grid .kg-cell .star {
-      position: absolute; bottom: -6px; left: -6px;
-      font-size: 0.9rem; line-height: 1;
+    .skenario-box .sk-num {
+      font-size: 0.7rem; font-weight: 700;
+      background: #f5ede6; color: #7a6656;
+      padding: 0.2rem 0.7rem; border-radius: 20px;
+      letter-spacing: 1px;
+    }
+    .skenario-box .sk-progress {
+      font-size: 0.7rem; font-weight: 700;
+      color: #2d5a1e; background: #e8f5e0;
+      padding: 0.2rem 0.7rem; border-radius: 20px;
+    }
+    .skenario-box .sk-title {
+      font-size: 1.05rem; font-weight: 700;
+      color: #3b2b1e; margin-bottom: 0.5rem;
+    }
+    .skenario-box .sk-desc {
+      font-size: 0.92rem; color: #2f2822;
+      line-height: 1.7;
+    }
+    .skenario-box .sk-desc strong { color: #b34614; }
+    .skenario-box .sk-penerima {
+      display: inline-block; margin-top: 0.6rem;
+      padding: 0.4rem 0.9rem; border-radius: 10px;
+      background: #fff5f0; border-left: 4px solid #ff8a5b;
+      font-size: 0.85rem; color: #b34614;
+      font-weight: 600;
     }
 
-    .kalender-legend {
-      display: flex; flex-wrap: wrap; gap: 1rem;
-      justify-content: center; margin-top: 1rem;
-      font-size: 0.8rem; color: #5c4638;
+    /* ===== RIWAYAT JAWABAN ===== */
+    .riwayat-box {
+      background: #f8f4ef; border-radius: 14px;
+      padding: 1rem 1.2rem; margin: 1rem 0;
+      border: 2px dashed #d9cdbf;
     }
-    .kalender-legend .leg-item {
-      display: flex; align-items: center; gap: 0.4rem;
+    .riwayat-box .rb-title {
+      font-weight: 700; font-size: 0.85rem;
+      color: #4d3829; margin-bottom: 0.5rem;
     }
-    .kalender-legend .leg-box {
-      width: 20px; height: 20px; border-radius: 5px;
-      border: 2px solid #e5dbd0;
+    .riwayat-box .rb-list {
+      display: flex; flex-direction: column; gap: 0.4rem;
     }
-    .kalender-legend .leg-box.abdi { background: #b8d4f5; border-color: #4a7a9b; }
-    .kalender-legend .leg-box.ali { background: #f5d4b8; border-color: #d4a030; }
-    .kalender-legend .leg-box.keduanya {
-      background: linear-gradient(135deg, #b8d4f5 50%, #f5d4b8 50%);
-      border-color: #6a8a5a;
+    .riwayat-box .rb-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.82rem; color: #2f2822;
+      padding: 0.4rem 0.7rem; border-radius: 8px;
+      background: #fff; border-left: 4px solid #d9cdbf;
+    }
+    .riwayat-box .rb-item.benar { border-left-color: #6ecb8f; background: #f0f8eb; }
+    .riwayat-box .rb-item.salah { border-left-color: #f26d8a; background: #fdf0f0; }
+    .riwayat-box .rb-item .rb-icon { font-size: 1rem; }
+    .riwayat-box .rb-empty {
+      font-size: 0.82rem; color: #b09b88; font-style: italic;
     }
 
     /* ===== FEEDBACK ===== */
@@ -289,7 +193,7 @@
     .feedback-box.show { display: block; }
     .feedback-box.success { border-color: #2d7d46; background: #e8f5ee; }
     .feedback-box.error { border-color: #b33c3c; background: #fde8e8; }
-    .feedback-box.info { border-color: #f26d8a; background: #fdf2f5; }
+    .feedback-box.info { border-color: #ff8a5b; background: #fff5f0; }
     .feedback-box.warn { border-color: #d4a030; background: #fff8e6; }
     .feedback-box .fb-icon { font-size: 1.5rem; margin-right: 0.5rem; }
     .feedback-box .fb-text { color: #2f2822; line-height: 1.6; }
@@ -308,12 +212,12 @@
       align-items: center; gap: 0.4rem;
     }
     .btn-game.primary {
-      background: linear-gradient(135deg, #f26d8a, #b07be0);
-      color: #fff; box-shadow: 0 4px 14px rgba(242, 109, 138, 0.25);
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
+      color: #fff; box-shadow: 0 4px 14px rgba(255, 138, 91, 0.25);
     }
     .btn-game.primary:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(242, 109, 138, 0.35);
+      box-shadow: 0 6px 20px rgba(255, 138, 91, 0.35);
     }
     .btn-game.secondary {
       background: #f5ede6; color: #4d3829; border: 2px solid #d9cdbf;
@@ -364,10 +268,6 @@
       padding: 1rem 1.3rem; border: 2px solid #e5dbd0;
       transition: all 0.3s ease;
     }
-    .tantangan-item.aktif {
-      border-color: #f4b942; background: #fffbf0;
-      box-shadow: 0 4px 14px rgba(244, 185, 66, 0.15);
-    }
     .tantangan-item.selesai {
       border-color: #8aaa7a; background: #f0f8eb;
     }
@@ -389,14 +289,14 @@
       display: flex; flex-wrap: wrap; gap: 0.5rem;
       align-items: center;
     }
-    .tantangan-item .t-input-row input {
-      flex: 1; min-width: 120px;
+    .tantangan-item .t-input-row textarea {
+      flex: 1; min-width: 200px;
       padding: 0.5rem 0.9rem; border-radius: 10px;
       border: 2px solid #d9cdbf; font-family: inherit;
-      font-size: 0.9rem; color: #2f2822; background: #fcfaf7;
-      outline: none;
+      font-size: 0.88rem; color: #2f2822; background: #fcfaf7;
+      outline: none; min-height: 70px; resize: vertical;
     }
-    .tantangan-item .t-input-row input:focus {
+    .tantangan-item .t-input-row textarea:focus {
       border-color: #6b4f3a; background: #fff;
     }
     .tantangan-item .t-input-row button {
@@ -404,6 +304,7 @@
       border: none; font-weight: 700; font-size: 0.85rem;
       cursor: pointer; background: #4d3829; color: #fff;
       font-family: inherit; transition: all 0.2s ease;
+      align-self: flex-end;
     }
     .tantangan-item .t-input-row button:hover:not(:disabled) {
       background: #6b4f3a; transform: translateY(-1px);
@@ -429,6 +330,17 @@
       background: #f5d6d0; color: #a84a3a;
       border-left: 4px solid #d97a6a;
     }
+    .tantangan-item .t-opsi-col {
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .tantangan-item .t-opsi-col label {
+      display: flex; gap: 0.5rem; padding: 0.5rem 0.8rem;
+      border: 2px solid #d9cdbf; border-radius: 10px;
+      cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+      background: #fff; transition: all 0.15s ease;
+    }
+    .tantangan-item .t-opsi-col label:hover { border-color: #6b4f3a; }
+    .tantangan-item .t-opsi-col input[type="radio"] { accent-color: #ff8a5b; }
 
     /* ===== PENAMAAN (LAPIS 3) ===== */
     .penamaan-box {
@@ -446,10 +358,26 @@
       background: #fff; border-radius: 12px;
       padding: 0.8rem 1.2rem; margin: 0.6rem 0;
       border: 2px dashed #8aaa7a;
-      font-family: 'Courier New', monospace;
       font-size: 0.95rem; color: #2f2822; line-height: 1.7;
     }
     .penamaan-box .notasi-box strong { color: #2d5a1e; }
+    .penamaan-box .notasi-box ul {
+      margin: 0.4rem 0 0 1.2rem; line-height: 1.7;
+    }
+    .penamaan-box .notasi-box table {
+      width: 100%; border-collapse: collapse;
+      margin-top: 0.6rem; font-size: 0.86rem;
+    }
+    .penamaan-box .notasi-box table th {
+      background: #e8f5ee; color: #2d5a1e;
+      padding: 0.5rem 0.8rem; text-align: left;
+      border-bottom: 2px solid #8aaa7a;
+    }
+    .penamaan-box .notasi-box table td {
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid #e5dbd0;
+      vertical-align: top;
+    }
     .penamaan-box .koneksi {
       background: #fff8e6; border-left: 5px solid #f4b942;
       border-radius: 10px; padding: 0.8rem 1.2rem;
@@ -458,20 +386,19 @@
     }
     .penamaan-box .koneksi strong { color: #8a5e00; }
 
-    /* Link materi lengkap */
     .link-materi-bawah {
       display: inline-flex; align-items: center; gap: 0.5rem;
       margin: 1rem auto 0;
       padding: 0.7rem 1.8rem; border-radius: 30px;
-      background: #fff; color: #5c2f8a;
-      border: 2px solid #b07be0; text-decoration: none;
+      background: #fff; color: #b34614;
+      border: 2px solid #ff8a5b; text-decoration: none;
       font-weight: 700; font-size: 0.9rem;
       transition: all 0.2s ease;
     }
     .link-materi-bawah:hover {
-      background: #f0e6ff;
+      background: #fff5f0;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(176, 123, 224, 0.25);
+      box-shadow: 0 6px 16px rgba(255, 138, 91, 0.25);
     }
     .link-materi-wrapper { text-align: center; margin-top: 1rem; }
 
@@ -479,22 +406,22 @@
     .kuis-kilat-box {
       background: #fff; border-radius: 16px;
       padding: 1.3rem 1.6rem; margin: 1.5rem 0;
-      border: 2px solid #f26d8a;
-      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.1);
+      border: 2px solid #ff8a5b;
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.1);
       display: none;
     }
     .kuis-kilat-box.show { display: block; animation: fadeIn 0.5s ease; }
     .kuis-kilat-box .kk-title {
-      font-weight: 700; color: #a01746; font-size: 1rem;
+      font-weight: 700; color: #b34614; font-size: 1rem;
       margin-bottom: 0.8rem; display: flex;
       align-items: center; gap: 0.5rem;
     }
     .kuis-kilat-box .kk-title .badge {
-      background: #f26d8a; color: #fff; font-size: 0.65rem;
+      background: #ff8a5b; color: #fff; font-size: 0.65rem;
       padding: 0.15rem 0.6rem; border-radius: 20px;
     }
     .kuis-kilat-box .kk-soal {
-      background: #fdf2f5; border-radius: 10px;
+      background: #fff5f0; border-radius: 10px;
       padding: 0.8rem 1.1rem; margin-bottom: 0.8rem;
     }
     .kuis-kilat-box .kk-soal .kk-q {
@@ -511,7 +438,7 @@
       border: 2px solid #e5dbd0; transition: all 0.15s;
     }
     .kuis-kilat-box .kk-opsi label:hover:not(.disabled) {
-      background: #fdf2f5; border-color: #f26d8a;
+      background: #fff5f0; border-color: #ff8a5b;
     }
     .kuis-kilat-box .kk-opsi label.disabled { cursor: default; }
     .kuis-kilat-box .kk-opsi label.benar {
@@ -520,7 +447,7 @@
     .kuis-kilat-box .kk-opsi label.salah {
       border-color: #d4a0a0; background: #f5e0e0;
     }
-    .kuis-kilat-box .kk-opsi input[type="radio"] { accent-color: #f26d8a; }
+    .kuis-kilat-box .kk-opsi input[type="radio"] { accent-color: #ff8a5b; }
     .kuis-kilat-box .kk-opsi .check-icon {
       margin-left: auto; font-size: 0.9rem;
     }
@@ -539,9 +466,9 @@
     }
     .tes-section.active { display: block; animation: fadeIn 0.4s ease; }
     .tes-header {
-      background: #fdf2f5; border-radius: 12px;
+      background: #fff5f0; border-radius: 12px;
       padding: 0.9rem 1.2rem; margin-bottom: 1rem;
-      border-left: 5px solid #f26d8a;
+      border-left: 5px solid #ff8a5b;
       display: flex; flex-wrap: wrap; justify-content: space-between;
       align-items: center; gap: 0.5rem;
     }
@@ -567,7 +494,7 @@
     }
     .soal-kuis .pertanyaan .soal-num {
       display: inline-flex; align-items: center; justify-content: center;
-      background: #f26d8a; color: #fff;
+      background: #ff8a5b; color: #fff;
       width: 24px; height: 24px; border-radius: 50%;
       font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
     }
@@ -581,11 +508,11 @@
       border: 2px solid #e5dbd0; transition: all 0.15s; line-height: 1.5;
     }
     .soal-kuis .opsi-kuis label:hover:not(.disabled) {
-      background: #fdf2f5; border-color: #f26d8a;
+      background: #fff5f0; border-color: #ff8a5b;
     }
     .soal-kuis .opsi-kuis label.disabled { cursor: default; }
     .soal-kuis .opsi-kuis label.selected {
-      border-color: #f26d8a; background: #fdf2f5;
+      border-color: #ff8a5b; background: #fff5f0;
     }
     .soal-kuis .opsi-kuis label.correct-answer {
       border-color: #8aaa7a; background: #e8f5e0;
@@ -594,7 +521,7 @@
       border-color: #d4a0a0; background: #f5e0e0;
     }
     .soal-kuis .opsi-kuis input[type="radio"] {
-      accent-color: #f26d8a;
+      accent-color: #ff8a5b;
       width: 16px; height: 16px;
       margin-top: 0.15rem; flex-shrink: 0;
     }
@@ -618,13 +545,13 @@
     .btn-submit-tes {
       display: block; margin: 1.2rem auto 0;
       padding: 0.7rem 2.5rem; border-radius: 30px; border: none;
-      background: linear-gradient(135deg, #f26d8a, #b07be0);
+      background: linear-gradient(135deg, #ff8a5b, #f4b942);
       color: #fff; font-weight: 700; font-size: 0.95rem;
       cursor: pointer; transition: all 0.2s ease; font-family: inherit;
     }
     .btn-submit-tes:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(242, 109, 138, 0.35);
+      box-shadow: 0 6px 18px rgba(255, 138, 91, 0.35);
     }
     .btn-submit-tes:disabled {
       opacity: 0.5; cursor: not-allowed; transform: none !important;
@@ -632,22 +559,22 @@
     .btn-ulangi-tes {
       display: none; margin: 1rem auto 0;
       padding: 0.7rem 2rem; border-radius: 30px;
-      background: #fff; color: #a01746;
-      border: 2px solid #f26d8a;
+      background: #fff; color: #b34614;
+      border: 2px solid #ff8a5b;
       font-weight: 700; font-size: 0.95rem;
       cursor: pointer; transition: all 0.2s ease;
       font-family: inherit;
     }
     .btn-ulangi-tes.show { display: block; }
     .btn-ulangi-tes:hover {
-      background: #fdf2f5;
+      background: #fff5f0;
       transform: translateY(-2px);
-      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.20);
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.20);
     }
     .hasil-tes {
       display: none; margin-top: 1.2rem; padding: 1.2rem;
-      background: #fdf2f5; border-radius: 14px;
-      border: 3px double #f26d8a; text-align: center;
+      background: #fff5f0; border-radius: 14px;
+      border: 3px double #ff8a5b; text-align: center;
     }
     .hasil-tes.show { display: block; animation: fadeIn 0.4s ease; }
     .hasil-tes .hasil-icon { font-size: 2.8rem; margin-bottom: 0.3rem; }
@@ -716,7 +643,7 @@
     }
     .status-kirim.show { display: flex; flex-wrap: wrap; }
     .status-kirim.info {
-      background: #fdf2f5; border: 2px solid #f26d8a; color: #a01746;
+      background: #fff5f0; border: 2px solid #ff8a5b; color: #b34614;
     }
     .status-kirim.success { background: #d4e8cb; border: 2px solid #8aaa7a; color: #2d5a1e; }
     .status-kirim.error { background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a; }
@@ -754,7 +681,7 @@
       display: inline-flex; align-items: center; gap: 0.4rem;
     }
     .btn-nav-bawah:hover {
-      background: #fdf2f5; border-color: #f26d8a;
+      background: #fff5f0; border-color: #ff8a5b;
       transform: translateY(-2px);
     }
     .btn-nav-bawah.primary {
@@ -779,7 +706,6 @@
     /* ===== RESPONSIF ===== */
     @media (max-width: 820px) {
       .scenario-panel { padding: 1.2rem; }
-      .form-siswa-box { padding: 1.2rem 1rem; }
       .penamaan-box { padding: 1rem 1.2rem; }
       .kuis-kilat-box { padding: 1rem 1.2rem; }
       .refleksi-box { padding: 1rem 1.2rem; }
@@ -795,13 +721,10 @@
       .soal-kuis .pertanyaan { font-size: 0.92rem; }
       .soal-kuis .opsi-kuis label { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
       .tes-header { flex-direction: column; align-items: flex-start; }
-      .form-siswa-item input[type="text"] { min-width: 100px; }
       .status-kirim .btn-retry { margin-left: 0; width: 100%; text-align: center; }
       .lapis-header { font-size: 0.85rem; padding: 0.6rem 1rem; }
       .progress-lapis .pl-step .pl-label { display: none; }
       .progress-lapis .pl-step { padding: 0.35rem 0.6rem; }
-      .kalender-grid { font-size: 0.6rem; }
-      .kalender-grid .kg-cell { font-size: 0.55rem; border-radius: 5px; }
     }
   </style>
 </head>
@@ -812,9 +735,9 @@
   <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
     <ol class="breadcrumb">
       <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materibk.html">Berpikir Komputasional</a></li>
-      <li><a href="bk4.html">Memodelkan Persoalan Logika</a></li>
-      <li>Bagian 2: Dunia yang Tumpang Tindih</li>
+      <li><a href="materitik.html">Teknologi Informasi dan Komunikasi</a></li>
+      <li><a href="tik2.html">Menerapkan Surel</a></li>
+      <li>Bagian 5: Etika &amp; Konteks Lokal</li>
     </ol>
   </nav>
 
@@ -822,7 +745,7 @@
     <article class="card">
       <div class="aktivitas-wrapper">
 
-        <!-- ===== PROGRESS BAR VISUAL (LAPIS) ===== -->
+        <!-- ===== PROGRESS BAR VISUAL ===== -->
         <div class="progress-lapis" id="progressLapis">
           <span class="pl-step active" data-step="lapis1">
             <span class="pl-num">1</span>
@@ -849,88 +772,83 @@
         <div id="area-simulasi" class="active">
           <div class="scenario-panel">
 
-            <div class="scenario-title">📅 Aktivitas: Kalender Ramadhan</div>
+            <div class="scenario-title">🎩 Aktivitas: Kapan Formal, Kapan Santai</div>
             <div class="scenario-story">
-			  📖 <strong>Cerita:</strong> Bulan Ramadhan tiba. Raka, ketua kelas 8A, ingin mengadakan buka puasa bersama.
-			  Ia mendata tanggal-tanggal di mana <strong>Abu</strong> dan <strong>Ali</strong> bisa hadir:
-			  <ul style="margin:0.5rem 0 0 1.2rem; font-size:0.9rem; line-height:1.7;">
-				<li><strong>Abu bisa hadir tanggal:</strong> 5, 8, 9, 15, 20, 23, 25</li>
-				<li><strong>Ali bisa hadir tanggal:</strong> 7, 9, 11, 15, 17, 21, 23</li>
-			  </ul>
-			  Bantu Raka menemukan tanggal di mana <strong>keduanya bisa hadir bersamaan</strong>, dan
-			  tanggal di mana <strong>setidaknya satu dari mereka</strong> bisa hadir!
-			</div>
+              📖 <strong>Cerita:</strong> Dewi adalah sekretaris OSIS di SMP Nusantara.
+              Ia harus mengirim email ke <strong>5 orang berbeda</strong> untuk urusan
+              kegiatan sekolah. Tetapi Dewi bingung: <em>seberapa formal email yang harus
+              ia tulis untuk masing-masing orang?</em>
+              <br><br>
+              Bantu Dewi memilih <strong>tingkat formalitas</strong> yang tepat untuk
+              setiap penerima &amp; situasi!
+            </div>
 
-            <!-- ===== LAPIS 1: MENJELAJAH BEBAS ===== -->
+            <!-- ===== LAPIS 1 ===== -->
             <div class="lapis-header lapis-1">
               <span class="lapis-num">LAPIS 1</span>
-              <span>🖐️ Menjelajah Bebas — Coba dan Perhatikan</span>
+              <span>🖐️ Menjelajah Bebas — Pilih Tingkat Formalitas</span>
             </div>
 
             <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
-              <strong>Instruksi:</strong> Klik tanggal di baris <strong>Abu</strong> atau <strong>Ali</strong> untuk
-              menyalakan/mematikan. Tanggal yang menyala di <strong>kedua baris</strong> akan otomatis
-              ditandai ⭐ (bintang) — itu tanggal di mana keduanya bisa hadir. Tanggal yang menyala
-              di <strong>salah satu baris</strong> akan ditandai ● (lingkaran). Coba dulu, dan perhatikan apa yang terjadi.
+              <strong>Instruksi:</strong> Untuk setiap <strong>skenario</strong>, pilih
+              <strong>tingkat formalitas</strong> email yang paling tepat. Klik salah satu
+              level di spektrum bawah skenario. Tidak ada jawaban salah — coba dulu!
             </p>
 
-            <div class="stats-bar">
-              <div class="stat">
-                <span>📅</span>
-                <span class="label">Abu bisa:</span>
-                <span class="num" id="statAbu">0</span>
-                <span class="label">tanggal</span>
-              </div>
-              <div class="stat">
-                <span>📅</span>
-                <span class="label">Ali bisa:</span>
-                <span class="num" id="statAli">0</span>
-                <span class="label">tanggal</span>
-              </div>
-              <div class="stat">
-                <span>⭐</span>
-                <span class="label">Keduanya:</span>
-                <span class="num" id="statKeduanya">0</span>
-                <span class="label">tanggal</span>
-              </div>
-              <div class="stat">
-                <span>●</span>
-                <span class="label">Salah satu:</span>
-                <span class="num" id="statSalahSatu">0</span>
-                <span class="label">tanggal</span>
+            <!-- Spektrum -->
+            <div class="spectrum-box">
+              <div class="spectrum-title">📊 Spektrum Formalitas Email</div>
+              <div class="spectrum-levels" id="spectrumLevels">
+                <div class="spectrum-level level-1" data-level="1">
+                  <span class="sl-icon">💬</span>
+                  <span class="sl-label">Sangat Santai</span>
+                </div>
+                <div class="spectrum-level level-2" data-level="2">
+                  <span class="sl-icon">🙂</span>
+                  <span class="sl-label">Santai Sopan</span>
+                </div>
+                <div class="spectrum-level level-3" data-level="3">
+                  <span class="sl-icon">📋</span>
+                  <span class="sl-label">Semi-Formal</span>
+                </div>
+                <div class="spectrum-level level-4" data-level="4">
+                  <span class="sl-icon">🎩</span>
+                  <span class="sl-label">Formal</span>
+                </div>
+                <div class="spectrum-level level-5" data-level="5">
+                  <span class="sl-icon">👔</span>
+                  <span class="sl-label">Sangat Formal</span>
+                </div>
               </div>
             </div>
 
-            <!-- Kalender -->
-            <div class="kalender-wrapper">
-              <div class="kalender-title">🗓️ Kalender Ramadhan (Tanggal 1–29)</div>
-              <div class="kalender-grid" id="kalenderGrid">
-                <!-- Header tanggal akan di-generate JS -->
+            <!-- Skenario -->
+            <div class="skenario-box" id="skenarioBox">
+              <div class="sk-header">
+                <span class="sk-num" id="skNum">SKENARIO 1 / 5</span>
+                <span class="sk-progress" id="skProgress">0 / 5 dijawab</span>
               </div>
-              <div class="kalender-legend">
-                <div class="leg-item">
-                  <div class="leg-box abdi"></div>
-                  <span>Abu bisa hadir</span>
-                </div>
-                <div class="leg-item">
-                  <div class="leg-box ali"></div>
-                  <span>Ali bisa hadir</span>
-                </div>
-                <div class="leg-item">
-                  <div class="leg-box keduanya"></div>
-                  <span>⭐ Keduanya bisa hadir</span>
-                </div>
+              <div class="sk-title" id="skTitle">—</div>
+              <div class="sk-desc" id="skDesc">—</div>
+              <div class="sk-penerima" id="skPenerima">—</div>
+            </div>
+
+            <!-- Riwayat Jawaban -->
+            <div class="riwayat-box">
+              <div class="rb-title">📝 Riwayat Jawaban</div>
+              <div class="rb-list" id="riwayatList">
+                <span class="rb-empty">Belum ada jawaban.</span>
               </div>
             </div>
 
             <!-- Feedback -->
             <div class="feedback-box info show" id="feedbackBox">
               <span class="fb-icon" id="fbIcon">💡</span>
-              <span class="fb-text" id="fbText">Klik tanggal di baris Abu atau Ali untuk menyalakan/mematikan!</span>
+              <span class="fb-text" id="fbText">Pilih tingkat formalitas yang tepat untuk skenario ini!</span>
             </div>
 
             <div class="game-actions">
-              <button class="btn-game secondary" onclick="resetKalender()">🔄 Ulangi dari Awal</button>
+              <button class="btn-game secondary" onclick="resetSkenario()">🔄 Ulangi dari Awal</button>
               <button class="btn-game primary" id="btnSelesaiLapis1" onclick="selesaiLapis1()" disabled>
                 ✅ Selesai Menjelajah
               </button>
@@ -940,8 +858,10 @@
             <div class="mindful-box" id="mindful1">
               <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 1</div>
               <div class="mb-text">
-                <strong>Pola apa yang kamu lihat?</strong> Tanggal mana yang mendapat tanda ⭐ (bintang)?
-                Tanggal mana yang mendapat tanda ● (lingkaran)? Apa bedanya?
+                <strong>Pola apa yang kamu lihat?</strong>
+                Apa hubungan antara <strong>jabatan penerima</strong> dengan
+                <strong>tingkat formalitas</strong>? Apakah selalu "semakin tinggi jabatan = semakin formal"?
+                Tulis pengamatanmu.
               </div>
               <textarea id="mindful1Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
             </div>
@@ -968,8 +888,9 @@
             <div class="mindful-box" id="mindful2" style="display:none;">
               <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 2</div>
               <div class="mb-text">
-                <strong>Refleksi:</strong> Apa perbedaan antara "tanggal yang muncul di dua kolom"
-                dan "semua tanggal yang muncul di kolom mana pun"?
+                <strong>Refleksi:</strong> Pernahkah kamu melihat orang mengirim email
+                <strong>terlalu formal</strong> ke teman sendiri? Atau <strong>terlalu santai</strong>
+                ke guru? Apa akibatnya? Tulis pendapatmu.
               </div>
               <textarea id="mindful2Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
             </div>
@@ -993,33 +914,77 @@
             <div class="penamaan-box show">
               <h3>🏷️ Sekarang, Kita Beri Nama!</h3>
               <p style="font-size:0.92rem; line-height:1.7; color:#2f2822;">
-                Semua yang kamu lakukan tadi punya <strong>nama resmi</strong> dalam matematika dan informatika.
-                Inilah saatnya menghubungkan pengalamanmu dengan istilah formal.
+                Semua yang kamu lakukan tadi punya <strong>nama resmi</strong> dalam
+                komunikasi digital &amp; etika. Inilah saatnya menghubungkan pengalamanmu
+                dengan istilah formal.
               </p>
 
               <div class="notasi-box">
-                <strong>Irisan (∩)</strong> = anggota yang ada di <strong>kedua</strong> himpunan.<br>
-                Contoh: A ∩ L = {9, 15, 23} — tanggal yang Abu <strong>dan</strong> Ali bisa hadir.<br><br>
-
-                <strong>Gabungan (∪)</strong> = anggota yang ada di <strong>setidaknya salah satu</strong> himpunan.<br>
-                Contoh: A ∪ L = {5, 7, 8, 9, 11, 15, 17, 20, 21, 23, 25} — tanggal yang Abu <strong>atau</strong> Ali bisa hadir.<br><br>
-
-                <strong>Rumus penting:</strong> n(A ∪ L) = n(A) + n(L) − n(A ∩ L)<br>
-                Contoh: 7 + 7 − 3 = 11.
+                <strong>🇮🇩 Etika Digital (Digital Ethics)</strong> adalah
+                <strong>prinsip perilaku bertanggung jawab di ruang digital</strong> —
+                termasuk menghormati waktu penerima, menggunakan bahasa yang sopan,
+                dan menyesuaikan diri dengan konteks.
+                <br><br>
+                <strong>Tingkat formalitas email:</strong>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Penerima</th>
+                      <th>Tingkat</th>
+                      <th>Contoh Salam</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Kepala sekolah / instansi resmi</td>
+                      <td>👔 Sangat Formal</td>
+                      <td>"Yth. Bapak Kepala Sekolah,"</td>
+                    </tr>
+                    <tr>
+                      <td>Guru (kenal / belum kenal)</td>
+                      <td>🎩 Formal</td>
+                      <td>"Yth. Bu Dewi,"</td>
+                    </tr>
+                    <tr>
+                      <td>Ketua kelas / OSIS / panitia</td>
+                      <td>📋 Semi-Formal</td>
+                      <td>"Halo Raka,"</td>
+                    </tr>
+                    <tr>
+                      <td>Teman sekelas (tugas formal)</td>
+                      <td>🙂 Santai Sopan</td>
+                      <td>"Hai Siti,"</td>
+                    </tr>
+                    <tr>
+                      <td>Teman dekat (non-formal)</td>
+                      <td>💬 Sangat Santai</td>
+                      <td>"Sit, ..."</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br>
+                <strong>Prinsip:</strong> Semakin <strong>tinggi jabatan</strong> penerima
+                dan semakin <strong>formal konteksnya</strong>, semakin formal bahasamu.
+                Tetapi <strong>sopan</strong> tetap berlaku di semua tingkat.
               </div>
 
               <div class="koneksi">
-                <strong>💡 Koneksi Dunia Nyata:</strong><br>
-                Ini seperti saat kamu melihat temanmu di dua tempat berbeda. Misalnya, Raka ikut Futsal dan juga Basket.
-                Dalam sistem akademik sekolah, Raka akan muncul di dua daftar. Kalau kepala sekolah ingin tahu
-                "siapa saja yang ikut minimal satu ekstrakurikuler", ia harus menggunakan <strong>gabungan</strong>,
-                dan berhati-hati agar Raka tidak dihitung dua kali.
+                <strong>💡 Koneksi Konteks Lokal Indonesia:</strong><br>
+                Dalam budaya <strong>gotong royong</strong> dan <strong>musyawarah</strong>
+                Indonesia, komunikasi yang baik mencerminkan sikap <strong>menghargai</strong>
+                dan <strong>tidak memaksakan kehendak</strong>. Email yang sopan bukan
+                sekadar formalitas — itu cara kita <strong>menjaga hubungan baik</strong>
+                dengan guru dan teman. Beberapa norma lokal:<br>
+                • Menggunakan <strong>sapaan hormat</strong> ("Bapak", "Ibu", "Yth.") kepada guru<br>
+                • Menyampaikan <strong>permohonan</strong>, bukan tuntutan<br>
+                • Menghindari <strong>singkatan gaya chat</strong> (yg, gpp, bgt) dalam email formal<br>
+                • Menulis dengan <strong>ejaan yang benar</strong>
               </div>
             </div>
 
-            <!-- Link materi lengkap (buka di tab baru) -->
+            <!-- Link materi lengkap -->
             <div class="link-materi-wrapper">
-              <a href="materibk4.html" target="_blank" rel="noopener" class="link-materi-bawah">
+              <a href="materitik2.html" target="_blank" rel="noopener" class="link-materi-bawah">
                 📚 Baca Materi Lengkap (buka tab baru)
               </a>
             </div>
@@ -1028,8 +993,8 @@
             <div class="mindful-box" id="mindful3">
               <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 3</div>
               <div class="mb-text">
-                Dengan istilah resmi: <strong>apa perbedaan irisan dan gabungan</strong>?
-                Tulis dengan bahasamu sendiri.
+                Dengan istilah resmi: <strong>mengapa etika digital penting dalam
+                komunikasi lewat email</strong>? Tulis dengan bahasamu sendiri.
               </div>
               <textarea id="mindful3Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
             </div>
@@ -1070,7 +1035,7 @@
           <div class="hasil-icon" id="hasilIcon">🏆</div>
           <div class="hasil-title" id="hasilTitle">Selamat!</div>
           <div class="hasil-skor" id="hasilSkor">0 / 4</div>
-          <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 2.</div>
+          <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 5.</div>
         </div>
 
         <!-- ===== REFLEKSI 4F ===== -->
@@ -1078,33 +1043,31 @@
           <h3>🪞 Refleksi 4F</h3>
 
           <div class="refleksi-item">
-            <label><span class="tag">FACT</span> Apa yang tadi saya lakukan dengan kalender?</label>
+            <label><span class="tag">FACT</span> Apa yang tadi saya lakukan saat memilih tingkat formalitas?</label>
             <textarea id="refFact" placeholder="Tulis di sini..."></textarea>
           </div>
 
           <div class="refleksi-item">
-            <label><span class="tag">FEELING</span> Bagian mana yang membingungkan? Bagian mana yang menyenangkan?</label>
+            <label><span class="tag">FEELING</span> Bagian mana yang membingungkan? Apakah saya pernah salah memilih formalitas?</label>
             <textarea id="refFeeling" placeholder="Tulis di sini..."></textarea>
           </div>
 
           <div class="refleksi-item">
-            <label><span class="tag">FINDING</span> Apa itu irisan? Apa itu gabungan? Kapan saya perlu berhati-hati agar tidak menghitung ganda?</label>
+            <label><span class="tag">FINDING</span> Apa itu etika digital? Bagaimana hubungannya dengan tingkat formalitas email?</label>
             <textarea id="refFinding" placeholder="Tulis di sini..."></textarea>
           </div>
 
           <div class="refleksi-item">
-            <label><span class="tag">FUTURE</span> Di mana lagi saya bisa menemukan situasi "tumpang tindih" seperti ini?</label>
+            <label><span class="tag">FUTURE</span> Dalam situasi apa lagi saya perlu menyesuaikan tingkat formalitas komunikasi — tidak hanya di email, tapi juga di chat atau media sosial?</label>
             <textarea id="refFuture" placeholder="Tulis di sini..."></textarea>
           </div>
 
           <div class="exit-ticket">
             <div class="et-title">🎫 Exit Ticket</div>
             <p style="font-size:0.85rem; color:#5c4638; margin-bottom:0.4rem;">
-              Di kelasmu, ada siswa yang ikut ekstrakurikuler Pramuka dan PMR.
-              Jika kamu ingin membuat daftar "semua siswa yang ikut minimal satu dari kedua ekstrakurikuler itu",
-              operasi himpunan apa yang kamu gunakan? Mengapa?
+              Tuliskan <strong>satu contoh aturan tidak tertulis</strong> di sekolah atau masyarakat Indonesia yang mencerminkan etika komunikasi (misalnya: "Jangan memanggil guru dengan nama depan", dll).
             </p>
-            <textarea id="exitTicket" placeholder="Contoh: Saya menggunakan operasi ... karena ..."></textarea>
+            <textarea id="exitTicket" placeholder="Contoh: Di sekolah Indonesia, kita memanggil guru dengan Bapak/Ibu, bukan nama depan." style="min-height:80px;"></textarea>
           </div>
         </div>
 
@@ -1116,16 +1079,16 @@
 
         <!-- ===== NAVIGASI BAWAH ===== -->
         <div class="nav-bottom">
-          <a href="aktivitasbk4a.html" class="btn-nav-bawah">
-            <span class="back-arrow">←</span> Kembali ke Bagian 1
+          <a href="aktivitastik2d.html" class="btn-nav-bawah">
+            <span class="back-arrow">←</span> Kembali ke Bagian 4
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian3" onclick="lanjutKeBagian3()">
-              Lanjut ke Bagian 3: Selisih &amp; Komplemen →
+            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian6" onclick="lanjutKeBagian6()">
+              Lanjut ke Bagian 6: Kuis Akhir &amp; Sertifikat →
             </button>
           </div>
           <div class="nav-hint locked" id="hintLanjut">
-            🔒 Selesaikan semua tahap untuk membuka Bagian 3
+            🔒 Selesaikan semua tahap untuk membuka Bagian 6
           </div>
         </div>
 
@@ -1146,24 +1109,63 @@
       // ============================================
       // KONFIGURASI MODUL
       // ============================================
-      const NAMA_SHEET = 'bk4';
-      const MODUL_KEY = 'bk4';
-      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+      const NAMA_SHEET = 'tik2';
+      const MODUL_KEY = 'tik2';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e', 'f'];
       const AMBANG_LULUS = 3;
 
       // ============================================
-      // DATA KALENDER
+      // DATA SKENARIO
       // ============================================
-      // Abu bisa: 5, 8, 9, 15, 20, 23, 25
-      // Ali bisa: 7, 9, 11, 15, 17, 21, 23
-      const ABU_DATES = [5, 8, 9, 15, 20, 23, 25];
-      const ALI_DATES = [7, 9, 11, 15, 17, 21, 23];
+      // jawaban = level formalitas yang tepat (1-5)
+      const SKENARIO_DATA = [
+        {
+          id: 's1',
+          title: 'Mengirim undangan rapat OSIS',
+          desc: 'Kamu (sekretaris OSIS) ingin mengundang <strong>ketua OSIS</strong> untuk rapat koordinasi kegiatan sekolah minggu depan. Isinya undangan singkat dengan tanggal, waktu, dan tempat.',
+          penerima: '🎯 Penerima: Ketua OSIS (teman sebaya, tapi jabatan resmi)',
+          jawaban: 3, // Semi-Formal
+          alasan: 'Ketua OSIS adalah teman sebaya, tapi jabatannya resmi. Cukup semi-formal: "Halo Raka, ..." + bahasa sopan tapi tidak kaku.'
+        },
+        {
+          id: 's2',
+          title: 'Meminta izin tidak masuk sekolah',
+          desc: 'Kamu sakit dan ingin mengirim email izin kepada <strong>wali kelas</strong>. Kamu perlu menyampaikan alasan dan memohon izin resmi.',
+          penerima: '🎯 Penerima: Wali kelas (guru yang kamu kenal baik)',
+          jawaban: 4, // Formal
+          alasan: 'Email kepada guru — meskipun kamu kenal — harus formal: "Yth. Bu Dewi," + perkenalan + permohonan izin + salam penutup.'
+        },
+        {
+          id: 's3',
+          title: 'Melamar menjadi panitia lomba',
+          desc: 'Kamu ingin mengajukan diri menjadi panitia lomba 17 Agustus di sekolah. Kamu mengirim email ke <strong>kepala sekolah</strong> karena panitia dikelola langsung oleh beliau.',
+          penerima: '🎯 Penerima: Kepala sekolah (jabatan tertinggi di sekolah)',
+          jawaban: 5, // Sangat Formal
+          alasan: 'Kepala sekolah adalah jabatan tertinggi — gunakan "Yth. Bapak Kepala Sekolah," + bahasa sangat formal + struktur lengkap.'
+        },
+        {
+          id: 's4',
+          title: 'Bertanya PR ke teman sekelas',
+          desc: 'Kamu lupa mencatat PR Informatika. Kamu ingin bertanya ke <strong>teman sebangku</strong> yang kamu kenal dekat.',
+          penerima: '🎯 Penerima: Teman sebangku (sahabat dekat)',
+          jawaban: 1, // Sangat Santai
+          alasan: 'Ke teman dekat, tidak perlu formal. Bahkan boleh lewat chat daripada email. Tapi kalau lewat email, cukup santai: "Sit, PR Informatika apa ya?"'
+        },
+        {
+          id: 's5',
+          title: 'Mengirim laporan kegiatan ekstrakurikuler',
+          desc: 'Kamu (ketua ekstrakurikuler) harus mengirim laporan kegiatan bulanan ke <strong>pembina ekstrakurikuler</strong> (seorang guru). Laporan berisi ringkasan kegiatan + foto.',
+          penerima: '🎯 Penerima: Pembina ekstrakurikuler (guru)',
+          jawaban: 4, // Formal
+          alasan: 'Pembina adalah guru — gunakan formal: "Yth. Bu Dewi," + perkenalan singkat + ringkasan laporan + salam penutup.'
+        }
+      ];
 
       // ============================================
       // STATE
       // ============================================
-      let abuOn = {};
-      let aliOn = {};
+      let skenarioIdx = 0;
+      let jawaban = {}; // { idSkenario: level }
       let lapis1Selesai = false;
       let lapis2Selesai = false;
 
@@ -1176,9 +1178,6 @@
       let tesBenar = 0;
       let tesSelesai = false;
 
-      let daftarSiswa = [];
-      let jumlahSiswaSekarang = 1;
-
       let kirimTimeoutId = null;
       let kirimSukses = false;
 
@@ -1190,11 +1189,14 @@
       const elAreaLapis3 = document.getElementById('areaLapis3');
       const elProgressLapis = document.getElementById('progressLapis');
 
-      const elKalenderGrid = document.getElementById('kalenderGrid');
-      const elStatAbu = document.getElementById('statAbu');
-      const elStatAli = document.getElementById('statAli');
-      const elStatKeduanya = document.getElementById('statKeduanya');
-      const elStatSalahSatu = document.getElementById('statSalahSatu');
+      const elSpectrumLevels = document.getElementById('spectrumLevels');
+      const elSkenarioBox = document.getElementById('skenarioBox');
+      const elSkNum = document.getElementById('skNum');
+      const elSkProgress = document.getElementById('skProgress');
+      const elSkTitle = document.getElementById('skTitle');
+      const elSkDesc = document.getElementById('skDesc');
+      const elSkPenerima = document.getElementById('skPenerima');
+      const elRiwayatList = document.getElementById('riwayatList');
       const elFeedbackBox = document.getElementById('feedbackBox');
       const elFbIcon = document.getElementById('fbIcon');
       const elFbText = document.getElementById('fbText');
@@ -1219,7 +1221,7 @@
       const elHasilTes = document.getElementById('hasilTes');
       const elRefleksiBox = document.getElementById('refleksiBox');
 
-      const elBtnLanjutBagian3 = document.getElementById('btnLanjutBagian3');
+      const elBtnLanjutBagian6 = document.getElementById('btnLanjutBagian6');
       const elHintLanjut = document.getElementById('hintLanjut');
       const elStatusKirim = document.getElementById('statusKirim');
       const elStatusKirimText = document.getElementById('statusKirimText');
@@ -1241,131 +1243,144 @@
       }
 
       // ============================================
-      // RENDER KALENDER
+      // RENDER SKENARIO
       // ============================================
-      function renderKalender() {
-        let html = '';
+      function renderSkenario() {
+        const sk = SKENARIO_DATA[skenarioIdx];
+        if (!sk) return;
 
-        // Header tanggal (1-29)
-        html += '<div class="kg-header"></div>';
-        for (let t = 1; t <= 29; t++) {
-          html += '<div class="kg-header">' + t + '</div>';
+        elSkNum.textContent = 'SKENARIO ' + (skenarioIdx + 1) + ' / ' + SKENARIO_DATA.length;
+        elSkTitle.textContent = sk.title;
+        elSkDesc.innerHTML = sk.desc;
+        elSkPenerima.textContent = sk.penerima;
+
+        const jumlahDijawab = Object.keys(jawaban).length;
+        elSkProgress.textContent = jumlahDijawab + ' / ' + SKENARIO_DATA.length + ' dijawab';
+
+        // Cek apakah skenario ini sudah dijawab
+        const sudahDijawab = jawaban[sk.id] !== undefined;
+
+        // Render spectrum
+        elSpectrumLevels.querySelectorAll('.spectrum-level').forEach(el => {
+          const level = parseInt(el.dataset.level);
+          el.classList.remove('active', 'locked');
+          if (sudahDijawab) {
+            el.classList.add('locked');
+            if (level === jawaban[sk.id]) el.classList.add('active');
+          }
+        });
+
+        // Render riwayat
+        renderRiwayat();
+      }
+
+      function renderRiwayat() {
+        elRiwayatList.innerHTML = '';
+        const keys = Object.keys(jawaban);
+        if (keys.length === 0) {
+          elRiwayatList.innerHTML = '<span class="rb-empty">Belum ada jawaban.</span>';
+          return;
         }
-
-        // Baris Abu
-        html += '<div class="kg-label abdi">Abu</div>';
-        for (let t = 1; t <= 29; t++) {
-          const on = abuOn[t] ? ' abdi-on' : '';
-          html += '<div class="kg-cell' + on + '" data-set="abu" data-tgl="' + t + '">' + t + '</div>';
-        }
-
-        // Baris Ali
-        html += '<div class="kg-label ali">Ali</div>';
-        for (let t = 1; t <= 29; t++) {
-          const on = aliOn[t] ? ' ali-on' : '';
-          html += '<div class="kg-cell' + on + '" data-set="ali" data-tgl="' + t + '">' + t + '</div>';
-        }
-
-        elKalenderGrid.innerHTML = html;
-
-        // Pasang event listener
-        elKalenderGrid.querySelectorAll('.kg-cell').forEach(cell => {
-          cell.addEventListener('click', function() {
-            if (lapis1Selesai) return;
-            const set = this.dataset.set;
-            const tgl = parseInt(this.dataset.tgl);
-            if (set === 'abu') abuOn[tgl] = !abuOn[tgl];
-            if (set === 'ali') aliOn[tgl] = !aliOn[tgl];
-            updateKalender();
-          });
+        SKENARIO_DATA.forEach(sk => {
+          if (jawaban[sk.id] === undefined) return;
+          const levelText = ['Sangat Santai', 'Santai Sopan', 'Semi-Formal', 'Formal', 'Sangat Formal'][jawaban[sk.id] - 1];
+          const benar = (jawaban[sk.id] === sk.jawaban);
+          const div = document.createElement('div');
+          div.className = 'rb-item ' + (benar ? 'benar' : 'salah');
+          div.innerHTML = `
+            <span class="rb-icon">${benar ? '✅' : '❌'}</span>
+            <span><strong>${escapeHtml(sk.title)}</strong> — kamu pilih: <strong>${levelText}</strong>${benar ? '' : ' (jawaban tepat: <em>' + ['Sangat Santai','Santai Sopan','Semi-Formal','Formal','Sangat Formal'][sk.jawaban - 1] + '</em>)'}</span>
+          `;
+          elRiwayatList.appendChild(div);
         });
       }
 
-      function updateKalender() {
-	  // Update visual
-	  elKalenderGrid.querySelectorAll('.kg-cell').forEach(cell => {
-		const set = cell.dataset.set;              // ← perbaikan: pakai cell, bukan this
-		const tgl = parseInt(cell.dataset.tgl);
-		if (set === 'abu') {
-		  cell.classList.toggle('abdi-on', !!abuOn[tgl]);
-		}
-		if (set === 'ali') {
-		  cell.classList.toggle('ali-on', !!aliOn[tgl]);
-		}
-	  });
-
-	  // Hitung statistik
-	  let abuCount = 0, aliCount = 0, keduanyaCount = 0, salahSatuCount = 0;
-	  for (let t = 1; t <= 29; t++) {
-		const abu = !!abuOn[t];
-		const ali = !!aliOn[t];
-		if (abu) abuCount++;
-		if (ali) aliCount++;
-		if (abu && ali) keduanyaCount++;
-		if (abu || ali) salahSatuCount++;
-	  }
-
-	  elStatAbu.textContent = abuCount;
-	  elStatAli.textContent = aliCount;
-	  elStatKeduanya.textContent = keduanyaCount;
-	  elStatSalahSatu.textContent = salahSatuCount;
-
-	  // Tandai sel yang keduanya
-	  elKalenderGrid.querySelectorAll('.kg-cell').forEach(cell => {
-		const set = cell.dataset.set;
-		const tgl = parseInt(cell.dataset.tgl);
-		if (set === 'abu' && abuOn[tgl] && aliOn[tgl]) {
-		  cell.classList.add('keduanya');
-		  if (!cell.querySelector('.star')) {
-			const star = document.createElement('span');
-			star.className = 'star';
-			star.textContent = '⭐';
-			cell.appendChild(star);
-		  }
-		} else {
-		  cell.classList.remove('keduanya');
-		  const star = cell.querySelector('.star');
-		  if (star) star.remove();
-		}
-	  });
-
-	  // Aktifkan tombol selesai jika minimal ada 1 tanggal
-	  if (abuCount > 0 || aliCount > 0) {
-		elBtnSelesaiLapis1.disabled = false;
-	  } else {
-		elBtnSelesaiLapis1.disabled = true;
-	  }
-	}
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
 
       // ============================================
-      // RESET KALENDER
+      // PILIH LEVEL
       // ============================================
-      window.resetKalender = function() {
+      function pilihLevel(level) {
         if (lapis1Selesai) return;
-        if (!confirm('Reset kalender? Semua tanggal akan dimatikan.')) return;
-        abuOn = {};
-        aliOn = {};
-        renderKalender();
-        updateKalender();
+
+        const sk = SKENARIO_DATA[skenarioIdx];
+        if (!sk) return;
+        if (jawaban[sk.id] !== undefined) {
+          tampilFeedback('info', '💡', 'Skenario ini sudah dijawab. Lanjut ke skenario berikutnya!');
+          return;
+        }
+
+        jawaban[sk.id] = level;
+
+        const benar = (level === sk.jawaban);
+        const levelText = ['Sangat Santai', 'Santai Sopan', 'Semi-Formal', 'Formal', 'Sangat Formal'][level - 1];
+        const tepatText = ['Sangat Santai', 'Santai Sopan', 'Semi-Formal', 'Formal', 'Sangat Formal'][sk.jawaban - 1];
+
+        if (benar) {
+          tampilFeedback('success', '✅', '<strong>Tepat!</strong> Skenario ini cocok dengan tingkat <strong>' + levelText + '</strong>.<br><br><small>' + escapeHtml(sk.alasan) + '</small>');
+        } else {
+          tampilFeedback('warn', '🤔', 'Kamu pilih <strong>' + levelText + '</strong>. Tingkat yang lebih tepat: <strong>' + tepatText + '</strong>.<br><br><small>' + escapeHtml(sk.alasan) + '</small>');
+        }
+
+        renderSkenario();
+
+        // Auto-lanjut ke skenario berikutnya setelah jeda
+        setTimeout(() => {
+          if (skenarioIdx < SKENARIO_DATA.length - 1) {
+            skenarioIdx++;
+            renderSkenario();
+            tampilFeedback('info', '💡', 'Skenario ' + (skenarioIdx + 1) + ' dari ' + SKENARIO_DATA.length + '. Pilih tingkat formalitas yang tepat!');
+          } else {
+            // Semua skenario sudah dijawab
+            cekLapis1Selesai();
+          }
+        }, 1800);
+      }
+
+      function cekLapis1Selesai() {
+        const jumlahDijawab = Object.keys(jawaban).length;
+        elBtnSelesaiLapis1.disabled = jumlahDijawab < SKENARIO_DATA.length;
+        if (jumlahDijawab >= SKENARIO_DATA.length) {
+          elMindful1.classList.add('show');
+        }
+      }
+
+      // ============================================
+      // RESET
+      // ============================================
+      window.resetSkenario = function() {
+        if (lapis1Selesai) return;
+        if (!confirm('Reset semua jawaban skenario?')) return;
+        skenarioIdx = 0;
+        jawaban = {};
+        renderSkenario();
         elMindful1.classList.remove('show');
         elBtnSelesaiLapis1.disabled = true;
-        tampilFeedback('info', '💡', 'Klik tanggal di baris Abu atau Ali untuk menyalakan/mematikan!');
+        tampilFeedback('info', '💡', 'Pilih tingkat formalitas yang tepat untuk skenario ini!');
       };
+
+      // ============================================
+      // FEEDBACK
+      // ============================================
+      function tampilFeedback(type, icon, text) {
+        elFeedbackBox.className = 'feedback-box show ' + type;
+        elFbIcon.textContent = icon || '💡';
+        elFbText.innerHTML = text;
+      }
 
       // ============================================
       // SELESAI LAPIS 1
       // ============================================
       window.selesaiLapis1 = function() {
-        // Validasi: pastikan user sudah menyalakan tanggal sesuai data yang diberikan
-        // Kita tidak memaksa jawaban benar, tapi beri feedback jika belum sesuai
-        const abuCount = Object.keys(abuOn).filter(t => abuOn[t]).length;
-        const aliCount = Object.keys(aliOn).filter(t => aliOn[t]).length;
-
-        if (abuCount === 0 && aliCount === 0) {
-          alert('⚠️ Nyalakan dulu tanggal-tanggal di baris Abu atau Ali!');
+        if (Object.keys(jawaban).length < SKENARIO_DATA.length) {
+          alert('⚠️ Jawab semua skenario dulu ya!');
           return;
         }
-		elMindful1.classList.add('show');
+
         const mindfulJawab = document.getElementById('mindful1Jawab').value.trim();
         if (mindfulJawab.length < 3) {
           alert('📝 Isi dulu jawaban Jeda Sadar 1 sebelum lanjut!');
@@ -1393,32 +1408,43 @@
       const tantanganData = [
         {
           id: 'T1',
-          teks: 'Berapa tanggal di mana <strong>Abu dan Ali bisa hadir bersamaan</strong>? (Tulis angka)',
-          tipe: 'angka',
-          kunci: 3,
-          hint: 'Hitung tanggal yang menyala di KEDUA baris (Abu DAN Ali).',
-          feedbackSalah: 'Coba hitung ulang. Apakah tanggal itu ada di kolom Abu DAN kolom Ali?'
+          teks: 'Tuliskan <strong>satu aturan tidak tertulis</strong> di sekolah atau masyarakat Indonesia yang mencerminkan etika komunikasi (misalnya cara memanggil guru, cara berbicara ke orang yang lebih tua, dll).',
+          tipe: 'teks',
+          validasi: function(val) {
+            const lower = val.toLowerCase();
+            const adaKonteks = /sekolah|guru|kelas|indonesia|masyarakat|keluarga|kakak|adik|bapak|ibu|orang tua|teman|murid|siswa/i.test(lower);
+            const adaAturan = /jangan|harus|sebaiknya|tidak boleh|wajib|panggil|gunakan|sebut|ucap|sapa|mengucapkan|memanggil/i.test(lower);
+            const cukupPanjang = val.length >= 25;
+            return adaKonteks && adaAturan && cukupPanjang;
+          },
+          hint: 'Contoh: <em>"Di sekolah Indonesia, kita memanggil guru dengan Bapak/Ibu, bukan nama depan."</em> Atau: <em>"Saat lewat di depan orang yang lebih tua, kita mengucapkan permisi."</em>',
+          feedbackSalah: 'Jawabanmu belum jelas menyebutkan <strong>konteks</strong> (sekolah/masyarakat) dan <strong>aturan</strong>-nya. Coba tulis dengan pola: "[Di mana], [apa yang harus/tidak boleh dilakukan]."'
         },
         {
           id: 'T2',
-          teks: 'Berapa tanggal di mana <strong>setidaknya satu dari mereka bisa hadir</strong>? (Abu saja, Ali saja, atau keduanya)',
-          tipe: 'angka',
-          kunci: 11,
-          hint: 'Hitung semua tanggal yang menyala di baris Abu ATAU baris Ali. Hati-hati: tanggal yang ada di keduanya tetap dihitung sekali.',
-          feedbackSalah: 'Hati-hati: tanggal yang ada di keduanya tetap dihitung sekali, bukan dua kali.'
+          teks: 'Kepada siapa kamu <strong>tidak perlu</strong> menggunakan tingkat "Sangat Formal" dalam email?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Kepala sekolah', benar: false },
+            { v: 'B', label: 'Guru yang belum kamu kenal', benar: false },
+            { v: 'C', label: 'Teman sebangku yang kamu kenal dekat', benar: true },
+            { v: 'D', label: 'Pejabat dinas pendidikan', benar: false }
+          ],
+          hint: 'Tingkat "Sangat Formal" untuk jabatan tertinggi. Ke teman dekat, cukup santai.',
+          feedbackSalah: 'Tingkat "Sangat Formal" hanya untuk penerima dengan jabatan tinggi atau konteks resmi. Ke teman dekat, cukup santai.'
         },
         {
           id: 'T3',
-          teks: '<strong>Batas Konsep:</strong> Jika kamu menghitung "semua tanggal Abu" + "semua tanggal Ali" (7 + 7 = 14), apakah jumlahnya sama dengan "tanggal setidaknya satu dari mereka" (11)? Mengapa bisa berbeda?',
+          teks: '<strong>Batas Konsep:</strong> Apakah email ke <strong>guru yang kamu kenal baik</strong> boleh menggunakan bahasa santai seperti ke teman?',
           tipe: 'pilihan',
           opsi: [
-            { v: 'A', label: 'Sama, karena jumlahnya memang 14', benar: false },
-            { v: 'B', label: 'Berbeda, karena tanggal yang muncul di keduanya dihitung dua kali', benar: true },
-            { v: 'C', label: 'Berbeda, karena ada tanggal yang tidak valid', benar: false },
-            { v: 'D', label: 'Sama, karena tidak ada tanggal yang tumpang tindih', benar: false }
+            { v: 'A', label: 'Boleh, karena sudah kenal baik', benar: false },
+            { v: 'B', label: 'Tidak boleh — tetap harus formal karena posisi guru tetap dihormati', benar: true },
+            { v: 'C', label: 'Boleh, asal gurunya tidak marah', benar: false },
+            { v: 'D', label: 'Boleh, asal isinya benar', benar: false }
           ],
-          hint: 'Pikirkan: apa yang terjadi pada tanggal 9, 15, dan 23?',
-          feedbackSalah: 'Coba pikirkan: apa yang terjadi pada tanggal 9, 15, dan 23?'
+          hint: 'Pikirkan: meskipun kamu kenal baik, guru tetap memiliki <strong>posisi</strong> yang dihormati dalam budaya Indonesia.',
+          feedbackSalah: 'Meskipun kamu kenal baik, guru tetap memiliki posisi yang dihormati. Gunakan tingkat <strong>Formal</strong>, bukan santai.'
         }
       ];
 
@@ -1432,36 +1458,24 @@
           div.dataset.id = t.id;
 
           let inputHtml = '';
-          if (t.tipe === 'angka') {
+          if (t.tipe === 'teks') {
             inputHtml = `
               <div class="t-input-row">
-                <input type="number" id="input_${t.id}" placeholder="Tulis angka" min="0" max="30">
-                <button id="btn_${t.id}">Periksa</button>
-              </div>
-            `;
-          } else if (t.tipe === 'teks') {
-            inputHtml = `
-              <div class="t-input-row">
-                <input type="text" id="input_${t.id}" placeholder="Tulis nama" maxlength="20">
+                <textarea id="input_${t.id}" placeholder="Tulis aturan tidak tertulis di sini..." maxlength="300"></textarea>
                 <button id="btn_${t.id}">Periksa</button>
               </div>
             `;
           } else if (t.tipe === 'pilihan') {
-            inputHtml = '<div class="t-input-row" style="flex-direction:column; align-items:stretch;">';
+            inputHtml = '<div class="t-opsi-col">';
             t.opsi.forEach(o => {
               inputHtml += `
-                <label style="display:flex; gap:0.5rem; padding:0.5rem 0.8rem; border:2px solid #d9cdbf; border-radius:10px; cursor:pointer; font-size:0.88rem; color:#3d2c1f; background:#fff;">
-                  <input type="radio" name="opsi_${t.id}" value="${o.v}" style="accent-color:#f26d8a;">
+                <label>
+                  <input type="radio" name="opsi_${t.id}" value="${o.v}">
                   <span>${o.label}</span>
                 </label>
               `;
             });
-            inputHtml += `
-              </div>
-              <div class="t-input-row" style="justify-content:flex-end;">
-                <button id="btn_${t.id}">Periksa</button>
-              </div>
-            `;
+            inputHtml += '</div><div class="t-input-row" style="justify-content:flex-end; margin-top:0.5rem;"><button id="btn_' + t.id + '">Periksa</button></div>';
           }
 
           div.innerHTML = `
@@ -1485,40 +1499,27 @@
         const fb = document.getElementById('fb_' + t.id);
         const item = document.getElementById('tantangan_' + t.id);
 
-        if (t.tipe === 'angka') {
-          const inp = document.getElementById('input_' + t.id);
-          const val = parseInt(inp.value);
-          if (isNaN(val)) {
-            fb.className = 't-feedback show hint';
-            fb.innerHTML = '⚠️ Tulis angka dulu ya!';
-            return;
-          }
-          if (val === t.kunci) {
-            fb.className = 't-feedback show ok';
-            fb.innerHTML = '✅ <strong>Benar!</strong> Jumlahnya ' + t.kunci + '.';
-            item.classList.add('selesai');
-            document.getElementById('btn_' + t.id).disabled = true;
-          } else {
-            fb.className = 't-feedback show no';
-            fb.innerHTML = '❌ ' + t.feedbackSalah;
-          }
-        } else if (t.tipe === 'teks') {
+        if (t.tipe === 'teks') {
           const inp = document.getElementById('input_' + t.id);
           const val = inp.value.trim();
           if (!val) {
             fb.className = 't-feedback show hint';
-            fb.innerHTML = '⚠️ Tulis nama dulu ya!';
+            fb.innerHTML = '⚠️ Tulis dulu jawabanmu ya!';
             return;
           }
-          const benar = t.kunci.some(k => k.toLowerCase() === val.toLowerCase());
-          if (benar) {
+          if (val.length < 20) {
+            fb.className = 't-feedback show hint';
+            fb.innerHTML = '🤔 Terlalu pendek. ' + t.hint;
+            return;
+          }
+          if (t.validasi(val)) {
             fb.className = 't-feedback show ok';
-            fb.innerHTML = '✅ <strong>Benar!</strong>';
+            fb.innerHTML = '✅ <strong>Bagus!</strong> Jawabanmu sudah mencakup konteks dan aturan etika komunikasi.';
             item.classList.add('selesai');
             document.getElementById('btn_' + t.id).disabled = true;
           } else {
             fb.className = 't-feedback show no';
-            fb.innerHTML = '❌ ' + t.feedbackSalah;
+            fb.innerHTML = '❌ ' + t.feedbackSalah + '<br><br>💡 ' + t.hint;
           }
         } else if (t.tipe === 'pilihan') {
           const selected = document.querySelector('input[name="opsi_' + t.id + '"]:checked');
@@ -1530,7 +1531,7 @@
           const opsi = t.opsi.find(o => o.v === selected.value);
           if (opsi.benar) {
             fb.className = 't-feedback show ok';
-            fb.innerHTML = '✅ <strong>Tepat sekali!</strong> Tanggal yang muncul di kedua kolom (9, 15, 23) dihitung dua kali jika kita hanya menjumlahkan 7 + 7. Itulah mengapa hasilnya berbeda.';
+            fb.innerHTML = '✅ <strong>Benar!</strong>';
             item.classList.add('selesai');
             document.getElementById('btn_' + t.id).disabled = true;
           } else {
@@ -1569,7 +1570,7 @@
         elBtnLanjutLapis3.textContent = '✅ Lapis 2 Selesai';
 
         updateProgressLapis('lapis3');
-		elMindful3.classList.add('show');
+        elMindful3.classList.add('show');
 
         buildKuisKilat();
 
@@ -1583,16 +1584,26 @@
       // ============================================
       const kuisKilatData = [
         {
-          pertanyaan: 'Jika A = {1, 2, 3, 4} dan B = {3, 4, 5, 6}, maka A ∩ B = …',
-          opsi: ['{1, 2}', '{3, 4}', '{5, 6}', '{1, 2, 3, 4, 5, 6}'],
+          pertanyaan: 'Apa itu <strong>etika digital</strong>?',
+          opsi: [
+            'Aturan menggunakan internet',
+            'Prinsip perilaku bertanggung jawab di ruang digital',
+            'Cara membuat email',
+            'Aplikasi chatting'
+          ],
           kunci: 1,
-          penjelasan: 'Irisan adalah anggota yang ada di kedua himpunan.'
+          penjelasan: 'Etika digital adalah prinsip perilaku bertanggung jawab di ruang digital.'
         },
         {
-          pertanyaan: 'Dari soal di atas, A ∪ B = …',
-          opsi: ['{1, 2, 3, 4}', '{3, 4}', '{1, 2, 3, 4, 5, 6}', '{5, 6}'],
-          kunci: 2,
-          penjelasan: 'Gabungan adalah semua anggota dari kedua himpunan.'
+          pertanyaan: 'Ke <strong>kepala sekolah</strong>, tingkat formalitas email yang tepat adalah…',
+          opsi: [
+            'Sangat Santai',
+            'Santai Sopan',
+            'Semi-Formal',
+            'Sangat Formal'
+          ],
+          kunci: 3,
+          penjelasan: 'Kepala sekolah adalah jabatan tertinggi — gunakan tingkat Sangat Formal.'
         }
       ];
 
@@ -1627,8 +1638,8 @@
               if (kuisKilatSubmitted) return;
               jawabanKuisKilat[idx] = oi;
               div.querySelectorAll('label').forEach((l2, oi2) => {
-                l2.style.background = oi2 === oi ? '#fdf2f5' : '#fff';
-                l2.style.borderColor = oi2 === oi ? '#f26d8a' : '#e5dbd0';
+                l2.style.background = oi2 === oi ? '#fff5f0' : '#fff';
+                l2.style.borderColor = oi2 === oi ? '#ff8a5b' : '#e5dbd0';
                 l2.querySelector('input').checked = (oi2 === oi);
               });
               cekKuisKilatSiap();
@@ -1706,28 +1717,48 @@
       // ============================================
       const soalData = [
         {
-          pertanyaan: 'Dalam sebuah kelas, 20 siswa suka Matematika, 15 suka IPA, dan 8 suka keduanya. Berapa siswa yang suka Matematika atau IPA?',
-          opsi: ['27', '35', '43', '20'],
-          kunci: 0,
-          penjelasan: '20 + 15 − 8 = 27.'
-        },
-        {
-          pertanyaan: 'Jika n(A) = 10, n(B) = 12, dan n(A ∩ B) = 4, maka n(A ∪ B) = …',
-          opsi: ['22', '18', '26', '14'],
+          pertanyaan: 'Apa itu <strong>etika digital</strong>?',
+          opsi: [
+            'Aturan menggunakan internet',
+            'Prinsip perilaku bertanggung jawab di ruang digital',
+            'Cara membuat email',
+            'Aplikasi chatting'
+          ],
           kunci: 1,
-          penjelasan: '10 + 12 − 4 = 18.'
+          penjelasan: 'Etika digital adalah prinsip perilaku bertanggung jawab di ruang digital.'
         },
         {
-          pertanyaan: 'Diagram Venn dengan dua lingkaran yang tidak beririsan berarti…',
-          opsi: ['A ∩ B = ∅', 'A ∪ B = ∅', 'A = B', 'A ⊂ B'],
-          kunci: 0,
-          penjelasan: 'Jika tidak beririsan, maka tidak ada anggota yang sama, sehingga A ∩ B = ∅.'
+          pertanyaan: 'Ke <strong>guru yang kamu kenal baik</strong>, tingkat formalitas email yang tepat adalah…',
+          opsi: [
+            'Sangat Santai',
+            'Santai Sopan',
+            'Semi-Formal',
+            'Formal'
+          ],
+          kunci: 3,
+          penjelasan: 'Meskipun kamu kenal baik, guru tetap memiliki posisi yang dihormati. Gunakan tingkat Formal.'
         },
         {
-          pertanyaan: 'Jika A = {1, 2, 3} dan B = {2, 3, 4}, maka A ∪ B = …',
-          opsi: ['{2, 3}', '{1, 2, 3, 4}', '{1, 4}', '{1, 2, 3}'],
+          pertanyaan: 'Mengapa di budaya Indonesia kita <strong>tidak memanggil guru dengan nama depan</strong>?',
+          opsi: [
+            'Karena gurunya marah',
+            'Karena mencerminkan sikap menghormati posisi guru',
+            'Karena aturan sekolah',
+            'Karena tidak sopan secara umum'
+          ],
           kunci: 1,
-          penjelasan: 'Gabungan dari A dan B adalah {1, 2, 3, 4}.'
+          penjelasan: 'Memanggil guru dengan "Bapak/Ibu" mencerminkan sikap menghormati posisi guru — bagian dari etika komunikasi lokal Indonesia.'
+        },
+        {
+          pertanyaan: 'Apa prinsip utama dalam memilih tingkat formalitas email?',
+          opsi: [
+            'Selalu formal ke semua orang',
+            'Selalu santai ke semua orang',
+            'Semakin tinggi jabatan & semakin formal konteks → semakin formal bahasa',
+            'Tergantung mood pengirim'
+          ],
+          kunci: 2,
+          penjelasan: 'Prinsip: semakin tinggi jabatan penerima dan semakin formal konteksnya, semakin formal bahasamu.'
         }
       ];
 
@@ -1865,22 +1896,22 @@
             elHasilTes.querySelector('#hasilTitle').textContent = 'Selamat!';
             elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
             elHasilTes.querySelector('#hasilDesc').innerHTML =
-              `Kamu berhasil menyelesaikan Bagian 2!<br><br>Bagian 3 sekarang terbuka!`;
+              `Kamu berhasil menyelesaikan Bagian 5!<br><br>Bagian 6 (Kuis Akhir &amp; Sertifikat) sekarang terbuka!`;
 
-            elBtnLanjutBagian3.classList.remove('locked');
-            elBtnLanjutBagian3.classList.add('primary');
+            elBtnLanjutBagian6.classList.remove('locked');
+            elBtnLanjutBagian6.classList.add('primary');
             elHintLanjut.classList.remove('locked', 'warn');
             elHintLanjut.classList.add('ready');
-            elHintLanjut.textContent = '✅ Bagian 3 sudah terbuka! Klik untuk melanjutkan.';
+            elHintLanjut.textContent = '✅ Bagian 6 sudah terbuka! Klik untuk melanjutkan.';
             elBtnUlangiTes.classList.remove('show');
 
-            simpanSkorBagian2(correct, total);
+            simpanSkorBagian5(correct, total);
           } else {
             elHasilTes.querySelector('#hasilIcon').textContent = '📖';
             elHasilTes.querySelector('#hasilTitle').textContent = 'Perlu Belajar Lagi';
             elHasilTes.querySelector('#hasilSkor').textContent = `${correct} / ${total}`;
             elHasilTes.querySelector('#hasilDesc').innerHTML =
-              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal ${AMBANG_LULUS} soal benar untuk membuka Bagian 3.<br><br>Pelajari kembali materinya, lalu klik <strong>🔄 Ulangi Tes Pemahaman</strong> di bawah.`;
+              `Kamu baru menjawab benar ${correct} dari ${total} soal.<br>Minimal ${AMBANG_LULUS} soal benar untuk membuka Bagian 6.<br><br>Pelajari kembali materinya, lalu klik <strong>🔄 Ulangi Tes Pemahaman</strong> di bawah.`;
 
             elBtnUlangiTes.classList.add('show');
             elHintLanjut.classList.remove('ready');
@@ -1894,18 +1925,18 @@
         }, 700);
       }
 
-      function simpanSkorBagian2(correct, total) {
-        const skorBagian2 = Math.round(40 + (correct / total) * 60);
+      function simpanSkorBagian5(correct, total) {
+        const skorBagian5 = Math.round(40 + (correct / total) * 60);
         try {
-          const prev = JSON.parse(localStorage.getItem('labbk4_progress') || '{}');
-          prev.bagian = 2;
-          prev.skorBagian2 = skorBagian2;
-          localStorage.setItem('labbk4_progress', JSON.stringify(prev));
+          const prev = JSON.parse(localStorage.getItem('labtik2_progress') || '{}');
+          prev.bagian = 5;
+          prev.skorBagian5 = skorBagian5;
+          localStorage.setItem('labtik2_progress', JSON.stringify(prev));
         } catch (e) {}
 
         if (window.dutaSimpanProgress) {
-          const skorObj = { b: skorBagian2 };
-          window.dutaSimpanProgress(MODUL_KEY, 'b', skorObj).catch(() => {});
+          const skorObj = { e: skorBagian5 };
+          window.dutaSimpanProgress(MODUL_KEY, 'e', skorObj).catch(() => {});
         }
       }
 
@@ -1922,7 +1953,7 @@
 
         elHintLanjut.classList.remove('ready', 'warn');
         elHintLanjut.classList.add('locked');
-        elHintLanjut.textContent = '🔒 Selesaikan semua tahap untuk membuka Bagian 3';
+        elHintLanjut.textContent = '🔒 Selesaikan semua tahap untuk membuka Bagian 6';
 
         renderSoal();
         updateTesProgress();
@@ -1931,14 +1962,14 @@
       });
 
       // ============================================
-      // KIRIM NILAI BAGIAN 2
+      // KIRIM NILAI BAGIAN 5
       // ============================================
-      async function kirimNilaiBagian2() {
-        const skorBagian2 = Math.round(40 + (tesBenar / soalData.length) * 60);
+      async function kirimNilaiBagian5() {
+        const skorBagian5 = Math.round(40 + (tesBenar / soalData.length) * 60);
 
         elStatusKirim.className = 'status-kirim info show';
         elStatusSpinner.style.display = 'inline-block';
-        elStatusKirimText.innerHTML = `Mengirim nilai Bagian 2 (${skorBagian2})...`;
+        elStatusKirimText.innerHTML = `Mengirim nilai Bagian 5 (${skorBagian5})...`;
 
         const oldRetry = elStatusKirim.querySelector('.btn-retry');
         if (oldRetry) oldRetry.remove();
@@ -1953,12 +1984,12 @@
         kirimTimeoutId = setTimeout(() => {
           if (selesaiKirim) return;
           selesaiKirim = true;
-          tampilkanGagalKirim(skorBagian2, '⏱️ Koneksi lambat atau terputus.');
+          tampilkanGagalKirim(skorBagian5, '⏱️ Koneksi lambat atau terputus.');
         }, 12000);
 
         try {
           const hasil = await window.kirimNilaiBagian(
-            NAMA_SHEET, 'b', skorBagian2, TOTAL_BAGIAN
+            NAMA_SHEET, 'e', skorBagian5, TOTAL_BAGIAN
           );
 
           if (selesaiKirim) return;
@@ -1970,16 +2001,16 @@
             kirimSukses = true;
             elStatusKirim.className = 'status-kirim success show';
             elStatusSpinner.style.display = 'none';
-            elStatusKirimText.innerHTML = `✅ Nilai Bagian 2 (<strong>${skorBagian2}</strong>) berhasil dikirim.`;
+            elStatusKirimText.innerHTML = `✅ Nilai Bagian 5 (<strong>${skorBagian5}</strong>) berhasil dikirim.`;
           } else {
-            tampilkanGagalKirim(skorBagian2, (hasil && hasil.error) || 'Terjadi kesalahan.');
+            tampilkanGagalKirim(skorBagian5, (hasil && hasil.error) || 'Terjadi kesalahan.');
           }
         } catch (err) {
           if (selesaiKirim) return;
           selesaiKirim = true;
           clearTimeout(kirimTimeoutId);
           kirimTimeoutId = null;
-          tampilkanGagalKirim(skorBagian2, err.message || 'Gagal terhubung.');
+          tampilkanGagalKirim(skorBagian5, err.message || 'Gagal terhubung.');
         }
       }
 
@@ -1997,62 +2028,63 @@
         btnRetry.textContent = '🔄 Ulangi Kirim';
         btnRetry.addEventListener('click', function() {
           kirimSukses = false;
-          kirimNilaiBagian2();
+          kirimNilaiBagian5();
         });
         elStatusKirim.appendChild(btnRetry);
       }
 
       // ============================================
-      // LANJUT KE BAGIAN 3
+      // LANJUT KE BAGIAN 6
       // ============================================
-      window.lanjutKeBagian3 = async function() {
+      window.lanjutKeBagian6 = async function() {
         if (!tesSelesai) {
           alert('🔒 Selesaikan tes pemahaman dengan benar terlebih dahulu!');
           return;
         }
 
         if (kirimSukses) {
-          pindahKeBagian3();
+          pindahKeBagian6();
           return;
         }
 
-        elBtnLanjutBagian3.disabled = true;
-        elBtnLanjutBagian3.textContent = '⏳ Mengirim...';
+        elBtnLanjutBagian6.disabled = true;
+        elBtnLanjutBagian6.textContent = '⏳ Mengirim...';
 
         if (!elStatusKirim.classList.contains('show')) {
-          await kirimNilaiBagian2();
+          await kirimNilaiBagian5();
         }
 
-        elBtnLanjutBagian3.disabled = false;
-        elBtnLanjutBagian3.textContent = 'Lanjut ke Bagian 3: Selisih & Komplemen →';
+        elBtnLanjutBagian6.disabled = false;
+        elBtnLanjutBagian6.textContent = 'Lanjut ke Bagian 6: Kuis Akhir & Sertifikat →';
 
         setTimeout(() => {
-          pindahKeBagian3();
+          pindahKeBagian6();
         }, 800);
       };
 
-      function pindahKeBagian3() {
-        window.location.href = 'aktivitasbk4c.html';
+      function pindahKeBagian6() {
+        window.location.href = 'aktivitastik2f.html';
       }
 
       // ============================================
-      // FEEDBACK
+      // EVENT LISTENER SPECTRUM
       // ============================================
-      function tampilFeedback(type, icon, text) {
-        elFeedbackBox.className = 'feedback-box show ' + type;
-        elFbIcon.textContent = icon || '💡';
-        elFbText.innerHTML = text;
-      }
+      elSpectrumLevels.querySelectorAll('.spectrum-level').forEach(el => {
+        el.addEventListener('click', function() {
+          const level = parseInt(this.dataset.level);
+          if (this.classList.contains('locked')) return;
+          pilihLevel(level);
+        });
+      });
 
       // ============================================
       // INISIALISASI
       // ============================================
       document.addEventListener('DOMContentLoaded', function() {
-        renderKalender();
-        updateKalender();
+        renderSkenario();
       });
 
-      console.log('✅ BK4 Bagian 2: Dunia yang Tumpang Tindih siap! (v1)');
+      console.log('✅ TIK2 Bagian 5: Etika & Konteks Lokal siap! (v1)');
     })();
   </script>
 

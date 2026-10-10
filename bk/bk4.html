@@ -149,6 +149,13 @@
 
     .portal-info strong { color: #4d3829; }
 
+    /* ===== TOMBOL LANJUTKAN BELAJAR ===== */
+    #duta-lanjut-container {
+      margin: 1.5rem auto 0.5rem;
+      max-width: 620px;
+      display: none; /* JS akan set display:block kalau ada progress */
+    }
+
     /* ===== RESPONSIF ===== */
     @media (max-width: 720px) {
       .portal-title { font-size: 1.6rem; }
@@ -203,6 +210,9 @@
           Silakan pilih mode pembelajaran yang kamu inginkan:
         </div>
 
+        <!-- ===== TOMBOL LANJUTKAN BELAJAR (muncul otomatis kalau ada progress) ===== -->
+        <div id="duta-lanjut-container"></div>
+
         <div class="portal-buttons">
           <a href="materibk4.html" class="portal-btn btn-materi">
             <span class="btn-icon">📖</span>
@@ -233,6 +243,83 @@
 
   <!-- script.js (header, footer, scroll) -->
   <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
+
+  <!-- ===== RENDER TOMBOL "LANJUTKAN BELAJAR" ===== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Tunggu sebentar supaya script.js selesai init
+      await new Promise(r => setTimeout(r, 100));
+
+      // Hanya render kalau user sudah login / tamu berkode
+      if (!window.ambilSession || !window.ambilSession()) return;
+
+      const container = document.getElementById('duta-lanjut-container');
+      if (!container) return;
+
+      // Cek progress di sheet
+      let progress = null;
+      try {
+        const hasil = await window.dutaAmbilProgress('bk4');
+        if (hasil && hasil.ok && hasil.progress && hasil.progress.length > 0) {
+          progress = hasil.progress[0];
+        }
+      } catch (e) {
+        return; // gagal ambil progress → jangan tampilkan tombol
+      }
+
+      if (!progress) return;
+
+      const bagianTerakhir = (progress.bagian_terakhir || '').toLowerCase();
+      const nilaiAkhir = Number(progress.nilai_akhir) || 0;
+
+      // Map bagian → file
+      const mapFile = {
+        a: 'aktivitasbk4a.html',
+        b: 'aktivitasbk4b.html',
+        c: 'aktivitasbk4c.html',
+        d: 'aktivitasbk4d.html',
+        e: 'aktivitasbk4e.html',
+        f: 'aktivitasbk4f.html',
+        g: 'aktivitasbk4g.html'
+      };
+
+      // Kalau sudah selesai semua (g / nilai_akhir > 0) → tawarkan ulang modul
+      const selesai = (bagianTerakhir === 'g') || (nilaiAkhir > 0);
+
+      let teks, tujuan;
+      if (selesai) {
+        teks = '🔄 <strong>Ulangi Modul Ini</strong> — Nilai akhir: ' + nilaiAkhir;
+        tujuan = 'aktivitasbk4a.html';
+      } else if (bagianTerakhir && mapFile[bagianTerakhir]) {
+        // Bagian berikutnya = setelah bagianTerakhir
+        // Karena bagianTerakhir = bagian yang TERAKHIR dikerjakan,
+        // tombol mengarah ke bagian BERIKUTNYA supaya user lanjut.
+        const urutan = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+        const idx = urutan.indexOf(bagianTerakhir);
+        const berikutnya = (idx >= 0 && idx < urutan.length - 1) ? urutan[idx + 1] : bagianTerakhir;
+        teks = '▶️ <strong>Lanjutkan dari Bagian ' + berikutnya.toUpperCase() + '</strong> — Progres tersimpan';
+        tujuan = mapFile[berikutnya] || mapFile[bagianTerakhir];
+      } else {
+        // Tidak ada bagian valid → sembunyikan
+        return;
+      }
+
+      // Render tombol
+      const btn = document.createElement('a');
+      btn.className = 'duta-lanjut-btn';
+      btn.href = tujuan;
+      btn.innerHTML = teks;
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = tujuan;
+      });
+
+      container.innerHTML = '';
+      container.appendChild(btn);
+      container.style.display = 'block';
+    });
+  </script>
 
 </body>
 </html>

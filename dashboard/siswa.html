@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Progres Belajar Saya · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    .siswa-wrapper { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+
+    /* ===== AKSES DITOLAK ===== */
+    .akses-ditolak {
+      max-width: 460px; margin: 3rem auto;
+      background: #fff; border-radius: 24px;
+      padding: 2rem; border: 3px solid #f0e6ff;
+      box-shadow: 0 12px 40px rgba(80,40,100,0.12);
+      text-align: center;
+    }
+    .akses-ditolak .ad-icon { font-size: 3.5rem; margin-bottom: 0.5rem; }
+    .akses-ditolak .ad-title {
+      font-size: 1.4rem; font-weight: 800;
+      color: #3b2b1e; margin-bottom: 0.5rem;
+    }
+    .akses-ditolak .ad-desc {
+      font-size: 0.92rem; color: #5c4638;
+      line-height: 1.6; margin-bottom: 1.2rem;
+    }
+    .akses-ditolak .ad-btn {
+      display: inline-block; padding: 0.7rem 1.6rem;
+      border-radius: 30px; background: linear-gradient(135deg, #f26d8a, #b07be0);
+      color: #fff; text-decoration: none;
+      font-weight: 700; font-size: 0.9rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 18px rgba(180,70,140,0.25);
+      margin: 0.3rem;
+    }
+    .akses-ditolak .ad-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(180,70,140,0.4);
+    }
+    .akses-ditolak .ad-btn.secondary {
+      background: #f5ede6; color: #4d3829;
+      border: 2px solid #d9cdbf; box-shadow: none;
+    }
+    .akses-ditolak .ad-btn.secondary:hover {
+      background: #e8dcd0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    /* ===== DASHBOARD SISWA ===== */
+    #dashboardArea { display: none; }
+    #dashboardArea.show { display: block; }
+
+    .siswa-header {
+      background: linear-gradient(135deg, #e6f4ff, #f0e6ff);
+      border: 2px solid #b8d4e8;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.5rem;
+      display: flex; flex-wrap: wrap;
+      justify-content: space-between; align-items: center;
+      gap: 0.8rem;
+    }
+    .siswa-header .sh-info { font-size: 0.95rem; color: #1a4a6b; }
+    .siswa-header .sh-info strong { color: #3b2b1e; font-size: 1.1rem; }
+    .siswa-header .sh-info .sh-meta {
+      display: block; font-size: 0.82rem;
+      color: #5c4638; margin-top: 0.2rem;
+    }
+    .siswa-header .sh-actions {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+    }
+    .btn-siswa {
+      padding: 0.5rem 1.2rem; border-radius: 30px;
+      border: 2px solid #d9cdbf; background: #fff;
+      font-weight: 700; font-size: 0.85rem;
+      color: #4d3829; cursor: pointer;
+      font-family: inherit; transition: all 0.2s ease;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      text-decoration: none;
+    }
+    .btn-siswa:hover {
+      background: #f5ede6; transform: translateY(-2px);
+    }
+    .btn-siswa.primary {
+      background: #4d3829; border-color: #4d3829; color: #fff;
+    }
+    .btn-siswa.primary:hover { background: #6b4f3a; border-color: #6b4f3a; }
+    .btn-siswa:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; }
+
+    /* ===== STATS ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: #fff; border-radius: 16px;
+      padding: 1rem 1.2rem; border: 2px solid #e5dbd0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .stat-card .sc-label {
+      font-size: 0.75rem; color: #7a6656;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      font-weight: 700; margin-bottom: 0.3rem;
+    }
+    .stat-card .sc-value {
+      font-size: 1.5rem; font-weight: 800; color: #3b2b1e;
+    }
+    .stat-card .sc-value.benar { color: #2d7d46; }
+
+    /* ===== TABEL ===== */
+    .tabel-wrapper {
+      background: #fff; border-radius: 16px;
+      border: 2px solid #e5dbd0;
+      overflow-x: auto;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    }
+    .tabel-progres {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem; min-width: 800px;
+    }
+    .tabel-progres thead {
+      background: #4d3829; color: #fff;
+    }
+    .tabel-progres th {
+      padding: 0.7rem 0.8rem; text-align: left;
+      font-weight: 700; font-size: 0.78rem;
+      white-space: nowrap;
+    }
+    .tabel-progres td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid #e5dbd0;
+      color: #2f2822; vertical-align: middle;
+    }
+    .tabel-progres tbody tr:hover td { background: #f8f3ee; }
+    .tabel-progres .badge-modul {
+      display: inline-block; padding: 0.15rem 0.55rem;
+      border-radius: 12px; font-size: 0.7rem;
+      font-weight: 700; background: #f0e6ff;
+      color: #5c2f8a; text-transform: uppercase;
+    }
+    .tabel-progres .skor-cell {
+      text-align: center; font-weight: 600;
+      font-family: 'Courier New', monospace;
+    }
+    .tabel-progres .skor-cell.kosong { color: #b09b88; }
+    .tabel-progres .nilai-akhir {
+      font-weight: 800; color: #4d7a3b;
+      text-align: center;
+    }
+    .tabel-progres .nilai-akhir.kosong { color: #b09b88; }
+    .badge-status {
+      display: inline-block; padding: 0.2rem 0.7rem;
+      border-radius: 20px; font-size: 0.72rem;
+      font-weight: 700; white-space: nowrap;
+    }
+    .badge-status.selesai {
+      background: #d4e8cb; color: #2d5a1e;
+    }
+    .badge-status.berlangsung {
+      background: #fff3d6; color: #8a5e00;
+    }
+    .empty-state {
+      text-align: center; padding: 2rem;
+      color: #7a6656; font-style: italic;
+    }
+    .empty-state .es-icon {
+      font-size: 3rem; display: block;
+      margin-bottom: 0.5rem; font-style: normal;
+    }
+
+    /* ===== AKSI BAWAH ===== */
+    .aksi-bawah {
+      margin-top: 1.5rem; text-align: center;
+      display: flex; flex-wrap: wrap;
+      gap: 0.6rem; justify-content: center;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 720px) {
+      .siswa-header { padding: 1rem 1.2rem; }
+      .siswa-header .sh-actions { width: 100%; }
+      .btn-siswa { flex: 1; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li>Progres Belajar Saya</li>
+    </ol>
+  </nav>
+
+  <main class="siswa-wrapper">
+
+    <!-- ===== AKSES DITOLAK ===== -->
+    <div class="akses-ditolak" id="aksesDitolak" style="display:none;">
+      <div class="ad-icon">🔒</div>
+      <div class="ad-title">Belum Login</div>
+      <div class="ad-desc">
+        Kamu belum login atau belum punya kode tamu. Login dulu untuk melihat progres belajarmu.
+      </div>
+      <a href="../login.html" class="ad-btn">🔑 Login</a>
+      <a href="../index.html" class="ad-btn secondary">🏠 Beranda</a>
+    </div>
+
+    <!-- ===== DASHBOARD SISWA ===== -->
+    <div id="dashboardArea">
+
+      <div class="siswa-header">
+        <div class="sh-info">
+          👋 Halo, <strong id="namaSiswa">Siswa</strong>!
+          <span class="sh-meta" id="metaSiswa">Memuat...</span>
+        </div>
+        <div class="sh-actions">
+          <button class="btn-siswa" id="btnMuatUlang">🔄 Muat Ulang</button>
+          <a href="../index.html" class="btn-siswa primary">🏠 Beranda</a>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="sc-label">Modul Diikuti</div>
+          <div class="sc-value" id="statModul">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Modul Selesai</div>
+          <div class="sc-value benar" id="statSelesai">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Rata-rata Nilai Akhir</div>
+          <div class="sc-value" id="statRata">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Terakhir Update</div>
+          <div class="sc-value" id="statUpdate" style="font-size:0.85rem;">–</div>
+        </div>
+      </div>
+
+      <!-- Tabel -->
+      <div class="tabel-wrapper">
+        <table class="tabel-progres">
+          <thead>
+            <tr>
+              <th>Modul</th>
+              <th>Bagian Terakhir</th>
+              <th>a</th>
+              <th>b</th>
+              <th>c</th>
+              <th>d</th>
+              <th>e</th>
+              <th>f</th>
+              <th>Kuis</th>
+              <th>Nilai Akhir</th>
+              <th>Status</th>
+              <th>Update</th>
+            </tr>
+          </thead>
+          <tbody id="tabelBody">
+            <tr><td colspan="12" class="empty-state">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aksi-bawah">
+        <a href="../bk/bk4.html" class="btn-siswa primary">🎮 Lanjut Belajar</a>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      let sessionSiswa = null;
+      let semuaProgress = [];
+
+      const elAksesDitolak = document.getElementById('aksesDitolak');
+      const elDash = document.getElementById('dashboardArea');
+      const elBody = document.getElementById('tabelBody');
+      const elNamaSiswa = document.getElementById('namaSiswa');
+      const elMetaSiswa = document.getElementById('metaSiswa');
+      const elBtnMuatUlang = document.getElementById('btnMuatUlang');
+
+      // ===== AMBIL SESSION =====
+      // Prioritas:
+      // 1) sessionStorage.duta_siswa_dash (dari login.html, untuk siswa terdaftar)
+      // 2) localStorage.duta_session (dari script.js, untuk login/tamu)
+      function ambilSessionSiswa() {
+        // Cek sessionStorage dulu (login terdaftar)
+        try {
+          const s = JSON.parse(sessionStorage.getItem('duta_siswa_dash') || 'null');
+          if (s && s.user_id) return s;
+        } catch (e) {}
+
+        // Fallback: localStorage.duta_session (login/tamu dari script.js)
+        const s2 = window.ambilSession && window.ambilSession();
+        if (s2 && s2.user_id) {
+          return {
+            user_id: s2.user_id,
+            nama: s2.nama || s2.user_id,
+            kelas: s2.kelas || '',
+            sekolah: s2.sekolah || '',
+            tipe: s2.tipe || 'login'
+          };
+        }
+
+        return null;
+      }
+
+      // ===== MUAT DATA =====
+      async function muatData() {
+        if (!sessionSiswa || !sessionSiswa.user_id) return;
+
+        elBody.innerHTML = '<tr><td colspan="12" class="empty-state">Memuat data...</td></tr>';
+
+        const hasil = await window.dutaAmbilProgress('');
+
+        if (!hasil || !hasil.ok) {
+          elBody.innerHTML = '<tr><td colspan="12" class="empty-state">⚠️ ' +
+            ((hasil && hasil.error) || 'Gagal memuat data') + '</td></tr>';
+          return;
+        }
+
+        semuaProgress = hasil.progress || [];
+        renderStats();
+        renderTabel();
+      }
+
+      // ===== STATS =====
+      function renderStats() {
+        const total = semuaProgress.length;
+        const selesai = semuaProgress.filter(p => p.nilai_akhir > 0).length;
+        const nilaiArr = semuaProgress
+          .filter(p => p.nilai_akhir > 0)
+          .map(p => p.nilai_akhir);
+        const rata = nilaiArr.length > 0
+          ? Math.round(nilaiArr.reduce((a, b) => a + b, 0) / nilaiArr.length)
+          : 0;
+
+        // Cari update terbaru
+        const terbaru = semuaProgress
+          .map(p => p.waktu_update)
+          .filter(Boolean)
+          .sort()
+          .pop() || '–';
+
+        document.getElementById('statModul').textContent = total;
+        document.getElementById('statSelesai').textContent = selesai;
+        document.getElementById('statRata').textContent = rata;
+        document.getElementById('statUpdate').textContent = terbaru;
+      }
+
+      // ===== TABEL =====
+      function renderTabel() {
+        if (semuaProgress.length === 0) {
+          elBody.innerHTML =
+            '<tr><td colspan="12" class="empty-state">' +
+            '<span class="es-icon">🚀</span>' +
+            'Belum ada progres. Mulai belajar dulu ya!' +
+            '<br><a href="../bk/bk4.html" style="color:#8a4bbf; font-weight:700;">Mulai dari Modul BK4</a>' +
+            '</td></tr>';
+          return;
+        }
+
+        elBody.innerHTML = semuaProgress.map(function(p) {
+          const lulus = p.nilai_akhir > 0;
+
+          function skorCell(v) {
+            return v > 0
+              ? '<td class="skor-cell">' + v + '</td>'
+              : '<td class="skor-cell kosong">–</td>';
+          }
+
+          return '<tr>' +
+            '<td><span class="badge-modul">' + escapeHtml(p.modul) + '</span></td>' +
+            '<td style="text-align:center; font-weight:700;">' + (p.bagian_terakhir || '–').toUpperCase() + '</td>' +
+            skorCell(p.skor_a) +
+            skorCell(p.skor_b) +
+            skorCell(p.skor_c) +
+            skorCell(p.skor_d) +
+            skorCell(p.skor_e) +
+            skorCell(p.skor_f) +
+            skorCell(p.skor_kuis) +
+            (lulus
+              ? '<td class="nilai-akhir">' + p.nilai_akhir + '</td>'
+              : '<td class="nilai-akhir kosong">–</td>') +
+            '<td><span class="badge-status ' + (lulus ? 'selesai' : 'berlangsung') + '">' +
+              (lulus ? '✅ Selesai' : '⏳ Berlangsung') + '</span></td>' +
+            '<td style="font-size:0.75rem; color:#7a6656; white-space:nowrap;">' + (p.waktu_update || '–') + '</td>' +
+          '</tr>';
+        }).join('');
+      }
+
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      // ===== TOMBOL MUAT ULANG =====
+      elBtnMuatUlang.addEventListener('click', async function() {
+        elBtnMuatUlang.disabled = true;
+        elBtnMuatUlang.textContent = '⏳ Memuat...';
+        await muatData();
+        elBtnMuatUlang.disabled = false;
+        elBtnMuatUlang.textContent = '🔄 Muat Ulang';
+      });
+
+      // ===== INISIALISASI =====
+      document.addEventListener('DOMContentLoaded', function() {
+        sessionSiswa = ambilSessionSiswa();
+
+        if (!sessionSiswa || !sessionSiswa.user_id) {
+          elAksesDitolak.style.display = 'block';
+          return;
+        }
+
+        // Tampilkan dashboard
+        elDash.classList.add('show');
+        elNamaSiswa.textContent = sessionSiswa.nama || sessionSiswa.user_id;
+
+        const meta = [];
+        if (sessionSiswa.kelas) meta.push('Kelas ' + sessionSiswa.kelas);
+        if (sessionSiswa.sekolah) meta.push(sessionSiswa.sekolah);
+        meta.push('ID: ' + sessionSiswa.user_id);
+        if (sessionSiswa.tipe === 'tamu') meta.push('(Mode Tamu)');
+        elMetaSiswa.textContent = meta.join(' · ');
+
+        muatData();
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

@@ -257,6 +257,26 @@
       font-weight: 700;
     }
 
+    /* Tabel kebenaran */
+    .tabel-kebenaran {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      max-width: 500px;
+    }
+    .tabel-kebenaran thead { background: #4d3829; color: #fff; }
+    .tabel-kebenaran th, .tabel-kebenaran td {
+      padding: 0.6rem 1rem; text-align: center;
+      border-bottom: 1px solid #e5dbd0;
+    }
+    .tabel-kebenaran tbody tr:nth-child(even) td { background: #f8f3ee; }
+    .tabel-kebenaran .b { color: #2d7d46; font-weight: 700; }
+    .tabel-kebenaran .s { color: #b33c3c; font-weight: 700; }
+
     /* Contoh soal */
     .contoh-soal {
       background: #f5ede6;
@@ -289,6 +309,75 @@
     .contoh-soal .soal-solusi strong {
       color: #4d3829;
     }
+
+    /* Peta konsep visual */
+    .peta-konsep {
+      background: #2f2822;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      border: 3px solid #dbb9a6;
+    }
+    .peta-konsep pre {
+      font-family: 'Courier New', monospace;
+      color: #e5dbd0;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      text-align: left;
+      margin: 0;
+    }
+    .peta-konsep .hl-1 { color: #f5d4b8; font-weight: bold; }
+    .peta-konsep .hl-2 { color: #b8d4f5; font-weight: bold; }
+    .peta-konsep .hl-3 { color: #b8f5d4; font-weight: bold; }
+    .peta-konsep .hl-4 { color: #f5b8d4; font-weight: bold; }
+
+    /* Bagian aktivitas */
+    .aktivitas-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .aktivitas-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 2px solid #e5dbd0;
+      padding: 1rem 1.2rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .aktivitas-card:hover {
+      transform: translateY(-3px);
+      border-color: #8aaa7a;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+    .aktivitas-card .ac-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #8aaa7a;
+      letter-spacing: 1px;
+    }
+    .aktivitas-card .ac-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #3b2b1e;
+      line-height: 1.3;
+    }
+    .aktivitas-card .ac-desc {
+      font-size: 0.78rem;
+      color: #7a6656;
+      line-height: 1.4;
+    }
+    .aktivitas-card.final {
+      border-color: #d4a030;
+      background: #fffbf0;
+    }
+    .aktivitas-card.final .ac-num { color: #8a5e00; }
 
     /* Daftar Isi */
     .toc-box {
@@ -431,6 +520,7 @@
       .contoh-soal { padding: 1.2rem 1.2rem; }
       .venn-diagram { padding: 1rem; }
       .venn-diagram pre { font-size: 0.65rem; }
+      .peta-konsep pre { font-size: 0.6rem; }
       #tocBtn { width: 40px; height: 40px; font-size: 1.1rem; left: 1rem; bottom: 1.8rem; }
     }
 
@@ -453,6 +543,7 @@
       #tocBtn, #scrollTopBtn, .nav-bottom, .toc-box { display: none !important; }
       body { background: #fff !important; }
       .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
+      .peta-konsep, .venn-diagram { background: #f5ede6 !important; color: #2f2822 !important; }
     }
   </style>
 </head>
@@ -476,24 +567,79 @@
         <h1>🧩 Memodelkan Persoalan Logika dalam Bentuk Himpunan</h1>
         <p class="sub-judul">Mengubah masalah nyata menjadi model himpunan · Berpikir Komputasional</p>
 
+        <!-- PETA KONSEP -->
+        <h2 id="peta-konsep">🗺️ Peta Konsep Visual</h2>
+        <p>Sebelum masuk ke materi, perhatikan peta konsep berikut agar kamu tahu gambaran besar alur belajar modul ini.</p>
+
+        <div class="peta-konsep">
+<pre>
+                    ┌─────────────────────────────┐
+                    │    MODELING LOGIKA DENGAN   │
+                    │         HIMPUNAN            │
+                    └──────────────┬──────────────┘
+                                   │
+          ┌────────────────────────┼────────────────────────┐
+          │                        │                        │
+          ▼                        ▼                        ▼
+    ┌───────────┐            ┌───────────┐            ┌───────────┐
+    │ BAGIAN 1  │            │ BAGIAN 2  │            │ BAGIAN 3  │
+    │  Semesta  │───────────▶│  Irisan   │───────────▶│  Selisih  │
+    │  & Anggota│            │& Gabungan │            │& Komplemen│
+    └───────────┘            └───────────┘            └───────────┘
+          │                        │                        │
+          ▼                        ▼                        ▼
+    "Siapa saja     "Siapa yang     "Siapa yang
+     yang termasuk    termasuk dua    hanya termasuk
+     dalam satu       dunia sekaligus?"  satu, bukan
+     kelompok?"                           yang lain?"
+          │                        │                        │
+          └────────────────────────┼────────────────────────┘
+                                   │
+          ┌────────────────────────┴────────────────────────┐
+          ▼                                                 ▼
+    ┌───────────┐                                     ┌───────────┐
+    │ BAGIAN 4  │                                     │ BAGIAN 5  │
+    │ Pemodelan │                                     │ Boolean   │
+    │  Masalah  │                                     │ AND/OR/NOT│
+    └─────┬─────┘                                     └─────┬─────┘
+          │                                                 │
+          └────────────────────────┬────────────────────────┘
+                                   ▼
+                        ┌─────────────────────┐
+                        │  KUIS AKHIR (10)    │
+                        │  Level & Sertifikat │
+                        └─────────────────────┘
+</pre>
+        </div>
+
+        <!-- PERTANYAAN PEMANTIK -->
+        <div class="highlight-box">
+          <strong>🤔 Pertanyaan Pemantik:</strong>
+          <p style="margin-top:0.3rem;">Pernahkah kamu melihat daftar siswa yang mengikuti ekstrakurikuler di papan pengumuman sekolahmu? Atau daftar anggota kelompok belajar yang ditempel di dinding kelas?</p>
+          <p>Ketika Pak Guru menulis daftar nama siswa yang ikut lomba, daftar siswa yang ikut ekstrakurikuler, dan daftar siswa yang ikut keduanya — sebenarnya Pak Guru sedang membuat <strong>model</strong> dari situasi nyata. Model itu bernama <strong>himpunan</strong>.</p>
+          <p style="margin-bottom:0;"><strong>Bagaimana caramu membuat daftar yang rapi dan mudah dibaca, sehingga orang lain bisa dengan cepat tahu siapa saja yang termasuk dalam kelompok tertentu?</strong></p>
+        </div>
+
         <!-- DAFTAR ISI -->
         <div class="toc-box" id="daftarIsi">
           <div class="toc-title">📑 Daftar Isi</div>
           <ol>
-            <li><a href="#bagian-a">Pendahuluan: Apa Itu Himpunan?</a></li>
+            <li><a href="#bagian-a">Apa Itu Himpunan?</a></li>
             <li><a href="#bagian-b">Konsep Dasar Himpunan</a></li>
             <li><a href="#bagian-c">Operasi pada Himpunan</a></li>
-            <li><a href="#bagian-d">Memodelkan Persoalan Logika dengan Himpunan</a></li>
-            <li><a href="#bagian-e">Himpunan dan Logika Boolean</a></li>
-            <li><a href="#bagian-f">Manfaat Memodelkan dengan Himpunan</a></li>
-            <li><a href="#bagian-g">Referensi Materi</a></li>
+            <li><a href="#bagian-d">Diagram Venn</a></li>
+            <li><a href="#bagian-e">Memodelkan Persoalan Logika</a></li>
+            <li><a href="#bagian-f">Himpunan dan Logika Boolean</a></li>
+            <li><a href="#bagian-g">Aktivitas Interaktif</a></li>
+            <li><a href="#bagian-h">Referensi</a></li>
           </ol>
         </div>
 
-        <!-- A. Pendahuluan -->
-        <h2 id="bagian-a">A. Pendahuluan: Apa Itu Himpunan?</h2>
+        <!-- A. APA ITU HIMPUNAN -->
+        <h2 id="bagian-a">A. Apa Itu Himpunan?</h2>
         <p>Pernahkah kamu mengelompokkan barang-barang di kamarmu? Buku-buku diletakkan di rak, pakaian dimasukkan ke lemari, dan mainan disimpan dalam kotak. Dalam matematika dan informatika, kegiatan mengelompokkan ini disebut <strong>himpunan (set)</strong>.</p>
-        <p><strong>Himpunan</strong> adalah kumpulan objek-objek yang terdefinisi dengan jelas dan memiliki sifat atau karakteristik yang sama. Objek-objek di dalam himpunan disebut <strong>anggota</strong> atau <strong>elemen</strong> himpunan.</p>
+
+        <p><strong>Himpunan</strong> adalah kumpulan objek-objek yang <strong>terdefinisi dengan jelas</strong> dan memiliki sifat atau karakteristik yang sama. Objek-objek di dalam himpunan disebut <strong>anggota</strong> atau <strong>elemen</strong> himpunan.</p>
 
         <div class="highlight-box">
           <strong>💡 Mengapa himpunan penting dalam informatika?</strong>
@@ -506,7 +652,7 @@
           </ul>
         </div>
 
-        <!-- B. Konsep Dasar -->
+        <!-- B. KONSEP DASAR -->
         <h2 id="bagian-b">B. Konsep Dasar Himpunan</h2>
 
         <h3>1. Notasi Himpunan</h3>
@@ -532,7 +678,7 @@
         </div>
 
         <h3>3. Himpunan Semesta (Universal Set)</h3>
-        <p><strong>Himpunan semesta</strong> adalah himpunan yang memuat semua objek yang sedang dibicarakan. Biasanya dilambangkan dengan <strong>S</strong> atau <strong>U</strong>.</p>
+        <p><strong>Himpunan semesta</strong> adalah himpunan yang memuat <strong>semua</strong> objek yang sedang dibicarakan. Biasanya dilambangkan dengan <strong>S</strong> atau <strong>U</strong>.</p>
 
         <div class="set-box">
           <div class="set-title">📌 Contoh:</div>
@@ -548,9 +694,52 @@
           <div>H = {bilangan ganjil yang habis dibagi 2} → H = ∅</div>
         </div>
 
-        <!-- C. Operasi pada Himpunan -->
+        <h3>5. Himpunan Bagian (Subset)</h3>
+        <p>A adalah <strong>himpunan bagian</strong> dari B jika semua anggota A juga merupakan anggota B. Ditulis <strong>A ⊆ B</strong>.</p>
+
+        <div class="set-box">
+          <div class="set-title">📌 Contoh:</div>
+          <div>A = {1, 2}</div>
+          <div>B = {1, 2, 3, 4}</div>
+          <div style="margin-top:0.5rem; font-weight:700; color:#4d3829;">A ⊆ B</div>
+          <div class="set-desc">→ semua anggota A ada di B</div>
+        </div>
+
+        <!-- C. OPERASI HIMPUNAN -->
         <h2 id="bagian-c">C. Operasi pada Himpunan</h2>
         <p>Sama seperti kita bisa menjumlahkan dan mengurangkan angka, kita juga bisa mengoperasikan himpunan.</p>
+
+        <table class="tabel-operasi">
+          <thead>
+            <tr>
+              <th>Operasi</th>
+              <th>Simbol</th>
+              <th>Arti</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Irisan</strong></td>
+              <td><span class="badge-op">∩</span></td>
+              <td>Anggota yang ada di <strong>kedua</strong> himpunan</td>
+            </tr>
+            <tr>
+              <td><strong>Gabungan</strong></td>
+              <td><span class="badge-op">∪</span></td>
+              <td>Anggota yang ada di <strong>setidaknya salah satu</strong> himpunan</td>
+            </tr>
+            <tr>
+              <td><strong>Selisih</strong></td>
+              <td><span class="badge-op">−</span></td>
+              <td>Anggota A yang <strong>tidak ada</strong> di B</td>
+            </tr>
+            <tr>
+              <td><strong>Komplemen</strong></td>
+              <td><span class="badge-op">′</span></td>
+              <td>Anggota semesta yang <strong>bukan</strong> anggota A</td>
+            </tr>
+          </tbody>
+        </table>
 
         <h3>1. Irisan (Intersection) — ∩</h3>
         <p><strong>Irisan</strong> adalah himpunan yang berisi anggota yang sama-sama dimiliki oleh dua himpunan atau lebih.</p>
@@ -574,28 +763,8 @@
           <div class="set-desc">→ semua angka dari A dan B (tanpa duplikat)</div>
         </div>
 
-        <!-- Diagram Venn -->
-        <div class="venn-diagram">
-          <div class="venn-title">┌─────────────────────────────────────────┐</div>
-          <div style="font-size:0.9rem; color:#dbb9a6; margin-bottom:0.8rem;">DIAGRAM VENN — IRISAN &amp; GABUNGAN</div>
-          <pre>
-                  ┌─────────────────────────────┐
-                  │         A ∪ B               │
-                  │  ┌──────────┐  ┌──────────┐ │
-                  │  │   A       │  │   B      │ │
-                  │  │ 1   2     │  │ 5   6    │ │
-                  │  │   ┌───────┼──┼───────┐ │ │
-                  │  │   │ <span class="highlight-intersect">3 , 4</span> │  │       │ │ │
-                  │  └───┼───────┘  └───────┼─┘ │
-                  └──────┴──────────────────┴───┘
-          </pre>
-          <div style="font-size:0.7rem; color:#7a6656; border-top:1px solid #4d3829; padding-top:0.8rem; margin-top:0.5rem;">
-            <span style="color:#f5d4b8;">■ A</span> &nbsp; <span style="color:#b8d4f5;">■ B</span> &nbsp; <span style="color:#b8f5d4;">■ A ∩ B (irisan)</span> &nbsp; <span style="color:#e5dbd0;">■ A ∪ B (gabungan)</span>
-          </div>
-        </div>
-
         <h3>3. Selisih (Difference) — −</h3>
-        <p><strong>Selisih</strong> A - B adalah himpunan yang berisi anggota A yang <strong>tidak</strong> menjadi anggota B.</p>
+        <p><strong>Selisih</strong> A − B adalah himpunan yang berisi anggota A yang <strong>tidak</strong> menjadi anggota B.</p>
 
         <div class="set-box">
           <div class="set-title">📌 Contoh:</div>
@@ -607,33 +776,61 @@
           <div class="set-desc">→ anggota B yang tidak ada di A</div>
         </div>
 
-        <h3>4. Komplemen (Complement) — A' atau ¬A</h3>
+        <h3>4. Komplemen (Complement) — A′</h3>
         <p><strong>Komplemen</strong> dari himpunan A adalah anggota himpunan semesta yang <strong>tidak</strong> menjadi anggota A.</p>
 
         <div class="set-box">
           <div class="set-title">📌 Contoh:</div>
           <div>S = {1, 2, 3, 4, 5, 6}</div>
           <div>A = {1, 2, 3}</div>
-          <div style="margin-top:0.5rem; font-weight:700; color:#4d3829;">A' = {4, 5, 6}</div>
+          <div style="margin-top:0.5rem; font-weight:700; color:#4d3829;">A′ = {4, 5, 6}</div>
           <div class="set-desc">→ anggota S yang tidak ada di A</div>
         </div>
 
-        <h3>5. Himpunan Bagian (Subset) — ⊆</h3>
-        <p>A adalah <strong>himpunan bagian</strong> dari B jika semua anggota A juga merupakan anggota B.</p>
-
-        <div class="set-box">
-          <div class="set-title">📌 Contoh:</div>
-          <div>A = {1, 2}</div>
-          <div>B = {1, 2, 3, 4}</div>
-          <div style="margin-top:0.5rem; font-weight:700; color:#4d3829;">A ⊆ B</div>
-          <div class="set-desc">→ semua anggota A ada di B</div>
+        <div class="highlight-box">
+          <strong>💡 Rumus Inklusi-Eksklusi:</strong>
+          <p style="margin-top:0.3rem;">Untuk dua himpunan A dan B:</p>
+          <div class="set-content" style="font-family:'Courier New', monospace; background:#fff; padding:0.6rem 1.2rem; border-radius:8px; display:inline-block; margin-top:0.3rem;">
+            n(A ∪ B) = n(A) + n(B) − n(A ∩ B)
+          </div>
+          <p style="margin-top:0.5rem; margin-bottom:0;">Rumus ini mencegah penghitungan ganda pada anggota yang muncul di kedua himpunan.</p>
         </div>
 
-        <!-- D. Memodelkan -->
-        <h2 id="bagian-d">D. Memodelkan Persoalan Logika dengan Himpunan</h2>
+        <!-- D. DIAGRAM VENN -->
+        <h2 id="bagian-d">D. Diagram Venn</h2>
+        <p><strong>Diagram Venn</strong> adalah cara visual untuk menggambarkan himpunan dan operasinya. Himpunan semesta digambarkan sebagai persegi panjang, dan himpunan-himpunan di dalamnya digambarkan sebagai lingkaran atau elips.</p>
+
+        <div class="venn-diagram">
+          <div class="venn-title">DIAGRAM VENN — IRISAN &amp; GABUNGAN</div>
+<pre>
+              ┌─────────────────────────────┐
+              │         S (Semesta)         │
+              │  ┌──────────┐  ┌──────────┐ │
+              │  │   A       │  │   B      │ │
+              │  │ 1   2     │  │ 5   6    │ │
+              │  │   ┌───────┼──┼───────┐ │ │
+              │  │   │ 3 , 4 │  │       │ │ │
+              │  └───┼───────┘  └───────┼─┘ │
+              └──────┴──────────────────┴───┘
+</pre>
+          <div style="font-size:0.7rem; color:#7a6656; border-top:1px solid #4d3829; padding-top:0.8rem; margin-top:0.5rem;">
+            <span style="color:#f5d4b8;">■ A</span> &nbsp; <span style="color:#b8d4f5;">■ B</span> &nbsp; <span style="color:#b8f5d4;">■ A ∩ B (irisan)</span>
+          </div>
+        </div>
+
+        <!-- E. MEMODELKAN -->
+        <h2 id="bagian-e">E. Memodelkan Persoalan Logika</h2>
         <p><strong>Memodelkan</strong> berarti menerjemahkan masalah nyata ke dalam bahasa himpunan agar lebih mudah dipahami dan dipecahkan.</p>
 
-        <!-- Contoh 1 -->
+        <h4>Langkah-langkah memodelkan:</h4>
+        <ol>
+          <li><strong>Tentukan himpunan semesta (S)</strong> — apa "dunia" pembicaraan kita?</li>
+          <li><strong>Identifikasi himpunan-himpunan bagian</strong> — apa saja kelompok yang terlibat?</li>
+          <li><strong>Tentukan relasi antar himpunan</strong> — apakah ada irisan? gabungan? selisih?</li>
+          <li><strong>Pilih operasi yang tepat</strong> — sesuai pertanyaan yang ingin dijawab.</li>
+          <li><strong>Hitung atau gambar diagram Venn</strong> untuk mempermudah.</li>
+        </ol>
+
         <div class="contoh-soal">
           <div class="soal-title">📘 Contoh 1: Preferensi Makanan</div>
           <div class="soal-text">
@@ -642,35 +839,33 @@
           <div class="soal-solusi">
             <strong>Model Himpunan:</strong><br>
             S = {semua siswa di kelas}<br>
-            A = {siswa suka nasi goreng}, |A| = 15<br>
-            B = {siswa suka mie goreng}, |B| = 12<br>
-            A ∩ B = {siswa suka keduanya}, |A ∩ B| = 6<br><br>
+            A = {siswa suka nasi goreng}, n(A) = 15<br>
+            B = {siswa suka mie goreng}, n(B) = 12<br>
+            A ∩ B = {siswa suka keduanya}, n(A ∩ B) = 6<br><br>
             <strong>Penyelesaian:</strong><br>
-            |A ∪ B| = |A| + |B| − |A ∩ B|<br>
-            |A ∪ B| = 15 + 12 − 6 = <strong>21</strong><br><br>
+            n(A ∪ B) = n(A) + n(B) − n(A ∩ B)<br>
+            n(A ∪ B) = 15 + 12 − 6 = <strong>21</strong><br><br>
             ✅ Jadi, ada <strong>21 siswa</strong> yang suka minimal salah satu dari kedua makanan tersebut.
           </div>
         </div>
 
-        <!-- Contoh 2 -->
         <div class="contoh-soal">
-          <div class="soal-title">📘 Contoh 2: Logika Peminjaman Buku</div>
+          <div class="soal-title">📘 Contoh 2: Ekstrakurikuler</div>
           <div class="soal-text">
-            <strong>Masalah:</strong> Di perpustakaan, buku yang dipinjam harus dikembalikan dalam 7 hari. Jika buku dikembalikan terlambat, peminjam dikenai denda. Bagaimana memodelkan aturan ini?
+            <strong>Masalah:</strong> Dalam sebuah sekolah, 30 siswa ikut Futsal, 25 ikut Basket, dan 10 ikut keduanya. Berapa siswa yang ikut Futsal saja?
           </div>
           <div class="soal-solusi">
             <strong>Model Himpunan:</strong><br>
-            P = {semua buku yang dipinjam}<br>
-            T = {buku yang dikembalikan tepat waktu}<br>
-            L = {buku yang dikembalikan terlambat}<br>
-            D = {buku yang dikenai denda}<br><br>
-            <strong>Relasi Logika:</strong><br>
-            Jika buku ∈ L, maka buku ∈ D (semua buku terlambat kena denda)<br>
-            L = P − T (buku terlambat adalah buku yang tidak tepat waktu)
+            F = {siswa ikut Futsal}, n(F) = 30<br>
+            B = {siswa ikut Basket}, n(B) = 25<br>
+            F ∩ B = {siswa ikut keduanya}, n(F ∩ B) = 10<br><br>
+            <strong>Penyelesaian:</strong><br>
+            F − B = {siswa ikut Futsal tetapi tidak Basket}<br>
+            n(F − B) = n(F) − n(F ∩ B) = 30 − 10 = <strong>20</strong><br><br>
+            ✅ Jadi, ada <strong>20 siswa</strong> yang ikut Futsal saja.
           </div>
         </div>
 
-        <!-- Contoh 3 -->
         <div class="contoh-soal">
           <div class="soal-title">📘 Contoh 3: Rekomendasi Film</div>
           <div class="soal-text">
@@ -687,8 +882,8 @@
           </div>
         </div>
 
-        <!-- E. Himpunan & Boolean -->
-        <h2 id="bagian-e">E. Himpunan dan Logika Boolean</h2>
+        <!-- F. HIMPUNAN & BOOLEAN -->
+        <h2 id="bagian-f">F. Himpunan dan Logika Boolean</h2>
         <p>Himpunan sangat erat kaitannya dengan <strong>logika Boolean</strong> (logika yang hanya memiliki dua nilai: benar/salah atau 1/0). Operasi himpunan memiliki padanan dalam logika:</p>
 
         <table class="tabel-boolean">
@@ -711,30 +906,118 @@
               <td>"Suka nasi goreng <strong>atau</strong> mie goreng"</td>
             </tr>
             <tr>
-              <td><span class="badge-op">'</span> Komplemen (A')</td>
+              <td><span class="badge-op">′</span> Komplemen (A′)</td>
               <td><span class="logic-true">NOT</span> (¬A)</td>
               <td>"<strong>Tidak</strong> suka nasi goreng"</td>
+            </tr>
+            <tr>
+              <td><span class="badge-op">−</span> Selisih (A − B)</td>
+              <td><span class="logic-true">AND NOT</span> (A ∧ ¬B)</td>
+              <td>"Suka nasi goreng <strong>tetapi tidak</strong> mie goreng"</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Tabel Kebenaran AND, OR, NOT</h3>
+
+        <table class="tabel-kebenaran">
+          <thead>
+            <tr>
+              <th>A</th>
+              <th>B</th>
+              <th>A AND B</th>
+              <th>A OR B</th>
+              <th>NOT A</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="b">1</td>
+              <td class="b">1</td>
+              <td class="b">1</td>
+              <td class="b">1</td>
+              <td class="s">0</td>
+            </tr>
+            <tr>
+              <td class="b">1</td>
+              <td class="s">0</td>
+              <td class="s">0</td>
+              <td class="b">1</td>
+              <td class="s">0</td>
+            </tr>
+            <tr>
+              <td class="s">0</td>
+              <td class="b">1</td>
+              <td class="s">0</td>
+              <td class="b">1</td>
+              <td class="b">1</td>
+            </tr>
+            <tr>
+              <td class="s">0</td>
+              <td class="s">0</td>
+              <td class="s">0</td>
+              <td class="s">0</td>
+              <td class="b">1</td>
             </tr>
           </tbody>
         </table>
 
         <div class="highlight-box">
-          <strong>💡 Contoh penerapan:</strong>
-          <p>Aturan akses: <em>"Siswa boleh masuk laboratorium jika sudah mendapat izin <strong>AND</strong> memakai sepatu"</em></p>
-          <p style="margin-top:0.3rem;">Dalam himpunan: Akses = Izin ∩ Sepatu</p>
+          <strong>💡 Koneksi Dunia Nyata:</strong>
+          <p style="margin-top:0.3rem;">Di <strong>mesin pencari</strong> (Google, Tokopedia), saat kamu mengetik "sepatu AND murah" — mesin mencari produk yang ada di himpunan "sepatu" <em>dan</em> himpunan "murah" (irisan). Saat kamu mengetik "sepatu OR sandal" — mesin mencari produk yang ada di himpunan "sepatu" <em>atau</em> "sandal" (gabungan).</p>
+          <p style="margin-bottom:0;">Fitur filter di <strong>Tokopedia</strong> juga bekerja seperti ini: setiap centang filter = satu operasi himpunan!</p>
         </div>
 
-        <!-- F. Manfaat -->
-        <h2 id="bagian-f">F. Manfaat Memodelkan dengan Himpunan</h2>
-        <ul>
-          <li><strong>Memudahkan Pemahaman:</strong> Masalah kompleks menjadi lebih sederhana dan terstruktur</li>
-          <li><strong>Mempermudah Penyelesaian:</strong> Operasi himpunan membantu menemukan solusi dengan cepat</li>
-          <li><strong>Dasar Pemrograman:</strong> Banyak algoritma menggunakan prinsip himpunan</li>
-          <li><strong>Penyelesaian Masalah Nyata:</strong> Dari rekomendasi produk hingga sistem keamanan</li>
-        </ul>
+        <div class="highlight-box">
+          <strong>💡 Contoh penerapan aturan akses:</strong>
+          <p style="margin-top:0.3rem;">Aturan: <em>"Siswa boleh masuk laboratorium jika sudah mendapat izin <strong>AND</strong> memakai sepatu"</em></p>
+          <p style="margin-bottom:0;">Dalam himpunan: Akses = Izin ∩ Sepatu</p>
+        </div>
 
-        <!-- G. Referensi -->
-        <h2 id="bagian-g">📚 Referensi Materi</h2>
+        <!-- G. AKTIVITAS -->
+        <h2 id="bagian-g">G. Aktivitas Interaktif</h2>
+        <p>Untuk memperdalam pemahaman, kerjakan aktivitas interaktif berikut secara berurutan. Setiap bagian harus diselesaikan (lulus tes pemahaman) sebelum lanjut ke bagian berikutnya.</p>
+
+        <div class="aktivitas-list">
+          <a href="aktivitasbk4a.html" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 1</span>
+            <span class="ac-title">🃏 Mengenal Kelompok</span>
+            <span class="ac-desc">Himpunan, anggota, dan semesta — lewat "Kartu Nama Ajaib"</span>
+          </a>
+          <a href="aktivitasbk4b.html" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 2</span>
+            <span class="ac-title">📅 Dunia yang Tumpang Tindih</span>
+            <span class="ac-desc">Irisan &amp; gabungan — lewat "Kalender Ramadhan"</span>
+          </a>
+          <a href="aktivitasbk4c.html" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 3</span>
+            <span class="ac-title">🍎 Yang Unik dan yang Tersisa</span>
+            <span class="ac-desc">Selisih &amp; komplemen — lewat "Parcel Buah Misterius"</span>
+          </a>
+          <a href="aktivitasbk4d.html" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 4</span>
+            <span class="ac-title">🕵️ Pemodelan Masalah Nyata</span>
+            <span class="ac-desc">Gabungan semua operasi — lewat "Detektif Himpunan"</span>
+          </a>
+          <a href="aktivitasbk4e.html" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 5</span>
+            <span class="ac-title">🧠 Himpunan &amp; Logika Boolean</span>
+            <span class="ac-desc">AND/OR/NOT — lewat "Konversi Logika"</span>
+          </a>
+          <a href="aktivitasbk4f.html" class="aktivitas-card final">
+            <span class="ac-num">BAGIAN 6</span>
+            <span class="ac-title">📝 Uji Pemahaman Akhir</span>
+            <span class="ac-desc">Latihan komprehensif 10 soal (tanpa nilai)</span>
+          </a>
+          <a href="aktivitasbk4g.html" class="aktivitas-card final">
+            <span class="ac-num">BAGIAN 7</span>
+            <span class="ac-title">🏆 Kuis Akhir &amp; Sertifikat</span>
+            <span class="ac-desc">Penilaian + sertifikat digital (lulus ≥7)</span>
+          </a>
+        </div>
+
+        <!-- H. REFERENSI -->
+        <h2 id="bagian-h">📚 Referensi Materi</h2>
         <ul>
           <li>Kurikulum Merdeka Informatika SMP Fase D - Elemen Berpikir Komputasional: "Memodelkan persoalan logika ke bentuk himpunan" (INF-D.BK1.3)</li>
           <li>Buku "Sets, Logic and Maths for Computing" oleh David Makinson - Konsep dasar himpunan dan operasinya</li>
@@ -742,6 +1025,7 @@
           <li>Konsep Boolean Models dan hubungan himpunan dengan logika proposisional</li>
           <li>Materi Himpunan dalam Informatika Kelas 8 SMP Kurikulum Merdeka</li>
           <li>Inclusion-Exclusion Principle Visualizer - Contoh visualisasi interaktif operasi himpunan</li>
+          <li>Bebras Indonesia. <em>Soal-soal Berpikir Komputasional</em>.</li>
         </ul>
 
         <!-- NAVIGASI -->
@@ -751,11 +1035,11 @@
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
             <a href="aktivitasbk4a.html" class="btn-nav primary">
-              🎮 Coba Materi + Aktivitas →
+              🎮 Mulai Aktivitas Bagian 1 →
             </a>
           </div>
           <div class="nav-hint">
-            💡 Ingin belajar sambil berlatih? Coba mode "Materi + Aktivitas" untuk pengalaman yang lebih interaktif!
+            💡 Sudah paham materinya? Mulai aktivitas interaktif untuk pengalaman belajar yang lebih dalam!
           </div>
         </div>
 
@@ -769,7 +1053,7 @@
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
-
+  <script>window.DUTA_ROOT = '../';</script>
   <script>
     function scrollToTOC() {
       const toc = document.getElementById('daftarIsi');
