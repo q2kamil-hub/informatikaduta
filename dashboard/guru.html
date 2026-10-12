@@ -6,7 +6,10 @@
   <title>Dashboard Guru · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
   <style>
-    .guru-wrapper { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+    /* ============================================================
+       LAYOUT
+       ============================================================ */
+    .guru-wrapper { max-width: 1400px; margin: 1.5rem auto; padding: 0 1rem; }
 
     /* ===== AKSES DITOLAK ===== */
     .akses-ditolak {
@@ -42,30 +45,42 @@
     #dashboardArea { display: none; }
     #dashboardArea.show { display: block; }
 
+    /* ===== HEADER DASH ===== */
     .dash-header {
       background: linear-gradient(135deg, #fff8e6, #ffe8c2);
       border: 2px solid #f0c896;
       border-radius: 20px;
       padding: 1.2rem 1.6rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .dash-header .dh-row1 {
       display: flex; flex-wrap: wrap;
       justify-content: space-between; align-items: center;
-      gap: 0.8rem;
+      gap: 0.8rem; margin-bottom: 0.8rem;
     }
-    .dash-header .dh-info {
-      font-size: 0.95rem; color: #5c3400;
+    .dash-header .dh-info { font-size: 1rem; color: #5c3400; }
+    .dash-header .dh-info strong { color: #3b2b1e; font-size: 1.1rem; }
+    .dash-header .dh-info .dh-sekolah {
+      display: inline-block;
+      background: rgba(255,255,255,0.7);
+      padding: 0.15rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-left: 0.5rem;
+      color: #7a4a00;
     }
-    .dash-header .dh-info strong { color: #3b2b1e; }
     .dash-header .dh-actions {
-      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
     }
     .btn-dash {
-      padding: 0.5rem 1.2rem; border-radius: 30px;
+      padding: 0.5rem 1.1rem; border-radius: 30px;
       border: 2px solid #d9cdbf; background: #fff;
-      font-weight: 700; font-size: 0.85rem;
+      font-weight: 700; font-size: 0.82rem;
       color: #4d3829; cursor: pointer;
       font-family: inherit; transition: all 0.2s ease;
       display: inline-flex; align-items: center; gap: 0.4rem;
+      white-space: nowrap;
     }
     .btn-dash:hover {
       background: #f5ede6; transform: translateY(-2px);
@@ -74,26 +89,112 @@
       background: #4d3829; border-color: #4d3829; color: #fff;
     }
     .btn-dash.primary:hover { background: #6b4f3a; border-color: #6b4f3a; }
+    .btn-dash.danger {
+      background: #fdf0f0; border-color: #f0c0c0; color: #a84a3a;
+    }
+    .btn-dash.danger:hover { background: #f8dcdc; border-color: #e8a8a8; }
     .btn-dash:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; }
 
     /* ===== STATS ===== */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem; margin-bottom: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.9rem; margin-bottom: 1.2rem;
     }
     .stat-card {
       background: #fff; border-radius: 16px;
-      padding: 1rem 1.2rem; border: 2px solid #e5dbd0;
+      padding: 0.9rem 1.1rem; border: 2px solid #e5dbd0;
       box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
     .stat-card .sc-label {
-      font-size: 0.78rem; color: #7a6656;
+      font-size: 0.72rem; color: #7a6656;
       text-transform: uppercase; letter-spacing: 0.5px;
       font-weight: 700; margin-bottom: 0.3rem;
     }
     .stat-card .sc-value {
-      font-size: 1.6rem; font-weight: 800; color: #3b2b1e;
+      font-size: 1.5rem; font-weight: 800; color: #3b2b1e;
+    }
+    .stat-card.warn { border-color: #f0c896; background: #fffaf0; }
+    .stat-card.warn .sc-value { color: #b06000; }
+
+    /* ===== PANEL INFO (Perhatian + Aktivitas) ===== */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin-bottom: 1.2rem;
+    }
+    @media (max-width: 720px) { .info-grid { grid-template-columns: 1fr; } }
+    .info-panel {
+      background: #fff; border-radius: 16px;
+      padding: 1rem 1.2rem; border: 2px solid #e5dbd0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .info-panel h3 {
+      font-size: 0.95rem; font-weight: 800;
+      color: #5c2f8a; margin-bottom: 0.6rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .info-panel ul {
+      list-style: none; padding: 0; margin: 0;
+      max-height: 180px; overflow-y: auto;
+    }
+    .info-panel li {
+      font-size: 0.82rem; color: #3a2b3e;
+      padding: 0.35rem 0; border-bottom: 1px dashed #f0e6ff;
+      display: flex; justify-content: space-between; gap: 0.5rem;
+    }
+    .info-panel li:last-child { border-bottom: none; }
+    .info-panel li .ip-nama { font-weight: 700; }
+    .info-panel li .ip-info { color: #7a6656; font-size: 0.78rem; }
+    .info-panel .ip-empty {
+      font-size: 0.82rem; color: #a08674;
+      font-style: italic; padding: 0.5rem 0;
+    }
+
+    /* ===== STATISTIK (hidden) ===== */
+    .statistik-section {
+      display: none;
+      background: #fff; border-radius: 16px;
+      padding: 1.2rem 1.4rem; border: 2px solid #e5dbd0;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    }
+    .statistik-section.show { display: block; }
+    .statistik-section h3 {
+      font-size: 1.05rem; font-weight: 800;
+      color: #5c2f8a; margin-bottom: 1rem;
+    }
+    .stat-block { margin-bottom: 1.4rem; }
+    .stat-block h4 {
+      font-size: 0.85rem; font-weight: 700;
+      color: #4d3829; margin-bottom: 0.5rem;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .bar-row {
+      display: flex; align-items: center; gap: 0.6rem;
+      margin-bottom: 0.4rem; font-size: 0.82rem;
+    }
+    .bar-label {
+      width: 90px; font-weight: 600; color: #3a2b3e;
+      flex-shrink: 0;
+    }
+    .bar-track {
+      flex: 1; height: 18px; background: #f0e6ff;
+      border-radius: 10px; overflow: hidden;
+      position: relative;
+    }
+    .bar-fill {
+      height: 100%; border-radius: 10px;
+      transition: width 0.4s ease;
+      background: linear-gradient(90deg, #b07be0, #5c7cfa);
+    }
+    .bar-fill.green { background: linear-gradient(90deg, #6ecb8f, #4fa86a); }
+    .bar-fill.yellow { background: linear-gradient(90deg, #f4b942, #e8a020); }
+    .bar-fill.red { background: linear-gradient(90deg, #f26d8a, #ef476f); }
+    .bar-value {
+      width: 60px; text-align: right;
+      font-weight: 700; color: #4d3829;
+      flex-shrink: 0;
     }
 
     /* ===== FILTER ===== */
@@ -101,86 +202,386 @@
       background: #f8f4ef; border-radius: 14px;
       padding: 0.9rem 1.2rem; margin-bottom: 1rem;
       border: 2px solid #e5dbd0;
-      display: flex; flex-wrap: wrap;
-      gap: 0.6rem 1rem; align-items: center;
     }
+    .filter-bar .fb-row {
+      display: flex; flex-wrap: wrap;
+      gap: 0.6rem 0.9rem; align-items: center;
+    }
+    .filter-bar .fb-row + .fb-row { margin-top: 0.6rem; }
     .filter-bar label {
-      font-size: 0.85rem; font-weight: 700;
+      font-size: 0.82rem; font-weight: 700;
       color: #4d3829;
     }
     .filter-bar input, .filter-bar select {
       padding: 0.45rem 0.8rem; border-radius: 8px;
       border: 2px solid #d9cdbf; background: #fff;
-      font-family: inherit; font-size: 0.88rem;
+      font-family: inherit; font-size: 0.85rem;
       color: #3d2c1f; outline: none;
     }
     .filter-bar input:focus, .filter-bar select:focus {
       border-color: #f26d8a;
     }
+    .filter-bar .fb-toggle {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.82rem; font-weight: 700; color: #4d3829;
+      cursor: pointer; user-select: none;
+    }
+    .filter-bar .fb-toggle input { width: auto; }
+
+    /* ===== BULK ACTION ===== */
+    .bulk-bar {
+      display: none; align-items: center; gap: 0.8rem;
+      background: #fdf0f0; border: 2px solid #f0c0c0;
+      border-radius: 12px; padding: 0.7rem 1rem;
+      margin-bottom: 1rem; font-size: 0.88rem;
+      color: #a84a3a; font-weight: 600;
+    }
+    .bulk-bar.show { display: flex; flex-wrap: wrap; }
+    .bulk-bar .bb-info { flex: 1; }
 
     /* ===== TABEL ===== */
     .tabel-wrapper {
       background: #fff; border-radius: 16px;
       border: 2px solid #e5dbd0;
-      overflow-x: auto;
+      overflow: auto;
+      max-height: 70vh;
       box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+      position: relative;
     }
     .tabel-progres {
       width: 100%; border-collapse: collapse;
-      font-size: 0.85rem; min-width: 900px;
+      font-size: 0.83rem;
+      min-width: 1000px;
     }
     .tabel-progres thead {
       background: #4d3829; color: #fff;
-      position: sticky; top: 0; z-index: 1;
+      position: sticky; top: 0; z-index: 2;
     }
     .tabel-progres th {
-      padding: 0.7rem 0.8rem; text-align: left;
-      font-weight: 700; font-size: 0.78rem;
+      padding: 0.6rem 0.7rem; text-align: left;
+      font-weight: 700; font-size: 0.75rem;
       white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
     }
+    .tabel-progres th.no-sort { cursor: default; }
+    .tabel-progres th .sort-arrow {
+      font-size: 0.65rem; opacity: 0.5; margin-left: 0.2rem;
+    }
+    .tabel-progres th.sorted .sort-arrow { opacity: 1; }
     .tabel-progres td {
-      padding: 0.6rem 0.8rem;
+      padding: 0.55rem 0.7rem;
       border-bottom: 1px solid #e5dbd0;
       color: #2f2822; vertical-align: middle;
     }
+    .tabel-progres tbody tr { transition: background 0.15s; }
     .tabel-progres tbody tr:hover td { background: #f8f3ee; }
+    .tabel-progres tbody tr.row-tuntas td { background: #f0f8f0; }
+    .tabel-progres tbody tr.row-tuntas:hover td { background: #e6f2e6; }
+    .tabel-progres tbody tr.row-perhatian td { background: #fffaf0; }
+    .tabel-progres tbody tr.row-perhatian:hover td { background: #fff3dc; }
+    .tabel-progres tbody tr.row-berlangsung td { background: #fafafa; }
+
+    /* Sticky kolom nama */
+    .tabel-progres th.col-nama,
+    .tabel-progres td.col-nama {
+      position: sticky; left: 0;
+      background: #fff;
+      z-index: 1;
+      box-shadow: 2px 0 4px rgba(0,0,0,0.04);
+    }
+    .tabel-progres thead th.col-nama {
+      background: #4d3829;
+      z-index: 3;
+    }
+    .tabel-progres tbody tr.row-tuntas td.col-nama { background: #f0f8f0; }
+    .tabel-progres tbody tr.row-perhatian td.col-nama { background: #fffaf0; }
+    .tabel-progres tbody tr.row-berlangsung td.col-nama { background: #fafafa; }
+    .tabel-progres tbody tr:hover td.col-nama { background: #f8f3ee; }
+
     .tabel-progres .badge-modul {
       display: inline-block; padding: 0.15rem 0.55rem;
-      border-radius: 12px; font-size: 0.7rem;
+      border-radius: 12px; font-size: 0.68rem;
       font-weight: 700; background: #f0e6ff;
       color: #5c2f8a; text-transform: uppercase;
     }
     .tabel-progres .badge-tipe {
-      display: inline-block; padding: 0.1rem 0.5rem;
-      border-radius: 10px; font-size: 0.65rem;
+      display: inline-block; padding: 0.1rem 0.45rem;
+      border-radius: 10px; font-size: 0.62rem;
       font-weight: 700; margin-left: 0.3rem;
     }
-    .tabel-progres .badge-tipe.login {
-      background: #d4e8cb; color: #2d5a1e;
+    .tabel-progres .badge-tipe.login { background: #d4e8cb; color: #2d5a1e; }
+    .tabel-progres .badge-tipe.tamu { background: #fff3d6; color: #8a5e00; }
+    .tabel-progres .badge-status {
+      display: inline-block; padding: 0.1rem 0.5rem;
+      border-radius: 10px; font-size: 0.65rem;
+      font-weight: 700;
     }
-    .tabel-progres .badge-tipe.tamu {
-      background: #fff3d6; color: #8a5e00;
-    }
+    .tabel-progres .badge-status.selesai { background: #c8ecd5; color: #1f5f32; }
+    .tabel-progres .badge-status.proses { background: #fff3d6; color: #8a5e00; }
+
     .tabel-progres .skor-cell {
       text-align: center; font-weight: 600;
       font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
     }
     .tabel-progres .skor-cell.kosong { color: #b09b88; }
     .tabel-progres .nilai-akhir {
       font-weight: 800; color: #4d7a3b;
-      text-align: center;
+      text-align: center; font-size: 0.9rem;
     }
     .tabel-progres .nilai-akhir.kosong { color: #b09b88; }
+    .tabel-progres .nilai-akhir.rendah { color: #b06000; }
+
+    .tabel-progres .aksi-cell {
+      white-space: nowrap; text-align: center;
+    }
+    .tabel-progres .aksi-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px;
+      border-radius: 8px; border: 1.5px solid #e5dbd0;
+      background: #fff; cursor: pointer;
+      font-size: 0.9rem; transition: all 0.15s;
+      margin: 0 2px;
+    }
+    .tabel-progres .aksi-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    .tabel-progres .aksi-btn.detail:hover { background: #e6f0ff; border-color: #5c7cfa; }
+    .tabel-progres .aksi-btn.unlock:hover { background: #fff3d6; border-color: #f4b942; }
+    .tabel-progres .aksi-btn.edit:hover { background: #f0e6ff; border-color: #b07be0; }
+
+    .tabel-progres .cb-cell {
+      width: 36px; text-align: center;
+    }
+    .tabel-progres .cb-cell input {
+      width: 16px; height: 16px; cursor: pointer;
+    }
+
     .empty-state {
       text-align: center; padding: 2rem;
       color: #7a6656; font-style: italic;
     }
 
-    /* ===== RESPONSIF ===== */
+    /* ===== PAGINATION ===== */
+    .pagination {
+      display: flex; flex-wrap: wrap;
+      justify-content: space-between; align-items: center;
+      gap: 0.8rem; margin-top: 1rem;
+      font-size: 0.85rem; color: #5c4638;
+    }
+    .pagination .pg-info { font-weight: 600; }
+    .pagination .pg-controls {
+      display: flex; gap: 0.4rem; align-items: center;
+    }
+    .pagination button {
+      padding: 0.35rem 0.8rem; border-radius: 8px;
+      border: 1.5px solid #d9cdbf; background: #fff;
+      font-family: inherit; font-size: 0.82rem;
+      font-weight: 700; color: #4d3829; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .pagination button:hover:not(:disabled) { background: #f5ede6; }
+    .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .pagination button.active {
+      background: #4d3829; color: #fff; border-color: #4d3829;
+    }
+    .pagination select {
+      padding: 0.35rem 0.6rem; border-radius: 8px;
+      border: 1.5px solid #d9cdbf; background: #fff;
+      font-family: inherit; font-size: 0.82rem;
+    }
+
+    /* ===== MODAL ===== */
+    .duta-modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(40,20,50,0.55);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10000; padding: 1rem;
+    }
+    .duta-modal-box {
+      background: #fff; border-radius: 20px;
+      padding: 1.5rem 1.7rem; max-width: 520px;
+      width: 100%; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(40,20,50,0.3);
+      border: 3px solid #f0e6ff;
+    }
+    .duta-modal-title {
+      font-size: 1.15rem; font-weight: 800;
+      color: #5c2f8a; margin-bottom: 0.8rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid #f0e6ff;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .duta-modal-close {
+      background: transparent; border: none;
+      font-size: 1.4rem; cursor: pointer;
+      color: #a08674; padding: 0 0.3rem;
+      border-radius: 6px; line-height: 1;
+    }
+    .duta-modal-close:hover { background: #f5f0ea; }
+    .duta-modal-body {
+      font-size: 0.9rem; color: #3a2b3e;
+      line-height: 1.6; margin-bottom: 1.2rem;
+    }
+    .duta-modal-body strong { color: #5c2f8a; }
+
+    /* Detail modal */
+    .detail-section {
+      background: #faf7ff; border-radius: 12px;
+      padding: 0.8rem 1rem; margin-bottom: 0.8rem;
+      border: 1.5px solid #f0e6ff;
+    }
+    .detail-section h4 {
+      font-size: 0.8rem; font-weight: 800;
+      color: #5c2f8a; margin-bottom: 0.5rem;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .detail-row {
+      display: flex; justify-content: space-between;
+      gap: 0.8rem; font-size: 0.85rem;
+      padding: 0.2rem 0;
+    }
+    .detail-row .dr-label { color: #7a6656; }
+    .detail-row .dr-value { font-weight: 600; color: #3a2b3e; text-align: right; }
+
+    .detail-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.78rem; margin-top: 0.4rem;
+    }
+    .detail-table th {
+      background: #f0e6ff; color: #5c2f8a;
+      padding: 0.4rem 0.5rem; text-align: left;
+      font-weight: 700; font-size: 0.72rem;
+    }
+    .detail-table td {
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1px solid #f0e6ff;
+    }
+    .detail-table tr:last-child td { border-bottom: none; }
+
+    /* Form edit */
+    .form-group {
+      margin-bottom: 0.9rem;
+    }
+    .form-group label {
+      display: block; font-size: 0.82rem;
+      font-weight: 700; color: #4d3829;
+      margin-bottom: 0.3rem;
+    }
+    .form-group input {
+      width: 100%; padding: 0.6rem 0.9rem;
+      border-radius: 10px; border: 2px solid #e5dbd0;
+      background: #fcfaf7; font-size: 0.9rem;
+      font-family: inherit; color: #3d2c1f;
+      outline: none; transition: all 0.15s;
+    }
+    .form-group input:focus {
+      border-color: #f26d8a; background: #fff;
+      box-shadow: 0 0 0 3px rgba(242,109,138,0.15);
+    }
+    .form-group input:disabled {
+      background: #f0ece5; color: #7a6656;
+      cursor: not-allowed;
+    }
+    .form-group .hint {
+      font-size: 0.72rem; color: #a08674;
+      margin-top: 0.2rem; font-style: italic;
+    }
+    .input-with-btn {
+      display: flex; gap: 0.4rem;
+    }
+    .input-with-btn input { flex: 1; }
+    .input-with-btn button {
+      padding: 0 0.8rem; border-radius: 10px;
+      border: 2px solid #e5dbd0; background: #f5f0ea;
+      cursor: pointer; font-size: 1rem;
+      transition: all 0.15s;
+    }
+    .input-with-btn button:hover { background: #e8dcd0; }
+
+    .modal-actions {
+      display: flex; gap: 0.6rem;
+      justify-content: flex-end; flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+    .modal-btn {
+      padding: 0.55rem 1.3rem; border-radius: 30px;
+      font-weight: 700; font-size: 0.85rem;
+      font-family: inherit; cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .modal-btn:hover { transform: translateY(-1px); }
+    .modal-btn.batal {
+      background: #f5f0ea; color: #5c4638;
+      border-color: #d9cdbf;
+    }
+    .modal-btn.batal:hover { background: #e8dcd0; }
+    .modal-btn.simpan {
+      background: linear-gradient(135deg, #6ecb8f, #4fa86a);
+      color: #fff;
+    }
+    .modal-btn.simpan:hover { filter: brightness(1.05); }
+    .modal-btn.unlock {
+      background: linear-gradient(135deg, #f4b942, #e8a020);
+      color: #fff;
+    }
+    .modal-btn.unlock:hover { filter: brightness(1.05); }
+    .modal-btn.hapus {
+      background: linear-gradient(135deg, #f26d8a, #ef476f);
+      color: #fff;
+    }
+    .modal-btn.hapus:hover { filter: brightness(1.05); }
+    .modal-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+    /* ===== MOBILE CARD VIEW ===== */
     @media (max-width: 720px) {
-      .dash-header { padding: 1rem 1.2rem; }
+      .guru-wrapper { padding: 0 0.6rem; margin: 0.8rem auto; }
+      .dash-header { padding: 1rem; }
       .dash-header .dh-actions { width: 100%; }
-      .btn-dash { flex: 1; justify-content: center; }
+      .btn-dash { flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.45rem 0.7rem; }
+      .tabel-wrapper { max-height: none; }
+      .tabel-progres { min-width: auto; display: block; }
+      .tabel-progres thead { display: none; }
+      .tabel-progres tbody { display: block; }
+      .tabel-progres tr {
+        display: block; background: #fff;
+        border: 1.5px solid #e5dbd0;
+        border-radius: 12px; margin-bottom: 0.6rem;
+        padding: 0.7rem 0.9rem;
+        position: relative;
+      }
+      .tabel-progres td {
+        display: flex; justify-content: space-between;
+        padding: 0.25rem 0; border-bottom: none;
+        font-size: 0.82rem;
+      }
+      .tabel-progres td.col-nama {
+        position: static; box-shadow: none;
+        font-weight: 800; font-size: 0.95rem;
+        color: #3b2b1e; border-bottom: 1px solid #f0e6ff;
+        padding-bottom: 0.4rem; margin-bottom: 0.3rem;
+        display: block;
+      }
+      .tabel-progres td::before {
+        content: attr(data-label);
+        font-weight: 700; color: #7a6656;
+        font-size: 0.75rem; margin-right: 0.6rem;
+        flex-shrink: 0;
+      }
+      .tabel-progres td.col-nama::before { display: none; }
+      .tabel-progres td.cb-cell { display: none; }
+      .tabel-progres td.aksi-cell {
+        border-top: 1px dashed #f0e6ff;
+        padding-top: 0.5rem; margin-top: 0.3rem;
+        justify-content: flex-end;
+      }
+      .tabel-progres td.aksi-cell::before { display: none; }
+      .pagination { flex-direction: column; align-items: stretch; }
+      .pagination .pg-controls { justify-content: center; }
     }
   </style>
 </head>
@@ -210,21 +611,32 @@
     <!-- ===== DASHBOARD ===== -->
     <div id="dashboardArea">
 
+      <!-- HEADER DASH -->
       <div class="dash-header">
-        <div class="dh-info">
-          👋 Selamat datang, <strong id="namaGuru">Guru</strong>.
-          <span id="infoTotal" style="margin-left:0.5rem;"></span>
-        </div>
-        <div class="dh-actions">
-          <button class="btn-dash" id="btnMuatUlang">🔄 Muat Ulang</button>
-          <button class="btn-dash" id="btnLogout">🚪 Keluar</button>
+        <div class="dh-row1">
+          <div class="dh-info">
+            👋 Selamat datang, <strong id="namaGuru">Guru</strong>
+            <span class="dh-sekolah" id="sekolahGuru">—</span>
+          </div>
+          <div class="dh-actions">
+            <button class="btn-dash" id="btnMuatUlang">🔄 Muat Ulang</button>
+			<label class="btn-dash" style="cursor:pointer;" title="Muat ulang otomatis tiap 60 detik">
+			  <input type="checkbox" id="chkAutoRefresh" style="width:auto; margin-right:0.3rem;">
+			  ⏱️ Auto 60s
+			</label>
+            <button class="btn-dash" id="btnStatistik">📊 Statistik</button>
+            <button class="btn-dash" id="btnExport">📥 Export CSV</button>
+            <button class="btn-dash" id="btnBackup">💾 Backup</button>
+            <button class="btn-dash" id="btnRestore">📤 Restore</button>
+            <button class="btn-dash danger" id="btnLogout">🚪 Keluar</button>
+          </div>
         </div>
       </div>
 
-      <!-- Stats -->
+      <!-- STATS -->
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="sc-label">Total Baris Progres</div>
+          <div class="sc-label">Total Baris</div>
           <div class="sc-value" id="statTotal">0</div>
         </div>
         <div class="stat-card">
@@ -235,57 +647,122 @@
           <div class="sc-label">Siswa Tamu</div>
           <div class="sc-value" id="statTamu">0</div>
         </div>
-        <div class="stat-card">
-          <div class="sc-label">Selesai (Nilai Akhir &gt; 0)</div>
-          <div class="sc-value" id="statSelesai">0</div>
+        <div class="stat-card warn">
+          <div class="sc-label">⚠️ Perlu Perhatian</div>
+          <div class="sc-value" id="statPerhatian">0</div>
         </div>
       </div>
 
-      <!-- Filter -->
-      <div class="filter-bar">
-        <label>🔍 Cari:</label>
-        <input type="text" id="filterCari" placeholder="Nama / user_id / kelas" style="min-width:200px;">
-        <label>Modul:</label>
-        <select id="filterModul">
-          <option value="">Semua</option>
-        </select>
-        <label>Status:</label>
-        <select id="filterStatus">
-          <option value="">Semua</option>
-          <option value="selesai">Selesai</option>
-          <option value="berlangsung">Berlangsung</option>
-        </select>
+      <!-- PANEL INFO -->
+      <div class="info-grid">
+        <div class="info-panel">
+          <h3>⚠️ Perlu Perhatian</h3>
+          <ul id="panelPerhatian">
+            <li class="ip-empty">Memuat…</li>
+          </ul>
+        </div>
+        <div class="info-panel">
+          <h3>🆕 Aktivitas Terbaru</h3>
+          <ul id="panelAktivitas">
+            <li class="ip-empty">Memuat…</li>
+          </ul>
+        </div>
       </div>
 
-      <!-- Tabel -->
+      <!-- STATISTIK -->
+      <div class="statistik-section" id="statistikSection">
+        <h3>📊 Statistik</h3>
+        <div class="stat-block">
+          <h4>Distribusi Nilai Akhir</h4>
+          <div id="grafikNilai"></div>
+        </div>
+        <div class="stat-block">
+          <h4>Progress per Modul</h4>
+          <div id="grafikModul"></div>
+        </div>
+      </div>
+
+      <!-- FILTER -->
+      <div class="filter-bar">
+        <div class="fb-row">
+          <label>🔍 Cari:</label>
+          <input type="text" id="filterCari" placeholder="Nama / user_id / kelas" style="min-width:200px;">
+          <label>Modul:</label>
+          <select id="filterModul"><option value="">Semua</option></select>
+          <label>Status:</label>
+          <select id="filterStatus">
+            <option value="">Semua</option>
+            <option value="selesai">Selesai</option>
+            <option value="berlangsung">Berlangsung</option>
+          </select>
+          <label>Waktu:</label>
+          <select id="filterWaktu">
+            <option value="">Semua</option>
+            <option value="hari_ini">Hari ini</option>
+            <option value="7_hari">7 hari terakhir</option>
+            <option value="30_hari">30 hari terakhir</option>
+          </select>
+        </div>
+        <div class="fb-row">
+          <label class="fb-toggle">
+            <input type="checkbox" id="toggleSkorDetail">
+            Tampilkan skor detail (a–f)
+          </label>
+        </div>
+      </div>
+
+      <!-- BULK ACTION -->
+      <div class="bulk-bar" id="bulkBar">
+        <div class="bb-info" id="bulkInfo">0 data tamu dipilih</div>
+        <button class="btn-dash danger" id="btnHapusBulk">🗑️ Hapus Terpilih</button>
+        <button class="btn-dash" id="btnBatalPilih">Batal</button>
+      </div>
+
+      <!-- TABEL -->
       <div class="tabel-wrapper">
         <table class="tabel-progres">
           <thead>
             <tr>
-              <th>Nama</th>
-              <th>Kelas</th>
-              <th>User ID</th>
-              <th>Modul</th>
-              <th>Bagian</th>
-              <th>a</th>
-              <th>b</th>
-              <th>c</th>
-              <th>d</th>
-              <th>e</th>
-              <th>f</th>
-              <th>Kuis</th>
-              <th>Nilai Akhir</th>
-              <th>Update</th>
+              <th class="no-sort cb-cell"></th>
+              <th class="col-nama" data-sort="nama">Nama <span class="sort-arrow">▲▼</span></th>
+              <th data-sort="kelas">Kelas <span class="sort-arrow">▲▼</span></th>
+              <th data-sort="modul">Modul <span class="sort-arrow">▲▼</span></th>
+              <th data-sort="bagian_terakhir">Bagian <span class="sort-arrow">▲▼</span></th>
+              <th class="col-skor no-sort">a</th>
+              <th class="col-skor no-sort">b</th>
+              <th class="col-skor no-sort">c</th>
+              <th class="col-skor no-sort">d</th>
+              <th class="col-skor no-sort">e</th>
+              <th class="col-skor no-sort">f</th>
+              <th data-sort="skor_kuis">Kuis <span class="sort-arrow">▲▼</span></th>
+              <th data-sort="nilai_akhir">Nilai Akhir <span class="sort-arrow">▲▼</span></th>
+              <th data-sort="waktu_update">Update <span class="sort-arrow">▲▼</span></th>
+              <th class="no-sort aksi-cell">Aksi</th>
             </tr>
           </thead>
           <tbody id="tabelBody">
-            <tr><td colspan="14" class="empty-state">Memuat data...</td></tr>
+            <tr><td colspan="15" class="empty-state">Memuat data...</td></tr>
           </tbody>
         </table>
       </div>
 
-    </div>
+      <!-- PAGINATION -->
+      <div class="pagination">
+        <div class="pg-info" id="pgInfo">—</div>
+        <div class="pg-controls">
+          <label style="font-size:0.82rem;">Baris:</label>
+          <select id="pgSize">
+            <option value="25" selected>25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <button id="pgPrev">‹ Prev</button>
+          <span id="pgPages"></span>
+          <button id="pgNext">Next ›</button>
+        </div>
+      </div>
 
+    </div>
   </main>
 
   <footer id="footer-utama"></footer>
@@ -297,19 +774,66 @@
     (function() {
       "use strict";
 
-      let semuaData = [];
+      // ===== STATE =====
+      let semuaData = [];       // data asli dari server
+      let filteredData = [];    // setelah filter
+      let sortedData = [];      // setelah sort
+      let pageData = [];        // halaman aktif
       let dataGuru = null;
+      let halaman = 1;
+      let ukuranHalaman = 25;
+      let sortKolom = 'waktu_update';
+      let sortAsc = false;
+      let dipilih = new Set();  // user_id tamu yang dicentang
+      let tampilSkorDetail = false;
+	  let autoRefreshTimer = null;
+	  const AUTO_REFRESH_MS = 60000; // 60 detik
 
+      // ===== ELEMENT =====
       const elAksesDitolak = document.getElementById('aksesDitolak');
       const elDash = document.getElementById('dashboardArea');
       const elBody = document.getElementById('tabelBody');
       const elNamaGuru = document.getElementById('namaGuru');
-      const elInfoTotal = document.getElementById('infoTotal');
+      const elSekolahGuru = document.getElementById('sekolahGuru');
       const elBtnMuatUlang = document.getElementById('btnMuatUlang');
+      const elBtnStatistik = document.getElementById('btnStatistik');
+      const elBtnExport = document.getElementById('btnExport');
+      const elBtnBackup = document.getElementById('btnBackup');
+      const elBtnRestore = document.getElementById('btnRestore');
       const elBtnLogout = document.getElementById('btnLogout');
+      const elStatistikSection = document.getElementById('statistikSection');
+      const elBulkBar = document.getElementById('bulkBar');
+      const elBulkInfo = document.getElementById('bulkInfo');
+      const elBtnHapusBulk = document.getElementById('btnHapusBulk');
+      const elBtnBatalPilih = document.getElementById('btnBatalPilih');
+
+      // ===== HELPER =====
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function formatTanggal(s) {
+        if (!s) return '–';
+        // s = 'yyyy-MM-dd HH:mm:ss'
+        const tgl = s.substring(0, 10);
+        const jam = s.substring(11, 16);
+        return tgl + ' ' + jam;
+      }
+
+      function parseTanggal(s) {
+        if (!s) return null;
+        try {
+          // Ganti ' ' jadi 'T' biar kompatibel
+          return new Date(s.replace(' ', 'T'));
+        } catch (e) { return null; }
+      }
 
       // ===== CEK SESSION =====
-      function ambilSessionGuru() {
+      function ambilSessionGuruLokal() {
+        // Pakai helper dari script.js kalau ada
+        if (window.ambilSessionGuru) return window.ambilSessionGuru();
         try {
           return JSON.parse(sessionStorage.getItem('duta_guru') || 'null');
         } catch (e) { return null; }
@@ -319,43 +843,50 @@
       async function muatData() {
         if (!dataGuru || !dataGuru.username) return;
 
-        elBody.innerHTML = '<tr><td colspan="14" class="empty-state">Memuat data...</td></tr>';
+        elBody.innerHTML = '<tr><td colspan="15" class="empty-state">Memuat data...</td></tr>';
 
-        const hasil = await window.dutaFetch({
-          action: 'getAllProgress',
-          username: dataGuru.username,
-          password: dataGuru.password || ''
-        });
+        const hasil = await window.dutaGetAllProgress(
+          dataGuru.username,
+          dataGuru.password || ''
+        );
 
         if (!hasil || !hasil.ok) {
-          elBody.innerHTML = '<tr><td colspan="14" class="empty-state">⚠️ ' +
-            ((hasil && hasil.error) || 'Gagal memuat data') + '</td></tr>';
+          elBody.innerHTML = '<tr><td colspan="15" class="empty-state">⚠️ ' +
+            escapeHtml((hasil && hasil.error) || 'Gagal memuat data') + '</td></tr>';
           return;
         }
 
-        // Update nama guru dari server (kalau ada)
-        if (hasil.guru && hasil.guru.nama) {
-          dataGuru.nama = hasil.guru.nama;
-          try {
-            sessionStorage.setItem('duta_guru', JSON.stringify(dataGuru));
-          } catch (e) {}
+        // Update info guru dari server
+        if (hasil.guru) {
+          dataGuru.nama = hasil.guru.nama || dataGuru.nama;
+          dataGuru.sekolah = hasil.guru.sekolah || dataGuru.sekolah;
+          if (window.simpanSessionGuru) window.simpanSessionGuru(dataGuru);
         }
 
         semuaData = hasil.progress || [];
         elNamaGuru.textContent = dataGuru.nama || dataGuru.username;
-        elInfoTotal.textContent = '(' + semuaData.length + ' baris data)';
+        elSekolahGuru.textContent = dataGuru.sekolah || '(sekolah belum diisi)';
 
         isiFilterModul();
         renderStats();
+        renderPanel();
         renderTabel();
+
+        // Kalau ada pesan khusus (mis. sekolah kosong)
+        if (hasil.message && semuaData.length === 0) {
+          elBody.innerHTML = '<tr><td colspan="15" class="empty-state">ℹ️ ' +
+            escapeHtml(hasil.message) + '</td></tr>';
+        }
       }
 
       // ===== FILTER MODUL =====
       function isiFilterModul() {
         const elModul = document.getElementById('filterModul');
+        const nilaiSekarang = elModul.value;
         const moduls = [...new Set(semuaData.map(d => d.modul).filter(Boolean))].sort();
         elModul.innerHTML = '<option value="">Semua</option>' +
-          moduls.map(m => '<option value="' + m + '">' + m.toUpperCase() + '</option>').join('');
+          moduls.map(m => '<option value="' + escapeHtml(m) + '">' + escapeHtml(m).toUpperCase() + '</option>').join('');
+        if (nilaiSekarang) elModul.value = nilaiSekarang;
       }
 
       // ===== STATS =====
@@ -363,44 +894,159 @@
         const total = semuaData.length;
         const login = semuaData.filter(d => d.tipe === 'login').length;
         const tamu = semuaData.filter(d => d.tipe === 'tamu').length;
-        const selesai = semuaData.filter(d => d.nilai_akhir > 0).length;
+        const perhatian = semuaData.filter(d =>
+          d.tipe === 'login' &&
+          d.nilai_akhir > 0 && d.nilai_akhir < 70
+        ).length;
 
         document.getElementById('statTotal').textContent = total;
         document.getElementById('statLogin').textContent = login;
         document.getElementById('statTamu').textContent = tamu;
-        document.getElementById('statSelesai').textContent = selesai;
+        document.getElementById('statPerhatian').textContent = perhatian;
       }
 
-      // ===== FILTER EVENTS =====
-      ['filterCari', 'filterModul', 'filterStatus'].forEach(function(id) {
-        const el = document.getElementById(id);
-        el.addEventListener('input', renderTabel);
-        el.addEventListener('change', renderTabel);
-      });
+      // ===== PANEL =====
+      function renderPanel() {
+        // Perhatian: nilai < 70 atau belum selesai > 14 hari
+        const elPerhatian = document.getElementById('panelPerhatian');
+        const batas14 = Date.now() - 14 * 24 * 60 * 60 * 1000;
 
-      // ===== TABEL =====
-      function renderTabel() {
+        const perhatianList = semuaData.filter(function(d) {
+          if (d.nilai_akhir > 0 && d.nilai_akhir < 70) return true;
+          const tgl = parseTanggal(d.waktu_update);
+          if (tgl && tgl.getTime() < batas14 && d.nilai_akhir === 0) return true;
+          return false;
+        }).slice(0, 10);
+
+        if (perhatianList.length === 0) {
+          elPerhatian.innerHTML = '<li class="ip-empty">Tidak ada siswa yang perlu perhatian khusus. 🎉</li>';
+        } else {
+          elPerhatian.innerHTML = perhatianList.map(function(d) {
+            const alasan = d.nilai_akhir > 0 && d.nilai_akhir < 70
+              ? 'Nilai: ' + d.nilai_akhir
+              : 'Belum selesai';
+            return '<li>' +
+              '<span class="ip-nama">' + escapeHtml(d.nama || d.user_id) + '</span>' +
+              '<span class="ip-info">' + escapeHtml(d.modul.toUpperCase()) + ' · ' + alasan + '</span>' +
+            '</li>';
+          }).join('');
+        }
+
+        // Aktivitas terbaru: 8 update terakhir
+        const elAktivitas = document.getElementById('panelAktivitas');
+        const aktivitas = semuaData.slice(0, 8);
+        if (aktivitas.length === 0) {
+          elAktivitas.innerHTML = '<li class="ip-empty">Belum ada aktivitas.</li>';
+        } else {
+          elAktivitas.innerHTML = aktivitas.map(function(d) {
+            return '<li>' +
+              '<span class="ip-nama">' + escapeHtml(d.nama || d.user_id) + '</span>' +
+              '<span class="ip-info">' + escapeHtml(d.modul.toUpperCase()) + ' · ' + formatTanggal(d.waktu_update) + '</span>' +
+            '</li>';
+          }).join('');
+        }
+      }
+
+      // ===== FILTER & SORT & PAGINATION PIPELINE =====
+      function terapkanFilter() {
         const cari = document.getElementById('filterCari').value.trim().toLowerCase();
         const modul = document.getElementById('filterModul').value;
         const status = document.getElementById('filterStatus').value;
+        const waktu = document.getElementById('filterWaktu').value;
 
-        const filtered = semuaData.filter(function(d) {
+        const batasWaktu = (function() {
+          const now = new Date();
+          if (waktu === 'hari_ini') {
+            const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            return d.getTime();
+          }
+          if (waktu === '7_hari') return Date.now() - 7 * 24 * 60 * 60 * 1000;
+          if (waktu === '30_hari') return Date.now() - 30 * 24 * 60 * 60 * 1000;
+          return null;
+        })();
+
+        filteredData = semuaData.filter(function(d) {
           if (cari) {
             const teks = (d.nama + ' ' + d.user_id + ' ' + d.kelas).toLowerCase();
             if (teks.indexOf(cari) === -1) return false;
           }
           if (modul && d.modul !== modul) return false;
-          if (status === 'selesai' && !(d.nilai_akhir > 0)) return false;
-          if (status === 'berlangsung' && (d.nilai_akhir > 0)) return false;
+          if (status === 'selesai' && !(d.status_modul === 'selesai')) return false;
+          if (status === 'berlangsung' && d.status_modul === 'selesai') return false;
+          if (batasWaktu !== null) {
+            const tgl = parseTanggal(d.waktu_update);
+            if (!tgl || tgl.getTime() < batasWaktu) return false;
+          }
           return true;
         });
+      }
 
-        if (filtered.length === 0) {
-          elBody.innerHTML = '<tr><td colspan="14" class="empty-state">Tidak ada data yang cocok.</td></tr>';
+      function terapkanSort() {
+        sortedData = filteredData.slice();
+        const kolom = sortKolom;
+        const asc = sortAsc;
+        sortedData.sort(function(a, b) {
+          let va = a[kolom];
+          let vb = b[kolom];
+          if (kolom === 'nama') {
+            va = (a.nama || a.user_id || '').toLowerCase();
+            vb = (b.nama || b.user_id || '').toLowerCase();
+          } else if (kolom === 'waktu_update') {
+            va = a.waktu_update || '';
+            vb = b.waktu_update || '';
+          } else if (typeof va === 'number' || typeof vb === 'number') {
+            va = Number(va) || 0;
+            vb = Number(vb) || 0;
+          } else {
+            va = String(va || '').toLowerCase();
+            vb = String(vb || '').toLowerCase();
+          }
+          if (va < vb) return asc ? -1 : 1;
+          if (va > vb) return asc ? 1 : -1;
+          return 0;
+        });
+      }
+
+      function terapkanPagination() {
+        const total = sortedData.length;
+        const maxHalaman = Math.max(1, Math.ceil(total / ukuranHalaman));
+        if (halaman > maxHalaman) halaman = maxHalaman;
+        if (halaman < 1) halaman = 1;
+        const mulai = (halaman - 1) * ukuranHalaman;
+        pageData = sortedData.slice(mulai, mulai + ukuranHalaman);
+      }
+
+      // ===== RENDER TABEL =====
+      function renderTabel() {
+        terapkanFilter();
+        terapkanSort();
+        terapkanPagination();
+
+        // Update header sort
+        document.querySelectorAll('.tabel-progres th[data-sort]').forEach(function(th) {
+          th.classList.remove('sorted');
+          const arrow = th.querySelector('.sort-arrow');
+          if (arrow) arrow.textContent = '▲▼';
+        });
+        const thAktif = document.querySelector('.tabel-progres th[data-sort="' + sortKolom + '"]');
+        if (thAktif) {
+          thAktif.classList.add('sorted');
+          const arrow = thAktif.querySelector('.sort-arrow');
+          if (arrow) arrow.textContent = sortAsc ? '▲' : '▼';
+        }
+
+        // Toggle kolom skor detail
+        document.querySelectorAll('.col-skor').forEach(function(el) {
+          el.style.display = tampilSkorDetail ? '' : 'none';
+        });
+
+        if (pageData.length === 0) {
+          elBody.innerHTML = '<tr><td colspan="15" class="empty-state">Tidak ada data yang cocok.</td></tr>';
+          renderPagination();
           return;
         }
 
-        elBody.innerHTML = filtered.map(function(d) {
+        elBody.innerHTML = pageData.map(function(d) {
           const nama = d.nama || d.nama_siswa || '(tanpa nama)';
           const tipeBadge = d.tipe === 'login'
             ? '<span class="badge-tipe login">login</span>'
@@ -408,69 +1054,726 @@
               ? '<span class="badge-tipe tamu">tamu</span>'
               : '';
 
+          const badgeStatus = d.status_modul === 'selesai'
+            ? '<span class="badge-status selesai">✅ selesai</span>'
+            : '<span class="badge-status proses">⏳ proses</span>';
+
+          // Tentukan warna baris
+          let rowClass = '';
+          if (d.status_modul === 'selesai' && d.nilai_akhir >= 70) rowClass = 'row-tuntas';
+          else if (d.nilai_akhir > 0 && d.nilai_akhir < 70) rowClass = 'row-perhatian';
+          else if (d.status_modul === 'selesai') rowClass = 'row-tuntas';
+          else rowClass = 'row-berlangsung';
+
           function skorCell(v) {
             return v > 0
-              ? '<td class="skor-cell">' + v + '</td>'
-              : '<td class="skor-cell kosong">–</td>';
+              ? '<td class="skor-cell col-skor">' + v + '</td>'
+              : '<td class="skor-cell kosong col-skor">–</td>';
           }
 
-          return '<tr>' +
-            '<td><strong>' + escapeHtml(nama) + '</strong>' + tipeBadge + '</td>' +
-            '<td>' + escapeHtml(d.kelas || '–') + '</td>' +
-            '<td style="font-size:0.78rem; color:#7a6656;">' + escapeHtml(d.user_id) + '</td>' +
-            '<td><span class="badge-modul">' + escapeHtml(d.modul) + '</span></td>' +
-            '<td style="text-align:center; font-weight:700;">' + (d.bagian_terakhir || '–').toUpperCase() + '</td>' +
+          const nilaiAkhirClass = d.nilai_akhir === 0
+            ? 'kosong'
+            : (d.nilai_akhir < 70 ? 'rendah' : '');
+
+          // Checkbox hanya untuk tamu
+          const cbCell = d.tipe === 'tamu'
+            ? '<td class="cb-cell"><input type="checkbox" class="cb-tamu" data-uid="' + escapeHtml(d.user_id) + '" ' + (dipilih.has(d.user_id) ? 'checked' : '') + '></td>'
+            : '<td class="cb-cell"></td>';
+
+          // Tombol aksi
+          let btnUnlock = '';
+          if (d.status_modul === 'selesai') {
+            btnUnlock = '<button class="aksi-btn unlock" title="Buka kunci" data-aksi="unlock" data-uid="' + escapeHtml(d.user_id) + '" data-modul="' + escapeHtml(d.modul) + '">🔓</button>';
+          }
+          const btnEdit = d.tipe === 'login'
+            ? '<button class="aksi-btn edit" title="Edit identitas" data-aksi="edit" data-uid="' + escapeHtml(d.user_id) + '">✏️</button>'
+            : '';
+          const btnDetail = '<button class="aksi-btn detail" title="Detail" data-aksi="detail" data-uid="' + escapeHtml(d.user_id) + '">👁️</button>';
+
+          return '<tr class="' + rowClass + '">' +
+            cbCell +
+            '<td class="col-nama" data-label="Nama">' + escapeHtml(nama) + tipeBadge + '</td>' +
+            '<td data-label="Kelas">' + escapeHtml(d.kelas || '–') + '</td>' +
+            '<td data-label="Modul"><span class="badge-modul">' + escapeHtml(d.modul) + '</span></td>' +
+            '<td data-label="Bagian" style="text-align:center; font-weight:700;">' + (d.bagian_terakhir || '–').toUpperCase() + '</td>' +
             skorCell(d.skor_a) +
             skorCell(d.skor_b) +
             skorCell(d.skor_c) +
             skorCell(d.skor_d) +
             skorCell(d.skor_e) +
             skorCell(d.skor_f) +
-            skorCell(d.skor_kuis) +
-            (d.nilai_akhir > 0
-              ? '<td class="nilai-akhir">' + d.nilai_akhir + '</td>'
-              : '<td class="nilai-akhir kosong">–</td>') +
-            '<td style="font-size:0.75rem; color:#7a6656; white-space:nowrap;">' + (d.waktu_update || '–') + '</td>' +
+            (d.skor_kuis > 0
+              ? '<td class="skor-cell">' + d.skor_kuis + '</td>'
+              : '<td class="skor-cell kosong">–</td>') +
+            '<td class="nilai-akhir ' + nilaiAkhirClass + '" data-label="Nilai Akhir">' +
+              (d.nilai_akhir > 0 ? d.nilai_akhir : '–') + '</td>' +
+            '<td data-label="Status">' + badgeStatus + '</td>' +
+            '<td data-label="Update" style="font-size:0.75rem; color:#7a6656; white-space:nowrap;">' + formatTanggal(d.waktu_update) + '</td>' +
+            '<td class="aksi-cell">' + btnDetail + btnUnlock + btnEdit + '</td>' +
           '</tr>';
+        }).join('');
+
+        renderPagination();
+        updateBulkBar();
+        pasangEventTabel();
+      }
+
+      // ===== PAGINATION =====
+      function renderPagination() {
+        const total = sortedData.length;
+        const maxHalaman = Math.max(1, Math.ceil(total / ukuranHalaman));
+        const mulai = total === 0 ? 0 : (halaman - 1) * ukuranHalaman + 1;
+        const akhir = Math.min(halaman * ukuranHalaman, total);
+
+        document.getElementById('pgInfo').textContent =
+          total === 0 ? 'Tidak ada data' : 'Menampilkan ' + mulai + '–' + akhir + ' dari ' + total + ' baris';
+
+        // Tombol halaman (maks 5 tombol)
+        const elPages = document.getElementById('pgPages');
+        let html = '';
+        const minPage = Math.max(1, halaman - 2);
+        const maxPage = Math.min(maxHalaman, minPage + 4);
+        for (let i = minPage; i <= maxPage; i++) {
+          html += '<button class="' + (i === halaman ? 'active' : '') + '" data-page="' + i + '">' + i + '</button>';
+        }
+        elPages.innerHTML = html;
+
+        document.getElementById('pgPrev').disabled = halaman <= 1;
+        document.getElementById('pgNext').disabled = halaman >= maxHalaman;
+
+        elPages.querySelectorAll('button[data-page]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            halaman = Number(this.dataset.page);
+            renderTabel();
+          });
+        });
+      }
+
+      // ===== BULK BAR =====
+      function updateBulkBar() {
+        const jumlah = dipilih.size;
+        if (jumlah > 0) {
+          elBulkBar.classList.add('show');
+          elBulkInfo.textContent = jumlah + ' data tamu dipilih';
+        } else {
+          elBulkBar.classList.remove('show');
+        }
+      }
+
+      // ===== EVENT TABEL =====
+      function pasangEventTabel() {
+        // Checkbox tamu
+        elBody.querySelectorAll('.cb-tamu').forEach(function(cb) {
+          cb.addEventListener('change', function() {
+            const uid = this.dataset.uid;
+            if (this.checked) dipilih.add(uid);
+            else dipilih.delete(uid);
+            updateBulkBar();
+          });
+        });
+
+        // Tombol aksi
+        elBody.querySelectorAll('.aksi-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            const aksi = this.dataset.aksi;
+            const uid = this.dataset.uid;
+            const modul = this.dataset.modul || '';
+            const data = semuaData.find(d => d.user_id === uid && (!modul || d.modul === modul));
+            if (!data) return;
+
+            if (aksi === 'detail') bukaDetailSiswa(data);
+            else if (aksi === 'unlock') konfirmasiUnlock(data);
+            else if (aksi === 'edit') bukaEditIdentitas(data);
+          });
+        });
+      }
+
+      // ===== MODAL HELPER =====
+      function buatModal(judul, bodyHtml, actionsHtml) {
+        const lama = document.getElementById('guru-modal');
+        if (lama) lama.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'guru-modal';
+        modal.className = 'duta-modal-overlay';
+        modal.innerHTML = `
+          <div class="duta-modal-box">
+            <div class="duta-modal-title">
+              <span>${escapeHtml(judul)}</span>
+              <button type="button" class="duta-modal-close" aria-label="Tutup">×</button>
+            </div>
+            <div class="duta-modal-body">${bodyHtml}</div>
+            <div class="modal-actions">${actionsHtml}</div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+
+        modal.querySelector('.duta-modal-close').addEventListener('click', function() { modal.remove(); });
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) modal.remove();
+        });
+        const esc = function(e) {
+          if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', esc); }
+        };
+        document.addEventListener('keydown', esc);
+        return modal;
+      }
+
+      // ===== MODAL DETAIL SISWA =====
+      function bukaDetailSiswa(data) {
+        // Semua progress untuk user ini
+        const semuaModul = semuaData.filter(d => d.user_id === data.user_id);
+
+        const rowsModul = semuaModul.map(function(m) {
+          const status = m.status_modul === 'selesai'
+            ? '<span class="badge-status selesai">✅ selesai</span>'
+            : '<span class="badge-status proses">⏳ proses</span>';
+          return '<tr>' +
+            '<td><strong>' + escapeHtml(m.modul.toUpperCase()) + '</strong></td>' +
+            '<td>' + (m.bagian_terakhir || '–').toUpperCase() + '</td>' +
+            '<td>' + (m.skor_kuis || '–') + '</td>' +
+            '<td>' + (m.nilai_akhir > 0 ? m.nilai_akhir : '–') + '</td>' +
+            '<td>' + status + '</td>' +
+            '<td style="font-size:0.72rem;">' + formatTanggal(m.waktu_update) + '</td>' +
+          '</tr>';
+        }).join('');
+
+        const tipeLabel = data.tipe === 'login'
+          ? '<span class="badge-tipe login">login</span>'
+          : '<span class="badge-tipe tamu">tamu</span>';
+
+        const bodyHtml = `
+          <div class="detail-section">
+            <h4>Identitas</h4>
+            <div class="detail-row"><span class="dr-label">Nama</span><span class="dr-value">${escapeHtml(data.nama || data.nama_siswa || '–')}</span></div>
+            <div class="detail-row"><span class="dr-label">Kelas</span><span class="dr-value">${escapeHtml(data.kelas || '–')}</span></div>
+            <div class="detail-row"><span class="dr-label">Sekolah</span><span class="dr-value">${escapeHtml(data.sekolah || '–')}</span></div>
+            <div class="detail-row"><span class="dr-label">User ID</span><span class="dr-value">${escapeHtml(data.user_id)} ${tipeLabel}</span></div>
+          </div>
+          <div class="detail-section">
+            <h4>Riwayat Modul</h4>
+            <table class="detail-table">
+              <thead>
+                <tr><th>Modul</th><th>Bagian</th><th>Kuis</th><th>Nilai</th><th>Status</th><th>Update</th></tr>
+              </thead>
+              <tbody>${rowsModul || '<tr><td colspan="6" style="text-align:center; color:#a08674;">Belum ada riwayat</td></tr>'}</tbody>
+            </table>
+          </div>
+        `;
+
+        const actionsHtml = `
+          <button class="modal-btn batal" data-act="tutup">Tutup</button>
+        `;
+
+        const modal = buatModal('👁️ Detail Siswa', bodyHtml, actionsHtml);
+        modal.querySelector('[data-act="tutup"]').addEventListener('click', function() { modal.remove(); });
+      }
+
+      // ===== MODAL EDIT IDENTITAS =====
+      function bukaEditIdentitas(data) {
+        if (data.tipe !== 'login') {
+          alert('Tamu tidak bisa diedit.');
+          return;
+        }
+
+        const bodyHtml = `
+          <div class="form-group">
+            <label>Username (tidak bisa diubah)</label>
+            <input type="text" value="${escapeHtml(data.user_id)}" disabled>
+          </div>
+          <div class="form-group">
+            <label for="editNama">Nama</label>
+            <input type="text" id="editNama" value="${escapeHtml(data.nama || '')}" maxlength="60">
+          </div>
+          <div class="form-group">
+            <label for="editKelas">Kelas</label>
+            <input type="text" id="editKelas" value="${escapeHtml(data.kelas || '')}" maxlength="10">
+            <div class="hint">Contoh: 7A, 8B, 9C</div>
+          </div>
+          <div class="form-group">
+            <label for="editSekolah">Sekolah</label>
+            <input type="text" id="editSekolah" value="${escapeHtml(data.sekolah || '')}" maxlength="80">
+            <div class="hint">⚠️ Mengubah sekolah akan memindahkan siswa ini ke dashboard guru sekolah lain.</div>
+          </div>
+          <div class="form-group">
+            <label for="editPassword">Password Siswa</label>
+            <div class="input-with-btn">
+              <input type="password" id="editPassword" value="" placeholder="Kosongkan jika tidak diubah">
+              <button type="button" id="btnLihatPassword" title="Lihat / sembunyikan">👁️</button>
+            </div>
+            <div class="hint">Kosongkan jika tidak ingin mengubah password.</div>
+          </div>
+        `;
+
+        const actionsHtml = `
+          <button class="modal-btn batal" data-act="batal">Batal</button>
+          <button class="modal-btn simpan" data-act="simpan">💾 Simpan</button>
+        `;
+
+        const modal = buatModal('✏️ Edit Identitas Siswa', bodyHtml, actionsHtml);
+
+        // Toggle lihat password
+        const elPass = modal.querySelector('#editPassword');
+        const btnLihat = modal.querySelector('#btnLihatPassword');
+        btnLihat.addEventListener('click', function() {
+          elPass.type = elPass.type === 'password' ? 'text' : 'password';
+        });
+
+        modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
+        modal.querySelector('[data-act="simpan"]').addEventListener('click', async function() {
+          const namaBaru = modal.querySelector('#editNama').value.trim();
+          const kelasBaru = modal.querySelector('#editKelas').value.trim();
+          const sekolahBaru = modal.querySelector('#editSekolah').value.trim();
+          const passBaru = elPass.value;
+
+          if (!namaBaru || !kelasBaru || !sekolahBaru) {
+            alert('Nama, kelas, dan sekolah wajib diisi.');
+            return;
+          }
+
+          const opts = {
+            username: dataGuru.username,
+            password: dataGuru.password || '',
+            userId: data.user_id,
+            nama: namaBaru,
+            kelas: kelasBaru,
+            sekolah: sekolahBaru
+          };
+          if (passBaru) opts.passwordSiswa = passBaru;
+
+          this.disabled = true;
+          this.textContent = '⏳ Menyimpan...';
+
+          const hasil = await window.dutaUpdateSiswa(opts);
+
+          if (hasil && hasil.ok) {
+            modal.remove();
+            alert('✅ Identitas berhasil diperbarui.');
+            muatData();
+          } else {
+            alert('⚠️ Gagal: ' + ((hasil && hasil.error) || 'Tidak diketahui'));
+            this.disabled = false;
+            this.textContent = '💾 Simpan';
+          }
+        });
+      }
+
+      // ===== MODAL KONFIRMASI UNLOCK =====
+      function konfirmasiUnlock(data) {
+        const bodyHtml = `
+          <p>Buka kunci modul <strong>${escapeHtml(data.modul.toUpperCase())}</strong> untuk
+          <strong>${escapeHtml(data.nama || data.user_id)}</strong>?</p>
+          <p style="margin-top:0.6rem; font-size:0.85rem; color:#7a6656;">
+            Siswa akan bisa mengulang modul ini dan nilai akhirnya akan diperbarui.
+            Nilai sekarang: <strong>${data.nilai_akhir || '–'}</strong>.
+          </p>
+        `;
+
+        const actionsHtml = `
+          <button class="modal-btn batal" data-act="batal">Batal</button>
+          <button class="modal-btn unlock" data-act="unlock">🔓 Ya, Buka Kunci</button>
+        `;
+
+        const modal = buatModal('🔓 Buka Kunci Modul?', bodyHtml, actionsHtml);
+        modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
+        modal.querySelector('[data-act="unlock"]').addEventListener('click', async function() {
+          this.disabled = true;
+          this.textContent = '⏳ Memproses...';
+
+          const hasil = await window.dutaUnlockModul(
+            dataGuru.username,
+            dataGuru.password || '',
+            data.user_id,
+            data.modul
+          );
+
+          if (hasil && hasil.ok) {
+            modal.remove();
+            alert('✅ Modul berhasil dibuka. Siswa bisa mengulang.');
+            muatData();
+          } else {
+            alert('⚠️ Gagal: ' + ((hasil && hasil.error) || 'Tidak diketahui'));
+            this.disabled = false;
+            this.textContent = '🔓 Ya, Buka Kunci';
+          }
+        });
+      }
+
+      // ===== BULK HAPUS =====
+      elBtnHapusBulk.addEventListener('click', function() {
+        const userIds = Array.from(dipilih);
+        if (userIds.length === 0) return;
+
+        const bodyHtml = `
+          <p>Hapus <strong>${userIds.length} data tamu</strong> berikut?</p>
+          <ul style="margin:0.6rem 0 0 1.2rem; font-size:0.85rem; color:#7a6656;">
+            ${userIds.slice(0, 10).map(function(u) { return '<li>' + escapeHtml(u) + '</li>'; }).join('')}
+            ${userIds.length > 10 ? '<li>… dan ' + (userIds.length - 10) + ' lainnya</li>' : ''}
+          </ul>
+          <p style="margin-top:0.8rem; font-size:0.85rem; color:#a84a3a;">
+            Data tamu + semua progress-nya akan dihapus permanen.
+          </p>
+        `;
+
+        const actionsHtml = `
+          <button class="modal-btn batal" data-act="batal">Batal</button>
+          <button class="modal-btn hapus" data-act="hapus">🗑️ Ya, Hapus</button>
+        `;
+
+        const modal = buatModal('🗑️ Hapus Data Tamu?', bodyHtml, actionsHtml);
+        modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
+        modal.querySelector('[data-act="hapus"]').addEventListener('click', async function() {
+          this.disabled = true;
+          this.textContent = '⏳ Menghapus...';
+
+          const hasil = await window.dutaHapusTamuBulk(
+            dataGuru.username,
+            dataGuru.password || '',
+            userIds
+          );
+
+          if (hasil && hasil.ok) {
+            modal.remove();
+            dipilih.clear();
+            alert('✅ ' + (hasil.message || 'Data tamu dihapus.'));
+            muatData();
+          } else {
+            alert('⚠️ Gagal: ' + ((hasil && hasil.error) || 'Tidak diketahui'));
+            this.disabled = false;
+            this.textContent = '🗑️ Ya, Hapus';
+          }
+        });
+      });
+
+      elBtnBatalPilih.addEventListener('click', function() {
+        dipilih.clear();
+        elBody.querySelectorAll('.cb-tamu').forEach(function(cb) { cb.checked = false; });
+        updateBulkBar();
+      });
+
+      // ===== STATISTIK =====
+      elBtnStatistik.addEventListener('click', function() {
+        const aktif = elStatistikSection.classList.toggle('show');
+        if (aktif) renderStatistik();
+      });
+
+      function renderStatistik() {
+        // Distribusi nilai akhir
+        const elNilai = document.getElementById('grafikNilai');
+        const buckets = [
+          { label: '90–100', min: 90, max: 100, color: 'green' },
+          { label: '80–89', min: 80, max: 89, color: 'green' },
+          { label: '70–79', min: 70, max: 79, color: 'yellow' },
+          { label: '< 70', min: 1, max: 69, color: 'red' },
+          { label: 'Belum', min: 0, max: 0, color: '' }
+        ];
+
+        const hitung = buckets.map(function(b) {
+          return semuaData.filter(function(d) {
+            if (b.label === 'Belum') return d.nilai_akhir === 0;
+            return d.nilai_akhir >= b.min && d.nilai_akhir <= b.max;
+          }).length;
+        });
+        const maxNilai = Math.max(1, ...hitung);
+
+        elNilai.innerHTML = buckets.map(function(b, i) {
+          const persen = (hitung[i] / maxNilai) * 100;
+          return '<div class="bar-row">' +
+            '<span class="bar-label">' + b.label + '</span>' +
+            '<div class="bar-track"><div class="bar-fill ' + b.color + '" style="width:' + persen + '%"></div></div>' +
+            '<span class="bar-value">' + hitung[i] + '</span>' +
+          '</div>';
+        }).join('');
+
+        // Progress per modul
+        const elModul = document.getElementById('grafikModul');
+        const moduls = [...new Set(semuaData.map(d => d.modul).filter(Boolean))].sort();
+
+        if (moduls.length === 0) {
+          elModul.innerHTML = '<div class="ip-empty">Belum ada data modul.</div>';
+          return;
+        }
+
+        elModul.innerHTML = moduls.map(function(m) {
+          const dataModul = semuaData.filter(d => d.modul === m);
+          const selesai = dataModul.filter(d => d.status_modul === 'selesai').length;
+          const total = dataModul.length;
+          const persen = total > 0 ? (selesai / total) * 100 : 0;
+          return '<div class="bar-row">' +
+            '<span class="bar-label">' + escapeHtml(m).toUpperCase() + '</span>' +
+            '<div class="bar-track"><div class="bar-fill" style="width:' + persen + '%"></div></div>' +
+            '<span class="bar-value">' + selesai + '/' + total + '</span>' +
+          '</div>';
         }).join('');
       }
 
-      function escapeHtml(s) {
-        return String(s || '')
-          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-      }
+      // ===== EXPORT CSV =====
+      elBtnExport.addEventListener('click', function() {
+        terapkanFilter();
+        terapkanSort();
 
-      // ===== TOMBOL MUAT ULANG =====
-      elBtnMuatUlang.addEventListener('click', async function() {
-        elBtnMuatUlang.disabled = true;
-        elBtnMuatUlang.textContent = '⏳ Memuat...';
-        await muatData();
-        elBtnMuatUlang.disabled = false;
-        elBtnMuatUlang.textContent = '🔄 Muat Ulang';
+        if (sortedData.length === 0) {
+          alert('Tidak ada data untuk di-export.');
+          return;
+        }
+
+        const header = ['Nama','Kelas','Sekolah','User ID','Tipe','Modul','Bagian','a','b','c','d','e','f','Kuis','Nilai Akhir','Status','Update'];
+        const rows = sortedData.map(function(d) {
+          return [
+            d.nama || d.nama_siswa || '',
+            d.kelas || '',
+            d.sekolah || '',
+            d.user_id || '',
+            d.tipe || '',
+            d.modul || '',
+            d.bagian_terakhir || '',
+            d.skor_a || 0,
+            d.skor_b || 0,
+            d.skor_c || 0,
+            d.skor_d || 0,
+            d.skor_e || 0,
+            d.skor_f || 0,
+            d.skor_kuis || 0,
+            d.nilai_akhir || 0,
+            d.status_modul || '',
+            d.waktu_update || ''
+          ];
+        });
+
+        const csv = [header].concat(rows).map(function(r) {
+          return r.map(function(c) {
+            const s = String(c == null ? '' : c);
+            if (s.indexOf(',') !== -1 || s.indexOf('"') !== -1 || s.indexOf('\n') !== -1) {
+              return '"' + s.replace(/"/g, '""') + '"';
+            }
+            return s;
+          }).join(',');
+        }).join('\n');
+
+        const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const tgl = new Date().toISOString().substring(0, 10);
+        a.href = url;
+        a.download = 'progress_informatika_duta_' + tgl + '.csv';
+        a.click();
+        URL.revokeObjectURL(url);
       });
 
-      // ===== TOMBOL LOGOUT =====
+      // ===== BACKUP =====
+      elBtnBackup.addEventListener('click', async function() {
+        this.disabled = true;
+        this.textContent = '⏳ Menyiapkan...';
+
+        const hasil = await window.dutaBackupData(dataGuru.username, dataGuru.password || '');
+
+        this.disabled = false;
+        this.textContent = '💾 Backup';
+
+        if (!hasil || !hasil.ok) {
+          alert('⚠️ Gagal backup: ' + ((hasil && hasil.error) || 'Tidak diketahui'));
+          return;
+        }
+
+        const blob = new Blob([JSON.stringify(hasil.backup, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const tgl = new Date().toISOString().substring(0, 19).replace(/[:T]/g, '-');
+        a.href = url;
+        a.download = 'backup_informatika_duta_' + tgl + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        alert('✅ Backup berhasil diunduh.');
+      });
+
+      // ===== RESTORE =====
+      elBtnRestore.addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json,application/json';
+        input.addEventListener('change', function() {
+          const file = input.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            let backupObj;
+            try {
+              backupObj = JSON.parse(e.target.result);
+            } catch (err) {
+              alert('⚠️ File bukan JSON yang valid.');
+              return;
+            }
+
+            const bodyHtml = `
+              <p style="color:#a84a3a; font-weight:700;">⚠️ PERINGATAN</p>
+              <p>Restore akan <strong>menimpa SEMUA data</strong> di sheet: Users, Tamu, Progress, Guru.</p>
+              <p style="margin-top:0.6rem; font-size:0.85rem; color:#7a6656;">
+                Backup berisi: ${(backupObj.users||[]).length} user,
+                ${(backupObj.tamu||[]).length} tamu,
+                ${(backupObj.progress||[]).length} progress,
+                ${(backupObj.guru||[]).length} guru.
+              </p>
+              <p style="margin-top:0.6rem; font-size:0.85rem;">Lanjutkan?</p>
+            `;
+
+            const actionsHtml = `
+              <button class="modal-btn batal" data-act="batal">Batal</button>
+              <button class="modal-btn hapus" data-act="restore">📤 Ya, Restore</button>
+            `;
+
+            const modal = buatModal('📤 Restore Data?', bodyHtml, actionsHtml);
+            modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
+            modal.querySelector('[data-act="restore"]').addEventListener('click', async function() {
+              this.disabled = true;
+              this.textContent = '⏳ Merestore...';
+
+              const hasil = await window.dutaRestoreBackup(
+                dataGuru.username,
+                dataGuru.password || '',
+                backupObj
+              );
+
+              if (hasil && hasil.ok) {
+                modal.remove();
+                alert('✅ Restore berhasil.');
+                muatData();
+              } else {
+                alert('⚠️ Gagal: ' + ((hasil && hasil.error) || 'Tidak diketahui'));
+                this.disabled = false;
+                this.textContent = '📤 Ya, Restore';
+              }
+            });
+          };
+          reader.readAsText(file);
+        });
+        input.click();
+      });
+
+      // ===== SORT HEADER =====
+      document.querySelectorAll('.tabel-progres th[data-sort]').forEach(function(th) {
+        th.addEventListener('click', function() {
+          const kolom = this.dataset.sort;
+          if (sortKolom === kolom) {
+            sortAsc = !sortAsc;
+          } else {
+            sortKolom = kolom;
+            sortAsc = false;
+          }
+          halaman = 1;
+          renderTabel();
+        });
+      });
+
+      // ===== FILTER EVENTS =====
+      ['filterCari', 'filterModul', 'filterStatus', 'filterWaktu'].forEach(function(id) {
+        const el = document.getElementById(id);
+        el.addEventListener('input', function() { halaman = 1; renderTabel(); });
+        el.addEventListener('change', function() { halaman = 1; renderTabel(); });
+      });
+
+      document.getElementById('toggleSkorDetail').addEventListener('change', function() {
+        tampilSkorDetail = this.checked;
+        renderTabel();
+      });
+
+      // ===== PAGINATION EVENTS =====
+      document.getElementById('pgPrev').addEventListener('click', function() {
+        if (halaman > 1) { halaman--; renderTabel(); }
+      });
+      document.getElementById('pgNext').addEventListener('click', function() {
+        const maxHalaman = Math.max(1, Math.ceil(sortedData.length / ukuranHalaman));
+        if (halaman < maxHalaman) { halaman++; renderTabel(); }
+      });
+      document.getElementById('pgSize').addEventListener('change', function() {
+        ukuranHalaman = Number(this.value);
+        halaman = 1;
+        renderTabel();
+      });
+
+      // ===== MUAT ULANG =====
+      elBtnMuatUlang.addEventListener('click', async function() {
+        this.disabled = true;
+        this.textContent = '⏳ Memuat...';
+        await muatData();
+        this.disabled = false;
+        this.textContent = '🔄 Muat Ulang';
+      });
+	  // ===== AUTO-REFRESH 60 DETIK =====
+		function mulaiAutoRefresh() {
+		  hentikanAutoRefresh();
+		  autoRefreshTimer = setInterval(function() {
+			// Hemat kuota: hanya refresh kalau tab aktif & tidak ada modal terbuka
+			if (document.hidden) return;
+			if (document.getElementById('guru-modal')) return;
+			muatData();
+		  }, AUTO_REFRESH_MS);
+		}
+
+		function hentikanAutoRefresh() {
+		  if (autoRefreshTimer) {
+			clearInterval(autoRefreshTimer);
+			autoRefreshTimer = null;
+		  }
+		}
+
+		document.getElementById('chkAutoRefresh').addEventListener('change', function() {
+		  if (this.checked) {
+			mulaiAutoRefresh();
+			// Simpan preferensi
+			try { localStorage.setItem('duta_guru_auto_refresh', '1'); } catch (e) {}
+		  } else {
+			hentikanAutoRefresh();
+			try { localStorage.removeItem('duta_guru_auto_refresh'); } catch (e) {}
+		  }
+		});
+
+		// Pause saat tab disembunyikan, lanjut saat tab kembali aktif
+		document.addEventListener('visibilitychange', function() {
+		  const chk = document.getElementById('chkAutoRefresh');
+		  if (!chk || !chk.checked) return;
+		  if (document.hidden) {
+			hentikanAutoRefresh();
+		  } else {
+			mulaiAutoRefresh();
+		  }
+		});
+
+		// Hentikan timer saat logout / halaman ditutup
+		window.addEventListener('beforeunload', hentikanAutoRefresh);
+
+      // ===== LOGOUT =====
       elBtnLogout.addEventListener('click', function() {
         if (!confirm('Keluar dari dashboard guru?')) return;
-        try { sessionStorage.removeItem('duta_guru'); } catch (e) {}
+        if (window.hapusSessionGuru) window.hapusSessionGuru();
+        else sessionStorage.removeItem('duta_guru');
         window.location.href = '../index.html';
       });
 
       // ===== INISIALISASI =====
       document.addEventListener('DOMContentLoaded', function() {
-        dataGuru = ambilSessionGuru();
+        dataGuru = ambilSessionGuruLokal();
 
         if (!dataGuru || !dataGuru.username) {
-          // Belum login guru → tampilkan akses ditolak
           elAksesDitolak.style.display = 'block';
           return;
         }
 
-        // Sudah login guru → tampilkan dashboard
         elDash.classList.add('show');
         elNamaGuru.textContent = dataGuru.nama || dataGuru.username;
+        elSekolahGuru.textContent = dataGuru.sekolah || '(sekolah belum diisi)';
+
         muatData();
+		// Cek preferensi auto-refresh dari sesi sebelumnya
+		try {
+		  if (localStorage.getItem('duta_guru_auto_refresh') === '1') {
+			const chk = document.getElementById('chkAutoRefresh');
+			if (chk) {
+			  chk.checked = true;
+			  mulaiAutoRefresh();
+			}
+		  }
+		} catch (e) {}
       });
 
     })();
