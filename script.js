@@ -1,6 +1,7 @@
-// script.js — versi Fase C v2.9
+// script.js — versi Fase C v3.0
 // Bar user di dalam header. + normalisasi + kunci modul + DUTA_MODUL_AKTIF.
 // + Dashboard Guru v2: updateSiswa, hapusTamuBulk, backup, restore.
+// + Sliding expiration 60 menit (auto-logout saat idle).
 // encoding: UTF-8
 
 (function() {
@@ -18,6 +19,11 @@
   };
 
   window.DUTA_BOBOT = { aktivitas: 0.5, kuis: 0.5 };
+
+  // Sliding expiration: auto-logout setelah 60 menit idle
+  const BATAS_SESI_MENIT = 60;
+  const KEY_AKTIVITAS = 'duta_aktivitas_terakhir';
+  const THROTTLE_AKTIVITAS_MS = 60 * 1000; // update max 1x per menit
 
   // Root path — diisi oleh halaman ('' atau '../')
   function getRoot() {
@@ -139,23 +145,65 @@
   };
 
   // ============================================
-  // SESSION
+  // SESSION + SLIDING EXPIRATION
   // ============================================
+  function catatAktivitas(force) {
+    try {
+      const now = Date.now();
+      const terakhir = Number(localStorage.getItem(KEY_AKTIVITAS)) || 0;
+      if (!force && (now - terakhir) < THROTTLE_AKTIVITAS_MS) return;
+      localStorage.setItem(KEY_AKTIVITAS, String(now));
+    } catch (e) {}
+  }
+  window.catatAktivitas = catatAktivitas;
+
+  function hapusAktivitas() {
+    try { localStorage.removeItem(KEY_AKTIVITAS); } catch (e) {}
+  }
+
+  function cekKadaluarsaSesi() {
+    try {
+      const terakhir = Number(localStorage.getItem(KEY_AKTIVITAS)) || 0;
+      if (terakhir === 0) return false; // belum pernah dicatat → anggap belum kadaluarsa
+      const idleMs = Date.now() - terakhir;
+      return idleMs > (BATAS_SESI_MENIT * 60 * 1000);
+    } catch (e) { return false; }
+  }
+
   window.simpanSession = function(s) {
-    try { localStorage.setItem('duta_session', JSON.stringify(s || {})); } catch (e) {}
+    try {
+      localStorage.setItem('duta_session', JSON.stringify(s || {}));
+      catatAktivitas(true); // reset timer saat login/buat tamu
+    } catch (e) {}
   };
+
   window.ambilSession = function() {
     try {
       const raw = localStorage.getItem('duta_session');
       if (!raw) return null;
       const s = JSON.parse(raw);
       if (!s || !s.user_id) return null;
+
+      // Cek kadaluarsa (sliding)
+      if (cekKadaluarsaSesi()) {
+        hapusSession();
+        hapusAktivitas();
+        return null;
+      }
+
+      // Perpanjang otomatis saat diakses
+      catatAktivitas(false);
       return s;
     } catch (e) { return null; }
   };
+
   window.hapusSession = function() {
-    try { localStorage.removeItem('duta_session'); } catch (e) {}
+    try {
+      localStorage.removeItem('duta_session');
+      hapusAktivitas();
+    } catch (e) {}
   };
+
   window.sudahLogin = function() {
     const s = window.ambilSession();
     return !!(s && s.tipe === 'login');
@@ -170,24 +218,49 @@
   };
 
   // ============================================
-  // SESSION GURU (sessionStorage)
+  // SESSION GURU (sessionStorage) — 60 menit sliding
   // ============================================
+  const KEY_GURU_AKTIVITAS = 'duta_guru_aktivitas';
+
+  function catatAktivitasGuru(force) {
+    try {
+      const now = Date.now();
+      const terakhir = Number(sessionStorage.getItem(KEY_GURU_AKTIVITAS)) || 0;
+      if (!force && (now - terakhir) < THROTTLE_AKTIVITAS_MS) return;
+      sessionStorage.setItem(KEY_GURU_AKTIVITAS, String(now));
+    } catch (e) {}
+  }
+
   window.simpanSessionGuru = function(guru) {
     try {
       sessionStorage.setItem('duta_guru', JSON.stringify(guru || {}));
+      catatAktivitasGuru(true);
     } catch (e) {}
   };
+
   window.ambilSessionGuru = function() {
     try {
       const raw = sessionStorage.getItem('duta_guru');
       if (!raw) return null;
       const g = JSON.parse(raw);
       if (!g || !g.username) return null;
+
+      // Cek kadaluarsa guru
+      const terakhir = Number(sessionStorage.getItem(KEY_GURU_AKTIVITAS)) || 0;
+      if (terakhir > 0 && (Date.now() - terakhir) > (BATAS_SESI_MENIT * 60 * 1000)) {
+        window.hapusSessionGuru();
+        return null;
+      }
+      catatAktivitasGuru(false);
       return g;
     } catch (e) { return null; }
   };
+
   window.hapusSessionGuru = function() {
-    try { sessionStorage.removeItem('duta_guru'); } catch (e) {}
+    try {
+      sessionStorage.removeItem('duta_guru');
+      sessionStorage.removeItem(KEY_GURU_AKTIVITAS);
+    } catch (e) {}
   };
 
   // ============================================
@@ -343,10 +416,6 @@
   // ============================================
   // AUTH — GURU
   // ============================================
-  /**
-   * Login guru. Simpan session ke sessionStorage.duta_guru.
-   * Return hasil API apa adanya.
-   */
   window.dutaLoginGuru = async function(username, password) {
     const hasil = await window.dutaFetch({
       action: 'loginGuru',
@@ -358,7 +427,7 @@
         username: hasil.user_id,
         nama: hasil.nama,
         sekolah: normalisasiSekolah(hasil.sekolah || ''),
-        password: password // untuk refresh di dashboard/guru.html
+        password: password
       });
     }
     return hasil;
@@ -575,13 +644,8 @@
   };
 
   // ============================================
-  // ===== DASHBOARD GURU — API BARU (v2.9) =====
+  // ===== DASHBOARD GURU — API BARU =====
   // ============================================
-
-  /**
-   * Ambil semua progress (guru). Filter by sekolah dilakukan di backend.
-   * Return { ok:true, guru:{username,nama,sekolah}, progress:[...], total:N }
-   */
   window.dutaGetAllProgress = async function(username, password) {
     if (!username) return { ok: false, error: 'Username guru wajib diisi' };
     return await window.dutaFetch({
@@ -591,10 +655,6 @@
     });
   };
 
-  /**
-   * Unlock modul (guru). Buka kunci agar siswa bisa mengulang.
-   * Return { ok:true, message }
-   */
   window.dutaUnlockModul = async function(guruUsername, guruPassword, userIdTarget, modul) {
     if (!guruUsername) return { ok: false, error: 'Username guru wajib diisi' };
     if (!userIdTarget) return { ok: false, error: 'userId target wajib diisi' };
@@ -608,15 +668,6 @@
     });
   };
 
-  /**
-   * Update identitas siswa (login only).
-   * @param {object} opts
-   *   - username (guru)
-   *   - password (guru)
-   *   - userId   (siswa target)
-   *   - nama, kelas, sekolah, passwordSiswa (opsional, hanya yang ingin diubah)
-   * Return { ok:true, message }
-   */
   window.dutaUpdateSiswa = async function(opts) {
     const o = opts || {};
     if (!o.username) return { ok: false, error: 'Username guru wajib diisi' };
@@ -636,12 +687,6 @@
     return await window.dutaFetch(payload);
   };
 
-  /**
-   * Hapus tamu massal. Hanya tamu.
-   * @param {string} username guru
-   * @param {string} password guru
-   * @param {string[]} userIds array kode tamu (TAMU-XXXX)
-   */
   window.dutaHapusTamuBulk = async function(username, password, userIds) {
     if (!username) return { ok: false, error: 'Username guru wajib diisi' };
     if (!Array.isArray(userIds) || userIds.length === 0) {
@@ -655,9 +700,6 @@
     });
   };
 
-  /**
-   * Backup semua data. Return { ok:true, backup:{users,tamu,progress,guru,waktu} }
-   */
   window.dutaBackupData = async function(username, password) {
     if (!username) return { ok: false, error: 'Username guru wajib diisi' };
     return await window.dutaFetch({
@@ -667,10 +709,6 @@
     });
   };
 
-  /**
-   * Restore dari JSON backup. HATI-HATI: overwrite semua sheet.
-   * @param {object} backupObj objek backup (hasil dari dutaBackupData)
-   */
   window.dutaRestoreBackup = async function(username, password, backupObj) {
     if (!username) return { ok: false, error: 'Username guru wajib diisi' };
     if (!backupObj || typeof backupObj !== 'object') {
@@ -933,6 +971,24 @@
   };
 
   // ============================================
+  // SLIDING EXPIRATION — LISTENER GLOBAL
+  // ============================================
+  function initAktivitasListener() {
+    const events = ['click', 'keydown', 'mousemove', 'scroll', 'touchstart'];
+    let throttleTimer = null;
+    function handle() {
+      if (throttleTimer) return;
+      throttleTimer = setTimeout(function() {
+        throttleTimer = null;
+        catatAktivitas(true);
+      }, THROTTLE_AKTIVITAS_MS);
+    }
+    events.forEach(function(ev) {
+      document.addEventListener(ev, handle, { passive: true });
+    });
+  }
+
+  // ============================================
   // EKSEKUSI
   // ============================================
   document.addEventListener('DOMContentLoaded', function() {
@@ -940,7 +996,8 @@
     renderFooter();
     initInfoToggle();
     initScrollButton();
+    initAktivitasListener();
   });
 
-  console.log('✅ script.js Fase C v2.9 siap. (+ Dashboard Guru API: updateSiswa, hapusTamuBulk, backup, restore)');
+  console.log('✅ script.js Fase C v3.0 siap. (+ sliding expiration 60 menit)');
 })();
