@@ -1,5 +1,5 @@
-// script.js — versi Fase C
-// Bar user sekarang di dalam header (ikut banner, tidak floating).
+// script.js — versi Fase C v2.8
+// Bar user di dalam header. + normalisasi + kunci modul + DUTA_MODUL_AKTIF.
 // encoding: UTF-8
 
 (function() {
@@ -23,6 +23,61 @@
     return (typeof window.DUTA_ROOT === 'string') ? window.DUTA_ROOT : '';
   }
   window.getRoot = getRoot;
+
+  // Modul aktif — diisi oleh halaman (mis. 'tik1', 'tik2', 'tik3', 'bk4')
+  // Dipakai untuk memilih key localStorage yang benar saat ambil nama siswa.
+  function getModulAktif() {
+    return (typeof window.DUTA_MODUL_AKTIF === 'string') ? window.DUTA_MODUL_AKTIF : '';
+  }
+  window.getModulAktif = getModulAktif;
+
+  // ============================================
+  // NORMALISASI INPUT (NAMA, KELAS, SEKOLAH)
+  // ============================================
+  function normalisasiNama(str) {
+    return String(str || '')
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .split(' ')
+      .map(function(kata) {
+        if (!kata) return '';
+        return kata.charAt(0).toUpperCase() + kata.slice(1);
+      })
+      .join(' ')
+      .trim();
+  }
+
+  function normalisasiKelas(str) {
+    let s = String(str || '').trim().toUpperCase().replace(/\s+/g, '');
+    const romawiMap = { 'VIII': '8', 'VII': '7', 'IX': '9' };
+    const keys = Object.keys(romawiMap).sort(function(a, b) {
+      return b.length - a.length;
+    });
+    for (let i = 0; i < keys.length; i++) {
+      const romawi = keys[i];
+      if (s.indexOf(romawi) === 0) {
+        s = romawiMap[romawi] + s.substring(romawi.length);
+        break;
+      }
+    }
+    const match = s.match(/^(\d+)([A-Z]*)$/);
+    if (match) return match[1] + match[2];
+    return s;
+  }
+
+  function normalisasiSekolah(str) {
+    return String(str || '')
+      .trim()
+      .replace(/\s+/g, ' ')
+      .toUpperCase();
+  }
+
+  window.dutaNormalisasi = {
+    nama: normalisasiNama,
+    kelas: normalisasiKelas,
+    sekolah: normalisasiSekolah
+  };
 
   // ============================================
   // HITUNG NILAI
@@ -48,7 +103,9 @@
   window.simpanIdentitasSiswa = function(sekolah, nama, kelas) {
     try {
       localStorage.setItem('duta_siswa', JSON.stringify({
-        sekolah: sekolah || '', nama: nama || '', kelas: kelas || ''
+        sekolah: normalisasiSekolah(sekolah),
+        nama: normalisasiNama(nama),
+        kelas: normalisasiKelas(kelas)
       }));
     } catch (e) {}
   };
@@ -115,28 +172,57 @@
   // ============================================
   // HELPER: ambil nama siswa gabungan untuk dikirim ke sheet
   // ============================================
+  // PENTING: prioritaskan key `lab[MODUL_AKTIF]_siswa` (dari window.DUTA_MODUL_AKTIF).
+  // Fallback ke array `lab*_siswa` TERPANJANG kalau modul aktif tidak diketahui.
   function ambilNamaSiswaUntukSheet() {
-    // Prioritas 1: dari key lab[modul]_siswa (array)
-    // Kita cek semua key yang berawalan 'lab' dan berakhiran '_siswa'
     try {
+      // 1) Prioritas: key modul yang sedang aktif
+      const modulAktif = getModulAktif();
+      if (modulAktif) {
+        const keyModul = 'lab' + modulAktif + '_siswa';
+        try {
+          const arr = JSON.parse(localStorage.getItem(keyModul) || '[]');
+          if (Array.isArray(arr) && arr.length > 0) {
+            const namaArr = arr
+              .map(function(s) { return (s && s.nama) ? String(s.nama).trim() : ''; })
+              .filter(Boolean);
+            if (namaArr.length > 0) {
+              return namaArr.join(' & ');
+            }
+          }
+        } catch (e) {}
+      }
+
+      // 2) Fallback: pilih array `lab*_siswa` dengan nama TERBANYAK
       const keys = [];
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
         if (k && k.startsWith('lab') && k.endsWith('_siswa')) keys.push(k);
       }
-      // Ambil yang paling baru (asumsi: key yang cocok dengan modul aktif)
-      // Fallback: gabung dari key pertama yang ketemu
+
+      let terbaik = null;
       for (let i = 0; i < keys.length; i++) {
         try {
           const arr = JSON.parse(localStorage.getItem(keys[i]) || '[]');
-          if (Array.isArray(arr) && arr.length > 0 && arr[0].nama) {
-            return arr.map(s => s.nama).filter(Boolean).join(' & ');
+          if (Array.isArray(arr) && arr.length > 0) {
+            if (!terbaik || arr.length > terbaik.length) {
+              terbaik = arr;
+            }
           }
         } catch (e) {}
       }
+
+      if (terbaik && terbaik.length > 0) {
+        const namaArr = terbaik
+          .map(function(s) { return (s && s.nama) ? String(s.nama).trim() : ''; })
+          .filter(Boolean);
+        if (namaArr.length > 0) {
+          return namaArr.join(' & ');
+        }
+      }
     } catch (e) {}
 
-    // Prioritas 2: dari duta_siswa (identitas tunggal)
+    // Fallback terakhir: identitas siswa tunggal
     const ids = window.ambilIdentitasSiswa();
     if (ids && ids.nama) return ids.nama;
 
@@ -168,9 +254,9 @@
     if (hasil && hasil.ok) {
       window.simpanSession({
         user_id: hasil.user_id,
-        nama: hasil.nama,
-        kelas: hasil.kelas,
-        sekolah: hasil.sekolah || '',
+        nama: normalisasiNama(hasil.nama),
+        kelas: normalisasiKelas(hasil.kelas),
+        sekolah: normalisasiSekolah(hasil.sekolah || ''),
         tipe: 'login',
         waktu_login: new Date().toISOString()
       });
@@ -181,8 +267,11 @@
   window.dutaDaftar = async function(username, password, nama, kelas, sekolah) {
     return await window.dutaFetch({
       action: 'register',
-      username: username, password: password,
-      nama: nama, kelas: kelas, sekolah: sekolah
+      username: username,
+      password: password,
+      nama: normalisasiNama(nama),
+      kelas: normalisasiKelas(kelas),
+      sekolah: normalisasiSekolah(sekolah)
     });
   };
 
@@ -190,17 +279,23 @@
     return await window.dutaFetch({ action: 'cekUser', username: username });
   };
 
-  // Buat kode tamu (dipanggil dari halaman aktivitas saat mulai)
   window.dutaBuatTamu = async function(sekolah, nama, kelas) {
+    const sekolahN = normalisasiSekolah(sekolah);
+    const namaN = normalisasiNama(nama);
+    const kelasN = normalisasiKelas(kelas);
+
     const hasil = await window.dutaFetch({
-      action: 'buatTamu', sekolah: sekolah, nama: nama, kelas: kelas
+      action: 'buatTamu',
+      sekolah: sekolahN,
+      nama: namaN,
+      kelas: kelasN
     });
     if (hasil && hasil.ok) {
       window.simpanSession({
         user_id: hasil.kode_tamu,
-        nama: hasil.nama,
-        kelas: hasil.kelas,
-        sekolah: hasil.sekolah || '',
+        nama: normalisasiNama(hasil.nama),
+        kelas: normalisasiKelas(hasil.kelas),
+        sekolah: normalisasiSekolah(hasil.sekolah || ''),
         tipe: 'tamu',
         kadaluarsa: hasil.kadaluarsa,
         waktu_buat: new Date().toISOString()
@@ -209,22 +304,16 @@
     return hasil;
   };
 
-  // Helper: pastikan user punya kode tamu. Kalau sudah login, return sesi login.
-  // Kalau sudah tamu berkode, return kode. Kalau belum, buat baru.
   window.dutaPastikanPunyaKode = async function(sekolah, nama, kelas) {
     const session = window.ambilSession();
 
-    // Sudah login → tidak perlu kode
     if (session && session.tipe === 'login') {
       return { ok: true, tipe: 'login', user_id: session.user_id, sudah_ada: true };
     }
-
-    // Sudah tamu berkode → pakai kode itu
     if (session && session.tipe === 'tamu' && session.user_id) {
       return { ok: true, tipe: 'tamu', user_id: session.user_id, sudah_ada: true };
     }
 
-    // Belum → buat baru
     const hasil = await window.dutaBuatTamu(sekolah, nama, kelas);
     if (hasil && hasil.ok) {
       return { ok: true, tipe: 'tamu', user_id: hasil.kode_tamu, sudah_ada: false };
@@ -241,14 +330,14 @@
   };
 
   // ============================================
-  // SIMPAN PROGRESS (dengan nama_siswa)
+  // SIMPAN PROGRESS (+ opsi kunci modul)
   // ============================================
-  window.dutaSimpanProgress = async function(modul, bagianTerakhir, skor, nilaiAkhir) {
+  window.dutaSimpanProgress = async function(modul, bagianTerakhir, skor, nilaiAkhir, opsi) {
     const userId = window.ambilUserId();
     if (!userId) return { ok: false, error: 'Belum login/tamu' };
 
-    // Ambil nama siswa gabungan dari localStorage
     const namaSiswa = ambilNamaSiswaUntukSheet();
+    const kunciModul = opsi && opsi.kunciModul === true;
 
     return await window.dutaFetch({
       action: 'simpanProgress',
@@ -257,10 +346,101 @@
       bagianTerakhir: bagianTerakhir || '',
       skor: skor || {},
       nilaiAkhir: nilaiAkhir || 0,
-      namaSiswa: namaSiswa
+      namaSiswa: namaSiswa,
+      kunciModul: kunciModul
     });
   };
 
+  // ============================================
+  // CEK STATUS MODUL (kunci sekali selesai)
+  // ============================================
+  // Cache di sessionStorage supaya tidak bolak-balik panggil API
+  const KEY_CACHE_STATUS = 'duta_status_modul_';
+
+  window.dutaCekStatusModul = async function(modul, opts) {
+    if (!modul) return { ok: false, terkunci: false, status: '' };
+
+    const forceRefresh = opts && opts.refresh === true;
+    const cacheKey = KEY_CACHE_STATUS + modul;
+
+    // Cek cache dulu (kalau tidak force refresh)
+    if (!forceRefresh) {
+      try {
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+          const c = JSON.parse(cached);
+          // Cache berlaku 60 detik
+          if (c && (Date.now() - (c.ts || 0)) < 60000) {
+            return {
+              ok: true,
+              terkunci: c.status === 'selesai',
+              status: c.status || '',
+              nilai_akhir: c.nilai_akhir || 0,
+              skor_kuis: c.skor_kuis || 0,
+              fromCache: true
+            };
+          }
+        }
+      } catch (e) {}
+    }
+
+    // Panggil API
+    const userId = window.ambilUserId();
+    if (!userId) return { ok: false, terkunci: false, status: '' };
+
+    try {
+      const hasil = await window.dutaFetch({
+        action: 'getProgress', userId: userId, modul: modul
+      });
+      if (hasil && hasil.ok && hasil.progress && hasil.progress.length > 0) {
+        const p = hasil.progress[0];
+        const status = (p.status_modul || '').toString().trim().toLowerCase();
+        const data = {
+          ok: true,
+          terkunci: status === 'selesai',
+          status: status,
+          nilai_akhir: Number(p.nilai_akhir) || 0,
+          skor_kuis: Number(p.skor_kuis) || 0
+        };
+        // Simpan cache
+        try {
+          sessionStorage.setItem(cacheKey, JSON.stringify({
+            status: data.status,
+            nilai_akhir: data.nilai_akhir,
+            skor_kuis: data.skor_kuis,
+            ts: Date.now()
+          }));
+        } catch (e) {}
+        return data;
+      }
+      return { ok: true, terkunci: false, status: '' };
+    } catch (e) {
+      return { ok: false, terkunci: false, status: '', error: e.message };
+    }
+  };
+
+  // Helper: bersihkan cache status modul (dipakai setelah simpan / unlock)
+  window.dutaBersihkanCacheStatus = function(modul) {
+    if (!modul) return;
+    try { sessionStorage.removeItem(KEY_CACHE_STATUS + modul); } catch (e) {}
+  };
+
+  // ============================================
+  // UNLOCK MODUL (untuk dashboard guru)
+  // ============================================
+  window.dutaUnlockModul = async function(guruUsername, guruPassword, userIdTarget, modul) {
+    return await window.dutaFetch({
+      action: 'unlockModul',
+      username: guruUsername,
+      password: guruPassword,
+      userId: userIdTarget,
+      modul: modul
+    });
+  };
+
+  // ============================================
+  // RESET USER (tamu)
+  // ============================================
   window.dutaResetUser = async function() {
     const session = window.ambilSession();
     if (!session) return { ok: false, error: 'Tidak ada session aktif' };
@@ -276,9 +456,14 @@
       const hapus = [];
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
-        if (k && prefixes.some(p => k.startsWith(p))) hapus.push(k);
+        if (k && prefixes.some(function(p) { return k.startsWith(p); })) hapus.push(k);
       }
-      hapus.forEach(k => localStorage.removeItem(k));
+      hapus.forEach(function(k) { localStorage.removeItem(k); });
+      // Bersihkan cache status modul di sessionStorage
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const k = sessionStorage.key(i);
+        if (k && k.startsWith(KEY_CACHE_STATUS)) sessionStorage.removeItem(k);
+      }
     } catch (e) {}
   }
   window.hapusSemuaLocalStorageUser = hapusSemuaLocalStorageUser;
@@ -313,8 +498,10 @@
       idUntukDipakai = userId || generateIdKlien(modul);
       payload = {
         sheetName: modul, id: idUntukDipakai,
-        sekolah: siswa.sekolah || '', nama: siswa.nama || '',
-        kelas: siswa.kelas || '', bagian: bagian,
+        sekolah: normalisasiSekolah(siswa.sekolah || ''),
+        nama: normalisasiNama(siswa.nama || ''),
+        kelas: normalisasiKelas(siswa.kelas || ''),
+        bagian: bagian,
         nilai: Number(nilai) || 0, totalBagian: totalBagian
       };
       window.simpanIdModul(modul, idUntukDipakai);
@@ -336,7 +523,7 @@
   function generateIdKlien(modul) {
     const kode = (modul || 'DUTA').toUpperCase().replace(/[^A-Z0-9]/g, '');
     const now = new Date();
-    const pad = (n) => String(n).padStart(2, '0');
+    const pad = function(n) { return String(n).padStart(2, '0'); };
     const tgl = '' + now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate());
     const jam = pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
     const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
@@ -351,7 +538,10 @@
         method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
-          sheetName: sheetName, nama: nama, kelas: kelas, nilai: nilai,
+          sheetName: sheetName,
+          nama: normalisasiNama(nama),
+          kelas: normalisasiKelas(kelas),
+          nilai: nilai,
           bagian: 'nilai_akhir', totalBagian: ['nilai_akhir']
         })
       });
@@ -372,13 +562,11 @@
     let barHtml = '';
 
     if (!session) {
-      // Belum login & belum punya kode → tamu biasa
       barHtml = `
         <span class="ub-info ub-guest">👤 Tamu</span>
         <a href="javascript:void(0)" class="ub-btn ub-login" id="ubAksiLogin">🔑 Login</a>
       `;
     } else if (session.tipe === 'login') {
-      // Sudah login → tidak ada tombol Reset
       barHtml = `
         <span class="ub-info ub-login" title="Login: ${escapeHtml(session.user_id)}">
           👤 ${escapeHtml(session.nama || session.user_id)}
@@ -386,7 +574,6 @@
         <button type="button" class="ub-btn ub-logout" id="ubAksiLogout">🚪 Logout</button>
       `;
     } else {
-      // Tamu berkode → ada tombol Reset
       barHtml = `
         <span class="ub-info ub-tamu" title="Kode: ${escapeHtml(session.user_id)}">
           🎭 ${escapeHtml(session.user_id)}
@@ -408,7 +595,6 @@
       </div>
     `;
 
-    // Pasang handler
     const btnLogin  = document.getElementById('ubAksiLogin');
     const btnLogout = document.getElementById('ubAksiLogout');
     const btnReset  = document.getElementById('ubAksiReset');
@@ -424,14 +610,12 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  // ===== Aksi: Login =====
   function aksiLogin() {
     const currentPath = window.location.pathname + window.location.search;
     try { sessionStorage.setItem('duta_redirect_after_login', currentPath); } catch (e) {}
     window.location.href = getRoot() + 'login.html';
   }
 
-  // ===== Aksi: Logout =====
   function aksiLogout() {
     tampilkanModal({
       judul: 'Logout',
@@ -445,7 +629,6 @@
     });
   }
 
-  // ===== Aksi: Reset Tamu =====
   async function aksiResetTamu() {
     const session = window.ambilSession();
     if (!session || session.tipe !== 'tamu') {
@@ -569,7 +752,7 @@
   }
 
   // ============================================
-  // TOMBOL LANJUTKAN BELAJAR (untuk aktivitas)
+  // TOMBOL LANJUTKAN BELAJAR
   // ============================================
   window.renderTombolLanjut = async function(opts) {
     const modul = opts.modul;
@@ -625,5 +808,5 @@
     initScrollButton();
   });
 
-  console.log('✅ script.js Fase C siap.');
+  console.log('✅ script.js Fase C v2.8 siap. (+ DUTA_MODUL_AKTIF + kunci modul + normalisasi)');
 })();
