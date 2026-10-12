@@ -1074,13 +1074,6 @@
               <span class="fb-text" id="fbText">Pilih salah satu misi untuk memulai!</span>
             </div>
 
-            <!-- Tombol selesai -->
-            <div class="game-actions">
-              <button class="btn-game primary" id="btnSelesaiLapis1" onclick="selesaiLapis1()" disabled>
-                ✅ Selesai Menjelajah
-              </button>
-            </div>
-
             <!-- Momen Mindful 1 -->
             <div class="mindful-box" id="mindful1">
               <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 1</div>
@@ -1092,8 +1085,9 @@
               <textarea id="mindful1Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
             </div>
 
+            <!-- Tombol Selesai Lapis 1 (HANYA SATU, SETELAH Jeda Sadar 1) -->
             <div class="game-actions" style="margin-top:1rem;">
-              <button class="btn-game primary" id="btnSelesaiLapis1Final" onclick="selesaiLapis1Final()" disabled>
+              <button class="btn-game primary" id="btnSelesaiLapis1" onclick="selesaiLapis1()" disabled>
                 ✅ Selesai Menjelajah
               </button>
             </div>
@@ -1299,6 +1293,7 @@
 
   <script src="../script.js"></script>
   <script>window.DUTA_ROOT = '../';</script>
+  <script>window.DUTA_MODUL_AKTIF = 'tik3';</script>
 
   <script>
     (function() {
@@ -1364,44 +1359,8 @@
       ];
 
       // ============================================
-      // GENERATOR HASIL TIRUAN
+      // BANK HASIL TIRUAN
       // ============================================
-      // Setiap hasil punya "kualitas": 'iklan' | 'tidak_relevan' | 'sedang' | 'relevan'
-      function generateHasil(misiId, keyword) {
-        const kw = keyword.toLowerCase().trim();
-        const misi = misiData.find(m => m.id === misiId);
-
-        // Klasifikasi kualitas kata kunci
-        let kualitas = 'sedang';
-        if (misi) {
-          const cocokUmum = misi.keywords.umum.some(k => kw === k || kw.length <= 4);
-          const cocokBaik = misi.keywords.baik.some(k => kw.includes(k) || k.includes(kw) || kw.split(' ').length >= 4);
-          if (cocokUmum && !cocokBaik) kualitas = 'umum';
-          else if (cocokBaik) kualitas = 'baik';
-        }
-
-        // Bank hasil per misi
-        const bank = BANK_HASIL[misiId] || BANK_HASIL.m1;
-
-        if (kualitas === 'umum') {
-          return {
-            count: '987.000.000',
-            items: bank.umum
-          };
-        } else if (kualitas === 'baik') {
-          return {
-            count: '1.240.000',
-            items: bank.baik
-          };
-        } else {
-          return {
-            count: '45.300.000',
-            items: bank.sedang
-          };
-        }
-      }
-
-      // Bank hasil untuk setiap misi
       const BANK_HASIL = {
         m1: {
           umum: [
@@ -1512,10 +1471,10 @@
       // STATE
       // ============================================
       let misiDipilih = null;
-      let misiSelesaiArr = [];  // array of misi id yang sudah selesai
+      let misiSelesaiArr = [];
       let totalPencarianCount = 0;
-      let hasilSekarang = [];   // hasil pencarian yang sedang ditampilkan
-      let hasilDipilih = [];    // index hasil yang dipilih (maks 3)
+      let hasilSekarang = [];
+      let hasilDipilih = [];
       let lapis1Selesai = false;
       let lapis2Selesai = false;
 
@@ -1561,7 +1520,6 @@
       const elFbText = document.getElementById('fbText');
       const elMindful1 = document.getElementById('mindful1');
       const elBtnSelesaiLapis1 = document.getElementById('btnSelesaiLapis1');
-      const elBtnSelesaiLapis1Final = document.getElementById('btnSelesaiLapis1Final');
 
       const elTantanganList = document.getElementById('tantanganList');
       const elMindful2 = document.getElementById('mindful2');
@@ -1586,6 +1544,21 @@
       const elStatusKirim = document.getElementById('statusKirim');
       const elStatusKirimText = document.getElementById('statusKirimText');
       const elStatusSpinner = document.getElementById('statusSpinner');
+
+      // ============================================
+      // HELPERS
+      // ============================================
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function tampilFeedback(type, icon, text) {
+        elFeedbackBox.className = 'feedback-box show ' + type;
+        elFbIcon.textContent = icon || '💡';
+        elFbText.innerHTML = text;
+      }
 
       // ============================================
       // PROGRESS LAPIS
@@ -1762,10 +1735,30 @@
         tampilFeedback('info', '👆', 'Sekarang ketik <strong>kata kunci</strong> di kotak pencarian, lalu klik <strong>Cari</strong>.');
       }
 
-      function escapeHtml(s) {
-        return String(s || '')
-          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      // ============================================
+      // GENERATOR HASIL TIRUAN
+      // ============================================
+      function generateHasil(misiId, keyword) {
+        const kw = keyword.toLowerCase().trim();
+        const misi = misiData.find(m => m.id === misiId);
+
+        let kualitas = 'sedang';
+        if (misi) {
+          const cocokUmum = misi.keywords.umum.some(k => kw === k || kw.length <= 4);
+          const cocokBaik = misi.keywords.baik.some(k => kw.includes(k) || k.includes(kw) || kw.split(' ').length >= 4);
+          if (cocokUmum && !cocokBaik) kualitas = 'umum';
+          else if (cocokBaik) kualitas = 'baik';
+        }
+
+        const bank = BANK_HASIL[misiId] || BANK_HASIL.m1;
+
+        if (kualitas === 'umum') {
+          return { count: '987.000.000', items: bank.umum };
+        } else if (kualitas === 'baik') {
+          return { count: '1.240.000', items: bank.baik };
+        } else {
+          return { count: '45.300.000', items: bank.sedang };
+        }
       }
 
       // ============================================
@@ -1796,7 +1789,6 @@
         tampilFeedback('info', '🔍', 'Menemukan <strong>' + hasil.count + '</strong> hasil untuk "<strong>' + escapeHtml(kw) + '</strong>". Pilih <strong>3 hasil</strong> yang paling relevan!');
       };
 
-      // Enter di search input
       elSearchInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -1862,28 +1854,19 @@
           hasilDipilih.push(idx);
         }
 
-        renderHasilCountOnly();
-        updateSeleksiStatus();
-      }
-
-      // Hanya refresh bagian hasil (tanpa ganti count)
-      function renderHasilCountOnly() {
         const items = elSearchResults.querySelectorAll('.result-item');
-        items.forEach((item, idx) => {
-          item.classList.toggle('selected', hasilDipilih.includes(idx));
+        items.forEach((item, i) => {
+          item.classList.toggle('selected', hasilDipilih.includes(i));
         });
-      }
 
-      function updateSeleksiStatus() {
         if (hasilDipilih.length === 3) {
-          tampilFeedback('info', '👌', 'Kamu sudah memilih 3 hasil. Klik hasil lain untuk mengganti, atau klik <strong>"Simpan Misi Ini"</strong> di bawah.');
+          tampilFeedback('info', '👌', 'Kamu sudah memilih 3 hasil. Klik <strong>"Simpan Misi Ini"</strong> di bawah.');
           showSimpanMisiBtn(true);
         } else {
           showSimpanMisiBtn(false);
         }
       }
 
-      // Tombol simpan misi (muncul setelah 3 hasil dipilih)
       function showSimpanMisiBtn(show) {
         let btn = document.getElementById('btnSimpanMisi');
         if (show && !btn) {
@@ -1925,10 +1908,13 @@
         showSimpanMisiBtn(false);
 
         if (misiSelesaiArr.length >= misiData.length) {
-          elBtnSelesaiLapis1.disabled = false;
-          elBtnSelesaiLapis1Final.disabled = false;
+          // ✅ Semua misi selesai: munculkan Jeda Sadar 1 DAN aktifkan tombol Selesai Menjelajah
           elMindful1.classList.add('show');
+          elBtnSelesaiLapis1.disabled = false;
           tampilFeedback('success', '🎉', '<strong>Luar biasa!</strong> Kamu menyelesaikan semua 5 misi. Sekarang isi Jeda Sadar 1, lalu klik "Selesai Menjelajah".');
+          setTimeout(() => {
+            elMindful1.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 300);
         } else {
           tampilFeedback('success', '✅', 'Misi tersimpan! Sisa <strong>' + (misiData.length - misiSelesaiArr.length) + '</strong> misi lagi.');
         }
@@ -1940,15 +1926,6 @@
       function updateStats() {
         elMisiSelesai.textContent = misiSelesaiArr.length;
         elTotalPencarian.textContent = totalPencarianCount;
-      }
-
-      // ============================================
-      // FEEDBACK
-      // ============================================
-      function tampilFeedback(type, icon, text) {
-        elFeedbackBox.className = 'feedback-box show ' + type;
-        elFbIcon.textContent = icon || '💡';
-        elFbText.innerHTML = text;
       }
 
       // ============================================
@@ -1970,9 +1947,7 @@
         lapis1Selesai = true;
         elAreaLapis2.style.display = 'block';
         elBtnSelesaiLapis1.disabled = true;
-        elBtnSelesaiLapis1Final.disabled = true;
         elBtnSelesaiLapis1.textContent = '✅ Lapis 1 Selesai';
-        elBtnSelesaiLapis1Final.textContent = '✅ Lapis 1 Selesai';
 
         updateProgressLapis('lapis2');
 
@@ -1982,9 +1957,6 @@
 
         buildTantangan();
       };
-
-      // Alias untuk tombol final
-      window.selesaiLapis1Final = window.selesaiLapis1;
 
       // ============================================
       // LAPIS 2 — TANTANGAN
@@ -1996,7 +1968,6 @@
           tipe: 'teks',
           validasi: function(val) {
             const lower = val.toLowerCase();
-            // Harus ada jenis makanan spesifik atau konteks
             const adaSpesifik = /resep|rendang|sate|nasi|soto|bakso|gudeg|padang|jawa|indonesia|khas|tradisional/i.test(lower);
             const cukupPanjang = val.trim().split(/\s+/).length >= 2;
             return adaSpesifik && cukupPanjang;
@@ -2657,7 +2628,7 @@
         updateFormSiswa('1');
       });
 
-      console.log('✅ TIK3 Bagian 1: Peramban & Kata Kunci siap!');
+      console.log('✅ TIK3 Bagian 1: Peramban & Kata Kunci siap! (v2 — perbaikan tombol Selesai Menjelajah)');
     })();
   </script>
 

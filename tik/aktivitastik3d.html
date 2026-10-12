@@ -528,7 +528,7 @@
             sesuai skormu. Jika belum lulus, kamu bisa mengulang kuis ini.
           </div>
 
-          <!-- ===== FORM IDENTITAS (untuk sertifikat) ===== -->
+          <!-- ===== FORM IDENTITAS ===== -->
           <div class="form-siswa-box" id="formSiswaBox">
             <div class="form-title">📝 Identitas Penerima Sertifikat</div>
             <div class="form-desc">
@@ -570,7 +570,7 @@
             </div>
           </div>
 
-          <!-- ===== SOAL (muncul setelah form diisi) ===== -->
+          <!-- ===== SOAL ===== -->
           <div id="areaKuis" style="display:none;">
             <div class="tes-header">
               <div class="tes-info">🏆 <strong>Kuis Akhir:</strong> 10 soal · Minimal 7 benar untuk lulus</div>
@@ -654,6 +654,7 @@
 
   <script src="../script.js"></script>
   <script>window.DUTA_ROOT = '../';</script>
+  <script>window.DUTA_MODUL_AKTIF = 'tik3';</script>
 
   <script>
     (function() {
@@ -1161,7 +1162,7 @@
       });
 
       // ============================================
-      // SIMPAN NILAI KUIS (skor_kuis + nilai_akhir)
+      // SIMPAN NILAI KUIS (skor_kuis + nilai_akhir + kunci modul)
       // ============================================
       async function simpanNilaiKuis() {
         const skorKuis = Math.round(40 + (kuisBenar / soalData.length) * 60);
@@ -1208,10 +1209,15 @@
         }, 12000);
 
         try {
+          // PENTING:
+          // - Hanya kirim 'kuis' (JANGAN kirim a/b/c supaya skor lama tidak tertimpa 0).
+          // - Kirim opsi { kunciModul: true } supaya backend menandai status_modul = 'selesai'.
           const hasil = await window.dutaSimpanProgress(
-            MODUL_KEY, 'd',
-            { kuis: skorKuis, c: 0 },
-            nilaiAkhir
+            MODUL_KEY,
+            'd',
+            { kuis: skorKuis },
+            nilaiAkhir,
+            { kunciModul: true }
           );
 
           if (selesaiKirim) return;
@@ -1223,7 +1229,13 @@
             kirimSukses = true;
             elStatusKirim.className = 'status-kirim success show';
             elStatusSpinner.style.display = 'none';
-            elStatusKirimText.innerHTML = `✅ Nilai akhir (<strong>${nilaiAkhir}</strong>) berhasil disimpan.`;
+            elStatusKirimText.innerHTML = `✅ Nilai akhir (<strong>${nilaiAkhir}</strong>) berhasil disimpan.` +
+              (hasil.locked ? ' <em>(Modul terkunci — nilai final dari percobaan pertama.)</em>' : '');
+
+            // Bersihkan cache status modul supaya halaman lain baca status terbaru
+            if (window.dutaBersihkanCacheStatus) {
+              window.dutaBersihkanCacheStatus(MODUL_KEY);
+            }
           } else {
             tampilkanGagalKirim(nilaiAkhir, (hasil && hasil.error) || 'Terjadi kesalahan.');
           }
@@ -1289,7 +1301,7 @@
         }
       });
 
-      console.log('✅ TIK3 Bagian 4: Kuis Akhir & Sertifikat siap!');
+      console.log('✅ TIK3 Bagian 4: Kuis Akhir & Sertifikat siap! (v2 — perbaikan skor_c & kunci modul)');
     })();
   </script>
 

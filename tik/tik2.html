@@ -153,6 +153,21 @@
       display: none;
     }
 
+    /* Badge kecil "Selesai" untuk modul yang sudah tuntas */
+    .duta-status-selesai {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #e0f5e8, #c8ecd5);
+      color: #1f5f32;
+      border: 2px solid #8aaa7a;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
     /* ===== RESPONSIF ===== */
     @media (max-width: 720px) {
       .portal-title { font-size: 1.6rem; }
@@ -212,6 +227,9 @@
         <!-- ===== TOMBOL LANJUTKAN BELAJAR (dinamis) ===== -->
         <div id="duta-lanjut-container"></div>
 
+        <!-- ===== BADGE SELESAI (dinamis) ===== -->
+        <div id="duta-badge-selesai-wrapper" style="display:none;"></div>
+
         <div class="portal-buttons">
           <a href="materitik2.html" class="portal-btn btn-materi">
             <span class="btn-icon">📖</span>
@@ -246,7 +264,7 @@
   <script src="../script.js"></script>
   <script>window.DUTA_ROOT = '../';</script>
 
-  <!-- ===== RENDER TOMBOL "LANJUTKAN BELAJAR" ===== -->
+  <!-- ===== RENDER TOMBOL "LANJUTKAN BELAJAR" + BADGE SELESAI ===== -->
   <script>
     document.addEventListener('DOMContentLoaded', async function() {
       // Tunggu script.js selesai init
@@ -256,9 +274,10 @@
       if (!window.ambilSession || !window.ambilSession()) return;
 
       const container = document.getElementById('duta-lanjut-container');
+      const badgeWrapper = document.getElementById('duta-badge-selesai-wrapper');
       if (!container) return;
 
-      // Ambil progress modul 'tik2' dari sheet
+      // Ambil progress modul 'tik2'
       let progress = null;
       try {
         const hasil = await window.dutaAmbilProgress('tik2');
@@ -266,55 +285,104 @@
           progress = hasil.progress[0];
         }
       } catch (e) {
-        return; // gagal ambil progress → jangan tampilkan tombol
+        return;
       }
 
       if (!progress) return;
 
       const bagianTerakhir = (progress.bagian_terakhir || '').toLowerCase();
       const nilaiAkhir = Number(progress.nilai_akhir) || 0;
+      const statusModul = (progress.status_modul || '').toString().trim().toLowerCase();
+      const sudahSelesai = (statusModul === 'selesai');
 
-      // Map bagian → file (sesuaikan kalau struktur file TIK2 berbeda)
+      // Map bagian → file
       const mapFile = {
         a: 'aktivitastik2a.html',
         b: 'aktivitastik2b.html',
         c: 'aktivitastik2c.html',
         d: 'aktivitastik2d.html',
         e: 'aktivitastik2e.html',
-        f: 'aktivitastik2f.html',
-        g: 'aktivitastik2g.html'
+        f: 'aktivitastik2f.html'
       };
 
-      // Kalau sudah selesai semua (g / nilai_akhir > 0) → tawarkan ulang modul
-      const selesai = (bagianTerakhir === 'g') || (nilaiAkhir > 0);
+      // ============================================
+      // KASUS 1: Modul SUDAH SELESAI
+      // ============================================
+      if (sudahSelesai) {
+        // Badge "Selesai"
+        if (badgeWrapper) {
+          badgeWrapper.style.display = 'block';
+          badgeWrapper.innerHTML =
+            '<span class="duta-status-selesai">✅ Modul sudah selesai · Nilai Akhir: ' +
+            nilaiAkhir + '</span>';
+        }
 
-      let teks, tujuan;
-      if (selesai) {
-        teks = '🔄 <strong>Ulangi Modul Ini</strong> — Nilai akhir: ' + nilaiAkhir;
-        tujuan = 'aktivitastik2a.html';
-      } else if (bagianTerakhir && mapFile[bagianTerakhir]) {
-        const urutan = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
-        const idx = urutan.indexOf(bagianTerakhir);
-        const berikutnya = (idx >= 0 && idx < urutan.length - 1) ? urutan[idx + 1] : bagianTerakhir;
-        teks = '▶️ <strong>Lanjutkan dari Bagian ' + berikutnya.toUpperCase() + '</strong> — Progres tersimpan';
-        tujuan = mapFile[berikutnya] || mapFile[bagianTerakhir];
-      } else {
-        return; // tidak ada bagian valid → sembunyikan
+        // Tombol "Ulangi Modul Ini"
+        const btn = document.createElement('a');
+        btn.className = 'duta-lanjut-btn';
+        btn.href = '#';
+        btn.innerHTML = '🔄 <strong>Ulangi Modul Ini</strong> — Nilai Akhir: ' + nilaiAkhir;
+
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+
+          if (typeof window.tampilkanModal === 'function') {
+            window.tampilkanModal({
+              judul: '🔄 Ulangi Modul Ini?',
+              pesan:
+                '<p style="margin-bottom:0.7rem;">Nilai Akhir kamu sekarang <strong>' + nilaiAkhir + '</strong> ' +
+                'dan <strong>tidak akan berubah</strong> meskipun kamu mengulang modul ini.</p>' +
+                '<p style="margin-bottom:0.7rem;">Tapi tidak masalah! Kamu <strong>boleh mengulang</strong> ' +
+                'untuk mempelajari kembali materinya dan berlatih lagi.</p>' +
+                '<p style="background:#fff8e6; padding:0.6rem 0.9rem; border-radius:10px; ' +
+                'border-left:4px solid #d4a030; color:#5c3400; font-size:0.88rem; margin:0;">' +
+                '💡 <strong>Ingin nilai Akhirnya diperbarui?</strong> Sampaikan kepada ' +
+                'Bapak/Ibu Guru Informatika ya.' +
+                '</p>',
+              tombolLanjut: '🔄 Ya, Ulangi Modul',
+              onLanjut: function() {
+                window.location.href = 'aktivitastik2a.html';
+              }
+            });
+          } else {
+            if (confirm(
+              'Nilai Akhir kamu (' + nilaiAkhir + ') tidak akan berubah.\n\n' +
+              'Kamu boleh mengulang modul ini untuk mempelajari kembali materinya.\n\n' +
+              'Jika ingin nilai Akhirnya diperbarui, sampaikan kepada Bapak/Ibu Guru Informatika.\n\n' +
+              'Lanjutkan mengulang modul?'
+            )) {
+              window.location.href = 'aktivitastik2a.html';
+            }
+          }
+        });
+
+        container.innerHTML = '';
+        container.appendChild(btn);
+        container.style.display = 'block';
+        return;
       }
 
-      // Render tombol
-      const btn = document.createElement('a');
-      btn.className = 'duta-lanjut-btn';
-      btn.href = tujuan;
-      btn.innerHTML = teks;
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.location.href = tujuan;
-      });
+      // ============================================
+      // KASUS 2: Modul BELUM SELESAI
+      // ============================================
+      if (bagianTerakhir && mapFile[bagianTerakhir]) {
+        const urutan = ['a', 'b', 'c', 'd', 'e', 'f'];
+        const idx = urutan.indexOf(bagianTerakhir);
+        const berikutnya = (idx >= 0 && idx < urutan.length - 1) ? urutan[idx + 1] : bagianTerakhir;
 
-      container.innerHTML = '';
-      container.appendChild(btn);
-      container.style.display = 'block';
+        const btn = document.createElement('a');
+        btn.className = 'duta-lanjut-btn';
+        btn.href = mapFile[berikutnya] || mapFile[bagianTerakhir];
+        btn.innerHTML = '▶️ <strong>Lanjutkan dari Bagian ' + berikutnya.toUpperCase() +
+                        '</strong> — Progres tersimpan';
+
+        container.innerHTML = '';
+        container.appendChild(btn);
+        container.style.display = 'block';
+        return;
+      }
+
+      // Tidak ada progress → tidak ada tombol
     });
   </script>
 
