@@ -37,7 +37,7 @@
       color: #c79bd9; font-weight: 700; font-size: 0.9rem;
     }
 
-    /* ===== SIMULASI 3 LAPIS ===== */
+    /* ===== HEADER LAPIS ===== */
     .lapis-header {
       display: flex; align-items: center; gap: 0.6rem;
       padding: 0.7rem 1.2rem; margin: 1.2rem 0 1rem;
@@ -363,6 +363,118 @@
       box-shadow: 0 0 0 3px rgba(79, 176, 198, 0.15);
     }
 
+    /* ===== PEMILIHAN TINGKAT TANTANGAN (DIFERENSIASI) ===== */
+    #areaPilihLevel { display: none; margin-top: 0.5rem; }
+    #areaPilihLevel.active { display: block; }
+
+    .pilih-level-box {
+      background: linear-gradient(135deg, #fff5f0, #ffe9dd, #f0f8eb);
+      border: 3px solid #ff8a5b;
+      border-radius: 20px;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      position: relative;
+    }
+    .pilih-level-box::before {
+      content: '★';
+      position: absolute;
+      top: -14px; left: 1.5rem;
+      background: #fff;
+      padding: 0 0.5rem;
+      font-size: 1.3rem;
+      color: #ff8a5b;
+    }
+    .pilih-level-box .plb-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #b34614;
+      margin-bottom: 0.3rem;
+      text-align: center;
+    }
+    .pilih-level-box .plb-desc {
+      font-size: 0.9rem;
+      color: #5c4638;
+      text-align: center;
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .level-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .level-option {
+      background: #fff;
+      border: 3px solid #e5dbd0;
+      border-radius: 16px;
+      padding: 1rem 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      align-items: center;
+    }
+    .level-option:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+    }
+    .level-option .lo-icon {
+      font-size: 2rem;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+    .level-option .lo-name {
+      font-weight: 800;
+      font-size: 1.05rem;
+      line-height: 1.2;
+    }
+    .level-option .lo-desc {
+      font-size: 0.8rem;
+      color: #5c4638;
+      line-height: 1.5;
+    }
+    .level-option.dasar { border-color: #a8d8b8; }
+    .level-option.dasar .lo-name { color: #2d5a1e; }
+    .level-option.dasar:hover { border-color: #6a8a5a; background: #f0f8eb; }
+    .level-option.reguler { border-color: #f0d9a8; }
+    .level-option.reguler .lo-name { color: #8a5e00; }
+    .level-option.reguler:hover { border-color: #d4a030; background: #fff8e6; }
+    .level-option.tantangan { border-color: #f0c0c0; }
+    .level-option.tantangan .lo-name { color: #a84a3a; }
+    .level-option.tantangan:hover { border-color: #d4a0a0; background: #fdf0f0; }
+    .level-option.terpilih {
+      box-shadow: 0 0 0 4px rgba(255, 138, 91, 0.35);
+      transform: translateY(-2px);
+    }
+    .level-option.terpilih.dasar { border-color: #2d5a1e; background: #e0f2d8; }
+    .level-option.terpilih.reguler { border-color: #8a5e00; background: #fff3d6; }
+    .level-option.terpilih.tantangan { border-color: #a84a3a; background: #fde0e0; }
+
+    .level-badge-terpilih {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      background: #fff;
+      border-radius: 30px;
+      border: 2px solid #ff8a5b;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #b34614;
+      margin: 0.8rem auto 0;
+      width: fit-content;
+    }
+    .level-badge-terpilih.show { display: flex; animation: fadeIn 0.4s ease; }
+
+    #mindfulPilihLevel { display: none; }
+    #mindfulPilihLevel.show { display: block; }
+
     /* ===== TANTANGAN ===== */
     .tantangan-list {
       display: flex; flex-direction: column; gap: 0.8rem;
@@ -394,14 +506,17 @@
       display: flex; flex-wrap: wrap; gap: 0.5rem;
       align-items: center;
     }
-    .tantangan-item .t-input-row input[type="text"] {
+    .tantangan-item .t-input-row input[type="text"],
+    .tantangan-item .t-input-row textarea {
       flex: 1; min-width: 180px;
       padding: 0.5rem 0.9rem; border-radius: 10px;
       border: 2px solid #d9cdbf; font-family: inherit;
       font-size: 0.9rem; color: #2f2822; background: #fcfaf7;
       outline: none;
     }
-    .tantangan-item .t-input-row input:focus {
+    .tantangan-item .t-input-row textarea { min-height: 70px; resize: vertical; }
+    .tantangan-item .t-input-row input:focus,
+    .tantangan-item .t-input-row textarea:focus {
       border-color: #6b4f3a; background: #fff;
     }
     .tantangan-item .t-input-row button {
@@ -409,6 +524,7 @@
       border: none; font-weight: 700; font-size: 0.85rem;
       cursor: pointer; background: #4d3829; color: #fff;
       font-family: inherit; transition: all 0.2s ease;
+      align-self: flex-end;
     }
     .tantangan-item .t-input-row button:hover:not(:disabled) {
       background: #6b4f3a; transform: translateY(-1px);
@@ -802,6 +918,7 @@
       .refleksi-box { padding: 1rem 1.2rem; }
       .progress-lapis { gap: 0.3rem; }
       .progress-lapis .pl-step { font-size: 0.7rem; padding: 0.35rem 0.8rem; }
+      .pilih-level-box { padding: 1.2rem 1rem; }
     }
     @media (max-width: 480px) {
       .scenario-panel { padding: 0.8rem; }
@@ -817,6 +934,7 @@
       .lapis-header { font-size: 0.85rem; padding: 0.6rem 1rem; }
       .progress-lapis .pl-step .pl-label { display: none; }
       .progress-lapis .pl-step { padding: 0.35rem 0.6rem; }
+      .level-options { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -992,17 +1110,72 @@
           </div>
         </div><!-- end area-simulasi -->
 
-        <!-- ===== LAPIS 2 ===== -->
+        <!-- ===== AREA PILIH LEVEL TANTANGAN (DIFERENSIASI) ===== -->
+        <div id="areaPilihLevel">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+
+            <div class="pilih-level-box">
+              <div class="plb-title">★ Pilih Tingkat Tantanganmu</div>
+              <div class="plb-desc">
+                Sebelum masuk ke Lapis 2 (Tantangan Terarah), pilih tingkat yang paling
+                sesuai dengan kesiapanmu. <strong>Semua level dinilai sama</strong> —
+                yang berbeda hanya jumlah dan tingkat kesulitan tantangannya.
+              </div>
+
+              <div class="level-options" id="levelOptions">
+                <div class="level-option dasar" data-level="dasar" onclick="pilihLevel('dasar')">
+                  <span class="lo-icon">🟢</span>
+                  <span class="lo-name">Dasar</span>
+                  <span class="lo-desc">3 tantangan terbimbing dengan petunjuk lebih detail. Cocok kalau kamu ingin penguatan dulu.</span>
+                </div>
+                <div class="level-option reguler" data-level="reguler" onclick="pilihLevel('reguler')">
+                  <span class="lo-icon">🟡</span>
+                  <span class="lo-name">Reguler</span>
+                  <span class="lo-desc">3 tantangan standar. Cocok untuk sebagian besar siswa.</span>
+                </div>
+                <div class="level-option tantangan" data-level="tantangan" onclick="pilihLevel('tantangan')">
+                  <span class="lo-icon">🔴</span>
+                  <span class="lo-name">Tantangan</span>
+                  <span class="lo-desc">3 tantangan standar + 1 tantangan bonus (studi kasus terbuka). Cocok kalau kamu ingin tantangan lebih.</span>
+                </div>
+              </div>
+
+              <div class="level-badge-terpilih" id="levelBadge">
+                <span>✅</span>
+                <span id="levelBadgeText">Kamu memilih level: —</span>
+              </div>
+            </div>
+
+            <!-- Momen Mindful setelah memilih level -->
+            <div class="mindful-box" id="mindfulPilihLevel">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar — Sebelum Tantangan</div>
+              <div class="mb-text">
+                <strong>Mengapa kamu memilih level ini?</strong> Tantangan apa yang kamu
+                harapkan? Tulis 1 kalimat.
+              </div>
+              <textarea id="mindfulPilihJawab" placeholder="Tulis alasanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis2" onclick="lanjutKeLapis2()" disabled>
+                ➡️ Lanjut ke Tantangan
+              </button>
+            </div>
+
+          </div>
+        </div><!-- end areaPilihLevel -->
+
+        <!-- ===== LAPIS 2: TANTANGAN (3 LEVEL) ===== -->
         <div id="areaLapis2" style="display:none;">
           <div class="scenario-panel" style="margin-top:1.5rem;">
             <div class="lapis-header lapis-2">
               <span class="lapis-num">LAPIS 2</span>
-              <span>🎯 Tantangan Terarah — Uji Pemahamanmu</span>
+              <span>🎯 Tantangan Terarah — Level <span id="lapis2LevelLabel">—</span></span>
             </div>
 
             <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
-              Sekarang kamu akan diberi <strong>3 tantangan</strong>. Jawab dengan teliti!
-              Sistem hanya memberi umpan balik, bukan jawaban langsung.
+              Jawab dengan teliti! Sistem hanya memberi umpan balik, bukan jawaban langsung.
+              <span id="lapis2JumlahTantangan">3 tantangan</span> yang harus diselesaikan.
             </p>
 
             <div class="tantangan-list" id="tantanganList"></div>
@@ -1203,7 +1376,7 @@
       const AMBANG_LULUS = 3;
 
       // ============================================
-      // DATA EMAIL
+      // DATA EMAIL (LAPIS 1)
       // ============================================
       const emailData = [
         {
@@ -1283,13 +1456,16 @@
       // ============================================
       // STATE
       // ============================================
-      let emailDipilih = [];      // array of email id (maks 3)
+      let emailDipilih = [];
       let revealed = false;
       let lapis1Selesai = false;
       let lapis2Selesai = false;
 
+      let levelTantangan = null;
+      let tantanganSelesai = {};
+
       let timerInterval = null;
-      let waktuTersisa = 600; // 10 menit dalam detik
+      let waktuTersisa = 600;
       let timerSelesai = false;
 
       let jawabanKuisKilat = {};
@@ -1317,6 +1493,7 @@
       const elFormError = document.getElementById('formError');
       const elBtnMulai = document.getElementById('btnMulai');
       const elAreaSimulasi = document.getElementById('area-simulasi');
+      const elAreaPilihLevel = document.getElementById('areaPilihLevel');
       const elAreaLapis2 = document.getElementById('areaLapis2');
       const elAreaLapis3 = document.getElementById('areaLapis3');
       const elProgressLapis = document.getElementById('progressLapis');
@@ -1334,6 +1511,14 @@
       const elMindful1 = document.getElementById('mindful1');
       const elBtnSelesaiLapis1 = document.getElementById('btnSelesaiLapis1');
 
+      const elLevelOptions = document.getElementById('levelOptions');
+      const elLevelBadge = document.getElementById('levelBadge');
+      const elLevelBadgeText = document.getElementById('levelBadgeText');
+      const elMindfulPilihLevel = document.getElementById('mindfulPilihLevel');
+      const elBtnLanjutLapis2 = document.getElementById('btnLanjutLapis2');
+
+      const elLapis2LevelLabel = document.getElementById('lapis2LevelLabel');
+      const elLapis2JumlahTantangan = document.getElementById('lapis2JumlahTantangan');
       const elTantanganList = document.getElementById('tantanganList');
       const elMindful2 = document.getElementById('mindful2');
       const elBtnLanjutLapis3 = document.getElementById('btnLanjutLapis3');
@@ -1357,6 +1542,123 @@
       const elStatusKirim = document.getElementById('statusKirim');
       const elStatusKirimText = document.getElementById('statusKirimText');
       const elStatusSpinner = document.getElementById('statusSpinner');
+
+      // ============================================
+      // DATA TANTANGAN — 3 LEVEL
+      // ============================================
+      const tantanganDasar = [
+        {
+          id: 'D1',
+          teks: 'Pilih subjek email yang paling <strong>jelas</strong> untuk mengirim tugas kepada guru:',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: '"Tugas"', benar: false },
+            { v: 'B', label: '"Tugas Informatika — Budi Kelas 7A"', benar: true },
+            { v: 'C', label: '"PENTING!!!"', benar: false }
+          ],
+          hint: 'Subjek yang baik mengandung <strong>topik</strong> (Informatika) + <strong>identitas pengirim</strong> (Budi, 7A).',
+          feedbackSalah: 'Subjek yang baik harus singkat, spesifik, dan mengidentifikasi pengirim. Mana yang memenuhi ketiganya?'
+        },
+        {
+          id: 'D2',
+          teks: 'Lengkapi subjek berikut agar menjadi subjek yang <strong>jelas</strong>:<br><em>"Tanya PR — ____"</em>',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: '"Tanya PR — Halo Bu"', benar: false },
+            { v: 'B', label: '"Tanya PR — Siti 7B"', benar: true },
+            { v: 'C', label: '"Tanya PR — Tugas"', benar: false }
+          ],
+          hint: 'Setelah topik ("Tanya PR"), tambahkan <strong>identitas pengirim</strong>: nama + kelas.',
+          feedbackSalah: 'Subjek yang baik mengandung topik + identitas. Tambahkan nama dan kelasmu.'
+        },
+        {
+          id: 'D3',
+          teks: 'Mengapa subjek email yang <strong>kosong</strong> merepotkan penerima?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Karena terlihat malas', benar: false },
+            { v: 'B', label: 'Karena penerima tidak tahu isi pesan sebelum membuka', benar: true },
+            { v: 'C', label: 'Karena email akan masuk spam', benar: false }
+          ],
+          hint: 'Subjek berfungsi seperti "judul" — memberi tahu penerima isi pesan sebelum dibuka.',
+          feedbackSalah: 'Subjek kosong membuat penerima harus membuka satu-satu — memakan waktu dan tidak menghormati penerima.'
+        }
+      ];
+
+      const tantanganReguler = [
+        {
+          id: 'R1',
+          teks: 'Perbaiki subjek email berikut menjadi subjek yang <strong>jelas</strong>:<br><code style="background:#f5ede6; padding:0.2rem 0.5rem; border-radius:5px; color:#b34614; font-weight:700;">Re: Re: Fwd: Tugas</code><br><br><em style="color:#7a6656;">Tuliskan subjek penggantimu.</em>',
+          tipe: 'teks',
+          validasi: function(val) {
+            const lower = val.toLowerCase();
+            const adaTopik = /tugas|informatika|matematika|ipa|ips|pr|ulangan|ujian|jadwal/i.test(lower);
+            const adaIdentitas = /kelas|kelompok|\b[0-9][a-z]\b|—|-/i.test(val) || val.split(' ').length >= 3;
+            return adaTopik && adaIdentitas && val.length >= 10;
+          },
+          hint: 'Subjek yang baik mengandung <strong>topik</strong> + <strong>identitas pengirim</strong>. Contoh: "Tugas Informatika — Raka 7A".',
+          feedbackSalah: 'Subjekmu belum cukup jelas. Apakah penerima bisa tahu <em>tentang apa</em> dan <em>dari siapa</em>?'
+        },
+        {
+          id: 'R2',
+          teks: 'Tuliskan subjek email yang tepat untuk situasi berikut:<br><br><em>"Kamu ingin mengirim undangan rapat OSIS kepada ketua OSIS."</em>',
+          tipe: 'teks',
+          validasi: function(val) {
+            const lower = val.toLowerCase();
+            const adaTopik = /undangan|rapat|osis/i.test(lower);
+            const adaIdentitas = /kelas|osis|sekretaris|\b[0-9][a-z]\b|—|-/i.test(val) || val.split(' ').length >= 3;
+            return adaTopik && adaIdentitas && val.length >= 10;
+          },
+          hint: 'Subjek yang baik: sebutkan <strong>jenis kegiatan</strong> (undangan rapat) + <strong>identitas/konteks</strong> (OSIS).',
+          feedbackSalah: 'Subjek yang baik harus menyebutkan topik (undangan rapat) dan konteks (OSIS).'
+        },
+        {
+          id: 'R3',
+          teks: '<strong>Batas Konsep:</strong> Bisakah kamu menulis subjek yang <strong>sangat pendek</strong> tapi tetap jelas?<br>Contoh: <em>"Tugas Raka — Kel. 3"</em> hanya 4 kata. Apakah ini cukup?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Tidak cukup, harus panjang dan formal', benar: false },
+            { v: 'B', label: 'Cukup, karena sudah ada topik + identitas meski singkat', benar: true },
+            { v: 'C', label: 'Cukup, asal penerima sudah kenal', benar: false }
+          ],
+          hint: 'Yang penting bukan panjangnya, tapi apakah penerima tahu <strong>apa</strong> dan <strong>dari siapa</strong>.',
+          feedbackSalah: 'Subjek pendek boleh, asalkan tetap mengandung topik + identitas pengirim.'
+        }
+      ];
+
+      const tantanganBonus = [
+        {
+          id: 'B1',
+          teks: '<strong>🔥 Tantangan Bonus (Pengayaan — Terbuka):</strong><br><br>"Bayangkan kamu adalah <strong>guru</strong> yang menerima <strong>50 email sehari</strong>. Subjek seperti apa yang membuatmu <strong>ingin membuka</strong> email itu lebih dulu? Subjek seperti apa yang membuatmu <strong>malas membuka</strong>? Tuliskan argumenmu dalam 3–5 kalimat."',
+          tipe: 'teks',
+          validasi: function(val) {
+            return val.trim().length >= 80;
+          },
+          hint: 'Pikirkan: apakah kamu melihat nama pengirim? Apakah topiknya jelas? Apakah ada kata yang berlebihan seperti "PENTING!!!"?',
+          feedbackSalah: 'Argumenmu masih terlalu pendek. Tulis minimal 3 kalimat: (1) subjek yang menarik, (2) subjek yang membosankan, (3) mengapa.'
+        }
+      ];
+
+      // ============================================
+      // HELPERS
+      // ============================================
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function tampilFeedback(type, icon, text) {
+        elFeedbackBox.className = 'feedback-box show ' + type;
+        elFbIcon.textContent = icon || '💡';
+        elFbText.innerHTML = text;
+      }
+
+      function formatWaktuDetik(detik) {
+        const m = Math.floor(detik / 60);
+        const s = detik % 60;
+        return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+      }
 
       // ============================================
       // PROGRESS LAPIS
@@ -1573,12 +1875,6 @@
         });
       }
 
-      function escapeHtml(s) {
-        return String(s || '')
-          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-      }
-
       // ============================================
       // PILIH EMAIL
       // ============================================
@@ -1607,9 +1903,6 @@
         }
       }
 
-      // ============================================
-      // UPDATE STATS
-      // ============================================
       function updateStats() {
         elTotalEmail.textContent = emailData.length;
         elTotalDipilih.textContent = emailDipilih.length;
@@ -1628,7 +1921,6 @@
         stopTimer();
         renderInbox();
 
-        // Hitung berapa email "baik" yang dipilih
         const dipilihBaik = emailDipilih.filter(id => {
           const e = emailData.find(x => x.id === id);
           return e && e.baik;
@@ -1666,16 +1958,7 @@
       };
 
       // ============================================
-      // FEEDBACK
-      // ============================================
-      function tampilFeedback(type, icon, text) {
-        elFeedbackBox.className = 'feedback-box show ' + type;
-        elFbIcon.textContent = icon || '💡';
-        elFbText.innerHTML = text;
-      }
-
-      // ============================================
-      // SELESAI LAPIS 1
+      // SELESAI LAPIS 1 → PILIH LEVEL
       // ============================================
       window.selesaiLapis1 = function() {
         if (!revealed) {
@@ -1691,78 +1974,112 @@
         }
 
         lapis1Selesai = true;
-        elAreaLapis2.style.display = 'block';
+        elAreaSimulasi.style.display = 'none';
+        elAreaPilihLevel.classList.add('active');
         elBtnSelesaiLapis1.disabled = true;
         elBtnSelesaiLapis1.textContent = '✅ Lapis 1 Selesai';
 
+        updateProgressLapis('lapis1');
+
+        setTimeout(() => {
+          elAreaPilihLevel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      };
+
+      // ============================================
+      // PILIH LEVEL TANTANGAN (DIFERENSIASI)
+      // ============================================
+      window.pilihLevel = function(level) {
+        levelTantangan = level;
+
+        elLevelOptions.querySelectorAll('.level-option').forEach(el => {
+          el.classList.remove('terpilih');
+        });
+        const elTerpilih = elLevelOptions.querySelector('[data-level="' + level + '"]');
+        if (elTerpilih) elTerpilih.classList.add('terpilih');
+
+        let namaLevel = '';
+        if (level === 'dasar') namaLevel = '🟢 Dasar';
+        else if (level === 'reguler') namaLevel = '🟡 Reguler';
+        else if (level === 'tantangan') namaLevel = '🔴 Tantangan';
+
+        elLevelBadgeText.textContent = 'Kamu memilih level: ' + namaLevel;
+        elLevelBadge.classList.add('show');
+
+        elMindfulPilihLevel.classList.add('show');
+        elBtnLanjutLapis2.disabled = false;
+
+        try { localStorage.setItem('labtik2_level', level); } catch (e) {}
+      };
+
+      // ============================================
+      // LANJUT KE LAPIS 2
+      // ============================================
+      window.lanjutKeLapis2 = function() {
+        if (!levelTantangan) {
+          alert('⚠️ Pilih tingkat tantangan dulu ya!');
+          return;
+        }
+
+        const jawab = document.getElementById('mindfulPilihJawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Tulis dulu alasanmu memilih level ini!');
+          document.getElementById('mindfulPilihJawab').focus();
+          return;
+        }
+
+        elAreaPilihLevel.classList.remove('active');
+        elAreaLapis2.style.display = 'block';
+
         updateProgressLapis('lapis2');
+
+        let namaLevel = '';
+        if (levelTantangan === 'dasar') namaLevel = '🟢 Dasar';
+        else if (levelTantangan === 'reguler') namaLevel = '🟡 Reguler';
+        else namaLevel = '🔴 Tantangan';
+        elLapis2LevelLabel.textContent = namaLevel;
+
+        if (levelTantangan === 'tantangan') {
+          elLapis2JumlahTantangan.textContent = '4 tantangan (3 inti + 1 bonus)';
+        } else {
+          elLapis2JumlahTantangan.textContent = '3 tantangan';
+        }
+
+        buildTantangan();
 
         setTimeout(() => {
           elAreaLapis2.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 300);
-
-        buildTantangan();
       };
 
       // ============================================
-      // LAPIS 2 — TANTANGAN
+      // BUILD TANTANGAN (3 LEVEL)
       // ============================================
-      const tantanganData = [
-        {
-          id: 'T1',
-          teks: 'Perbaiki subjek email berikut menjadi subjek yang <strong>jelas</strong>:<br><em>"Halo"</em>',
-          tipe: 'teks',
-          validasi: function(val) {
-            const lower = val.toLowerCase();
-            const adaTopik = /tugas|izin|tanya|jadwal|undangan|laporan|permohonan|kegiatan|rapat|ulangan|pr/i.test(lower);
-            const adaIdentitas = /kelas|kelompok|\b[0-9][a-z]\b|—|-/i.test(val) || val.split(' ').length >= 3;
-            return adaTopik && adaIdentitas;
-          },
-          hint: 'Subjek yang baik harus mengandung <strong>topik</strong> (tentang apa) dan <strong>identitas</strong> (dari siapa/kelas berapa). Contoh: "Tugas Informatika — Raka 7A".',
-          feedbackSalah: 'Subjekmu belum cukup jelas. Apakah penerima bisa tahu <em>dari siapa</em> dan <em>tentang apa</em> hanya dari subjekmu? Coba tambahkan topik dan identitas.'
-        },
-        {
-          id: 'T2',
-          teks: 'Manakah subjek email yang <strong>paling baik</strong> untuk mengirim tugas kepada guru?',
-          tipe: 'pilihan',
-          opsi: [
-            { v: 'A', label: '"Tugas"', benar: false },
-            { v: 'B', label: '"PENTING!!!"', benar: false },
-            { v: 'C', label: '"Tugas Informatika — Budi Kelas 7A"', benar: true },
-            { v: 'D', label: '(kosong)', benar: false }
-          ],
-          hint: 'Subjek yang baik harus singkat, spesifik, dan mengidentifikasi pengirim.',
-          feedbackSalah: 'Perhatikan: subjek yang baik harus menyebutkan <strong>topik</strong> dan <strong>identitas pengirim</strong>. Mana yang memenuhi keduanya?'
-        },
-        {
-          id: 'T3',
-          teks: '<strong>Batas Konsep:</strong> Bisakah kamu menulis subjek yang <strong>sangat pendek</strong> tapi tetap jelas?<br>Contoh: <em>"Tugas Raka — Kel. 3"</em> hanya 4 kata. Apakah ini cukup?',
-          tipe: 'pilihan',
-          opsi: [
-            { v: 'A', label: 'Tidak cukup, harus panjang dan formal', benar: false },
-            { v: 'B', label: 'Cukup, karena sudah ada topik + identitas meski singkat', benar: true },
-            { v: 'C', label: 'Cukup, asal penerima sudah kenal', benar: false },
-            { v: 'D', label: 'Tidak cukup, harus ada salam pembuka', benar: false }
-          ],
-          hint: 'Pikirkan: penerima perlu tahu <strong>apa</strong> dan <strong>dari siapa</strong>. Apakah 4 kata itu sudah cukup?',
-          feedbackSalah: 'Yang penting bukan panjangnya, tapi apakah penerima tahu <strong>apa</strong> dan <strong>dari siapa</strong>.'
-        }
-      ];
-
       function buildTantangan() {
         elTantanganList.innerHTML = '';
+        tantanganSelesai = {};
 
-        tantanganData.forEach((t, idx) => {
+        let daftar = [];
+        if (levelTantangan === 'dasar') daftar = tantanganDasar.slice();
+        else if (levelTantangan === 'reguler') daftar = tantanganReguler.slice();
+        else daftar = tantanganReguler.slice().concat(tantanganBonus);
+
+        daftar.forEach((t, idx) => {
+          const isBonus = t.id.startsWith('B');
           const div = document.createElement('div');
           div.className = 'tantangan-item';
           div.id = 'tantangan_' + t.id;
           div.dataset.id = t.id;
+          if (isBonus) {
+            div.style.background = 'linear-gradient(135deg, #fff8e6, #ffe8c2)';
+            div.style.borderColor = '#d4a030';
+          }
 
           let inputHtml = '';
           if (t.tipe === 'teks') {
             inputHtml = `
               <div class="t-input-row">
-                <input type="text" id="input_${t.id}" placeholder="Tulis subjek yang lebih baik..." maxlength="100">
+                <textarea id="input_${t.id}" placeholder="Tulis jawabanmu di sini..." maxlength="600"></textarea>
                 <button id="btn_${t.id}">Periksa</button>
               </div>
             `;
@@ -1781,8 +2098,8 @@
 
           div.innerHTML = `
             <div class="t-header">
-              <span class="t-num">${idx + 1}</span>
-              <span>Tantangan ${idx + 1}</span>
+              <span class="t-num">${isBonus ? '🔥' : (idx + 1)}</span>
+              <span>${isBonus ? 'Tantangan Bonus' : 'Tantangan ' + (idx + 1)}</span>
             </div>
             <div class="t-text">${t.teks}</div>
             ${inputHtml}
@@ -1796,6 +2113,9 @@
         });
       }
 
+      // ============================================
+      // PERIKSA TANTANGAN
+      // ============================================
       function periksaTantangan(t) {
         const fb = document.getElementById('fb_' + t.id);
         const item = document.getElementById('tantangan_' + t.id);
@@ -1805,19 +2125,20 @@
           const val = inp.value.trim();
           if (!val) {
             fb.className = 't-feedback show hint';
-            fb.innerHTML = '⚠️ Tulis subjek dulu ya!';
+            fb.innerHTML = '⚠️ Tulis jawabanmu dulu ya!';
             return;
           }
           if (val.length < 8) {
             fb.className = 't-feedback show hint';
-            fb.innerHTML = '🤔 Subjekmu terlalu pendek. ' + t.hint;
+            fb.innerHTML = '🤔 Jawabanmu terlalu pendek. ' + t.hint;
             return;
           }
           if (t.validasi(val)) {
             fb.className = 't-feedback show ok';
-            fb.innerHTML = '✅ <strong>Bagus!</strong> Subjekmu sudah mengandung topik dan identitas.';
+            fb.innerHTML = '✅ <strong>Bagus!</strong> Jawabanmu sudah tepat.';
             item.classList.add('selesai');
             document.getElementById('btn_' + t.id).disabled = true;
+            tantanganSelesai[t.id] = true;
           } else {
             fb.className = 't-feedback show no';
             fb.innerHTML = '❌ ' + t.feedbackSalah + '<br><br>💡 ' + t.hint;
@@ -1832,9 +2153,10 @@
           const opsi = t.opsi.find(o => o.v === selected.value);
           if (opsi.benar) {
             fb.className = 't-feedback show ok';
-            fb.innerHTML = '✅ <strong>Benar!</strong> Subjek yang baik harus singkat, spesifik, dan mengidentifikasi pengirim.';
+            fb.innerHTML = '✅ <strong>Benar!</strong>';
             item.classList.add('selesai');
             document.getElementById('btn_' + t.id).disabled = true;
+            tantanganSelesai[t.id] = true;
           } else {
             fb.className = 't-feedback show no';
             fb.innerHTML = '❌ ' + t.feedbackSalah;
@@ -1844,6 +2166,9 @@
         cekSemuaTantangan();
       }
 
+      // ============================================
+      // CEK SEMUA TANTANGAN SELESAI
+      // ============================================
       function cekSemuaTantangan() {
         const items = document.querySelectorAll('.tantangan-item');
         const semuaSelesai = Array.from(items).every(i => i.classList.contains('selesai'));
@@ -1851,6 +2176,9 @@
           elMindful2.classList.add('show');
           elMindful2.style.display = 'block';
           elBtnLanjutLapis3.disabled = false;
+          setTimeout(() => {
+            elMindful2.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 200);
         }
       }
 
@@ -2335,7 +2663,7 @@
       }
 
       // ============================================
-      // LANJUT KE BAGIAN 2 (FIX BUG TOMBOL)
+      // LANJUT KE BAGIAN 2
       // ============================================
       window.lanjutKeBagian2 = async function() {
         if (!tesSelesai) {
@@ -2374,7 +2702,7 @@
         updateFormSiswa('1');
       });
 
-      console.log('✅ TIK2 Bagian 1: Subjek Email siap! (v1)');
+      console.log('✅ TIK2 Bagian 1: Subjek Email siap! (+ diferensiasi 3 level)');
     })();
   </script>
 
