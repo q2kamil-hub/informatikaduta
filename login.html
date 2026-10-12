@@ -22,7 +22,7 @@
 
       <span class="auth-icon" aria-hidden="true">🔑</span>
       <h1 class="auth-title">Login</h1>
-      <p class="auth-sub">Masuk sebagai siswa atau guru</p>
+      <p class="auth-sub">Masuk untuk melanjutkan</p>
 
       <div class="auth-error" id="authError"></div>
       <div class="auth-success" id="authSuccess"></div>
@@ -90,21 +90,30 @@
       const elError = document.getElementById('authError');
       const elSuccess = document.getElementById('authSuccess');
 
-      // Kalau sudah login siswa, langsung redirect
+      // ===== HELPER: session guru =====
+      function ambilSessionGuruLokal() {
+        if (window.ambilSessionGuru) return window.ambilSessionGuru();
+        try {
+          return JSON.parse(sessionStorage.getItem('duta_guru') || 'null');
+        } catch (e) { return null; }
+      }
+
+      // ===== AUTO-REDIRECT kalau sudah login =====
       document.addEventListener('DOMContentLoaded', function() {
+        // Cek session siswa
         const session = window.ambilSession && window.ambilSession();
         if (session && session.tipe === 'login') {
           redirectSetelahLogin();
+          return;
         }
-        // Kalau sudah login guru, langsung ke dashboard guru
-        try {
-          const guru = JSON.parse(sessionStorage.getItem('duta_guru') || 'null');
-          if (guru && guru.username) {
-            window.location.href = 'dashboard/guru.html';
-          }
-        } catch (e) {}
+        // Cek session guru
+        const guru = ambilSessionGuruLokal();
+        if (guru && guru.username) {
+          window.location.href = 'dashboard/guru.html';
+        }
       });
 
+      // ===== TAMPIL PESAN =====
       function tampilError(pesan) {
         elError.textContent = '⚠️ ' + pesan;
         elError.classList.add('show');
@@ -122,7 +131,7 @@
         elSuccess.classList.remove('show');
       }
 
-      // Redirect setelah login siswa: kembali ke halaman asal, atau index.html
+      // ===== REDIRECT SETELAH LOGIN SISWA =====
       function redirectSetelahLogin() {
         let tujuan = 'index.html';
         try {
@@ -135,6 +144,7 @@
         window.location.href = tujuan;
       }
 
+      // ===== SUBMIT FORM =====
       elForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         sembunyikanPesan();
@@ -162,28 +172,47 @@
           const hasilSiswa = await window.dutaLogin(username, password);
 
           if (hasilSiswa && hasilSiswa.ok) {
+            // Simpan juga ke sessionStorage untuk dashboard siswa
+            try {
+              sessionStorage.setItem('duta_siswa_dash', JSON.stringify({
+                user_id: hasilSiswa.user_id,
+                nama: hasilSiswa.nama,
+                kelas: hasilSiswa.kelas,
+                sekolah: hasilSiswa.sekolah
+              }));
+            } catch (e) {}
+
             tampilSukses('Login berhasil. Mengalihkan...');
             setTimeout(redirectSetelahLogin, 700);
             return;
           }
 
           // ===== 2) Kalau gagal, coba login sebagai GURU (sheet Guru) =====
-          const hasilGuru = await window.dutaFetch({
-            action: 'loginGuru',
-            username: username,
-            password: password
-          });
+          let hasilGuru = null;
+          if (typeof window.dutaLoginGuru === 'function') {
+            // Pakai helper baru (otomatis simpan session + sekolah)
+            hasilGuru = await window.dutaLoginGuru(username, password);
+          } else {
+            // Fallback: panggil API manual
+            hasilGuru = await window.dutaFetch({
+              action: 'loginGuru',
+              username: username,
+              password: password
+            });
+            // Simpan manual kalau berhasil
+            if (hasilGuru && hasilGuru.ok && hasilGuru.tipe === 'guru') {
+              try {
+                sessionStorage.setItem('duta_guru', JSON.stringify({
+                  username: hasilGuru.user_id,
+                  nama: hasilGuru.nama,
+                  sekolah: hasilGuru.sekolah || '',
+                  password: password
+                }));
+              } catch (e) {}
+            }
+          }
 
           if (hasilGuru && hasilGuru.ok && hasilGuru.tipe === 'guru') {
-            // Simpan session guru di sessionStorage
-            try {
-              sessionStorage.setItem('duta_guru', JSON.stringify({
-                username: hasilGuru.user_id,
-                nama: hasilGuru.nama,
-                password: password   // untuk refresh di dashboard/guru.html
-              }));
-            } catch (e) {}
-
             tampilSukses('Login guru berhasil. Mengalihkan...');
             setTimeout(function() {
               window.location.href = 'dashboard/guru.html';
@@ -192,18 +221,14 @@
           }
 
           // ===== 3) Dua-duanya gagal =====
-          // Prioritaskan pesan dari siswa, kecuali pesan siswa generik
           let pesan = 'Username atau password salah.';
 
           if (hasilSiswa && hasilSiswa.error === 'Password salah') {
-            // Username ada di Users tapi password salah
             pesan = 'Password salah.';
           } else if (hasilGuru && hasilGuru.error === 'Password salah') {
-            // Username ada di Guru tapi password salah
             pesan = 'Password salah.';
           } else if (hasilSiswa && hasilSiswa.error === 'Username tidak ditemukan' &&
                      hasilGuru && hasilGuru.error === 'Bukan akun guru') {
-            // Tidak ada di dua-duanya
             pesan = 'Username tidak ditemukan. Pastikan sudah daftar atau hubungi guru.';
           }
 

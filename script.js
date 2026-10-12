@@ -1,5 +1,6 @@
-// script.js — versi Fase C v2.8
+// script.js — versi Fase C v2.9
 // Bar user di dalam header. + normalisasi + kunci modul + DUTA_MODUL_AKTIF.
+// + Dashboard Guru v2: updateSiswa, hapusTamuBulk, backup, restore.
 // encoding: UTF-8
 
 (function() {
@@ -25,7 +26,6 @@
   window.getRoot = getRoot;
 
   // Modul aktif — diisi oleh halaman (mis. 'tik1', 'tik2', 'tik3', 'bk4')
-  // Dipakai untuk memilih key localStorage yang benar saat ambil nama siswa.
   function getModulAktif() {
     return (typeof window.DUTA_MODUL_AKTIF === 'string') ? window.DUTA_MODUL_AKTIF : '';
   }
@@ -170,13 +170,31 @@
   };
 
   // ============================================
+  // SESSION GURU (sessionStorage)
+  // ============================================
+  window.simpanSessionGuru = function(guru) {
+    try {
+      sessionStorage.setItem('duta_guru', JSON.stringify(guru || {}));
+    } catch (e) {}
+  };
+  window.ambilSessionGuru = function() {
+    try {
+      const raw = sessionStorage.getItem('duta_guru');
+      if (!raw) return null;
+      const g = JSON.parse(raw);
+      if (!g || !g.username) return null;
+      return g;
+    } catch (e) { return null; }
+  };
+  window.hapusSessionGuru = function() {
+    try { sessionStorage.removeItem('duta_guru'); } catch (e) {}
+  };
+
+  // ============================================
   // HELPER: ambil nama siswa gabungan untuk dikirim ke sheet
   // ============================================
-  // PENTING: prioritaskan key `lab[MODUL_AKTIF]_siswa` (dari window.DUTA_MODUL_AKTIF).
-  // Fallback ke array `lab*_siswa` TERPANJANG kalau modul aktif tidak diketahui.
   function ambilNamaSiswaUntukSheet() {
     try {
-      // 1) Prioritas: key modul yang sedang aktif
       const modulAktif = getModulAktif();
       if (modulAktif) {
         const keyModul = 'lab' + modulAktif + '_siswa';
@@ -193,7 +211,6 @@
         } catch (e) {}
       }
 
-      // 2) Fallback: pilih array `lab*_siswa` dengan nama TERBANYAK
       const keys = [];
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
@@ -222,7 +239,6 @@
       }
     } catch (e) {}
 
-    // Fallback terakhir: identitas siswa tunggal
     const ids = window.ambilIdentitasSiswa();
     if (ids && ids.nama) return ids.nama;
 
@@ -231,7 +247,7 @@
   window.ambilNamaSiswaUntukSheet = ambilNamaSiswaUntukSheet;
 
   // ============================================
-  // API CALL
+  // API CALL (dasar)
   // ============================================
   window.dutaFetch = async function(payload) {
     const apiUrl = window.DUTA_API && window.DUTA_API.url;
@@ -247,6 +263,9 @@
     }
   };
 
+  // ============================================
+  // AUTH — SISWA
+  // ============================================
   window.dutaLogin = async function(username, password) {
     const hasil = await window.dutaFetch({
       action: 'login', username: username, password: password
@@ -321,6 +340,33 @@
     return { ok: false, error: (hasil && hasil.error) || 'Gagal membuat kode tamu' };
   };
 
+  // ============================================
+  // AUTH — GURU
+  // ============================================
+  /**
+   * Login guru. Simpan session ke sessionStorage.duta_guru.
+   * Return hasil API apa adanya.
+   */
+  window.dutaLoginGuru = async function(username, password) {
+    const hasil = await window.dutaFetch({
+      action: 'loginGuru',
+      username: username,
+      password: password
+    });
+    if (hasil && hasil.ok) {
+      window.simpanSessionGuru({
+        username: hasil.user_id,
+        nama: hasil.nama,
+        sekolah: normalisasiSekolah(hasil.sekolah || ''),
+        password: password // untuk refresh di dashboard/guru.html
+      });
+    }
+    return hasil;
+  };
+
+  // ============================================
+  // PROGRESS
+  // ============================================
   window.dutaAmbilProgress = async function(modul) {
     const userId = window.ambilUserId();
     if (!userId) return { ok: false, error: 'Belum login/tamu' };
@@ -329,9 +375,6 @@
     });
   };
 
-  // ============================================
-  // SIMPAN PROGRESS (+ opsi kunci modul)
-  // ============================================
   window.dutaSimpanProgress = async function(modul, bagianTerakhir, skor, nilaiAkhir, opsi) {
     const userId = window.ambilUserId();
     if (!userId) return { ok: false, error: 'Belum login/tamu' };
@@ -352,9 +395,8 @@
   };
 
   // ============================================
-  // CEK STATUS MODUL (kunci sekali selesai)
+  // CEK STATUS MODUL
   // ============================================
-  // Cache di sessionStorage supaya tidak bolak-balik panggil API
   const KEY_CACHE_STATUS = 'duta_status_modul_';
 
   window.dutaCekStatusModul = async function(modul, opts) {
@@ -363,13 +405,11 @@
     const forceRefresh = opts && opts.refresh === true;
     const cacheKey = KEY_CACHE_STATUS + modul;
 
-    // Cek cache dulu (kalau tidak force refresh)
     if (!forceRefresh) {
       try {
         const cached = sessionStorage.getItem(cacheKey);
         if (cached) {
           const c = JSON.parse(cached);
-          // Cache berlaku 60 detik
           if (c && (Date.now() - (c.ts || 0)) < 60000) {
             return {
               ok: true,
@@ -384,7 +424,6 @@
       } catch (e) {}
     }
 
-    // Panggil API
     const userId = window.ambilUserId();
     if (!userId) return { ok: false, terkunci: false, status: '' };
 
@@ -402,7 +441,6 @@
           nilai_akhir: Number(p.nilai_akhir) || 0,
           skor_kuis: Number(p.skor_kuis) || 0
         };
-        // Simpan cache
         try {
           sessionStorage.setItem(cacheKey, JSON.stringify({
             status: data.status,
@@ -419,23 +457,9 @@
     }
   };
 
-  // Helper: bersihkan cache status modul (dipakai setelah simpan / unlock)
   window.dutaBersihkanCacheStatus = function(modul) {
     if (!modul) return;
     try { sessionStorage.removeItem(KEY_CACHE_STATUS + modul); } catch (e) {}
-  };
-
-  // ============================================
-  // UNLOCK MODUL (untuk dashboard guru)
-  // ============================================
-  window.dutaUnlockModul = async function(guruUsername, guruPassword, userIdTarget, modul) {
-    return await window.dutaFetch({
-      action: 'unlockModul',
-      username: guruUsername,
-      password: guruPassword,
-      userId: userIdTarget,
-      modul: modul
-    });
   };
 
   // ============================================
@@ -459,7 +483,6 @@
         if (k && prefixes.some(function(p) { return k.startsWith(p); })) hapus.push(k);
       }
       hapus.forEach(function(k) { localStorage.removeItem(k); });
-      // Bersihkan cache status modul di sessionStorage
       for (let i = 0; i < sessionStorage.length; i++) {
         const k = sessionStorage.key(i);
         if (k && k.startsWith(KEY_CACHE_STATUS)) sessionStorage.removeItem(k);
@@ -549,6 +572,116 @@
     } catch (err) {
       return { ok: false, error: err.message };
     }
+  };
+
+  // ============================================
+  // ===== DASHBOARD GURU — API BARU (v2.9) =====
+  // ============================================
+
+  /**
+   * Ambil semua progress (guru). Filter by sekolah dilakukan di backend.
+   * Return { ok:true, guru:{username,nama,sekolah}, progress:[...], total:N }
+   */
+  window.dutaGetAllProgress = async function(username, password) {
+    if (!username) return { ok: false, error: 'Username guru wajib diisi' };
+    return await window.dutaFetch({
+      action: 'getAllProgress',
+      username: username,
+      password: password || ''
+    });
+  };
+
+  /**
+   * Unlock modul (guru). Buka kunci agar siswa bisa mengulang.
+   * Return { ok:true, message }
+   */
+  window.dutaUnlockModul = async function(guruUsername, guruPassword, userIdTarget, modul) {
+    if (!guruUsername) return { ok: false, error: 'Username guru wajib diisi' };
+    if (!userIdTarget) return { ok: false, error: 'userId target wajib diisi' };
+    if (!modul) return { ok: false, error: 'modul wajib diisi' };
+    return await window.dutaFetch({
+      action: 'unlockModul',
+      username: guruUsername,
+      password: guruPassword || '',
+      userId: userIdTarget,
+      modul: modul
+    });
+  };
+
+  /**
+   * Update identitas siswa (login only).
+   * @param {object} opts
+   *   - username (guru)
+   *   - password (guru)
+   *   - userId   (siswa target)
+   *   - nama, kelas, sekolah, passwordSiswa (opsional, hanya yang ingin diubah)
+   * Return { ok:true, message }
+   */
+  window.dutaUpdateSiswa = async function(opts) {
+    const o = opts || {};
+    if (!o.username) return { ok: false, error: 'Username guru wajib diisi' };
+    if (!o.userId) return { ok: false, error: 'userId target wajib diisi' };
+
+    const payload = {
+      action: 'updateSiswa',
+      username: o.username,
+      password: o.password || '',
+      userId: o.userId
+    };
+    if (o.nama !== undefined)          payload.nama          = normalisasiNama(o.nama);
+    if (o.kelas !== undefined)         payload.kelas         = normalisasiKelas(o.kelas);
+    if (o.sekolah !== undefined)       payload.sekolah       = normalisasiSekolah(o.sekolah);
+    if (o.passwordSiswa !== undefined) payload.passwordSiswa = String(o.passwordSiswa);
+
+    return await window.dutaFetch(payload);
+  };
+
+  /**
+   * Hapus tamu massal. Hanya tamu.
+   * @param {string} username guru
+   * @param {string} password guru
+   * @param {string[]} userIds array kode tamu (TAMU-XXXX)
+   */
+  window.dutaHapusTamuBulk = async function(username, password, userIds) {
+    if (!username) return { ok: false, error: 'Username guru wajib diisi' };
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      return { ok: false, error: 'Tidak ada userId yang dikirim' };
+    }
+    return await window.dutaFetch({
+      action: 'hapusTamuBulk',
+      username: username,
+      password: password || '',
+      userIds: userIds
+    });
+  };
+
+  /**
+   * Backup semua data. Return { ok:true, backup:{users,tamu,progress,guru,waktu} }
+   */
+  window.dutaBackupData = async function(username, password) {
+    if (!username) return { ok: false, error: 'Username guru wajib diisi' };
+    return await window.dutaFetch({
+      action: 'getBackupData',
+      username: username,
+      password: password || ''
+    });
+  };
+
+  /**
+   * Restore dari JSON backup. HATI-HATI: overwrite semua sheet.
+   * @param {object} backupObj objek backup (hasil dari dutaBackupData)
+   */
+  window.dutaRestoreBackup = async function(username, password, backupObj) {
+    if (!username) return { ok: false, error: 'Username guru wajib diisi' };
+    if (!backupObj || typeof backupObj !== 'object') {
+      return { ok: false, error: 'Data backup tidak valid' };
+    }
+    return await window.dutaFetch({
+      action: 'restoreBackup',
+      username: username,
+      password: password || '',
+      backup: backupObj
+    });
   };
 
   // ============================================
@@ -706,6 +839,7 @@
     `;
     document.body.appendChild(el);
   }
+  window.tampilkanLoading = tampilkanLoading;
 
   // ============================================
   // FOOTER
@@ -808,5 +942,5 @@
     initScrollButton();
   });
 
-  console.log('✅ script.js Fase C v2.8 siap. (+ DUTA_MODUL_AKTIF + kunci modul + normalisasi)');
+  console.log('✅ script.js Fase C v2.9 siap. (+ Dashboard Guru API: updateSiswa, hapusTamuBulk, backup, restore)');
 })();
