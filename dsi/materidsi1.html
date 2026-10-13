@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Materi Dampak Teknologi bagi Produktivitas · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== Gaya khusus halaman materi DSI1 ===== */
+    .materi-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .materi-container h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #b07be0, #5c7cfa, #4fb0c6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .materi-container .sub-judul {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      border-left: 4px solid #b07be0;
+      padding-left: 1rem;
+      font-style: italic;
+    }
+
+    .materi-container h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 0.8rem 0;
+      color: #5c2f8a;
+      border-left: 6px solid #b07be0;
+      padding-left: 1rem;
+      scroll-margin-top: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.2rem 0 0.3rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container p {
+      margin-bottom: 1rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.5rem 0 1.2rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.4rem;
+      color: #2f2822;
+    }
+
+    .materi-container .highlight-box {
+      background: #f0e6ff;
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 8px solid #b07be0;
+      margin: 1.5rem 0;
+    }
+
+    .materi-container .highlight-box strong { color: #5c2f8a; }
+    .materi-container .highlight-box ul { margin-bottom: 0; }
+    .materi-container .highlight-box ul li { margin-bottom: 0.2rem; }
+
+    /* Kartu contoh baik/buruk */
+    .contoh-box {
+      background: #fffffffa;
+      border: 2px solid #dbb9a6;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .contoh-box .ce-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #7a6656;
+      margin-bottom: 0.5rem;
+    }
+    .contoh-box .ce-baik {
+      border-left: 6px solid #2d7d46;
+      background: #f0f8eb;
+      padding: 0.8rem 1.2rem;
+      border-radius: 10px;
+      margin-bottom: 0.8rem;
+    }
+    .contoh-box .ce-buruk {
+      border-left: 6px solid #b33c3c;
+      background: #fdf0f0;
+      padding: 0.8rem 1.2rem;
+      border-radius: 10px;
+    }
+    .contoh-box .ce-baik .ce-title { color: #2d5a1e; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.3rem; }
+    .contoh-box .ce-buruk .ce-title { color: #a84a3a; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.3rem; }
+    .contoh-box .ce-body {
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #2f2822;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    /* Tabel */
+    .tabel-materi {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .tabel-materi thead {
+      background: #b07be0;
+      color: #fff;
+    }
+    .tabel-materi th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+    .tabel-materi td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+      vertical-align: top;
+    }
+    .tabel-materi tr:last-child td { border-bottom: none; }
+    .tabel-materi tr:hover td { background: #f0e6ff; }
+
+    /* Peta konsep */
+    .peta-konsep {
+      background: #2f2822;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      border: 3px solid #b07be0;
+    }
+    .peta-konsep pre {
+      font-family: 'Courier New', monospace;
+      color: #e5dbd0;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      text-align: left;
+      margin: 0;
+    }
+    .peta-konsep .hl-1 { color: #d4b8f5; font-weight: bold; }
+    .peta-konsep .hl-2 { color: #b8d4f5; font-weight: bold; }
+    .peta-konsep .hl-3 { color: #f5b8d4; font-weight: bold; }
+    .peta-konsep .hl-4 { color: #b8f5d4; font-weight: bold; }
+
+    /* Daftar Isi */
+    .toc-box {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0 2rem 0;
+      border: 2px solid #e5dbd0;
+    }
+
+    .toc-box .toc-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 1.05rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toc-box ol {
+      margin: 0 0 0 1.2rem;
+      padding: 0;
+    }
+
+    .toc-box li {
+      margin-bottom: 0.4rem;
+    }
+
+    .toc-box a {
+      color: #4d3829;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dotted #bfaa9a;
+      transition: all 0.2s ease;
+    }
+
+    .toc-box a:hover {
+      color: #5c2f8a;
+      border-bottom: 2px solid #b07be0;
+    }
+
+    /* Aktivitas grid */
+    .aktivitas-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .aktivitas-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 2px solid #e5dbd0;
+      padding: 1rem 1.2rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .aktivitas-card:hover {
+      transform: translateY(-3px);
+      border-color: #b07be0;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+    .aktivitas-card .ac-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #b07be0;
+      letter-spacing: 1px;
+    }
+    .aktivitas-card .ac-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #3b2b1e;
+      line-height: 1.3;
+    }
+    .aktivitas-card .ac-desc {
+      font-size: 0.78rem;
+      color: #7a6656;
+      line-height: 1.4;
+    }
+    .aktivitas-card.final {
+      border-color: #d4a030;
+      background: #fffbf0;
+    }
+    .aktivitas-card.final .ac-num { color: #8a5e00; }
+
+    /* Kartu 3 level tantangan (info diferensiasi) */
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.8rem;
+      margin: 1.2rem 0;
+    }
+    .level-card {
+      border-radius: 14px;
+      padding: 0.9rem 1.1rem;
+      border: 2px solid;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+    .level-card.dasar {
+      background: #e8f5e0;
+      border-color: #8aaa7a;
+      color: #2d5a1e;
+    }
+    .level-card.reguler {
+      background: #fff8e6;
+      border-color: #d4a030;
+      color: #5c3400;
+    }
+    .level-card.tantangan {
+      background: #fde8e8;
+      border-color: #d4a0a0;
+      color: #a84a3a;
+    }
+    .level-card .lc-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+    .level-card .lc-desc {
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    /* Navigasi bawah */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-nav:hover {
+      background: #f0e6ff;
+      border-color: #b07be0;
+      transform: translateY(-2px);
+    }
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+    .btn-nav .back-arrow { font-size: 1.2rem; }
+    .nav-hint {
+      font-size: 0.85rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* Tombol floating daftar isi */
+    #tocBtn {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 1.5rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #f0e6ff;
+      border: 2px solid #b07be0;
+      font-size: 1.3rem;
+      color: #5c2f8a;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 998;
+    }
+    #tocBtn:hover {
+      background: #b07be0;
+      color: #fff;
+      transform: scale(1.08);
+    }
+
+    /* Responsif */
+    @media (max-width: 720px) {
+      .materi-container h1 { font-size: 1.7rem; }
+      .materi-container h2 { font-size: 1.3rem; }
+      .materi-container h3 { font-size: 1.05rem; }
+      .tabel-materi { font-size: 0.8rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.5rem 0.6rem; }
+      .contoh-box { padding: 1rem 1.2rem; }
+      .peta-konsep pre { font-size: 0.58rem; }
+      #tocBtn { width: 40px; height: 40px; font-size: 1.1rem; left: 1rem; bottom: 1.8rem; }
+    }
+    @media (max-width: 480px) {
+      .tabel-materi { font-size: 0.7rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.4rem 0.4rem; }
+      .materi-container ul, .materi-container ol { margin-left: 1.2rem; }
+      .contoh-box .ce-body { font-size: 0.78rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+      .level-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Print */
+    @media print {
+      #tocBtn, #scrollTopBtn, .nav-bottom, .toc-box { display: none !important; }
+      body { background: #fff !important; }
+      .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
+      .peta-konsep { background: #f5ede6 !important; color: #2f2822 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="materidsi.html">Dampak Sosial Informatika</a></li>
+      <li><a href="dsi1.html">Pahami Dampak Teknologi bagi Produktivitas</a></li>
+      <li>Materi Lengkap</li>
+    </ol>
+  </nav>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <h1>⚡ Pahami Dampak Teknologi bagi Produktivitas</h1>
+        <p class="sub-judul">Bekerja Lebih Cerdas · Bukan Lebih Keras</p>
+
+        <!-- PETA KONSEP -->
+        <h2 id="peta-konsep">🗺️ Peta Konsep Visual</h2>
+        <p>Sebelum masuk ke materi, perhatikan peta konsep berikut agar kamu tahu gambaran besar alur belajar modul ini.</p>
+
+        <div class="peta-konsep">
+<pre>
+              ┌──────────────────────────────────────────────┐
+              │  DAMPAK TEKNOLOGI INFORMASI BAGI PRODUKTIVITAS │
+              └──────────────────┬───────────────────────────┘
+                                 │
+     ┌───────────────────────────┼───────────────────────────┐
+     │                           │                           │
+     ▼                           ▼                           ▼
+<span class="hl-1">┌───────────┐</span>             <span class="hl-2">┌───────────┐</span>             <span class="hl-3">┌───────────┐</span>
+<span class="hl-1">│ BAGIAN 1  │</span>────────────▶<span class="hl-2">│ BAGIAN 2  │</span>────────────▶<span class="hl-3">│ BAGIAN 3  │</span>
+<span class="hl-1">│ APA ITU   │</span>             <span class="hl-2">│ DAMPAK    │</span>             <span class="hl-3">│ DAMPAK    │</span>
+<span class="hl-1">│ PRODUKTIF │</span>             <span class="hl-2">│ POSITIF   │</span>             <span class="hl-3">│ NEGATIF   │</span>
+<span class="hl-1">└───────────┘</span>             <span class="hl-2">└───────────┘</span>             <span class="hl-3">└───────────┘</span>
+     │                           │                           │
+     ▼                           ▼                           ▼
+Konsep dasar,               Kolaborasi,                 Distraksi,
+simulasi warung             akses data, otomatisasi     multi-tasking, hoax
+     │                           │                           │
+     └───────────────────────────┼───────────────────────────┘
+                                 ▼
+                         <span class="hl-4">┌───────────┐</span>
+                         <span class="hl-4">│ BAGIAN 4  │</span>
+                         <span class="hl-4">│ STRATEGI  │</span>
+                         <span class="hl-4">│ BIJAK     │</span>
+                         <span class="hl-4">└───────────┘</span>
+                                 │
+                                 ▼
+                         ┌─────────────────┐
+                         │  KUIS AKHIR (10) │
+                         │  + SERTIFIKAT    │
+                         └─────────────────┘
+</pre>
+        </div>
+
+        <!-- PERTANYAAN PEMANTIK -->
+        <div class="highlight-box">
+          <strong>🤔 Pertanyaan Pemantik:</strong>
+          <p style="margin-top:0.3rem;">Siti punya PR Matematika 10 soal. Dulu, kakaknya butuh 2 jam untuk mengerjakan PR serupa karena harus mencari rumus di buku tebal. Siti hanya butuh 30 menit karena bisa mencari video penjelasan di YouTube dan berdiskusi di grup WhatsApp kelas.</p>
+          <p style="margin-bottom:0;">Apakah Siti <strong>"lebih pintar"</strong> dari kakaknya? Atau ada hal lain yang membuatnya lebih cepat?</p>
+        </div>
+
+        <!-- DAFTAR ISI -->
+        <div class="toc-box" id="daftarIsi">
+          <div class="toc-title">📑 Daftar Isi</div>
+          <ol>
+            <li><a href="#bagian-a">Apa Itu Produktivitas dan Mengapa Teknologi Berpengaruh?</a></li>
+            <li><a href="#bagian-b">Dampak Positif Teknologi bagi Produktivitas</a></li>
+            <li><a href="#bagian-c">Dampak Negatif Teknologi bagi Produktivitas</a></li>
+            <li><a href="#bagian-d">Strategi Bijak Menggunakan Teknologi untuk Produktivitas</a></li>
+            <li><a href="#bagian-e">Konteks Lokal Indonesia</a></li>
+            <li><a href="#bagian-f">Aktivitas Interaktif</a></li>
+            <li><a href="#bagian-g">Referensi</a></li>
+          </ol>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- A. APA ITU PRODUKTIVITAS -->
+        <!-- ================================================== -->
+        <h2 id="bagian-a">A. Apa Itu Produktivitas dan Mengapa Teknologi Berpengaruh?</h2>
+
+        <h3>1. Situasi Masalah: "Kantin Bu Rina dan Aplikasi Pesan-Antar"</h3>
+        <p>Bu Rina punya warung kecil di dekat SMP Nusantara. Dulu, siswa harus datang, mengantre, dan menunggu pesanan dibuat. Saat istirahat hanya 15 menit, banyak siswa akhirnya tidak sempat membeli karena antrean panjang. Bu Rina juga sering kewalahan mencatat pesanan secara manual — kadang ada yang tertulis, kadang ada yang lupa.</p>
+
+        <p>Suatu hari, Raka (siswa kelas 8) menawarkan ide: <em>"Bu, coba pakai aplikasi pesan-antar sederhana. Saya bantu buatkan link Google Form untuk pesanan. Nanti siswa isi dari kelas, Bu Rina bisa siapkan sebelum istirahat."</em></p>
+
+        <p>Bu Rina mencoba. Hasilnya:</p>
+        <ul>
+          <li>Antrean berkurang drastis.</li>
+          <li>Pesanan tidak ada yang terlewat.</li>
+          <li>Penjualan naik karena lebih banyak siswa terlayani.</li>
+          <li>Bu Rina punya lebih banyak waktu untuk istirahat sejenak.</li>
+        </ul>
+
+        <h3>2. Definisi Produktivitas</h3>
+        <p><strong>Produktivitas</strong> adalah kemampuan menghasilkan <strong>output</strong> (hasil) yang lebih banyak atau lebih baik dengan <strong>input</strong> (waktu, tenaga, biaya) yang sama atau lebih sedikit.</p>
+
+        <div class="contoh-box">
+          <div class="ce-label">Contoh Sederhana</div>
+          <div class="ce-buruk">
+            <div class="ce-title">❌ Kurang Produktif</div>
+            <div class="ce-body">Menghabiskan 2 jam untuk mencatat 20 pesanan manual.
+Banyak yang terlewat, tulisan tidak rapi.
+Hasil: 15 pesanan tercatat.</div>
+          </div>
+          <div class="ce-baik">
+            <div class="ce-title">✅ Lebih Produktif</div>
+            <div class="ce-body">Menghabiskan 30 menit dengan Google Form.
+Pesanan otomatis masuk, tidak ada yang terlewat.
+Hasil: 20 pesanan tercatat + rekap otomatis.</div>
+          </div>
+        </div>
+
+        <p>Perhatikan: produktivitas <strong>bukan berarti bekerja lebih lama</strong>, tapi <strong>bekerja lebih cerdas</strong> — menghasilkan lebih banyak dengan sumber daya yang sama.</p>
+
+        <h3>3. Tiga Pilar Produktivitas</h3>
+
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Pilar</th>
+              <th>Makna</th>
+              <th>Contoh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Efisiensi</strong></td>
+              <td>Menggunakan sumber daya (waktu, tenaga, biaya) sebaik mungkin tanpa pemborosan.</td>
+              <td>Fitur "Rekap Otomatis" mengurangi waktu mencatat ulang.</td>
+            </tr>
+            <tr>
+              <td><strong>Efektivitas</strong></td>
+              <td>Mencapai tujuan yang diinginkan dengan tepat.</td>
+              <td>Pesanan sampai ke pelanggan tanpa salah.</td>
+            </tr>
+            <tr>
+              <td><strong>Kualitas</strong></td>
+              <td>Hasil yang dihasilkan lebih baik, rapi, dan akurat.</td>
+              <td>Struk digital vs tulisan tangan yang sulit dibaca.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>4. Mengapa Teknologi Berpengaruh?</h3>
+        <p>Teknologi memengaruhi produktivitas melalui tiga cara utama:</p>
+        <ul>
+          <li><strong>Otomatisasi</strong> — menggantikan pekerjaan manual berulang dengan sistem yang bekerja sendiri.</li>
+          <li><strong>Percepatan</strong> — mempercepat proses yang dulunya memakan waktu lama.</li>
+          <li><strong>Perluasan</strong> — memungkinkan kita menjangkau lebih banyak orang atau data dalam waktu yang sama.</li>
+        </ul>
+
+        <div class="highlight-box">
+          <strong>💡 Koneksi Dunia Nyata:</strong>
+          <p style="margin-top:0.3rem; margin-bottom:0;">Saat kamu menggunakan <strong>Google Form</strong> untuk absen kelas, kamu sudah menerapkan otomatisasi. Saat kamu mencari jawaban di <strong>Google</strong>, kamu mempercepat proses. Saat kamu <strong>video call</strong> dengan guru dari rumah, kamu memperluas jangkauan belajar. Semua itu adalah wujud teknologi yang meningkatkan produktivitas.</p>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- B. DAMPAK POSITIF -->
+        <!-- ================================================== -->
+        <h2 id="bagian-b">B. Dampak Positif Teknologi bagi Produktivitas</h2>
+
+        <h3>1. Situasi Masalah: "Kelompok Belajar Aurel dan Dewi"</h3>
+        <p>Aurel dan Dewi mendapat tugas kelompok membuat presentasi tentang "Pencemaran Sungai". Dulu, mereka harus datang ke rumah salah satu teman, membawa buku tebal dari perpustakaan, menulis di kertas karton, dan bertukar draft dengan cara fotokopi.</p>
+
+        <p>Sekarang, mereka:</p>
+        <ul>
+          <li>Berdiskusi di <strong>Google Docs</strong> secara bersamaan dari rumah masing-masing.</li>
+          <li>Mencari data terbaru dari situs resmi <strong>KLHK</strong>.</li>
+          <li>Membuat slide di <strong>Canva</strong> dengan template gratis.</li>
+          <li>Mengirim file lewat <strong>WhatsApp Group</strong> tanpa perlu bertemu fisik.</li>
+        </ul>
+
+        <p>Tugas selesai dalam <strong>2 hari</strong>. Dulu, kakak Aurel butuh <strong>1 minggu</strong> untuk tugas serupa.</p>
+
+        <h3>2. Lima Dampak Positif Utama</h3>
+
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Dampak Positif</th>
+              <th>Penjelasan</th>
+              <th>Contoh Konkret</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Kolaborasi Digital</strong></td>
+              <td>Bekerja bersama secara real-time tanpa harus berada di tempat yang sama.</td>
+              <td>Google Docs, WhatsApp Group, Canva, Zoom.</td>
+            </tr>
+            <tr>
+              <td><strong>Akses Informasi Cepat</strong></td>
+              <td>Menemukan data dalam hitungan detik melalui mesin pencari dan situs resmi.</td>
+              <td>Mencari data KLHK vs buku perpustakaan.</td>
+            </tr>
+            <tr>
+              <td><strong>Otomatisasi Tugas</strong></td>
+              <td>Menggantikan pekerjaan manual berulang dengan fitur otomatis.</td>
+              <td>Template Canva, auto-save Google Docs, form absen otomatis.</td>
+            </tr>
+            <tr>
+              <td><strong>Efisiensi Waktu</strong></td>
+              <td>Mengurangi waktu yang dibutuhkan untuk menyelesaikan tugas.</td>
+              <td>Tugas 1 minggu → 2 hari.</td>
+            </tr>
+            <tr>
+              <td><strong>Peningkatan Kualitas</strong></td>
+              <td>Hasil lebih rapi, akurat, dan menarik.</td>
+              <td>Slide Canva vs karton manual.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>3. Contoh di Kehidupan Sehari-hari</h3>
+
+        <div class="contoh-box">
+          <div class="ce-label">Positif — Konteks Indonesia</div>
+          <div class="ce-baik">
+            <div class="ce-title">✅ Gojek / Grab</div>
+            <div class="ce-body">Dulu kita harus ke pasar, sekarang makanan diantar.
+Produktivitas pengemudi naik (lebih banyak order).
+Produktivitas pembeli naik (hemat waktu).</div>
+          </div>
+          <div class="ce-baik">
+            <div class="ce-title">✅ Tokopedia / Shopee</div>
+            <div class="ce-body">UMKM bisa jualan tanpa harus punya toko fisik.
+Jangkauan pembeli meluas ke seluruh Indonesia.</div>
+          </div>
+          <div class="ce-baik">
+            <div class="ce-title">✅ Ruangguru / YouTube</div>
+            <div class="ce-body">Belajar jadi lebih cepat dan fleksibel.
+Bisa diulang kapan saja, di mana saja.</div>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <strong>⚠️ Catatan Penting:</strong>
+          <p style="margin-top:0.3rem; margin-bottom:0;">Dampak positif ini <strong>tidak otomatis</strong>. Teknologi hanyalah alat. Hasilnya tergantung pada <strong>cara kita menggunakannya</strong>. Jika digunakan dengan bijak, produktivitas meningkat. Jika tidak, justru sebaliknya.</p>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- C. DAMPAK NEGATIF -->
+        <!-- ================================================== -->
+        <h2 id="bagian-c">C. Dampak Negatif Teknologi bagi Produktivitas</h2>
+
+        <h3>1. Situasi Masalah: "PR Raka yang Tertunda"</h3>
+        <p>Raka duduk di meja belajarnya. Jam 19.00. Ia membuka laptop untuk mengerjakan PR IPA. Tapi, sebelum membuka buku, ia membuka Instagram <em>"sebentar"</em>. Lalu ada notifikasi WhatsApp. Lalu ada video TikTok yang dikirim teman. Lalu ada game mobile yang ingin ia coba.</p>
+
+        <p>Jam 21.00. PR belum dimulai. Raka merasa lelah, cemas, dan akhirnya tidur tanpa menyelesaikan PR. Besoknya, ia dimarahi guru. Raka bingung: <em>"Aku duduk di depan laptop 2 jam, tapi kenapa tidak ada yang selesai?"</em></p>
+
+        <h3>2. Lima Dampak Negatif Utama</h3>
+
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Dampak Negatif</th>
+              <th>Penjelasan</th>
+              <th>Contoh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Distraksi Digital</strong></td>
+              <td>Gangguan dari perangkat digital yang memecah perhatian.</td>
+              <td>Notifikasi chat, like, video rekomendasi.</td>
+            </tr>
+            <tr>
+              <td><strong>Multi-tasking</strong></td>
+              <td>Mengerjakan beberapa tugas sekaligus. Sering menurunkan kualitas dan kecepatan.</td>
+              <td>Baca sambil chat → tidak paham isi bacaannya.</td>
+            </tr>
+            <tr>
+              <td><strong>Kecanduan Digital</strong></td>
+              <td>Ketergantungan pada perangkat hingga sulit berhenti.</td>
+              <td>Scroll TikTok tanpa sadar 1 jam.</td>
+            </tr>
+            <tr>
+              <td><strong>FOMO</strong></td>
+              <td>Rasa takut ketinggalan informasi/keseruan.</td>
+              <td>Cek grup chat terus-menerus.</td>
+            </tr>
+            <tr>
+              <td><strong>Produktivitas Palsu</strong></td>
+              <td>Merasa sibuk, tapi tidak ada hasil nyata.</td>
+              <td>Banyak tab terbuka, tidak ada yang selesai.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>3. Mengapa Multi-tasking Menurunkan Produktivitas?</h3>
+        <p>Otak manusia <strong>tidak dirancang</strong> untuk mengerjakan dua hal kompleks secara bersamaan. Yang sebenarnya terjadi adalah <strong>task-switching</strong> (berpindah tugas) — dan setiap perpindahan memakan waktu serta energi.</p>
+
+        <div class="contoh-box">
+          <div class="ce-label">Ilustrasi</div>
+          <div class="ce-buruk">
+            <div class="ce-title">❌ Multi-tasking</div>
+            <div class="ce-body">Baca 5 menit → cek chat 2 menit → baca lagi 3 menit →
+cek notif 2 menit → baca 4 menit → ...
+
+Total waktu: 60 menit
+Hasil: Tidak paham isi bacaan, harus baca ulang.</div>
+          </div>
+          <div class="ce-baik">
+            <div class="ce-title">✅ Fokus Satu Tugas</div>
+            <div class="ce-body">Baca 25 menit non-stop → istirahat 5 menit →
+lanjut 25 menit.
+
+Total waktu: 55 menit
+Hasil: Paham isi bacaan, selesai lebih cepat.</div>
+          </div>
+        </div>
+
+        <h3>4. Informasi Hoax dan Produktivitas</h3>
+        <p>Hoax (informasi palsu) bisa menurunkan produktivitas karena:</p>
+        <ul>
+          <li>Membuat kita <strong>sibuk menyebarkan</strong> tanpa verifikasi.</li>
+          <li>Menguras <strong>waktu dan energi</strong> untuk hal yang tidak benar.</li>
+          <li>Membuat <strong>keputusan salah</strong> berdasarkan informasi palsu.</li>
+          <li>Memicu <strong>kecemasan</strong> yang mengganggu fokus.</li>
+        </ul>
+
+        <div class="highlight-box" style="background:#fdf0f0; border-left-color:#b33c3c;">
+          <strong style="color:#a84a3a;">⚠️ Ingat!</strong>
+          <p style="margin-top:0.3rem; margin-bottom:0;">Teknologi <strong>bukan musuh</strong>. Yang jadi masalah adalah <strong>cara kita menggunakannya</strong>. Raka tidak salah karena menggunakan laptop, tapi karena tidak mengatur fokusnya.</p>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- D. STRATEGI BIJAK -->
+        <!-- ================================================== -->
+        <h2 id="bagian-d">D. Strategi Bijak Menggunakan Teknologi untuk Produktivitas</h2>
+
+        <h3>1. Situasi Masalah: "Budi dan Jadwal Belajarnya"</h3>
+        <p>Budi dulu sering kena masalah: PR tidak selesai, nilai turun, dan orang tuanya khawatir. Ia sadar teknologi sering membuatnya teralihkan. Tapi ia tidak mau berhenti pakai teknologi — karena teknologi juga membantunya mencari materi dan berdiskusi.</p>
+
+        <p>Budi mencoba strategi baru:</p>
+        <ol>
+          <li>HP di-silent saat belajar, diletakkan di laci.</li>
+          <li>Menggunakan aplikasi timer 25 menit belajar, 5 menit istirahat.</li>
+          <li>Membuat daftar tugas di Google Keep.</li>
+          <li>Bergabung dengan grup belajar yang fokus, bukan grup gossip.</li>
+          <li>Menggunakan YouTube hanya untuk materi pelajaran, bukan rekomendasi hiburan.</li>
+        </ol>
+
+        <p>Hasilnya: PR selesai tepat waktu, nilai naik, dan ia tetap bisa bersosialisasi online.</p>
+
+        <h3>2. Enam Strategi Bijak</h3>
+
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Strategi</th>
+              <th>Makna</th>
+              <th>Cara Menerapkan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Manajemen Waktu</strong></td>
+              <td>Mengatur waktu untuk tugas dan istirahat secara seimbang.</td>
+              <td>Teknik Pomodoro: 25 menit belajar, 5 menit istirahat.</td>
+            </tr>
+            <tr>
+              <td><strong>Mode Fokus</strong></td>
+              <td>Mengatur perangkat agar tidak mengganggu saat bekerja.</td>
+              <td>Silent HP, matikan notifikasi, mode Do Not Disturb.</td>
+            </tr>
+            <tr>
+              <td><strong>Prioritas</strong></td>
+              <td>Menentukan tugas mana yang paling penting dan mendesak.</td>
+              <td>Matriks Eisenhower: penting-mendesak, penting-tidak mendesak, dll.</td>
+            </tr>
+            <tr>
+              <td><strong>Zona Bebas Distraksi</strong></td>
+              <td>Tempat atau kondisi yang bebas dari gangguan digital.</td>
+              <td>Belajar di ruang tanpa HP, atau perpustakaan.</td>
+            </tr>
+            <tr>
+              <td><strong>Refleksi Diri</strong></td>
+              <td>Melihat kembali apa yang sudah dilakukan dan memperbaikinya.</td>
+              <td>Evaluasi harian: apa yang berhasil, apa yang perlu diperbaiki.</td>
+            </tr>
+            <tr>
+              <td><strong>Penggunaan Sadar</strong></td>
+              <td>Menggunakan teknologi dengan tujuan jelas, bukan sekadar kebiasaan.</td>
+              <td>YouTube untuk belajar, bukan hiburan. Instagram untuk inspirasi, bukan scroll kosong.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>3. Matriks Prioritas Sederhana</h3>
+
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Mendesak</th>
+              <th>Tidak Mendesak</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Penting</strong></td>
+              <td>🔴 Kerjakan sekarang<br><em>PR besok, ujian minggu ini</em></td>
+              <td>🟡 Jadwalkan<br><em>Belajar rutin, olahraga, baca buku</em></td>
+            </tr>
+            <tr>
+              <td><strong>Tidak Penting</strong></td>
+              <td>🟠 Delegasikan / batasi<br><em>Chat tidak penting, notifikasi grup gossip</em></td>
+              <td>⚪ Buang / kurangi<br><em>Scroll TikTok tanpa tujuan, game berlebihan</em></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="contoh-box">
+          <div class="ce-label">Contoh Penerapan</div>
+          <div class="ce-baik">
+            <div class="ce-title">✅ Jumat Sore — Budi</div>
+            <div class="ce-body">16.00–16.25  → Kerjakan PR Matematika (🔴 penting-mendesak)
+16.25–16.30  → Istirahat, minum air
+16.30–16.55  → Baca materi IPA (🟡 penting-tidak mendesak)
+16.55–17.00  → Istirahat
+17.00–17.25  → Olahraga ringan (🟡 penting-tidak mendesak)
+17.25–17.30  → Refleksi: apa yang selesai hari ini?
+HP di laci selama sesi belajar. Notifikasi di-silent.</div>
+          </div>
+          <div class="ce-buruk">
+            <div class="ce-title">❌ Jumat Sore — Tanpa Strategi</div>
+            <div class="ce-body">16.00  → Buka HP "sebentar"
+16.10  → Lihat notif, balas chat
+16.20  → Buka TikTok, lihat 1 video
+16.45  → Sadar waktu berlalu, buka PR
+16.50  → Notif WhatsApp, balas
+17.05  → Buka game mobile
+17.30  → PR belum selesai, merasa lelah
+         dan cemas.</div>
+          </div>
+        </div>
+
+        <h3>4. Kunci: Bukan Berhenti, Tapi Mengatur</h3>
+        <p>Budi tidak berhenti menggunakan teknologi. Ia <strong>mengubah cara</strong> menggunakannya. Inilah inti dari <strong>penggunaan teknologi secara sadar</strong>.</p>
+
+        <div class="highlight-box">
+          <strong>💡 Prinsip:</strong>
+          <p style="margin-top:0.3rem; margin-bottom:0;">Teknologi itu seperti <strong>pisau</strong>. Bisa membantu memotong sayur dengan cepat, bisa juga melukai jika salah pakai. Yang menentukan bukan pisau-nya, tapi <strong>cara kita memegangnya</strong>.</p>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- E. KONTEKS LOKAL -->
+        <!-- ================================================== -->
+        <h2 id="bagian-e">E. Konteks Lokal Indonesia</h2>
+
+        <p>Keterampilan memanfaatkan teknologi secara produktif sangat relevan dengan kehidupan sehari-hari siswa Indonesia:</p>
+
+        <ul>
+          <li><strong>Jam belajar keluarga</strong> — banyak keluarga Indonesia punya kebiasaan "jam belajar" (misalnya 19.00–21.00). Dengan mode fokus dan zona bebas distraksi, jam ini bisa jauh lebih efektif.</li>
+          <li><strong>Gotong royong digital</strong> — dulu gotong royong fisik (bersih-bersih kampung). Sekarang gotong royong bisa lewat Google Form untuk data warga, atau grup WhatsApp untuk koordinasi RT.</li>
+          <li><strong>Musyawarah online</strong> — diskusi kelas bisa lewat WhatsApp, tapi tetap butuh etika dan aturan agar tidak jadi gossip.</li>
+          <li><strong>UMKM naik kelas</strong> — penjual kue bisa promosi lewat Instagram, terima order lewat WhatsApp, kirim lewat GoSend. Produktivitas naik tanpa harus punya toko fisik.</li>
+          <li><strong>Belajar jarak jauh</strong> — saat pandemi, siswa Indonesia belajar dari rumah lewat Zoom dan Google Classroom. Yang bisa mengatur fokus, tetap produktif. Yang tidak, tertinggal.</li>
+          <li><strong>Budaya "nanti dulu"</strong> — menunda karena "scroll sebentar" adalah tantangan nyata. Refleksi diri dan prioritas membantu melawan kebiasaan ini.</li>
+        </ul>
+
+        <div class="highlight-box">
+          <strong>🇮🇩 Kearifan Lokal:</strong>
+          <p style="margin-top:0.3rem; margin-bottom:0;">Pepatah <em>"Sedikit demi sedikit, lama-lama menjadi bukit"</em> sangat relevan. Produktivitas bukan tentang kerja keras sesaat, tapi tentang <strong>konsistensi</strong> dalam mengerjakan hal-hal kecil setiap hari.</p>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- F. AKTIVITAS -->
+        <!-- ================================================== -->
+        <h2 id="bagian-f">F. Aktivitas Interaktif</h2>
+        <p>Untuk memperdalam pemahaman, kerjakan aktivitas interaktif berikut secara berurutan. Setiap bagian harus diselesaikan (lulus tes pemahaman) sebelum lanjut ke bagian berikutnya.</p>
+
+        <!-- Info diferensiasi -->
+        <div class="highlight-box" style="background:#f0f8eb; border-left-color:#8aaa7a;">
+          <strong style="color:#2d5a1e;">★ Di Setiap Bagian, Kamu Bisa Memilih Tingkat Tantangan!</strong>
+          <p style="margin-top:0.5rem; margin-bottom:0.8rem;">Setelah menyelesaikan Lapis 1 (Menjelajah Bebas), kamu akan diminta memilih tingkat tantangan Lapis 2:</p>
+
+          <div class="level-grid">
+            <div class="level-card dasar">
+              <div class="lc-title">🟢 Dasar</div>
+              <div class="lc-desc">3 tantangan terbimbing dengan petunjuk lebih detail. Cocok kalau kamu ingin penguatan dulu.</div>
+            </div>
+            <div class="level-card reguler">
+              <div class="lc-title">🟡 Reguler</div>
+              <div class="lc-desc">3 tantangan standar seperti biasanya. Cocok untuk sebagian besar siswa.</div>
+            </div>
+            <div class="level-card tantangan">
+              <div class="lc-title">🔴 Tantangan</div>
+              <div class="lc-desc">3 tantangan standar + 1 tantangan bonus (studi kasus terbuka). Cocok kalau kamu ingin tantangan lebih.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="aktivitas-list">
+          <a href="aktivitasdsi1a.html" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 1</span>
+            <span class="ac-title">⚡ Apa Itu Produktivitas?</span>
+            <span class="ac-desc">"Warung Produktif: Simulasi Teknologi vs Manual" — menemukan pola produktivitas</span>
+          </a>
+          <a href="aktivitasdsi1b.html" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 2</span>
+            <span class="ac-title">👥 Dampak Positif Teknologi</span>
+            <span class="ac-desc">"Misi Kelompok: Dari Kertas ke Cloud" — kolaborasi digital &amp; akses informasi</span>
+          </a>
+          <a href="aktivitasdsi1c.html" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 3</span>
+            <span class="ac-title">📱 Dampak Negatif Teknologi</span>
+            <span class="ac-desc">"Fokus atau Teralihkan: Simulasi Hari Belajar" — distraksi &amp; multi-tasking</span>
+          </a>
+          <a href="aktivitasdsi1d.html" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 4</span>
+            <span class="ac-title">⏰ Strategi Bijak</span>
+            <span class="ac-desc">"Rancang Hari Produktifmu" — manajemen waktu &amp; mode fokus</span>
+          </a>
+          <a href="aktivitasdsi1e.html" class="aktivitas-card final">
+            <span class="ac-num">BAGIAN 5</span>
+            <span class="ac-title">🏆 Kuis Akhir &amp; Sertifikat</span>
+            <span class="ac-desc">Penilaian + sertifikat digital (lulus ≥7)</span>
+          </a>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- G. REFERENSI -->
+        <!-- ================================================== -->
+        <h2 id="bagian-g">📚 Referensi Materi</h2>
+        <ul>
+          <li>Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi. (2021). <em>Buku Siswa Informatika SMP Kelas VIII</em>. Jakarta: Pusat Kurikulum dan Perbukuan.</li>
+          <li>Suryadi, A., &amp; Wibowo, A. (2020). <em>Dampak Teknologi Informasi terhadap Produktivitas Kerja</em>. Jurnal Teknologi Informasi dan Pendidikan, 13(2), 45–52.</li>
+          <li>Bebras Indonesia. (2023). <em>Modul Literasi Digital untuk SMP</em>. Diakses dari https://bebras.or.id</li>
+          <li>Kominfo. (2022). <em>Panduan Literasi Digital: Bijak Bermedia Sosial</em>. Jakarta: Kementerian Komunikasi dan Informatika.</li>
+          <li>UNESCO. (2021). <em>Media and Information Literacy Curriculum for Teachers</em>. Paris: UNESCO.</li>
+          <li>Kurikulum Merdeka Informatika SMP Fase D — Elemen Dampak Sosial Informatika: "Pahami dampak teknologi bagi produktivitas"</li>
+        </ul>
+
+        <!-- NAVIGASI -->
+        <div class="nav-bottom">
+          <a href="dsi1.html" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Portal
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <a href="aktivitasdsi1a.html" class="btn-nav primary">
+              🎮 Mulai Aktivitas Bagian 1 →
+            </a>
+          </div>
+          <div class="nav-hint">
+            💡 Sudah paham materinya? Mulai aktivitas interaktif untuk pengalaman belajar yang lebih dalam!
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <button id="tocBtn" aria-label="Daftar Isi" title="Ke Daftar Isi" onclick="scrollToTOC()">📑</button>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
+  <script>
+    function scrollToTOC() {
+      const toc = document.getElementById('daftarIsi');
+      if (toc) {
+        toc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const target = document.querySelector(targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
