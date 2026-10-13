@@ -248,7 +248,8 @@
         <table class="tabel-progres">
           <thead>
             <tr>
-              <th>Modul</th>
+              <th>Nama</th>
+			  <th>Modul</th>
               <th>Bagian Terakhir</th>
               <th>a</th>
               <th>b</th>
@@ -263,7 +264,7 @@
             </tr>
           </thead>
           <tbody id="tabelBody">
-            <tr><td colspan="12" class="empty-state">Memuat data...</td></tr>
+            <tr><td colspan="13" class="empty-state">Memuat data...</td></tr>
           </tbody>
         </table>
       </div>
@@ -325,12 +326,12 @@
       async function muatData() {
         if (!sessionSiswa || !sessionSiswa.user_id) return;
 
-        elBody.innerHTML = '<tr><td colspan="12" class="empty-state">Memuat data...</td></tr>';
+        elBody.innerHTML = '<tr><td colspan="13" class="empty-state">Memuat data...</td></tr>';
 
         const hasil = await window.dutaAmbilProgress('');
 
         if (!hasil || !hasil.ok) {
-          elBody.innerHTML = '<tr><td colspan="12" class="empty-state">⚠️ ' +
+          elBody.innerHTML = '<tr><td colspan="13" class="empty-state">⚠️ ' +
             ((hasil && hasil.error) || 'Gagal memuat data') + '</td></tr>';
           return;
         }
@@ -368,7 +369,7 @@
       function renderTabel() {
         if (semuaProgress.length === 0) {
           elBody.innerHTML =
-            '<tr><td colspan="12" class="empty-state">' +
+            '<tr><td colspan="13" class="empty-state">' +
             '<span class="es-icon">🚀</span>' +
             'Belum ada progres. Mulai belajar dulu ya!' +
             '<br><a href="../bk/bk4.html" style="color:#8a4bbf; font-weight:700;">Mulai dari Modul BK4</a>' +
@@ -386,7 +387,8 @@
           }
 
           return '<tr>' +
-            '<td><span class="badge-modul">' + escapeHtml(p.modul) + '</span></td>' +
+		  '<td style="font-weight:700; color:#3b2b1e; white-space:nowrap;">' + escapeHtml(p.nama_siswa || '–') + '</td>' +
+		  '<td><span class="badge-modul">' + escapeHtml(p.modul) + '</span></td>' +
             '<td style="text-align:center; font-weight:700;">' + (p.bagian_terakhir || '–').toUpperCase() + '</td>' +
             skorCell(p.skor_a) +
             skorCell(p.skor_b) +
