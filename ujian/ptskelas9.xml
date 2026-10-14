@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bankSoal mapel="Informatika" kelas="9" judul="PTS Kelas 9 — Informatika DUTA">
+
+  <!-- ===================================================== -->
+  <!-- PAKET A -->
+  <!-- ===================================================== -->
+  <paket kode="A">
+
+    <!-- BK2 · PG -->
+    <item type="pg" materi="BK2">
+      <q>Empat pilar berpikir komputasional adalah…</q>
+      <opsi>Dekomposisi, Pengenalan Pola, Abstraksi, Algoritma</opsi>
+      <opsi>Input, Proses, Output, Penyimpanan</opsi>
+      <opsi>Biner, Oktal, Desimal, Heksadesimal</opsi>
+      <opsi>Irisan, Gabungan, Selisih, Komplemen</opsi>
+      <jawaban>0</jawaban>
+    </item>
+
+    <!-- BK2 · BS -->
+    <item type="bs" materi="BK2">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="false">Abstraksi adalah kemampuan memecah masalah besar menjadi bagian kecil.</pernyataan>
+      <pernyataan benar="true">Pengenalan pola membantu kita menemukan kesamaan dari masalah yang berbeda.</pernyataan>
+      <pernyataan benar="true">Algoritma adalah urutan langkah sistematis untuk menyelesaikan masalah.</pernyataan>
+    </item>
+
+    <!-- BK2 · Match -->
+    <item type="match" materi="BK2">
+      <q>Pasangkan pilar berpikir komputasional dengan contohnya!</q>
+      <kiri id="1">Dekomposisi</kiri>
+      <kiri id="2">Algoritma</kiri>
+      <kiri id="3">Abstraksi</kiri>
+      <kiri id="4">Pengenalan Pola</kiri>
+      <kanan id="A">Membuat resep langkah demi langkah</kanan>
+      <kanan id="B">Fokus pada jalan saat melihat peta</kanan>
+      <kanan id="C">Memecah proyek menjadi tugas kecil</kanan>
+      <kanan id="D">Menyadari kemacetan setiap Senin pagi</kanan>
+      <kunci kiri="1" kanan="C"/>
+      <kunci kiri="2" kanan="A"/>
+      <kunci kiri="3" kanan="B"/>
+      <kunci kiri="4" kanan="D"/>
+    </item>
+
+    <!-- BK2 · PGK -->
+    <item type="pgk" materi="BK2">
+      <q>Manakah pernyataan berikut yang benar tentang penerapan berpikir komputasional? (Pilih lebih dari satu)</q>
+      <opsi>Filter wajah di media sosial menggunakan pengenalan pola.</opsi>
+      <opsi>Aplikasi navigasi menggunakan abstraksi dengan hanya fokus pada jalan dan kondisi lalu lintas.</opsi>
+      <opsi>Berpikir komputasional hanya berguna bagi programmer.</opsi>
+      <opsi>Dekomposisi membantu memecah masalah kompleks menjadi lebih sederhana.</opsi>
+      <jawaban>0,1,3</jawaban>
+    </item>
+
+    <!-- BK2 · Order -->
+    <item type="order" materi="BK2">
+      <q>Urutkan langkah-langkah berpikir komputasional dalam menyelesaikan masalah "merencanakan liburan keluarga"!</q>
+      <langkah id="0">Menyusun urutan pemesanan tiket → hotel → itinerary</langkah>
+      <langkah id="1">Memecah masalah menjadi transportasi, penginapan, makanan, aktivitas</langkah>
+      <langkah id="2">Melihat pola harga tiket di musim liburan</langkah>
+      <langkah id="3">Fokus pada tujuan utama liburan</langkah>
+      <kunci>1,2,3,0</kunci>
+    </item>
+
+    <!-- BK3 · PG -->
+    <item type="pg" materi="BK3">
+      <q>Bagian dari fungsi komputasi yang menerima data atau informasi disebut…</q>
+      <opsi>Output</opsi>
+      <opsi>Proses</opsi>
+      <opsi>Input</opsi>
+      <opsi>Storage</opsi>
+      <jawaban>2</jawaban>
+    </item>
+
+    <!-- BK3 · BS -->
+    <item type="bs" materi="BK3">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="true">Dalam konsep black box, kita tidak perlu tahu detail proses di dalamnya.</pernyataan>
+      <pernyataan benar="true">Output adalah hasil akhir dari proses yang dilakukan.</pernyataan>
+      <pernyataan benar="false">Mesin penjual otomatis tidak menerapkan konsep input-proses-output.</pernyataan>
+    </item>
+
+    <!-- BK3 · Match -->
+    <item type="match" materi="BK3">
+      <q>Pasangkan analogi dengan komponen input-proses-output yang sesuai!</q>
+      <kiri id="1">Mesin cuci</kiri>
+      <kiri id="2">Koki di restoran</kiri>
+      <kiri id="3">Kalkulator</kiri>
+      <kiri id="4">Mesin ATM</kiri>
+      <kanan id="A">Input: pakaian kotor</kanan>
+      <kanan id="B">Proses: memasak bahan</kanan>
+      <kanan id="C">Output: hasil perhitungan</kanan>
+      <kanan id="D">Output: uang tunai</kanan>
+      <kunci kiri="1" kanan="A"/>
+      <kunci kiri="2" kanan="B"/>
+      <kunci kiri="3" kanan="C"/>
+      <kunci kiri="4" kanan="D"/>
+    </item>
+
+    <!-- BK3 · PGK -->
+    <item type="pgk" materi="BK3">
+      <q>Manakah yang termasuk input dalam sistem komputer? (Pilih lebih dari satu)</q>
+      <opsi>Keyboard</opsi>
+      <opsi>Monitor</opsi>
+      <opsi>Mouse</opsi>
+      <opsi>Printer</opsi>
+      <opsi>Scanner</opsi>
+      <jawaban>0,2,4</jawaban>
+    </item>
+
+    <!-- BK3 · Order -->
+    <item type="order" materi="BK3">
+      <q>Urutkan proses dalam fungsi "Membuat Teh Manis"!</q>
+      <langkah id="0">Aduk hingga rata</langkah>
+      <langkah id="1">Rebus air hingga mendidih</langkah>
+      <langkah id="2">Tambahkan gula sesuai selera</langkah>
+      <langkah id="3">Seduh teh dalam air panas</langkah>
+      <kunci>1,3,2,0</kunci>
+    </item>
+
+    <!-- BK4 · PG -->
+    <item type="pg" materi="BK4">
+      <q>Himpunan yang berisi semua anggota dari dua himpunan atau lebih disebut…</q>
+      <opsi>Irisan</opsi>
+      <opsi>Gabungan</opsi>
+      <opsi>Selisih</opsi>
+      <opsi>Komplemen</opsi>
+      <jawaban>1</jawaban>
+    </item>
+
+    <!-- BK4 · BS -->
+    <item type="bs" materi="BK4">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="true">A ∩ B adalah himpunan yang berisi anggota yang sama-sama dimiliki A dan B.</pernyataan>
+      <pernyataan benar="false">Himpunan kosong dilambangkan dengan {0}.</pernyataan>
+      <pernyataan benar="true">A ∪ B berisi semua anggota A dan B tanpa duplikat.</pernyataan>
+    </item>
+
+    <!-- BK4 · Match -->
+    <item type="match" materi="BK4">
+      <q>Pasangkan operasi himpunan dengan hasilnya! (A = {1,2,3,4}, B = {3,4,5,6})</q>
+      <kiri id="1">A ∩ B</kiri>
+      <kiri id="2">A ∪ B</kiri>
+      <kiri id="3">A − B</kiri>
+      <kiri id="4">B − A</kiri>
+      <kanan id="A">{1, 2}</kanan>
+      <kanan id="B">{3, 4}</kanan>
+      <kanan id="C">{1, 2, 3, 4, 5, 6}</kanan>
+      <kanan id="D">{5, 6}</kanan>
+      <kunci kiri="1" kanan="B"/>
+      <kunci kiri="2" kanan="C"/>
+      <kunci kiri="3" kanan="A"/>
+      <kunci kiri="4" kanan="D"/>
+    </item>
+
+    <!-- BK4 · PGK -->
+    <item type="pgk" materi="BK4">
+      <q>Diketahui S = {1,2,3,4,5,6,7,8}, A = {1,2,3,4}, B = {3,4,5,6}. Manakah pernyataan yang benar? (Pilih lebih dari satu)</q>
+      <opsi>A ∩ B = {3,4}</opsi>
+      <opsi>A ∪ B = {1,2,3,4,5,6}</opsi>
+      <opsi>A' = {5,6,7,8}</opsi>
+      <opsi>A − B = {1,2,3}</opsi>
+      <jawaban>0,1,2</jawaban>
+    </item>
+
+    <!-- BK4 · Order -->
+    <item type="order" materi="BK4">
+      <q>Urutkan langkah memodelkan masalah "preferensi makanan" ke dalam himpunan!</q>
+      <langkah id="0">Tentukan |A ∪ B| = |A| + |B| − |A ∩ B|</langkah>
+      <langkah id="1">Definisikan A = {siswa suka nasi goreng}, B = {siswa suka mie goreng}</langkah>
+      <langkah id="2">Tentukan |A| = 15, |B| = 12, |A ∩ B| = 6</langkah>
+      <langkah id="3">Hitung: 15 + 12 − 6 = 21</langkah>
+      <kunci>1,2,0,3</kunci>
+    </item>
+
+    <!-- BK5 · PG -->
+    <item type="pg" materi="BK5">
+      <q>Bilangan biner 1101 jika dikonversi ke desimal adalah…</q>
+      <opsi>11</opsi>
+      <opsi>12</opsi>
+      <opsi>13</opsi>
+      <opsi>14</opsi>
+      <jawaban>2</jawaban>
+    </item>
+
+    <!-- BK5 · BS -->
+    <item type="bs" materi="BK5">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="true">1 byte = 8 bit.</pernyataan>
+      <pernyataan benar="true">Bilangan oktal menggunakan basis 8.</pernyataan>
+      <pernyataan benar="true">Biner 1010 sama dengan desimal 10.</pernyataan>
+    </item>
+
+    <!-- BK5 · Match -->
+    <item type="match" materi="BK5">
+      <q>Pasangkan bilangan biner dengan bilangan desimal yang sesuai!</q>
+      <kiri id="1">001</kiri>
+      <kiri id="2">010</kiri>
+      <kiri id="3">101</kiri>
+      <kiri id="4">111</kiri>
+      <kanan id="A">5</kanan>
+      <kanan id="B">1</kanan>
+      <kanan id="C">2</kanan>
+      <kanan id="D">7</kanan>
+      <kunci kiri="1" kanan="B"/>
+      <kunci kiri="2" kanan="C"/>
+      <kunci kiri="3" kanan="A"/>
+      <kunci kiri="4" kanan="D"/>
+    </item>
+
+    <!-- BK5 · PGK -->
+    <item type="pgk" materi="BK5">
+      <q>Manakah pernyataan yang benar tentang konversi bilangan? (Pilih lebih dari satu)</q>
+      <opsi>Biner 11101 = desimal 29</opsi>
+      <opsi>Oktal 247 = biner 010100111</opsi>
+      <opsi>Desimal 245 = oktal 365</opsi>
+      <opsi>Biner 1011101 = oktal 135</opsi>
+      <jawaban>0,1,2,3</jawaban>
+    </item>
+
+    <!-- BK5 · Order -->
+    <item type="order" materi="BK5">
+      <q>Urutkan langkah konversi desimal 29 ke biner!</q>
+      <langkah id="0">1 ÷ 2 = 0 sisa 1</langkah>
+      <langkah id="1">29 ÷ 2 = 14 sisa 1</langkah>
+      <langkah id="2">7 ÷ 2 = 3 sisa 1</langkah>
+      <langkah id="3">14 ÷ 2 = 7 sisa 0</langkah>
+      <langkah id="4">3 ÷ 2 = 1 sisa 1</langkah>
+      <kunci>1,3,2,4,0</kunci>
+    </item>
+
+  </paket>
+
+  <!-- ===================================================== -->
+  <!-- PAKET B -->
+  <!-- ===================================================== -->
+  <paket kode="B">
+
+    <!-- BK2 · PG -->
+    <item type="pg" materi="BK2">
+      <q>Kemampuan memecah masalah besar menjadi bagian-bagian kecil yang lebih mudah dikelola disebut…</q>
+      <opsi>Abstraksi</opsi>
+      <opsi>Dekomposisi</opsi>
+      <opsi>Algoritma</opsi>
+      <opsi>Pengenalan Pola</opsi>
+      <jawaban>1</jawaban>
+    </item>
+
+    <!-- BK2 · BS -->
+    <item type="bs" materi="BK2">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="false">Berpikir komputasional berarti berpikir seperti komputer.</pernyataan>
+      <pernyataan benar="true">Algoritma adalah urutan langkah logis untuk menyelesaikan masalah.</pernyataan>
+      <pernyataan benar="true">Abstraksi berarti mengabaikan informasi yang tidak relevan.</pernyataan>
+    </item>
+
+    <!-- BK2 · Match -->
+    <item type="match" materi="BK2">
+      <q>Pasangkan istilah dengan pengertiannya!</q>
+      <kiri id="1">Dekomposisi</kiri>
+      <kiri id="2">Pengenalan Pola</kiri>
+      <kiri id="3">Abstraksi</kiri>
+      <kiri id="4">Algoritma</kiri>
+      <kanan id="A">Menemukan kesamaan antar masalah</kanan>
+      <kanan id="B">Fokus pada informasi penting</kanan>
+      <kanan id="C">Memecah masalah menjadi bagian kecil</kanan>
+      <kanan id="D">Langkah-langkah sistematis penyelesaian</kanan>
+      <kunci kiri="1" kanan="C"/>
+      <kunci kiri="2" kanan="A"/>
+      <kunci kiri="3" kanan="B"/>
+      <kunci kiri="4" kanan="D"/>
+    </item>
+
+    <!-- BK2 · PGK -->
+    <item type="pgk" materi="BK2">
+      <q>Manakah yang merupakan contoh penerapan dekomposisi dalam kehidupan sehari-hari? (Pilih lebih dari satu)</q>
+      <opsi>Membagi proyek sekolah menjadi beberapa tugas kecil</opsi>
+      <opsi>Menyadari bahwa setiap Senin pagi jalanan lebih macet</opsi>
+      <opsi>Memecah masalah liburan menjadi transportasi, penginapan, dan aktivitas</opsi>
+      <opsi>Membagi jadwal belajar per mata pelajaran dan per hari</opsi>
+      <jawaban>0,2,3</jawaban>
+    </item>
+
+    <!-- BK2 · Order -->
+    <item type="order" materi="BK2">
+      <q>Urutkan langkah-langkah menyusun strategi bermain game menggunakan berpikir komputasional!</q>
+      <langkah id="0">Menyusun urutan strategi serang dan bertahan</langkah>
+      <langkah id="1">Mengenali pola gerakan musuh</langkah>
+      <langkah id="2">Fokus pada objektif utama permainan</langkah>
+      <langkah id="3">Menentukan tujuan akhir permainan</langkah>
+      <kunci>3,1,2,0</kunci>
+    </item>
+
+    <!-- BK3 · PG -->
+    <item type="pg" materi="BK3">
+      <q>Bagian dari fungsi komputasi yang menghasilkan keluaran setelah diproses disebut…</q>
+      <opsi>Input</opsi>
+      <opsi>Proses</opsi>
+      <opsi>Output</opsi>
+      <opsi>Storage</opsi>
+      <jawaban>2</jawaban>
+    </item>
+
+    <!-- BK3 · BS -->
+    <item type="bs" materi="BK3">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="true">Proses dalam fungsi komputasi dilakukan oleh CPU.</pernyataan>
+      <pernyataan benar="true">Output bisa berupa informasi yang ditampilkan atau tindakan yang dilakukan.</pernyataan>
+      <pernyataan benar="false">Dalam black box, kita harus mengetahui seluruh detail proses di dalamnya.</pernyataan>
+    </item>
+
+    <!-- BK3 · Match -->
+    <item type="match" materi="BK3">
+      <q>Pasangkan aktivitas dengan komponen input-proses-output yang sesuai!</q>
+      <kiri id="1">Menghitung nilai rata-rata</kiri>
+      <kiri id="2">Mesin cuci</kiri>
+      <kiri id="3">Mengirim email</kiri>
+      <kiri id="4">Menonton film di YouTube</kiri>
+      <kanan id="A">Input: daftar nilai ujian</kanan>
+      <kanan id="B">Proses: mencuci, membilas, memeras</kanan>
+      <kanan id="C">Output: pesan terkirim</kanan>
+      <kanan id="D">Output: film diputar</kanan>
+      <kunci kiri="1" kanan="A"/>
+      <kunci kiri="2" kanan="B"/>
+      <kunci kiri="3" kanan="C"/>
+      <kunci kiri="4" kanan="D"/>
+    </item>
+
+    <!-- BK3 · PGK -->
+    <item type="pgk" materi="BK3">
+      <q>Manakah yang termasuk output dari sebuah sistem komputasi? (Pilih lebih dari satu)</q>
+      <opsi>Monitor menampilkan gambar</opsi>
+      <opsi>Keyboard menerima ketikan</opsi>
+      <opsi>Printer mencetak dokumen</opsi>
+      <opsi>Speaker mengeluarkan suara</opsi>
+      <opsi>Mouse menggerakkan kursor</opsi>
+      <jawaban>0,2,3</jawaban>
+    </item>
+
+    <!-- BK3 · Order -->
+    <item type="order" materi="BK3">
+      <q>Urutkan proses dalam fungsi "Pengecekan Kelulusan"!</q>
+      <langkah id="0">Jika nilai ≥ 75, maka "Lulus"</langkah>
+      <langkah id="1">Input: nilai siswa = 80</langkah>
+      <langkah id="2">Jika nilai &lt; 75, maka "Tidak Lulus"</langkah>
+      <langkah id="3">Output: "Lulus"</langkah>
+      <kunci>1,0,2,3</kunci>
+    </item>
+
+    <!-- BK4 · PG -->
+    <item type="pg" materi="BK4">
+      <q>Himpunan yang berisi anggota yang sama-sama dimiliki oleh dua himpunan disebut…</q>
+      <opsi>Gabungan</opsi>
+      <opsi>Irisan</opsi>
+      <opsi>Selisih</opsi>
+      <opsi>Komplemen</opsi>
+      <jawaban>1</jawaban>
+    </item>
+
+    <!-- BK4 · BS -->
+    <item type="bs" materi="BK4">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="true">Himpunan semesta memuat semua objek yang sedang dibicarakan.</pernyataan>
+      <pernyataan benar="false">Simbol ∈ berarti "bukan anggota dari".</pernyataan>
+      <pernyataan benar="true">A − B adalah himpunan anggota A yang tidak ada di B.</pernyataan>
+    </item>
+
+    <!-- BK4 · Match -->
+    <item type="match" materi="BK4">
+      <q>Pasangkan operasi himpunan dengan hasilnya! (S = {1,2,3,4,5,6}, A = {1,2,3}, B = {3,4,5})</q>
+      <kiri id="1">A ∩ B</kiri>
+      <kiri id="2">A ∪ B</kiri>
+      <kiri id="3">A − B</kiri>
+      <kiri id="4">A'</kiri>
+      <kanan id="A">{1, 2}</kanan>
+      <kanan id="B">{3}</kanan>
+      <kanan id="C">{1, 2, 3, 4, 5}</kanan>
+      <kanan id="D">{4, 5, 6}</kanan>
+      <kunci kiri="1" kanan="B"/>
+      <kunci kiri="2" kanan="C"/>
+      <kunci kiri="3" kanan="A"/>
+      <kunci kiri="4" kanan="D"/>
+    </item>
+
+    <!-- BK4 · PGK -->
+    <item type="pgk" materi="BK4">
+      <q>Diketahui S = {1,2,3,4,5,6,7,8}, A = {1,2,3,4}, B = {3,4,5,6}. Manakah pernyataan yang benar? (Pilih lebih dari satu)</q>
+      <opsi>A ∩ B = {3,4}</opsi>
+      <opsi>A ∪ B = {1,2,3,4,5,6}</opsi>
+      <opsi>B − A = {5,6}</opsi>
+      <opsi>A' = {5,6,7,8}</opsi>
+      <jawaban>0,1,2,3</jawaban>
+    </item>
+
+    <!-- BK4 · Order -->
+    <item type="order" materi="BK4">
+      <q>Urutkan langkah memodelkan masalah "rekomendasi film" ke dalam himpunan!</q>
+      <langkah id="0">R = S − T (rekomendasi genre yang disukai tapi belum ditonton)</langkah>
+      <langkah id="1">Definisikan G = {genre film}, S = {genre disukai}, T = {genre sudah ditonton}</langkah>
+      <langkah id="2">Tentukan R = {genre yang akan direkomendasikan}</langkah>
+      <langkah id="3">Terapkan logika selisih himpunan</langkah>
+      <kunci>1,2,3,0</kunci>
+    </item>
+
+    <!-- BK5 · PG -->
+    <item type="pg" materi="BK5">
+      <q>Bilangan biner 1011 jika dikonversi ke desimal adalah…</q>
+      <opsi>9</opsi>
+      <opsi>10</opsi>
+      <opsi>11</opsi>
+      <opsi>12</opsi>
+      <jawaban>2</jawaban>
+    </item>
+
+    <!-- BK5 · BS -->
+    <item type="bs" materi="BK5">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="true">1 kilobyte = 1.024 byte.</pernyataan>
+      <pernyataan benar="true">Bilangan oktal menggunakan 8 simbol: 0–7.</pernyataan>
+      <pernyataan benar="true">Biner 1111 sama dengan desimal 15.</pernyataan>
+    </item>
+
+    <!-- BK5 · Match -->
+    <item type="match" materi="BK5">
+      <q>Pasangkan bilangan oktal dengan bilangan biner yang sesuai!</q>
+      <kiri id="1">2</kiri>
+      <kiri id="2">4</kiri>
+      <kiri id="3">5</kiri>
+      <kiri id="4">7</kiri>
+      <kanan id="A">100</kanan>
+      <kanan id="B">010</kanan>
+      <kanan id="C">111</kanan>
+      <kanan id="D">101</kanan>
+      <kunci kiri="1" kanan="B"/>
+      <kunci kiri="2" kanan="A"/>
+      <kunci kiri="3" kanan="D"/>
+      <kunci kiri="4" kanan="C"/>
+    </item>
+
+    <!-- BK5 · PGK -->
+    <item type="pgk" materi="BK5">
+      <q>Manakah pernyataan yang benar tentang konversi bilangan? (Pilih lebih dari satu)</q>
+      <opsi>Biner 1101 = desimal 13</opsi>
+      <opsi>Oktal 367 = desimal 247</opsi>
+      <opsi>Desimal 29 = biner 11101</opsi>
+      <opsi>Biner 1011101 = oktal 135</opsi>
+      <jawaban>0,1,2,3</jawaban>
+    </item>
+
+    <!-- BK5 · Order -->
+    <item type="order" materi="BK5">
+      <q>Urutkan langkah konversi desimal 245 ke oktal!</q>
+      <langkah id="0">3 ÷ 8 = 0 sisa 3</langkah>
+      <langkah id="1">245 ÷ 8 = 30 sisa 5</langkah>
+      <langkah id="2">30 ÷ 8 = 3 sisa 6</langkah>
+      <kunci>1,2,0</kunci>
+    </item>
+
+  </paket>
+
+  <!-- ===================================================== -->
+  <!-- PAKET C -->
+  <!-- ===================================================== -->
+  <paket kode="C">
+
+    <!-- BK2 · PG -->
+    <item type="pg" materi="BK2">
+      <q>Pilar berpikir komputasional yang berfokus pada informasi penting dan mengabaikan detail yang tidak relevan disebut…</q>
+      <opsi>Dekomposisi</opsi>
+      <opsi>Pengenalan Pola</opsi>
+      <opsi>Abstraksi</opsi>
+      <opsi>Algoritma</opsi>
+      <jawaban>2</jawaban>
+    </item>
+
+    <!-- BK2 · BS -->
+    <item type="bs" materi="BK2">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="true">Pengenalan pola adalah kemampuan menemukan kesamaan dalam berbagai masalah.</pernyataan>
+      <pernyataan benar="false">Berpikir komputasional hanya bermanfaat bagi programmer.</pernyataan>
+      <pernyataan benar="true">Algoritma harus disusun secara sistematis dan logis.</pernyataan>
+    </item>
+
+    <!-- BK2 · Match -->
+    <item type="match" materi="BK2">
+      <q>Pasangkan contoh dengan pilar berpikir komputasional yang sesuai!</q>
+      <kiri id="1">Membuat kopi instan langkah demi langkah</kiri>
+      <kiri id="2">Membagi proyek menjadi tugas kecil</kiri>
+      <kiri id="3">Menyadari pola lalu lintas Senin pagi</kiri>
+      <kiri id="4">Melihat peta hanya fokus pada jalan</kiri>
+      <kanan id="A">Dekomposisi</kanan>
+      <kanan id="B">Pengenalan Pola</kanan>
+      <kanan id="C">Abstraksi</kanan>
+      <kanan id="D">Algoritma</kanan>
+      <kunci kiri="1" kanan="D"/>
+      <kunci kiri="2" kanan="A"/>
+      <kunci kiri="3" kanan="B"/>
+      <kunci kiri="4" kanan="C"/>
+    </item>
+
+    <!-- BK2 · PGK -->
+    <item type="pgk" materi="BK2">
+      <q>Manakah yang merupakan contoh penerapan abstraksi? (Pilih lebih dari satu)</q>
+      <opsi>Saat memasak nasi goreng, tidak memikirkan proses pembuatan kecap</opsi>
+      <opsi>Menggambar sketsa hanya fokus pada bentuk utama</opsi>
+      <opsi>Membagi jadwal belajar per mata pelajaran</opsi>
+      <opsi>Melihat peta hanya pada jalan dan arah</opsi>
+      <jawaban>0,1,3</jawaban>
+    </item>
+
+    <!-- BK2 · Order -->
+    <item type="order" materi="BK2">
+      <q>Urutkan langkah-langkah mengatur keuangan jajan mingguan menggunakan berpikir komputasional!</q>
+      <langkah id="0">Susun anggaran → catat pengeluaran → evaluasi</langkah>
+      <langkah id="1">Pisahkan kebutuhan: makan, transport, tabungan</langkah>
+      <langkah id="2">Melihat pengeluaran lebih besar di hari tertentu</langkah>
+      <langkah id="3">Tentukan tujuan menabung</langkah>
+      <kunci>1,2,3,0</kunci>
+    </item>
+
+    <!-- BK3 · PG -->
+    <item type="pg" materi="BK3">
+      <q>Serangkaian langkah atau aturan yang mengubah input menjadi output disebut…</q>
+      <opsi>Input</opsi>
+      <opsi>Proses</opsi>
+      <opsi>Output</opsi>
+      <opsi>Storage</opsi>
+      <jawaban>1</jawaban>
+    </item>
+
+    <!-- BK3 · BS -->
+    <item type="bs" materi="BK3">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="true">Input bisa berasal dari pengguna, perangkat lain, atau penyimpanan.</pernyataan>
+      <pernyataan benar="true">Fungsi dalam berpikir komputasional digambarkan sebagai "kotak hitam".</pernyataan>
+      <pernyataan benar="false">Output tidak dapat berupa tindakan yang dilakukan perangkat.</pernyataan>
+    </item>
+
+    <!-- BK3 · Match -->
+    <item type="match" materi="BK3">
+      <q>Pasangkan analogi dengan komponen output yang sesuai!</q>
+      <kiri id="1">Mesin ATM</kiri>
+      <kiri id="2">Koki di restoran</kiri>
+      <kiri id="3">Aplikasi navigasi</kiri>
+      <kiri id="4">Mesin cetak foto</kiri>
+      <kanan id="A">Makanan siap saji</kanan>
+      <kanan id="B">Uang tunai dan struk</kanan>
+      <kanan id="C">Foto cetak</kanan>
+      <kanan id="D">Rute perjalanan</kanan>
+      <kunci kiri="1" kanan="B"/>
+      <kunci kiri="2" kanan="A"/>
+      <kunci kiri="3" kanan="D"/>
+      <kunci kiri="4" kanan="C"/>
+    </item>
+
+    <!-- BK3 · PGK -->
+    <item type="pgk" materi="BK3">
+      <q>Manakah yang termasuk proses dalam sistem komputasi? (Pilih lebih dari satu)</q>
+      <opsi>CPU melakukan perhitungan</opsi>
+      <opsi>Keyboard menerima ketikan</opsi>
+      <opsi>Mesin kopi memanaskan air</opsi>
+      <opsi>Monitor menampilkan gambar</opsi>
+      <opsi>Kalkulator menghitung hasil</opsi>
+      <jawaban>0,2,4</jawaban>
+    </item>
+
+    <!-- BK3 · Order -->
+    <item type="order" materi="BK3">
+      <q>Urutkan proses dalam fungsi "Menghitung Nilai Rata-rata"!</q>
+      <langkah id="0">Bagi dengan jumlah data: 425 ÷ 5 = 85</langkah>
+      <langkah id="1">Input: daftar nilai ujian [80, 85, 90, 75, 95]</langkah>
+      <langkah id="2">Jumlahkan semua nilai: 80+85+90+75+95 = 425</langkah>
+      <langkah id="3">Output: nilai rata-rata = 85</langkah>
+      <kunci>1,2,0,3</kunci>
+    </item>
+
+    <!-- BK4 · PG -->
+    <item type="pg" materi="BK4">
+      <q>Himpunan yang tidak memiliki anggota sama sekali disebut…</q>
+      <opsi>Himpunan Semesta</opsi>
+      <opsi>Himpunan Kosong</opsi>
+      <opsi>Himpunan Bagian</opsi>
+      <opsi>Himpunan Komplemen</opsi>
+      <jawaban>1</jawaban>
+    </item>
+
+    <!-- BK4 · BS -->
+    <item type="bs" materi="BK4">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="true">Himpunan kosong dilambangkan dengan ∅ atau {}.</pernyataan>
+      <pernyataan benar="true">A ⊆ B berarti semua anggota A juga anggota B.</pernyataan>
+      <pernyataan benar="false">Komplemen A adalah anggota himpunan semesta yang menjadi anggota A.</pernyataan>
+    </item>
+
+    <!-- BK4 · Match -->
+    <item type="match" materi="BK4">
+      <q>Pasangkan operasi himpunan dengan hasilnya! (S = {1,2,3,4,5,6}, A = {1,2,3,4}, B = {4,5,6})</q>
+      <kiri id="1">A ∩ B</kiri>
+      <kiri id="2">A ∪ B</kiri>
+      <kiri id="3">A − B</kiri>
+      <kiri id="4">B − A</kiri>
+      <kanan id="A">{1, 2, 3}</kanan>
+      <kanan id="B">{4}</kanan>
+      <kanan id="C">{1, 2, 3, 4, 5, 6}</kanan>
+      <kanan id="D">{5, 6}</kanan>
+      <kunci kiri="1" kanan="B"/>
+      <kunci kiri="2" kanan="C"/>
+      <kunci kiri="3" kanan="A"/>
+      <kunci kiri="4" kanan="D"/>
+    </item>
+
+    <!-- BK4 · PGK -->
+    <item type="pgk" materi="BK4">
+      <q>Diketahui S = {1,2,3,4,5,6,7,8}, A = {1,2,3,4}, B = {3,4,5,6}. Manakah pernyataan yang benar? (Pilih lebih dari satu)</q>
+      <opsi>A ∩ B = {3,4}</opsi>
+      <opsi>A ∪ B = {1,2,3,4,5,6}</opsi>
+      <opsi>A − B = {1,2}</opsi>
+      <opsi>B' = {1,2,7,8}</opsi>
+      <jawaban>0,1,2,3</jawaban>
+    </item>
+
+    <!-- BK4 · Order -->
+    <item type="order" materi="BK4">
+      <q>Urutkan langkah memodelkan masalah "logika peminjaman buku" ke dalam himpunan!</q>
+      <langkah id="0">Jika buku ∈ L, maka buku ∈ D</langkah>
+      <langkah id="1">Definisikan P = {buku dipinjam}, T = {tepat waktu}, L = {terlambat}, D = {kena denda}</langkah>
+      <langkah id="2">L = P − T</langkah>
+      <langkah id="3">Tentukan relasi logika</langkah>
+      <kunci>1,3,2,0</kunci>
+    </item>
+
+    <!-- BK5 · PG -->
+    <item type="pg" materi="BK5">
+      <q>Bilangan biner 1001 jika dikonversi ke desimal adalah…</q>
+      <opsi>7</opsi>
+      <opsi>8</opsi>
+      <opsi>9</opsi>
+      <opsi>10</opsi>
+      <jawaban>2</jawaban>
+    </item>
+
+    <!-- BK5 · BS -->
+    <item type="bs" materi="BK5">
+      <q>Tentukan benar atau salah pernyataan berikut!</q>
+      <pernyataan benar="true">1 byte = 8 bit.</pernyataan>
+      <pernyataan benar="true">Bilangan biner hanya menggunakan simbol 0 dan 1.</pernyataan>
+      <pernyataan benar="false">Biner 110 = desimal 5.</pernyataan>
+    </item>
+
+    <!-- BK5 · Match -->
+    <item type="match" materi="BK5">
+      <q>Pasangkan bilangan biner dengan bilangan oktal yang sesuai!</q>
+      <kiri id="1">001</kiri>
+      <kiri id="2">011</kiri>
+      <kiri id="3">101</kiri>
+      <kiri id="4">111</kiri>
+      <kanan id="A">3</kanan>
+      <kanan id="B">5</kanan>
+      <kanan id="C">1</kanan>
+      <kanan id="D">7</kanan>
+      <kunci kiri="1" kanan="C"/>
+      <kunci kiri="2" kanan="A"/>
+      <kunci kiri="3" kanan="B"/>
+      <kunci kiri="4" kanan="D"/>
+    </item>
+
+    <!-- BK5 · PGK -->
+    <item type="pgk" materi="BK5">
+      <q>Manakah pernyataan yang benar tentang konversi bilangan? (Pilih lebih dari satu)</q>
+      <opsi>Biner 1101 = desimal 13</opsi>
+      <opsi>Oktal 247 = biner 010100111</opsi>
+      <opsi>Desimal 245 = oktal 365</opsi>
+      <opsi>Biner 1011101 = oktal 135</opsi>
+      <jawaban>0,1,2,3</jawaban>
+    </item>
+
+    <!-- BK5 · Order -->
+    <item type="order" materi="BK5">
+      <q>Urutkan langkah konversi biner 1011101 ke oktal!</q>
+      <langkah id="0">Konversi setiap kelompok: 001=1, 011=3, 101=5</langkah>
+      <langkah id="1">Kelompokkan dari kanan: 1 | 011 | 101</langkah>
+      <langkah id="2">Hasil: 135 (oktal)</langkah>
+      <langkah id="3">Tambahkan 0 di depan kelompok pertama: 001 | 011 | 101</langkah>
+      <kunci>1,3,0,2</kunci>
+    </item>
+
+  </paket>
+
+</bankSoal>
