@@ -5,6 +5,397 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Daftar Akun · Portal Informatika DUTA</title>
   <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== PREVIEW NORMALISASI ===== */
+    .input-preview {
+      display: none;
+      margin-top: 0.4rem;
+      padding: 0.35rem 0.7rem;
+      background: #f0f8eb;
+      border: 1.5px dashed #8aaa7a;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      color: #2d5a1e;
+      line-height: 1.4;
+    }
+    .input-preview.show { display: block; }
+    .input-preview strong {
+      color: #1f5f32;
+      font-family: 'Courier New', monospace;
+      background: #fff;
+      padding: 0.05rem 0.4rem;
+      border-radius: 4px;
+    }
+    .input-preview .pv-label {
+      font-size: 0.7rem;
+      color: #5c8a6a;
+      font-style: italic;
+    }
+
+    /* ===== SUGGEST USERNAME ===== */
+    .suggest-box {
+      display: none;
+      margin-top: 0.5rem;
+      padding: 0.7rem 0.9rem;
+      background: linear-gradient(135deg, #f0e6ff, #e6f0ff);
+      border: 2px dashed #b07be0;
+      border-radius: 12px;
+      animation: fadeIn 0.3s ease;
+    }
+    .suggest-box.show { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .suggest-box .sb-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #5c2f8a;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .suggest-box .sb-hint {
+      font-size: 0.72rem;
+      color: #7a6656;
+      font-style: italic;
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+    .suggest-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .suggest-item {
+      background: #fff;
+      border: 2px solid #b07be0;
+      border-radius: 20px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #5c2f8a;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: 'Courier New', monospace;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .suggest-item:hover {
+      background: #b07be0;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(176, 123, 224, 0.35);
+    }
+    .suggest-item:active {
+      transform: translateY(0);
+    }
+    .suggest-item.terpilih {
+      background: #b07be0;
+      color: #fff;
+    }
+    .suggest-item.loading {
+      opacity: 0.6;
+      cursor: wait;
+      font-style: italic;
+      font-family: inherit;
+    }
+    .suggest-refresh {
+      background: transparent;
+      border: 2px solid #b07be0;
+      border-radius: 20px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #5c2f8a;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .suggest-refresh:hover {
+      background: #f0e6ff;
+      transform: translateY(-2px);
+    }
+
+    /* ===== MODAL SUKSES DAFTAR ===== */
+    .duta-daftar-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(40, 20, 50, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 1rem;
+      animation: modalFadeIn 0.25s ease;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .duta-daftar-box {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2rem 1.8rem 1.6rem;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 24px 60px rgba(40, 20, 50, 0.35);
+      border: 3px solid #b07be0;
+      animation: modalSlideUp 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    @keyframes modalSlideUp {
+      from { transform: translateY(30px) scale(0.95); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .duta-daftar-box::before {
+      content: '🎉';
+      position: absolute;
+      top: -22px; left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      border: 3px solid #b07be0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+    }
+    .duta-daftar-box .dd-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #5c2f8a;
+      text-align: center;
+      margin-bottom: 0.3rem;
+      margin-top: 0.5rem;
+    }
+    .duta-daftar-box .dd-sub {
+      font-size: 0.9rem;
+      color: #5c4638;
+      text-align: center;
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+
+    /* Kartu kredensial */
+    .kredensial-box {
+      background: linear-gradient(135deg, #f0e6ff, #e6f0ff);
+      border: 2px dashed #b07be0;
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .kredensial-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      flex-wrap: wrap;
+    }
+    .kredensial-item + .kredensial-item {
+      border-top: 1px dashed #d4b8f5;
+      padding-top: 0.7rem;
+    }
+    .kredensial-item .ki-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #5c2f8a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      min-width: 80px;
+    }
+    .kredensial-item .ki-value {
+      flex: 1;
+      min-width: 0;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      background: #fff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: 2px solid #e5dbd0;
+      word-break: break-all;
+      line-height: 1.4;
+      user-select: all;
+    }
+    .kredensial-item .ki-value.hidden-pass {
+      letter-spacing: 4px;
+      color: #7a6656;
+    }
+    .kredensial-item .ki-btn {
+      background: #fff;
+      border: 2px solid #b07be0;
+      color: #5c2f8a;
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+      font-family: inherit;
+      padding: 0;
+    }
+    .kredensial-item .ki-btn:hover {
+      background: #f0e6ff;
+      transform: scale(1.08);
+    }
+    .kredensial-item .ki-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Peringatan catat */
+    .peringatan-catat {
+      background: #fff8e6;
+      border-left: 5px solid #d4a030;
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      margin-bottom: 1.2rem;
+      font-size: 0.85rem;
+      color: #5c3400;
+      line-height: 1.5;
+    }
+    .peringatan-catat strong {
+      color: #8a5e00;
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: 0.88rem;
+    }
+
+    /* Tombol aksi */
+    .dd-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .dd-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 0.75rem 1.2rem;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      border: 2px solid transparent;
+      text-decoration: none;
+    }
+    .dd-btn.primary {
+      background: linear-gradient(135deg, #b07be0, #5c7cfa);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(176, 123, 224, 0.3);
+    }
+    .dd-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(176, 123, 224, 0.4);
+    }
+    .dd-btn.secondary {
+      background: #f5ede6;
+      color: #4d3829;
+      border-color: #d9cdbf;
+    }
+    .dd-btn.secondary:hover {
+      background: #e8dcd0;
+      border-color: #b09b88;
+      transform: translateY(-2px);
+    }
+
+    /* ===== LOCKOUT BANNER ===== */
+    .lockout-banner {
+      display: none;
+      background: linear-gradient(135deg, #fdf0f0, #f5d6d0);
+      border: 3px solid #d4a0a0;
+      border-left: 8px solid #b33c3c;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      animation: fadeIn 0.4s ease;
+    }
+    .lockout-banner.show { display: block; }
+    .lockout-banner .lb-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+    }
+    .lockout-banner .lb-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #a84a3a;
+      margin-bottom: 0.4rem;
+    }
+    .lockout-banner .lb-desc {
+      font-size: 0.9rem;
+      color: #5c4638;
+      line-height: 1.6;
+      margin-bottom: 0.8rem;
+    }
+    .lockout-banner .lb-timer {
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #b33c3c;
+      background: #fff;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      border: 3px solid #d4a0a0;
+      letter-spacing: 2px;
+    }
+
+    /* ===== COUNTER PENDAFTARAN ===== */
+    .counter-pendaftaran {
+      display: none;
+      background: #f0f8eb;
+      border: 2px solid #8aaa7a;
+      border-radius: 10px;
+      padding: 0.5rem 0.9rem;
+      margin-bottom: 1rem;
+      font-size: 0.8rem;
+      color: #2d5a1e;
+      text-align: center;
+      font-weight: 600;
+    }
+    .counter-pendaftaran.show { display: block; }
+    .counter-pendaftaran.warn {
+      background: #fff8e6;
+      border-color: #d4a030;
+      color: #5c3400;
+    }
+    .counter-pendaftaran.danger {
+      background: #fdf0f0;
+      border-color: #d4a0a0;
+      color: #a84a3a;
+    }
+
+    @media (max-width: 480px) {
+      .duta-daftar-box { padding: 1.5rem 1.1rem 1.2rem; }
+      .duta-daftar-box .dd-title { font-size: 1.15rem; }
+      .kredensial-item .ki-label { min-width: 60px; font-size: 0.7rem; }
+      .kredensial-item .ki-value { font-size: 0.9rem; padding: 0.35rem 0.6rem; }
+      .dd-actions { flex-direction: column; }
+      .dd-btn { width: 100%; }
+      .lockout-banner .lb-timer { font-size: 1.2rem; padding: 0.3rem 1rem; }
+    }
+  </style>
 </head>
 <body>
 
@@ -24,89 +415,133 @@
       <h1 class="auth-title">Daftar Akun</h1>
       <p class="auth-sub">Buat akun untuk menyimpan progres belajarmu</p>
 
-      <div class="auth-error" id="authError"></div>
-      <div class="auth-success" id="authSuccess"></div>
-
-      <form id="formDaftar" autocomplete="off" novalidate>
-
-        <div class="auth-form-group">
-          <label for="inputNama">Nama Lengkap</label>
-          <input
-            type="text"
-            id="inputNama"
-            placeholder="Contoh: Budi Santoso"
-            maxlength="40"
-            autocomplete="name">
-          <div class="hint">Nama akan muncul di sertifikat digital.</div>
+      <!-- ===== LOCKOUT BANNER ===== -->
+      <div class="lockout-banner" id="lockoutBanner">
+        <div class="lb-icon">⏳</div>
+        <div class="lb-title">Batas Pendaftaran Tercapai</div>
+        <div class="lb-desc" id="lockoutDesc">
+          Kamu sudah mendaftarkan 3 akun. Untuk mencegah spam, pendaftaran baru
+          dibuka kembali dalam:
         </div>
-
-        <div class="auth-form-group">
-          <label for="inputKelas">Kelas</label>
-          <input
-            type="text"
-            id="inputKelas"
-            placeholder="Contoh: 7A"
-            maxlength="10">
+        <div class="lb-timer" id="lockoutTimer">05:00</div>
+        <div class="lb-desc" style="margin-top:0.6rem; font-size:0.8rem; font-style:italic;">
+          Silakan login dengan salah satu akun yang sudah terdaftar, atau tunggu hingga waktu habis.
         </div>
+        <a href="login.html" class="dd-btn primary" style="margin-top:0.8rem; text-decoration:none; display:inline-flex;">
+          🔑 Login Sekarang
+        </a>
+      </div>
 
-        <div class="auth-form-group">
-          <label for="inputSekolah">Nama Sekolah</label>
-          <input
-            type="text"
-            id="inputSekolah"
-            placeholder="Contoh: SMPN 2 Talegong"
-            maxlength="60">
-          <div class="hint">Nama sekolah akan tercantum di sertifikat digital.</div>
-        </div>
+      <!-- ===== COUNTER PENDAFTARAN ===== -->
+      <div class="counter-pendaftaran" id="counterPendaftaran">
+        <span id="counterText">—</span>
+      </div>
 
-        <div class="auth-form-group">
-          <label for="inputUsername">Username</label>
-          <input
-            type="text"
-            id="inputUsername"
-            placeholder="Contoh: budi7a"
-            maxlength="30"
-            autocomplete="username"
-            autocapitalize="none"
-            spellcheck="false">
-          <div class="hint">Min 3 karakter. Huruf, angka, titik, garis bawah, strip.</div>
-        </div>
+      <div id="formWrapper">
+        <div class="auth-error" id="authError"></div>
+        <div class="auth-success" id="authSuccess"></div>
 
-        <div class="auth-form-group">
-          <label for="inputPassword">Password</label>
-          <input
-            type="password"
-            id="inputPassword"
-            placeholder="Min 4 karakter"
-            maxlength="50"
-            autocomplete="new-password">
-          <div class="hint">Min 4 karakter. Tidak boleh sama dengan username.</div>
-        </div>
+        <form id="formDaftar" autocomplete="off" novalidate>
 
-        <div class="auth-form-group">
-          <label for="inputPassword2">Ulangi Password</label>
-          <input
-            type="password"
-            id="inputPassword2"
-            placeholder="Ketik ulang password"
-            maxlength="50"
-            autocomplete="new-password">
-        </div>
+          <div class="auth-form-group">
+            <label for="inputNama">Nama Lengkap</label>
+            <input
+              type="text"
+              id="inputNama"
+              placeholder="Contoh: Budi Santoso"
+              maxlength="40"
+              autocomplete="name">
+            <div class="hint">Nama akan muncul di sertifikat digital.</div>
+            <div class="input-preview" id="previewNama">
+              <span class="pv-label">Akan disimpan sebagai:</span>
+              <strong id="previewNamaVal">—</strong>
+            </div>
+          </div>
 
-        <button type="submit" class="btn-auth" id="btnDaftar">
-          ✨ Daftar Sekarang
-        </button>
-      </form>
+          <div class="auth-form-group">
+            <label for="inputKelas">Kelas</label>
+            <input
+              type="text"
+              id="inputKelas"
+              placeholder="Contoh: 7A"
+              maxlength="10">
+            <div class="hint">Bisa ditulis 7A, VIIA, VII A, 7 a — otomatis dirapikan.</div>
+            <div class="input-preview" id="previewKelas">
+              <span class="pv-label">Akan disimpan sebagai:</span>
+              <strong id="previewKelasVal">—</strong>
+            </div>
+          </div>
 
-      <div class="auth-divider">atau</div>
+          <div class="auth-form-group">
+            <label for="inputSekolah">Nama Sekolah</label>
+            <input
+              type="text"
+              id="inputSekolah"
+              placeholder="Contoh: SMPN 2 Talegong"
+              maxlength="60">
+            <div class="hint">Nama sekolah akan tercantum di sertifikat digital.</div>
+            <div class="input-preview" id="previewSekolah">
+              <span class="pv-label">Akan disimpan sebagai:</span>
+              <strong id="previewSekolahVal">—</strong>
+            </div>
+          </div>
 
-      <a href="index.html" class="btn-auth-secondary">
-        🎭 Lanjut sebagai Tamu
-      </a>
+          <div class="auth-form-group">
+            <label for="inputUsername">Username</label>
+            <input
+              type="text"
+              id="inputUsername"
+              placeholder="Contoh: budi7a"
+              maxlength="30"
+              autocomplete="username"
+              autocapitalize="none"
+              spellcheck="false">
+            <div class="hint">Min 3 karakter. Huruf, angka, titik, garis bawah, strip.</div>
 
-      <p class="auth-footer-text">
-        Sudah punya akun? <a href="login.html">Login di sini</a>
-      </p>
+            <!-- ===== SUGGEST USERNAME ===== -->
+            <div class="suggest-box" id="suggestBox">
+              <div class="sb-title">💡 Saran Username</div>
+              <div class="sb-hint" id="suggestHint">Klik salah satu untuk memakai:</div>
+              <div class="suggest-list" id="suggestList"></div>
+            </div>
+          </div>
+
+          <div class="auth-form-group">
+            <label for="inputPassword">Password</label>
+            <input
+              type="password"
+              id="inputPassword"
+              placeholder="Min 4 karakter"
+              maxlength="50"
+              autocomplete="new-password">
+            <div class="hint">Min 4 karakter. Tidak boleh sama dengan username.</div>
+          </div>
+
+          <div class="auth-form-group">
+            <label for="inputPassword2">Ulangi Password</label>
+            <input
+              type="password"
+              id="inputPassword2"
+              placeholder="Ketik ulang password"
+              maxlength="50"
+              autocomplete="new-password">
+          </div>
+
+          <button type="submit" class="btn-auth" id="btnDaftar">
+            ✨ Daftar Sekarang
+          </button>
+        </form>
+
+        <div class="auth-divider">atau</div>
+
+        <a href="index.html" class="btn-auth-secondary">
+          🎭 Lanjut sebagai Tamu
+        </a>
+
+        <p class="auth-footer-text">
+          Sudah punya akun? <a href="login.html">Login di sini</a>
+        </p>
+      </div>
 
     </div>
   </main>
@@ -120,11 +555,16 @@
     (function() {
       "use strict";
 
-      // Sembunyikan bar user di halaman daftar (belum login)
-      const styleHide = document.createElement('style');
-      styleHide.textContent = '#duta-user-bar { display: none !important; }';
-      document.head.appendChild(styleHide);
+      // ============================================
+      // KONFIGURASI RATE LIMIT
+      // ============================================
+      const MAX_DAFTAR = 3;              // maksimal 3 pendaftaran
+      const DURASI_LOCKOUT_MS = 5 * 60 * 1000; // 5 menit
+      const KEY_DAFTAR_LOG = 'duta_daftar_log'; // { count, firstAt }
 
+      // ============================================
+      // DOM REFS
+      // ============================================
       const elForm = document.getElementById('formDaftar');
       const elNama = document.getElementById('inputNama');
       const elKelas = document.getElementById('inputKelas');
@@ -136,6 +576,434 @@
       const elError = document.getElementById('authError');
       const elSuccess = document.getElementById('authSuccess');
 
+      const elPreviewNama = document.getElementById('previewNama');
+      const elPreviewNamaVal = document.getElementById('previewNamaVal');
+      const elPreviewKelas = document.getElementById('previewKelas');
+      const elPreviewKelasVal = document.getElementById('previewKelasVal');
+      const elPreviewSekolah = document.getElementById('previewSekolah');
+      const elPreviewSekolahVal = document.getElementById('previewSekolahVal');
+
+      const elSuggestBox = document.getElementById('suggestBox');
+      const elSuggestList = document.getElementById('suggestList');
+      const elSuggestHint = document.getElementById('suggestHint');
+
+      const elLockoutBanner = document.getElementById('lockoutBanner');
+      const elLockoutTimer = document.getElementById('lockoutTimer');
+      const elLockoutDesc = document.getElementById('lockoutDesc');
+      const elFormWrapper = document.getElementById('formWrapper');
+
+      const elCounterPendaftaran = document.getElementById('counterPendaftaran');
+      const elCounterText = document.getElementById('counterText');
+
+      // Sembunyikan bar user di halaman daftar (belum login)
+      const styleHide = document.createElement('style');
+      styleHide.textContent = '#duta-user-bar { display: none !important; }';
+      document.head.appendChild(styleHide);
+
+      // ============================================
+      // PASTIKAN dutaNormalisasi tersedia
+      // ============================================
+      function normalisasiNama(str) {
+        if (window.dutaNormalisasi && window.dutaNormalisasi.nama) {
+          return window.dutaNormalisasi.nama(str);
+        }
+        return String(str || '').trim();
+      }
+      function normalisasiKelas(str) {
+        if (window.dutaNormalisasi && window.dutaNormalisasi.kelas) {
+          return window.dutaNormalisasi.kelas(str);
+        }
+        return String(str || '').trim();
+      }
+      function normalisasiSekolah(str) {
+        if (window.dutaNormalisasi && window.dutaNormalisasi.sekolah) {
+          return window.dutaNormalisasi.sekolah(str);
+        }
+        return String(str || '').trim();
+      }
+
+      // ============================================
+      // RATE LIMIT — CEK & SIMPAN
+      // ============================================
+      function bacaLog() {
+        try {
+          const raw = localStorage.getItem(KEY_DAFTAR_LOG);
+          if (!raw) return { count: 0, firstAt: 0 };
+          const d = JSON.parse(raw);
+          return {
+            count: Number(d.count) || 0,
+            firstAt: Number(d.firstAt) || 0
+          };
+        } catch (e) {
+          return { count: 0, firstAt: 0 };
+        }
+      }
+
+      function simpanLog(log) {
+        try {
+          localStorage.setItem(KEY_DAFTAR_LOG, JSON.stringify(log));
+        } catch (e) {}
+      }
+
+      function resetLog() {
+        try { localStorage.removeItem(KEY_DAFTAR_LOG); } catch (e) {}
+      }
+
+      /**
+       * Cek apakah user masih dalam masa lockout.
+       * Return { lockout: bool, sisaMs, sisaDetik, sisaMenit, log }
+       */
+      function cekLockout() {
+        const log = bacaLog();
+        if (log.count < MAX_DAFTAR) {
+          return { lockout: false, sisaMs: 0, sisaDetik: 0, sisaMenit: 0, log: log };
+        }
+        const elapsed = Date.now() - log.firstAt;
+        const sisaMs = DURASI_LOCKOUT_MS - elapsed;
+        if (sisaMs <= 0) {
+          // Lockout sudah habis → reset
+          resetLog();
+          return { lockout: false, sisaMs: 0, sisaDetik: 0, sisaMenit: 0, log: { count: 0, firstAt: 0 } };
+        }
+        return {
+          lockout: true,
+          sisaMs: sisaMs,
+          sisaDetik: Math.ceil(sisaMs / 1000),
+          sisaMenit: Math.ceil(sisaMs / 60000),
+          log: log
+        };
+      }
+
+      /**
+       * Catat 1 pendaftaran sukses.
+       * - Jika count = 0 → set firstAt = now, count = 1
+       * - Jika count > 0 dan masih dalam window 5 menit → count++
+       * - Jika count > 0 tapi window sudah lewat → reset
+       */
+      function catatPendaftaranSukses() {
+        let log = bacaLog();
+        const now = Date.now();
+
+        // Kalau window sudah lewat, reset dulu
+        if (log.count > 0 && (now - log.firstAt) > DURASI_LOCKOUT_MS) {
+          log = { count: 0, firstAt: 0 };
+        }
+
+        if (log.count === 0) {
+          log.firstAt = now;
+          log.count = 1;
+        } else {
+          log.count++;
+        }
+        simpanLog(log);
+        return log;
+      }
+
+      // ============================================
+      // RENDER LOCKOUT / COUNTER
+      // ============================================
+      let lockoutInterval = null;
+
+      function tampilkanLockout() {
+        const cek = cekLockout();
+        if (!cek.lockout) {
+          // Sembunyikan lockout, tampilkan form
+          elLockoutBanner.classList.remove('show');
+          elFormWrapper.style.display = 'block';
+          if (lockoutInterval) {
+            clearInterval(lockoutInterval);
+            lockoutInterval = null;
+          }
+          updateCounter();
+          return;
+        }
+
+        // Tampilkan lockout, sembunyikan form
+        elLockoutBanner.classList.add('show');
+        elFormWrapper.style.display = 'none';
+        elCounterPendaftaran.classList.remove('show');
+
+        // Update timer tiap detik
+        function updateTimer() {
+          const cekNow = cekLockout();
+          if (!cekNow.lockout) {
+            // Lockout habis → kembali ke form
+            tampilkanLockout();
+            return;
+          }
+          const totalDetik = cekNow.sisaDetik;
+          const menit = Math.floor(totalDetik / 60);
+          const detik = totalDetik % 60;
+          elLockoutTimer.textContent =
+            (menit < 10 ? '0' : '') + menit + ':' +
+            (detik < 10 ? '0' : '') + detik;
+        }
+        updateTimer();
+
+        if (lockoutInterval) clearInterval(lockoutInterval);
+        lockoutInterval = setInterval(updateTimer, 1000);
+      }
+
+      function updateCounter() {
+        const log = bacaLog();
+        if (log.count <= 0) {
+          elCounterPendaftaran.classList.remove('show');
+          return;
+        }
+        const sisa = MAX_DAFTAR - log.count;
+        elCounterPendaftaran.classList.add('show');
+        elCounterPendaftaran.classList.remove('warn', 'danger');
+
+        if (sisa <= 0) {
+          elCounterPendaftaran.classList.add('danger');
+          elCounterText.textContent = '⚠️ Batas pendaftaran tercapai.';
+        } else if (sisa === 1) {
+          elCounterPendaftaran.classList.add('warn');
+          elCounterText.textContent = '⚠️ Kamu sudah mendaftarkan ' + log.count + ' akun. Sisa: 1 pendaftaran lagi dalam 5 menit.';
+        } else {
+          elCounterText.textContent = '✅ Kamu sudah mendaftarkan ' + log.count + ' akun. Sisa: ' + sisa + ' pendaftaran lagi.';
+        }
+      }
+
+      // Cek saat halaman dibuka
+      tampilkanLockout();
+
+      // ============================================
+      // PREVIEW REAL-TIME
+      // ============================================
+      function updatePreview(inputEl, previewBox, previewVal) {
+        const raw = inputEl.value.trim();
+        if (!raw) {
+          previewBox.classList.remove('show');
+          previewVal.textContent = '—';
+          return;
+        }
+        let hasil = '';
+        if (inputEl === elNama) hasil = normalisasiNama(raw);
+        else if (inputEl === elKelas) hasil = normalisasiKelas(raw);
+        else if (inputEl === elSekolah) hasil = normalisasiSekolah(raw);
+
+        if (hasil) {
+          previewVal.textContent = hasil;
+          previewBox.classList.add('show');
+        } else {
+          previewBox.classList.remove('show');
+        }
+      }
+
+      elNama.addEventListener('input', function() {
+        updatePreview(elNama, elPreviewNama, elPreviewNamaVal);
+        jadwalkanSuggestUsername();
+      });
+      elKelas.addEventListener('input', function() {
+        updatePreview(elKelas, elPreviewKelas, elPreviewKelasVal);
+      });
+      elSekolah.addEventListener('input', function() {
+        updatePreview(elSekolah, elPreviewSekolah, elPreviewSekolahVal);
+      });
+
+      // ============================================
+      // SUGGEST USERNAME
+      // ============================================
+      let suggestTimer = null;
+
+      function jadwalkanSuggestUsername() {
+        // Debounce 600ms — tunggu user selesai mengetik nama
+        if (suggestTimer) clearTimeout(suggestTimer);
+        suggestTimer = setTimeout(() => {
+          generateSuggestUsername();
+        }, 600);
+      }
+
+      /**
+       * Generate kandidat username dari nama lengkap.
+       * Contoh: "Budi Santoso" → budi, santoso, budisantoso, budi.santoso, budi_santoso, budi7a, dll.
+       */
+      function generateKandidatUsername(namaLengkap, kelas) {
+        const nama = normalisasiNama(namaLengkap);
+        if (!nama) return [];
+
+        const kata = nama.toLowerCase().split(/\s+/).filter(Boolean);
+        if (kata.length === 0) return [];
+
+        const kelasBersih = (kelas || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const kandidat = [];
+        const first = kata[0];
+        const last = kata[kata.length - 1];
+
+        // 1. Nama depan saja
+        if (first.length >= 3) kandidat.push(first);
+
+        // 2. Nama belakang saja
+        if (last.length >= 3 && last !== first) kandidat.push(last);
+
+        // 3. Gabung tanpa separator
+        if (kata.length >= 2) {
+          const gabung = kata.join('');
+          if (gabung.length >= 3 && gabung.length <= 30) kandidat.push(gabung);
+        }
+
+        // 4. Gabung dengan titik
+        if (kata.length >= 2) {
+          const dot = kata.join('.');
+          if (dot.length >= 3 && dot.length <= 30) kandidat.push(dot);
+        }
+
+        // 5. Gabung dengan underscore
+        if (kata.length >= 2) {
+          const und = kata.join('_');
+          if (und.length >= 3 && und.length <= 30) kandidat.push(und);
+        }
+
+        // 6. Nama depan + kelas (kalau ada)
+        if (kelasBersih) {
+          const fdKelas = first + kelasBersih;
+          if (fdKelas.length >= 3 && fdKelas.length <= 30) kandidat.push(fdKelas);
+        }
+
+        // 7. Gabung + kelas
+        if (kata.length >= 2 && kelasBersih) {
+          const gabungKelas = kata.join('') + kelasBersih;
+          if (gabungKelas.length >= 3 && gabungKelas.length <= 30) kandidat.push(gabungKelas);
+        }
+
+        // 8. Nama depan + angka (fallback)
+        kandidat.push(first + '1');
+        kandidat.push(first + '123');
+
+        // Hapus duplikat, filter valid, batasi max 6 kandidat awal
+        const unik = [];
+        const sudahAda = {};
+        kandidat.forEach(k => {
+          const kk = k.toLowerCase();
+          if (sudahAda[kk]) return;
+          if (kk.length < 3 || kk.length > 30) return;
+          if (!/^[a-z0-9._-]+$/.test(kk)) return;
+          sudahAda[kk] = true;
+          unik.push(kk);
+        });
+
+        return unik.slice(0, 8);
+      }
+
+      let suggestRequestId = 0;
+
+      async function generateSuggestUsername() {
+        const nama = elNama.value.trim();
+        if (nama.length < 2) {
+          elSuggestBox.classList.remove('show');
+          return;
+        }
+
+        // Tampilkan loading
+        elSuggestBox.classList.add('show');
+        elSuggestHint.textContent = 'Memeriksa ketersediaan...';
+        elSuggestList.innerHTML = '<span class="suggest-item loading">⏳ Memuat...</span>';
+
+        const kelas = elKelas.value.trim();
+        const kandidat = generateKandidatUsername(nama, kelas);
+
+        if (kandidat.length === 0) {
+          elSuggestBox.classList.remove('show');
+          return;
+        }
+
+        // Request ID untuk menghindari race condition
+        const reqId = ++suggestRequestId;
+
+        // Cek ketersediaan satu per satu (paralel, max 8 request)
+        const hasilCek = await Promise.all(
+          kandidat.map(async (u) => {
+            try {
+              const res = await window.dutaCekUser(u);
+              return {
+                username: u,
+                tersedia: (res && res.ok && res.tersedia) ? true : false
+              };
+            } catch (e) {
+              return { username: u, tersedia: false };
+            }
+          })
+        );
+
+        // Kalau request ini bukan yang terakhir, abaikan hasilnya
+        if (reqId !== suggestRequestId) return;
+
+        // Filter yang tersedia saja
+        const tersedia = hasilCek.filter(h => h.tersedia).map(h => h.username);
+
+        // Kalau tidak ada yang tersedia, tambahkan suffix angka
+        if (tersedia.length === 0) {
+          // Coba tambah angka ke kandidat pertama
+          const base = kandidat[0];
+          const tambahan = [];
+          for (let i = 1; i <= 5; i++) {
+            const baru = base + i;
+            if (baru.length <= 30) tambahan.push(baru);
+          }
+          // Cek batch kedua
+          const hasilCek2 = await Promise.all(
+            tambahan.map(async (u) => {
+              try {
+                const res = await window.dutaCekUser(u);
+                return {
+                  username: u,
+                  tersedia: (res && res.ok && res.tersedia) ? true : false
+                };
+              } catch (e) {
+                return { username: u, tersedia: false };
+              }
+            })
+          );
+          if (reqId !== suggestRequestId) return;
+          const tersedia2 = hasilCek2.filter(h => h.tersedia).map(h => h.username);
+          tampilkanSuggest(tersedia2);
+          return;
+        }
+
+        tampilkanSuggest(tersedia);
+      }
+
+      function tampilkanSuggest(daftar) {
+        if (!daftar || daftar.length === 0) {
+          elSuggestHint.textContent = '😕 Tidak ada saran yang tersedia. Coba ubah nama atau tambahkan angka.';
+          elSuggestList.innerHTML = '';
+          return;
+        }
+
+        elSuggestHint.innerHTML = '💡 <strong>' + daftar.length + ' username tersedia</strong> — klik untuk memakai:';
+        elSuggestList.innerHTML = '';
+
+        daftar.forEach(u => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'suggest-item';
+          btn.textContent = u;
+          btn.addEventListener('click', function() {
+            elUsername.value = u;
+            // Tandai terpilih
+            elSuggestList.querySelectorAll('.suggest-item').forEach(el => el.classList.remove('terpilih'));
+            btn.classList.add('terpilih');
+            // Fokus ke password
+            elPassword.focus();
+          });
+          elSuggestList.appendChild(btn);
+        });
+
+        // Tombol refresh
+        const btnRefresh = document.createElement('button');
+        btnRefresh.type = 'button';
+        btnRefresh.className = 'suggest-refresh';
+        btnRefresh.textContent = '🔄 Cari lagi';
+        btnRefresh.addEventListener('click', function() {
+          generateSuggestUsername();
+        });
+        elSuggestList.appendChild(btnRefresh);
+      }
+
+      // ============================================
+      // PESAN ERROR / SUKSES
+      // ============================================
       function tampilError(pesan) {
         elError.textContent = '⚠️ ' + pesan;
         elError.classList.add('show');
@@ -151,7 +1019,9 @@
         elSuccess.classList.remove('show');
       }
 
-      // ==== VALIDASI CLIENT-SIDE ====
+      // ============================================
+      // VALIDASI CLIENT-SIDE
+      // ============================================
       function validasiUsername(u) {
         if (!u) return 'Username wajib diisi.';
         if (u.length < 3) return 'Username minimal 3 karakter.';
@@ -161,25 +1031,217 @@
       }
 
       function validasiPassword(p, u) {
-        if (!p) return 'Password wajib diisi.';
-        if (p.length < 4) return 'Password minimal 4 karakter.';
-        if (p.length > 50) return 'Password maksimal 50 karakter.';
-        if (p.toLowerCase() === u.toLowerCase()) return 'Password tidak boleh sama dengan username.';
-        return null;
+		  if (!p) return 'Password wajib diisi.';
+		  if (p.length < 4) return 'Password minimal 4 karakter.';
+		  if (p.length > 50) return 'Password maksimal 50 karakter.';
+		if (/\s/.test(p)) return 'Password tidak boleh mengandung spasi.';
+		  if (/\s/.test(p)) return 'Password tidak boleh mengandung spasi.';  // ⬅️ BARIS BARU
+		  if (p.toLowerCase() === u.toLowerCase()) return 'Password tidak boleh sama dengan username.';
+		  return null;
+		}
+
+      // ============================================
+      // MODAL SUKSES DAFTAR
+      // ============================================
+      function tampilkanModalSukses(username, password, nama, kelas) {
+        // Hapus modal lama kalau ada
+        const lama = document.getElementById('dutaDaftarModal');
+        if (lama) lama.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'dutaDaftarModal';
+        modal.className = 'duta-daftar-modal';
+        modal.innerHTML = `
+          <div class="duta-daftar-box">
+            <div class="dd-title">Pendaftaran Berhasil!</div>
+            <div class="dd-sub">
+              Akun <strong>${escapeHtml(nama)}</strong> (${escapeHtml(kelas)}) sudah terdaftar.
+            </div>
+
+            <div class="kredensial-box">
+              <div class="kredensial-item">
+                <span class="ki-label">Username</span>
+                <span class="ki-value" id="kiUsername">${escapeHtml(username)}</span>
+                <button type="button" class="ki-btn" id="kiBtnUser" title="Salin username">📋</button>
+              </div>
+              <div class="kredensial-item">
+                <span class="ki-label">Password</span>
+                <span class="ki-value hidden-pass" id="kiPassword">••••••••</span>
+                <button type="button" class="ki-btn" id="kiBtnPass" title="Lihat / sembunyikan password">👁️</button>
+                <button type="button" class="ki-btn" id="kiBtnCopyPass" title="Salin password">📋</button>
+              </div>
+            </div>
+
+            <div class="peringatan-catat">
+              <strong>⚠️ Penting — Catat sekarang!</strong>
+              Username dan password ini <strong>tidak akan ditampilkan lagi</strong>.
+              Catat di buku, notes HP, atau screenshot halaman ini. Kalau lupa, kamu
+              harus menghubungi Bapak/Ibu Guru Informatika.
+            </div>
+
+            <div class="dd-actions">
+              <button type="button" class="dd-btn secondary" id="ddBtnTetap">
+                ➕ Daftar Lagi
+              </button>
+              <button type="button" class="dd-btn primary" id="ddBtnLogin">
+                🔑 Kembali ke Login
+              </button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Toggle password visibility
+        const elKiPass = modal.querySelector('#kiPassword');
+        const elBtnPass = modal.querySelector('#kiBtnPass');
+        let passTerlihat = false;
+        elBtnPass.addEventListener('click', function() {
+          passTerlihat = !passTerlihat;
+          if (passTerlihat) {
+            elKiPass.textContent = password;
+            elKiPass.classList.remove('hidden-pass');
+            elBtnPass.textContent = '🙈';
+            elBtnPass.title = 'Sembunyikan password';
+          } else {
+            elKiPass.textContent = '••••••••';
+            elKiPass.classList.add('hidden-pass');
+            elBtnPass.textContent = '👁️';
+            elBtnPass.title = 'Lihat password';
+          }
+        });
+
+        // Salin username
+        const elBtnUser = modal.querySelector('#kiBtnUser');
+        elBtnUser.addEventListener('click', function() {
+          salinKeClipboard(username, elBtnUser, '📋', '✅');
+        });
+
+        // Salin password
+        const elBtnCopyPass = modal.querySelector('#kiBtnCopyPass');
+        elBtnCopyPass.addEventListener('click', function() {
+          salinKeClipboard(password, elBtnCopyPass, '📋', '✅');
+        });
+
+        // Tombol "Tetap di Sini"
+        modal.querySelector('#ddBtnTetap').addEventListener('click', function() {
+          modal.remove();
+          // Reset form
+          resetForm();
+          // Update counter
+          updateCounter();
+          // Cek apakah sekarang sudah lockout
+          const cek = cekLockout();
+          if (cek.lockout) {
+            tampilkanLockout();
+          }
+          // Scroll ke atas
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Tombol "Kembali ke Login"
+        modal.querySelector('#ddBtnLogin').addEventListener('click', function() {
+          window.location.href = 'login.html';
+        });
+
+        // Klik overlay untuk tutup (opsional)
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            modal.remove();
+            resetForm();
+            updateCounter();
+            const cek = cekLockout();
+            if (cek.lockout) tampilkanLockout();
+          }
+        });
       }
 
+      function salinKeClipboard(teks, btn, iconAsal, iconSukses) {
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(teks).then(function() {
+              btn.textContent = iconSukses;
+              setTimeout(() => { btn.textContent = iconAsal; }, 1200);
+            }).catch(function() {
+              fallbackCopy(teks, btn, iconAsal, iconSukses);
+            });
+          } else {
+            fallbackCopy(teks, btn, iconAsal, iconSukses);
+          }
+        } catch (e) {
+          fallbackCopy(teks, btn, iconAsal, iconSukses);
+        }
+      }
+
+      function fallbackCopy(teks, btn, iconAsal, iconSukses) {
+        const ta = document.createElement('textarea');
+        ta.value = teks;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          btn.textContent = iconSukses;
+          setTimeout(() => { btn.textContent = iconAsal; }, 1200);
+        } catch (e) {}
+        document.body.removeChild(ta);
+      }
+
+      function resetForm() {
+        elNama.value = '';
+        elKelas.value = '';
+        elSekolah.value = '';
+        elUsername.value = '';
+        elPassword.value = '';
+        elPassword2.value = '';
+        elPreviewNama.classList.remove('show');
+        elPreviewKelas.classList.remove('show');
+        elPreviewSekolah.classList.remove('show');
+        elSuggestBox.classList.remove('show');
+        elSuggestList.innerHTML = '';
+        sembunyikanPesan();
+        elBtn.disabled = false;
+        elBtn.textContent = '✨ Daftar Sekarang';
+        elNama.focus();
+      }
+
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      // ============================================
+      // SUBMIT HANDLER
+      // ============================================
       elForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         sembunyikanPesan();
 
-        const nama = elNama.value.trim();
-        const kelas = elKelas.value.trim();
-        const sekolah = elSekolah.value.trim();
-        const username = elUsername.value.trim().toLowerCase();
-        const password = elPassword.value;
-        const password2 = elPassword2.value;
+        // Cek lockout dulu
+        const cekL = cekLockout();
+        if (cekL.lockout) {
+          tampilkanLockout();
+          return;
+        }
 
-        // Validasi nama
+        // Ambil nilai MENTAH
+        const namaMentah    = elNama.value.trim();
+        const kelasMentah   = elKelas.value.trim();
+        const sekolahMentah = elSekolah.value.trim();
+        const usernameMentah = elUsername.value.trim().toLowerCase();
+        const passwordMentah = elPassword.value;
+        const password2Mentah = elPassword2.value;
+
+        // Normalisasi
+        const nama    = normalisasiNama(namaMentah);
+        const kelas   = normalisasiKelas(kelasMentah);
+        const sekolah = normalisasiSekolah(sekolahMentah);
+        const username = usernameMentah;
+        const password = passwordMentah;
+        const password2 = password2Mentah;
+
+        // ===== VALIDASI =====
         if (!nama) {
           tampilError('Nama lengkap wajib diisi.');
           elNama.focus();
@@ -190,8 +1252,6 @@
           elNama.focus();
           return;
         }
-
-        // Validasi kelas
         if (!kelas) {
           tampilError('Kelas wajib diisi.');
           elKelas.focus();
@@ -202,8 +1262,6 @@
           elKelas.focus();
           return;
         }
-
-        // Validasi sekolah
         if (!sekolah) {
           tampilError('Nama sekolah wajib diisi.');
           elSekolah.focus();
@@ -219,24 +1277,18 @@
           elSekolah.focus();
           return;
         }
-
-        // Validasi username
         const errU = validasiUsername(username);
         if (errU) {
           tampilError(errU);
           elUsername.focus();
           return;
         }
-
-        // Validasi password
         const errP = validasiPassword(password, username);
         if (errP) {
           tampilError(errP);
           elPassword.focus();
           return;
         }
-
-        // Cocokkan password
         if (password !== password2) {
           tampilError('Password dan ulangi password tidak sama.');
           elPassword2.focus();
@@ -247,7 +1299,7 @@
         elBtn.textContent = '⏳ Memeriksa...';
 
         try {
-          // 1. Cek username tersedia dulu
+          // ===== 1. Cek username tersedia =====
           const cek = await window.dutaCekUser(username);
 
           if (!cek || !cek.ok) {
@@ -266,15 +1318,19 @@
             return;
           }
 
-          // 2. Proses daftar (dengan sekolah)
+          // ===== 2. Proses daftar =====
           elBtn.textContent = '⏳ Mendaftar...';
           const hasil = await window.dutaDaftar(username, password, nama, kelas, sekolah);
 
           if (hasil && hasil.ok) {
-            tampilSukses('Pendaftaran berhasil! Mengarahkan ke halaman login...');
-            setTimeout(function() {
-              window.location.href = 'login.html';
-            }, 1200);
+            // ✅ Catat pendaftaran sukses untuk rate limit
+            catatPendaftaranSukses();
+
+            // ✅ Tampilkan modal sukses
+            tampilkanModalSukses(username, password, nama, kelas);
+
+            elBtn.disabled = false;
+            elBtn.textContent = '✨ Daftar Sekarang';
           } else {
             const pesan = (hasil && hasil.error) || 'Pendaftaran gagal. Coba lagi.';
             tampilError(pesan);
