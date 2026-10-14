@@ -1428,6 +1428,8 @@
       const MODUL_KEY = 'dsi1';
       const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
       const AMBANG_LULUS = 3;
+      // ⭐ STATE KEY untuk simpan/restore aktivitas
+      const STATE_KEY = 'labdsi1_state_d';
 
       // ============================================
       // STATE
@@ -1456,6 +1458,9 @@
       let kirimTimeoutId = null;
       let kirimSukses = false;
 
+      // Timer animasi timeline
+      let animasiTimelineInterval = null;
+
       // ============================================
       // DATA STRATEGI
       // ============================================
@@ -1467,7 +1472,6 @@
           desc: 'Silent HP dan matikan notifikasi sosial media saat belajar.',
           effect: 'Mengurangi gangguan',
           effectBad: false,
-          // Efek: mengurangi waktu terbuang
           kurangiTerbuang: 2
         },
         {
@@ -1811,18 +1815,14 @@
           }
         });
 
-        // Waktu terbuang dasar = 5 jam (jika tanpa strategi)
         let terbuang = 5 + tambahTerbuang - kurangiTerbuang;
         if (terbuang < 0) terbuang = 0;
 
-        // Tugas selesai: dasar 1 (hanya 1 tugas yang selesai tanpa strategi)
-        // + tambahSelesai, dan bonus jika terbuang rendah
         let selesai = 1 + tambahSelesai;
         if (terbuang <= 1) selesai = 3;
         else if (terbuang <= 3) selesai = Math.max(selesai, 2);
         if (selesai > 3) selesai = 3;
 
-        // Skor produktivitas
         skorProduktivitas = Math.round(100 - (terbuang * 10) + (selesai * 15));
         if (skorProduktivitas < 0) skorProduktivitas = 0;
         if (skorProduktivitas > 100) skorProduktivitas = 100;
@@ -1836,7 +1836,6 @@
           { text: '📋 3 tugas menanti: PR, Ujian IPA, Tugas Kelompok.', type: 'info' }
         ];
 
-        // Tambah event berdasarkan strategi
         if (strategiDipilih['notif']) timelineData.push({ text: '🔕 Kamu matikan notifikasi HP. Fokus terjaga!', type: 'ok' });
         if (strategiDipilih['pomodoro']) timelineData.push({ text: '⏱️ Kamu pakai timer 25-5. Fokus teratur!', type: 'ok' });
         if (strategiDipilih['prioritas']) timelineData.push({ text: '🎯 Kamu kerjakan PR dulu (paling mendesak).', type: 'ok' });
@@ -1849,11 +1848,11 @@
 
         timelineData.push({ text: '🌙 Hari berakhir.', type: 'info' });
 
-        // Tampilkan timeline satu per satu
         let idx = 0;
-        const intv = setInterval(() => {
+        animasiTimelineInterval = setInterval(() => {
           if (idx >= timelineData.length) {
-            clearInterval(intv);
+            clearInterval(animasiTimelineInterval);
+            animasiTimelineInterval = null;
             selesaikanSimulasi();
             return;
           }
@@ -1861,14 +1860,12 @@
           idx++;
         }, 500);
 
-        // Update stats selama animasi
         elStatSelesai.textContent = '...';
         elStatTerbuang.textContent = '...';
         elStatSkor.textContent = '...';
         elTimer.textContent = '00:00';
         elTimer.classList.add('running');
 
-        // Tandai tugas sebagai selesai/terlewat
         document.getElementById('tugas_pr').classList.remove('selesai', 'terlewat');
         document.getElementById('tugas_ujian').classList.remove('selesai', 'terlewat');
         document.getElementById('tugas_kelompok').classList.remove('selesai', 'terlewat');
@@ -1886,7 +1883,6 @@
         elStatTerbuang.textContent = waktuTerbuang;
         elStatSkor.textContent = skorProduktivitas;
 
-        // Tandai tugas
         const tugasIds = ['tugas_pr', 'tugas_ujian', 'tugas_kelompok'];
         tugasIds.forEach((id, i) => {
           const el = document.getElementById(id);
@@ -1900,7 +1896,6 @@
           }
         });
 
-        // Hasil
         let pesan = '';
         if (skorProduktivitas >= 80) {
           pesan = '🎉 <strong>Luar biasa!</strong> Kamu berhasil menyelesaikan ' + tugasSelesai + '/3 tugas dengan skor produktivitas <strong>' + skorProduktivitas + '</strong>. Strategimu sangat efektif!';
@@ -1915,13 +1910,17 @@
 
         tampilFeedback('success', '📊', 'Hari selesai! Baca hasil di bawah, lalu isi Jeda Sadar 1.');
 
-        // Aktifkan Jeda Sadar 1 dan tombol selesai
         elMindful1.classList.add('show');
         elBtnSelesaiLapis1.disabled = false;
 
         setTimeout(() => {
           elHasilBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 300);
+
+        // ⭐ Simpan state setelah simulasi selesai
+        if (window.dutaSimpanState) {
+          window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+        }
       }
 
       // ============================================
@@ -1929,6 +1928,10 @@
       // ============================================
       window.resetSimulasi = function() {
         if (simulasiBerjalan) return;
+        if (animasiTimelineInterval) {
+          clearInterval(animasiTimelineInterval);
+          animasiTimelineInterval = null;
+        }
         hariSudahDijalankan = false;
         strategiDipilih = {};
         elStrategiList.querySelectorAll('.strategi-item').forEach(el => {
@@ -1977,6 +1980,8 @@
         }
 
         lapis1Selesai = true;
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+
         elBtnSelesaiLapis1.disabled = true;
         elBtnSelesaiLapis1.textContent = '✅ Lapis 1 Selesai';
 
@@ -1993,6 +1998,7 @@
       // ============================================
       window.pilihLevel = function(level) {
         levelTantangan = level;
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
 
         elLevelOptions.querySelectorAll('.level-option').forEach(el => {
           el.classList.remove('terpilih');
@@ -2048,6 +2054,7 @@
         }
 
         buildTantangan();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
 
         setTimeout(() => {
           elAreaLapis2.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2166,6 +2173,7 @@
         }
 
         cekSemuaTantangan();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
       }
 
       function cekSemuaTantangan() {
@@ -2201,6 +2209,7 @@
         elMindful3.classList.add('show');
 
         buildKuisKilat();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
 
         setTimeout(() => {
           elAreaLapis3.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2315,6 +2324,7 @@
         elKkHasil.innerHTML = `✅ Kuis Kilat selesai! Kamu benar <strong>${kuisKilatBenar}</strong> dari <strong>${kuisKilatData.length}</strong>.`;
 
         elBtnLanjutTes.disabled = false;
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
       }
 
       // ============================================
@@ -2334,6 +2344,7 @@
         updateTesProgress();
 
         updateProgressLapis('tes');
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
 
         setTimeout(() => {
           elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2510,6 +2521,8 @@
 
         elBtnPeriksaTes.disabled = true;
         elBtnPeriksaTes.textContent = correct === total ? '✅ Semua Benar!' : `📊 Skor: ${correct}/${total}`;
+
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
 
         tampilkanHasilTes(correct, total, lulus);
       });
@@ -2691,7 +2704,328 @@
       };
 
       function pindahKeBagian5() {
+        if (window.dutaHapusState) window.dutaHapusState(STATE_KEY);
         window.location.href = 'aktivitasdsi1e.html';
+      }
+
+      // ============================================
+      // STATE ACTIVITY — Simpan & Restore
+      // ============================================
+
+      /**
+       * Kumpulkan semua state yang perlu disimpan.
+       * Bagian 4 tidak punya form identitas.
+       */
+      function kumpulkanState() {
+        return {
+          // Tahap saat ini
+          lapis1Selesai: lapis1Selesai,
+          lapis2Selesai: lapis2Selesai,
+          // Data simulasi jadwal hari
+          strategiDipilih: strategiDipilih,
+          hariSudahDijalankan: hariSudahDijalankan,
+          tugasSelesai: tugasSelesai,
+          waktuTerbuang: waktuTerbuang,
+          skorProduktivitas: skorProduktivitas,
+          // Jeda Sadar (text)
+          mindful1Jawab: (document.getElementById('mindful1Jawab') || {}).value || '',
+          mindfulPilihJawab: (document.getElementById('mindfulPilihJawab') || {}).value || '',
+          mindful2Jawab: (document.getElementById('mindful2Jawab') || {}).value || '',
+          mindful3Jawab: (document.getElementById('mindful3Jawab') || {}).value || '',
+          // Level & tantangan
+          levelTantangan: levelTantangan,
+          tantanganSelesai: tantanganSelesai,
+          // Kuis kilat
+          jawabanKuisKilat: jawabanKuisKilat,
+          kuisKilatSubmitted: kuisKilatSubmitted,
+          kuisKilatBenar: kuisKilatBenar,
+          // Tes pemahaman
+          jawabanTes: jawabanTes,
+          tesSubmitted: tesSubmitted,
+          tesBenar: tesBenar,
+          tesSelesai: tesSelesai,
+          // Refleksi + exit ticket
+          refPelajaran: (document.getElementById('refPelajaran') || {}).value || '',
+          refPenerapan: (document.getElementById('refPenerapan') || {}).value || '',
+          exitTicket: (document.getElementById('exitTicket') || {}).value || '',
+          // Info tambahan
+          __lapisTerakhir: cekLapisTerakhir()
+        };
+      }
+
+      /**
+       * Tentukan lapis terakhir yang sudah dicapai.
+       * Return: 'lapis1' | 'lapis2' | 'lapis3' | 'tes'
+       */
+      function cekLapisTerakhir() {
+        if (tesSelesai || tesSubmitted) return 'tes';
+        if (lapis2Selesai) return 'lapis3';
+        if (lapis1Selesai && (levelTantangan || lapis2Selesai)) return 'lapis2';
+        return 'lapis1';
+      }
+
+      /**
+       * Restore state dari localStorage ke variabel + DOM.
+       */
+      function restoreState(s) {
+        if (!s || typeof s !== 'object') return;
+
+        // Restore variabel
+        lapis1Selesai        = !!s.lapis1Selesai;
+        lapis2Selesai        = !!s.lapis2Selesai;
+        strategiDipilih      = s.strategiDipilih || {};
+        hariSudahDijalankan  = !!s.hariSudahDijalankan;
+        tugasSelesai         = Number(s.tugasSelesai) || 0;
+        waktuTerbuang        = Number(s.waktuTerbuang) || 0;
+        skorProduktivitas    = Number(s.skorProduktivitas) || 0;
+        levelTantangan       = s.levelTantangan || null;
+        tantanganSelesai     = s.tantanganSelesai || {};
+        jawabanKuisKilat     = s.jawabanKuisKilat || {};
+        kuisKilatSubmitted   = !!s.kuisKilatSubmitted;
+        kuisKilatBenar       = Number(s.kuisKilatBenar) || 0;
+        jawabanTes           = s.jawabanTes || {};
+        tesSubmitted         = !!s.tesSubmitted;
+        tesBenar             = Number(s.tesBenar) || 0;
+        tesSelesai           = !!s.tesSelesai;
+
+        // Restore textarea
+        const elM1 = document.getElementById('mindful1Jawab');
+        const elMP = document.getElementById('mindfulPilihJawab');
+        const elM2 = document.getElementById('mindful2Jawab');
+        const elM3 = document.getElementById('mindful3Jawab');
+        const elRP = document.getElementById('refPelajaran');
+        const elRN = document.getElementById('refPenerapan');
+        const elET = document.getElementById('exitTicket');
+
+        if (elM1 && s.mindful1Jawab) elM1.value = s.mindful1Jawab;
+        if (elMP && s.mindfulPilihJawab) elMP.value = s.mindfulPilihJawab;
+        if (elM2 && s.mindful2Jawab) elM2.value = s.mindful2Jawab;
+        if (elM3 && s.mindful3Jawab) elM3.value = s.mindful3Jawab;
+        if (elRP && s.refPelajaran) elRP.value = s.refPelajaran;
+        if (elRN && s.refPenerapan) elRN.value = s.refPenerapan;
+        if (elET && s.exitTicket) elET.value = s.exitTicket;
+
+        // Render strategi dulu (dibutuhkan untuk restore pilihan strategi)
+        renderStrategi();
+
+        // Restore tampilan strategi yang terpilih
+        Object.keys(strategiDipilih).forEach(function(id) {
+          const el = document.getElementById('strategi_' + id);
+          const check = document.getElementById('check_' + id);
+          if (el) el.classList.add('aktif');
+          if (check) check.textContent = '✓';
+        });
+
+        // Tampilkan lapis yang sesuai
+        const lapis = s.__lapisTerakhir || cekLapisTerakhir();
+
+        // Pastikan area simulasi aktif
+        if (elAreaSimulasi) elAreaSimulasi.classList.add('active');
+
+        if (lapis === 'lapis1') {
+          updateProgressLapis('lapis1');
+
+          // Kalau hari sudah dijalankan, restore hasil
+          if (hariSudahDijalankan) {
+            elBtnMulaiSim.disabled = true;
+            elBtnMulaiSim.textContent = '✅ Hari Selesai';
+            elBtnResetSim.style.display = 'inline-flex';
+            elStatSelesai.textContent = tugasSelesai;
+            elStatTerbuang.textContent = waktuTerbuang;
+            elStatSkor.textContent = skorProduktivitas;
+
+            // Tandai tugas
+            const tugasIds = ['tugas_pr', 'tugas_ujian', 'tugas_kelompok'];
+            tugasIds.forEach((id, i) => {
+              const el = document.getElementById(id);
+              const progress = el.querySelector('.ti-progress');
+              if (i < tugasSelesai) {
+                el.classList.add('selesai');
+                progress.textContent = '✓ SELESAI';
+              } else {
+                el.classList.add('terlewat');
+                progress.textContent = 'TERLEWAT';
+              }
+            });
+
+            // Tampilkan hasil
+            let pesan = '';
+            if (skorProduktivitas >= 80) {
+              pesan = '🎉 <strong>Luar biasa!</strong> Kamu berhasil menyelesaikan ' + tugasSelesai + '/3 tugas dengan skor produktivitas <strong>' + skorProduktivitas + '</strong>. Strategimu sangat efektif!';
+            } else if (skorProduktivitas >= 50) {
+              pesan = '👍 <strong>Cukup baik!</strong> Kamu menyelesaikan ' + tugasSelesai + '/3 tugas dengan skor <strong>' + skorProduktivitas + '</strong>. Coba tambah strategi baik untuk hasil lebih optimal!';
+            } else {
+              pesan = '📖 <strong>Perlu perbaikan.</strong> Kamu hanya menyelesaikan ' + tugasSelesai + '/3 tugas dengan skor <strong>' + skorProduktivitas + '</strong>. Waktu terbuang: <strong>' + waktuTerbuang + ' jam</strong>. Klik "Ulangi" dan pilih strategi yang lebih baik!';
+            }
+            elHasilText.innerHTML = pesan;
+            elHasilBox.style.display = 'block';
+
+            elMindful1.classList.add('show');
+            elBtnSelesaiLapis1.disabled = false;
+            tampilFeedback('success', '📊', 'Hari selesai! Baca hasil di bawah, lalu isi Jeda Sadar 1.');
+          }
+          return;
+        }
+
+        // Lapis 2 atau 3 atau tes: sembunyikan simulasi & pilih level
+        if (elAreaSimulasi) elAreaSimulasi.style.display = 'none';
+
+        if (lapis === 'lapis2') {
+          elAreaPilihLevel.classList.remove('active');
+          elAreaLapis2.style.display = 'block';
+          updateProgressLapis('lapis2');
+          if (levelTantangan) {
+            elLapis2LevelLabel.textContent = levelTantangan === 'dasar' ? '🟢 Dasar' :
+                                             levelTantangan === 'reguler' ? '🟡 Reguler' : '🔴 Tantangan';
+            if (levelTantangan === 'tantangan') {
+              elLapis2JumlahTantangan.textContent = '4 tantangan (3 inti + 1 bonus)';
+            } else {
+              elLapis2JumlahTantangan.textContent = '3 tantangan';
+            }
+            buildTantangan();
+            Object.keys(tantanganSelesai).forEach(function(id) {
+              const el = document.getElementById('tantangan_' + id);
+              if (el) {
+                el.classList.add('selesai');
+                const btn = document.getElementById('btn_' + id);
+                if (btn) btn.disabled = true;
+              }
+            });
+            if (Object.keys(tantanganSelesai).length > 0) {
+              cekSemuaTantangan();
+            }
+          }
+          return;
+        }
+
+        if (lapis === 'lapis3' || lapis === 'tes') {
+          elAreaPilihLevel.classList.remove('active');
+          elAreaLapis2.style.display = 'none';
+          elAreaLapis3.style.display = 'block';
+          updateProgressLapis('lapis3');
+          if (levelTantangan) {
+            elLapis2LevelLabel.textContent = levelTantangan === 'dasar' ? '🟢 Dasar' :
+                                             levelTantangan === 'reguler' ? '🟡 Reguler' : '🔴 Tantangan';
+          }
+          elMindful3.classList.add('show');
+          elBtnLanjutLapis3.disabled = true;
+          elBtnLanjutLapis3.textContent = '✅ Lapis 2 Selesai';
+          buildKuisKilat();
+          if (kuisKilatSubmitted) {
+            restoreKuisKilat();
+          }
+        }
+
+        if (lapis === 'tes') {
+          elTesSection.classList.add('active');
+          elRefleksiBox.classList.add('show');
+          renderSoal();
+          updateTesProgress();
+          updateProgressLapis('tes');
+          elBtnLanjutTes.disabled = true;
+          elBtnLanjutTes.textContent = '✅ Selesai';
+          if (tesSubmitted) {
+            restoreTes();
+          }
+        }
+      }
+
+      /**
+       * Restore tampilan kuis kilat yang sudah disubmit.
+       */
+      function restoreKuisKilat() {
+        kuisKilatData.forEach(function(soal, idx) {
+          const div = elKuisKilatContent.querySelector('[data-index="' + idx + '"]');
+          if (!div) return;
+          const labels = div.querySelectorAll('label');
+          const selected = jawabanKuisKilat[idx];
+          if (selected === undefined) return;
+          labels.forEach(function(lbl, oi) {
+            lbl.classList.add('disabled');
+            const input = lbl.querySelector('input');
+            if (input) input.disabled = true;
+            if (oi === selected) {
+              const benar = (selected === soal.kunci);
+              lbl.classList.add(benar ? 'benar' : 'salah');
+              const ic = lbl.querySelector('.check-icon');
+              if (ic) ic.textContent = benar ? '✅' : '❌';
+            }
+            if (oi === soal.kunci && selected !== soal.kunci) {
+              lbl.classList.add('benar');
+              const ic = lbl.querySelector('.check-icon');
+              if (ic) ic.textContent = '✅';
+            }
+          });
+        });
+        elKkHasil.classList.add('show');
+        elKkHasil.innerHTML = `✅ Kuis Kilat selesai! Kamu benar <strong>${kuisKilatBenar}</strong> dari <strong>${kuisKilatData.length}</strong>.`;
+        elBtnLanjutTes.disabled = false;
+      }
+
+      /**
+       * Restore tampilan tes yang sudah disubmit.
+       */
+      function restoreTes() {
+        soalData.forEach(function(soal, idx) {
+          const selected = jawabanTes[idx];
+          const soalDiv = document.querySelector('.soal-kuis[data-index="' + idx + '"]');
+          if (!soalDiv || selected === undefined) return;
+          const labels = soalDiv.querySelectorAll('.opsi-kuis label');
+          const isCorrect = (selected === soal.kunci);
+          labels.forEach(function(label, oi) {
+            label.classList.add('disabled');
+            const inp = label.querySelector('input');
+            if (inp) inp.disabled = true;
+            if (oi === selected) {
+              label.classList.add(isCorrect ? 'correct-answer' : 'wrong-answer');
+              const ic = label.querySelector('.check-icon');
+              if (ic) ic.textContent = isCorrect ? '✅' : '❌';
+            }
+            if (isCorrect && oi === soal.kunci) {
+              label.classList.add('correct-answer');
+              const ic = label.querySelector('.check-icon');
+              if (ic) ic.textContent = '✅';
+            }
+          });
+          const feedback = document.getElementById('feedback_soal_' + idx);
+          if (isCorrect) {
+            soalDiv.classList.add('correct');
+            if (feedback) {
+              feedback.className = 'jawaban-feedback benar';
+              feedback.innerHTML = '✅ <strong>Benar!</strong>';
+            }
+          } else {
+            soalDiv.classList.add('wrong');
+            if (feedback) {
+              feedback.className = 'jawaban-feedback salah';
+              feedback.innerHTML = '❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kunci">' + soal.opsi[soal.kunci] + '</span><br>' + soal.penjelasan;
+            }
+          }
+        });
+        elBtnPeriksaTes.disabled = true;
+        elBtnPeriksaTes.textContent = '📊 Skor: ' + tesBenar + '/' + soalData.length;
+        tampilkanHasilTes(tesBenar, soalData.length, tesBenar >= AMBANG_LULUS);
+      }
+
+      /**
+       * Tampilkan modal "Lanjutkan Aktivitas?" kalau ada state tersimpan.
+       */
+      function tawarkanRestore() {
+        const s = window.dutaAmbilState ? window.dutaAmbilState(STATE_KEY) : null;
+        if (!s) return false;
+
+        window.tampilkanModal({
+          judul: '🔄 Lanjutkan Aktivitas?',
+          pesan:
+            '<p style="margin-bottom:0.7rem;">Kami menemukan progres belajar yang tersimpan di perangkat ini.</p>' +
+            '<p style="margin-bottom:0.7rem;">Kamu bisa <strong>melanjutkan dari terakhir</strong> ' +
+            'atau <strong>mulai dari awal</strong>.</p>',
+          tombolLanjut: '▶️ Lanjutkan',
+          onLanjut: function() {
+            restoreState(s);
+          }
+        });
+        return true;
       }
 
       // ============================================
@@ -2699,9 +3033,30 @@
       // ============================================
       document.addEventListener('DOMContentLoaded', function() {
         renderStrategi();
+
+        // ⭐ Tawarkan restore kalau ada state tersimpan
+        tawarkanRestore();
+
+        // ⭐ Auto-save berkala (tiap 5 detik, jaga-jaga)
+        if (window.dutaAutoSave) {
+          window.dutaAutoSave(STATE_KEY, kumpulkanState, 5000);
+        }
+
+        // ⭐ Auto-save saat input di textarea (Jeda Sadar + Refleksi + Exit Ticket)
+        if (window.dutaPasangAutoSaveInput) {
+          window.dutaPasangAutoSaveInput(STATE_KEY, kumpulkanState, [
+            document.getElementById('mindful1Jawab'),
+            document.getElementById('mindfulPilihJawab'),
+            document.getElementById('mindful2Jawab'),
+            document.getElementById('mindful3Jawab'),
+            document.getElementById('refPelajaran'),
+            document.getElementById('refPenerapan'),
+            document.getElementById('exitTicket')
+          ]);
+        }
       });
 
-      console.log('✅ DSI1 Bagian 4: Strategi Bijak Menggunakan Teknologi siap! (+ diferensiasi 3 level)');
+      console.log('✅ DSI1 Bagian 4: Strategi Bijak Menggunakan Teknologi siap! (+ diferensiasi 3 level + state save/restore)');
     })();
   </script>
 
