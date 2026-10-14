@@ -588,6 +588,120 @@
     .tabel-istilah tr:hover td { background: #f0f8eb; }
     .tabel-istilah strong { color: #2d5a1e; }
 
+    /* ===== MODAL PENAMAAN KONSEP ===== */
+    .duta-penamaan-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(40, 20, 50, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      z-index: 10000;
+      padding: 1.5rem 1rem;
+      overflow-y: auto;
+      animation: dutaModalFadeIn 0.25s ease;
+    }
+    @keyframes dutaModalFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .duta-penamaan-box {
+      background: #fff;
+      border-radius: 24px;
+      padding: 0;
+      max-width: 760px;
+      width: 100%;
+      box-shadow: 0 24px 70px rgba(40, 20, 50, 0.35);
+      border: 3px solid #b07be0;
+      animation: dutaModalSlideUp 0.3s ease;
+      overflow: hidden;
+      margin: auto;
+    }
+    @keyframes dutaModalSlideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .duta-penamaan-header {
+      background: linear-gradient(135deg, #6ecb8f, #4fa86a);
+      color: #fff;
+      padding: 1.1rem 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+    .duta-penamaan-header .dph-icon { font-size: 1.4rem; }
+    .duta-penamaan-body {
+      padding: 1.4rem 1.8rem 1.2rem;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    .duta-penamaan-body .penamaan-box {
+      margin: 0;
+      border: none;
+      padding: 0;
+      background: transparent;
+    }
+    .duta-penamaan-footer {
+      padding: 1rem 1.6rem 1.3rem;
+      background: #f8f4ef;
+      border-top: 2px solid #e5dbd0;
+      text-align: center;
+      position: sticky;
+      bottom: 0;
+    }
+    .btn-sudah-baca {
+      padding: 0.85rem 2.5rem;
+      border-radius: 40px;
+      border: none;
+      background: linear-gradient(135deg, #6ecb8f, #4fa86a);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 18px rgba(45, 125, 70, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-sudah-baca:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(45, 125, 70, 0.4);
+      filter: brightness(1.05);
+    }
+    .btn-sudah-baca:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    .btn-sudah-baca .bsb-progress {
+      position: absolute;
+      left: 0; bottom: 0;
+      height: 4px;
+      background: rgba(255,255,255,0.65);
+      width: 0%;
+      transition: width 1s linear;
+    }
+    .duta-penamaan-timer {
+      font-size: 0.8rem;
+      color: #7a6656;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+    @media (max-width: 600px) {
+      .duta-penamaan-body { padding: 1rem 1rem 0.8rem; max-height: 55vh; }
+      .duta-penamaan-header { font-size: 0.95rem; padding: 0.9rem 1.1rem; }
+      .btn-sudah-baca { padding: 0.75rem 1.8rem; font-size: 0.92rem; }
+      .duta-penamaan-box { border-radius: 18px; }
+    }
+
     /* ===== LINK MATERI ===== */
     .link-materi-wrapper { text-align: center; margin-top: 1rem; }
     .link-materi-bawah {
@@ -924,6 +1038,65 @@
       .tabel-istilah th, .tabel-istilah td { padding: 0.4rem 0.5rem; }
       .tugas-item .ti-desc { display: none; }
     }
+	    /* ===== FEEDBACK GURU ===== */
+    .feedback-ai-box {
+      background: linear-gradient(135deg, #eef4ff, #e6ecff);
+      border: 2px solid #5c7cfa;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0 1rem 0;
+      display: none;
+    }
+    .feedback-ai-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .feedback-ai-box .fai-header {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-weight: 800; color: #3b4a9a;
+      font-size: 1rem; margin-bottom: 0.6rem;
+    }
+    .feedback-ai-box .fai-header .fai-icon {
+      font-size: 1.4rem; line-height: 1;
+    }
+    .feedback-ai-box .fai-body {
+      background: #fff;
+      border-radius: 12px;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #2f2822;
+      border-left: 5px solid #5c7cfa;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .btn-feedback-ai {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.8rem; border-radius: 30px;
+      border: none; cursor: pointer;
+      background: linear-gradient(135deg, #5c7cfa, #7a5cf0);
+      color: #fff; font-weight: 700; font-size: 0.9rem;
+      font-family: inherit;
+      box-shadow: 0 6px 16px rgba(92, 124, 250, 0.30);
+      transition: all 0.2s ease;
+      margin: 0.6rem 0 0.2rem 0;
+    }
+    .btn-feedback-ai:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(92, 124, 250, 0.40);
+      filter: brightness(1.05);
+    }
+    .btn-feedback-ai:disabled {
+      opacity: 0.55; cursor: not-allowed; transform: none !important;
+    }
+    .btn-feedback-ai .fai-spin {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+
+    .feedback-ai-hint {
+      font-size: 0.8rem; color: #7a6656;
+      margin-top: 0.3rem; font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -1075,9 +1248,7 @@
                 Pilih strategi yang ingin kamu terapkan hari ini. Setiap strategi punya
                 efek berbeda pada produktivitasmu. Bisa pilih beberapa sekaligus!
               </div>
-              <div class="strategi-list" id="strategiList">
-                <!-- Akan di-render JS -->
-              </div>
+              <div class="strategi-list" id="strategiList"></div>
             </div>
 
             <!-- Timeline -->
@@ -1210,13 +1381,13 @@
 
             <div class="game-actions" style="margin-top:1rem;">
               <button class="btn-game primary" id="btnLanjutLapis3" onclick="lanjutKeLapis3()" disabled>
-                ➡️ Lanjut ke Penamaan Konsep
+                ➡️ Lapis 2 Selesai — Buka Penamaan Konsep
               </button>
             </div>
           </div>
         </div>
 
-        <!-- ===== LAPIS 3: PENAMAAN KONSEP ===== -->
+        <!-- ===== LAPIS 3: PENAMAAN KONSEP (TETAP DI HALAMAN) ===== -->
         <div id="areaLapis3" style="display:none;">
           <div class="scenario-panel" style="margin-top:1.5rem;">
             <div class="lapis-header lapis-3">
@@ -1224,7 +1395,7 @@
               <span>📖 Penamaan Konsep — Istilah Resmi</span>
             </div>
 
-            <div class="penamaan-box show">
+            <div class="penamaan-box show" id="penamaanKonten">
               <h3>🏷️ Sekarang, Kita Beri Nama!</h3>
               <p style="font-size:0.92rem; line-height:1.7; color:#2f2822;">
                 Semua strategi yang kamu coba punya <strong>nama resmi</strong> dalam
@@ -1383,6 +1554,24 @@
             </p>
             <textarea id="exitTicket" placeholder="Contoh: HP di laci selama 25 menit — supaya tidak ada notifikasi yang memecah fokus."></textarea>
           </div>
+		            <!-- ===== CATATAN DARI GURU ===== -->
+          <div class="feedback-ai-box" id="feedbackAiBox">
+            <div class="fai-header">
+              <span class="fai-icon">🧑‍🏫</span>
+              <span>Catatan dari Guru</span>
+            </div>
+            <div class="fai-body" id="feedbackAiBody"></div>
+          </div>
+        </div>
+		
+		        <!-- Tombol minta feedback guru -->
+        <div class="game-actions" style="margin-top:0.6rem;">
+          <button type="button" class="btn-feedback-ai" id="btnMintaFeedback" disabled>
+            🧑‍🏫 Minta Feedback
+          </button>
+        </div>
+        <div class="feedback-ai-hint" id="feedbackAiHint" style="text-align:center;">
+          Isi Refleksi atau Exit Ticket dulu untuk mengaktifkan tombol.
         </div>
 
         <!-- Status kirim -->
@@ -1428,13 +1617,13 @@
       const MODUL_KEY = 'dsi1';
       const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
       const AMBANG_LULUS = 3;
-      // ⭐ STATE KEY untuk simpan/restore aktivitas
       const STATE_KEY = 'labdsi1_state_d';
+      const DURASI_BACA_DETIK = 12;
 
       // ============================================
       // STATE
       // ============================================
-      let strategiDipilih = {};       // { id: true }
+      let strategiDipilih = {};
       let simulasiBerjalan = false;
       let hariSudahDijalankan = false;
       let tugasSelesai = 0;
@@ -1442,6 +1631,7 @@
       let skorProduktivitas = 0;
       let lapis1Selesai = false;
       let lapis2Selesai = false;
+      let lapis3Dibaca = false;
 
       let levelTantangan = null;
       let tantanganSelesai = {};
@@ -1457,85 +1647,60 @@
 
       let kirimTimeoutId = null;
       let kirimSukses = false;
+	  
+	  // ⭐ Feedback guru
+      let aiFeedback = '';
+      let aiFeedbackLoading = false;
 
-      // Timer animasi timeline
       let animasiTimelineInterval = null;
+
+      let modalPenamaanEl = null;
+      let bacaTimerInterval = null;
+      let bacaCountdown = 0;
 
       // ============================================
       // DATA STRATEGI
       // ============================================
       const strategiData = [
         {
-          id: 'notif',
-          icon: '🔕',
-          nama: 'Matikan Notifikasi',
+          id: 'notif', icon: '🔕', nama: 'Matikan Notifikasi',
           desc: 'Silent HP dan matikan notifikasi sosial media saat belajar.',
-          effect: 'Mengurangi gangguan',
-          effectBad: false,
-          kurangiTerbuang: 2
+          effect: 'Mengurangi gangguan', effectBad: false, kurangiTerbuang: 2
         },
         {
-          id: 'pomodoro',
-          icon: '⏱️',
-          nama: 'Teknik Pomodoro',
+          id: 'pomodoro', icon: '⏱️', nama: 'Teknik Pomodoro',
           desc: 'Belajar 25 menit, istirahat 5 menit. Berulang.',
-          effect: 'Meningkatkan fokus',
-          effectBad: false,
-          kurangiTerbuang: 1
+          effect: 'Meningkatkan fokus', effectBad: false, kurangiTerbuang: 1
         },
         {
-          id: 'prioritas',
-          icon: '🎯',
-          nama: 'Susun Prioritas',
+          id: 'prioritas', icon: '🎯', nama: 'Susun Prioritas',
           desc: 'Kerjakan tugas paling mendesak dulu (PR), baru yang lain.',
-          effect: 'Menambah tugas selesai',
-          effectBad: false,
-          tambahSelesai: 1
+          effect: 'Menambah tugas selesai', effectBad: false, tambahSelesai: 1
         },
         {
-          id: 'zona',
-          icon: '🚪',
-          nama: 'Zona Bebas Distraksi',
+          id: 'zona', icon: '🚪', nama: 'Zona Bebas Distraksi',
           desc: 'Belajar di ruang tanpa HP/laptop hiburan.',
-          effect: 'Mengurangi gangguan',
-          effectBad: false,
-          kurangiTerbuang: 2
+          effect: 'Mengurangi gangguan', effectBad: false, kurangiTerbuang: 2
         },
         {
-          id: 'grup',
-          icon: '💬',
-          nama: 'Grup Belajar Fokus',
+          id: 'grup', icon: '💬', nama: 'Grup Belajar Fokus',
           desc: 'Ikut grup belajar yang serius, keluar dari grup gossip.',
-          effect: 'Menambah fokus',
-          effectBad: false,
-          kurangiTerbuang: 1
+          effect: 'Menambah fokus', effectBad: false, kurangiTerbuang: 1
         },
         {
-          id: 'sadar',
-          icon: '🧠',
-          nama: 'Penggunaan Sadar',
+          id: 'sadar', icon: '🧠', nama: 'Penggunaan Sadar',
           desc: 'YouTube hanya untuk materi, bukan rekomendasi hiburan.',
-          effect: 'Meningkatkan kualitas',
-          effectBad: false,
-          kurangiTerbuang: 1
+          effect: 'Meningkatkan kualitas', effectBad: false, kurangiTerbuang: 1
         },
         {
-          id: 'game',
-          icon: '🎮',
-          nama: 'Main Game Dulu',
+          id: 'game', icon: '🎮', nama: 'Main Game Dulu',
           desc: 'Main game "sebentar" sebelum mulai belajar.',
-          effect: 'Menambah waktu terbuang',
-          effectBad: true,
-          tambahTerbuang: 2
+          effect: 'Menambah waktu terbuang', effectBad: true, tambahTerbuang: 2
         },
         {
-          id: 'sosmed',
-          icon: '📱',
-          nama: 'Scroll Sosmed',
+          id: 'sosmed', icon: '📱', nama: 'Scroll Sosmed',
           desc: 'Buka TikTok/Instagram "sebentar" saat belajar.',
-          effect: 'Menambah waktu terbuang',
-          effectBad: true,
-          tambahTerbuang: 3
+          effect: 'Menambah waktu terbuang', effectBad: true, tambahTerbuang: 3
         }
       ];
 
@@ -1628,9 +1793,7 @@
           id: 'B1',
           teks: '<strong>🔥 Tantangan Bonus (Pengayaan — Terbuka):</strong><br><br>"Teknologi terus berkembang. Apa yang akan kamu lakukan jika besok muncul aplikasi baru yang sangat menggoda tapi mengganggu belajarmu? Bagaimana kamu menjaga produktivitasmu? Tulis argumenmu minimal 3 kalimat."',
           tipe: 'teks',
-          validasi: function(val) {
-            return val.trim().length >= 80;
-          },
+          validasi: function(val) { return val.trim().length >= 80; },
           hint: 'Pikirkan: (1) prinsip yang kamu pegang, (2) langkah konkret untuk membatasi, (3) bagaimana melibatkan orang lain (keluarga/teman) untuk mendukung.',
           feedbackSalah: 'Argumenmu masih terlalu pendek. Tulis minimal 3 kalimat: (1) prinsip utama, (2) langkah konkret, (3) dukungan sosial.'
         }
@@ -1676,7 +1839,6 @@
       const elMindful2 = document.getElementById('mindful2');
       const elBtnLanjutLapis3 = document.getElementById('btnLanjutLapis3');
 
-      const elMindful3 = document.getElementById('mindful3');
       const elKuisKilatBox = document.getElementById('kuisKilatBox');
       const elKuisKilatContent = document.getElementById('kuisKilatContent');
       const elKkHasil = document.getElementById('kkHasil');
@@ -1802,7 +1964,6 @@
         elTimeline.style.display = 'block';
         elHasilBox.style.display = 'none';
 
-        // Hitung efek
         let tambahTerbuang = 0;
         let kurangiTerbuang = 0;
         let tambahSelesai = 0;
@@ -1830,7 +1991,6 @@
         tugasSelesai = selesai;
         waktuTerbuang = terbuang;
 
-        // Timeline animasi
         const timelineData = [
           { text: '🌅 Hari dimulai. Kamu duduk di meja belajar.', type: 'info' },
           { text: '📋 3 tugas menanti: PR, Ujian IPA, Tugas Kelompok.', type: 'info' }
@@ -1917,7 +2077,6 @@
           elHasilBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 300);
 
-        // ⭐ Simpan state setelah simulasi selesai
         if (window.dutaSimpanState) {
           window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
         }
@@ -2190,7 +2349,7 @@
       }
 
       // ============================================
-      // LANJUT KE LAPIS 3
+      // LANJUT KE LAPIS 3 — dengan MODAL POP-UP
       // ============================================
       window.lanjutKeLapis3 = function() {
         const jawab = document.getElementById('mindful2Jawab').value.trim();
@@ -2201,20 +2360,142 @@
         }
 
         lapis2Selesai = true;
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+
         elAreaLapis3.style.display = 'block';
+        updateProgressLapis('lapis3');
+
         elBtnLanjutLapis3.disabled = true;
         elBtnLanjutLapis3.textContent = '✅ Lapis 2 Selesai';
 
-        updateProgressLapis('lapis3');
-        elMindful3.classList.add('show');
+        if (lapis3Dibaca) {
+          tampilkanKontenLapis3SetelahBaca();
+          setTimeout(() => {
+            elAreaLapis3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 300);
+          return;
+        }
 
-        buildKuisKilat();
-        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
-
-        setTimeout(() => {
-          elAreaLapis3.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 300);
+        tampilkanModalPenamaan();
       };
+
+      // ============================================
+      // MODAL PENAMAAN KONSEP
+      // ============================================
+      function tampilkanModalPenamaan() {
+        if (modalPenamaanEl) {
+          modalPenamaanEl.remove();
+          modalPenamaanEl = null;
+        }
+        if (bacaTimerInterval) {
+          clearInterval(bacaTimerInterval);
+          bacaTimerInterval = null;
+        }
+
+        const overlay = document.createElement('div');
+        overlay.className = 'duta-penamaan-overlay';
+        overlay.id = 'duta-penamaan-modal';
+
+        const penamaanKonten = document.getElementById('penamaanKonten');
+        const kontenHTML = penamaanKonten ? penamaanKonten.innerHTML : '<p>Konten penamaan konsep tidak ditemukan.</p>';
+
+        overlay.innerHTML = `
+          <div class="duta-penamaan-box" role="dialog" aria-modal="true" aria-labelledby="dutaPenamaanTitle">
+            <div class="duta-penamaan-header">
+              <span class="dph-icon">📖</span>
+              <span id="dutaPenamaanTitle">Lapis 3 — Penamaan Konsep (Baca dulu ya!)</span>
+            </div>
+            <div class="duta-penamaan-body">
+              <div class="penamaan-box">
+                ${kontenHTML}
+              </div>
+            </div>
+            <div class="duta-penamaan-footer">
+              <button type="button" class="btn-sudah-baca" id="btnSudahBaca" disabled>
+                <span class="bsb-progress" id="bsbProgress"></span>
+                <span id="bsbLabel">⏳ Baca dulu... (<span id="bsbDetik">${DURASI_BACA_DETIK}</span>s)</span>
+              </button>
+              <div class="duta-penamaan-timer" id="dutaPenamaanTimer">
+                Tombol aktif setelah ${DURASI_BACA_DETIK} detik — supaya kamu benar-benar membaca.
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.body.appendChild(overlay);
+        modalPenamaanEl = overlay;
+        document.body.style.overflow = 'hidden';
+
+        const elBtnSudahBaca = document.getElementById('btnSudahBaca');
+        const elBsbProgress = document.getElementById('bsbProgress');
+        const elBsbLabel = document.getElementById('bsbLabel');
+        const elBsbDetik = document.getElementById('bsbDetik');
+        const elTimerInfo = document.getElementById('dutaPenamaanTimer');
+
+        bacaCountdown = DURASI_BACA_DETIK;
+        const totalDetik = DURASI_BACA_DETIK;
+
+        requestAnimationFrame(() => {
+          elBsbProgress.style.width = '0%';
+        });
+
+        bacaTimerInterval = setInterval(() => {
+          bacaCountdown--;
+          if (elBsbDetik) elBsbDetik.textContent = bacaCountdown;
+          const persen = Math.round(((totalDetik - bacaCountdown) / totalDetik) * 100);
+          if (elBsbProgress) elBsbProgress.style.width = persen + '%';
+
+          if (bacaCountdown <= 0) {
+            clearInterval(bacaTimerInterval);
+            bacaTimerInterval = null;
+            if (elBtnSudahBaca) {
+              elBtnSudahBaca.disabled = false;
+              elBsbLabel.innerHTML = '✅ Sudah Membaca';
+            }
+            if (elTimerInfo) {
+              elTimerInfo.textContent = 'Terima kasih sudah membaca! Klik tombol untuk lanjut.';
+              elTimerInfo.style.color = '#2d5a1e';
+              elTimerInfo.style.fontWeight = '700';
+            }
+          }
+        }, 1000);
+
+        elBtnSudahBaca.addEventListener('click', function() {
+          if (elBtnSudahBaca.disabled) return;
+          lapis3Dibaca = true;
+          tutupModalPenamaan();
+          tampilkanKontenLapis3SetelahBaca();
+          if (window.dutaSimpanState) {
+            window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+          }
+          setTimeout(() => {
+            const elJeda = document.getElementById('mindful3');
+            if (elJeda) elJeda.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 300);
+        });
+      }
+
+      function tutupModalPenamaan() {
+        if (bacaTimerInterval) {
+          clearInterval(bacaTimerInterval);
+          bacaTimerInterval = null;
+        }
+        if (modalPenamaanEl) {
+          modalPenamaanEl.remove();
+          modalPenamaanEl = null;
+        }
+        document.body.style.overflow = '';
+      }
+
+      function tampilkanKontenLapis3SetelahBaca() {
+        const elMindful3 = document.getElementById('mindful3');
+        if (elMindful3) elMindful3.classList.add('show');
+
+        if (elKuisKilatContent && !elKuisKilatContent.dataset.built) {
+          buildKuisKilat();
+          elKuisKilatContent.dataset.built = '1';
+        }
+      }
 
       // ============================================
       // KUIS KILAT
@@ -2711,52 +2992,36 @@
       // ============================================
       // STATE ACTIVITY — Simpan & Restore
       // ============================================
-
-      /**
-       * Kumpulkan semua state yang perlu disimpan.
-       * Bagian 4 tidak punya form identitas.
-       */
       function kumpulkanState() {
         return {
-          // Tahap saat ini
           lapis1Selesai: lapis1Selesai,
           lapis2Selesai: lapis2Selesai,
-          // Data simulasi jadwal hari
+          lapis3Dibaca: lapis3Dibaca,
           strategiDipilih: strategiDipilih,
           hariSudahDijalankan: hariSudahDijalankan,
           tugasSelesai: tugasSelesai,
           waktuTerbuang: waktuTerbuang,
           skorProduktivitas: skorProduktivitas,
-          // Jeda Sadar (text)
           mindful1Jawab: (document.getElementById('mindful1Jawab') || {}).value || '',
           mindfulPilihJawab: (document.getElementById('mindfulPilihJawab') || {}).value || '',
           mindful2Jawab: (document.getElementById('mindful2Jawab') || {}).value || '',
           mindful3Jawab: (document.getElementById('mindful3Jawab') || {}).value || '',
-          // Level & tantangan
           levelTantangan: levelTantangan,
           tantanganSelesai: tantanganSelesai,
-          // Kuis kilat
           jawabanKuisKilat: jawabanKuisKilat,
           kuisKilatSubmitted: kuisKilatSubmitted,
           kuisKilatBenar: kuisKilatBenar,
-          // Tes pemahaman
           jawabanTes: jawabanTes,
           tesSubmitted: tesSubmitted,
           tesBenar: tesBenar,
           tesSelesai: tesSelesai,
-          // Refleksi + exit ticket
           refPelajaran: (document.getElementById('refPelajaran') || {}).value || '',
           refPenerapan: (document.getElementById('refPenerapan') || {}).value || '',
           exitTicket: (document.getElementById('exitTicket') || {}).value || '',
-          // Info tambahan
           __lapisTerakhir: cekLapisTerakhir()
         };
       }
 
-      /**
-       * Tentukan lapis terakhir yang sudah dicapai.
-       * Return: 'lapis1' | 'lapis2' | 'lapis3' | 'tes'
-       */
       function cekLapisTerakhir() {
         if (tesSelesai || tesSubmitted) return 'tes';
         if (lapis2Selesai) return 'lapis3';
@@ -2764,15 +3029,12 @@
         return 'lapis1';
       }
 
-      /**
-       * Restore state dari localStorage ke variabel + DOM.
-       */
       function restoreState(s) {
         if (!s || typeof s !== 'object') return;
 
-        // Restore variabel
         lapis1Selesai        = !!s.lapis1Selesai;
         lapis2Selesai        = !!s.lapis2Selesai;
+        lapis3Dibaca         = !!s.lapis3Dibaca;
         strategiDipilih      = s.strategiDipilih || {};
         hariSudahDijalankan  = !!s.hariSudahDijalankan;
         tugasSelesai         = Number(s.tugasSelesai) || 0;
@@ -2787,8 +3049,8 @@
         tesSubmitted         = !!s.tesSubmitted;
         tesBenar             = Number(s.tesBenar) || 0;
         tesSelesai           = !!s.tesSelesai;
+		aiFeedback     = s.aiFeedback || '';
 
-        // Restore textarea
         const elM1 = document.getElementById('mindful1Jawab');
         const elMP = document.getElementById('mindfulPilihJawab');
         const elM2 = document.getElementById('mindful2Jawab');
@@ -2805,10 +3067,8 @@
         if (elRN && s.refPenerapan) elRN.value = s.refPenerapan;
         if (elET && s.exitTicket) elET.value = s.exitTicket;
 
-        // Render strategi dulu (dibutuhkan untuk restore pilihan strategi)
         renderStrategi();
 
-        // Restore tampilan strategi yang terpilih
         Object.keys(strategiDipilih).forEach(function(id) {
           const el = document.getElementById('strategi_' + id);
           const check = document.getElementById('check_' + id);
@@ -2816,16 +3076,14 @@
           if (check) check.textContent = '✓';
         });
 
-        // Tampilkan lapis yang sesuai
         const lapis = s.__lapisTerakhir || cekLapisTerakhir();
 
-        // Pastikan area simulasi aktif
+        renderFeedbackAi();
         if (elAreaSimulasi) elAreaSimulasi.classList.add('active');
 
         if (lapis === 'lapis1') {
           updateProgressLapis('lapis1');
 
-          // Kalau hari sudah dijalankan, restore hasil
           if (hariSudahDijalankan) {
             elBtnMulaiSim.disabled = true;
             elBtnMulaiSim.textContent = '✅ Hari Selesai';
@@ -2834,7 +3092,6 @@
             elStatTerbuang.textContent = waktuTerbuang;
             elStatSkor.textContent = skorProduktivitas;
 
-            // Tandai tugas
             const tugasIds = ['tugas_pr', 'tugas_ujian', 'tugas_kelompok'];
             tugasIds.forEach((id, i) => {
               const el = document.getElementById(id);
@@ -2848,7 +3105,6 @@
               }
             });
 
-            // Tampilkan hasil
             let pesan = '';
             if (skorProduktivitas >= 80) {
               pesan = '🎉 <strong>Luar biasa!</strong> Kamu berhasil menyelesaikan ' + tugasSelesai + '/3 tugas dengan skor produktivitas <strong>' + skorProduktivitas + '</strong>. Strategimu sangat efektif!';
@@ -2867,7 +3123,6 @@
           return;
         }
 
-        // Lapis 2 atau 3 atau tes: sembunyikan simulasi & pilih level
         if (elAreaSimulasi) elAreaSimulasi.style.display = 'none';
 
         if (lapis === 'lapis2') {
@@ -2907,12 +3162,14 @@
             elLapis2LevelLabel.textContent = levelTantangan === 'dasar' ? '🟢 Dasar' :
                                              levelTantangan === 'reguler' ? '🟡 Reguler' : '🔴 Tantangan';
           }
-          elMindful3.classList.add('show');
           elBtnLanjutLapis3.disabled = true;
           elBtnLanjutLapis3.textContent = '✅ Lapis 2 Selesai';
-          buildKuisKilat();
-          if (kuisKilatSubmitted) {
-            restoreKuisKilat();
+
+          if (lapis3Dibaca) {
+            tampilkanKontenLapis3SetelahBaca();
+            if (kuisKilatSubmitted) {
+              restoreKuisKilat();
+            }
           }
         }
 
@@ -2930,9 +3187,6 @@
         }
       }
 
-      /**
-       * Restore tampilan kuis kilat yang sudah disubmit.
-       */
       function restoreKuisKilat() {
         kuisKilatData.forEach(function(soal, idx) {
           const div = elKuisKilatContent.querySelector('[data-index="' + idx + '"]');
@@ -2962,9 +3216,6 @@
         elBtnLanjutTes.disabled = false;
       }
 
-      /**
-       * Restore tampilan tes yang sudah disubmit.
-       */
       function restoreTes() {
         soalData.forEach(function(soal, idx) {
           const selected = jawabanTes[idx];
@@ -3007,9 +3258,6 @@
         tampilkanHasilTes(tesBenar, soalData.length, tesBenar >= AMBANG_LULUS);
       }
 
-      /**
-       * Tampilkan modal "Lanjutkan Aktivitas?" kalau ada state tersimpan.
-       */
       function tawarkanRestore() {
         const s = window.dutaAmbilState ? window.dutaAmbilState(STATE_KEY) : null;
         if (!s) return false;
@@ -3027,6 +3275,127 @@
         });
         return true;
       }
+	  
+	        // ============================================
+      // FEEDBACK GURU (via Code.gs)
+      // ============================================
+      const elFeedbackAiBox   = document.getElementById('feedbackAiBox');
+      const elFeedbackAiBody  = document.getElementById('feedbackAiBody');
+      const elBtnMintaFeedback = document.getElementById('btnMintaFeedback');
+      const elFeedbackAiHint  = document.getElementById('feedbackAiHint');
+
+      function cekTombolFeedback() {
+        const refPel = (document.getElementById('refPelajaran') || {}).value || '';
+        const refPen = (document.getElementById('refPenerapan') || {}).value || '';
+        const exitT  = (document.getElementById('exitTicket') || {}).value || '';
+        const ada = (refPel.trim().length >= 3) || (refPen.trim().length >= 3) || (exitT.trim().length >= 3);
+        if (elBtnMintaFeedback) elBtnMintaFeedback.disabled = !ada || aiFeedbackLoading;
+        if (elFeedbackAiHint) {
+          elFeedbackAiHint.textContent = ada
+            ? 'Klik tombol untuk minta catatan dari guru.'
+            : 'Isi Refleksi atau Exit Ticket dulu untuk mengaktifkan tombol.';
+        }
+      }
+
+      function renderFeedbackAi() {
+        if (!elFeedbackAiBox) return;
+        if (aiFeedback) {
+          elFeedbackAiBox.classList.add('show');
+          if (elFeedbackAiBody) elFeedbackAiBody.textContent = aiFeedback;
+        } else {
+          elFeedbackAiBox.classList.remove('show');
+        }
+      }
+
+      async function mintaFeedbackGuru() {
+        if (aiFeedbackLoading) return;
+
+        const refPel = (document.getElementById('refPelajaran') || {}).value || '';
+        const refPen = (document.getElementById('refPenerapan') || {}).value || '';
+        const exitT  = (document.getElementById('exitTicket') || {}).value || '';
+
+        if (refPel.trim().length < 3 && refPen.trim().length < 3 && exitT.trim().length < 3) {
+          alert('📝 Isi Refleksi (PELAJARAN / PENERAPAN) atau Exit Ticket dulu ya.');
+          return;
+        }
+
+        aiFeedbackLoading = true;
+        if (elBtnMintaFeedback) {
+          elBtnMintaFeedback.disabled = true;
+          elBtnMintaFeedback.innerHTML = '<span class="fai-spin"></span> Meminta catatan...';
+        }
+        if (elFeedbackAiHint) elFeedbackAiHint.textContent = 'Mohon tunggu, guru sedang menulis catatan...';
+
+        const skorBagian4 = Math.round(40 + (tesBenar / soalData.length) * 60);
+
+        const ringkasHasil =
+          'Strategi dipilih: ' + (Object.keys(strategiDipilih || {}).length || 0) + ' strategi' +
+          '; Tugas selesai: ' + tugasSelesai + '/3' +
+          '; Waktu terbuang: ' + waktuTerbuang + ' jam' +
+          '; Skor produktivitas: ' + skorProduktivitas;
+
+        const payload = {
+          modul: MODUL_KEY,
+          bagian: 'd',
+          level: levelTantangan || '',
+          skorTes: skorBagian4,
+          benarTes: tesBenar,
+          totalTes: soalData.length,
+          ringkasHasil: ringkasHasil,
+          mindful: {
+            j1: (document.getElementById('mindful1Jawab') || {}).value || '',
+            j2: (document.getElementById('mindful2Jawab') || {}).value || '',
+            j3: (document.getElementById('mindful3Jawab') || {}).value || '',
+            pilih: (document.getElementById('mindfulPilihJawab') || {}).value || ''
+          },
+          refleksi: {
+            pelajaran: refPel,
+            penerapan: refPen
+          },
+          exitTicket: exitT
+        };
+
+        let hasil;
+        try {
+          hasil = await window.dutaMintaFeedbackAI(payload);
+        } catch (e) {
+          hasil = { ok: false, error: e.message || 'Gagal terhubung' };
+        }
+
+        aiFeedbackLoading = false;
+
+        if (hasil && hasil.ok && hasil.feedback) {
+          aiFeedback = hasil.feedback;
+          renderFeedbackAi();
+          if (elBtnMintaFeedback) {
+            elBtnMintaFeedback.innerHTML = '🔁 Minta Feedback Lagi';
+          }
+          if (elFeedbackAiHint) elFeedbackAiHint.textContent = 'Catatan guru tersimpan. Bisa lanjut ke bagian berikutnya.';
+          if (window.dutaSimpanState) {
+            window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+          }
+        } else {
+          const pesan = (hasil && hasil.error) || 'Gagal minta feedback. Coba lagi.';
+          alert('⚠️ ' + pesan);
+          if (elBtnMintaFeedback) {
+            elBtnMintaFeedback.innerHTML = '🧑‍🏫 Minta Feedback';
+          }
+          if (elFeedbackAiHint) elFeedbackAiHint.textContent = 'Gagal. Klik tombol untuk coba lagi.';
+        }
+
+        cekTombolFeedback();
+      }
+
+      if (elBtnMintaFeedback) {
+        elBtnMintaFeedback.addEventListener('click', mintaFeedbackGuru);
+      }
+      ['refPelajaran', 'refPenerapan', 'exitTicket'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', cekTombolFeedback);
+          el.addEventListener('change', cekTombolFeedback);
+        }
+      });
 
       // ============================================
       // INISIALISASI
@@ -3034,15 +3403,12 @@
       document.addEventListener('DOMContentLoaded', function() {
         renderStrategi();
 
-        // ⭐ Tawarkan restore kalau ada state tersimpan
         tawarkanRestore();
 
-        // ⭐ Auto-save berkala (tiap 5 detik, jaga-jaga)
         if (window.dutaAutoSave) {
           window.dutaAutoSave(STATE_KEY, kumpulkanState, 5000);
         }
 
-        // ⭐ Auto-save saat input di textarea (Jeda Sadar + Refleksi + Exit Ticket)
         if (window.dutaPasangAutoSaveInput) {
           window.dutaPasangAutoSaveInput(STATE_KEY, kumpulkanState, [
             document.getElementById('mindful1Jawab'),
@@ -3056,7 +3422,13 @@
         }
       });
 
-      console.log('✅ DSI1 Bagian 4: Strategi Bijak Menggunakan Teknologi siap! (+ diferensiasi 3 level + state save/restore)');
+      window.addEventListener('beforeunload', function() {
+        if (bacaTimerInterval) clearInterval(bacaTimerInterval);
+        if (modalPenamaanEl) modalPenamaanEl.remove();
+        if (animasiTimelineInterval) clearInterval(animasiTimelineInterval);
+      });
+
+      console.log('✅ DSI1 Bagian 4: Strategi Bijak Menggunakan Teknologi siap! (+ modal Lapis 3 + diferensiasi 3 level + state save/restore)');
     })();
   </script>
 
