@@ -3,656 +3,738 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>BK6 Bagian 3: Simulasi Riwayat Browser · Informatika DUTA</title>
+  <title>Berpikir Komputasional Lab · Bagian 3: Penerapan Tumpukan · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
   <style>
-    /* ===== Gaya khusus aktivitas BK6 ===== */
-    :root {
-      --c-bk6: #f26d8a;
-      --c-bk6-dark: #a01746;
-      --c-bk6-soft: #fff5f8;
-      --c-bk6-ungu: #b07be0;
+    /* ===== PROGRESS BAR VISUAL (LAPIS) ===== */
+    .progress-lapis {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.4rem; margin: 1.2rem auto 1.5rem;
+      flex-wrap: wrap; max-width: 700px;
     }
-
-    /* Progress bagian */
-    .bagian-progress {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-      padding: 1rem;
-      background: linear-gradient(135deg, #fff5f8, #f3ecff);
-      border-radius: 22px;
+    .progress-lapis .pl-step {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.45rem 1rem; border-radius: 30px;
+      background: #f5ede6; border: 2px solid #e5dbd0;
+      font-size: 0.78rem; font-weight: 700; color: #7a6656;
+      transition: all 0.3s ease; white-space: nowrap;
     }
-    .bagian-progress .step {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.45rem 1rem;
-      border-radius: 30px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      background: #fff;
-      color: #b09ac0;
-      border: 2px solid #e8d9f5;
+    .progress-lapis .pl-step.active {
+      background: linear-gradient(135deg, #6ecb8f, #4fa86a);
+      border-color: #6ecb8f; color: #fff;
+      box-shadow: 0 4px 12px rgba(110, 203, 143, 0.30);
     }
-    .bagian-progress .step.aktif {
-      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
-      color: #fff;
-      border-color: transparent;
-      box-shadow: 0 4px 14px rgba(242, 109, 138, 0.30);
+    .progress-lapis .pl-step.done {
+      background: #8aaa7a; border-color: #8aaa7a; color: #fff;
     }
-    .bagian-progress .step.selesai {
-      background: #d4f5dd;
-      color: #227a44;
-      border-color: #6ecb8f;
-    }
-    .bagian-progress .step .angka {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
+    .progress-lapis .pl-step .pl-num {
+      width: 20px; height: 20px; border-radius: 50%;
       background: rgba(255,255,255,0.35);
-      font-size: 0.75rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
     }
-    .bagian-progress .step.aktif .angka { background: rgba(255,255,255,0.30); }
-    .bagian-progress .step:not(.aktif):not(.selesai) .angka { background: #f0e6ff; }
+    .progress-lapis .pl-sep {
+      color: #a8d8b8; font-weight: 700; font-size: 0.9rem;
+    }
 
-    /* Materi ringkas */
-    .materi-ringkas {
-      background: linear-gradient(135deg, #fff3e0, #ffe3f1);
-      border-radius: 24px;
-      padding: 1.4rem 1.7rem;
-      margin-bottom: 1.5rem;
-      border-left: 8px solid var(--c-bk6);
-      box-shadow: 0 6px 18px rgba(140, 80, 180, 0.08);
+    /* ===== HEADER LAPIS ===== */
+    .lapis-header {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.7rem 1.2rem; margin: 1.2rem 0 1rem;
+      border-radius: 14px; font-weight: 700;
+      font-size: 0.95rem; color: #fff;
     }
-    .materi-ringkas h2 {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #6a2a7a;
-      margin-bottom: 0.6rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border: none;
-      padding: 0;
+    .lapis-header.lapis-1 { background: linear-gradient(135deg, #4fb0c6, #3a8aa0); }
+    .lapis-header.lapis-2 { background: linear-gradient(135deg, #f4b942, #d4a030); }
+    .lapis-header.lapis-3 { background: linear-gradient(135deg, #6ecb8f, #4fa86a); }
+    .lapis-header .lapis-num {
+      background: rgba(255,255,255,0.3); padding: 0.15rem 0.7rem;
+      border-radius: 20px; font-size: 0.75rem; letter-spacing: 0.5px;
     }
-    .materi-ringkas p { margin-bottom: 0.6rem; color: #3a2b3e; }
-    .materi-ringkas ul { margin: 0.3rem 0 0 1.4rem; color: #3a2b3e; }
-    .materi-ringkas li { margin-bottom: 0.3rem; }
-    .materi-ringkas li::marker { color: var(--c-bk6); }
 
-    /* Area simulasi */
-    .step-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 1rem;
-      padding: 0.6rem 1rem;
-      background: #faf6ff;
-      border-radius: 14px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #5c2f8a;
-    }
-    .step-indicator .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--c-bk6);
-      animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.3); }
-    }
+    /* ===== AREA SIMULASI ===== */
+    #area-simulasi { display: none; margin-top: 0.5rem; }
+    #area-simulasi.active { display: block; }
 
     .scenario-panel {
-      background: #fff;
-      border-radius: 24px;
-      padding: 1.5rem 1.7rem;
-      border: 2px solid #f0e6ff;
-      box-shadow: 0 6px 18px rgba(80, 40, 100, 0.06);
+      background: #fffffffa; border-radius: 24px;
+      border: 2px solid #e5dbd0; padding: 2rem;
+      min-height: 400px; position: relative; transition: all 0.3s ease;
+    }
+    .scenario-panel .scenario-title {
+      font-size: 1.4rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.3rem;
+    }
+    .scenario-panel .scenario-story {
+      font-size: 0.95rem; color: #5c4638; background: #e8f5ee;
+      padding: 0.8rem 1.2rem; border-radius: 12px;
+      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid #6ecb8f;
+      line-height: 1.7;
     }
 
-    /* ===== Browser mini ===== */
-    .simulasi-wrap {
+    /* ===== MISI INFO ===== */
+    .misi-info {
+      background: linear-gradient(135deg, #e8f5ee, #d4ebd8);
+      border: 2px solid #6ecb8f;
+      border-radius: 12px;
+      padding: 0.8rem 1.1rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.88rem;
+      color: #2d5a1e;
+      line-height: 1.6;
+    }
+    .misi-info strong { color: #1f4a14; }
+    .misi-info .mi-label {
+      font-size: 0.65rem; letter-spacing: 1.5px;
+      font-weight: 700; text-transform: uppercase;
+      color: #4fa86a; margin-bottom: 0.2rem;
+    }
+
+    /* ===== PANEL MODUL (3 modul) ===== */
+    .modul-pilihan {
       display: grid;
-      grid-template-columns: 1.3fr 1fr;
-      gap: 1.3rem;
-      margin-bottom: 1.3rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.9rem;
+      margin: 1rem 0 1.2rem;
     }
-    @media (max-width: 820px) {
-      .simulasi-wrap { grid-template-columns: 1fr; }
-    }
-
-    .browser-mini {
+    .modul-card {
       background: #fff;
-      border-radius: 18px;
-      border: 3px solid #d4b3e8;
-      overflow: hidden;
-      box-shadow: 0 8px 22px rgba(80, 40, 100, 0.10);
-    }
-    .browser-bar {
-      background: linear-gradient(135deg, #f0e6ff, #faf6ff);
-      padding: 0.7rem 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-bottom: 2px solid #e8d9f5;
-    }
-    .browser-bar .btn-nav {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 2px solid #d4b3e8;
-      background: #fff;
-      font-size: 1rem;
-      font-weight: 800;
-      color: #5c2f8a;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s ease;
-      flex-shrink: 0;
-    }
-    .browser-bar .btn-nav:hover:not(:disabled) {
-      background: var(--c-bk6);
-      color: #fff;
-      border-color: var(--c-bk6);
-      transform: scale(1.05);
-    }
-    .browser-bar .btn-nav:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-    .browser-bar .address {
-      flex: 1;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      background: #fff;
-      border: 2px solid #e8d9f5;
-      font-size: 0.85rem;
-      font-family: 'Courier New', monospace;
-      color: #5c2f8a;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      min-width: 0;
-    }
-    .browser-content {
-      min-height: 220px;
-      padding: 1.5rem 1.3rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      background: linear-gradient(135deg, #faf6ff, #fff);
-      transition: background 0.3s ease;
-    }
-    .browser-content .ikon-situs {
-      font-size: 3rem;
-      line-height: 1;
-      margin-bottom: 0.6rem;
-    }
-    .browser-content .nama-situs {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: #5c2f8a;
-      margin-bottom: 0.3rem;
-    }
-    .browser-content .deskripsi-situs {
-      font-size: 0.9rem;
-      color: var(--ink-soft);
-      max-width: 40ch;
-    }
-    .browser-content.kosong {
-      color: #b09ac0;
-      font-style: italic;
-    }
-
-    /* Daftar situs */
-    .daftar-situs {
-      background: #fff;
-      border-radius: 18px;
-      padding: 1.1rem 1.2rem;
-      border: 2px solid #f0e6ff;
-    }
-    .daftar-situs h3 {
-      font-size: 1rem;
-      font-weight: 800;
-      color: #5c2f8a;
-      margin: 0 0 0.7rem 0;
-      border: none;
-      padding: 0;
-    }
-    .situs-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem;
-    }
-    .situs-btn {
-      padding: 0.7rem 0.6rem;
-      border-radius: 14px;
-      border: 2px solid #e8d9f5;
-      background: #fff;
-      font-size: 0.85rem;
-      font-weight: 700;
-      font-family: inherit;
-      color: #5c2f8a;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.3rem;
-    }
-    .situs-btn .ikon {
-      font-size: 1.3rem;
-      line-height: 1;
-    }
-    .situs-btn:hover {
-      border-color: var(--c-bk6);
-      background: #fff5f8;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(242, 109, 138, 0.18);
-    }
-    .situs-btn.aktif {
-      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
-      color: #fff;
-      border-color: transparent;
-    }
-
-    /* Visualisasi stack riwayat */
-    .stack-riwayat {
-      margin-top: 1rem;
-      background: linear-gradient(180deg, #faf6ff 0%, #f0e6ff 100%);
+      border: 3px solid #e5dbd0;
       border-radius: 16px;
-      padding: 1rem;
-      min-height: 180px;
+      padding: 1rem 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      gap: 0.3rem;
+      align-items: center;
       position: relative;
-      border: 2px dashed #d4b3e8;
     }
-    .stack-riwayat .label-stack {
-      position: absolute;
-      top: 0.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: #fff;
-      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
-      padding: 0.2rem 0.8rem;
-      border-radius: 20px;
-      white-space: nowrap;
+    .modul-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.10);
     }
-    .stack-riwayat .riwayat-item {
-      padding: 0.45rem 0.8rem;
-      margin-bottom: 0.25rem;
-      border-radius: 8px;
-      background: #fff;
-      border-left: 4px solid var(--c-bk6);
-      font-size: 0.8rem;
-      font-family: 'Courier New', monospace;
-      color: #5c2f8a;
-      font-weight: 600;
-      animation: slideIn 0.3s ease;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .stack-riwayat .riwayat-item.teratas {
-      background: linear-gradient(135deg, #fff5f8, #f3ecff);
-      border-left-color: var(--c-bk6-dark);
-      font-weight: 800;
-      box-shadow: 0 3px 10px rgba(242, 109, 138, 0.20);
-    }
-    .stack-riwayat .stack-kosong {
-      color: #b09ac0;
-      font-style: italic;
-      font-size: 0.85rem;
-      text-align: center;
-      padding: 1rem;
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-12px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
+    .modul-card .mc-icon { font-size: 2rem; line-height: 1; margin-bottom: 0.2rem; }
+    .modul-card .mc-title { font-weight: 800; font-size: 1rem; line-height: 1.2; color: #3b2b1e; }
+    .modul-card .mc-desc { font-size: 0.78rem; color: #5c4638; line-height: 1.4; }
+    .modul-card.editor { border-color: #5c7cfa; }
+    .modul-card.editor:hover { border-color: #3a5ad0; background: #e6ecff; }
+    .modul-card.editor.terpilih { background: #e6ecff; box-shadow: 0 0 0 4px rgba(92, 124, 250, 0.30); }
+    .modul-card.browser { border-color: #4fb0c6; }
+    .modul-card.browser:hover { border-color: #3a8aa0; background: #e6f4ff; }
+    .modul-card.browser.terpilih { background: #e6f4ff; box-shadow: 0 0 0 4px rgba(79, 176, 198, 0.30); }
+    .modul-card.fisik { border-color: #f4b942; }
+    .modul-card.fisik:hover { border-color: #d4a030; background: #fff8e6; }
+    .modul-card.fisik.terpilih { background: #fff8e6; box-shadow: 0 0 0 4px rgba(244, 185, 66, 0.30); }
 
-    /* Log */
-    .log-area {
-      margin-top: 1rem;
-      background: #2b1d2e;
-      border-radius: 14px;
-      padding: 0.8rem 1rem;
-      max-height: 150px;
-      overflow-y: auto;
-      font-family: 'Courier New', monospace;
-      font-size: 0.82rem;
-      color: #e8dcd0;
+    .modul-detail {
+      background: #f8f4ef;
+      border-radius: 16px;
+      border: 3px solid #d9cdbf;
+      padding: 1.2rem;
+      margin: 1rem 0;
+      display: none;
     }
-    .log-area .log-line { margin-bottom: 0.25rem; }
-    .log-area .log-line.push { color: #a8e6cf; }
-    .log-area .log-line.pop { color: #ffd7a8; }
-    .log-area .log-line.info { color: #c5b3ff; }
-    .log-area .log-empty { color: #7a6a80; font-style: italic; }
-
-    /* Penghitung */
-    .penghitung {
+    .modul-detail.show { display: block; animation: fadeIn 0.4s ease; }
+    .modul-detail .md-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #3b2b1e;
+      margin-bottom: 0.5rem;
       display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .modul-detail .md-desc {
+      font-size: 0.88rem;
+      color: #5c4638;
+      line-height: 1.6;
+      margin-bottom: 0.8rem;
+    }
+	
+	    /* ===== FEEDBACK AI ===== */
+    .feedback-ai-box {
+      background: linear-gradient(135deg, #eef4ff, #e6ecff);
+      border: 2px solid #5c7cfa;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0 1rem 0;
+      display: none;
+    }
+    .feedback-ai-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .feedback-ai-box .fai-header {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-weight: 800; color: #3b4a9a;
+      font-size: 1rem; margin-bottom: 0.6rem;
+    }
+    .feedback-ai-box .fai-body {
+      background: #fff; border-radius: 12px;
+      padding: 0.9rem 1.1rem; font-size: 0.92rem;
+      line-height: 1.7; color: #2f2822;
+      border-left: 5px solid #5c7cfa;
+      white-space: pre-wrap; word-wrap: break-word;
+    }
+
+    .btn-feedback-ai {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.8rem; border-radius: 30px;
+      border: none; cursor: pointer;
+      background: linear-gradient(135deg, #5c7cfa, #7a5cf0);
+      color: #fff; font-weight: 700; font-size: 0.9rem;
+      font-family: inherit;
+      box-shadow: 0 6px 16px rgba(92, 124, 250, 0.30);
+      transition: all 0.2s ease, opacity 0.2s ease;
+      margin: 0.6rem 0 0.2rem 0;
+      position: relative;
+    }
+    .btn-feedback-ai:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(92, 124, 250, 0.40);
+      filter: brightness(1.05);
+    }
+
+    /* ===== FEEDBACK AI — state disabled yang jelas ===== */
+    .btn-feedback-ai:disabled {
+      opacity: 0.45;
+      cursor: not-allowed !important;
+      filter: grayscale(0.5);
+      box-shadow: 0 2px 6px rgba(92, 124, 250, 0.15) !important;
+      transform: none !important;
+      pointer-events: auto; /* agar cursor not-allowed tetap muncul */
+    }
+    .btn-feedback-ai:disabled:hover {
+      transform: none !important;
+      box-shadow: 0 2px 6px rgba(92, 124, 250, 0.15) !important;
+      filter: grayscale(0.5);
+      cursor: not-allowed !important;
+    }
+    .btn-feedback-ai:disabled * {
+      cursor: not-allowed !important;
+    }
+
+    .btn-feedback-ai .fai-spin {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .feedback-ai-hint {
+      font-size: 0.8rem; color: #7a6656;
+      margin-top: 0.3rem; font-style: italic;
+      text-align: center;
+    }
+
+    /* ===== TEXT EDITOR SIM ===== */
+    .editor-sim {
+      background: #fff;
+      border: 3px solid #5c7cfa;
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 0.8rem 0;
+    }
+    .editor-sim .es-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #3b4a9a;
+      margin-bottom: 0.4rem;
+    }
+    .editor-sim .es-text {
+      font-family: 'Courier New', monospace;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #2f2822;
+      background: #f5f0ea;
+      border: 2px solid #e5dbd0;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      min-height: 60px;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      word-break: break-all;
+    }
+    .editor-sim .es-text .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.3em;
+      background: #5c7cfa;
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+      vertical-align: text-top;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    .editor-sim .es-actions {
+      display: flex;
+      flex-wrap: wrap;
       gap: 0.5rem;
       margin-top: 0.8rem;
     }
-    .penghitung .kotak {
+    .editor-input {
       flex: 1;
-      text-align: center;
-      background: #faf6ff;
-      border-radius: 12px;
-      padding: 0.5rem 0.3rem;
-      border: 2px solid #e8d9f5;
-    }
-    .penghitung .kotak .angka {
-      display: block;
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--c-bk6-dark);
-    }
-    .penghitung .kotak .label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: #8a4bbf;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    /* Tantangan */
-    .tantangan-box {
-      background: linear-gradient(135deg, #e6f4ff, #f3ecff);
-      border-radius: 20px;
-      padding: 1.2rem 1.5rem;
-      margin-top: 1.3rem;
-      border: 2px dashed var(--c-bk6-ungu);
-    }
-    .tantangan-box h3 {
-      margin: 0 0 0.5rem 0;
-      font-size: 1.05rem;
-      color: #5c2f8a;
-      border: none;
-      padding: 0;
-    }
-    .tantangan-box p { margin-bottom: 0.8rem; color: #3a2b3e; }
-    .tantangan-box .soal-tantangan {
-      background: #fff;
-      border-radius: 14px;
-      padding: 0.9rem 1.1rem;
-      margin-bottom: 0.8rem;
-      font-size: 0.92rem;
-      color: #2b1d2e;
-      border-left: 4px solid var(--c-bk6-ungu);
-    }
-    .tantangan-box .soal-tantangan strong { color: #5c2f8a; }
-    .tantangan-box .opsi-tantangan {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      margin-bottom: 0.6rem;
-    }
-    .tantangan-box .opsi-tantangan button {
-      text-align: left;
+      min-width: 100px;
       padding: 0.6rem 1rem;
-      border-radius: 12px;
-      border: 2px solid #d4b3e8;
+      border-radius: 10px;
+      border: 2px solid #d9cdbf;
       background: #fff;
-      color: var(--ink);
-      font-size: 0.9rem;
-      font-family: inherit;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .tantangan-box .opsi-tantangan button:hover:not(:disabled) {
-      border-color: var(--c-bk6);
-      background: #fff5f8;
-      transform: translateX(4px);
-    }
-    .tantangan-box .opsi-tantangan button.benar {
-      background: #d4f5dd; border-color: #6ecb8f; color: #227a44; font-weight: 700;
-    }
-    .tantangan-box .opsi-tantangan button.salah {
-      background: #ffe0e6; border-color: var(--c-bk6); color: #a01746; font-weight: 700;
-    }
-    .tantangan-box .feedback-tantangan {
-      margin-top: 0.7rem;
-      padding: 0.6rem 1rem;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      display: none;
-    }
-    .tantangan-box .feedback-tantangan.show { display: block; }
-    .tantangan-box .feedback-tantangan.ok {
-      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
-    }
-    .tantangan-box .feedback-tantangan.no {
-      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
-    }
-
-    /* Tes pemahaman */
-    .tes-box {
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 3px dashed #e8d9f5;
-    }
-    .tes-box h2 {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #5c2f8a;
-      margin-bottom: 0.4rem;
-      border: none;
-      padding: 0;
-    }
-    .tes-box .sub {
-      font-size: 0.9rem;
-      color: var(--ink-soft);
-      margin-bottom: 1rem;
-    }
-    .soal-item {
-      background: #faf6ff;
-      border-radius: 18px;
-      padding: 1.1rem 1.3rem;
-      margin-bottom: 1rem;
-      border-left: 5px solid var(--c-bk6-ungu);
-    }
-    .soal-item .pertanyaan {
-      font-weight: 700;
-      color: #5c2f8a;
-      margin-bottom: 0.7rem;
-      font-size: 0.95rem;
-    }
-    .soal-item .opsi-tes {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-    .soal-item .opsi-tes label {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
-      padding: 0.55rem 0.9rem;
-      border-radius: 12px;
-      border: 2px solid #e8d9f5;
-      background: #fff;
-      cursor: pointer;
-      font-size: 0.92rem;
-      transition: all 0.15s ease;
-    }
-    .soal-item .opsi-tes label:hover {
-      border-color: var(--c-bk6);
-      background: #fff5f8;
-    }
-    .soal-item .opsi-tes input[type="radio"] {
-      margin-top: 0.25rem;
-      accent-color: var(--c-bk6-ungu);
-    }
-    .soal-item .opsi-tes label.benar {
-      background: #d4f5dd; border-color: #6ecb8f; color: #227a44; font-weight: 700;
-    }
-    .soal-item .opsi-tes label.salah {
-      background: #ffe0e6; border-color: var(--c-bk6); color: #a01746; font-weight: 700;
-    }
-
-    /* Tombol periksa tes */
-    .btn-periksa-tes {
-      display: block;
-      margin: 1.2rem auto 0;
-      padding: 0.9rem 2.2rem;
-      border-radius: 40px;
-      border: none;
-      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
-      color: #fff;
-      font-weight: 700;
+      font-family: 'Courier New', monospace;
       font-size: 1rem;
-      font-family: inherit;
-      cursor: pointer;
-      box-shadow: 0 8px 22px rgba(242, 109, 138, 0.30);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-weight: 700;
+      color: #2f2822;
+      outline: none;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      max-width: 130px;
     }
-    .btn-periksa-tes:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(242, 109, 138, 0.42);
-    }
-    .btn-periksa-tes:disabled {
-      opacity: 0.5; cursor: not-allowed; transform: none;
-    }
+    .editor-input:focus { border-color: #5c7cfa; box-shadow: 0 0 0 3px rgba(92, 124, 250, 0.18); }
 
-    /* Hasil tes */
-    .hasil-tes {
-      display: none;
-      margin-top: 1.3rem;
-      background: linear-gradient(135deg, #fff5f8, #f3ecff);
-      border-radius: 22px;
-      padding: 1.4rem 1.6rem;
-      border-left: 8px solid var(--c-bk6-ungu);
-      box-shadow: 0 8px 24px rgba(140, 80, 180, 0.12);
+    /* ===== BROWSER SIM ===== */
+    .browser-sim {
+      background: #fff;
+      border: 3px solid #4fb0c6;
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 0.8rem 0;
     }
-    .hasil-tes.show { display: block; }
-    .hasil-tes h3 {
-      margin: 0 0 0.5rem 0;
-      color: #5c2f8a;
-      font-size: 1.2rem;
-      border: none;
-      padding: 0;
-    }
-    .hasil-tes .skor-besar {
-      font-size: 2.6rem;
-      font-weight: 800;
-      color: var(--c-bk6-dark);
-      line-height: 1;
-      margin: 0.4rem 0;
-    }
-    .hasil-tes .pesan {
-      padding: 0.7rem 1.1rem;
-      border-radius: 14px;
-      font-weight: 600;
-      font-size: 0.92rem;
-      margin-top: 0.7rem;
-    }
-    .hasil-tes .pesan.lulus {
-      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
-    }
-    .hasil-tes .pesan.gagal {
-      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
-    }
-
-    /* Status kirim */
-    .status-kirim {
-      display: none;
-      margin-top: 1.2rem;
-      padding: 0.9rem 1.3rem;
-      border-radius: 16px;
-      font-size: 0.92rem;
-      font-weight: 600;
-    }
-    .status-kirim.show { display: block; }
-    .status-kirim.info {
-      background: #e6f4ff; color: #1f6b7d; border-left: 5px solid #4fb0c6;
-    }
-    .status-kirim.success {
-      background: #d4f5dd; color: #227a44; border-left: 5px solid #6ecb8f;
-    }
-    .status-kirim.error {
-      background: #ffe0e6; color: #a01746; border-left: 5px solid var(--c-bk6);
-    }
-
-    /* Navigasi bawah */
-    .nav-bottom {
+    .browser-sim .bs-bar {
+      background: #e6f4ff;
+      border-radius: 20px;
+      padding: 0.4rem 0.8rem;
+      margin-bottom: 0.8rem;
       display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 3px dashed #e8d9f5;
-    }
-    .nav-bottom a, .nav-bottom button {
-      display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.85rem 1.8rem;
-      border-radius: 40px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.98rem;
-      font-family: inherit;
-      color: #fff;
-      background: linear-gradient(135deg, var(--c-bk6), var(--c-bk6-ungu));
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 8px 22px rgba(242, 109, 138, 0.30);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #1f6b7d;
+      border: 2px solid #b8d4e8;
     }
-    .nav-bottom a:hover, .nav-bottom button:hover:not(:disabled) {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 30px rgba(242, 109, 138, 0.42);
+    .browser-sim .bs-bar .bs-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #d4a0a0;
     }
-    .nav-bottom button:disabled {
-      opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none;
-    }
-    .nav-bottom .secondary {
+    .browser-sim .bs-bar .bs-dot.b { background: #f4b942; }
+    .browser-sim .bs-bar .bs-dot.c { background: #8aaa7a; }
+    .browser-sim .bs-bar .bs-url {
+      flex: 1;
       background: #fff;
-      color: #a01746;
-      border: 2px solid var(--c-bk6);
-      box-shadow: 0 6px 18px rgba(242, 109, 138, 0.15);
+      padding: 0.2rem 0.8rem;
+      border-radius: 12px;
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .browser-sim .bs-page {
+      background: #f0f9ff;
+      border-radius: 10px;
+      padding: 1.2rem;
+      text-align: center;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-bottom: 0.8rem;
+      border: 2px dashed #b8d4e8;
+    }
+    .browser-sim .bs-page .bsp-icon {
+      font-size: 2.4rem;
+    }
+    .browser-sim .bs-page .bsp-title {
+      font-weight: 700;
+      color: #1f6b7d;
+      font-size: 1.1rem;
+    }
+    .browser-sim .bs-page .bsp-url {
+      font-size: 0.82rem;
+      color: #5c4638;
+      font-family: 'Courier New', monospace;
+      background: #fff;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      border: 1px solid #b8d4e8;
+    }
+    .browser-sim .bs-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .bs-btn {
+      padding: 0.55rem 1.4rem;
+      border-radius: 20px;
+      border: 2px solid #4fb0c6;
+      background: #e6f4ff;
+      color: #1f6b7d;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    .bs-btn:hover:not(:disabled) {
+      background: #d4ebff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(79, 176, 198, 0.20);
+    }
+    .bs-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed !important;
+      pointer-events: auto;
+    }
+    .bs-btn.open-baru {
+      border-color: #8aaa7a;
+      background: #f0f8eb;
+      color: #2d5a1e;
+    }
+    .bs-btn.open-baru:hover:not(:disabled) {
+      background: #e0f2d8;
+      border-color: #6a8a5a;
+    }
+    .bs-input-url {
+      padding: 0.5rem 0.9rem;
+      border-radius: 20px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: #2f2822;
+      outline: none;
+      min-width: 140px;
+      max-width: 180px;
+    }
+    .bs-input-url:focus { border-color: #4fb0c6; box-shadow: 0 0 0 3px rgba(79, 176, 198, 0.18); }
+
+    /* ===== FISIK SIM (tumpukan piring/nampan) ===== */
+    .fisik-sim {
+      background: #fff;
+      border: 3px solid #f4b942;
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 0.8rem 0;
+    }
+    .fisik-sim .fs-rak {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      gap: 0.3rem;
+      min-height: 200px;
+      padding: 1rem;
+      background: linear-gradient(180deg, #fff 0%, #f8f0e0 100%);
+      border: 3px solid #8a7a6a;
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      margin-bottom: 0.8rem;
+      position: relative;
+    }
+    .fisik-sim .fs-rak::before {
+      content: '🍽️ Tumpukan Piring';
+      position: absolute;
+      top: -26px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #8a7a6a;
+      color: #fff;
+      padding: 0.15rem 0.9rem;
+      border-radius: 12px 12px 0 0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .fisik-sim .fs-rak .fs-kosong {
+      color: #a89684; font-style: italic;
+      font-size: 0.85rem; text-align: center;
+      padding: 2rem 1rem;
+    }
+    .piring-item {
+      width: 180px;
+      height: 34px;
+      background: linear-gradient(135deg, #fff 0%, #f0e6d8 100%);
+      border: 2px solid #d4a030;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: #5c3400;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.10);
+      position: relative;
+    }
+    .piring-item.top {
+      background: linear-gradient(135deg, #ffd700, #f4b942);
+      color: #4d2a10;
+      border-color: #8a5e00;
+    }
+    .piring-item .pi-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .fisik-sim .fs-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .fs-btn {
+      padding: 0.55rem 1.4rem;
+      border-radius: 20px;
+      border: 2px solid #f4b942;
+      background: #fff8e6;
+      color: #8a5e00;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    .fs-btn:hover:not(:disabled) {
+      background: #ffefcc;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(244, 185, 66, 0.20);
+    }
+    .fs-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed !important;
+      pointer-events: auto;
+    }
+    .fs-btn.tambah { border-color: #8aaa7a; background: #f0f8eb; color: #2d5a1e; }
+    .fs-btn.tambah:hover:not(:disabled) { background: #e0f2d8; border-color: #6a8a5a; }
+
+    /* Log aktivitas */
+    .log-aktivitas {
+      background: #2f2822;
+      border-radius: 12px;
+      padding: 0.8rem 1.1rem;
+      margin: 0.8rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.78rem;
+      color: #e5dbd0;
+      max-height: 180px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+    .log-aktivitas .log-line {
+      margin-bottom: 0.2rem;
+      animation: fadeIn 0.3s ease;
+    }
+    .log-aktivitas .log-time { color: #b8d4f5; }
+    .log-aktivitas .log-undo { color: #f5d4b8; }
+    .log-aktivitas .log-redo { color: #b8f5d4; }
+    .log-aktivitas .log-back { color: #b8d4f5; }
+    .log-aktivitas .log-forward { color: #d4b8f5; }
+    .log-aktivitas .log-fisik { color: #f5e8b8; }
+    .log-aktivitas .log-error { color: #ff8a8a; font-weight: 700; }
+    .log-aktivitas .log-info { color: #a89684; font-style: italic; }
+
+    /* ===== FEEDBACK ===== */
+    .feedback-box {
+      background: #f5ede6; border-radius: 16px;
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      border-left: 8px solid #dbb9a6;
+      display: none; animation: fadeIn 0.4s ease;
+    }
+    .feedback-box.show { display: block; }
+    .feedback-box.success { border-color: #2d7d46; background: #e8f5ee; }
+    .feedback-box.error { border-color: #b33c3c; background: #fde8e8; }
+    .feedback-box.info { border-color: #6ecb8f; background: #e8f5ee; }
+    .feedback-box.warn { border-color: #d4a030; background: #fff8e6; }
+    .feedback-box .fb-icon { font-size: 1.5rem; margin-right: 0.5rem; }
+    .feedback-box .fb-text { color: #2f2822; line-height: 1.6; }
+    .feedback-box .fb-text strong { color: #4d3829; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 720px) {
-      .bagian-progress { padding: 0.7rem; gap: 0.35rem; }
-      .bagian-progress .step { font-size: 0.72rem; padding: 0.35rem 0.6rem; }
-      .bagian-progress .step .angka { width: 18px; height: 18px; font-size: 0.65rem; }
-      .scenario-panel { padding: 1.1rem 1rem; }
-      .situs-grid { grid-template-columns: repeat(2, 1fr); }
-      .nav-bottom a, .nav-bottom button { width: 100%; justify-content: center; }
+    /* ===== TOMBOL ===== */
+    .btn-game {
+      padding: 0.6rem 1.8rem; border-radius: 30px; border: none;
+      font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; transition: all 0.2s ease;
+      font-family: inherit; display: inline-flex;
+      align-items: center; gap: 0.4rem;
+    }
+    .btn-game.primary {
+      background: linear-gradient(135deg, #6ecb8f, #4fa86a);
+      color: #fff; box-shadow: 0 4px 14px rgba(110, 203, 143, 0.30);
+    }
+    .btn-game.primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(110, 203, 143, 0.40);
+    }
+    .btn-game.secondary {
+      background: #f5ede6; color: #4d3829; border: 2px solid #d9cdbf;
+    }
+    .btn-game.secondary:hover { background: #e8dcd0; transform: translateY(-2px); }
+    .btn-game:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+    .game-actions {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      justify-content: center; margin-top: 1rem;
+    }
+
+    /* ===== MOMEN MINDFUL ===== */
+    .mindful-box {
+      background: linear-gradient(135deg, #e6f4ff, #f0f9ff);
+      border: 2px dashed #4fb0c6;
+      border-radius: 16px; padding: 1rem 1.5rem;
+      margin: 1.2rem 0; display: none;
+    }
+    .mindful-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .mindful-box .mb-icon { font-size: 1.4rem; margin-right: 0.4rem; }
+    .mindful-box .mb-title {
+      font-weight: 700; color: #1f6b7d; font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+    .mindful-box .mb-text {
+      font-size: 0.92rem; color: #2f2822; line-height: 1.6;
+      margin-bottom: 0.6rem;
+    }
+    .mindful-box textarea {
+      width: 100%; padding: 0.6rem 0.9rem;
+      border: 2px solid #b8d4e8; border-radius: 10px;
+      font-family: inherit; font-size: 0.9rem;
+      color: #2f2822; background: #fff; resize: vertical;
+      min-height: 60px; outline: none;
+    }
+    .mindful-box textarea:focus {
+      border-color: #4fb0c6;
+      box-shadow: 0 0 0 3px rgba(79, 176, 198, 0.15);
+    }
+
+    /* ===== PEMILIHAN TINGKAT TANTANGAN ===== */
+    #areaPilihLevel { display: none; margin-top: 0.5rem; }
+    #areaPilihLevel.active { display: block; }
+
+    .pilih-level-box {
+      background: linear-gradient(135deg, #e8f5ee, #d4ebd8, #e6f4ff);
+      border: 3px solid #6ecb8f;
+      border-radius: 20px;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      position: relative;
+    }
+    .pilih-level-box::before {
+      content: '★';
+      position: absolute;
+      top: -14px; left: 1.5rem;
+      background: #fff;
+      padding: 0 0.5rem;
+      font-size: 1.3rem;
+      color: #6ecb8f;
+    }
+    .pilih-level-box .plb-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #2d5a1e;
+      margin-bottom: 0.3rem;
+      text-align: center;
+    }
+    .pilih-level-box .plb-desc {
+      font-size: 0.9rem;
+      color: #5c4638;
+      text-align: center;
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .level-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .level-option {
+      background: #fff;
+      border: 3px solid #e5dbd0;
+      border-radius: 16px;
+      padding: 1rem 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      align-items: center;
+    }
+    .level-option:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+    }
+    .level-option .lo-icon { font-size: 2rem; line-height: 1; margin-bottom: 0.2rem; }
+    .level-option .lo-name { font-weight: 800; font-size: 1.05rem; line-height: 1.2; }
+    .level-option .lo-desc { font-size: 0.8rem; color: #5c4638; line-height: 1.5; }
+    .level-option.dasar { border-color: #a8d8b8; }
+    .level-option.dasar .lo-name { color: #2d5a1e; }
+    .level-option.dasar:hover { border-color: #6a8a5a; background: #f0f8eb; }
+    .level-option.reguler { border-color: #f0d9a8; }
+    .level-option.reguler .lo-name { color: #8a5e00; }
+    .level-option.reguler:hover { border-color: #d4a030; background: #fff8e6; }
+    .level-option.tantangan { border-color: #f0c0c0; }
+    .level-option.tantangan .lo-name { color: #a84a3a; }
+    .level-option.tantangan:hover { border-color: #d4a0a0; background: #fdf0f0; }
+    .level-option.terpilih {
+      box-shadow: 0 0 0 4px rgba(110, 203, 143, 0.40);
+      transform: translateY(-2px);
+    }
+    .level-option.terpilih.dasar { border-color: #2d5a1e; background: #e0f2d8; }
+    .level-option.terpilih.reguler { border-color: #8a5e00; background: #fff3d6; }
+    .level-option.terpilih.tantangan { border-color: #a84a3a; background: #fde0e0; }
+
+    .level-badge-terpilih {
+      display: none; align-items: center; justify-content: center;
+      gap: 0.5rem; padding: 0.6rem 1.2rem;
+      background: #fff; border-radius: 30px;
+      border: 2px solid #6ecb8f;
+      font-size: 0.9rem; font-weight: 700; color: #2d5a1e;
+      margin: 0.8rem auto 0; width: fit-content;
+    }
+    .level-badge-terpilih.show { display: flex; animation: fadeIn 0.4s ease; }
+
+    #mindfulPilihLevel { display: none; }
+    #mindfulPilihLevel.show { display: block; }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 820px) {
+      .scenario-panel { padding: 1.2rem; }
+      .progress-lapis { gap: 0.3rem; }
+      .progress-lapis .pl-step { font-size: 0.7rem; padding: 0.35rem 0.8rem; }
+      .pilih-level-box { padding: 1.2rem 1rem; }
+    }
+    @media (max-width: 480px) {
+      .scenario-panel { padding: 0.8rem; }
+      .scenario-panel .scenario-title { font-size: 1.1rem; }
+      .lapis-header { font-size: 0.85rem; padding: 0.6rem 1rem; }
+      .progress-lapis .pl-step .pl-label { display: none; }
+      .progress-lapis .pl-step { padding: 0.35rem 0.6rem; }
+      .level-options { grid-template-columns: 1fr; }
+      .modul-pilihan { grid-template-columns: 1fr; }
+      .editor-sim .es-text { font-size: 1rem; }
+      .piring-item { width: 140px; height: 30px; font-size: 0.72rem; }
+      .bs-input-url { min-width: 100px; max-width: 130px; }
     }
   </style>
 </head>
 <body>
+
   <header id="header-utama"></header>
 
   <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
     <ol class="breadcrumb">
       <li><a href="../index.html">Beranda</a></li>
       <li><a href="materibk.html">Berpikir Komputasional</a></li>
-      <li><a href="bk6.html">BK6: Tumpukan (Stack)</a></li>
-      <li>Bagian 3: Simulasi Riwayat Browser</li>
+      <li><a href="bk6.html">Tumpukan (Stack)</a></li>
+      <li>Bagian 3: Penerapan Tumpukan</li>
     </ol>
   </nav>
 
@@ -660,138 +742,495 @@
     <article class="card">
       <div class="aktivitas-wrapper">
 
-        <!-- ===== PROGRESS BAGIAN ===== -->
-        <div class="bagian-progress" aria-label="Progress bagian">
-          <div class="step selesai"><span class="angka">✓</span> Simulasi Buku</div>
-          <div class="step selesai"><span class="angka">✓</span> Lab Stack</div>
-          <div class="step aktif"><span class="angka">3</span> Riwayat Browser</div>
-          <div class="step"><span class="angka">4</span> Studi Kasus</div>
-          <div class="step"><span class="angka">5</span> Kuis Akhir</div>
-        </div>
-
-        <!-- ===== MATERI SINGKAT ===== -->
-        <div class="materi-ringkas">
-          <h2>📚 Materi Singkat — Bagian 3</h2>
-          <p>
-            Stack banyak dipakai di teknologi sehari-hari. Salah satu contoh paling nyata adalah
-            <strong>tombol Back di browser</strong>. Browser menyimpan riwayat halaman yang kamu
-            kunjungi dalam sebuah <strong>stack</strong>.
-          </p>
-          <ul>
-            <li>Setiap kali kamu membuka halaman baru → <strong>Push</strong> URL ke stack riwayat.</li>
-            <li>Setiap kali kamu klik <strong>Back</strong> → <strong>Pop</strong> dari stack riwayat.</li>
-            <li>Halaman yang muncul adalah halaman yang <em>terakhir dikunjungi</em> sebelum halaman saat ini.</li>
-          </ul>
-          <p style="margin-top:0.6rem;">
-            <strong>Contoh lain:</strong> tombol Undo (Ctrl+Z), riwayat chat WhatsApp,
-            call stack di program komputer, dan tumpukan buku di meja belajar.
-          </p>
+        <!-- ===== PROGRESS BAR VISUAL ===== -->
+        <div class="progress-lapis" id="progressLapis">
+          <span class="pl-step active" data-step="lapis1">
+            <span class="pl-num">1</span>
+            <span class="pl-label">Menjelajah</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis2">
+            <span class="pl-num">2</span>
+            <span class="pl-label">Tantangan</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis3">
+            <span class="pl-num">3</span>
+            <span class="pl-label">Penamaan</span>
+          </span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="tes">
+            <span class="pl-num">4</span>
+            <span class="pl-label">Tes Pemahaman</span>
+          </span>
         </div>
 
         <!-- ===== AREA SIMULASI ===== -->
-        <div id="area-simulasi">
-          <div class="step-indicator">
-            <span class="dot"></span>
-            <span>Aktivitas Interaktif — Simulasi Riwayat Browser</span>
-          </div>
-
+        <div id="area-simulasi" class="active">
           <div class="scenario-panel">
-            <p style="margin-bottom:1rem; color:#3a2b3e;">
-              Buka beberapa website Indonesia dengan mengklik tombol di panel kanan.
-              Amati bagaimana <strong>stack riwayat</strong> bertambah setiap kali kamu membuka situs baru.
-              Lalu gunakan tombol <strong>← Back</strong> dan <strong>→ Forward</strong> di browser mini
-              untuk menjelajah riwayat.
+
+            <div class="scenario-title">🌐 Aktivitas: Stack di Sekitar Kita</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Budi sedang mengerjakan tugas di laptopnya.
+              Ia mengetik beberapa huruf, lalu salah dan menekan <strong>Undo</strong>.
+              Setelah selesai, ia membuka browser untuk mencari referensi: Google,
+              lalu Wikipedia, lalu YouTube. Saat ingin kembali ke Wikipedia, ia menekan
+              <strong>Back</strong>. Di dapur, ibunya menumpuk piring yang baru dicuci.
+              <br><br>
+              Tanpa sadar, Budi dan ibunya sedang menggunakan <strong>struktur data
+              yang sama</strong> — <strong>stack (tumpukan)</strong>! Tugasmu sekarang:
+              jelajahi tiga tempat berbeda untuk menemukan <strong>stack</strong> di
+              sekitar kita!
+            </div>
+
+            <!-- ===== LAPIS 1: MENJELAJAH BEBAS ===== -->
+            <div class="lapis-header lapis-1">
+              <span class="lapis-num">LAPIS 1</span>
+              <span>🖐️ Menjelajah Bebas — Pilih Modul, Coba Sendiri</span>
+            </div>
+
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              <strong>Instruksi:</strong> Ada <strong>3 modul</strong> yang bisa kamu
+              jelajahi. Klik salah satu kartu untuk membuka modul. Coba semua operasi
+              di setiap modul, lalu amati bagaimana <strong>stack</strong> bekerja
+              di kehidupan nyata!
             </p>
 
-            <!-- Simulasi -->
-            <div class="simulasi-wrap">
-              <!-- Browser mini -->
-              <div>
-                <div class="browser-mini">
-                  <div class="browser-bar">
-                    <button class="btn-nav" id="btnBack" title="Back" aria-label="Back" disabled>←</button>
-                    <button class="btn-nav" id="btnForward" title="Forward" aria-label="Forward" disabled>→</button>
-                    <div class="address" id="addressBar">about:blank</div>
-                  </div>
-                  <div class="browser-content kosong" id="browserContent">
-                    <div class="ikon-situs">🌐</div>
-                    <div class="nama-situs">Halaman Kosong</div>
-                    <div class="deskripsi-situs">Klik salah satu situs di panel kanan untuk mulai menjelajah.</div>
-                  </div>
-                </div>
+            <!-- Misi info -->
+            <div class="misi-info" id="misiInfo">
+              <div class="mi-label">STATUS MODUL</div>
+              <div id="misiText">Pilih salah satu modul di bawah untuk mulai menjelajah.</div>
+            </div>
 
-                <!-- Stack riwayat -->
-                <div class="stack-riwayat" id="stackRiwayat">
-                  <div class="label-stack">📚 Stack Riwayat (TOP di atas)</div>
-                  <div class="stack-kosong">Stack riwayat kosong</div>
-                </div>
-
-                <!-- Penghitung -->
-                <div class="penghitung">
-                  <div class="kotak">
-                    <span class="angka" id="hitungPush">0</span>
-                    <span class="label">Push</span>
-                  </div>
-                  <div class="kotak">
-                    <span class="angka" id="hitungPop">0</span>
-                    <span class="label">Back</span>
-                  </div>
-                  <div class="kotak">
-                    <span class="angka" id="hitungForward">0</span>
-                    <span class="label">Forward</span>
-                  </div>
-                </div>
+            <!-- Stats -->
+            <div class="stats-bar" style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-between; align-items:center; padding:0.8rem 1.2rem; background:#fff; border-radius:16px; border:2px solid #e5dbd0; margin-bottom:1rem;">
+              <div class="stat" style="display:flex; align-items:center; gap:0.4rem; font-size:0.88rem; color:#4d3829;">
+                <span>✅</span>
+                <span>Modul Selesai Dijelajahi:</span>
+                <span class="num" id="statModulSelesai" style="font-weight:700; font-size:1.1rem; color:#2d5a1e;">0</span>
+                <span>/ 3</span>
               </div>
-
-              <!-- Daftar situs + log -->
-              <div>
-                <div class="daftar-situs">
-                  <h3>🌐 Daftar Website</h3>
-                  <div class="situs-grid" id="situsGrid"></div>
-                </div>
-
-                <div class="log-area" id="logArea">
-                  <div class="log-empty">Belum ada aktivitas...</div>
-                </div>
-
-                <button class="btn btn-reset" id="btnReset" style="width:100%; margin-top:0.8rem; padding:0.65rem 1.2rem; border-radius:14px; border:2px solid var(--c-bk6); background:#fff; color:#a01746; font-weight:700; font-family:inherit; font-size:0.9rem; cursor:pointer; transition:all 0.15s ease;">🔄 Reset Simulasi</button>
+              <div class="stat" style="display:flex; align-items:center; gap:0.4rem; font-size:0.88rem; color:#4d3829;">
+                <span>👆</span>
+                <span>Total Aksi:</span>
+                <span class="num" id="statTotalAksi" style="font-weight:700; font-size:1.1rem; color:#3a8aa0;">0</span>
               </div>
             </div>
 
-            <!-- Tantangan -->
-            <div class="tantangan-box" id="tantanganBox">
-              <h3>🎯 Tantangan — Prediksi Halaman</h3>
-              <div class="soal-tantangan">
-                <strong>Skenario:</strong> Siti membuka <strong>Google → Ruangguru → Tokopedia → Gojek</strong>.
-                Ia klik <strong>Back 2 kali</strong>. Halaman apa yang sekarang tampil?
+            <!-- Pilihan Modul -->
+            <div class="modul-pilihan" id="modulPilihan">
+              <div class="modul-card editor" data-modul="editor" onclick="pilihModul('editor')">
+                <div class="mc-icon">📝</div>
+                <div class="mc-title">Text Editor</div>
+                <div class="mc-desc">Ketik huruf, lalu tekan Undo/Redo. Temukan stack di balik layar!</div>
               </div>
-              <div class="opsi-tantangan" id="opsiTantangan">
-                <button data-jawab="salah" data-feedback="Bukan. Setelah Back 1x dari Gojek, Siti di Tokopedia. Back 2x, Siti di Ruangguru.">A. Gojek</button>
-                <button data-jawab="salah" data-feedback="Bukan. Tokopedia adalah hasil Back 1x, bukan Back 2x.">B. Tokopedia</button>
-                <button data-jawab="benar" data-feedback="Benar! Stack riwayat: [Google, Ruangguru, Tokopedia, Gojek]. Back 1x → Pop Gojek → di Tokopedia. Back 2x → Pop Tokopedia → di Ruangguru.">C. Ruangguru</button>
-                <button data-jawab="salah" data-feedback="Bukan. Google adalah halaman paling awal, butuh 3x Back untuk kembali ke Google.">D. Google</button>
+              <div class="modul-card browser" data-modul="browser" onclick="pilihModul('browser')">
+                <div class="mc-icon">🌐</div>
+                <div class="mc-title">Browser History</div>
+                <div class="mc-desc">Buka beberapa halaman, lalu tekan Back/Forward. Temukan stack-nya!</div>
               </div>
-              <div class="feedback-tantangan" id="feedbackTantangan"></div>
+              <div class="modul-card fisik" data-modul="fisik" onclick="pilihModul('fisik')">
+                <div class="mc-icon">🍽️</div>
+                <div class="mc-title">Tumpukan Piring</div>
+                <div class="mc-desc">Tambah piring, ambil piring. Rasakan prinsip LIFO di dunia nyata!</div>
+              </div>
             </div>
 
-            <!-- ===== TES PEMAHAMAN ===== -->
-            <div class="tes-box" id="tesBox">
-              <h2>📝 Tes Pemahaman — Bagian 3</h2>
-              <p class="sub">Minimal <strong>2 dari 3 soal</strong> benar untuk lanjut ke Bagian 4.</p>
+            <!-- ===== MODUL DETAIL: TEXT EDITOR ===== -->
+            <div class="modul-detail" id="modulEditor">
+              <div class="md-title">
+                <span>📝</span>
+                <span>Modul A: Text Editor — Undo &amp; Redo</span>
+              </div>
+              <div class="md-desc">
+                Setiap huruf yang kamu ketik akan <strong>disimpan di stack</strong>.
+                Saat kamu tekan <strong>Undo</strong>, huruf terakhir diambil (pop).
+                Saat kamu tekan <strong>Redo</strong>, huruf yang diambil dikembalikan.
+              </div>
 
-              <div id="soalWrap"></div>
-
-              <button class="btn-periksa-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
-
-              <div class="hasil-tes" id="hasilTes"></div>
-              <div class="status-kirim" id="statusKirim"></div>
+              <div class="editor-sim">
+                <div class="es-label">📄 Teks Kamu</div>
+                <div class="es-text" id="editorText">
+                  <span id="editorContent"></span><span class="cursor"></span>
+                </div>
+                <div class="es-actions">
+                  <input type="text" class="editor-input" id="editorInput" placeholder="A-Z" maxlength="1" oninput="ketikHuruf(this.value)" autocomplete="off">
+                  <button type="button" class="bs-btn" onclick="aksiUndo()" id="btnUndo">↶ Undo</button>
+                  <button type="button" class="bs-btn open-baru" onclick="aksiRedo()" id="btnRedo">↷ Redo</button>
+                  <button type="button" class="bs-btn" onclick="resetEditor()" style="border-color:#d9cdbf; background:#f5ede6; color:#4d3829;">🔄 Reset</button>
+                </div>
+                <div style="font-size:0.78rem; color:#7a6656; margin-top:0.6rem; font-style:italic;">
+                  💡 Ketik satu huruf, lalu coba Undo dan Redo.
+                </div>
+              </div>
             </div>
 
-            <!-- ===== NAVIGASI BAWAH ===== -->
-            <div class="nav-bottom">
-              <a class="secondary" href="aktivitasbk6b.html">← Bagian 2</a>
-              <button id="btnLanjut" disabled>Lanjut ke Bagian 4 →</button>
+            <!-- ===== MODUL DETAIL: BROWSER HISTORY ===== -->
+            <div class="modul-detail" id="modulBrowser">
+              <div class="md-title">
+                <span>🌐</span>
+                <span>Modul B: Browser History — Back &amp; Forward</span>
+              </div>
+              <div class="md-desc">
+                Setiap halaman yang kamu buka <strong>disimpan di stack riwayat</strong>.
+                Tombol <strong>Back</strong> mengambil halaman terakhir (pop).
+                <strong>Forward</strong> mengembalikannya.
+              </div>
+
+              <div class="browser-sim">
+                <div class="bs-bar">
+                  <span class="bs-dot"></span>
+                  <span class="bs-dot b"></span>
+                  <span class="bs-dot c"></span>
+                  <span class="bs-url" id="bsUrl">about:blank</span>
+                </div>
+                <div class="bs-page" id="bsPage">
+                  <div class="bsp-icon">🏠</div>
+                  <div class="bsp-title">Halaman Kosong</div>
+                  <div class="bsp-url">Belum ada halaman dibuka</div>
+                </div>
+                <div class="bs-actions">
+                  <input type="text" class="bs-input-url" id="bsInputUrl" placeholder="contoh: google.com" maxlength="40" autocomplete="off">
+                  <button type="button" class="bs-btn open-baru" onclick="bukaHalaman()">➕ Buka Halaman</button>
+                  <button type="button" class="bs-btn" onclick="aksiBack()" id="btnBack">← Back</button>
+                  <button type="button" class="bs-btn open-baru" onclick="aksiForward()" id="btnForward">→ Forward</button>
+                  <button type="button" class="bs-btn" onclick="resetBrowser()" style="border-color:#d9cdbf; background:#f5ede6; color:#4d3829;">🔄 Reset</button>
+                </div>
+                <div style="font-size:0.78rem; color:#7a6656; margin-top:0.6rem; font-style:italic;">
+                  💡 Buka minimal 3 halaman, lalu coba Back dan Forward.
+                </div>
+              </div>
             </div>
+
+            <!-- ===== MODUL DETAIL: FISIK ===== -->
+            <div class="modul-detail" id="modulFisik">
+              <div class="md-title">
+                <span>🍽️</span>
+                <span>Modul C: Tumpukan Piring — LIFO di Dunia Nyata</span>
+              </div>
+              <div class="md-desc">
+                Piring yang <strong>terakhir diletakkan</strong> di atas tumpukan
+                adalah yang <strong>pertama diambil</strong>. Coba tumpuk dan ambil
+                piring untuk merasakan prinsip LIFO.
+              </div>
+
+              <div class="fisik-sim">
+                <div class="fs-rak" id="fsRak">
+                  <div class="fs-kosong" id="fsKosong">— tumpukan masih kosong —</div>
+                </div>
+                <div class="fs-actions">
+                  <button type="button" class="fs-btn tambah" onclick="tambahPiring()" id="btnTambahPiring">➕ Tambah Piring</button>
+                  <button type="button" class="fs-btn" onclick="ambilPiring()" id="btnAmbilPiring">✋ Ambil Piring Atas</button>
+                  <button type="button" class="fs-btn" onclick="resetFisik()" style="border-color:#d9cdbf; background:#f5ede6; color:#4d3829;">🔄 Reset</button>
+                </div>
+                <div style="font-size:0.78rem; color:#7a6656; margin-top:0.6rem; font-style:italic;">
+                  💡 Tambah 3 piring, lalu ambil 1. Piring mana yang terambil?
+                </div>
+              </div>
+            </div>
+
+            <!-- Log aktivitas -->
+            <div class="log-aktivitas" id="logAktivitas">
+              <div class="log-line log-info">Log aktivitas akan muncul di sini...</div>
+            </div>
+
+            <!-- Feedback -->
+            <div class="feedback-box info show" id="feedbackBox">
+              <span class="fb-icon" id="fbIcon">💡</span>
+              <span class="fb-text" id="fbText">Pilih salah satu modul di atas untuk mulai menjelajah. Coba semua modul ya!</span>
+            </div>
+
+            <!-- Tombol Selesai Lapis 1 -->
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnSelesaiLapis1" onclick="selesaiLapis1()" disabled>
+                ✅ Selesai Menjelajah
+              </button>
+            </div>
+
+            <!-- Momen Mindful 1 -->
+            <div class="mindful-box" id="mindful1">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 1</div>
+              <div class="mb-text">
+                <strong>Perhatikan pola!</strong> Apa kesamaan dari ketiga modul
+                (text editor, browser, tumpukan piring)? Apa yang terjadi saat kamu
+                menekan <strong>Undo</strong> atau <strong>Back</strong>?
+                Tulis 1–2 kalimat tentang kesamaan yang kamu temukan.
+              </div>
+              <textarea id="mindful1Jawab" placeholder="Tulis pengamatanmu di sini..."></textarea>
+            </div>
+
+          </div>
+        </div><!-- end area-simulasi -->
+
+        <!-- ===== AREA PILIH LEVEL TANTANGAN ===== -->
+        <div id="areaPilihLevel">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+
+            <div class="pilih-level-box">
+              <div class="plb-title">★ Pilih Tingkat Tantanganmu</div>
+              <div class="plb-desc">
+                Sebelum masuk ke Lapis 2 (Tantangan Terarah), pilih tingkat yang paling
+                sesuai dengan kesiapanmu. <strong>Semua level dinilai sama</strong> —
+                yang berbeda hanya jumlah dan tingkat kesulitan tantangannya.
+              </div>
+
+              <div class="level-options" id="levelOptions">
+                <div class="level-option dasar" data-level="dasar" onclick="pilihLevel('dasar')">
+                  <span class="lo-icon">🟢</span>
+                  <span class="lo-name">Dasar</span>
+                  <span class="lo-desc">3 tantangan terbimbing dengan petunjuk lebih detail. Cocok kalau kamu ingin penguatan dulu.</span>
+                </div>
+                <div class="level-option reguler" data-level="reguler" onclick="pilihLevel('reguler')">
+                  <span class="lo-icon">🟡</span>
+                  <span class="lo-name">Reguler</span>
+                  <span class="lo-desc">3 tantangan standar. Cocok untuk sebagian besar siswa.</span>
+                </div>
+                <div class="level-option tantangan" data-level="tantangan" onclick="pilihLevel('tantangan')">
+                  <span class="lo-icon">🔴</span>
+                  <span class="lo-name">Tantangan</span>
+                  <span class="lo-desc">3 tantangan standar + 1 tantangan bonus (studi kasus terbuka). Cocok kalau kamu ingin tantangan lebih.</span>
+                </div>
+              </div>
+
+              <div class="level-badge-terpilih" id="levelBadge">
+                <span>✅</span>
+                <span id="levelBadgeText">Kamu memilih level: —</span>
+              </div>
+            </div>
+
+            <!-- Momen Mindful setelah memilih level -->
+            <div class="mindful-box" id="mindfulPilihLevel">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar — Sebelum Tantangan</div>
+              <div class="mb-text">
+                <strong>Mengapa kamu memilih level ini?</strong> Tantangan apa yang kamu
+                harapkan? Tulis 1 kalimat.
+              </div>
+              <textarea id="mindfulPilihJawab" placeholder="Tulis alasanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis2" onclick="lanjutKeLapis2()" disabled>
+                ➡️ Lanjut ke Tantangan
+              </button>
+            </div>
+
+          </div>
+        </div><!-- end areaPilihLevel -->
+
+        <!-- ===== LAPIS 2: TANTANGAN ===== -->
+        <div id="areaLapis2" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-2">
+              <span class="lapis-num">LAPIS 2</span>
+              <span>🎯 Tantangan Terarah — Level <span id="lapis2LevelLabel">—</span></span>
+            </div>
+
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              Jawab dengan teliti! Sistem hanya memberi umpan balik, bukan jawaban langsung.
+              <span id="lapis2JumlahTantangan">3 tantangan</span> yang harus diselesaikan.
+            </p>
+
+            <div class="tantangan-list" id="tantanganList" style="display:flex; flex-direction:column; gap:0.8rem; margin:1rem 0;"></div>
+
+            <!-- Momen Mindful 2 -->
+            <div class="mindful-box" id="mindful2" style="display:none;">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 2</div>
+              <div class="mb-text">
+                <strong>Refleksi:</strong> Setelah menjelajah dan menjawab tantangan,
+                menurutmu <strong>mengapa stack banyak dipakai di aplikasi</strong>
+                sehari-hari? Apa yang terjadi kalau aplikasi tidak memakai stack?
+                Tulis 1–2 kalimat.
+              </div>
+              <textarea id="mindful2Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis3" onclick="lanjutKeLapis3()" disabled>
+                ➡️ Lapis 2 Selesai — Buka Penamaan Konsep
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== LAPIS 3: PENAMAAN KONSEP ===== -->
+        <div id="areaLapis3" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-3">
+              <span class="lapis-num">LAPIS 3</span>
+              <span>📖 Penamaan Konsep — Istilah Resmi</span>
+            </div>
+
+            <div class="penamaan-box show" id="penamaanKonten" style="background:linear-gradient(135deg, #e8f5ee, #d4ebd8); border-radius:16px; padding:1.5rem 1.8rem; margin:1.2rem 0; border:2px solid #8aaa7a;">
+              <h3 style="font-size:1.1rem; color:#2d5a1e; margin-bottom:0.6rem; display:flex; align-items:center; gap:0.5rem;">🏷️ Sekarang, Kita Beri Nama!</h3>
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822;">
+                Semua yang kamu jelajahi tadi — text editor, browser history,
+                tumpukan piring — semuanya memakai <strong>struktur data yang sama</strong>:
+                <strong>stack (tumpukan)</strong>. Inilah saatnya menghubungkan
+                pengalamanmu dengan istilah formal.
+              </p>
+
+              <div style="background:#fff; border-radius:12px; padding:0.8rem 1.2rem; margin:0.6rem 0; border:2px dashed #8aaa7a; font-size:0.95rem; color:#2f2822; line-height:1.7;">
+                <strong style="color:#2d5a1e;">📚 Penerapan Stack di Sekitar Kita</strong>
+              </div>
+
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822; margin-top:1rem;">
+                <strong>Tabel Penerapan Stack:</strong>
+              </p>
+
+              <table class="tabel-istilah" style="width:100%; border-collapse:collapse; margin:0.8rem 0; font-size:0.88rem; border-radius:10px; overflow:hidden;">
+                <thead style="background:#4d7a3b; color:#fff;">
+                  <tr>
+                    <th style="padding:0.5rem 0.8rem; text-align:left;">Penerapan</th>
+                    <th style="padding:0.5rem 0.8rem; text-align:left;">Cara Kerja Stack</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="padding:0.5rem 0.8rem; background:#fff; border-bottom:1px solid #e5dbd0;"><strong style="color:#2d5a1e;">Undo/Redo</strong></td>
+                    <td style="padding:0.5rem 0.8rem; background:#fff; border-bottom:1px solid #e5dbd0;">Stack pertama menyimpan aksi yang dilakukan. Undo = Pop. Redo = Push ke stack kedua (redo). Untuk Redo, dibutuhkan dua stack: stack undo dan stack redo.</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:0.5rem 0.8rem; background:#fff; border-bottom:1px solid #e5dbd0;"><strong style="color:#2d5a1e;">Browser Back/Forward</strong></td>
+                    <td style="padding:0.5rem 0.8rem; background:#fff; border-bottom:1px solid #e5dbd0;">Stack riwayat halaman. Back = Pop dari stack back. Forward = Push kembali ke stack riwayat. Sama seperti Undo/Redo, browser butuh dua stack.</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:0.5rem 0.8rem; background:#fff; border-bottom:1px solid #e5dbd0;"><strong style="color:#2d5a1e;">Tumpukan Fisik</strong></td>
+                    <td style="padding:0.5rem 0.8rem; background:#fff; border-bottom:1px solid #e5dbd0;">Piring, nampan, buku — yang terakhir diletakkan, pertama diambil (LIFO).</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:0.5rem 0.8rem; background:#fff;"><strong style="color:#2d5a1e;">Contoh Lain</strong></td>
+                    <td style="padding:0.5rem 0.8rem; background:#fff;">Chat WhatsApp (edit pesan), aplikasi edit foto (Undo), permainan kartu (tumpukan kartu di meja), call stack pada program.</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div style="background:#fff8e6; border-left:5px solid #f4b942; border-radius:10px; padding:0.8rem 1.2rem; margin-top:0.8rem; font-size:0.9rem; color:#5c3400; line-height:1.6;">
+                <strong style="color:#8a5e00;">💡 Koneksi Dunia Nyata:</strong><br>
+                Saat kamu mengedit pesan WhatsApp dan menekan tombol <strong>hapus</strong>,
+                itu mirip <strong>Pop</strong> di stack. Saat kamu membatalkan edit dan
+                mengembalikan pesan semula, itu mirip <strong>Redo</strong>.
+                Bahkan saat kamu menumpuk buku pelajaran di meja, kamu sedang
+                melakukan <strong>Push</strong> di stack fisik!
+              </div>
+            </div>
+
+            <div class="link-materi-wrapper" style="text-align:center; margin-top:1rem;">
+              <a href="materibk6.html" target="_blank" rel="noopener" class="link-materi-bawah" style="display:inline-flex; align-items:center; gap:0.5rem; margin:1rem auto 0; padding:0.7rem 1.8rem; border-radius:30px; background:#fff; color:#2d5a1e; border:2px solid #6ecb8f; text-decoration:none; font-weight:700; font-size:0.9rem;">
+                📚 Baca Materi Lengkap (buka tab baru)
+              </a>
+            </div>
+
+            <!-- Momen Mindful 3 -->
+            <div class="mindful-box" id="mindful3">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 3</div>
+              <div class="mb-text">
+                Dengan istilah resmi: <strong>mengapa stack sangat berguna dalam
+                teknologi, dan mengapa prinsipnya (LIFO) penting untuk dipahami
+                seorang programmer</strong>? Tulis dengan bahasamu sendiri,
+                kaitkan dengan pengalamanmu di tiga modul tadi.
+              </div>
+              <textarea id="mindful3Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <!-- Kuis Kilat -->
+            <div class="kuis-kilat-box" id="kuisKilatBox" style="background:#fff; border-radius:16px; padding:1.3rem 1.6rem; margin:1.5rem 0; border:2px solid #6ecb8f; box-shadow:0 4px 14px rgba(110, 203, 143, 0.10); display:none;">
+              <div class="kk-title" style="font-weight:700; color:#2d5a1e; font-size:1rem; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem;">
+                ⚡ Kuis Kilat
+                <span class="badge" style="background:#6ecb8f; color:#fff; font-size:0.65rem; padding:0.15rem 0.6rem; border-radius:20px;">2 SOAL</span>
+              </div>
+              <div id="kuisKilatContent"></div>
+              <div class="kk-hasil" id="kkHasil" style="background:#f5ede6; border-radius:10px; padding:0.7rem 1rem; margin-top:0.6rem; font-size:0.88rem; color:#4d3829; display:none; text-align:center; font-weight:600;"></div>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutTes" onclick="lanjutKeTesPemahaman()" disabled>
+                ➡️ Lanjut ke Tes Pemahaman
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TES PEMAHAMAN ===== -->
+        <div class="tes-section" id="tesSection" style="margin-top:1.8rem; padding-top:1.5rem; border-top:2px solid #e5dbd0; display:none;">
+          <div class="tes-header" style="background:#e8f5ee; border-radius:12px; padding:0.9rem 1.2rem; margin-bottom:1rem; border-left:5px solid #6ecb8f; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem;">
+            <div class="tes-info" style="font-size:0.95rem; color:#3b2b1e; font-weight:600;">📝 <strong>Tes Pemahaman:</strong> 4 soal · Minimal 3 benar untuk lanjut</div>
+            <div class="tes-progress" id="tesProgress" style="font-size:0.82rem; color:#4d7a3b; font-weight:700; background:#fff; padding:0.25rem 0.9rem; border-radius:30px; border:2px solid #e5dbd0;">Terjawab: 0 / 4</div>
+          </div>
+
+          <div id="soalContainer"></div>
+
+          <button class="btn-submit-tes" id="btnPeriksaTes" style="display:block; margin:1.2rem auto 0; padding:0.7rem 2.5rem; border-radius:30px; border:none; background:linear-gradient(135deg, #6ecb8f, #4fa86a); color:#fff; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s ease; font-family:inherit;">✅ Periksa Jawaban</button>
+          <button class="btn-ulangi-tes" id="btnUlangiTes" style="display:none; margin:1rem auto 0; padding:0.7rem 2rem; border-radius:30px; background:#fff; color:#2d5a1e; border:2px solid #6ecb8f; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s ease; font-family:inherit;">🔄 Ulangi Tes Pemahaman</button>
+        </div>
+
+        <!-- ===== HASIL TES ===== -->
+        <div class="hasil-tes" id="hasilTes" style="display:none; margin-top:1.2rem; padding:1.2rem; background:#e8f5ee; border-radius:14px; border:3px double #6ecb8f; text-align:center;">
+          <div class="hasil-icon" id="hasilIcon" style="font-size:2.8rem; margin-bottom:0.3rem;">🏆</div>
+          <div class="hasil-title" id="hasilTitle" style="font-size:1.15rem; font-weight:700; color:#3b2b1e; margin-bottom:0.2rem;">Selamat!</div>
+          <div class="hasil-skor" id="hasilSkor" style="font-size:2rem; font-weight:800; color:#4d7a3b; margin:0.3rem 0;">0 / 4</div>
+          <div class="hasil-desc" id="hasilDesc" style="font-size:0.9rem; color:#5c4638; margin-bottom:0.8rem; line-height:1.5;">Kamu telah menyelesaikan Bagian 3.</div>
+        </div>
+
+        <!-- ===== REFLEKSI ===== -->
+        <div class="refleksi-box" id="refleksiBox" style="background:linear-gradient(135deg, #e8f5ee, #e6f4ff); border:2px solid #6ecb8f; border-radius:16px; padding:1.3rem 1.6rem; margin:1.5rem 0; display:none;">
+          <h3 style="color:#2d5a1e; font-size:1.05rem; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem;">🪞 Refleksi</h3>
+
+          <div class="refleksi-item" style="margin-bottom:0.8rem;">
+            <label style="display:block; font-weight:700; color:#2d5a1e; font-size:0.88rem; margin-bottom:0.3rem;"><span class="tag" style="background:#6ecb8f; color:#fff; padding:0.1rem 0.6rem; border-radius:20px; font-size:0.65rem; margin-right:0.4rem;">PELAJARAN</span> Apa yang saya pelajari tentang penerapan tumpukan (stack) dalam kehidupan sehari-hari dari aktivitas ini?</label>
+            <textarea id="refPelajaran" placeholder="Tulis di sini..." style="width:100%; padding:0.6rem 0.9rem; border:2px solid #b8d4e8; border-radius:10px; font-family:inherit; font-size:0.88rem; color:#2f2822; background:#fff; resize:vertical; min-height:50px; outline:none;"></textarea>
+          </div>
+
+          <div class="refleksi-item" style="margin-bottom:0.8rem;">
+            <label style="display:block; font-weight:700; color:#2d5a1e; font-size:0.88rem; margin-bottom:0.3rem;"><span class="tag" style="background:#6ecb8f; color:#fff; padding:0.1rem 0.6rem; border-radius:20px; font-size:0.65rem; margin-right:0.4rem;">PENERAPAN</span> Di mana lagi saya akan menggunakan konsep tumpukan untuk memahami teknologi?</label>
+            <textarea id="refPenerapan" placeholder="Tulis di sini..." style="width:100%; padding:0.6rem 0.9rem; border:2px solid #b8d4e8; border-radius:10px; font-family:inherit; font-size:0.88rem; color:#2f2822; background:#fff; resize:vertical; min-height:50px; outline:none;"></textarea>
+          </div>
+
+          <div class="exit-ticket" style="background:#fff; border-radius:12px; padding:0.9rem 1.2rem; margin-top:1rem; border:2px dashed #6ecb8f;">
+            <div class="et-title" style="font-weight:700; color:#2d5a1e; font-size:0.9rem; margin-bottom:0.4rem;">🎫 Exit Ticket</div>
+            <p style="font-size:0.85rem; color:#5c4638; margin-bottom:0.4rem;">
+              Sebutkan <strong>satu aplikasi di HP-mu</strong> yang kamu duga menggunakan konsep tumpukan (stack). Jelaskan mengapa kamu menduga demikian (1–2 kalimat).
+            </p>
+            <textarea id="exitTicket" placeholder="Contoh: Google Docs — karena ada tombol Undo yang membatalkan aksi terakhir." style="width:100%; padding:0.6rem 0.9rem; border:2px solid #b8d4e8; border-radius:10px; font-family:inherit; font-size:0.88rem; color:#2f2822; background:#fff; resize:vertical; min-height:50px; outline:none;"></textarea>
+          </div>
+
+          <!-- ===== FEEDBACK GURU (GEMINI) ===== -->
+          <div class="feedback-ai-box" id="feedbackAiBox" style="background:linear-gradient(135deg, #eef4ff, #e6ecff); border:2px solid #5c7cfa; border-radius:16px; padding:1.2rem 1.5rem; margin:1.5rem 0 1rem 0; display:none;">
+            <div class="fai-header" style="display:flex; align-items:center; gap:0.6rem; font-weight:800; color:#3b4a9a; font-size:1rem; margin-bottom:0.6rem;">
+              <span class="fai-icon" style="font-size:1.4rem; line-height:1;">🧑‍🏫</span>
+              <span>Catatan dari Guru</span>
+            </div>
+            <div class="fai-body" id="feedbackAiBody" style="background:#fff; border-radius:12px; padding:0.9rem 1.1rem; font-size:0.92rem; line-height:1.7; color:#2f2822; border-left:5px solid #5c7cfa; white-space:pre-wrap; word-wrap:break-word;"></div>
+          </div>
+        </div>
+
+        <!-- Tombol minta feedback guru -->
+        <div class="game-actions" style="margin-top:0.6rem;">
+          <button type="button" class="btn-feedback-ai" id="btnMintaFeedback" disabled>
+            🧑‍🏫 Minta Feedback
+          </button>
+        </div>
+        <div class="feedback-ai-hint" id="feedbackAiHint">
+          Isi Refleksi atau Exit Ticket dulu untuk mengaktifkan tombol.
+        </div>
+
+        <!-- Status kirim -->
+        <div class="status-kirim info" id="statusKirim" style="max-width:520px; margin:1rem auto; padding:0.8rem 1.2rem; border-radius:12px; font-size:0.88rem; font-weight:600; line-height:1.5; display:none; align-items:center; gap:0.6rem; text-align:left;">
+          <span class="spinner" id="statusSpinner" style="display:inline-block; width:16px; height:16px; border:2px solid currentColor; border-top-color:transparent; border-radius:50%; animation:spin 0.7s linear infinite; flex-shrink:0;"></span>
+          <span id="statusKirimText">Mengirim nilai...</span>
+        </div>
+
+        <!-- ===== NAVIGASI BAWAH ===== -->
+        <div class="nav-bottom" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-top:2rem; padding-top:1.5rem; border-top:2px solid #e5dbd0;">
+          <a href="aktivitasbk6b.html" class="btn-nav-bawah" style="padding:0.6rem 1.8rem; border-radius:30px; border:2px solid #d9cdbf; background:#fff; font-weight:600; font-size:0.9rem; color:#3b2b1e; cursor:pointer; transition:all 0.2s ease; font-family:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem;">
+            <span class="back-arrow" style="font-size:1.2rem;">←</span> Kembali ke Bagian 2
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian4" onclick="lanjutKeBagian4()" style="padding:0.6rem 1.8rem; border-radius:30px; border:2px solid #4d3829; background:#4d3829; font-weight:600; font-size:0.9rem; color:#fff; cursor:pointer; transition:all 0.2s ease; font-family:inherit; display:inline-flex; align-items:center; gap:0.4rem; opacity:0.4; pointer-events:none;">
+              Lanjut ke Bagian 4: Kuis Akhir →
+            </button>
+          </div>
+          <div class="nav-hint locked" id="hintLanjut" style="font-size:0.8rem; color:#d4a0a0; text-align:center; width:100%; margin-top:0.3rem;">
+            🔒 Selesaikan semua tahap untuk membuka Bagian 4
           </div>
         </div>
 
@@ -800,9 +1239,12 @@
   </main>
 
   <footer id="footer-utama"></footer>
-  <button id="scrollTopBtn" title="Kembali ke atas" aria-label="Kembali ke atas">⬆</button>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
+  <script>window.DUTA_ROOT = '../';</script>
+  <script>window.DUTA_MODUL_AKTIF = 'bk6';</script>
+
   <script>
     (function() {
       "use strict";
@@ -811,457 +1253,1912 @@
       // KONFIGURASI MODUL
       // ============================================
       const NAMA_SHEET = 'bk6';
-      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd', 'e'];
-      const KEY_PROGRESS = 'labbk6_progress';
-
-      // ============================================
-      // DATA SITUS
-      // ============================================
-      const SITUS = [
-        { id: 'google',     nama: 'Google',     url: 'google.com',     ikon: '🔍', deskripsi: 'Mesin pencari paling populer di dunia.' },
-        { id: 'ruangguru',  nama: 'Ruangguru',  url: 'ruangguru.com',  ikon: '📚', deskripsi: 'Platform belajar online untuk siswa Indonesia.' },
-        { id: 'tokopedia',  nama: 'Tokopedia',  url: 'tokopedia.com',  ikon: '🛒', deskripsi: 'Marketplace jual beli online.' },
-        { id: 'gojek',      nama: 'Gojek',      url: 'gojek.com',      ikon: '🛵', deskripsi: 'Aplikasi transportasi dan layanan on-demand.' },
-        { id: 'detik',      nama: 'Detik.com',  url: 'detik.com',      ikon: '📰', deskripsi: 'Portal berita terbesar di Indonesia.' },
-        { id: 'youtube',    nama: 'YouTube',    url: 'youtube.com',    ikon: '▶️', deskripsi: 'Platform berbagi video.' }
-      ];
+      const MODUL_KEY = 'bk6';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd'];
+      const AMBANG_LULUS = 3;
+      const STATE_KEY = 'labbk6_state_c';
+      const DURASI_BACA_DETIK = 12;
 
       // ============================================
       // STATE
       // ============================================
-      let riwayat = [];        // stack riwayat (index 0 = paling bawah)
-      let riwayatMaju = [];    // stack forward
-      let situsSekarang = null;
-      let hitPush = 0;
-      let hitBack = 0;
-      let hitForward = 0;
+      let modulTerpilih = null;
+      let modulSelesaiDijelajahi = { editor: false, browser: false, fisik: false };
+      let totalAksi = 0;
+      let lapis1Selesai = false;
+      let lapis2Selesai = false;
+      let lapis3Dibaca = false;
+
+      let levelTantangan = null;
+      let tantanganSelesai = {};
+
+      let jawabanKuisKilat = {};
+      let kuisKilatSubmitted = false;
+      let kuisKilatBenar = 0;
+
+      let jawabanTes = {};
+      let tesSubmitted = false;
+      let tesBenar = 0;
+      let tesSelesai = false;
+
+      let daftarSiswa = [];
+
+      let kirimTimeoutId = null;
+      let kirimSukses = false;
+
+      // Feedback guru
+      let aiFeedback = '';
+      let aiFeedbackLoading = false;
+
+      // Modal Lapis 3
+      let modalPenamaanEl = null;
+      let bacaTimerInterval = null;
+      let bacaCountdown = 0;
+
+      // ---- STATE MODUL EDITOR ----
+      let editorTeks = '';        // string teks saat ini
+      let editorUndoStack = [];   // stack undo: array aksi (huruf)
+      let editorRedoStack = [];   // stack redo: array aksi yang dibatalkan
+
+      // ---- STATE MODUL BROWSER ----
+      let browserHistory = [];    // array {url, title, icon}
+      let browserBackStack = [];  // stack untuk back
+      let browserForwardStack = []; // stack untuk forward
+      let browserCurrentIdx = -1;
+
+      // ---- STATE MODUL FISIK ----
+      let piringCounter = 0;
+      let tumpukanPiring = []; // array {id, label}
+
+      // ============================================
+      // DATA TANTANGAN — 3 LEVEL
+      // ============================================
+      const tantanganDasar = [
+        {
+          id: 'D1',
+          teks: 'Kamu mengetik <strong>"SEKOLAH"</strong> di text editor, lalu menekan <strong>Undo 2 kali</strong>. Apa teks yang tersisa?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'SEKOL', benar: false },
+            { v: 'B', label: 'SEKO', benar: true },
+            { v: 'C', label: 'SEKOLAH', benar: false }
+          ],
+          hint: 'Setiap Undo menghapus 1 huruf terakhir. Undo 2 kali = hapus 2 huruf terakhir.',
+          feedbackSalah: 'Undo menghapus huruf terakhir. "SEKOLAH" - 2 huruf = "SEKO".'
+        },
+        {
+          id: 'D2',
+          teks: 'Kamu membuka: <strong>A, B, C</strong>. Lalu menekan <strong>Back 1 kali</strong>. Halaman apa yang aktif?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'A', benar: false },
+            { v: 'B', label: 'B', benar: true },
+            { v: 'C', label: 'C', benar: false }
+          ],
+          hint: 'Back = kembali ke halaman sebelumnya. Setelah buka A, B, C, halaman aktif C. Back → B.',
+          feedbackSalah: 'Back mengembalikan ke halaman sebelumnya. Setelah C, Back → B.'
+        },
+        {
+          id: 'D3',
+          teks: 'Piring ditumpuk: <strong>1, 2, 3</strong> (3 di atas). Lalu diambil 1. Piring apa yang terambil?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Piring 1', benar: false },
+            { v: 'B', label: 'Piring 2', benar: false },
+            { v: 'C', label: 'Piring 3', benar: true }
+          ],
+          hint: 'Piring yang terakhir diletakkan, pertama diambil (LIFO).',
+          feedbackSalah: 'Piring 3 paling atas. Ambil = piring 3 dulu.'
+        }
+      ];
+
+      const tantanganReguler = [
+        {
+          id: 'R1',
+          teks: 'Kamu mengetik <strong>"HALO"</strong>, lalu <strong>Undo 2 kali</strong>, lalu <strong>Redo 1 kali</strong>. Apa teks sekarang?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'HA', benar: false },
+            { v: 'B', label: 'HAL', benar: true },
+            { v: 'C', label: 'HALO', benar: false },
+            { v: 'D', label: 'H', benar: false }
+          ],
+          hint: 'HALO → Undo 2x = HA → Redo 1x = HAL.',
+          feedbackSalah: 'HALO - 2 huruf = HA. Lalu Redo menambah 1 huruf = HAL.'
+        },
+        {
+          id: 'R2',
+          teks: 'Kamu membuka: <strong>A, B, C</strong>. Lalu <strong>Back 1 kali</strong>. Lalu buka <strong>D</strong>. Lalu <strong>Back 2 kali</strong>. Halaman apa yang aktif?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'A', benar: true },
+            { v: 'B', label: 'B', benar: false },
+            { v: 'C', label: 'C', benar: false },
+            { v: 'D', label: 'D', benar: false }
+          ],
+          hint: 'Lacak: A → B → C → Back ke B → buka D (jadi B → D) → Back 2x: D → B → A.',
+          feedbackSalah: 'Lacak: A, B, C. Back → B. Buka D → riwayat [A, B, D]. Back 2x: D → B → A. Hasilnya A.'
+        },
+        {
+          id: 'R3',
+          teks: 'Mengapa <strong>Undo dan Redo</strong> membutuhkan <strong>dua stack</strong>, bukan satu?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Karena satu stack tidak cukup kapasitasnya', benar: false },
+            { v: 'B', label: 'Karena satu untuk menyimpan aksi, satu untuk menyimpan aksi yang dibatalkan', benar: true },
+            { v: 'C', label: 'Karena komputer butuh dua stack', benar: false },
+            { v: 'D', label: 'Karena stack tidak bisa menyimpan teks', benar: false }
+          ],
+          hint: 'Redo butuh menyimpan aksi yang sudah dibatalkan. Kalau hanya satu stack, aksi yang dibatalkan akan hilang.',
+          feedbackSalah: 'Undo dan Redo butuh 2 stack: satu untuk aksi, satu untuk aksi yang dibatalkan (agar bisa di-redo).'
+        }
+      ];
+
+      const tantanganBonus = [
+        {
+          id: 'B1',
+          teks: '<strong>🔥 Tantangan Bonus (Pengayaan — Terbuka):</strong><br><br>"Selain Undo, Back, dan tumpukan fisik, sebutkan satu contoh lain penerapan tumpukan (stack) di teknologi yang kamu gunakan sehari-hari. Jelaskan mengapa itu tumpukan, minimal 3 kalimat."',
+          tipe: 'teks',
+          validasi: function(val) { return val.trim().length >= 80; },
+          hint: 'Pikirkan aplikasi lain: WhatsApp edit, permainan kartu, aplikasi edit foto, atau fitur lain di HP kamu. Jelaskan mengapa mengikuti prinsip LIFO.',
+          feedbackSalah: 'Argumenmu masih terlalu pendek. Tulis minimal 3 kalimat: (1) sebutkan aplikasinya, (2) jelaskan cara kerjanya, (3) kaitkan dengan prinsip LIFO.'
+        }
+      ];
 
       // ============================================
       // DOM REFS
       // ============================================
-      const btnBack = document.getElementById('btnBack');
-      const btnForward = document.getElementById('btnForward');
-      const addressBar = document.getElementById('addressBar');
-      const browserContent = document.getElementById('browserContent');
-      const stackRiwayat = document.getElementById('stackRiwayat');
-      const situsGrid = document.getElementById('situsGrid');
-      const logArea = document.getElementById('logArea');
-      const btnReset = document.getElementById('btnReset');
-      const hitungPush = document.getElementById('hitungPush');
-      const hitungPop = document.getElementById('hitungPop');
-      const hitungForward = document.getElementById('hitungForward');
+      const elAreaSimulasi = document.getElementById('area-simulasi');
+      const elAreaPilihLevel = document.getElementById('areaPilihLevel');
+      const elAreaLapis2 = document.getElementById('areaLapis2');
+      const elAreaLapis3 = document.getElementById('areaLapis3');
+      const elProgressLapis = document.getElementById('progressLapis');
 
-      const opsiTantangan = document.getElementById('opsiTantangan');
-      const feedbackTantangan = document.getElementById('feedbackTantangan');
+      const elModulPilihan = document.getElementById('modulPilihan');
+      const elModulEditor = document.getElementById('modulEditor');
+      const elModulBrowser = document.getElementById('modulBrowser');
+      const elModulFisik = document.getElementById('modulFisik');
 
-      const soalWrap = document.getElementById('soalWrap');
-      const btnPeriksaTes = document.getElementById('btnPeriksaTes');
-      const hasilTes = document.getElementById('hasilTes');
-      const statusKirim = document.getElementById('statusKirim');
-      const btnLanjut = document.getElementById('btnLanjut');
+      const elMisiText = document.getElementById('misiText');
+      const elStatModulSelesai = document.getElementById('statModulSelesai');
+      const elStatTotalAksi = document.getElementById('statTotalAksi');
+      const elLogAktivitas = document.getElementById('logAktivitas');
+      const elFeedbackBox = document.getElementById('feedbackBox');
+      const elFbIcon = document.getElementById('fbIcon');
+      const elFbText = document.getElementById('fbText');
+      const elBtnSelesaiLapis1 = document.getElementById('btnSelesaiLapis1');
+      const elMindful1 = document.getElementById('mindful1');
+
+      // Editor refs
+      const elEditorContent = document.getElementById('editorContent');
+      const elEditorInput = document.getElementById('editorInput');
+      const elBtnUndo = document.getElementById('btnUndo');
+      const elBtnRedo = document.getElementById('btnRedo');
+
+      // Browser refs
+      const elBsUrl = document.getElementById('bsUrl');
+      const elBsPage = document.getElementById('bsPage');
+      const elBsInputUrl = document.getElementById('bsInputUrl');
+      const elBtnBack = document.getElementById('btnBack');
+      const elBtnForward = document.getElementById('btnForward');
+
+      // Fisik refs
+      const elFsRak = document.getElementById('fsRak');
+      const elFsKosong = document.getElementById('fsKosong');
+      const elBtnTambahPiring = document.getElementById('btnTambahPiring');
+      const elBtnAmbilPiring = document.getElementById('btnAmbilPiring');
+
+      const elLevelOptions = document.getElementById('levelOptions');
+      const elLevelBadge = document.getElementById('levelBadge');
+      const elLevelBadgeText = document.getElementById('levelBadgeText');
+      const elMindfulPilihLevel = document.getElementById('mindfulPilihLevel');
+      const elBtnLanjutLapis2 = document.getElementById('btnLanjutLapis2');
+
+      const elLapis2LevelLabel = document.getElementById('lapis2LevelLabel');
+      const elLapis2JumlahTantangan = document.getElementById('lapis2JumlahTantangan');
+      const elTantanganList = document.getElementById('tantanganList');
+      const elMindful2 = document.getElementById('mindful2');
+      const elBtnLanjutLapis3 = document.getElementById('btnLanjutLapis3');
+
+      const elMindful3 = document.getElementById('mindful3');
+      const elKuisKilatBox = document.getElementById('kuisKilatBox');
+      const elKuisKilatContent = document.getElementById('kuisKilatContent');
+      const elKkHasil = document.getElementById('kkHasil');
+      const elBtnLanjutTes = document.getElementById('btnLanjutTes');
+
+      const elTesSection = document.getElementById('tesSection');
+      const elSoalContainer = document.getElementById('soalContainer');
+      const elTesProgress = document.getElementById('tesProgress');
+      const elBtnPeriksaTes = document.getElementById('btnPeriksaTes');
+      const elBtnUlangiTes = document.getElementById('btnUlangiTes');
+      const elHasilTes = document.getElementById('hasilTes');
+      const elRefleksiBox = document.getElementById('refleksiBox');
+
+      const elBtnLanjutBagian4 = document.getElementById('btnLanjutBagian4');
+      const elHintLanjut = document.getElementById('hintLanjut');
+      const elStatusKirim = document.getElementById('statusKirim');
+      const elStatusKirimText = document.getElementById('statusKirimText');
+      const elStatusSpinner = document.getElementById('statusSpinner');
 
       // ============================================
-      // RENDER DAFTAR SITUS
+      // HELPERS
       // ============================================
-      function renderSitusGrid() {
-        situsGrid.innerHTML = '';
-        SITUS.forEach(function(situs) {
-          const btn = document.createElement('button');
-          btn.className = 'situs-btn';
-          btn.dataset.id = situs.id;
-          btn.innerHTML = '<span class="ikon">' + situs.ikon + '</span><span>' + situs.nama + '</span>';
-          btn.addEventListener('click', function() { bukaSitus(situs.id); });
-          situsGrid.appendChild(btn);
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function tampilFeedback(type, icon, text) {
+        elFeedbackBox.className = 'feedback-box show ' + type;
+        elFbIcon.textContent = icon || '💡';
+        elFbText.innerHTML = text;
+      }
+
+      function acakArray(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function acakOpsiDenganKunci(soal) {
+        const pasangan = soal.opsi.map((teks, i) => ({ teks: teks, asli: i }));
+        const acak = acakArray(pasangan);
+        return {
+          pertanyaan: soal.pertanyaan,
+          opsi: acak.map(p => p.teks),
+          kunci: acak.findIndex(p => p.asli === soal.kunci),
+          penjelasan: soal.penjelasan
+        };
+      }
+
+      function updateProgressLapis(step) {
+        const steps = ['lapis1', 'lapis2', 'lapis3', 'tes'];
+        const targetIdx = steps.indexOf(step);
+        if (targetIdx === -1) return;
+        elProgressLapis.querySelectorAll('.pl-step').forEach((el, i) => {
+          el.classList.remove('active', 'done');
+          if (i < targetIdx) el.classList.add('done');
+          else if (i === targetIdx) el.classList.add('active');
         });
       }
 
-      // ============================================
-      // BUKA SITUS (PUSH)
-      // ============================================
-      function bukaSitus(idSitus) {
-        const situs = SITUS.find(function(s) { return s.id === idSitus; });
-        if (!situs) return;
+      function tambahLog(text, tipe) {
+        const emptyEl = elLogAktivitas.querySelector('.log-info');
+        if (emptyEl && emptyEl.textContent.indexOf('Log aktivitas akan') !== -1) emptyEl.remove();
 
-        // Kalau ada riwayat maju (forward), hapus — karena membuka situs baru
-        if (riwayatMaju.length > 0) {
-          riwayatMaju = [];
-          tambahLog('Riwayat maju dihapus (buka situs baru).', 'info');
-        }
-
-        // Push ke riwayat
-        riwayat.push(situs);
-        situsSekarang = situs;
-        hitPush++;
-
-        renderBrowser();
-        renderStackRiwayat();
-        updatePenghitung();
-        updateTombolNav();
-        updateSitusAktif();
-
-        tambahLog('Push: ' + situs.url, 'push');
+        const line = document.createElement('div');
+        line.className = 'log-line';
+        const cls = tipe ? 'log-' + tipe : 'log-info';
+        const now = new Date();
+        const waktu = String(now.getHours()).padStart(2, '0') + ':' +
+                       String(now.getMinutes()).padStart(2, '0') + ':' +
+                       String(now.getSeconds()).padStart(2, '0');
+        line.innerHTML = '<span class="log-time">[' + waktu + ']</span> <span class="' + cls + '">' + text + '</span>';
+        elLogAktivitas.appendChild(line);
+        elLogAktivitas.scrollTop = elLogAktivitas.scrollHeight;
       }
 
-      // ============================================
-      // BACK (POP)
-      // ============================================
-      function doBack() {
-        if (riwayat.length <= 1) return;
-
-        // Pop dari riwayat, push ke riwayat maju
-        const keluar = riwayat.pop();
-        riwayatMaju.push(keluar);
-        situsSekarang = riwayat[riwayat.length - 1];
-        hitBack++;
-
-        renderBrowser();
-        renderStackRiwayat();
-        updatePenghitung();
-        updateTombolNav();
-        updateSitusAktif();
-
-        tambahLog('Back → Pop: ' + keluar.url + ' | Kembali ke: ' + situsSekarang.url, 'pop');
-      }
-
-      // ============================================
-      // FORWARD
-      // ============================================
-      function doForward() {
-        if (riwayatMaju.length === 0) return;
-
-        const masuk = riwayatMaju.pop();
-        riwayat.push(masuk);
-        situsSekarang = masuk;
-        hitForward++;
-
-        renderBrowser();
-        renderStackRiwayat();
-        updatePenghitung();
-        updateTombolNav();
-        updateSitusAktif();
-
-        tambahLog('Forward → Push: ' + masuk.url, 'push');
-      }
-
-      // ============================================
-      // RENDER BROWSER
-      // ============================================
-      function renderBrowser() {
-        if (!situsSekarang) {
-          addressBar.textContent = 'about:blank';
-          browserContent.className = 'browser-content kosong';
-          browserContent.innerHTML = '<div class="ikon-situs">🌐</div>' +
-                                     '<div class="nama-situs">Halaman Kosong</div>' +
-                                     '<div class="deskripsi-situs">Klik salah satu situs di panel kanan untuk mulai menjelajah.</div>';
-          return;
-        }
-
-        addressBar.textContent = 'https://' + situsSekarang.url;
-        browserContent.className = 'browser-content';
-        browserContent.innerHTML = '<div class="ikon-situs">' + situsSekarang.ikon + '</div>' +
-                                   '<div class="nama-situs">' + situsSekarang.nama + '</div>' +
-                                   '<div class="deskripsi-situs">' + situsSekarang.deskripsi + '</div>';
-      }
-
-      // ============================================
-      // RENDER STACK RIWAYAT
-      // ============================================
-      function renderStackRiwayat() {
-        const labelStack = stackRiwayat.querySelector('.label-stack');
-        stackRiwayat.innerHTML = '';
-        stackRiwayat.appendChild(labelStack);
-
-        if (riwayat.length === 0) {
-          const kosong = document.createElement('div');
-          kosong.className = 'stack-kosong';
-          kosong.textContent = 'Stack riwayat kosong';
-          stackRiwayat.appendChild(kosong);
-          return;
-        }
-
-        // Render dari atas ke bawah (index terbesar = paling atas)
-        for (let i = riwayat.length - 1; i >= 0; i--) {
-          const div = document.createElement('div');
-          div.className = 'riwayat-item';
-          if (i === riwayat.length - 1) div.classList.add('teratas');
-          div.textContent = (i === riwayat.length - 1 ? '⬇ ' : '   ') + riwayat[i].url;
-          stackRiwayat.appendChild(div);
+      function updateStatAksi() {
+        totalAksi++;
+        elStatTotalAksi.textContent = totalAksi;
+        let selesai = 0;
+        ['editor','browser','fisik'].forEach(k => { if (modulSelesaiDijelajahi[k]) selesai++; });
+        elStatModulSelesai.textContent = selesai;
+        if (selesai >= 3) {
+          elBtnSelesaiLapis1.disabled = false;
+          elMindful1.classList.add('show');
         }
       }
 
       // ============================================
-      // UPDATE PENGHITUNG
+      // PILIH MODUL
       // ============================================
-      function updatePenghitung() {
-        hitungPush.textContent = hitPush;
-        hitungPop.textContent = hitBack;
-        hitungForward.textContent = hitForward;
-      }
-
-      // ============================================
-      // UPDATE TOMBOL NAV
-      // ============================================
-      function updateTombolNav() {
-        btnBack.disabled = riwayat.length <= 1;
-        btnForward.disabled = riwayatMaju.length === 0;
-      }
-
-      // ============================================
-      // UPDATE SITUS AKTIF
-      // ============================================
-      function updateSitusAktif() {
-        situsGrid.querySelectorAll('.situs-btn').forEach(function(btn) {
-          btn.classList.toggle('aktif', situsSekarang && btn.dataset.id === situsSekarang.id);
+      window.pilihModul = function(modul) {
+        modulTerpilih = modul;
+        elModulPilihan.querySelectorAll('.modul-card').forEach(el => {
+          el.classList.remove('terpilih');
         });
+        const elTerpilih = elModulPilihan.querySelector('[data-modul="' + modul + '"]');
+        if (elTerpilih) elTerpilih.classList.add('terpilih');
+
+        elModulEditor.classList.remove('show');
+        elModulBrowser.classList.remove('show');
+        elModulFisik.classList.remove('show');
+
+        if (modul === 'editor') {
+          elModulEditor.classList.add('show');
+          elMisiText.innerHTML = '📝 Kamu membuka <strong>Text Editor</strong>. Coba ketik huruf, lalu tekan Undo dan Redo!';
+          tampilFeedback('info', '📝', 'Modul Text Editor dibuka. Ketik huruf di kolom input, lalu coba <strong>Undo</strong> dan <strong>Redo</strong>.');
+        } else if (modul === 'browser') {
+          elModulBrowser.classList.add('show');
+          elMisiText.innerHTML = '🌐 Kamu membuka <strong>Browser History</strong>. Buka minimal 3 halaman, lalu coba Back dan Forward!';
+          tampilFeedback('info', '🌐', 'Modul Browser History dibuka. Masukkan URL, klik <strong>Buka Halaman</strong>, lalu coba <strong>Back</strong> dan <strong>Forward</strong>.');
+        } else if (modul === 'fisik') {
+          elModulFisik.classList.add('show');
+          elMisiText.innerHTML = '🍽️ Kamu membuka <strong>Tumpukan Piring</strong>. Coba tambah dan ambil piring!';
+          tampilFeedback('info', '🍽️', 'Modul Tumpukan Piring dibuka. Klik <strong>Tambah Piring</strong> dan <strong>Ambil Piring Atas</strong>.');
+        }
+
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+      };
+
+      // ============================================
+      // MODUL A: TEXT EDITOR
+      // ============================================
+      window.ketikHuruf = function(huruf) {
+        if (!huruf || !modulTerpilih) return;
+        const h = String(huruf).toUpperCase().trim();
+        if (!h || h.length > 1) return;
+        if (!/^[A-Z]$/.test(h)) {
+          elEditorInput.value = '';
+          return;
+        }
+        editorTeks += h;
+        editorUndoStack.push(h);
+        editorRedoStack = [];
+        elEditorInput.value = '';
+        renderEditor();
+        tambahLog('📝 Ketik "' + h + '" → teks: "' + editorTeks + '"', 'info');
+        updateStatAksi();
+        if (editorUndoStack.length >= 2 && editorRedoStack.length === 0 && !modulSelesaiDijelajahi.editor) {
+          // Belum selesai — tunggu user coba Undo & Redo
+        }
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+      };
+
+      window.aksiUndo = function() {
+        if (!modulTerpilih) return;
+        if (editorUndoStack.length === 0) {
+          tambahLog('⚠️ Undo() gagal — tidak ada aksi yang bisa dibatalkan (stack kosong)', 'error');
+          tampilFeedback('warn', '⚠️', 'Tidak ada aksi yang bisa dibatalkan. Stack Undo kosong (Stack Underflow).');
+          return;
+        }
+        const h = editorUndoStack.pop();
+        editorRedoStack.push(h);
+        if (editorTeks.length > 0) editorTeks = editorTeks.slice(0, -1);
+        renderEditor();
+        tambahLog('↶ Undo() → "' + h + '" dibatalkan. Teks: "' + editorTeks + '"', 'undo');
+        updateStatAksi();
+        cekModulEditorSelesai();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+      };
+
+      window.aksiRedo = function() {
+        if (!modulTerpilih) return;
+        if (editorRedoStack.length === 0) {
+          tambahLog('⚠️ Redo() gagal — tidak ada aksi yang bisa dikembalikan (stack redo kosong)', 'error');
+          tampilFeedback('warn', '⚠️', 'Tidak ada aksi yang bisa di-redo. Stack Redo kosong.');
+          return;
+        }
+        const h = editorRedoStack.pop();
+        editorUndoStack.push(h);
+        editorTeks += h;
+        renderEditor();
+        tambahLog('↷ Redo() → "' + h + '" dikembalikan. Teks: "' + editorTeks + '"', 'redo');
+        updateStatAksi();
+        cekModulEditorSelesai();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+      };
+
+      window.resetEditor = function() {
+        editorTeks = '';
+        editorUndoStack = [];
+        editorRedoStack = [];
+        renderEditor();
+        tambahLog('🔄 Text Editor direset.', 'info');
+      };
+
+      function renderEditor() {
+        if (elEditorContent) elEditorContent.textContent = editorTeks;
+        elBtnUndo.disabled = (editorUndoStack.length === 0);
+        elBtnRedo.disabled = (editorRedoStack.length === 0);
       }
 
-      // ============================================
-      // LOG
-      // ============================================
-      function tambahLog(teks, tipe) {
-        const empty = logArea.querySelector('.log-empty');
-        if (empty) empty.remove();
-
-        const div = document.createElement('div');
-        div.className = 'log-line ' + (tipe || 'info');
-        const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        div.textContent = '[' + waktu + '] ' + teks;
-        logArea.appendChild(div);
-        logArea.scrollTop = logArea.scrollHeight;
-      }
-
-      // ============================================
-      // RESET
-      // ============================================
-      function doReset() {
-        riwayat = [];
-        riwayatMaju = [];
-        situsSekarang = null;
-        hitPush = 0;
-        hitBack = 0;
-        hitForward = 0;
-
-        renderBrowser();
-        renderStackRiwayat();
-        updatePenghitung();
-        updateTombolNav();
-        updateSitusAktif();
-
-        logArea.innerHTML = '<div class="log-empty">Belum ada aktivitas...</div>';
-        tambahLog('Simulasi direset.', 'info');
-      }
-
-      // ============================================
-      // TANTANGAN
-      // ============================================
-      opsiTantangan.querySelectorAll('button').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          opsiTantangan.querySelectorAll('button').forEach(function(b) {
-            b.disabled = true;
-            b.style.cursor = 'default';
-          });
-
-          const benar = btn.dataset.jawab === 'benar';
-          btn.classList.add(benar ? 'benar' : 'salah');
-
-          feedbackTantangan.textContent = btn.dataset.feedback || '';
-          feedbackTantangan.className = 'feedback-tantangan show ' + (benar ? 'ok' : 'no');
-
-          if (!benar) {
-            opsiTantangan.querySelectorAll('button').forEach(function(b) {
-              if (b.dataset.jawab === 'benar') b.classList.add('benar');
-            });
+      function cekModulEditorSelesai() {
+        // Selesai kalau sudah pernah Undo dan Redo
+        if (editorUndoStack.length >= 0 && editorRedoStack.length >= 0) {
+          if (!modulSelesaiDijelajahi.editor) {
+            modulSelesaiDijelajahi.editor = true;
+            tampilFeedback('success', '✅', 'Modul <strong>Text Editor</strong> sudah kamu jelajahi!');
+            cekSemuaModulSelesai();
           }
-        });
-      });
+        }
+      }
 
       // ============================================
-      // SOAL TES PEMAHAMAN
+      // MODUL B: BROWSER HISTORY
       // ============================================
-      const SOAL = [
+      const PAGE_ICONS = {
+        'google.com': '🔍',
+        'youtube.com': '📺',
+        'wikipedia.org': '📚',
+        'detik.com': '📰',
+        'github.com': '💻'
+      };
+
+      function getIconForUrl(url) {
+        const u = String(url || '').toLowerCase();
+        for (const key in PAGE_ICONS) {
+          if (u.indexOf(key) !== -1) return PAGE_ICONS[key];
+        }
+        return '🌐';
+      }
+
+      window.bukaHalaman = function() {
+        if (!modulTerpilih) return;
+        const urlInput = (elBsInputUrl.value || '').trim();
+        const url = urlInput || ('halaman' + (browserHistory.length + 1) + '.com');
+
+        // Push ke history
+        browserHistory.push({ url: url, icon: getIconForUrl(url), title: url });
+        browserForwardStack = [];
+        browserCurrentIdx = browserHistory.length - 1;
+        elBsInputUrl.value = '';
+        renderBrowser();
+        tambahLog('🌐 Buka: ' + url, 'back');
+        updateStatAksi();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+      };
+
+      window.aksiBack = function() {
+        if (!modulTerpilih) return;
+        if (browserCurrentIdx <= 0) {
+          tambahLog('⚠️ Back() gagal — tidak ada halaman sebelumnya', 'error');
+          tampilFeedback('warn', '⚠️', 'Tidak ada halaman sebelumnya. Tombol Back di-disable.');
+          return;
+        }
+        const current = browserHistory[browserCurrentIdx];
+        browserForwardStack.push(current);
+        browserCurrentIdx--;
+        renderBrowser();
+        tambahLog('← Back() → kembali ke: ' + browserHistory[browserCurrentIdx].url, 'back');
+        updateStatAksi();
+        cekModulBrowserSelesai();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+      };
+
+      window.aksiForward = function() {
+        if (!modulTerpilih) return;
+        if (browserForwardStack.length === 0 || browserCurrentIdx >= browserHistory.length - 1) {
+          tambahLog('⚠️ Forward() gagal — tidak ada halaman berikutnya', 'error');
+          tampilFeedback('warn', '⚠️', 'Tidak ada halaman berikutnya. Tombol Forward di-disable.');
+          return;
+        }
+        browserCurrentIdx++;
+        const next = browserHistory[browserCurrentIdx];
+        browserForwardStack.pop();
+        renderBrowser();
+        tambahLog('→ Forward() → maju ke: ' + next.url, 'forward');
+        updateStatAksi();
+        cekModulBrowserSelesai();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+      };
+
+      window.resetBrowser = function() {
+        browserHistory = [];
+        browserForwardStack = [];
+        browserCurrentIdx = -1;
+        renderBrowser();
+        tambahLog('🔄 Browser History direset.', 'info');
+      };
+
+      function renderBrowser() {
+        if (browserHistory.length === 0 || browserCurrentIdx < 0) {
+          elBsUrl.textContent = 'about:blank';
+          elBsPage.innerHTML = `
+            <div class="bsp-icon">🏠</div>
+            <div class="bsp-title">Halaman Kosong</div>
+            <div class="bsp-url">Belum ada halaman dibuka</div>
+          `;
+          elBtnBack.disabled = true;
+          elBtnForward.disabled = true;
+          return;
+        }
+        const current = browserHistory[browserCurrentIdx];
+        elBsUrl.textContent = current.url;
+        elBsPage.innerHTML = `
+          <div class="bsp-icon">${current.icon}</div>
+          <div class="bsp-title">${escapeHtml(current.url)}</div>
+          <div class="bsp-url">Halaman ${browserCurrentIdx + 1} dari ${browserHistory.length}</div>
+        `;
+        elBtnBack.disabled = (browserCurrentIdx <= 0);
+        elBtnForward.disabled = (browserCurrentIdx >= browserHistory.length - 1);
+      }
+
+      function cekModulBrowserSelesai() {
+        if (browserHistory.length >= 3) {
+          if (!modulSelesaiDijelajahi.browser) {
+            modulSelesaiDijelajahi.browser = true;
+            tampilFeedback('success', '✅', 'Modul <strong>Browser History</strong> sudah kamu jelajahi!');
+            cekSemuaModulSelesai();
+          }
+        }
+      }
+
+      // ============================================
+      // MODUL C: TUMPUKAN PIRING
+      // ============================================
+      window.tambahPiring = function() {
+        if (!modulTerpilih) return;
+        piringCounter++;
+        const piring = { id: piringCounter, label: 'Piring ' + piringCounter };
+        tumpukanPiring.push(piring);
+        renderPiring();
+        tambahLog('🍽️ Tambah ' + piring.label + ' → tumpukan: [' + tumpukanPiring.map(p => p.label).join(', ') + ']', 'fisik');
+        updateStatAksi();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+      };
+
+      window.ambilPiring = function() {
+        if (!modulTerpilih) return;
+        if (tumpukanPiring.length === 0) {
+          tambahLog('⚠️ Ambil gagal — tumpukan kosong (Stack Underflow)', 'error');
+          tampilFeedback('warn', '⚠️', 'Tumpukan kosong! Tidak ada piring yang bisa diambil. Stack Underflow.');
+          return;
+        }
+        const p = tumpukanPiring.pop();
+        renderPiring();
+        tambahLog('✋ Ambil ' + p.label + ' → sisa: [' + (tumpukanPiring.length > 0 ? tumpukanPiring.map(x => x.label).join(', ') : 'kosong') + ']', 'fisik');
+        updateStatAksi();
+        cekModulFisikSelesai();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+      };
+
+      window.resetFisik = function() {
+        piringCounter = 0;
+        tumpukanPiring = [];
+        renderPiring();
+        tambahLog('🔄 Tumpukan piring direset.', 'info');
+      };
+
+      function renderPiring() {
+        elFsRak.innerHTML = '';
+        if (tumpukanPiring.length === 0) {
+          const div = document.createElement('div');
+          div.className = 'fs-kosong';
+          div.textContent = '— tumpukan masih kosong —';
+          elFsRak.appendChild(div);
+          elBtnAmbilPiring.disabled = true;
+          return;
+        }
+        tumpukanPiring.forEach((p, idx) => {
+          const isTop = (idx === tumpukanPiring.length - 1);
+          const div = document.createElement('div');
+          div.className = 'piring-item' + (isTop ? ' top' : '');
+          div.innerHTML = `<span class="pi-label">${escapeHtml(p.label)}${isTop ? ' ⬅ TOP' : ''}</span>`;
+          elFsRak.appendChild(div);
+        });
+        elBtnAmbilPiring.disabled = false;
+      }
+
+      function cekModulFisikSelesai() {
+        if (tumpukanPiring.length >= 0 && piringCounter >= 3) {
+          if (!modulSelesaiDijelajahi.fisik) {
+            modulSelesaiDijelajahi.fisik = true;
+            tampilFeedback('success', '✅', 'Modul <strong>Tumpukan Piring</strong> sudah kamu jelajahi!');
+            cekSemuaModulSelesai();
+          }
+        }
+      }
+
+      // ============================================
+      // CEK SEMUA MODUL SELESAI
+      // ============================================
+      function cekSemuaModulSelesai() {
+        let selesai = 0;
+        ['editor','browser','fisik'].forEach(k => { if (modulSelesaiDijelajahi[k]) selesai++; });
+        elStatModulSelesai.textContent = selesai;
+        if (selesai >= 3) {
+          elBtnSelesaiLapis1.disabled = false;
+          elMindful1.classList.add('show');
+          tampilFeedback('success', '✅', 'Ketiga modul sudah kamu jelajahi! Isi Jeda Sadar 1, lalu klik <strong>Selesai Menjelajah</strong>.');
+        }
+      }
+
+      // ============================================
+      // SELESAI LAPIS 1
+      // ============================================
+      window.selesaiLapis1 = function() {
+        let selesai = 0;
+        ['editor','browser','fisik'].forEach(k => { if (modulSelesaiDijelajahi[k]) selesai++; });
+        if (selesai < 3) {
+          alert('⚠️ Coba jelajahi ketiga modul dulu ya (Text Editor, Browser, Tumpukan Piring)!');
+          return;
+        }
+
+        const mindfulJawab = document.getElementById('mindful1Jawab').value.trim();
+        if (mindfulJawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 1 sebelum lanjut!');
+          document.getElementById('mindful1Jawab').focus();
+          return;
+        }
+
+        lapis1Selesai = true;
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+
+        elBtnSelesaiLapis1.disabled = true;
+        elBtnSelesaiLapis1.textContent = '✅ Lapis 1 Selesai';
+
+        elAreaSimulasi.style.display = 'none';
+        elAreaPilihLevel.classList.add('active');
+
+        setTimeout(() => {
+          elAreaPilihLevel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      };
+
+      // ============================================
+      // PILIH LEVEL TANTANGAN
+      // ============================================
+      window.pilihLevel = function(level) {
+        levelTantangan = level;
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+
+        elLevelOptions.querySelectorAll('.level-option').forEach(el => {
+          el.classList.remove('terpilih');
+        });
+        const elTerpilih = elLevelOptions.querySelector('[data-level="' + level + '"]');
+        if (elTerpilih) elTerpilih.classList.add('terpilih');
+
+        let namaLevel = '';
+        if (level === 'dasar') namaLevel = '🟢 Dasar';
+        else if (level === 'reguler') namaLevel = '🟡 Reguler';
+        else if (level === 'tantangan') namaLevel = '🔴 Tantangan';
+
+        elLevelBadgeText.textContent = 'Kamu memilih level: ' + namaLevel;
+        elLevelBadge.classList.add('show');
+        elMindfulPilihLevel.classList.add('show');
+        elBtnLanjutLapis2.disabled = false;
+
+        try { localStorage.setItem('labbk6_level', level); } catch (e) {}
+      };
+
+      // ============================================
+      // LANJUT KE LAPIS 2
+      // ============================================
+      window.lanjutKeLapis2 = function() {
+        if (!levelTantangan) {
+          alert('⚠️ Pilih tingkat tantangan dulu ya!');
+          return;
+        }
+
+        const jawab = document.getElementById('mindfulPilihJawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Tulis dulu alasanmu memilih level ini!');
+          document.getElementById('mindfulPilihJawab').focus();
+          return;
+        }
+
+        elAreaPilihLevel.classList.remove('active');
+        elAreaLapis2.style.display = 'block';
+
+        updateProgressLapis('lapis2');
+
+        let namaLevel = '';
+        if (levelTantangan === 'dasar') namaLevel = '🟢 Dasar';
+        else if (levelTantangan === 'reguler') namaLevel = '🟡 Reguler';
+        else namaLevel = '🔴 Tantangan';
+        elLapis2LevelLabel.textContent = namaLevel;
+
+        if (levelTantangan === 'tantangan') {
+          elLapis2JumlahTantangan.textContent = '4 tantangan (3 inti + 1 bonus)';
+        } else {
+          elLapis2JumlahTantangan.textContent = '3 tantangan';
+        }
+
+        buildTantangan();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+
+        setTimeout(() => {
+          elAreaLapis2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      };
+
+      // ============================================
+      // BUILD TANTANGAN
+      // ============================================
+      function buildTantangan() {
+        elTantanganList.innerHTML = '';
+        tantanganSelesai = {};
+
+        let daftar = [];
+        if (levelTantangan === 'dasar') daftar = tantanganDasar.slice();
+        else if (levelTantangan === 'reguler') daftar = tantanganReguler.slice();
+        else daftar = tantanganReguler.slice().concat(tantanganBonus);
+
+        daftar.forEach((t, idx) => {
+          const isBonus = t.id.startsWith('B');
+          const div = document.createElement('div');
+          div.className = 'tantangan-item';
+          div.id = 'tantangan_' + t.id;
+          div.dataset.id = t.id;
+          div.style.cssText = 'background:#fff; border-radius:14px; padding:1rem 1.3rem; border:2px solid #e5dbd0; transition:all 0.3s ease;';
+          if (isBonus) {
+            div.style.background = 'linear-gradient(135deg, #fff8e6, #ffe8c2)';
+            div.style.borderColor = '#d4a030';
+          }
+
+          let inputHtml = '';
+          if (t.tipe === 'teks') {
+            inputHtml = `
+              <div class="t-input-row" style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
+                <textarea id="input_${t.id}" placeholder="Tulis argumenmu di sini..." maxlength="600" style="flex:1; min-width:200px; padding:0.5rem 0.9rem; border-radius:10px; border:2px solid #d9cdbf; font-family:inherit; font-size:0.88rem; color:#2f2822; background:#fcfaf7; outline:none; min-height:70px; resize:vertical;"></textarea>
+                <button id="btn_${t.id}" style="padding:0.5rem 1.4rem; border-radius:20px; border:none; font-weight:700; font-size:0.85rem; cursor:pointer; background:#4d3829; color:#fff; font-family:inherit; align-self:flex-end;">Periksa</button>
+              </div>
+            `;
+          } else if (t.tipe === 'pilihan') {
+            inputHtml = '<div class="t-opsi-col" style="display:flex; flex-direction:column; gap:0.4rem;">';
+            t.opsi.forEach(o => {
+              inputHtml += `
+                <label style="display:flex; gap:0.5rem; padding:0.5rem 0.8rem; border:2px solid #d9cdbf; border-radius:10px; cursor:pointer; font-size:0.88rem; color:#3d2c1f; background:#fff;">
+                  <input type="radio" name="opsi_${t.id}" value="${o.v}" style="accent-color:#6ecb8f;">
+                  <span>${o.label}</span>
+                </label>
+              `;
+            });
+            inputHtml += '</div><div class="t-input-row" style="justify-content:flex-end; margin-top:0.5rem;"><button id="btn_' + t.id + '" style="padding:0.5rem 1.4rem; border-radius:20px; border:none; font-weight:700; font-size:0.85rem; cursor:pointer; background:#4d3829; color:#fff; font-family:inherit;">Periksa</button></div>';
+          }
+
+          div.innerHTML = `
+            <div class="t-header" style="display:flex; align-items:center; gap:0.5rem; font-weight:700; color:#3b2b1e; margin-bottom:0.4rem;">
+              <span class="t-num" style="background:#4d3829; color:#fff; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0;">${isBonus ? '🔥' : (idx + 1)}</span>
+              <span>${isBonus ? 'Tantangan Bonus' : 'Tantangan ' + (idx + 1)}</span>
+            </div>
+            <div class="t-text" style="font-size:0.92rem; color:#2f2822; line-height:1.6; margin-bottom:0.6rem;">${t.teks}</div>
+            ${inputHtml}
+            <div class="t-feedback" id="fb_${t.id}" style="margin-top:0.6rem; padding:0.6rem 0.9rem; border-radius:8px; font-size:0.85rem; line-height:1.5; display:none;"></div>
+          `;
+
+          elTantanganList.appendChild(div);
+
+          const btn = document.getElementById('btn_' + t.id);
+          btn.addEventListener('click', () => periksaTantangan(t));
+        });
+      }
+
+      // ============================================
+      // PERIKSA TANTANGAN
+      // ============================================
+      function periksaTantangan(t) {
+        const fb = document.getElementById('fb_' + t.id);
+        const item = document.getElementById('tantangan_' + t.id);
+
+        if (t.tipe === 'teks') {
+          const inp = document.getElementById('input_' + t.id);
+          const val = inp.value.trim();
+          if (!val) {
+            fb.style.cssText = 'display:block; margin-top:0.6rem; padding:0.6rem 0.9rem; border-radius:8px; font-size:0.85rem; line-height:1.5; background:#fff3d6; color:#8a5e00; border-left:4px solid #f4b942;';
+            fb.innerHTML = '⚠️ Tulis argumenmu dulu ya!';
+            return;
+          }
+          if (val.length < 30) {
+            fb.style.cssText = 'display:block; margin-top:0.6rem; padding:0.6rem 0.9rem; border-radius:8px; font-size:0.85rem; line-height:1.5; background:#fff3d6; color:#8a5e00; border-left:4px solid #f4b942;';
+            fb.innerHTML = '🤔 Argumenmu terlalu pendek. ' + t.hint;
+            return;
+          }
+          if (t.validasi(val)) {
+            fb.style.cssText = 'display:block; margin-top:0.6rem; padding:0.6rem 0.9rem; border-radius:8px; font-size:0.85rem; line-height:1.5; background:#d4e8cb; color:#3d6b2c; border-left:4px solid #6b8c5e;';
+            fb.innerHTML = '✅ <strong>Bagus!</strong> Argumenmu sudah menyentuh inti masalahnya. Tantangan bonus selesai!';
+            item.style.borderColor = '#8aaa7a';
+            item.style.background = '#f0f8eb';
+            document.getElementById('btn_' + t.id).disabled = true;
+            tantanganSelesai[t.id] = true;
+          } else {
+            fb.style.cssText = 'display:block; margin-top:0.6rem; padding:0.6rem 0.9rem; border-radius:8px; font-size:0.85rem; line-height:1.5; background:#f5d6d0; color:#a84a3a; border-left:4px solid #d97a6a;';
+            fb.innerHTML = '❌ ' + t.feedbackSalah + '<br><br>💡 ' + t.hint;
+          }
+        } else if (t.tipe === 'pilihan') {
+          const selected = document.querySelector('input[name="opsi_' + t.id + '"]:checked');
+          if (!selected) {
+            fb.style.cssText = 'display:block; margin-top:0.6rem; padding:0.6rem 0.9rem; border-radius:8px; font-size:0.85rem; line-height:1.5; background:#fff3d6; color:#8a5e00; border-left:4px solid #f4b942;';
+            fb.innerHTML = '⚠️ Pilih salah satu jawaban dulu!';
+            return;
+          }
+          const opsi = t.opsi.find(o => o.v === selected.value);
+          if (opsi.benar) {
+            fb.style.cssText = 'display:block; margin-top:0.6rem; padding:0.6rem 0.9rem; border-radius:8px; font-size:0.85rem; line-height:1.5; background:#d4e8cb; color:#3d6b2c; border-left:4px solid #6b8c5e;';
+            fb.innerHTML = '✅ <strong>Benar!</strong>';
+            item.style.borderColor = '#8aaa7a';
+            item.style.background = '#f0f8eb';
+            document.getElementById('btn_' + t.id).disabled = true;
+            tantanganSelesai[t.id] = true;
+          } else {
+            fb.style.cssText = 'display:block; margin-top:0.6rem; padding:0.6rem 0.9rem; border-radius:8px; font-size:0.85rem; line-height:1.5; background:#f5d6d0; color:#a84a3a; border-left:4px solid #d97a6a;';
+            fb.innerHTML = '❌ ' + t.feedbackSalah;
+          }
+        }
+
+        cekSemuaTantangan();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+      }
+
+      function cekSemuaTantangan() {
+        const items = document.querySelectorAll('.tantangan-item');
+        if (Object.keys(tantanganSelesai).length === items.length) {
+          elMindful2.classList.add('show');
+          elMindful2.style.display = 'block';
+          elBtnLanjutLapis3.disabled = false;
+          setTimeout(() => {
+            elMindful2.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 200);
+        }
+      }
+
+      // ============================================
+      // LANJUT KE LAPIS 3 — dengan MODAL
+      // ============================================
+      window.lanjutKeLapis3 = function() {
+        const jawab = document.getElementById('mindful2Jawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 2 sebelum lanjut!');
+          document.getElementById('mindful2Jawab').focus();
+          return;
+        }
+
+        lapis2Selesai = true;
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+
+        elAreaLapis3.style.display = 'block';
+        updateProgressLapis('lapis3');
+
+        elBtnLanjutLapis3.disabled = true;
+        elBtnLanjutLapis3.textContent = '✅ Lapis 2 Selesai';
+
+        if (lapis3Dibaca) {
+          tampilkanKontenLapis3SetelahBaca();
+          setTimeout(() => {
+            elAreaLapis3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 300);
+          return;
+        }
+
+        tampilkanModalPenamaan();
+      };
+
+      // ============================================
+      // MODAL PENAMAAN KONSEP
+      // ============================================
+      function tampilkanModalPenamaan() {
+        if (modalPenamaanEl) { modalPenamaanEl.remove(); modalPenamaanEl = null; }
+        if (bacaTimerInterval) { clearInterval(bacaTimerInterval); bacaTimerInterval = null; }
+
+        const overlay = document.createElement('div');
+        overlay.className = 'duta-penamaan-overlay';
+        overlay.id = 'duta-penamaan-modal';
+        overlay.style.cssText = 'position:fixed; inset:0; background:rgba(40,20,50,0.65); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:flex; align-items:flex-start; justify-content:center; z-index:10000; padding:1.5rem 1rem; overflow-y:auto;';
+
+        const penamaanKonten = document.getElementById('penamaanKonten');
+        const kontenHTML = penamaanKonten ? penamaanKonten.innerHTML : '<p>Konten tidak ditemukan.</p>';
+
+        overlay.innerHTML = `
+          <div style="background:#fff; border-radius:24px; padding:0; max-width:760px; width:100%; box-shadow:0 24px 70px rgba(40,20,50,0.35); border:3px solid #6ecb8f; overflow:hidden; margin:auto;" role="dialog" aria-modal="true">
+            <div style="background:linear-gradient(135deg, #6ecb8f, #4fa86a); color:#fff; padding:1.1rem 1.6rem; display:flex; align-items:center; gap:0.6rem; font-weight:800; font-size:1.05rem;">
+              <span style="font-size:1.4rem;">📖</span>
+              <span>Lapis 3 — Penamaan Konsep (Baca dulu ya!)</span>
+            </div>
+            <div style="padding:1.4rem 1.8rem 1.2rem; max-height:60vh; overflow-y:auto;">
+              <div>${kontenHTML}</div>
+            </div>
+            <div style="padding:1rem 1.6rem 1.3rem; background:#f8f4ef; border-top:2px solid #e5dbd0; text-align:center; position:sticky; bottom:0;">
+              <button type="button" id="btnSudahBaca" disabled style="padding:0.85rem 2.5rem; border-radius:40px; border:none; background:linear-gradient(135deg, #6ecb8f, #4fa86a); color:#fff; font-weight:800; font-size:1rem; font-family:inherit; cursor:pointer; box-shadow:0 6px 18px rgba(45,125,70,0.3); display:inline-flex; align-items:center; gap:0.5rem; position:relative; overflow:hidden; opacity:0.7;">
+                <span id="bsbProgress" style="position:absolute; left:0; bottom:0; height:4px; background:rgba(255,255,255,0.65); width:0%; transition:width 1s linear;"></span>
+                <span id="bsbLabel">⏳ Baca dulu... (<span id="bsbDetik">${DURASI_BACA_DETIK}</span>s)</span>
+              </button>
+              <div id="dutaPenamaanTimer" style="font-size:0.8rem; color:#7a6656; margin-top:0.5rem; font-style:italic;">
+                Tombol aktif setelah ${DURASI_BACA_DETIK} detik — supaya kamu benar-benar membaca.
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.body.appendChild(overlay);
+        modalPenamaanEl = overlay;
+        document.body.style.overflow = 'hidden';
+
+        const elBtnSudahBaca = document.getElementById('btnSudahBaca');
+        const elBsbProgress = document.getElementById('bsbProgress');
+        const elBsbLabel = document.getElementById('bsbLabel');
+        const elBsbDetik = document.getElementById('bsbDetik');
+        const elTimerInfo = document.getElementById('dutaPenamaanTimer');
+
+        bacaCountdown = DURASI_BACA_DETIK;
+        const totalDetik = DURASI_BACA_DETIK;
+        requestAnimationFrame(() => { elBsbProgress.style.width = '0%'; });
+
+        bacaTimerInterval = setInterval(() => {
+          bacaCountdown--;
+          if (elBsbDetik) elBsbDetik.textContent = bacaCountdown;
+          const persen = Math.round(((totalDetik - bacaCountdown) / totalDetik) * 100);
+          if (elBsbProgress) elBsbProgress.style.width = persen + '%';
+
+          if (bacaCountdown <= 0) {
+            clearInterval(bacaTimerInterval); bacaTimerInterval = null;
+            if (elBtnSudahBaca) { elBtnSudahBaca.disabled = false; elBtnSudahBaca.style.opacity = '1'; elBtnSudahBaca.style.cursor = 'pointer'; }
+            if (elBsbLabel) elBsbLabel.innerHTML = '✅ Sudah Membaca';
+            if (elTimerInfo) {
+              elTimerInfo.textContent = 'Terima kasih sudah membaca! Klik tombol untuk lanjut.';
+              elTimerInfo.style.color = '#2d5a1e';
+              elTimerInfo.style.fontWeight = '700';
+            }
+          }
+        }, 1000);
+
+        elBtnSudahBaca.addEventListener('click', function() {
+          if (elBtnSudahBaca.disabled) return;
+          lapis3Dibaca = true;
+          tutupModalPenamaan();
+          tampilkanKontenLapis3SetelahBaca();
+          if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+          setTimeout(() => {
+            const elJeda = document.getElementById('mindful3');
+            if (elJeda) elJeda.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 300);
+        });
+      }
+
+      function tutupModalPenamaan() {
+        if (bacaTimerInterval) { clearInterval(bacaTimerInterval); bacaTimerInterval = null; }
+        if (modalPenamaanEl) { modalPenamaanEl.remove(); modalPenamaanEl = null; }
+        document.body.style.overflow = '';
+      }
+
+      function tampilkanKontenLapis3SetelahBaca() {
+        const elMindful3 = document.getElementById('mindful3');
+        if (elMindful3) elMindful3.classList.add('show');
+        if (elKuisKilatContent && !elKuisKilatContent.dataset.built) {
+          buildKuisKilat();
+          elKuisKilatContent.dataset.built = '1';
+        }
+      }
+
+      // ============================================
+      // KUIS KILAT (opsi diacak)
+      // ============================================
+      const kuisKilatData = [
         {
-          q: 'Ketika kamu membuka website di browser, mengapa tombol Back selalu mengembalikan ke halaman terakhir yang dikunjungi?',
-          o: [
-            'Karena browser menyimpan semua halaman di hard disk',
-            'Karena browser menggunakan prinsip stack (LIFO) untuk riwayat',
-            'Karena browser menggunakan prinsip queue (FIFO) untuk riwayat',
-            'Karena browser memilih halaman secara acak'
-          ],
-          a: 1,
-          feedback: 'Browser menyimpan riwayat dalam stack. Tombol Back = Pop, sehingga halaman terakhir yang dikunjungi kembali lebih dulu.'
+          pertanyaan: 'Tombol "Undo" di aplikasi teks menggunakan konsep...',
+          opsi: ['Queue', 'Stack', 'Array', 'Tree'],
+          kunci: 1,
+          penjelasan: 'Undo memakai stack — aksi terakhir dibatalkan lebih dulu (LIFO).'
         },
         {
-          q: 'Manakah dari aktivitas berikut yang paling tepat menggambarkan prinsip stack?',
-          o: [
-            'Antrean siswa saat bel istirahat berbunyi',
-            'Tumpukan piring di rak dapur',
-            'Daftar hadir siswa di kelas',
-            'Nomor urut peserta lomba'
+          pertanyaan: 'Saat menekan "Back" di browser, halaman yang muncul adalah...',
+          opsi: [
+            'Halaman pertama yang dibuka.',
+            'Halaman terakhir yang dikunjungi sebelum halaman saat ini.',
+            'Halaman acak.',
+            'Halaman beranda.'
           ],
-          a: 1,
-          feedback: 'Tumpukan piring menggunakan prinsip LIFO — piring terakhir ditaruh diambil pertama. Antrean dan daftar hadir menggunakan prinsip FIFO/urut.'
-        },
-        {
-          q: 'Dewi membuka aplikasi Gojek, lalu membuka Tokopedia di browser, kemudian membuka Ruangguru. Setelah itu ia menutup Ruangguru dan klik Back di browser. Halaman apa yang muncul?',
-          o: ['Gojek', 'Tokopedia', 'Ruangguru', 'Halaman kosong'],
-          a: 1,
-          feedback: 'Stack riwayat: [Gojek, Tokopedia, Ruangguru]. Klik Back = Pop Ruangguru, sehingga kembali ke Tokopedia.'
+          kunci: 1,
+          penjelasan: 'Back mengembalikan ke halaman sebelumnya (stack riwayat).'
         }
       ];
 
-      let jawabanUser = new Array(SOAL.length).fill(null);
+      function buildKuisKilat() {
+        elKuisKilatContent.innerHTML = '';
+        elKuisKilatBox.style.display = 'block';
 
-      function renderSoal() {
-        soalWrap.innerHTML = '';
-        SOAL.forEach(function(soal, i) {
+        const kuisTampil = kuisKilatData.map(acakOpsiDenganKunci);
+        window.__kuisKilatTampil = kuisTampil;
+
+        kuisTampil.forEach((soal, idx) => {
           const div = document.createElement('div');
-          div.className = 'soal-item';
+          div.dataset.index = idx;
+          div.style.cssText = 'background:#e8f5ee; border-radius:10px; padding:0.8rem 1.1rem; margin-bottom:0.8rem;';
 
-          let html = '<div class="pertanyaan">' + (i + 1) + '. ' + soal.q + '</div><div class="opsi-tes">';
-          soal.o.forEach(function(opsi, j) {
-            html += '<label data-soal="' + i + '" data-opsi="' + j + '">' +
-                    '<input type="radio" name="soal' + i + '" value="' + j + '">' +
-                    '<span><strong>' + String.fromCharCode(65 + j) + '.</strong> ' + opsi + '</span>' +
-                    '</label>';
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            opsiHtml += `
+              <label id="kk_label_${idx}_${oi}" style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.87rem; color:#3d2c1f; padding:0.4rem 0.8rem; border-radius:10px; border:2px solid #e5dbd0; background:#fff; margin-bottom:0.35rem;">
+                <input type="radio" name="kk_soal_${idx}" value="${oi}" style="accent-color:#6ecb8f;">
+                <span>${opsi}</span>
+                <span class="check-icon" style="margin-left:auto; font-size:0.9rem;"></span>
+              </label>
+            `;
           });
-          html += '</div>';
-          div.innerHTML = html;
-          soalWrap.appendChild(div);
 
-          div.querySelectorAll('input[type="radio"]').forEach(function(radio) {
-            radio.addEventListener('change', function() {
-              jawabanUser[i] = parseInt(radio.value, 10);
+          div.innerHTML = `
+            <div style="font-weight:600; color:#3b2b1e; font-size:0.92rem; margin-bottom:0.5rem;"><strong>Soal ${idx + 1}.</strong> ${soal.pertanyaan}</div>
+            <div>${opsiHtml}</div>
+          `;
+          elKuisKilatContent.appendChild(div);
+
+          div.querySelectorAll('label').forEach((lbl, oi) => {
+            lbl.addEventListener('click', () => {
+              if (kuisKilatSubmitted) return;
+              jawabanKuisKilat[idx] = oi;
+              div.querySelectorAll('label').forEach((l2, oi2) => {
+                l2.style.background = oi2 === oi ? '#f0e6ff' : '#fff';
+                l2.style.borderColor = oi2 === oi ? '#6ecb8f' : '#e5dbd0';
+                l2.querySelector('input').checked = (oi2 === oi);
+              });
+              cekKuisKilatSiap();
             });
           });
         });
       }
 
+      function cekKuisKilatSiap() {
+        if (Object.keys(jawabanKuisKilat).length === kuisKilatData.length && !kuisKilatSubmitted) {
+          setTimeout(() => {
+            if (kuisKilatSubmitted) return;
+            submitKuisKilat();
+          }, 300);
+        }
+      }
+
+      function submitKuisKilat() {
+        kuisKilatSubmitted = true;
+        kuisKilatBenar = 0;
+        const kuisTampil = window.__kuisKilatTampil || kuisKilatData;
+
+        kuisTampil.forEach((soal, idx) => {
+          const selected = jawabanKuisKilat[idx];
+          const div = elKuisKilatContent.querySelector('[data-index="' + idx + '"]');
+          const labels = div.querySelectorAll('label');
+          const benar = (selected === soal.kunci);
+
+          labels.forEach((lbl, oi) => {
+            lbl.style.cursor = 'default';
+            lbl.querySelector('input').disabled = true;
+            if (oi === selected) {
+              lbl.style.background = benar ? '#e8f5e0' : '#f5e0e0';
+              lbl.style.borderColor = benar ? '#8aaa7a' : '#d4a0a0';
+              lbl.querySelector('.check-icon').textContent = benar ? '✅' : '❌';
+            }
+            if (oi === soal.kunci && !benar) {
+              lbl.style.background = '#e8f5e0';
+              lbl.style.borderColor = '#8aaa7a';
+              lbl.querySelector('.check-icon').textContent = '✅';
+            }
+          });
+
+          if (benar) kuisKilatBenar++;
+        });
+
+        elKkHasil.style.display = 'block';
+        elKkHasil.innerHTML = '✅ Kuis Kilat selesai! Kamu benar <strong>' + kuisKilatBenar + '</strong> dari <strong>' + kuisTampil.length + '</strong>.';
+
+        elBtnLanjutTes.disabled = false;
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+      }
+
       // ============================================
-      // PERIKSA TES
+      // LANJUT KE TES
       // ============================================
-      function periksaTes() {
-        const belumDijawab = jawabanUser.findIndex(function(j) { return j === null; });
-        if (belumDijawab !== -1) {
-          alert('Soal nomor ' + (belumDijawab + 1) + ' belum dijawab.');
+      window.lanjutKeTesPemahaman = function() {
+        const jawab = document.getElementById('mindful3Jawab').value.trim();
+        if (jawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 3 sebelum lanjut!');
+          document.getElementById('mindful3Jawab').focus();
           return;
         }
 
-        let benar = 0;
-        jawabanUser.forEach(function(jawab, i) {
-          if (jawab === SOAL[i].a) benar++;
-        });
+        elTesSection.style.display = 'block';
+        elRefleksiBox.style.display = 'block';
+        renderSoal();
+        updateTesProgress();
 
-        soalWrap.querySelectorAll('label[data-soal]').forEach(function(label) {
-          const i = parseInt(label.dataset.soal, 10);
-          const j = parseInt(label.dataset.opsi, 10);
-          label.querySelector('input').disabled = true;
-          if (j === SOAL[i].a) {
-            label.classList.add('benar');
-          } else if (jawabanUser[i] === j) {
-            label.classList.add('salah');
+        updateProgressLapis('tes');
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+
+        setTimeout(() => {
+          elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      };
+
+      // ============================================
+      // TES PEMAHAMAN (opsi diacak)
+      // ============================================
+      const soalData = [
+        {
+          pertanyaan: 'Manakah yang <strong>bukan</strong> penerapan tumpukan (stack)?',
+          opsi: [
+            'Undo di text editor.',
+            'Browser back.',
+            'Antrean printer.',
+            'Tumpukan piring.'
+          ],
+          kunci: 2,
+          penjelasan: 'Antrean printer = queue (FIFO), bukan stack (LIFO).'
+        },
+        {
+          pertanyaan: 'Mengapa Undo dan Redo membutuhkan <strong>dua stack</strong>?',
+          opsi: [
+            'Karena satu stack tidak cukup.',
+            'Karena satu untuk menyimpan aksi, satu untuk menyimpan yang dibatalkan.',
+            'Karena komputer butuh dua stack.',
+            'Karena stack tidak bisa menyimpan teks.'
+          ],
+          kunci: 1,
+          penjelasan: 'Stack undo menyimpan aksi. Stack redo menyimpan aksi yang dibatalkan agar bisa di-redo.'
+        },
+        {
+          pertanyaan: 'Browser history menggunakan stack karena...',
+          opsi: [
+            'Halaman pertama harus keluar dulu.',
+            'Halaman terakhir yang dikunjungi adalah yang pertama muncul saat Back.',
+            'Browser tidak butuh urutan.',
+            'Semua halaman sama.'
+          ],
+          kunci: 1,
+          penjelasan: 'Back memunculkan halaman terakhir yang dikunjungi sebelum halaman saat ini — prinsip LIFO.'
+        },
+        {
+          pertanyaan: 'Tumpukan nampan di kantin adalah contoh stack karena...',
+          opsi: [
+            'Nampan bisa diambil dari mana saja.',
+            'Nampan yang terakhir diletakkan adalah yang pertama diambil.',
+            'Nampan tidak bisa ditumpuk.',
+            'Nampan diambil secara acak.'
+          ],
+          kunci: 1,
+          penjelasan: 'Nampan terakhir diletakkan = nampan paling atas = pertama diambil. Itulah LIFO.'
+        }
+      ];
+
+      function renderSoal() {
+        elSoalContainer.innerHTML = '';
+        const soalTampil = soalData.map(acakOpsiDenganKunci);
+        window.__soalTesTampil = soalTampil;
+
+        soalTampil.forEach((soal, idx) => {
+          const div = document.createElement('div');
+          div.className = 'soal-kuis';
+          div.dataset.index = idx;
+          div.style.cssText = 'background:#fff; padding:1.1rem 1.3rem; border-radius:14px; border:2px solid #e5dbd0; margin-bottom:0.9rem; transition:all 0.3s ease;';
+
+          let opsiHtml = '';
+          soal.opsi.forEach((opsi, oi) => {
+            const id = 'soal' + idx + '_opt' + oi;
+            opsiHtml += `
+              <label for="${id}" id="label_${idx}_${oi}" style="display:flex; align-items:flex-start; gap:0.5rem; cursor:pointer; font-size:0.88rem; color:#3d2c1f; padding:0.45rem 0.8rem; border-radius:10px; border:2px solid #e5dbd0; line-height:1.5; margin-bottom:0.35rem; background:#fff;">
+                <input type="radio" name="soal${idx}" id="${id}" value="${oi}" style="accent-color:#6ecb8f; width:16px; height:16px; margin-top:0.15rem;">
+                <span>${opsi}</span>
+                <span class="check-icon" style="margin-left:auto; font-size:0.9rem;"></span>
+              </label>
+            `;
+          });
+
+          div.innerHTML = `
+            <div style="font-weight:600; font-size:0.95rem; color:#3b2b1e; margin-bottom:0.5rem; display:flex; gap:0.5rem; align-items:flex-start; line-height:1.6;">
+              <span style="display:inline-flex; align-items:center; justify-content:center; background:#6ecb8f; color:#fff; width:24px; height:24px; border-radius:50%; font-size:0.75rem; font-weight:700; flex-shrink:0;">${idx + 1}</span>
+              <span>${soal.pertanyaan}</span>
+            </div>
+            <div>${opsiHtml}</div>
+            <div class="jawaban-feedback" id="feedback_soal_${idx}" style="margin-top:0.6rem; padding:0.6rem 0.9rem; border-radius:8px; display:none; font-size:0.85rem; line-height:1.5;"></div>
+          `;
+
+          elSoalContainer.appendChild(div);
+
+          div.querySelectorAll('label').forEach((lbl, oi) => {
+            lbl.addEventListener('click', function(e) {
+              if (tesSubmitted) return;
+              e.preventDefault();
+              pilihJawabanTes(idx, oi);
+            });
+          });
+        });
+      }
+
+      function pilihJawabanTes(soalIndex, optIndex) {
+        if (tesSubmitted) return;
+        const soalDiv = document.querySelector('.soal-kuis[data-index="' + soalIndex + '"]');
+        const labels = soalDiv.querySelectorAll('label');
+
+        labels.forEach((label, idx) => {
+          label.style.borderColor = '#e5dbd0';
+          label.style.background = '#fff';
+          if (idx === optIndex) {
+            label.style.borderColor = '#6ecb8f';
+            label.style.background = '#e8f5ee';
+            label.querySelector('input').checked = true;
+          } else {
+            label.querySelector('input').checked = false;
           }
         });
 
-        const skor = Math.round(40 + (benar / SOAL.length) * 60);
-        const lulus = benar >= 2;
-
-        let html = '<h3>Hasil Tes Pemahaman — Bagian 3</h3>' +
-                   '<div class="skor-besar">' + skor + '</div>' +
-                   '<p><strong>Jawaban benar:</strong> ' + benar + ' / ' + SOAL.length + '</p>';
-
-        if (lulus) {
-          html += '<div class="pesan lulus">🎉 Selamat! Kamu lulus Bagian 3. Silakan lanjut ke Bagian 4.</div>';
-        } else {
-          html += '<div class="pesan gagal">📖 Belum lulus (minimal 2 benar). Silakan baca ulang materi singkat dan coba lagi.</div>';
-        }
-
-        hasilTes.innerHTML = html;
-        hasilTes.classList.add('show');
-        hasilTes.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        if (lulus) {
-          btnLanjut.disabled = false;
-          simpanProgress(skor, benar, SOAL.length);
-          kirimNilai(skor);
-        } else {
-          btnLanjut.disabled = true;
-        }
-
-        btnPeriksaTes.disabled = true;
+        jawabanTes[soalIndex] = optIndex;
+        updateTesProgress();
       }
 
-      // ============================================
-      // SIMPAN PROGRESS
-      // ============================================
-      function simpanProgress(skor, benar, total) {
+      function updateTesProgress() {
+        const total = soalData.length;
+        const answered = Object.keys(jawabanTes).length;
+        elTesProgress.textContent = 'Terjawab: ' + answered + ' / ' + total;
+      }
+
+      elBtnPeriksaTes.addEventListener('click', function() {
+        if (tesSubmitted) return;
+        const total = soalData.length;
+        const answered = Object.keys(jawabanTes).length;
+
+        if (answered < total) {
+          alert('⚠️ Kamu baru menjawab ' + answered + ' dari ' + total + ' soal. Selesaikan semua soal terlebih dahulu!');
+          return;
+        }
+
+        const soalTampil = window.__soalTesTampil || soalData;
+        let correct = 0;
+        soalTampil.forEach((soal, idx) => {
+          if (jawabanTes[idx] === soal.kunci) correct++;
+        });
+
+        const lulus = correct >= AMBANG_LULUS;
+        tesBenar = correct;
+        tesSubmitted = true;
+
+        soalTampil.forEach((soal, idx) => {
+          const selected = jawabanTes[idx];
+          const soalDiv = document.querySelector('.soal-kuis[data-index="' + idx + '"]');
+          const labels = soalDiv.querySelectorAll('label');
+          const feedback = document.getElementById('feedback_soal_' + idx);
+          const isThisCorrect = (selected === soal.kunci);
+
+          labels.forEach((label, oi) => {
+            label.style.cursor = 'default';
+            label.querySelector('input').disabled = true;
+            if (oi === selected) {
+              if (isThisCorrect) {
+                label.style.borderColor = '#8aaa7a';
+                label.style.background = '#e8f5e0';
+                label.querySelector('.check-icon').textContent = '✅';
+              } else {
+                label.style.borderColor = '#d4a0a0';
+                label.style.background = '#f5e0e0';
+                label.querySelector('.check-icon').textContent = '❌';
+              }
+            }
+            if (lulus && oi === soal.kunci && !isThisCorrect) {
+              label.style.borderColor = '#8aaa7a';
+              label.style.background = '#e8f5e0';
+              label.querySelector('.check-icon').textContent = '✅';
+            }
+          });
+
+          if (isThisCorrect) {
+            soalDiv.style.borderColor = '#8aaa7a';
+            soalDiv.style.background = '#f0f8eb';
+            feedback.style.display = 'block';
+            feedback.style.background = '#d4e8cb';
+            feedback.style.color = '#3d6b2c';
+            feedback.style.borderLeft = '4px solid #6b8c5e';
+            feedback.innerHTML = '✅ <strong>Benar!</strong>';
+          } else {
+            soalDiv.style.borderColor = '#d4a0a0';
+            soalDiv.style.background = '#fdf0f0';
+            feedback.style.display = 'block';
+            feedback.style.background = '#f5d6d0';
+            feedback.style.color = '#a84a3a';
+            feedback.style.borderLeft = '4px solid #d97a6a';
+            if (lulus) {
+              feedback.innerHTML = '❌ <strong>Kurang tepat.</strong> Jawaban benar: <span style="font-weight:700; color:#4d7a3b;">' + soal.opsi[soal.kunci] + '</span><br>' + soal.penjelasan;
+            } else {
+              feedback.innerHTML = '❌ <strong>Kurang tepat.</strong> Coba baca kembali materi dan pikirkan jawaban yang benar.';
+            }
+          }
+        });
+
+        elBtnPeriksaTes.disabled = true;
+        elBtnPeriksaTes.textContent = correct === total ? '✅ Semua Benar!' : '📊 Skor: ' + correct + '/' + total;
+
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+
+        tampilkanHasilTes(correct, total, lulus);
+      });
+
+      function tampilkanHasilTes(correct, total, lulus) {
+        setTimeout(() => {
+          elHasilTes.style.display = 'block';
+
+          if (lulus) {
+            tesSelesai = true;
+            document.getElementById('hasilIcon').textContent = '🏆';
+            document.getElementById('hasilTitle').textContent = 'Selamat!';
+            document.getElementById('hasilSkor').textContent = correct + ' / ' + total;
+            document.getElementById('hasilDesc').innerHTML =
+              'Kamu berhasil menyelesaikan Bagian 3!<br><br>Bagian 4 (Kuis Akhir & Sertifikat) sekarang terbuka!';
+
+            elBtnLanjutBagian4.style.opacity = '1';
+            elBtnLanjutBagian4.style.pointerEvents = 'auto';
+            elHintLanjut.style.color = '#2d5a1e';
+            elHintLanjut.style.fontWeight = '600';
+            elHintLanjut.textContent = '✅ Bagian 4 sudah terbuka! Klik untuk melanjutkan.';
+            elBtnUlangiTes.style.display = 'none';
+
+            simpanSkorBagian3(correct, total);
+          } else {
+            document.getElementById('hasilIcon').textContent = '📖';
+            document.getElementById('hasilTitle').textContent = 'Perlu Belajar Lagi';
+            document.getElementById('hasilSkor').textContent = correct + ' / ' + total;
+            document.getElementById('hasilDesc').innerHTML =
+              'Kamu baru menjawab benar ' + correct + ' dari ' + total + ' soal.<br>Minimal ' + AMBANG_LULUS + ' soal benar untuk membuka Bagian 4.<br><br>Pelajari kembali materinya, lalu klik <strong>🔄 Ulangi Tes Pemahaman</strong> di bawah.';
+
+            elBtnUlangiTes.style.display = 'block';
+            elHintLanjut.style.color = '#a84a3a';
+            elHintLanjut.style.fontWeight = '600';
+            elHintLanjut.textContent = '⚠️ Belum lulus — klik "Ulangi Tes Pemahaman" untuk mencoba lagi.';
+          }
+
+          setTimeout(() => {
+            elHasilTes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 200);
+        }, 700);
+      }
+
+      function simpanSkorBagian3(correct, total) {
+        const skorBagian3 = Math.round(40 + (correct / total) * 60);
         try {
-          const prog = JSON.parse(localStorage.getItem(KEY_PROGRESS) || '{}');
-          prog.bagian = 'c';
-          prog.skorBagian3 = skor;
-          prog.benarBagian3 = benar;
-          prog.totalBagian3 = total;
-          prog.waktuBagian3 = new Date().toISOString();
-          localStorage.setItem(KEY_PROGRESS, JSON.stringify(prog));
-        } catch (e) {
-          console.warn('Gagal simpan progress:', e);
+          const prev = JSON.parse(localStorage.getItem('labbk6_progress') || '{}');
+          prev.bagian = 3;
+          prev.skorBagian3 = skorBagian3;
+          localStorage.setItem('labbk6_progress', JSON.stringify(prev));
+        } catch (e) {}
+
+        if (window.dutaSimpanProgress) {
+          const skorObj = { c: skorBagian3 };
+          window.dutaSimpanProgress(MODUL_KEY, 'c', skorObj).catch(() => {});
         }
       }
 
-      // ============================================
-      // KIRIM NILAI (mode UPDATE)
-      // ============================================
-      async function kirimNilai(skor) {
-        statusKirim.textContent = '⏳ Mengirim nilai Bagian 3...';
-        statusKirim.className = 'status-kirim show info';
+      elBtnUlangiTes.addEventListener('click', function() {
+        jawabanTes = {};
+        tesSubmitted = false;
+        tesBenar = 0;
+        tesSelesai = false;
 
-        const hasil = await window.kirimNilaiBagian(
-          NAMA_SHEET,
-          'c',
-          skor,
-          TOTAL_BAGIAN
-        );
+        elBtnPeriksaTes.disabled = false;
+        elBtnPeriksaTes.textContent = '✅ Periksa Jawaban';
+        elBtnUlangiTes.style.display = 'none';
+        elHasilTes.style.display = 'none';
 
-        if (hasil.ok) {
-          statusKirim.textContent = '✅ Nilai Bagian 3 berhasil dikirim! Silakan lanjut ke Bagian 4.';
-          statusKirim.className = 'status-kirim show success';
-        } else {
-          statusKirim.textContent = '❌ Gagal mengirim nilai: ' + (hasil.error || 'Terjadi kesalahan') + '. Coba lagi.';
-          statusKirim.className = 'status-kirim show error';
-          btnLanjut.disabled = true;
+        elHintLanjut.style.color = '#d4a0a0';
+        elHintLanjut.textContent = '🔒 Selesaikan semua tahap untuk membuka Bagian 4';
+
+        renderSoal();
+        updateTesProgress();
+
+        elTesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      // ============================================
+      // KIRIM NILAI BAGIAN 3
+      // ============================================
+      async function kirimNilaiBagian3() {
+        const skorBagian3 = Math.round(40 + (tesBenar / soalData.length) * 60);
+
+        elStatusKirim.className = 'status-kirim info show';
+        elStatusKirim.style.cssText = 'max-width:520px; margin:1rem auto; padding:0.8rem 1.2rem; border-radius:12px; font-size:0.88rem; font-weight:600; line-height:1.5; display:flex; flex-wrap:wrap; align-items:center; gap:0.6rem; background:#e8f5ee; border:2px solid #6ecb8f; color:#2d5a1e;';
+        elStatusSpinner.style.display = 'inline-block';
+        elStatusKirimText.innerHTML = 'Mengirim nilai Bagian 3 (' + skorBagian3 + ')...';
+
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
+
+        if (kirimTimeoutId) { clearTimeout(kirimTimeoutId); kirimTimeoutId = null; }
+        let selesaiKirim = false;
+
+        kirimTimeoutId = setTimeout(() => {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          tampilkanGagalKirim(skorBagian3, '⏱️ Koneksi lambat atau terputus.');
+        }, 12000);
+
+        try {
+          const hasil = await window.kirimNilaiBagian(
+            NAMA_SHEET, 'c', skorBagian3, TOTAL_BAGIAN
+          );
+
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+
+          if (hasil && hasil.ok) {
+            kirimSukses = true;
+            elStatusKirim.style.background = '#d4e8cb';
+            elStatusKirim.style.borderColor = '#8aaa7a';
+            elStatusKirim.style.color = '#2d5a1e';
+            elStatusSpinner.style.display = 'none';
+            elStatusKirimText.innerHTML = '✅ Nilai Bagian 3 (<strong>' + skorBagian3 + '</strong>) berhasil dikirim.';
+          } else {
+            tampilkanGagalKirim(skorBagian3, (hasil && hasil.error) || 'Terjadi kesalahan.');
+          }
+        } catch (err) {
+          if (selesaiKirim) return;
+          selesaiKirim = true;
+          clearTimeout(kirimTimeoutId);
+          kirimTimeoutId = null;
+          tampilkanGagalKirim(skorBagian3, err.message || 'Gagal terhubung.');
         }
+      }
+
+      function tampilkanGagalKirim(skor, pesan) {
+        elStatusKirim.style.background = '#f5d6d0';
+        elStatusKirim.style.borderColor = '#d4a0a0';
+        elStatusKirim.style.color = '#a84a3a';
+        elStatusSpinner.style.display = 'none';
+        elStatusKirimText.innerHTML = '⚠️ ' + pesan + ' Nilai: <strong>' + skor + '</strong>. Klik "Ulangi Kirim" untuk mencoba lagi.';
+
+        const oldRetry = elStatusKirim.querySelector('.btn-retry');
+        if (oldRetry) oldRetry.remove();
+
+        const btnRetry = document.createElement('button');
+        btnRetry.className = 'btn-retry';
+        btnRetry.type = 'button';
+        btnRetry.textContent = '🔄 Ulangi Kirim';
+        btnRetry.style.cssText = 'margin-left:auto; padding:0.35rem 1rem; border-radius:20px; border:2px solid currentColor; background:transparent; color:inherit; font-weight:700; font-size:0.82rem; cursor:pointer; font-family:inherit;';
+        btnRetry.addEventListener('click', function() {
+          kirimSukses = false;
+          kirimNilaiBagian3();
+        });
+        elStatusKirim.appendChild(btnRetry);
       }
 
       // ============================================
       // LANJUT KE BAGIAN 4
       // ============================================
-      btnLanjut.addEventListener('click', function() {
-        if (btnLanjut.disabled) return;
-        btnLanjut.disabled = true;
-        btnLanjut.textContent = '⏳ Berpindah...';
-        setTimeout(function() {
-          window.location.href = 'aktivitasbk6d.html';
-        }, 800);
-      });
+      window.lanjutKeBagian4 = async function() {
+        if (!tesSelesai) {
+          alert('🔒 Selesaikan tes pemahaman dengan benar terlebih dahulu!');
+          return;
+        }
+        if (kirimSukses) { pindahKeBagian4(); return; }
+
+        elBtnLanjutBagian4.disabled = true;
+        elBtnLanjutBagian4.textContent = '⏳ Mengirim...';
+
+        if (!elStatusKirim.classList.contains('show')) {
+          await kirimNilaiBagian3();
+        }
+
+        elBtnLanjutBagian4.disabled = false;
+        elBtnLanjutBagian4.textContent = 'Lanjut ke Bagian 4: Kuis Akhir →';
+
+        setTimeout(() => { pindahKeBagian4(); }, 800);
+      };
+
+      function pindahKeBagian4() {
+        if (window.dutaHapusState) window.dutaHapusState(STATE_KEY);
+        window.location.href = 'aktivitasbk6d.html';
+      }
 
       // ============================================
-      // EVENT LISTENERS
+      // STATE ACTIVITY
       // ============================================
-      btnBack.addEventListener('click', doBack);
-      btnForward.addEventListener('click', doForward);
-      btnReset.addEventListener('click', doReset);
-      btnPeriksaTes.addEventListener('click', periksaTes);
+      function kumpulkanState() {
+        return {
+          modulTerpilih: modulTerpilih,
+          modulSelesaiDijelajahi: modulSelesaiDijelajahi,
+          totalAksi: totalAksi,
+          editorTeks: editorTeks,
+          editorUndoStack: editorUndoStack.slice(),
+          editorRedoStack: editorRedoStack.slice(),
+          browserHistory: browserHistory.slice(),
+          browserForwardStack: browserForwardStack.slice(),
+          browserCurrentIdx: browserCurrentIdx,
+          piringCounter: piringCounter,
+          tumpukanPiring: tumpukanPiring.slice(),
+          lapis1Selesai: lapis1Selesai,
+          lapis2Selesai: lapis2Selesai,
+          lapis3Dibaca: lapis3Dibaca,
+          mindful1Jawab: (document.getElementById('mindful1Jawab') || {}).value || '',
+          mindfulPilihJawab: (document.getElementById('mindfulPilihJawab') || {}).value || '',
+          mindful2Jawab: (document.getElementById('mindful2Jawab') || {}).value || '',
+          mindful3Jawab: (document.getElementById('mindful3Jawab') || {}).value || '',
+          levelTantangan: levelTantangan,
+          tantanganSelesai: tantanganSelesai,
+          jawabanKuisKilat: jawabanKuisKilat,
+          kuisKilatSubmitted: kuisKilatSubmitted,
+          kuisKilatBenar: kuisKilatBenar,
+          jawabanTes: jawabanTes,
+          tesSubmitted: tesSubmitted,
+          tesBenar: tesBenar,
+          tesSelesai: tesSelesai,
+          refPelajaran: (document.getElementById('refPelajaran') || {}).value || '',
+          refPenerapan: (document.getElementById('refPenerapan') || {}).value || '',
+          exitTicket: (document.getElementById('exitTicket') || {}).value || '',
+          __lapisTerakhir: cekLapisTerakhir(),
+          aiFeedback: aiFeedback
+        };
+      }
+
+      function cekLapisTerakhir() {
+        if (tesSelesai || tesSubmitted) return 'tes';
+        if (lapis2Selesai) return 'lapis3';
+        if (lapis1Selesai && (levelTantangan || lapis2Selesai)) return 'lapis2';
+        if (lapis1Selesai) return 'lapis1';
+        if (elAreaSimulasi && elAreaSimulasi.classList.contains('active')) return 'lapis1';
+        return 'form';
+      }
+
+      function restoreState(s) {
+        if (!s || typeof s !== 'object') return;
+
+        modulTerpilih = s.modulTerpilih || null;
+        modulSelesaiDijelajahi = s.modulSelesaiDijelajahi || { editor: false, browser: false, fisik: false };
+        totalAksi = Number(s.totalAksi) || 0;
+        editorTeks = s.editorTeks || '';
+        editorUndoStack = Array.isArray(s.editorUndoStack) ? s.editorUndoStack.slice() : [];
+        editorRedoStack = Array.isArray(s.editorRedoStack) ? s.editorRedoStack.slice() : [];
+        browserHistory = Array.isArray(s.browserHistory) ? s.browserHistory.slice() : [];
+        browserForwardStack = Array.isArray(s.browserForwardStack) ? s.browserForwardStack.slice() : [];
+        browserCurrentIdx = Number(s.browserCurrentIdx);
+        if (isNaN(browserCurrentIdx)) browserCurrentIdx = -1;
+        piringCounter = Number(s.piringCounter) || 0;
+        tumpukanPiring = Array.isArray(s.tumpukanPiring) ? s.tumpukanPiring.slice() : [];
+
+        lapis1Selesai  = !!s.lapis1Selesai;
+        lapis2Selesai  = !!s.lapis2Selesai;
+        lapis3Dibaca   = !!s.lapis3Dibaca;
+        levelTantangan = s.levelTantangan || null;
+        tantanganSelesai = s.tantanganSelesai || {};
+        jawabanKuisKilat = s.jawabanKuisKilat || {};
+        kuisKilatSubmitted = !!s.kuisKilatSubmitted;
+        kuisKilatBenar = Number(s.kuisKilatBenar) || 0;
+        jawabanTes     = s.jawabanTes || {};
+        tesSubmitted   = !!s.tesSubmitted;
+        tesBenar       = Number(s.tesBenar) || 0;
+        tesSelesai     = !!s.tesSelesai;
+        aiFeedback     = s.aiFeedback || '';
+
+        const elM1 = document.getElementById('mindful1Jawab');
+        const elMP = document.getElementById('mindfulPilihJawab');
+        const elM2 = document.getElementById('mindful2Jawab');
+        const elM3 = document.getElementById('mindful3Jawab');
+        const elRP = document.getElementById('refPelajaran');
+        const elRN = document.getElementById('refPenerapan');
+        const elET = document.getElementById('exitTicket');
+
+        if (elM1 && s.mindful1Jawab) elM1.value = s.mindful1Jawab;
+        if (elMP && s.mindfulPilihJawab) elMP.value = s.mindfulPilihJawab;
+        if (elM2 && s.mindful2Jawab) elM2.value = s.mindful2Jawab;
+        if (elM3 && s.mindful3Jawab) elM3.value = s.mindful3Jawab;
+        if (elRP && s.refPelajaran) elRP.value = s.refPelajaran;
+        if (elRN && s.refPenerapan) elRN.value = s.refPenerapan;
+        if (elET && s.exitTicket) elET.value = s.exitTicket;
+
+        // Restore simulasi
+        renderEditor();
+        renderBrowser();
+        renderPiring();
+        updateStatAksiVisual();
+
+        if (modulTerpilih) pilihModul(modulTerpilih);
+
+        const lapis = s.__lapisTerakhir || cekLapisTerakhir();
+
+        if (lapis === 'form') return;
+
+        renderFeedbackAi();
+        if (elAreaSimulasi) elAreaSimulasi.classList.add('active');
+
+        if (lapis === 'lapis1') {
+          updateProgressLapis('lapis1');
+          cekSemuaModulSelesai();
+          return;
+        }
+
+        if (elAreaSimulasi) elAreaSimulasi.style.display = 'none';
+
+        if (lapis === 'lapis2') {
+          elAreaPilihLevel.classList.remove('active');
+          elAreaLapis2.style.display = 'block';
+          updateProgressLapis('lapis2');
+          if (levelTantangan) {
+            elLapis2LevelLabel.textContent = levelTantangan === 'dasar' ? '🟢 Dasar' :
+                                             levelTantangan === 'reguler' ? '🟡 Reguler' : '🔴 Tantangan';
+            if (levelTantangan === 'tantangan') {
+              elLapis2JumlahTantangan.textContent = '4 tantangan (3 inti + 1 bonus)';
+            } else {
+              elLapis2JumlahTantangan.textContent = '3 tantangan';
+            }
+            buildTantangan();
+            Object.keys(tantanganSelesai).forEach(function(id) {
+              const el = document.getElementById('tantangan_' + id);
+              if (el) {
+                el.style.borderColor = '#8aaa7a';
+                el.style.background = '#f0f8eb';
+                const btn = document.getElementById('btn_' + id);
+                if (btn) btn.disabled = true;
+              }
+            });
+            if (Object.keys(tantanganSelesai).length > 0) {
+              cekSemuaTantangan();
+            }
+          }
+          return;
+        }
+
+        if (lapis === 'lapis3' || lapis === 'tes') {
+          elAreaPilihLevel.classList.remove('active');
+          elAreaLapis2.style.display = 'none';
+          elAreaLapis3.style.display = 'block';
+          updateProgressLapis('lapis3');
+          if (levelTantangan) {
+            elLapis2LevelLabel.textContent = levelTantangan === 'dasar' ? '🟢 Dasar' :
+                                             levelTantangan === 'reguler' ? '🟡 Reguler' : '🔴 Tantangan';
+          }
+          elBtnLanjutLapis3.disabled = true;
+          elBtnLanjutLapis3.textContent = '✅ Lapis 2 Selesai';
+
+          if (lapis3Dibaca) {
+            tampilkanKontenLapis3SetelahBaca();
+            if (kuisKilatSubmitted) { restoreKuisKilat(); }
+          }
+        }
+
+        if (lapis === 'tes') {
+          elTesSection.style.display = 'block';
+          elRefleksiBox.style.display = 'block';
+          renderSoal();
+          updateTesProgress();
+          updateProgressLapis('tes');
+          elBtnLanjutTes.disabled = true;
+          elBtnLanjutTes.textContent = '✅ Selesai';
+          if (tesSubmitted) { restoreTes(); }
+        }
+      }
+
+      function updateStatAksiVisual() {
+        elStatTotalAksi.textContent = totalAksi;
+        let selesai = 0;
+        ['editor','browser','fisik'].forEach(k => { if (modulSelesaiDijelajahi[k]) selesai++; });
+        elStatModulSelesai.textContent = selesai;
+      }
+
+      function restoreKuisKilat() {
+        const kuisTampil = window.__kuisKilatTampil || kuisKilatData;
+        kuisTampil.forEach(function(soal, idx) {
+          const div = elKuisKilatContent.querySelector('[data-index="' + idx + '"]');
+          if (!div) return;
+          const labels = div.querySelectorAll('label');
+          const selected = jawabanKuisKilat[idx];
+          if (selected === undefined) return;
+          labels.forEach(function(lbl, oi) {
+            lbl.style.cursor = 'default';
+            const input = lbl.querySelector('input');
+            if (input) input.disabled = true;
+            if (oi === selected) {
+              const benar = (selected === soal.kunci);
+              lbl.style.background = benar ? '#e8f5e0' : '#f5e0e0';
+              lbl.style.borderColor = benar ? '#8aaa7a' : '#d4a0a0';
+              const ic = lbl.querySelector('.check-icon');
+              if (ic) ic.textContent = benar ? '✅' : '❌';
+            }
+            if (oi === soal.kunci && selected !== soal.kunci) {
+              lbl.style.background = '#e8f5e0';
+              lbl.style.borderColor = '#8aaa7a';
+              const ic = lbl.querySelector('.check-icon');
+              if (ic) ic.textContent = '✅';
+            }
+          });
+        });
+        elKkHasil.style.display = 'block';
+        elKkHasil.innerHTML = '✅ Kuis Kilat selesai! Kamu benar <strong>' + kuisKilatBenar + '</strong> dari <strong>' + kuisTampil.length + '</strong>.';
+        elBtnLanjutTes.disabled = false;
+      }
+
+      function restoreTes() {
+        const soalTampil = window.__soalTesTampil || soalData;
+        soalTampil.forEach(function(soal, idx) {
+          const selected = jawabanTes[idx];
+          const soalDiv = document.querySelector('.soal-kuis[data-index="' + idx + '"]');
+          if (!soalDiv || selected === undefined) return;
+          const labels = soalDiv.querySelectorAll('label');
+          const isCorrect = (selected === soal.kunci);
+          labels.forEach(function(label, oi) {
+            label.style.cursor = 'default';
+            const inp = label.querySelector('input');
+            if (inp) inp.disabled = true;
+            if (oi === selected) {
+              label.style.borderColor = isCorrect ? '#8aaa7a' : '#d4a0a0';
+              label.style.background = isCorrect ? '#e8f5e0' : '#f5e0e0';
+              const ic = label.querySelector('.check-icon');
+              if (ic) ic.textContent = isCorrect ? '✅' : '❌';
+            }
+            if (isCorrect && oi === soal.kunci) {
+              label.style.borderColor = '#8aaa7a';
+              label.style.background = '#e8f5e0';
+              const ic = label.querySelector('.check-icon');
+              if (ic) ic.textContent = '✅';
+            }
+          });
+          const feedback = document.getElementById('feedback_soal_' + idx);
+          if (isCorrect) {
+            soalDiv.style.borderColor = '#8aaa7a';
+            soalDiv.style.background = '#f0f8eb';
+            if (feedback) {
+              feedback.style.display = 'block';
+              feedback.style.background = '#d4e8cb';
+              feedback.style.color = '#3d6b2c';
+              feedback.style.borderLeft = '4px solid #6b8c5e';
+              feedback.innerHTML = '✅ <strong>Benar!</strong>';
+            }
+          } else {
+            soalDiv.style.borderColor = '#d4a0a0';
+            soalDiv.style.background = '#fdf0f0';
+            if (feedback) {
+              feedback.style.display = 'block';
+              feedback.style.background = '#f5d6d0';
+              feedback.style.color = '#a84a3a';
+              feedback.style.borderLeft = '4px solid #d97a6a';
+              feedback.innerHTML = '❌ <strong>Kurang tepat.</strong> Jawaban benar: <span style="font-weight:700; color:#4d7a3b;">' + soal.opsi[soal.kunci] + '</span><br>' + soal.penjelasan;
+            }
+          }
+        });
+        elBtnPeriksaTes.disabled = true;
+        elBtnPeriksaTes.textContent = '📊 Skor: ' + tesBenar + '/' + soalTampil.length;
+        tampilkanHasilTes(tesBenar, soalTampil.length, tesBenar >= AMBANG_LULUS);
+      }
+
+      function tawarkanRestore() {
+        const s = window.dutaAmbilState ? window.dutaAmbilState(STATE_KEY) : null;
+        if (!s) return false;
+        window.tampilkanModal({
+          judul: '🔄 Lanjutkan Aktivitas?',
+          pesan:
+            '<p style="margin-bottom:0.7rem;">Kami menemukan progres belajar yang tersimpan di perangkat ini.</p>' +
+            '<p style="margin-bottom:0.7rem;">Kamu bisa <strong>melanjutkan dari terakhir</strong> ' +
+            'atau <strong>mulai dari awal</strong>.</p>',
+          tombolLanjut: '▶️ Lanjutkan',
+          onLanjut: function() { restoreState(s); }
+        });
+        return true;
+      }
+
+      // ============================================
+      // FEEDBACK GURU (GEMINI)
+      // ============================================
+      const elFeedbackAiBox   = document.getElementById('feedbackAiBox');
+      const elFeedbackAiBody  = document.getElementById('feedbackAiBody');
+      const elBtnMintaFeedback = document.getElementById('btnMintaFeedback');
+      const elFeedbackAiHint  = document.getElementById('feedbackAiHint');
+
+      function cekTombolFeedback() {
+        const refPel = (document.getElementById('refPelajaran') || {}).value || '';
+        const refPen = (document.getElementById('refPenerapan') || {}).value || '';
+        const exitT  = (document.getElementById('exitTicket') || {}).value || '';
+        const ada = (refPel.trim().length >= 3) || (refPen.trim().length >= 3) || (exitT.trim().length >= 3);
+        if (elBtnMintaFeedback) elBtnMintaFeedback.disabled = !ada || aiFeedbackLoading;
+        if (elFeedbackAiHint) {
+          elFeedbackAiHint.textContent = ada
+            ? 'Klik tombol untuk minta catatan dari guru.'
+            : 'Isi Refleksi atau Exit Ticket dulu untuk mengaktifkan tombol.';
+        }
+      }
+
+      function renderFeedbackAi() {
+        if (!elFeedbackAiBox) return;
+        if (aiFeedback) {
+          elFeedbackAiBox.style.display = 'block';
+          if (elFeedbackAiBody) elFeedbackAiBody.textContent = aiFeedback;
+        } else {
+          elFeedbackAiBox.style.display = 'none';
+        }
+      }
+
+      async function mintaFeedbackGuru() {
+        if (aiFeedbackLoading) return;
+
+        const refPel = (document.getElementById('refPelajaran') || {}).value || '';
+        const refPen = (document.getElementById('refPenerapan') || {}).value || '';
+        const exitT  = (document.getElementById('exitTicket') || {}).value || '';
+
+        if (refPel.trim().length < 3 && refPen.trim().length < 3 && exitT.trim().length < 3) {
+          alert('📝 Isi Refleksi (PELAJARAN / PENERAPAN) atau Exit Ticket dulu ya.');
+          return;
+        }
+
+        aiFeedbackLoading = true;
+        if (elBtnMintaFeedback) {
+          elBtnMintaFeedback.disabled = true;
+          elBtnMintaFeedback.innerHTML = '<span class="fai-spin" style="display:inline-block; width:14px; height:14px; border:2px solid currentColor; border-top-color:transparent; border-radius:50%; animation:spin 0.7s linear infinite;"></span> Meminta catatan...';
+        }
+        if (elFeedbackAiHint) elFeedbackAiHint.textContent = 'Mohon tunggu, guru sedang menulis catatan...';
+
+        const skorBagian3 = Math.round(40 + (tesBenar / soalData.length) * 60);
+        const ringkasHasil = 'Modul dijelajahi: ' + Object.keys(modulSelesaiDijelajahi).filter(k => modulSelesaiDijelajahi[k]).length + '/3, Total aksi: ' + totalAksi;
+
+        const payload = {
+          modul: MODUL_KEY,
+          bagian: 'c',
+          level: levelTantangan || '',
+          skorTes: skorBagian3,
+          benarTes: tesBenar,
+          totalTes: soalData.length,
+          ringkasHasil: ringkasHasil,
+          mindful: {
+            j1: (document.getElementById('mindful1Jawab') || {}).value || '',
+            j2: (document.getElementById('mindful2Jawab') || {}).value || '',
+            j3: (document.getElementById('mindful3Jawab') || {}).value || '',
+            pilih: (document.getElementById('mindfulPilihJawab') || {}).value || ''
+          },
+          refleksi: { pelajaran: refPel, penerapan: refPen },
+          exitTicket: exitT
+        };
+
+        let hasil;
+        try { hasil = await window.dutaMintaFeedbackAI(payload); }
+        catch (e) { hasil = { ok: false, error: e.message || 'Gagal terhubung' }; }
+
+        aiFeedbackLoading = false;
+
+        if (hasil && hasil.ok && hasil.feedback) {
+          aiFeedback = hasil.feedback;
+          renderFeedbackAi();
+          if (elBtnMintaFeedback) elBtnMintaFeedback.innerHTML = '🔁 Minta Feedback Lagi';
+          if (elFeedbackAiHint) elFeedbackAiHint.textContent = 'Catatan guru tersimpan. Bisa lanjut ke bagian berikutnya.';
+          if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, kumpulkanState(), { force: true });
+        } else {
+          const pesan = (hasil && hasil.error) || 'Gagal minta feedback. Coba lagi.';
+          alert('⚠️ ' + pesan);
+          if (elBtnMintaFeedback) elBtnMintaFeedback.innerHTML = '🧑‍🏫 Minta Feedback';
+          if (elFeedbackAiHint) elFeedbackAiHint.textContent = 'Gagal. Klik tombol untuk coba lagi.';
+        }
+
+        cekTombolFeedback();
+      }
+
+      if (elBtnMintaFeedback) elBtnMintaFeedback.addEventListener('click', mintaFeedbackGuru);
+      ['refPelajaran', 'refPenerapan', 'exitTicket'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', cekTombolFeedback);
+          el.addEventListener('change', cekTombolFeedback);
+        }
+      });
 
       // ============================================
       // INISIALISASI
       // ============================================
-      renderSitusGrid();
-      renderBrowser();
-      renderStackRiwayat();
-      updatePenghitung();
-      updateTombolNav();
-      renderSoal();
+      document.addEventListener('DOMContentLoaded', function() {
+        try {
+          const siswa = JSON.parse(localStorage.getItem('labbk6_siswa') || '[]');
+          if (Array.isArray(siswa) && siswa.length > 0) daftarSiswa = siswa;
+        } catch (e) {}
 
+        const adaRestore = tawarkanRestore();
+
+        if (!adaRestore) {
+          elAreaSimulasi.classList.add('active');
+          renderEditor();
+          renderBrowser();
+          renderPiring();
+        }
+
+        cekTombolFeedback();
+        renderFeedbackAi();
+
+        if (window.dutaAutoSave) {
+          window.dutaAutoSave(STATE_KEY, kumpulkanState, 5000);
+        }
+
+        if (window.dutaPasangAutoSaveInput) {
+          window.dutaPasangAutoSaveInput(STATE_KEY, kumpulkanState, [
+            document.getElementById('mindful1Jawab'),
+            document.getElementById('mindfulPilihJawab'),
+            document.getElementById('mindful2Jawab'),
+            document.getElementById('mindful3Jawab'),
+            document.getElementById('refPelajaran'),
+            document.getElementById('refPenerapan'),
+            document.getElementById('exitTicket')
+          ]);
+        }
+      });
+
+      window.addEventListener('beforeunload', function() {
+        if (bacaTimerInterval) clearInterval(bacaTimerInterval);
+        if (modalPenamaanEl) modalPenamaanEl.remove();
+      });
+
+      console.log('✅ BK6 Bagian 3: Penerapan Tumpukan siap! (+ 3 modul simulasi + modal Lapis 3 + diferensiasi 3 level + state save/restore + feedback guru)');
     })();
   </script>
+
 </body>
 </html>
