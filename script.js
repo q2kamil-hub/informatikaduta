@@ -1,7 +1,8 @@
-// script.js — versi Fase C v3.0
+// script.js — versi Fase C v3.1
 // Bar user di dalam header. + normalisasi + kunci modul + DUTA_MODUL_AKTIF.
 // + Dashboard Guru v2: updateSiswa, hapusTamuBulk, backup, restore.
 // + Sliding expiration 60 menit (auto-logout saat idle).
+// + State aktivitas: simpan/restore/auto-save (binding ke user_id + TTL 24 jam).
 // encoding: UTF-8
 
 (function() {
@@ -164,7 +165,7 @@
   function cekKadaluarsaSesi() {
     try {
       const terakhir = Number(localStorage.getItem(KEY_AKTIVITAS)) || 0;
-      if (terakhir === 0) return false; // belum pernah dicatat → anggap belum kadaluarsa
+      if (terakhir === 0) return false;
       const idleMs = Date.now() - terakhir;
       return idleMs > (BATAS_SESI_MENIT * 60 * 1000);
     } catch (e) { return false; }
@@ -173,7 +174,7 @@
   window.simpanSession = function(s) {
     try {
       localStorage.setItem('duta_session', JSON.stringify(s || {}));
-      catatAktivitas(true); // reset timer saat login/buat tamu
+      catatAktivitas(true);
     } catch (e) {}
   };
 
@@ -184,14 +185,12 @@
       const s = JSON.parse(raw);
       if (!s || !s.user_id) return null;
 
-      // Cek kadaluarsa (sliding)
       if (cekKadaluarsaSesi()) {
         hapusSession();
         hapusAktivitas();
         return null;
       }
 
-      // Perpanjang otomatis saat diakses
       catatAktivitas(false);
       return s;
     } catch (e) { return null; }
@@ -245,7 +244,6 @@
       const g = JSON.parse(raw);
       if (!g || !g.username) return null;
 
-      // Cek kadaluarsa guru
       const terakhir = Number(sessionStorage.getItem(KEY_GURU_AKTIVITAS)) || 0;
       if (terakhir > 0 && (Date.now() - terakhir) > (BATAS_SESI_MENIT * 60 * 1000)) {
         window.hapusSessionGuru();
@@ -559,6 +557,220 @@
     } catch (e) {}
   }
   window.hapusSemuaLocalStorageUser = hapusSemuaLocalStorageUser;
+
+  // ============================================
+  // HELPER: SIMPAN/RESTORE STATE AKTIVITAS (v3.1)
+  // ============================================
+  // Format key: lab[modul]_state_[huruf]_[user_id]
+  // Contoh   : labdsi1_state_a_budi7a
+  // TTL      : 24 jam
+  // Binding  : ke user_id aktif (ambilSession().user_id)
+  // ============================================
+
+  const STATE_TTL_MS = 24 * 60 * 60 * 1000;   // 24 jam
+  const STATE_THROTTLE_MS = 1000;              // min 1 detik antar-simpan
+  const STATE_PREFIX = 'lab';
+  const STATE_SUFFIX = '_state_';
+
+  // Throttle per key: { [key]: timestampTerakhirSimpan }
+  const stateThrottleMap = {};
+
+  /**
+   * Ambil user_id aktif. Fallback ke 'anon' kalau tidak ada session.
+   */
+  function ambilUserIdUntukState() {
+    try {
+      const s = window.ambilSession ? window.ambilSession() : null;
+      if (s && s.user_id) return String(s.user_id).trim();
+    } catch (e) {}
+    return 'anon';
+  }
+
+  /**
+   * Bentuk key state lengkap.
+   * @param {string} keyBase — mis. 'labdsi1_state_a'
+   * @returns {string} key final (dengan suffix _user_id)
+   */
+  function bentukKeyState(keyBase) {
+    const uid = ambilUserIdUntukState();
+    // Kalau keyBase sudah mengandung '_state_', tambahkan suffix uid
+    if (keyBase.indexOf(STATE_SUFFIX) !== -1) {
+      return keyBase + '_' + uid;
+    }
+    // Kalau keyBase cuma 'dsi1_a', bangun dari awal
+    return STATE_PREFIX + keyBase + STATE_SUFFIX + '_' + uid;
+  }
+
+  /**
+   * Bersihkan state kadaluarsa (TTL > 24 jam) untuk semua key 'lab*_state_*'.
+   * Dipanggil otomatis saat simpan.
+   */
+  function bersihkanStateKadaluarsa() {
+    try {
+      const now = Date.now();
+      const hapus = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k) continue;
+        if (k.indexOf('_state_') === -1) continue;
+        if (k.indexOf(STATE_PREFIX) !== 0) continue;
+        try {
+          const raw = localStorage.getItem(k);
+          if (!raw) continue;
+          const d = JSON.parse(raw);
+          const ts = Number(d && d.__ts) || 0;
+          if (!ts || (now - ts) > STATE_TTL_MS) hapus.push(k);
+        } catch (e) {
+          // JSON rusak → hapus
+          hapus.push(k);
+        }
+      }
+      hapus.forEach(function(k) {
+        try { localStorage.removeItem(k); } catch (e) {}
+      });
+    } catch (e) {}
+  }
+
+  /**
+   * Simpan state aktivitas.
+   * @param {string} keyBase — mis. 'labdsi1_state_a'
+   * @param {object} obj     — state yang mau disimpan (plain object)
+   * @param {object} [opts]  — { force: true } untuk lewati throttle
+   * @returns {boolean} true kalau tersimpan
+   */
+  window.dutaSimpanState = function(keyBase, obj, opts) {
+    if (!keyBase || typeof obj !== 'object' || obj === null) return false;
+    try {
+      const o = opts || {};
+      const force = o.force === true;
+      const finalKey = bentukKeyState(keyBase);
+
+      // Throttle
+      const now = Date.now();
+      const terakhir = stateThrottleMap[finalKey] || 0;
+      if (!force && (now - terakhir) < STATE_THROTTLE_MS) return false;
+
+      // Tambah timestamp internal
+      const data = Object.assign({}, obj);
+      data.__ts = now;
+
+      localStorage.setItem(finalKey, JSON.stringify(data));
+      stateThrottleMap[finalKey] = now;
+
+      // Auto-cleanup (best-effort, tidak blocking)
+      bersihkanStateKadaluarsa();
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  /**
+   * Ambil state aktivitas untuk user aktif.
+   * @param {string} keyBase
+   * @returns {object|null} state (tanpa __ts) atau null kalau tidak ada/kadaluarsa
+   */
+  window.dutaAmbilState = function(keyBase) {
+    if (!keyBase) return null;
+    try {
+      const finalKey = bentukKeyState(keyBase);
+      const raw = localStorage.getItem(finalKey);
+      if (!raw) return null;
+
+      let d;
+      try { d = JSON.parse(raw); } catch (e) {
+        try { localStorage.removeItem(finalKey); } catch (e2) {}
+        return null;
+      }
+      if (!d || typeof d !== 'object') {
+        try { localStorage.removeItem(finalKey); } catch (e2) {}
+        return null;
+      }
+
+      // Cek TTL
+      const ts = Number(d.__ts) || 0;
+      if (!ts || (Date.now() - ts) > STATE_TTL_MS) {
+        try { localStorage.removeItem(finalKey); } catch (e2) {}
+        return null;
+      }
+
+      // Buang __ts dari hasil
+      const hasil = Object.assign({}, d);
+      delete hasil.__ts;
+      return hasil;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  /**
+   * Hapus state aktivitas untuk user aktif.
+   * @param {string} keyBase
+   * @returns {boolean}
+   */
+  window.dutaHapusState = function(keyBase) {
+    if (!keyBase) return false;
+    try {
+      const finalKey = bentukKeyState(keyBase);
+      localStorage.removeItem(finalKey);
+      delete stateThrottleMap[finalKey];
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  /**
+   * Auto-save berkala. Panggil getterFn() tiap intervalMs, simpan hasilnya.
+   * @param {string} keyBase
+   * @param {Function} getterFn — return object state
+   * @param {number} [intervalMs=5000]
+   * @returns {number} intervalId (untuk clearInterval)
+   */
+  window.dutaAutoSave = function(keyBase, getterFn, intervalMs) {
+    if (!keyBase || typeof getterFn !== 'function') return null;
+    const ms = Number(intervalMs) || 5000;
+    const id = setInterval(function() {
+      try {
+        const obj = getterFn();
+        if (obj && typeof obj === 'object') {
+          window.dutaSimpanState(keyBase, obj, { force: true });
+        }
+      } catch (e) {}
+    }, ms);
+    return id;
+  };
+
+  /**
+   * Helper: pasang listener 'input' + 'change' pada textarea/input untuk auto-save.
+   * @param {string} keyBase
+   * @param {Function} getterFn
+   * @param {Array<HTMLElement>} elArr — elemen yang dipantau
+   */
+  window.dutaPasangAutoSaveInput = function(keyBase, getterFn, elArr) {
+    if (!keyBase || typeof getterFn !== 'function') return;
+    if (!Array.isArray(elArr)) return;
+    elArr.forEach(function(el) {
+      if (!el || !el.addEventListener) return;
+      el.addEventListener('input', function() {
+        try {
+          const obj = getterFn();
+          if (obj && typeof obj === 'object') {
+            window.dutaSimpanState(keyBase, obj, { force: true });
+          }
+        } catch (e) {}
+      });
+      el.addEventListener('change', function() {
+        try {
+          const obj = getterFn();
+          if (obj && typeof obj === 'object') {
+            window.dutaSimpanState(keyBase, obj, { force: true });
+          }
+        } catch (e) {}
+      });
+    });
+  };
 
   // ============================================
   // KIRIM NILAI BAGIAN (LAMA)
@@ -999,5 +1211,5 @@
     initAktivitasListener();
   });
 
-  console.log('✅ script.js Fase C v3.0 siap. (+ sliding expiration 60 menit)');
+  console.log('✅ script.js Fase C v3.1 siap. (+ sliding expiration 60 menit + state aktivitas)');
 })();
