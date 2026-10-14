@@ -528,6 +528,72 @@
     if (!modul) return;
     try { sessionStorage.removeItem(KEY_CACHE_STATUS + modul); } catch (e) {}
   };
+  
+	// ============================================
+  // FEEDBACK AI (GEMINI via Code.gs) — v1.0
+  // ============================================
+  /**
+   * Minta feedback AI (guru virtual) untuk satu bagian aktivitas.
+   *
+   * @param {object} payload
+   *   - modul       {string}  mis. 'dsi1'
+   *   - bagian      {string}  mis. 'a' | 'b' | 'c' | 'd'
+   *   - level       {string}  'dasar' | 'reguler' | 'tantangan' (opsional)
+   *   - skorTes     {number}  skor tes pemahaman (0-100)
+   *   - benarTes    {number}  jumlah benar
+   *   - totalTes    {number}  jumlah soal
+   *   - ringkasHasil {string} ringkasan hasil simulasi (opsional, teks bebas)
+   *   - mindful     {object}  { j1, j2, j3, pilih } — jawaban jeda sadar (opsional)
+   *   - refleksi    {object}  { pelajaran, penerapan }
+   *   - exitTicket  {string}  (opsional)
+   * @returns {Promise<{ok:boolean, feedback?:string, error?:string}>}
+   */
+  window.dutaMintaFeedbackAI = async function(payload) {
+    const p = payload || {};
+    const userId = window.ambilUserId ? window.ambilUserId() : null;
+
+    if (!p.modul)  return { ok: false, error: 'modul wajib diisi' };
+    if (!p.bagian) return { ok: false, error: 'bagian wajib diisi' };
+
+    const body = {
+      action: 'getFeedbackAI',
+      userId: userId || '',
+      modul: p.modul,
+      bagian: p.bagian,
+      level: p.level || '',
+      skorTes: Number(p.skorTes) || 0,
+      benarTes: Number(p.benarTes) || 0,
+      totalTes: Number(p.totalTes) || 0,
+      ringkasHasil: p.ringkasHasil || '',
+      mindful: {
+        j1: (p.mindful && p.mindful.j1) || '',
+        j2: (p.mindful && p.mindful.j2) || '',
+        j3: (p.mindful && p.mindful.j3) || '',
+        pilih: (p.mindful && p.mindful.pilih) || ''
+      },
+      refleksi: {
+        pelajaran: (p.refleksi && p.refleksi.pelajaran) || '',
+        penerapan: (p.refleksi && p.refleksi.penerapan) || ''
+      },
+      exitTicket: p.exitTicket || ''
+    };
+
+    const hasil = await window.dutaFetch(body);
+
+    if (!hasil || !hasil.ok) {
+      return {
+        ok: false,
+        error: (hasil && hasil.error) || 'Gagal minta feedback'
+      };
+    }
+
+    return {
+      ok: true,
+      feedback: hasil.feedback || '',
+      model: hasil.model || '',
+      waktu: hasil.waktu || ''
+    };
+  };
 
   // ============================================
   // RESET USER (tamu)
