@@ -257,14 +257,8 @@
   <!-- HEADER (dinamis dari script.js) -->
   <header id="header-utama"></header>
 
-  <!-- BREADCRUMB (statis, 3 level) -->
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materidsi.html">Dampak Sosial Informatika</a></li>
-      <li>Pahami Dampak Teknologi bagi Produktivitas</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <!-- KONTEN UTAMA: PORTAL -->
   <main class="container" id="konten-utama">
@@ -336,13 +330,13 @@ simulasi warung             akses data, otomatisasi     multi-tasking, hoax
         <div id="duta-badge-selesai-wrapper" style="display:none;"></div>
 
         <div class="portal-buttons">
-          <a href="materidsi1.html" class="portal-btn btn-materi">
+          <a href="materidsi1" class="portal-btn btn-materi">
             <span class="btn-icon">📖</span>
             <span class="btn-title">Materi Lengkap</span>
             <span class="btn-desc">Baca materi tanpa aktivitas</span>
           </a>
 
-          <a href="aktivitasdsi1a.html" class="portal-btn btn-aktivitas">
+          <a href="aktivitasdsi1a" class="portal-btn btn-aktivitas">
             <span class="btn-icon">🎮</span>
             <span class="btn-title">Materi + Aktivitas</span>
             <span class="btn-desc">Belajar sambil mengerjakan aktivitas interaktif</span>
@@ -392,9 +386,8 @@ simulasi warung             akses data, otomatisasi     multi-tasking, hoax
   <!-- Tombol floating -->
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
-  <!-- script.js + root -->
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
 
   <!-- ===== RENDER TOMBOL "LANJUTKAN BELAJAR" + BADGE SELESAI ===== -->
   <script>
@@ -429,11 +422,11 @@ simulasi warung             akses data, otomatisasi     multi-tasking, hoax
 
       // Map bagian → file
       const mapFile = {
-        a: 'aktivitasdsi1a.html',
-        b: 'aktivitasdsi1b.html',
-        c: 'aktivitasdsi1c.html',
-        d: 'aktivitasdsi1d.html',
-        e: 'aktivitasdsi1e.html'
+        a: 'aktivitasdsi1a',
+        b: 'aktivitasdsi1b',
+        c: 'aktivitasdsi1c',
+        d: 'aktivitasdsi1d',
+        e: 'aktivitasdsi1e'
       };
       const urutan = ['a', 'b', 'c', 'd', 'e'];
 
@@ -473,7 +466,7 @@ simulasi warung             akses data, otomatisasi     multi-tasking, hoax
                 '</p>',
               tombolLanjut: '🔄 Ya, Ulangi Modul',
               onLanjut: function() {
-                window.location.href = 'aktivitasdsi1a.html';
+                window.location.href = 'aktivitasdsi1a';
               }
             });
           } else {
@@ -483,7 +476,7 @@ simulasi warung             akses data, otomatisasi     multi-tasking, hoax
               'Jika ingin nilai Akhirnya diperbarui, sampaikan kepada Bapak/Ibu Guru Informatika.\n\n' +
               'Lanjutkan mengulang modul?'
             )) {
-              window.location.href = 'aktivitasdsi1a.html';
+              window.location.href = 'aktivitasdsi1a';
             }
           }
         });

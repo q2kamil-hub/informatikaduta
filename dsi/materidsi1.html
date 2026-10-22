@@ -411,14 +411,8 @@
 
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materidsi.html">Dampak Sosial Informatika</a></li>
-      <li><a href="dsi1.html">Pahami Dampak Teknologi bagi Produktivitas</a></li>
-      <li>Materi Lengkap</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
     <article class="card">
@@ -907,27 +901,27 @@ HP di laci selama sesi belajar. Notifikasi di-silent.</div>
         </div>
 
         <div class="aktivitas-list">
-          <a href="aktivitasdsi1a.html" class="aktivitas-card">
+          <a href="aktivitasdsi1a" class="aktivitas-card">
             <span class="ac-num">BAGIAN 1</span>
             <span class="ac-title">⚡ Apa Itu Produktivitas?</span>
             <span class="ac-desc">"Warung Produktif: Simulasi Teknologi vs Manual" — menemukan pola produktivitas</span>
           </a>
-          <a href="aktivitasdsi1b.html" class="aktivitas-card">
+          <a href="aktivitasdsi1b" class="aktivitas-card">
             <span class="ac-num">BAGIAN 2</span>
             <span class="ac-title">👥 Dampak Positif Teknologi</span>
             <span class="ac-desc">"Misi Kelompok: Dari Kertas ke Cloud" — kolaborasi digital &amp; akses informasi</span>
           </a>
-          <a href="aktivitasdsi1c.html" class="aktivitas-card">
+          <a href="aktivitasdsi1c" class="aktivitas-card">
             <span class="ac-num">BAGIAN 3</span>
             <span class="ac-title">📱 Dampak Negatif Teknologi</span>
             <span class="ac-desc">"Fokus atau Teralihkan: Simulasi Hari Belajar" — distraksi &amp; multi-tasking</span>
           </a>
-          <a href="aktivitasdsi1d.html" class="aktivitas-card">
+          <a href="aktivitasdsi1d" class="aktivitas-card">
             <span class="ac-num">BAGIAN 4</span>
             <span class="ac-title">⏰ Strategi Bijak</span>
             <span class="ac-desc">"Rancang Hari Produktifmu" — manajemen waktu &amp; mode fokus</span>
           </a>
-          <a href="aktivitasdsi1e.html" class="aktivitas-card final">
+          <a href="aktivitasdsi1e" class="aktivitas-card final">
             <span class="ac-num">BAGIAN 5</span>
             <span class="ac-title">🏆 Kuis Akhir &amp; Sertifikat</span>
             <span class="ac-desc">Penilaian + sertifikat digital (lulus ≥7)</span>
@@ -949,11 +943,11 @@ HP di laci selama sesi belajar. Notifikasi di-silent.</div>
 
         <!-- NAVIGASI -->
         <div class="nav-bottom">
-          <a href="dsi1.html" class="btn-nav">
+          <a href="dsi1" class="btn-nav">
             <span class="back-arrow">←</span> Kembali ke Portal
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-            <a href="aktivitasdsi1a.html" class="btn-nav primary">
+            <a href="aktivitasdsi1a" class="btn-nav primary">
               🎮 Mulai Aktivitas Bagian 1 →
             </a>
           </div>
@@ -972,7 +966,7 @@ HP di laci selama sesi belajar. Notifikasi di-silent.</div>
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
   <script>
     function scrollToTOC() {
       const toc = document.getElementById('daftarIsi');

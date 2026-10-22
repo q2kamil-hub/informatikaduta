@@ -6,6 +6,7 @@
   <title>DSI · Informatika DUTA</title>
   <!-- CSS di root, naik satu level dari folder dsi/ -->
   <link rel="stylesheet" href="../desain.css">
+  <!-- ⚠️ TIDAK perlu <link rel="icon"> — favicon di-render otomatis oleh script.js -->
   <style>
     /* Gaya tambahan khusus untuk halaman materi DSI — kartu grid */
     .grid-kartu {
@@ -82,16 +83,11 @@
 </head>
 <body>
 
-  <!-- HEADER (dinamis dari script.js — banner saja) -->
+  <!-- HEADER: banner + bar user + navbar (di-render script.js) -->
   <header id="header-utama"></header>
 
-  <!-- BREADCRUMB (statis, 2 level: Beranda → DSI) -->
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li>Dampak Sosial Informatika</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <!-- KONTEN UTAMA: KARTU GRID -->
   <main class="container" id="konten-utama">
@@ -101,76 +97,36 @@
 
       <div class="grid-kartu">
         <!-- Kartu 1 -->
-        <a href="dsi1.html" class="kartu-link" aria-label="Pahami Dampak Teknologi bagi Produktivitas">
+        <a href="dsi1" class="kartu-link" aria-label="Pahami Dampak Teknologi bagi Produktivitas">
           <img class="kartu-gambar" src="gambar/dsi-kartu1.jpg" alt="Ilustrasi dampak teknologi pada produktivitas" loading="lazy">
           <div class="kartu-judul">#1 Pahami Dampak Teknologi bagi Produktivitas <small>Dampak Sosial Informatika</small></div>
         </a>
         <!-- Kartu 2 -->
-        <a href="dsi2.html" class="kartu-link" aria-label="Kolaborasi Dunia Maya &amp; Etika Berbagi">
+        <a href="dsi2" class="kartu-link" aria-label="Kolaborasi Dunia Maya &amp; Etika Berbagi">
           <img class="kartu-gambar" src="gambar/dsi-kartu2.jpg" alt="Ilustrasi kolaborasi dunia maya dan etika berbagi" loading="lazy">
           <div class="kartu-judul">#2 Kolaborasi Dunia Maya &amp; Etika Berbagi <small>Dampak Sosial Informatika</small></div>
         </a>
         <!-- Kartu 3 -->
-        <a href="dsi3.html" class="kartu-link" aria-label="Terbuka Informasi, Bijak Memilah Data Pribadi">
+        <a href="dsi3" class="kartu-link" aria-label="Terbuka Informasi, Bijak Memilah Data Pribadi">
           <img class="kartu-gambar" src="gambar/dsi-kartu3.jpg" alt="Ilustrasi keterbukaan informasi dan data pribadi" loading="lazy">
           <div class="kartu-judul">#3 Terbuka Informasi, Bijak Memilah Data Pribadi <small>Dampak Sosial Informatika</small></div>
         </a>
         <!-- Kartu 4 -->
-        <a href="dsi4.html" class="kartu-link" aria-label="Media Sosial: Manfaat, Risiko, &amp; Kajian Kritis">
+        <a href="dsi4" class="kartu-link" aria-label="Media Sosial: Manfaat, Risiko, &amp; Kajian Kritis">
           <img class="kartu-gambar" src="gambar/dsi-kartu4.jpg" alt="Ilustrasi media sosial" loading="lazy">
           <div class="kartu-judul">#4 Media Sosial: Manfaat, Risiko, &amp; Kajian Kritis <small>Dampak Sosial Informatika</small></div>
         </a>
         <!-- Kartu 5 -->
-        <a href="dsi5.html" class="kartu-link" aria-label="Cyberbullying: Kenali, Antisipasi, &amp; Cegah">
+        <a href="dsi5" class="kartu-link" aria-label="Cyberbullying: Kenali, Antisipasi, &amp; Cegah">
           <img class="kartu-gambar" src="gambar/dsi-kartu5.jpg" alt="Ilustrasi cyberbullying" loading="lazy">
           <div class="kartu-judul">#5 Cyberbullying: Kenali, Antisipasi, &amp; Cegah <small>Dampak Sosial Informatika</small></div>
         </a>
         <!-- Kartu 6 -->
-        <a href="dsi6.html" class="kartu-link" aria-label="Jaga Keamanan Data Diri dari Kejahatan Digital">
+        <a href="dsi6" class="kartu-link" aria-label="Jaga Keamanan Data Diri dari Kejahatan Digital">
           <img class="kartu-gambar" src="gambar/dsi-kartu6.jpg" alt="Ilustrasi keamanan data diri" loading="lazy">
           <div class="kartu-judul">#6 Jaga Keamanan Data Diri dari Kejahatan Digital <small>Dampak Sosial Informatika</small></div>
         </a>
       </div>
-
-      <!--
-        ============================================================
-        CATATAN INTERNAL (tidak tampil di halaman)
-        ============================================================
-
-        📁 STRUKTUR FOLDER
-        Root/
-        ├── index.html · desain.css · script.js · login.html · daftar.html
-        ├── dashboard/  (guru.html, siswa.html)
-        ├── tik/        (materitik.html, tik1.html…tikN.html, gambar/)
-        ├── sk/         (materisk.html, sk1.html…skN.html, gambar/)
-        ├── jki/        (pola sama)
-        ├── dsi/        (materidsi.html ← file ini, dsi1.html…dsiN.html, gambar/)
-        ├── ad/         (pola sama)
-        ├── bk/         (pola sama)
-        ├── ap/         (pola sama)
-        └── ujian/      (daftarujian.html)
-
-        📄 FORMAT PENAMAAN
-        - File kartu   : [kode][nomor].html → dsi1.html, dsi2.html, dsi6.html
-        - File gambar  : [kode]-kartu[nomor].jpg → dsi-kartu1.jpg, dsi-kartu6.jpg
-        - Lokasi kartu : folder yang sama dengan materidsi.html
-        - Lokasi gambar: ./dsi/gambar/
-
-        📌 STATUS MODUL DSI
-        - ✅ materidsi.html (file ini) — halaman daftar 6 topik
-        - ⏳ dsi1.html s/d dsi6.html — belum dibuat (perlu dibuat)
-
-        🧭 BREADCRUMB STATIS
-        - index.html      : 1 level
-        - materidsi.html  : 2 level (file ini)
-        - dsiN.html       : 3 level
-        - daftarujian.html: 2 level
-
-        ⚠️ SETIAP HALAMAN WAJIB SET window.DUTA_ROOT
-        - Root        : <script>window.DUTA_ROOT = '';</script>
-        - Subfolder   : <script>window.DUTA_ROOT = '../';</script>
-        ============================================================
-      -->
 
     </article>
   </main>
@@ -181,9 +137,9 @@
   <!-- Tombol floating panah ke atas -->
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
-  <!-- script.js (header, footer, scroll) + root -->
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
+  <!-- ⚠️ TIDAK perlu window.DUTA_MODUL_AKTIF — auto-detect -->
 
 </body>
 </html>

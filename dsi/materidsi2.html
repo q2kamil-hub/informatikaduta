@@ -526,14 +526,8 @@
 
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materidsi.html">Dampak Sosial Informatika</a></li>
-      <li><a href="dsi2.html">Kolaborasi Dunia Maya &amp; Etika Berbagi</a></li>
-      <li>Materi Lengkap</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
     <article class="card">
@@ -1030,22 +1024,22 @@ Gunakan "Version History" untuk melihat perubahan.</div>
         </div>
 
         <div class="aktivitas-list">
-          <a href="aktivitasdsi2a.html" class="aktivitas-card">
+          <a href="aktivitasdsi2a" class="aktivitas-card">
             <span class="ac-num">BAGIAN 1</span>
             <span class="ac-title">🤝 Kolaborasi Dunia Maya</span>
             <span class="ac-desc">"Kerja Kelompok Virtual" — merasakan kolaborasi daring tanpa batas ruang &amp; waktu</span>
           </a>
-          <a href="aktivitasdsi2b.html" class="aktivitas-card">
+          <a href="aktivitasdsi2b" class="aktivitas-card">
             <span class="ac-num">BAGIAN 2</span>
             <span class="ac-title">🛡️ Etika Berbagi di Dunia Maya</span>
             <span class="ac-desc">"Saring Sebelum Sharing" — mempraktikkan prinsip THINK sebelum membagikan konten</span>
           </a>
-          <a href="aktivitasdsi2c.html" class="aktivitas-card">
+          <a href="aktivitasdsi2c" class="aktivitas-card">
             <span class="ac-num">BAGIAN 3</span>
             <span class="ac-title">🧭 Praktik Bijak Berkolaborasi &amp; Berbagi</span>
             <span class="ac-desc">"Tim Virtual yang Bermasalah" — studi kasus gabungan kolaborasi + etika</span>
           </a>
-          <a href="aktivitasdsi2d.html" class="aktivitas-card final">
+          <a href="aktivitasdsi2d" class="aktivitas-card final">
             <span class="ac-num">BAGIAN 4</span>
             <span class="ac-title">🏆 Kuis Akhir &amp; Sertifikat</span>
             <span class="ac-desc">Penilaian + sertifikat digital (lulus ≥7)</span>
@@ -1069,11 +1063,11 @@ Gunakan "Version History" untuk melihat perubahan.</div>
 
         <!-- NAVIGASI -->
         <div class="nav-bottom">
-          <a href="dsi2.html" class="btn-nav">
+          <a href="dsi2" class="btn-nav">
             <span class="back-arrow">←</span> Kembali ke Portal
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-            <a href="aktivitasdsi2a.html" class="btn-nav primary">
+            <a href="aktivitasdsi2a" class="btn-nav primary">
               🎮 Mulai Aktivitas Bagian 1 →
             </a>
           </div>
@@ -1092,7 +1086,7 @@ Gunakan "Version History" untuk melihat perubahan.</div>
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
   <script>
     function scrollToTOC() {
       const toc = document.getElementById('daftarIsi');

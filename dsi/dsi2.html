@@ -257,14 +257,8 @@
   <!-- HEADER (dinamis dari script.js) -->
   <header id="header-utama"></header>
 
-  <!-- BREADCRUMB -->
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materidsi.html">Dampak Sosial Informatika</a></li>
-      <li>Kolaborasi Dunia Maya &amp; Etika Berbagi</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <!-- KONTEN UTAMA: PORTAL -->
   <main class="container" id="konten-utama">
@@ -331,13 +325,13 @@ feedback                 jejak digital              hoaks, atribusi
         <div id="duta-badge-selesai-wrapper" style="display:none;"></div>
 
         <div class="portal-buttons">
-          <a href="materidsi2.html" class="portal-btn btn-materi">
+          <a href="materidsi2" class="portal-btn btn-materi">
             <span class="btn-icon">📖</span>
             <span class="btn-title">Materi Lengkap</span>
             <span class="btn-desc">Baca materi tanpa aktivitas</span>
           </a>
 
-          <a href="aktivitasdsi2a.html" class="portal-btn btn-aktivitas">
+          <a href="aktivitasdsi2a" class="portal-btn btn-aktivitas">
             <span class="btn-icon">🎮</span>
             <span class="btn-title">Materi + Aktivitas</span>
             <span class="btn-desc">Belajar sambil mengerjakan aktivitas interaktif</span>
@@ -386,7 +380,7 @@ feedback                 jejak digital              hoaks, atribusi
 
   <!-- script.js + root -->
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
 
   <!-- ===== RENDER TOMBOL "LANJUTKAN BELAJAR" + BADGE SELESAI ===== -->
   <script>
@@ -421,10 +415,10 @@ feedback                 jejak digital              hoaks, atribusi
 
       // Map bagian → file
       const mapFile = {
-        a: 'aktivitasdsi2a.html',
-        b: 'aktivitasdsi2b.html',
-        c: 'aktivitasdsi2c.html',
-        d: 'aktivitasdsi2d.html'
+        a: 'aktivitasdsi2a',
+        b: 'aktivitasdsi2b',
+        c: 'aktivitasdsi2c',
+        d: 'aktivitasdsi2d'
       };
       const urutan = ['a', 'b', 'c', 'd'];
 
@@ -464,7 +458,7 @@ feedback                 jejak digital              hoaks, atribusi
                 '</p>',
               tombolLanjut: '🔄 Ya, Ulangi Modul',
               onLanjut: function() {
-                window.location.href = 'aktivitasdsi2a.html';
+                window.location.href = 'aktivitasdsi2a';
               }
             });
           } else {
@@ -474,7 +468,7 @@ feedback                 jejak digital              hoaks, atribusi
               'Jika ingin nilai Akhirnya diperbarui, sampaikan kepada Bapak/Ibu Guru Informatika.\n\n' +
               'Lanjutkan mengulang modul?'
             )) {
-              window.location.href = 'aktivitasdsi2a.html';
+              window.location.href = 'aktivitasdsi2a';
             }
           }
         });

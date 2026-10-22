@@ -306,14 +306,8 @@
 
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materidsi.html">Dampak Sosial Informatika</a></li>
-      <li><a href="dsi2.html">Kolaborasi &amp; Etika Berbagi</a></li>
-      <li>Bagian 3: Praktik Bijak Berkolaborasi &amp; Berbagi</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
     <article class="card">
@@ -551,7 +545,7 @@
             </div>
 
             <div class="link-materi-wrapper">
-              <a href="materidsi2.html" target="_blank" rel="noopener" class="link-materi-bawah">
+              <a href="materidsi2" target="_blank" rel="noopener" class="link-materi-bawah">
                 📚 Baca Materi Lengkap (buka tab baru)
               </a>
             </div>
@@ -642,7 +636,7 @@
 
         <!-- Navigasi bawah -->
         <div class="nav-bottom">
-          <a href="aktivitasdsi2b.html" class="btn-nav-bawah"><span class="back-arrow">←</span> Kembali ke Bagian 2</a>
+          <a href="aktivitasdsi2b" class="btn-nav-bawah"><span class="back-arrow">←</span> Kembali ke Bagian 2</a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
             <button class="btn-nav-bawah primary locked" id="btnLanjutBagian4" onclick="lanjutKeBagian4()">
               Lanjut ke Bagian 4: Kuis Akhir →
@@ -661,8 +655,8 @@
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
-  <script>window.DUTA_MODUL_AKTIF = 'dsi2';</script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
+  <!-- ⚠️ TIDAK perlu window.DUTA_MODUL_AKTIF — auto-detect -->
 
   <script>
     (function() {
@@ -1663,7 +1657,7 @@
 
       function pindahKeBagian4() {
         if (window.dutaHapusState) window.dutaHapusState(STATE_KEY);
-        window.location.href = 'aktivitasdsi2d.html';
+        window.location.href = 'aktivitasdsi2d';
       }
 
       // ============================================

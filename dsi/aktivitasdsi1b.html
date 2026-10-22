@@ -1072,14 +1072,8 @@
 
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materidsi.html">Dampak Sosial Informatika</a></li>
-      <li><a href="dsi1.html">Pahami Dampak Teknologi bagi Produktivitas</a></li>
-      <li>Bagian 2: Dampak Positif Teknologi</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
     <article class="card">
@@ -1425,7 +1419,7 @@
             </div>
 
             <div class="link-materi-wrapper">
-              <a href="materidsi1.html" target="_blank" rel="noopener" class="link-materi-bawah">
+              <a href="materidsi1" target="_blank" rel="noopener" class="link-materi-bawah">
                 📚 Baca Materi Lengkap (buka tab baru)
               </a>
             </div>
@@ -1530,7 +1524,7 @@
 
         <!-- ===== NAVIGASI BAWAH ===== -->
         <div class="nav-bottom">
-          <a href="aktivitasdsi1a.html" class="btn-nav-bawah">
+          <a href="aktivitasdsi1a" class="btn-nav-bawah">
             <span class="back-arrow">←</span> Kembali ke Bagian 1
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
@@ -1551,8 +1545,8 @@
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
-  <script>window.DUTA_MODUL_AKTIF = 'dsi1';</script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
+  <!-- ⚠️ TIDAK perlu window.DUTA_MODUL_AKTIF — auto-detect -->
 
   <script>
     (function() {
@@ -2917,7 +2911,7 @@
 
       function pindahKeBagian3() {
         if (window.dutaHapusState) window.dutaHapusState(STATE_KEY);
-        window.location.href = 'aktivitasdsi1c.html';
+        window.location.href = 'aktivitasdsi1c';
       }
 
       // ============================================

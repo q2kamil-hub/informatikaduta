@@ -491,14 +491,8 @@
 
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materidsi.html">Dampak Sosial Informatika</a></li>
-      <li><a href="dsi1.html">Pahami Dampak Teknologi bagi Produktivitas</a></li>
-      <li>Bagian 5: Kuis Akhir &amp; Sertifikat</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
     <article class="card">
@@ -610,7 +604,7 @@
 
             <div class="sertifikat-actions">
               <button class="btn-sertifikat" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
-              <a href="dsi1.html" class="btn-sertifikat">🏠 Kembali ke Portal</a>
+              <a href="dsi1" class="btn-sertifikat">🏠 Kembali ke Portal</a>
             </div>
           </div>
 
@@ -635,10 +629,10 @@
 
         <!-- ===== NAVIGASI BAWAH ===== -->
         <div class="nav-bottom">
-          <a href="aktivitasdsi1d.html" class="btn-nav-bawah">
+          <a href="aktivitasdsi1d" class="btn-nav-bawah">
             <span class="back-arrow">←</span> Kembali ke Bagian 4
           </a>
-          <a href="dsi1.html" class="btn-nav-bawah primary">
+          <a href="dsi1" class="btn-nav-bawah primary">
             🏠 Selesai — Kembali ke Portal
           </a>
         </div>
@@ -651,8 +645,8 @@
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
-  <script>window.DUTA_MODUL_AKTIF = 'dsi1';</script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
+  <!-- ⚠️ TIDAK perlu window.DUTA_MODUL_AKTIF — auto-detect -->
 
   <script>
     (function() {
