@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Berpikir Komputasional Lab · Bagian 2: Operasi Dasar Tumpukan · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
+  <!-- ⚠️ TIDAK perlu <link rel="icon"> — favicon di-render otomatis oleh script.js -->
   <style>
     /* ===== PROGRESS BAR VISUAL (LAPIS) ===== */
     .progress-lapis {
@@ -1148,14 +1149,8 @@
 
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materibk.html">Berpikir Komputasional</a></li>
-      <li><a href="bk6.html">Tumpukan (Stack)</a></li>
-      <li>Bagian 2: Operasi Dasar Tumpukan</li>
-    </ol>
-  </nav>
+    <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
     <article class="card">
@@ -1471,7 +1466,7 @@
             </div>
 
             <div class="link-materi-wrapper">
-              <a href="materibk6.html" target="_blank" rel="noopener" class="link-materi-bawah">
+              <a href="materibk6" target="_blank" rel="noopener" class="link-materi-bawah">
                 📚 Baca Materi Lengkap (buka tab baru)
               </a>
             </div>
@@ -1577,7 +1572,7 @@
 
         <!-- ===== NAVIGASI BAWAH ===== -->
         <div class="nav-bottom">
-          <a href="aktivitasbk6a.html" class="btn-nav-bawah">
+          <a href="aktivitasbk6a" class="btn-nav-bawah">
             <span class="back-arrow">←</span> Kembali ke Bagian 1
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
@@ -1598,9 +1593,8 @@
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
-  <script>window.DUTA_MODUL_AKTIF = 'bk6';</script>
-
+	<!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
+  <!-- ⚠️ TIDAK perlu window.DUTA_MODUL_AKTIF — auto-detect -->
   <script>
     (function() {
       "use strict";
@@ -2873,7 +2867,7 @@
 
       function pindahKeBagian3() {
         if (window.dutaHapusState) window.dutaHapusState(STATE_KEY);
-        window.location.href = 'aktivitasbk6c.html';
+        window.location.href = 'aktivitasbk6c';
       }
 
       // ============================================
@@ -3224,7 +3218,7 @@
       // INISIALISASI
       // ============================================
       document.addEventListener('DOMContentLoaded', function() {
-        // Muat data siswa dari localStorage (sudah diisi di aktivitasbk6a.html)
+        // Muat data siswa dari localStorage (sudah diisi di aktivitasbk6a)
         try {
           const siswa = JSON.parse(localStorage.getItem('labbk6_siswa') || '[]');
           if (Array.isArray(siswa) && siswa.length > 0) {

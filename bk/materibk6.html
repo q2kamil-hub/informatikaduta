@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Materi Tumpukan (Stack) · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
+  <!-- ⚠️ TIDAK perlu <link rel="icon"> — favicon di-render otomatis oleh script.js -->
   <style>
     /* ===== Gaya khusus halaman materi BK6 ===== */
     .materi-container {
@@ -465,16 +466,11 @@
 </head>
 <body>
 
+  <!-- HEADER: banner + bar user + navbar (di-render script.js) -->
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materibk.html">Berpikir Komputasional</a></li>
-      <li><a href="bk6.html">Tumpukan (Stack)</a></li>
-      <li>Materi Lengkap</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
     <article class="card">
@@ -1017,22 +1013,22 @@ Hasil akhir: "HA"</div>
         </div>
 
         <div class="aktivitas-list">
-          <a href="aktivitasbk6a.html" class="aktivitas-card">
+          <a href="aktivitasbk6a" class="aktivitas-card">
             <span class="ac-num">BAGIAN 1</span>
             <span class="ac-title">📚 Apa Itu Tumpukan (Stack)?</span>
             <span class="ac-desc">"Tumpukan Virtual: Push dan Pop" — menemukan prinsip LIFO melalui simulasi tumpukan buku</span>
           </a>
-          <a href="aktivitasbk6b.html" class="aktivitas-card">
+          <a href="aktivitasbk6b" class="aktivitas-card">
             <span class="ac-num">BAGIAN 2</span>
             <span class="ac-title">⚙️ Operasi Dasar Tumpukan</span>
             <span class="ac-desc">"Stack Simulator: Push, Pop, dan Top" — praktik operasi dasar &amp; kenali kondisi error</span>
           </a>
-          <a href="aktivitasbk6c.html" class="aktivitas-card">
+          <a href="aktivitasbk6c" class="aktivitas-card">
             <span class="ac-num">BAGIAN 3</span>
             <span class="ac-title">🌐 Penerapan Tumpukan</span>
             <span class="ac-desc">"Stack di Sekitar Kita" — Undo/Redo, Browser Back, tumpukan fisik</span>
           </a>
-          <a href="aktivitasbk6d.html" class="aktivitas-card final">
+          <a href="aktivitasbk6d" class="aktivitas-card final">
             <span class="ac-num">BAGIAN 4</span>
             <span class="ac-title">🏆 Kuis Akhir &amp; Sertifikat</span>
             <span class="ac-desc">Penilaian + sertifikat digital (lulus ≥7)</span>
@@ -1055,11 +1051,11 @@ Hasil akhir: "HA"</div>
 
         <!-- NAVIGASI -->
         <div class="nav-bottom">
-          <a href="bk6.html" class="btn-nav">
+          <a href="bk6" class="btn-nav">
             <span class="back-arrow">←</span> Kembali ke Portal
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-            <a href="aktivitasbk6a.html" class="btn-nav primary">
+            <a href="aktivitasbk6a" class="btn-nav primary">
               🎮 Mulai Aktivitas Bagian 1 →
             </a>
           </div>
@@ -1078,7 +1074,8 @@ Hasil akhir: "HA"</div>
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
+
   <script>
     function scrollToTOC() {
       const toc = document.getElementById('daftarIsi');

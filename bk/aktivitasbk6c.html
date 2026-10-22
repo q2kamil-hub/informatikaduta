@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Berpikir Komputasional Lab · Bagian 3: Penerapan Tumpukan · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
+  <!-- ⚠️ TIDAK perlu <link rel="icon"> — favicon di-render otomatis oleh script.js -->
   <style>
     /* ===== PROGRESS BAR VISUAL (LAPIS) ===== */
     .progress-lapis {
@@ -729,14 +730,8 @@
 
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materibk.html">Berpikir Komputasional</a></li>
-      <li><a href="bk6.html">Tumpukan (Stack)</a></li>
-      <li>Bagian 3: Penerapan Tumpukan</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
     <article class="card">
@@ -1115,7 +1110,7 @@
             </div>
 
             <div class="link-materi-wrapper" style="text-align:center; margin-top:1rem;">
-              <a href="materibk6.html" target="_blank" rel="noopener" class="link-materi-bawah" style="display:inline-flex; align-items:center; gap:0.5rem; margin:1rem auto 0; padding:0.7rem 1.8rem; border-radius:30px; background:#fff; color:#2d5a1e; border:2px solid #6ecb8f; text-decoration:none; font-weight:700; font-size:0.9rem;">
+              <a href="materibk6" target="_blank" rel="noopener" class="link-materi-bawah" style="display:inline-flex; align-items:center; gap:0.5rem; margin:1rem auto 0; padding:0.7rem 1.8rem; border-radius:30px; background:#fff; color:#2d5a1e; border:2px solid #6ecb8f; text-decoration:none; font-weight:700; font-size:0.9rem;">
                 📚 Baca Materi Lengkap (buka tab baru)
               </a>
             </div>
@@ -1221,7 +1216,7 @@
 
         <!-- ===== NAVIGASI BAWAH ===== -->
         <div class="nav-bottom" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-top:2rem; padding-top:1.5rem; border-top:2px solid #e5dbd0;">
-          <a href="aktivitasbk6b.html" class="btn-nav-bawah" style="padding:0.6rem 1.8rem; border-radius:30px; border:2px solid #d9cdbf; background:#fff; font-weight:600; font-size:0.9rem; color:#3b2b1e; cursor:pointer; transition:all 0.2s ease; font-family:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem;">
+          <a href="aktivitasbk6b" class="btn-nav-bawah" style="padding:0.6rem 1.8rem; border-radius:30px; border:2px solid #d9cdbf; background:#fff; font-weight:600; font-size:0.9rem; color:#3b2b1e; cursor:pointer; transition:all 0.2s ease; font-family:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem;">
             <span class="back-arrow" style="font-size:1.2rem;">←</span> Kembali ke Bagian 2
           </a>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
@@ -1241,9 +1236,9 @@
   <footer id="footer-utama"></footer>
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
-  <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
-  <script>window.DUTA_MODUL_AKTIF = 'bk6';</script>
+    <script src="../script.js"></script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
+  <!-- ⚠️ TIDAK perlu window.DUTA_MODUL_AKTIF — auto-detect -->
 
   <script>
     (function() {
@@ -2724,7 +2719,7 @@
 
       function pindahKeBagian4() {
         if (window.dutaHapusState) window.dutaHapusState(STATE_KEY);
-        window.location.href = 'aktivitasbk6d.html';
+        window.location.href = 'aktivitasbk6d';
       }
 
       // ============================================

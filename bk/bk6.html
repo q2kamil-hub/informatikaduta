@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Tumpukan (Stack) · Portal · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
+  <!-- ⚠️ TIDAK perlu <link rel="icon"> — favicon di-render otomatis oleh script.js -->
   <style>
     /* ===== GAYA PORTAL ===== */
     .portal-wrapper {
@@ -254,17 +255,11 @@
 </head>
 <body>
 
-  <!-- HEADER (dinamis dari script.js) -->
+  <!-- HEADER: banner + bar user + navbar (di-render script.js) -->
   <header id="header-utama"></header>
 
-  <!-- BREADCRUMB -->
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li><a href="materibk.html">Berpikir Komputasional</a></li>
-      <li>Tumpukan (Stack)</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <!-- KONTEN UTAMA: PORTAL -->
   <main class="container" id="konten-utama">
@@ -331,13 +326,13 @@ tumpukan buku            Stack Overflow/           tumpukan piring,
         <div id="duta-badge-selesai-wrapper" style="display:none;"></div>
 
         <div class="portal-buttons">
-          <a href="materibk6.html" class="portal-btn btn-materi">
+          <a href="materibk6" class="portal-btn btn-materi">
             <span class="btn-icon">📖</span>
             <span class="btn-title">Materi Lengkap</span>
             <span class="btn-desc">Baca materi tanpa aktivitas</span>
           </a>
 
-          <a href="aktivitasbk6a.html" class="portal-btn btn-aktivitas">
+          <a href="aktivitasbk6a" class="portal-btn btn-aktivitas">
             <span class="btn-icon">🎮</span>
             <span class="btn-title">Materi + Aktivitas</span>
             <span class="btn-desc">Belajar sambil mengerjakan aktivitas interaktif</span>
@@ -384,9 +379,8 @@ tumpukan buku            Stack Overflow/           tumpukan piring,
   <!-- Tombol floating -->
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
-  <!-- script.js + root -->
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
 
   <!-- ===== RENDER TOMBOL "LANJUTKAN BELAJAR" + BADGE SELESAI ===== -->
   <script>
@@ -421,10 +415,10 @@ tumpukan buku            Stack Overflow/           tumpukan piring,
 
       // Map bagian → file
       const mapFile = {
-        a: 'aktivitasbk6a.html',
-        b: 'aktivitasbk6b.html',
-        c: 'aktivitasbk6c.html',
-        d: 'aktivitasbk6d.html'
+        a: 'aktivitasbk6a',
+        b: 'aktivitasbk6b',
+        c: 'aktivitasbk6c',
+        d: 'aktivitasbk6d'
       };
       const urutan = ['a', 'b', 'c', 'd'];
 
@@ -464,7 +458,7 @@ tumpukan buku            Stack Overflow/           tumpukan piring,
                 '</p>',
               tombolLanjut: '🔄 Ya, Ulangi Modul',
               onLanjut: function() {
-                window.location.href = 'aktivitasbk6a.html';
+                window.location.href = 'aktivitasbk6a';
               }
             });
           } else {
@@ -474,7 +468,7 @@ tumpukan buku            Stack Overflow/           tumpukan piring,
               'Jika ingin nilai Akhirnya diperbarui, sampaikan kepada Bapak/Ibu Guru Informatika.\n\n' +
               'Lanjutkan mengulang modul?'
             )) {
-              window.location.href = 'aktivitasbk6a.html';
+              window.location.href = 'aktivitasbk6a';
             }
           }
         });
