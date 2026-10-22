@@ -189,12 +189,7 @@
 
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li>Progres Belajar Saya</li>
-    </ol>
-  </nav>
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="siswa-wrapper">
 
@@ -205,8 +200,8 @@
       <div class="ad-desc">
         Kamu belum login atau belum punya kode tamu. Login dulu untuk melihat progres belajarmu.
       </div>
-      <a href="../login.html" class="ad-btn">🔑 Login</a>
-      <a href="../index.html" class="ad-btn secondary">🏠 Beranda</a>
+      <a href="../login" class="ad-btn">🔑 Login</a>
+      <a href="../" class="ad-btn secondary">🏠 Beranda</a>
     </div>
 
     <!-- ===== DASHBOARD SISWA ===== -->
@@ -219,7 +214,7 @@
         </div>
         <div class="sh-actions">
           <button class="btn-siswa" id="btnMuatUlang">🔄 Muat Ulang</button>
-          <a href="../index.html" class="btn-siswa primary">🏠 Beranda</a>
+          <a href="../" class="btn-siswa primary">🏠 Beranda</a>
         </div>
       </div>
 
@@ -249,7 +244,7 @@
           <thead>
             <tr>
               <th>Nama</th>
-			  <th>Modul</th>
+              <th>Modul</th>
               <th>Bagian Terakhir</th>
               <th>a</th>
               <th>b</th>
@@ -270,7 +265,7 @@
       </div>
 
       <div class="aksi-bawah">
-        <a href="../bk/bk4.html" class="btn-siswa primary">🎮 Lanjut Belajar</a>
+        <a href="../bk/bk4" class="btn-siswa primary">🎮 Lanjut Belajar</a>
       </div>
 
     </div>
@@ -278,9 +273,9 @@
   </main>
 
   <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
 
   <script>
     (function() {
@@ -297,17 +292,12 @@
       const elBtnMuatUlang = document.getElementById('btnMuatUlang');
 
       // ===== AMBIL SESSION =====
-      // Prioritas:
-      // 1) sessionStorage.duta_siswa_dash (dari login.html, untuk siswa terdaftar)
-      // 2) localStorage.duta_session (dari script.js, untuk login/tamu)
       function ambilSessionSiswa() {
-        // Cek sessionStorage dulu (login terdaftar)
         try {
           const s = JSON.parse(sessionStorage.getItem('duta_siswa_dash') || 'null');
           if (s && s.user_id) return s;
         } catch (e) {}
 
-        // Fallback: localStorage.duta_session (login/tamu dari script.js)
         const s2 = window.ambilSession && window.ambilSession();
         if (s2 && s2.user_id) {
           return {
@@ -318,7 +308,6 @@
             tipe: s2.tipe || 'login'
           };
         }
-
         return null;
       }
 
@@ -344,17 +333,16 @@
       // ===== STATS =====
       function renderStats() {
         const total = semuaProgress.length;
-        const selesai = semuaProgress.filter(p => p.nilai_akhir > 0).length;
+        const selesai = semuaProgress.filter(function(p) { return p.nilai_akhir > 0; }).length;
         const nilaiArr = semuaProgress
-          .filter(p => p.nilai_akhir > 0)
-          .map(p => p.nilai_akhir);
+          .filter(function(p) { return p.nilai_akhir > 0; })
+          .map(function(p) { return p.nilai_akhir; });
         const rata = nilaiArr.length > 0
-          ? Math.round(nilaiArr.reduce((a, b) => a + b, 0) / nilaiArr.length)
+          ? Math.round(nilaiArr.reduce(function(a, b) { return a + b; }, 0) / nilaiArr.length)
           : 0;
 
-        // Cari update terbaru
         const terbaru = semuaProgress
-          .map(p => p.waktu_update)
+          .map(function(p) { return p.waktu_update; })
           .filter(Boolean)
           .sort()
           .pop() || '–';
@@ -372,7 +360,7 @@
             '<tr><td colspan="13" class="empty-state">' +
             '<span class="es-icon">🚀</span>' +
             'Belum ada progres. Mulai belajar dulu ya!' +
-            '<br><a href="../bk/bk4.html" style="color:#8a4bbf; font-weight:700;">Mulai dari Modul BK4</a>' +
+            '<br><a href="../bk/bk4" style="color:#8a4bbf; font-weight:700;">Mulai dari Modul BK4</a>' +
             '</td></tr>';
           return;
         }
@@ -387,8 +375,8 @@
           }
 
           return '<tr>' +
-		  '<td style="font-weight:700; color:#3b2b1e; white-space:nowrap;">' + escapeHtml(p.nama_siswa || '–') + '</td>' +
-		  '<td><span class="badge-modul">' + escapeHtml(p.modul) + '</span></td>' +
+            '<td style="font-weight:700; color:#3b2b1e; white-space:nowrap;">' + escapeHtml(p.nama_siswa || '–') + '</td>' +
+            '<td><span class="badge-modul">' + escapeHtml(p.modul) + '</span></td>' +
             '<td style="text-align:center; font-weight:700;">' + (p.bagian_terakhir || '–').toUpperCase() + '</td>' +
             skorCell(p.skor_a) +
             skorCell(p.skor_b) +
@@ -431,7 +419,6 @@
           return;
         }
 
-        // Tampilkan dashboard
         elDash.classList.add('show');
         elNamaSiswa.textContent = sessionSiswa.nama || sessionSiswa.user_id;
 

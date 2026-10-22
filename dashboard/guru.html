@@ -589,12 +589,7 @@
 
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li>Dashboard Guru</li>
-    </ol>
-  </nav>
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="guru-wrapper">
 
@@ -605,7 +600,7 @@
       <div class="ad-desc">
         Halaman ini khusus untuk guru. Silakan login terlebih dahulu lewat halaman login.
       </div>
-      <a href="../login.html" class="ad-btn">🔑 Ke Halaman Login</a>
+      <a href="../login" class="ad-btn">🔑 Ke Halaman Login</a>
     </div>
 
     <!-- ===== DASHBOARD ===== -->
@@ -620,10 +615,10 @@
           </div>
           <div class="dh-actions">
             <button class="btn-dash" id="btnMuatUlang">🔄 Muat Ulang</button>
-			<label class="btn-dash" style="cursor:pointer;" title="Muat ulang otomatis tiap 60 detik">
-			  <input type="checkbox" id="chkAutoRefresh" style="width:auto; margin-right:0.3rem;">
-			  ⏱️ Auto 60s
-			</label>
+            <label class="btn-dash" style="cursor:pointer;" title="Muat ulang otomatis tiap 60 detik">
+              <input type="checkbox" id="chkAutoRefresh" style="width:auto; margin-right:0.3rem;">
+              ⏱️ Auto 60s
+            </label>
             <button class="btn-dash" id="btnStatistik">📊 Statistik</button>
             <button class="btn-dash" id="btnExport">📥 Export CSV</button>
             <button class="btn-dash" id="btnBackup">💾 Backup</button>
@@ -766,28 +761,28 @@
   </main>
 
   <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
-  <script>window.DUTA_ROOT = '../';</script>
 
   <script>
     (function() {
       "use strict";
 
       // ===== STATE =====
-      let semuaData = [];       // data asli dari server
-      let filteredData = [];    // setelah filter
-      let sortedData = [];      // setelah sort
-      let pageData = [];        // halaman aktif
+      let semuaData = [];
+      let filteredData = [];
+      let sortedData = [];
+      let pageData = [];
       let dataGuru = null;
       let halaman = 1;
       let ukuranHalaman = 25;
       let sortKolom = 'waktu_update';
       let sortAsc = false;
-      let dipilih = new Set();  // user_id tamu yang dicentang
+      let dipilih = new Set();
       let tampilSkorDetail = false;
-	  let autoRefreshTimer = null;
-	  const AUTO_REFRESH_MS = 60000; // 60 detik
+      let autoRefreshTimer = null;
+      const AUTO_REFRESH_MS = 60000;
 
       // ===== ELEMENT =====
       const elAksesDitolak = document.getElementById('aksesDitolak');
@@ -813,36 +808,25 @@
           .replace(/&/g, '&amp;').replace(/</g, '&lt;')
           .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
       }
-
       function formatTanggal(s) {
         if (!s) return '–';
-        // s = 'yyyy-MM-dd HH:mm:ss'
         const tgl = s.substring(0, 10);
         const jam = s.substring(11, 16);
         return tgl + ' ' + jam;
       }
-
       function parseTanggal(s) {
         if (!s) return null;
-        try {
-          // Ganti ' ' jadi 'T' biar kompatibel
-          return new Date(s.replace(' ', 'T'));
-        } catch (e) { return null; }
+        try { return new Date(s.replace(' ', 'T')); } catch (e) { return null; }
       }
 
-      // ===== CEK SESSION =====
       function ambilSessionGuruLokal() {
-        // Pakai helper dari script.js kalau ada
         if (window.ambilSessionGuru) return window.ambilSessionGuru();
-        try {
-          return JSON.parse(sessionStorage.getItem('duta_guru') || 'null');
-        } catch (e) { return null; }
+        try { return JSON.parse(sessionStorage.getItem('duta_guru') || 'null'); } catch (e) { return null; }
       }
 
       // ===== MUAT DATA =====
       async function muatData() {
         if (!dataGuru || !dataGuru.username) return;
-
         elBody.innerHTML = '<tr><td colspan="15" class="empty-state">Memuat data...</td></tr>';
 
         const hasil = await window.dutaGetAllProgress(
@@ -856,7 +840,6 @@
           return;
         }
 
-        // Update info guru dari server
         if (hasil.guru) {
           dataGuru.nama = hasil.guru.nama || dataGuru.nama;
           dataGuru.sekolah = hasil.guru.sekolah || dataGuru.sekolah;
@@ -872,45 +855,37 @@
         renderPanel();
         renderTabel();
 
-        // Kalau ada pesan khusus (mis. sekolah kosong)
         if (hasil.message && semuaData.length === 0) {
           elBody.innerHTML = '<tr><td colspan="15" class="empty-state">ℹ️ ' +
             escapeHtml(hasil.message) + '</td></tr>';
         }
       }
 
-      // ===== FILTER MODUL =====
       function isiFilterModul() {
         const elModul = document.getElementById('filterModul');
         const nilaiSekarang = elModul.value;
-        const moduls = [...new Set(semuaData.map(d => d.modul).filter(Boolean))].sort();
+        const moduls = [...new Set(semuaData.map(function(d) { return d.modul; }).filter(Boolean))].sort();
         elModul.innerHTML = '<option value="">Semua</option>' +
-          moduls.map(m => '<option value="' + escapeHtml(m) + '">' + escapeHtml(m).toUpperCase() + '</option>').join('');
+          moduls.map(function(m) { return '<option value="' + escapeHtml(m) + '">' + escapeHtml(m).toUpperCase() + '</option>'; }).join('');
         if (nilaiSekarang) elModul.value = nilaiSekarang;
       }
 
-      // ===== STATS =====
       function renderStats() {
         const total = semuaData.length;
-        const login = semuaData.filter(d => d.tipe === 'login').length;
-        const tamu = semuaData.filter(d => d.tipe === 'tamu').length;
-        const perhatian = semuaData.filter(d =>
-          d.tipe === 'login' &&
-          d.nilai_akhir > 0 && d.nilai_akhir < 70
-        ).length;
-
+        const login = semuaData.filter(function(d) { return d.tipe === 'login'; }).length;
+        const tamu = semuaData.filter(function(d) { return d.tipe === 'tamu'; }).length;
+        const perhatian = semuaData.filter(function(d) {
+          return d.tipe === 'login' && d.nilai_akhir > 0 && d.nilai_akhir < 70;
+        }).length;
         document.getElementById('statTotal').textContent = total;
         document.getElementById('statLogin').textContent = login;
         document.getElementById('statTamu').textContent = tamu;
         document.getElementById('statPerhatian').textContent = perhatian;
       }
 
-      // ===== PANEL =====
       function renderPanel() {
-        // Perhatian: nilai < 70 atau belum selesai > 14 hari
         const elPerhatian = document.getElementById('panelPerhatian');
         const batas14 = Date.now() - 14 * 24 * 60 * 60 * 1000;
-
         const perhatianList = semuaData.filter(function(d) {
           if (d.nilai_akhir > 0 && d.nilai_akhir < 70) return true;
           const tgl = parseTanggal(d.waktu_update);
@@ -923,8 +898,7 @@
         } else {
           elPerhatian.innerHTML = perhatianList.map(function(d) {
             const alasan = d.nilai_akhir > 0 && d.nilai_akhir < 70
-              ? 'Nilai: ' + d.nilai_akhir
-              : 'Belum selesai';
+              ? 'Nilai: ' + d.nilai_akhir : 'Belum selesai';
             return '<li>' +
               '<span class="ip-nama">' + escapeHtml(d.nama || d.user_id) + '</span>' +
               '<span class="ip-info">' + escapeHtml(d.modul.toUpperCase()) + ' · ' + alasan + '</span>' +
@@ -932,7 +906,6 @@
           }).join('');
         }
 
-        // Aktivitas terbaru: 8 update terakhir
         const elAktivitas = document.getElementById('panelAktivitas');
         const aktivitas = semuaData.slice(0, 8);
         if (aktivitas.length === 0) {
@@ -947,7 +920,7 @@
         }
       }
 
-      // ===== FILTER & SORT & PAGINATION PIPELINE =====
+      // ===== FILTER & SORT & PAGINATION =====
       function terapkanFilter() {
         const cari = document.getElementById('filterCari').value.trim().toLowerCase();
         const modul = document.getElementById('filterModul').value;
@@ -1022,7 +995,6 @@
         terapkanSort();
         terapkanPagination();
 
-        // Update header sort
         document.querySelectorAll('.tabel-progres th[data-sort]').forEach(function(th) {
           th.classList.remove('sorted');
           const arrow = th.querySelector('.sort-arrow');
@@ -1035,7 +1007,6 @@
           if (arrow) arrow.textContent = sortAsc ? '▲' : '▼';
         }
 
-        // Toggle kolom skor detail
         document.querySelectorAll('.col-skor').forEach(function(el) {
           el.style.display = tampilSkorDetail ? '' : 'none';
         });
@@ -1058,7 +1029,6 @@
             ? '<span class="badge-status selesai">✅ selesai</span>'
             : '<span class="badge-status proses">⏳ proses</span>';
 
-          // Tentukan warna baris
           let rowClass = '';
           if (d.status_modul === 'selesai' && d.nilai_akhir >= 70) rowClass = 'row-tuntas';
           else if (d.nilai_akhir > 0 && d.nilai_akhir < 70) rowClass = 'row-perhatian';
@@ -1075,12 +1045,10 @@
             ? 'kosong'
             : (d.nilai_akhir < 70 ? 'rendah' : '');
 
-          // Checkbox hanya untuk tamu
           const cbCell = d.tipe === 'tamu'
             ? '<td class="cb-cell"><input type="checkbox" class="cb-tamu" data-uid="' + escapeHtml(d.user_id) + '" ' + (dipilih.has(d.user_id) ? 'checked' : '') + '></td>'
             : '<td class="cb-cell"></td>';
 
-          // Tombol aksi
           let btnUnlock = '';
           if (d.status_modul === 'selesai') {
             btnUnlock = '<button class="aksi-btn unlock" title="Buka kunci" data-aksi="unlock" data-uid="' + escapeHtml(d.user_id) + '" data-modul="' + escapeHtml(d.modul) + '">🔓</button>';
@@ -1118,7 +1086,6 @@
         pasangEventTabel();
       }
 
-      // ===== PAGINATION =====
       function renderPagination() {
         const total = sortedData.length;
         const maxHalaman = Math.max(1, Math.ceil(total / ukuranHalaman));
@@ -1128,7 +1095,6 @@
         document.getElementById('pgInfo').textContent =
           total === 0 ? 'Tidak ada data' : 'Menampilkan ' + mulai + '–' + akhir + ' dari ' + total + ' baris';
 
-        // Tombol halaman (maks 5 tombol)
         const elPages = document.getElementById('pgPages');
         let html = '';
         const minPage = Math.max(1, halaman - 2);
@@ -1149,7 +1115,6 @@
         });
       }
 
-      // ===== BULK BAR =====
       function updateBulkBar() {
         const jumlah = dipilih.size;
         if (jumlah > 0) {
@@ -1160,9 +1125,7 @@
         }
       }
 
-      // ===== EVENT TABEL =====
       function pasangEventTabel() {
-        // Checkbox tamu
         elBody.querySelectorAll('.cb-tamu').forEach(function(cb) {
           cb.addEventListener('change', function() {
             const uid = this.dataset.uid;
@@ -1172,15 +1135,13 @@
           });
         });
 
-        // Tombol aksi
         elBody.querySelectorAll('.aksi-btn').forEach(function(btn) {
           btn.addEventListener('click', function() {
             const aksi = this.dataset.aksi;
             const uid = this.dataset.uid;
             const modul = this.dataset.modul || '';
-            const data = semuaData.find(d => d.user_id === uid && (!modul || d.modul === modul));
+            const data = semuaData.find(function(d) { return d.user_id === uid && (!modul || d.modul === modul); });
             if (!data) return;
-
             if (aksi === 'detail') bukaDetailSiswa(data);
             else if (aksi === 'unlock') konfirmasiUnlock(data);
             else if (aksi === 'edit') bukaEditIdentitas(data);
@@ -1196,16 +1157,15 @@
         const modal = document.createElement('div');
         modal.id = 'guru-modal';
         modal.className = 'duta-modal-overlay';
-        modal.innerHTML = `
-          <div class="duta-modal-box">
-            <div class="duta-modal-title">
-              <span>${escapeHtml(judul)}</span>
-              <button type="button" class="duta-modal-close" aria-label="Tutup">×</button>
-            </div>
-            <div class="duta-modal-body">${bodyHtml}</div>
-            <div class="modal-actions">${actionsHtml}</div>
-          </div>
-        `;
+        modal.innerHTML =
+          '<div class="duta-modal-box">' +
+            '<div class="duta-modal-title">' +
+              '<span>' + escapeHtml(judul) + '</span>' +
+              '<button type="button" class="duta-modal-close" aria-label="Tutup">×</button>' +
+            '</div>' +
+            '<div class="duta-modal-body">' + bodyHtml + '</div>' +
+            '<div class="modal-actions">' + actionsHtml + '</div>' +
+          '</div>';
         document.body.appendChild(modal);
 
         modal.querySelector('.duta-modal-close').addEventListener('click', function() { modal.remove(); });
@@ -1219,10 +1179,9 @@
         return modal;
       }
 
-      // ===== MODAL DETAIL SISWA =====
+      // ===== DETAIL SISWA =====
       function bukaDetailSiswa(data) {
-        // Semua progress untuk user ini
-        const semuaModul = semuaData.filter(d => d.user_id === data.user_id);
+        const semuaModul = semuaData.filter(function(d) { return d.user_id === data.user_id; });
 
         const rowsModul = semuaModul.map(function(m) {
           const status = m.status_modul === 'selesai'
@@ -1242,77 +1201,63 @@
           ? '<span class="badge-tipe login">login</span>'
           : '<span class="badge-tipe tamu">tamu</span>';
 
-        const bodyHtml = `
-          <div class="detail-section">
-            <h4>Identitas</h4>
-            <div class="detail-row"><span class="dr-label">Nama</span><span class="dr-value">${escapeHtml(data.nama || data.nama_siswa || '–')}</span></div>
-            <div class="detail-row"><span class="dr-label">Kelas</span><span class="dr-value">${escapeHtml(data.kelas || '–')}</span></div>
-            <div class="detail-row"><span class="dr-label">Sekolah</span><span class="dr-value">${escapeHtml(data.sekolah || '–')}</span></div>
-            <div class="detail-row"><span class="dr-label">User ID</span><span class="dr-value">${escapeHtml(data.user_id)} ${tipeLabel}</span></div>
-          </div>
-          <div class="detail-section">
-            <h4>Riwayat Modul</h4>
-            <table class="detail-table">
-              <thead>
-                <tr><th>Modul</th><th>Bagian</th><th>Kuis</th><th>Nilai</th><th>Status</th><th>Update</th></tr>
-              </thead>
-              <tbody>${rowsModul || '<tr><td colspan="6" style="text-align:center; color:#a08674;">Belum ada riwayat</td></tr>'}</tbody>
-            </table>
-          </div>
-        `;
+        const bodyHtml =
+          '<div class="detail-section">' +
+            '<h4>Identitas</h4>' +
+            '<div class="detail-row"><span class="dr-label">Nama</span><span class="dr-value">' + escapeHtml(data.nama || data.nama_siswa || '–') + '</span></div>' +
+            '<div class="detail-row"><span class="dr-label">Kelas</span><span class="dr-value">' + escapeHtml(data.kelas || '–') + '</span></div>' +
+            '<div class="detail-row"><span class="dr-label">Sekolah</span><span class="dr-value">' + escapeHtml(data.sekolah || '–') + '</span></div>' +
+            '<div class="detail-row"><span class="dr-label">User ID</span><span class="dr-value">' + escapeHtml(data.user_id) + ' ' + tipeLabel + '</span></div>' +
+          '</div>' +
+          '<div class="detail-section">' +
+            '<h4>Riwayat Modul</h4>' +
+            '<table class="detail-table">' +
+              '<thead><tr><th>Modul</th><th>Bagian</th><th>Kuis</th><th>Nilai</th><th>Status</th><th>Update</th></tr></thead>' +
+              '<tbody>' + (rowsModul || '<tr><td colspan="6" style="text-align:center; color:#a08674;">Belum ada riwayat</td></tr>') + '</tbody>' +
+            '</table>' +
+          '</div>';
 
-        const actionsHtml = `
-          <button class="modal-btn batal" data-act="tutup">Tutup</button>
-        `;
-
-        const modal = buatModal('👁️ Detail Siswa', bodyHtml, actionsHtml);
+        const modal = buatModal('👁️ Detail Siswa', bodyHtml,
+          '<button class="modal-btn batal" data-act="tutup">Tutup</button>');
         modal.querySelector('[data-act="tutup"]').addEventListener('click', function() { modal.remove(); });
       }
 
-      // ===== MODAL EDIT IDENTITAS =====
+      // ===== EDIT IDENTITAS =====
       function bukaEditIdentitas(data) {
-        if (data.tipe !== 'login') {
-          alert('Tamu tidak bisa diedit.');
-          return;
-        }
+        if (data.tipe !== 'login') { alert('Tamu tidak bisa diedit.'); return; }
 
-        const bodyHtml = `
-          <div class="form-group">
-            <label>Username (tidak bisa diubah)</label>
-            <input type="text" value="${escapeHtml(data.user_id)}" disabled>
-          </div>
-          <div class="form-group">
-            <label for="editNama">Nama</label>
-            <input type="text" id="editNama" value="${escapeHtml(data.nama || '')}" maxlength="60">
-          </div>
-          <div class="form-group">
-            <label for="editKelas">Kelas</label>
-            <input type="text" id="editKelas" value="${escapeHtml(data.kelas || '')}" maxlength="10">
-            <div class="hint">Contoh: 7A, 8B, 9C</div>
-          </div>
-          <div class="form-group">
-            <label for="editSekolah">Sekolah</label>
-            <input type="text" id="editSekolah" value="${escapeHtml(data.sekolah || '')}" maxlength="80">
-            <div class="hint">⚠️ Mengubah sekolah akan memindahkan siswa ini ke dashboard guru sekolah lain.</div>
-          </div>
-          <div class="form-group">
-            <label for="editPassword">Password Siswa</label>
-            <div class="input-with-btn">
-              <input type="password" id="editPassword" value="" placeholder="Kosongkan jika tidak diubah">
-              <button type="button" id="btnLihatPassword" title="Lihat / sembunyikan">👁️</button>
-            </div>
-            <div class="hint">Kosongkan jika tidak ingin mengubah password.</div>
-          </div>
-        `;
+        const bodyHtml =
+          '<div class="form-group">' +
+            '<label>Username (tidak bisa diubah)</label>' +
+            '<input type="text" value="' + escapeHtml(data.user_id) + '" disabled>' +
+          '</div>' +
+          '<div class="form-group">' +
+            '<label for="editNama">Nama</label>' +
+            '<input type="text" id="editNama" value="' + escapeHtml(data.nama || '') + '" maxlength="60">' +
+          '</div>' +
+          '<div class="form-group">' +
+            '<label for="editKelas">Kelas</label>' +
+            '<input type="text" id="editKelas" value="' + escapeHtml(data.kelas || '') + '" maxlength="10">' +
+            '<div class="hint">Contoh: 7A, 8B, 9C</div>' +
+          '</div>' +
+          '<div class="form-group">' +
+            '<label for="editSekolah">Sekolah</label>' +
+            '<input type="text" id="editSekolah" value="' + escapeHtml(data.sekolah || '') + '" maxlength="80">' +
+            '<div class="hint">⚠️ Mengubah sekolah akan memindahkan siswa ini ke dashboard guru sekolah lain.</div>' +
+          '</div>' +
+          '<div class="form-group">' +
+            '<label for="editPassword">Password Siswa</label>' +
+            '<div class="input-with-btn">' +
+              '<input type="password" id="editPassword" value="" placeholder="Kosongkan jika tidak diubah">' +
+              '<button type="button" id="btnLihatPassword" title="Lihat / sembunyikan">👁️</button>' +
+            '</div>' +
+            '<div class="hint">Kosongkan jika tidak ingin mengubah password.</div>' +
+          '</div>';
 
-        const actionsHtml = `
-          <button class="modal-btn batal" data-act="batal">Batal</button>
-          <button class="modal-btn simpan" data-act="simpan">💾 Simpan</button>
-        `;
+        const modal = buatModal('✏️ Edit Identitas Siswa', bodyHtml,
+          '<button class="modal-btn batal" data-act="batal">Batal</button>' +
+          '<button class="modal-btn simpan" data-act="simpan">💾 Simpan</button>');
 
-        const modal = buatModal('✏️ Edit Identitas Siswa', bodyHtml, actionsHtml);
-
-        // Toggle lihat password
         const elPass = modal.querySelector('#editPassword');
         const btnLihat = modal.querySelector('#btnLihatPassword');
         btnLihat.addEventListener('click', function() {
@@ -1358,23 +1303,20 @@
         });
       }
 
-      // ===== MODAL KONFIRMASI UNLOCK =====
+      // ===== KONFIRMASI UNLOCK =====
       function konfirmasiUnlock(data) {
-        const bodyHtml = `
-          <p>Buka kunci modul <strong>${escapeHtml(data.modul.toUpperCase())}</strong> untuk
-          <strong>${escapeHtml(data.nama || data.user_id)}</strong>?</p>
-          <p style="margin-top:0.6rem; font-size:0.85rem; color:#7a6656;">
-            Siswa akan bisa mengulang modul ini dan nilai akhirnya akan diperbarui.
-            Nilai sekarang: <strong>${data.nilai_akhir || '–'}</strong>.
-          </p>
-        `;
+        const bodyHtml =
+          '<p>Buka kunci modul <strong>' + escapeHtml(data.modul.toUpperCase()) + '</strong> untuk ' +
+          '<strong>' + escapeHtml(data.nama || data.user_id) + '</strong>?</p>' +
+          '<p style="margin-top:0.6rem; font-size:0.85rem; color:#7a6656;">' +
+            'Siswa akan bisa mengulang modul ini dan nilai akhirnya akan diperbarui. ' +
+            'Nilai sekarang: <strong>' + (data.nilai_akhir || '–') + '</strong>.' +
+          '</p>';
 
-        const actionsHtml = `
-          <button class="modal-btn batal" data-act="batal">Batal</button>
-          <button class="modal-btn unlock" data-act="unlock">🔓 Ya, Buka Kunci</button>
-        `;
+        const modal = buatModal('🔓 Buka Kunci Modul?', bodyHtml,
+          '<button class="modal-btn batal" data-act="batal">Batal</button>' +
+          '<button class="modal-btn unlock" data-act="unlock">🔓 Ya, Buka Kunci</button>');
 
-        const modal = buatModal('🔓 Buka Kunci Modul?', bodyHtml, actionsHtml);
         modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
         modal.querySelector('[data-act="unlock"]').addEventListener('click', async function() {
           this.disabled = true;
@@ -1404,32 +1346,27 @@
         const userIds = Array.from(dipilih);
         if (userIds.length === 0) return;
 
-        const bodyHtml = `
-          <p>Hapus <strong>${userIds.length} data tamu</strong> berikut?</p>
-          <ul style="margin:0.6rem 0 0 1.2rem; font-size:0.85rem; color:#7a6656;">
-            ${userIds.slice(0, 10).map(function(u) { return '<li>' + escapeHtml(u) + '</li>'; }).join('')}
-            ${userIds.length > 10 ? '<li>… dan ' + (userIds.length - 10) + ' lainnya</li>' : ''}
-          </ul>
-          <p style="margin-top:0.8rem; font-size:0.85rem; color:#a84a3a;">
-            Data tamu + semua progress-nya akan dihapus permanen.
-          </p>
-        `;
+        const bodyHtml =
+          '<p>Hapus <strong>' + userIds.length + ' data tamu</strong> berikut?</p>' +
+          '<ul style="margin:0.6rem 0 0 1.2rem; font-size:0.85rem; color:#7a6656;">' +
+            userIds.slice(0, 10).map(function(u) { return '<li>' + escapeHtml(u) + '</li>'; }).join('') +
+            (userIds.length > 10 ? '<li>… dan ' + (userIds.length - 10) + ' lainnya</li>' : '') +
+          '</ul>' +
+          '<p style="margin-top:0.8rem; font-size:0.85rem; color:#a84a3a;">' +
+            'Data tamu + semua progress-nya akan dihapus permanen.' +
+          '</p>';
 
-        const actionsHtml = `
-          <button class="modal-btn batal" data-act="batal">Batal</button>
-          <button class="modal-btn hapus" data-act="hapus">🗑️ Ya, Hapus</button>
-        `;
+        const modal = buatModal('🗑️ Hapus Data Tamu?', bodyHtml,
+          '<button class="modal-btn batal" data-act="batal">Batal</button>' +
+          '<button class="modal-btn hapus" data-act="hapus">🗑️ Ya, Hapus</button>');
 
-        const modal = buatModal('🗑️ Hapus Data Tamu?', bodyHtml, actionsHtml);
         modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
         modal.querySelector('[data-act="hapus"]').addEventListener('click', async function() {
           this.disabled = true;
           this.textContent = '⏳ Menghapus...';
 
           const hasil = await window.dutaHapusTamuBulk(
-            dataGuru.username,
-            dataGuru.password || '',
-            userIds
+            dataGuru.username, dataGuru.password || '', userIds
           );
 
           if (hasil && hasil.ok) {
@@ -1458,7 +1395,6 @@
       });
 
       function renderStatistik() {
-        // Distribusi nilai akhir
         const elNilai = document.getElementById('grafikNilai');
         const buckets = [
           { label: '90–100', min: 90, max: 100, color: 'green' },
@@ -1467,7 +1403,6 @@
           { label: '< 70', min: 1, max: 69, color: 'red' },
           { label: 'Belum', min: 0, max: 0, color: '' }
         ];
-
         const hitung = buckets.map(function(b) {
           return semuaData.filter(function(d) {
             if (b.label === 'Belum') return d.nilai_akhir === 0;
@@ -1485,18 +1420,15 @@
           '</div>';
         }).join('');
 
-        // Progress per modul
         const elModul = document.getElementById('grafikModul');
-        const moduls = [...new Set(semuaData.map(d => d.modul).filter(Boolean))].sort();
-
+        const moduls = [...new Set(semuaData.map(function(d) { return d.modul; }).filter(Boolean))].sort();
         if (moduls.length === 0) {
           elModul.innerHTML = '<div class="ip-empty">Belum ada data modul.</div>';
           return;
         }
-
         elModul.innerHTML = moduls.map(function(m) {
-          const dataModul = semuaData.filter(d => d.modul === m);
-          const selesai = dataModul.filter(d => d.status_modul === 'selesai').length;
+          const dataModul = semuaData.filter(function(d) { return d.modul === m; });
+          const selesai = dataModul.filter(function(d) { return d.status_modul === 'selesai'; }).length;
           const total = dataModul.length;
           const persen = total > 0 ? (selesai / total) * 100 : 0;
           return '<div class="bar-row">' +
@@ -1511,32 +1443,16 @@
       elBtnExport.addEventListener('click', function() {
         terapkanFilter();
         terapkanSort();
-
-        if (sortedData.length === 0) {
-          alert('Tidak ada data untuk di-export.');
-          return;
-        }
+        if (sortedData.length === 0) { alert('Tidak ada data untuk di-export.'); return; }
 
         const header = ['Nama','Kelas','Sekolah','User ID','Tipe','Modul','Bagian','a','b','c','d','e','f','Kuis','Nilai Akhir','Status','Update'];
         const rows = sortedData.map(function(d) {
           return [
-            d.nama || d.nama_siswa || '',
-            d.kelas || '',
-            d.sekolah || '',
-            d.user_id || '',
-            d.tipe || '',
-            d.modul || '',
-            d.bagian_terakhir || '',
-            d.skor_a || 0,
-            d.skor_b || 0,
-            d.skor_c || 0,
-            d.skor_d || 0,
-            d.skor_e || 0,
-            d.skor_f || 0,
-            d.skor_kuis || 0,
-            d.nilai_akhir || 0,
-            d.status_modul || '',
-            d.waktu_update || ''
+            d.nama || d.nama_siswa || '', d.kelas || '', d.sekolah || '',
+            d.user_id || '', d.tipe || '', d.modul || '', d.bagian_terakhir || '',
+            d.skor_a || 0, d.skor_b || 0, d.skor_c || 0, d.skor_d || 0,
+            d.skor_e || 0, d.skor_f || 0, d.skor_kuis || 0, d.nilai_akhir || 0,
+            d.status_modul || '', d.waktu_update || ''
           ];
         });
 
@@ -1564,9 +1480,7 @@
       elBtnBackup.addEventListener('click', async function() {
         this.disabled = true;
         this.textContent = '⏳ Menyiapkan...';
-
         const hasil = await window.dutaBackupData(dataGuru.username, dataGuru.password || '');
-
         this.disabled = false;
         this.textContent = '💾 Backup';
 
@@ -1594,44 +1508,34 @@
         input.addEventListener('change', function() {
           const file = input.files[0];
           if (!file) return;
-
           const reader = new FileReader();
           reader.onload = function(e) {
             let backupObj;
-            try {
-              backupObj = JSON.parse(e.target.result);
-            } catch (err) {
-              alert('⚠️ File bukan JSON yang valid.');
-              return;
-            }
+            try { backupObj = JSON.parse(e.target.result); }
+            catch (err) { alert('⚠️ File bukan JSON yang valid.'); return; }
 
-            const bodyHtml = `
-              <p style="color:#a84a3a; font-weight:700;">⚠️ PERINGATAN</p>
-              <p>Restore akan <strong>menimpa SEMUA data</strong> di sheet: Users, Tamu, Progress, Guru.</p>
-              <p style="margin-top:0.6rem; font-size:0.85rem; color:#7a6656;">
-                Backup berisi: ${(backupObj.users||[]).length} user,
-                ${(backupObj.tamu||[]).length} tamu,
-                ${(backupObj.progress||[]).length} progress,
-                ${(backupObj.guru||[]).length} guru.
-              </p>
-              <p style="margin-top:0.6rem; font-size:0.85rem;">Lanjutkan?</p>
-            `;
+            const bodyHtml =
+              '<p style="color:#a84a3a; font-weight:700;">⚠️ PERINGATAN</p>' +
+              '<p>Restore akan <strong>menimpa SEMUA data</strong> di sheet: Users, Tamu, Progress, Guru.</p>' +
+              '<p style="margin-top:0.6rem; font-size:0.85rem; color:#7a6656;">' +
+                'Backup berisi: ' + (backupObj.users||[]).length + ' user, ' +
+                (backupObj.tamu||[]).length + ' tamu, ' +
+                (backupObj.progress||[]).length + ' progress, ' +
+                (backupObj.guru||[]).length + ' guru.' +
+              '</p>' +
+              '<p style="margin-top:0.6rem; font-size:0.85rem;">Lanjutkan?</p>';
 
-            const actionsHtml = `
-              <button class="modal-btn batal" data-act="batal">Batal</button>
-              <button class="modal-btn hapus" data-act="restore">📤 Ya, Restore</button>
-            `;
+            const modal = buatModal('📤 Restore Data?', bodyHtml,
+              '<button class="modal-btn batal" data-act="batal">Batal</button>' +
+              '<button class="modal-btn hapus" data-act="restore">📤 Ya, Restore</button>');
 
-            const modal = buatModal('📤 Restore Data?', bodyHtml, actionsHtml);
             modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
             modal.querySelector('[data-act="restore"]').addEventListener('click', async function() {
               this.disabled = true;
               this.textContent = '⏳ Merestore...';
 
               const hasil = await window.dutaRestoreBackup(
-                dataGuru.username,
-                dataGuru.password || '',
-                backupObj
+                dataGuru.username, dataGuru.password || '', backupObj
               );
 
               if (hasil && hasil.ok) {
@@ -1654,12 +1558,8 @@
       document.querySelectorAll('.tabel-progres th[data-sort]').forEach(function(th) {
         th.addEventListener('click', function() {
           const kolom = this.dataset.sort;
-          if (sortKolom === kolom) {
-            sortAsc = !sortAsc;
-          } else {
-            sortKolom = kolom;
-            sortAsc = false;
-          }
+          if (sortKolom === kolom) sortAsc = !sortAsc;
+          else { sortKolom = kolom; sortAsc = false; }
           halaman = 1;
           renderTabel();
         });
@@ -1699,55 +1599,42 @@
         this.disabled = false;
         this.textContent = '🔄 Muat Ulang';
       });
-	  // ===== AUTO-REFRESH 60 DETIK =====
-		function mulaiAutoRefresh() {
-		  hentikanAutoRefresh();
-		  autoRefreshTimer = setInterval(function() {
-			// Hemat kuota: hanya refresh kalau tab aktif & tidak ada modal terbuka
-			if (document.hidden) return;
-			if (document.getElementById('guru-modal')) return;
-			muatData();
-		  }, AUTO_REFRESH_MS);
-		}
 
-		function hentikanAutoRefresh() {
-		  if (autoRefreshTimer) {
-			clearInterval(autoRefreshTimer);
-			autoRefreshTimer = null;
-		  }
-		}
-
-		document.getElementById('chkAutoRefresh').addEventListener('change', function() {
-		  if (this.checked) {
-			mulaiAutoRefresh();
-			// Simpan preferensi
-			try { localStorage.setItem('duta_guru_auto_refresh', '1'); } catch (e) {}
-		  } else {
-			hentikanAutoRefresh();
-			try { localStorage.removeItem('duta_guru_auto_refresh'); } catch (e) {}
-		  }
-		});
-
-		// Pause saat tab disembunyikan, lanjut saat tab kembali aktif
-		document.addEventListener('visibilitychange', function() {
-		  const chk = document.getElementById('chkAutoRefresh');
-		  if (!chk || !chk.checked) return;
-		  if (document.hidden) {
-			hentikanAutoRefresh();
-		  } else {
-			mulaiAutoRefresh();
-		  }
-		});
-
-		// Hentikan timer saat logout / halaman ditutup
-		window.addEventListener('beforeunload', hentikanAutoRefresh);
+      // ===== AUTO-REFRESH =====
+      function mulaiAutoRefresh() {
+        hentikanAutoRefresh();
+        autoRefreshTimer = setInterval(function() {
+          if (document.hidden) return;
+          if (document.getElementById('guru-modal')) return;
+          muatData();
+        }, AUTO_REFRESH_MS);
+      }
+      function hentikanAutoRefresh() {
+        if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+      }
+      document.getElementById('chkAutoRefresh').addEventListener('change', function() {
+        if (this.checked) {
+          mulaiAutoRefresh();
+          try { localStorage.setItem('duta_guru_auto_refresh', '1'); } catch (e) {}
+        } else {
+          hentikanAutoRefresh();
+          try { localStorage.removeItem('duta_guru_auto_refresh'); } catch (e) {}
+        }
+      });
+      document.addEventListener('visibilitychange', function() {
+        const chk = document.getElementById('chkAutoRefresh');
+        if (!chk || !chk.checked) return;
+        if (document.hidden) hentikanAutoRefresh();
+        else mulaiAutoRefresh();
+      });
+      window.addEventListener('beforeunload', hentikanAutoRefresh);
 
       // ===== LOGOUT =====
       elBtnLogout.addEventListener('click', function() {
         if (!confirm('Keluar dari dashboard guru?')) return;
         if (window.hapusSessionGuru) window.hapusSessionGuru();
         else sessionStorage.removeItem('duta_guru');
-        window.location.href = '../index.html';
+        window.location.href = '../';
       });
 
       // ===== INISIALISASI =====
@@ -1764,16 +1651,13 @@
         elSekolahGuru.textContent = dataGuru.sekolah || '(sekolah belum diisi)';
 
         muatData();
-		// Cek preferensi auto-refresh dari sesi sebelumnya
-		try {
-		  if (localStorage.getItem('duta_guru_auto_refresh') === '1') {
-			const chk = document.getElementById('chkAutoRefresh');
-			if (chk) {
-			  chk.checked = true;
-			  mulaiAutoRefresh();
-			}
-		  }
-		} catch (e) {}
+
+        try {
+          if (localStorage.getItem('duta_guru_auto_refresh') === '1') {
+            const chk = document.getElementById('chkAutoRefresh');
+            if (chk) { chk.checked = true; mulaiAutoRefresh(); }
+          }
+        } catch (e) {}
       });
 
     })();

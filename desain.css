@@ -87,8 +87,9 @@ body {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.8rem 1.5rem;
+  z-index: 50;          /* ⬅️ BARU: banner di atas konten */
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 .banner::after {
   content: "";
@@ -101,6 +102,8 @@ body {
   pointer-events: none;
   opacity: 0.7;
   z-index: 0;
+  border-radius: 0 0 32px 32px;   /* ⬅️ samakan dengan .banner */
+  overflow: hidden;                /* ⬅️ BARU: hiasan tetap di dalam */
 }
 
 /* Bagian kiri banner: judul + sub */
@@ -1007,4 +1010,173 @@ body {
 }
 @media (max-width: 480px) {
   .breadcrumb { font-size: 0.7rem; }
+}
+/* ================================================================
+   NAVBAR DI DALAM BANNER (v3.2 final)
+   ================================================================ */
+.duta-navbar-slot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+}
+
+.duta-navbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.15rem;
+  position: relative;
+  z-index: 1;
+}
+
+.duta-navbar .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #4d3829;
+  text-decoration: none;
+  background: transparent;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.duta-navbar .nav-link:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(80, 40, 100, 0.12);
+}
+.duta-navbar .nav-link.aktif {
+  background: #fff;
+  border-color: #b07be0;
+  color: #5c2f8a;
+  box-shadow: 0 4px 12px rgba(176, 123, 224, 0.2);
+}
+.duta-navbar .nav-link:focus-visible {
+  outline: 2px solid #8a4bbf;
+  outline-offset: 2px;
+}
+
+.nav-dropdown { position: relative; }
+.nav-drop-toggle { user-select: none; }
+.nav-drop-toggle .nav-caret {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  font-size: 0.75em;
+}
+.nav-dropdown.open .nav-drop-toggle .nav-caret { transform: rotate(180deg); }
+
+.nav-drop-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(80, 40, 100, 0.2);
+  border: 2px solid #f0e6ff;
+  padding: 0.4rem;
+  min-width: 220px;
+  z-index: 200;         /* ⬅️ naikkan dari 100 ke 200 */
+  animation: navFadeIn 0.18s ease;
+}
+.nav-dropdown.open .nav-drop-menu { display: block; }
+@keyframes navFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nav-drop-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #3b2b1e;
+  text-decoration: none;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+.nav-drop-item:hover { background: #f5ede6; }
+.nav-drop-item.aktif { background: #f0e6ff; color: #5c2f8a; }
+.nav-drop-item .ndi-ikon { font-size: 1rem; }
+
+#duta-breadcrumb-host .breadcrumb-wrapper {
+  padding: 0.4rem 1rem 0.1rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Responsif navbar */
+@media (max-width: 720px) {
+  .banner { flex-wrap: wrap; }
+  .duta-navbar-slot {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: flex-start;
+    margin-top: 0.3rem;
+  }
+  .duta-navbar .nav-link { padding: 0.35rem 0.65rem; font-size: 0.78rem; }
+  .nav-drop-menu { min-width: 190px; }
+}
+@media (max-width: 480px) {
+  .duta-navbar { justify-content: center; width: 100%; }
+  .duta-navbar .nav-link { padding: 0.3rem 0.55rem; font-size: 0.72rem; }
+  .nav-drop-menu { left: auto; right: 0; }
+}
+
+/* ================================================================
+   FIX DROPDOWN NAVBAR — z-index & stacking context
+   ================================================================ */
+
+/* 1. Pastikan header & banner punya stacking context yang benar */
+#header-utama {
+  position: relative;
+  z-index: 100;
+  overflow: visible;
+}
+
+.banner {
+  position: relative;
+  z-index: 100;
+  overflow: visible;
+}
+
+/* 2. Hiasan banner tetap di dalam */
+.banner::after {
+  border-radius: 0 0 32px 32px;
+  overflow: hidden;
+}
+
+/* 3. Konten di bawah banner tidak menutupi dropdown */
+.container,
+.hero,
+.card,
+.portal-grid,
+.breadcrumb-wrapper,
+#duta-breadcrumb-host {
+  position: relative;
+  z-index: 1;
+}
+
+/* 4. Dropdown di atas segalanya */
+.nav-drop-menu {
+  z-index: 9999 !important;
+}
+
+/* 5. Pastikan body tidak punya overflow-x: hidden yang memotong dropdown */
+body {
+  overflow-x: clip;   /* lebih aman dari hidden */
 }

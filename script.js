@@ -1,8 +1,10 @@
-// script.js — versi Fase C v3.1
-// Bar user di dalam header. + normalisasi + kunci modul + DUTA_MODUL_AKTIF.
-// + Dashboard Guru v2: updateSiswa, hapusTamuBulk, backup, restore.
-// + Sliding expiration 60 menit (auto-logout saat idle).
-// + State aktivitas: simpan/restore/auto-save (binding ke user_id + TTL 24 jam).
+// script.js — versi Fase C v3.2 (sentralisasi navbar + breadcrumb + favicon)
+// Perubahan dari v3.1:
+//   + renderFavicon() terpusat
+//   + renderNavbar() menyatu di banner
+//   + renderBreadcrumb() via fetch partials/breadcrumb.json
+//   + autoDetectRoot() & autoDetectModulAktif()
+//   + initDutaPage() — panggil 1x di DOMContentLoaded
 // encoding: UTF-8
 
 (function() {
@@ -21,83 +23,59 @@
 
   window.DUTA_BOBOT = { aktivitas: 0.5, kuis: 0.5 };
 
-  // Sliding expiration: auto-logout setelah 60 menit idle
   const BATAS_SESI_MENIT = 60;
   const KEY_AKTIVITAS = 'duta_aktivitas_terakhir';
-  const THROTTLE_AKTIVITAS_MS = 60 * 1000; // update max 1x per menit
+  const THROTTLE_AKTIVITAS_MS = 60 * 1000;
 
-  // Root path — diisi oleh halaman ('' atau '../')
   function getRoot() {
     return (typeof window.DUTA_ROOT === 'string') ? window.DUTA_ROOT : '';
   }
   window.getRoot = getRoot;
 
-  // Modul aktif — diisi oleh halaman (mis. 'tik1', 'tik2', 'tik3', 'bk4')
   function getModulAktif() {
     return (typeof window.DUTA_MODUL_AKTIF === 'string') ? window.DUTA_MODUL_AKTIF : '';
   }
   window.getModulAktif = getModulAktif;
 
   // ============================================
-  // NORMALISASI INPUT (NAMA, KELAS, SEKOLAH)
+  // NORMALISASI
   // ============================================
   function normalisasiNama(str) {
     return String(str || '')
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, ' ')
+      .trim().toLowerCase().replace(/\s+/g, ' ')
       .split(' ')
       .map(function(kata) {
         if (!kata) return '';
         return kata.charAt(0).toUpperCase() + kata.slice(1);
       })
-      .join(' ')
-      .trim();
+      .join(' ').trim();
   }
-
   function normalisasiKelas(str) {
     let s = String(str || '').trim().toUpperCase().replace(/\s+/g, '');
     const romawiMap = { 'VIII': '8', 'VII': '7', 'IX': '9' };
-    const keys = Object.keys(romawiMap).sort(function(a, b) {
-      return b.length - a.length;
-    });
+    const keys = Object.keys(romawiMap).sort(function(a, b) { return b.length - a.length; });
     for (let i = 0; i < keys.length; i++) {
       const romawi = keys[i];
-      if (s.indexOf(romawi) === 0) {
-        s = romawiMap[romawi] + s.substring(romawi.length);
-        break;
-      }
+      if (s.indexOf(romawi) === 0) { s = romawiMap[romawi] + s.substring(romawi.length); break; }
     }
     const match = s.match(/^(\d+)([A-Z]*)$/);
     if (match) return match[1] + match[2];
     return s;
   }
-
   function normalisasiSekolah(str) {
-    return String(str || '')
-      .trim()
-      .replace(/\s+/g, ' ')
-      .toUpperCase();
+    return String(str || '').trim().replace(/\s+/g, ' ').toUpperCase();
   }
-
-  window.dutaNormalisasi = {
-    nama: normalisasiNama,
-    kelas: normalisasiKelas,
-    sekolah: normalisasiSekolah
-  };
+  window.dutaNormalisasi = { nama: normalisasiNama, kelas: normalisasiKelas, sekolah: normalisasiSekolah };
 
   // ============================================
   // HITUNG NILAI
   // ============================================
   window.hitungNilaiAkhir = function(nilaiAktivitas, nilaiKuis) {
     const arr = Array.isArray(nilaiAktivitas) ? nilaiAktivitas : [];
-    const rata = arr.length > 0
-      ? arr.reduce((a, b) => a + Number(b || 0), 0) / arr.length
-      : 0;
+    const rata = arr.length > 0 ? arr.reduce((a, b) => a + Number(b || 0), 0) / arr.length : 0;
     const kuis = Number(nilaiKuis) || 0;
     return Math.round((rata * window.DUTA_BOBOT.aktivitas) + (kuis * window.DUTA_BOBOT.kuis));
   };
-
   window.hitungRataAktivitas = function(nilaiAktivitas) {
     const arr = Array.isArray(nilaiAktivitas) ? nilaiAktivitas : [];
     if (arr.length === 0) return 0;
@@ -161,13 +139,11 @@
   function hapusAktivitas() {
     try { localStorage.removeItem(KEY_AKTIVITAS); } catch (e) {}
   }
-
   function cekKadaluarsaSesi() {
     try {
       const terakhir = Number(localStorage.getItem(KEY_AKTIVITAS)) || 0;
       if (terakhir === 0) return false;
-      const idleMs = Date.now() - terakhir;
-      return idleMs > (BATAS_SESI_MENIT * 60 * 1000);
+      return (Date.now() - terakhir) > (BATAS_SESI_MENIT * 60 * 1000);
     } catch (e) { return false; }
   }
 
@@ -177,50 +153,28 @@
       catatAktivitas(true);
     } catch (e) {}
   };
-
   window.ambilSession = function() {
     try {
       const raw = localStorage.getItem('duta_session');
       if (!raw) return null;
       const s = JSON.parse(raw);
       if (!s || !s.user_id) return null;
-
-      if (cekKadaluarsaSesi()) {
-        hapusSession();
-        hapusAktivitas();
-        return null;
-      }
-
+      if (cekKadaluarsaSesi()) { hapusSession(); hapusAktivitas(); return null; }
       catatAktivitas(false);
       return s;
     } catch (e) { return null; }
   };
-
   window.hapusSession = function() {
-    try {
-      localStorage.removeItem('duta_session');
-      hapusAktivitas();
-    } catch (e) {}
+    try { localStorage.removeItem('duta_session'); hapusAktivitas(); } catch (e) {}
   };
-
-  window.sudahLogin = function() {
-    const s = window.ambilSession();
-    return !!(s && s.tipe === 'login');
-  };
-  window.modeTamu = function() {
-    const s = window.ambilSession();
-    return !!(s && s.tipe === 'tamu');
-  };
-  window.ambilUserId = function() {
-    const s = window.ambilSession();
-    return s ? s.user_id : null;
-  };
+  window.sudahLogin = function() { const s = window.ambilSession(); return !!(s && s.tipe === 'login'); };
+  window.modeTamu = function() { const s = window.ambilSession(); return !!(s && s.tipe === 'tamu'); };
+  window.ambilUserId = function() { const s = window.ambilSession(); return s ? s.user_id : null; };
 
   // ============================================
-  // SESSION GURU (sessionStorage) — 60 menit sliding
+  // SESSION GURU
   // ============================================
   const KEY_GURU_AKTIVITAS = 'duta_guru_aktivitas';
-
   function catatAktivitasGuru(force) {
     try {
       const now = Date.now();
@@ -229,31 +183,26 @@
       sessionStorage.setItem(KEY_GURU_AKTIVITAS, String(now));
     } catch (e) {}
   }
-
   window.simpanSessionGuru = function(guru) {
     try {
       sessionStorage.setItem('duta_guru', JSON.stringify(guru || {}));
       catatAktivitasGuru(true);
     } catch (e) {}
   };
-
   window.ambilSessionGuru = function() {
     try {
       const raw = sessionStorage.getItem('duta_guru');
       if (!raw) return null;
       const g = JSON.parse(raw);
       if (!g || !g.username) return null;
-
       const terakhir = Number(sessionStorage.getItem(KEY_GURU_AKTIVITAS)) || 0;
       if (terakhir > 0 && (Date.now() - terakhir) > (BATAS_SESI_MENIT * 60 * 1000)) {
-        window.hapusSessionGuru();
-        return null;
+        window.hapusSessionGuru(); return null;
       }
       catatAktivitasGuru(false);
       return g;
     } catch (e) { return null; }
   };
-
   window.hapusSessionGuru = function() {
     try {
       sessionStorage.removeItem('duta_guru');
@@ -262,7 +211,7 @@
   };
 
   // ============================================
-  // HELPER: ambil nama siswa gabungan untuk dikirim ke sheet
+  // HELPER: nama siswa untuk sheet
   // ============================================
   function ambilNamaSiswaUntukSheet() {
     try {
@@ -272,62 +221,44 @@
         try {
           const arr = JSON.parse(localStorage.getItem(keyModul) || '[]');
           if (Array.isArray(arr) && arr.length > 0) {
-            const namaArr = arr
-              .map(function(s) { return (s && s.nama) ? String(s.nama).trim() : ''; })
-              .filter(Boolean);
-            if (namaArr.length > 0) {
-              return namaArr.join(' & ');
-            }
+            const namaArr = arr.map(function(s) { return (s && s.nama) ? String(s.nama).trim() : ''; }).filter(Boolean);
+            if (namaArr.length > 0) return namaArr.join(' & ');
           }
         } catch (e) {}
       }
-
       const keys = [];
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
         if (k && k.startsWith('lab') && k.endsWith('_siswa')) keys.push(k);
       }
-
       let terbaik = null;
       for (let i = 0; i < keys.length; i++) {
         try {
           const arr = JSON.parse(localStorage.getItem(keys[i]) || '[]');
           if (Array.isArray(arr) && arr.length > 0) {
-            if (!terbaik || arr.length > terbaik.length) {
-              terbaik = arr;
-            }
+            if (!terbaik || arr.length > terbaik.length) terbaik = arr;
           }
         } catch (e) {}
       }
-
       if (terbaik && terbaik.length > 0) {
-        const namaArr = terbaik
-          .map(function(s) { return (s && s.nama) ? String(s.nama).trim() : ''; })
-          .filter(Boolean);
-        if (namaArr.length > 0) {
-          return namaArr.join(' & ');
-        }
+        const namaArr = terbaik.map(function(s) { return (s && s.nama) ? String(s.nama).trim() : ''; }).filter(Boolean);
+        if (namaArr.length > 0) return namaArr.join(' & ');
       }
     } catch (e) {}
-
     const ids = window.ambilIdentitasSiswa();
     if (ids && ids.nama) return ids.nama;
-
     return '';
   }
   window.ambilNamaSiswaUntukSheet = ambilNamaSiswaUntukSheet;
 
   // ============================================
-  // API CALL (dasar)
+  // API CALL
   // ============================================
   window.dutaFetch = async function(payload) {
     const apiUrl = window.DUTA_API && window.DUTA_API.url;
     if (!apiUrl) return { ok: false, error: 'URL API tidak tersedia' };
     try {
-      const res = await fetch(apiUrl, {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      });
+      const res = await fetch(apiUrl, { method: 'POST', body: JSON.stringify(payload) });
       return await res.json();
     } catch (err) {
       return { ok: false, error: err.message || 'Gagal terhubung ke server' };
@@ -335,12 +266,10 @@
   };
 
   // ============================================
-  // AUTH — SISWA
+  // AUTH SISWA
   // ============================================
   window.dutaLogin = async function(username, password) {
-    const hasil = await window.dutaFetch({
-      action: 'login', username: username, password: password
-    });
+    const hasil = await window.dutaFetch({ action: 'login', username: username, password: password });
     if (hasil && hasil.ok) {
       window.simpanSession({
         user_id: hasil.user_id,
@@ -353,32 +282,21 @@
     }
     return hasil;
   };
-
   window.dutaDaftar = async function(username, password, nama, kelas, sekolah) {
     return await window.dutaFetch({
-      action: 'register',
-      username: username,
-      password: password,
-      nama: normalisasiNama(nama),
-      kelas: normalisasiKelas(kelas),
-      sekolah: normalisasiSekolah(sekolah)
+      action: 'register', username: username, password: password,
+      nama: normalisasiNama(nama), kelas: normalisasiKelas(kelas), sekolah: normalisasiSekolah(sekolah)
     });
   };
-
   window.dutaCekUser = async function(username) {
     return await window.dutaFetch({ action: 'cekUser', username: username });
   };
-
   window.dutaBuatTamu = async function(sekolah, nama, kelas) {
-    const sekolahN = normalisasiSekolah(sekolah);
-    const namaN = normalisasiNama(nama);
-    const kelasN = normalisasiKelas(kelas);
-
     const hasil = await window.dutaFetch({
       action: 'buatTamu',
-      sekolah: sekolahN,
-      nama: namaN,
-      kelas: kelasN
+      sekolah: normalisasiSekolah(sekolah),
+      nama: normalisasiNama(nama),
+      kelas: normalisasiKelas(kelas)
     });
     if (hasil && hasil.ok) {
       window.simpanSession({
@@ -393,39 +311,24 @@
     }
     return hasil;
   };
-
   window.dutaPastikanPunyaKode = async function(sekolah, nama, kelas) {
     const session = window.ambilSession();
-
-    if (session && session.tipe === 'login') {
-      return { ok: true, tipe: 'login', user_id: session.user_id, sudah_ada: true };
-    }
-    if (session && session.tipe === 'tamu' && session.user_id) {
-      return { ok: true, tipe: 'tamu', user_id: session.user_id, sudah_ada: true };
-    }
-
+    if (session && session.tipe === 'login') return { ok: true, tipe: 'login', user_id: session.user_id, sudah_ada: true };
+    if (session && session.tipe === 'tamu' && session.user_id) return { ok: true, tipe: 'tamu', user_id: session.user_id, sudah_ada: true };
     const hasil = await window.dutaBuatTamu(sekolah, nama, kelas);
-    if (hasil && hasil.ok) {
-      return { ok: true, tipe: 'tamu', user_id: hasil.kode_tamu, sudah_ada: false };
-    }
+    if (hasil && hasil.ok) return { ok: true, tipe: 'tamu', user_id: hasil.kode_tamu, sudah_ada: false };
     return { ok: false, error: (hasil && hasil.error) || 'Gagal membuat kode tamu' };
   };
 
   // ============================================
-  // AUTH — GURU
+  // AUTH GURU
   // ============================================
   window.dutaLoginGuru = async function(username, password) {
-    const hasil = await window.dutaFetch({
-      action: 'loginGuru',
-      username: username,
-      password: password
-    });
+    const hasil = await window.dutaFetch({ action: 'loginGuru', username: username, password: password });
     if (hasil && hasil.ok) {
       window.simpanSessionGuru({
-        username: hasil.user_id,
-        nama: hasil.nama,
-        sekolah: normalisasiSekolah(hasil.sekolah || ''),
-        password: password
+        username: hasil.user_id, nama: hasil.nama,
+        sekolah: normalisasiSekolah(hasil.sekolah || ''), password: password
       });
     }
     return hasil;
@@ -437,27 +340,16 @@
   window.dutaAmbilProgress = async function(modul) {
     const userId = window.ambilUserId();
     if (!userId) return { ok: false, error: 'Belum login/tamu' };
-    return await window.dutaFetch({
-      action: 'getProgress', userId: userId, modul: modul || ''
-    });
+    return await window.dutaFetch({ action: 'getProgress', userId: userId, modul: modul || '' });
   };
-
   window.dutaSimpanProgress = async function(modul, bagianTerakhir, skor, nilaiAkhir, opsi) {
     const userId = window.ambilUserId();
     if (!userId) return { ok: false, error: 'Belum login/tamu' };
-
-    const namaSiswa = ambilNamaSiswaUntukSheet();
-    const kunciModul = opsi && opsi.kunciModul === true;
-
     return await window.dutaFetch({
-      action: 'simpanProgress',
-      userId: userId,
-      modul: modul,
-      bagianTerakhir: bagianTerakhir || '',
-      skor: skor || {},
-      nilaiAkhir: nilaiAkhir || 0,
-      namaSiswa: namaSiswa,
-      kunciModul: kunciModul
+      action: 'simpanProgress', userId: userId, modul: modul,
+      bagianTerakhir: bagianTerakhir || '', skor: skor || {},
+      nilaiAkhir: nilaiAkhir || 0, namaSiswa: ambilNamaSiswaUntukSheet(),
+      kunciModul: (opsi && opsi.kunciModul === true)
     });
   };
 
@@ -465,56 +357,31 @@
   // CEK STATUS MODUL
   // ============================================
   const KEY_CACHE_STATUS = 'duta_status_modul_';
-
   window.dutaCekStatusModul = async function(modul, opts) {
     if (!modul) return { ok: false, terkunci: false, status: '' };
-
     const forceRefresh = opts && opts.refresh === true;
     const cacheKey = KEY_CACHE_STATUS + modul;
-
     if (!forceRefresh) {
       try {
         const cached = sessionStorage.getItem(cacheKey);
         if (cached) {
           const c = JSON.parse(cached);
           if (c && (Date.now() - (c.ts || 0)) < 60000) {
-            return {
-              ok: true,
-              terkunci: c.status === 'selesai',
-              status: c.status || '',
-              nilai_akhir: c.nilai_akhir || 0,
-              skor_kuis: c.skor_kuis || 0,
-              fromCache: true
-            };
+            return { ok: true, terkunci: c.status === 'selesai', status: c.status || '', nilai_akhir: c.nilai_akhir || 0, skor_kuis: c.skor_kuis || 0, fromCache: true };
           }
         }
       } catch (e) {}
     }
-
     const userId = window.ambilUserId();
     if (!userId) return { ok: false, terkunci: false, status: '' };
-
     try {
-      const hasil = await window.dutaFetch({
-        action: 'getProgress', userId: userId, modul: modul
-      });
+      const hasil = await window.dutaFetch({ action: 'getProgress', userId: userId, modul: modul });
       if (hasil && hasil.ok && hasil.progress && hasil.progress.length > 0) {
         const p = hasil.progress[0];
         const status = (p.status_modul || '').toString().trim().toLowerCase();
-        const data = {
-          ok: true,
-          terkunci: status === 'selesai',
-          status: status,
-          nilai_akhir: Number(p.nilai_akhir) || 0,
-          skor_kuis: Number(p.skor_kuis) || 0
-        };
+        const data = { ok: true, terkunci: status === 'selesai', status: status, nilai_akhir: Number(p.nilai_akhir) || 0, skor_kuis: Number(p.skor_kuis) || 0 };
         try {
-          sessionStorage.setItem(cacheKey, JSON.stringify({
-            status: data.status,
-            nilai_akhir: data.nilai_akhir,
-            skor_kuis: data.skor_kuis,
-            ts: Date.now()
-          }));
+          sessionStorage.setItem(cacheKey, JSON.stringify({ status: data.status, nilai_akhir: data.nilai_akhir, skor_kuis: data.skor_kuis, ts: Date.now() }));
         } catch (e) {}
         return data;
       }
@@ -523,80 +390,35 @@
       return { ok: false, terkunci: false, status: '', error: e.message };
     }
   };
-
   window.dutaBersihkanCacheStatus = function(modul) {
     if (!modul) return;
     try { sessionStorage.removeItem(KEY_CACHE_STATUS + modul); } catch (e) {}
   };
-  
-	// ============================================
-  // FEEDBACK AI (GEMINI via Code.gs) — v1.0
+
   // ============================================
-  /**
-   * Minta feedback AI (guru virtual) untuk satu bagian aktivitas.
-   *
-   * @param {object} payload
-   *   - modul       {string}  mis. 'dsi1'
-   *   - bagian      {string}  mis. 'a' | 'b' | 'c' | 'd'
-   *   - level       {string}  'dasar' | 'reguler' | 'tantangan' (opsional)
-   *   - skorTes     {number}  skor tes pemahaman (0-100)
-   *   - benarTes    {number}  jumlah benar
-   *   - totalTes    {number}  jumlah soal
-   *   - ringkasHasil {string} ringkasan hasil simulasi (opsional, teks bebas)
-   *   - mindful     {object}  { j1, j2, j3, pilih } — jawaban jeda sadar (opsional)
-   *   - refleksi    {object}  { pelajaran, penerapan }
-   *   - exitTicket  {string}  (opsional)
-   * @returns {Promise<{ok:boolean, feedback?:string, error?:string}>}
-   */
+  // FEEDBACK AI
+  // ============================================
   window.dutaMintaFeedbackAI = async function(payload) {
     const p = payload || {};
     const userId = window.ambilUserId ? window.ambilUserId() : null;
-
-    if (!p.modul)  return { ok: false, error: 'modul wajib diisi' };
+    if (!p.modul) return { ok: false, error: 'modul wajib diisi' };
     if (!p.bagian) return { ok: false, error: 'bagian wajib diisi' };
-
     const body = {
-      action: 'getFeedbackAI',
-      userId: userId || '',
-      modul: p.modul,
-      bagian: p.bagian,
-      level: p.level || '',
-      skorTes: Number(p.skorTes) || 0,
-      benarTes: Number(p.benarTes) || 0,
-      totalTes: Number(p.totalTes) || 0,
+      action: 'getFeedbackAI', userId: userId || '',
+      modul: p.modul, bagian: p.bagian, level: p.level || '',
+      skorTes: Number(p.skorTes) || 0, benarTes: Number(p.benarTes) || 0, totalTes: Number(p.totalTes) || 0,
       ringkasHasil: p.ringkasHasil || '',
-      mindful: {
-        j1: (p.mindful && p.mindful.j1) || '',
-        j2: (p.mindful && p.mindful.j2) || '',
-        j3: (p.mindful && p.mindful.j3) || '',
-        pilih: (p.mindful && p.mindful.pilih) || ''
-      },
-      refleksi: {
-        pelajaran: (p.refleksi && p.refleksi.pelajaran) || '',
-        penerapan: (p.refleksi && p.refleksi.penerapan) || ''
-      },
+      mindful: { j1: (p.mindful && p.mindful.j1) || '', j2: (p.mindful && p.mindful.j2) || '', j3: (p.mindful && p.mindful.j3) || '', pilih: (p.mindful && p.mindful.pilih) || '' },
+      refleksi: { pelajaran: (p.refleksi && p.refleksi.pelajaran) || '', penerapan: (p.refleksi && p.refleksi.penerapan) || '' },
       exitTicket: p.exitTicket || ''
     };
-
     const hasil = await window.dutaFetch(body);
-
-    if (!hasil || !hasil.ok) {
-      return {
-        ok: false,
-        error: (hasil && hasil.error) || 'Gagal minta feedback'
-      };
-    }
-
-    return {
-      ok: true,
-      feedback: hasil.feedback || '',
-      model: hasil.model || '',
-      waktu: hasil.waktu || ''
-    };
+    if (!hasil || !hasil.ok) return { ok: false, error: (hasil && hasil.error) || 'Gagal minta feedback' };
+    return { ok: true, feedback: hasil.feedback || '', model: hasil.model || '', waktu: hasil.waktu || '' };
   };
 
   // ============================================
-  // RESET USER (tamu)
+  // RESET USER
   // ============================================
   window.dutaResetUser = async function() {
     const session = window.ambilSession();
@@ -606,7 +428,6 @@
     hapusSemuaLocalStorageUser();
     return hasil;
   };
-
   function hapusSemuaLocalStorageUser() {
     try {
       const prefixes = ['lab', 'duta'];
@@ -625,25 +446,14 @@
   window.hapusSemuaLocalStorageUser = hapusSemuaLocalStorageUser;
 
   // ============================================
-  // HELPER: SIMPAN/RESTORE STATE AKTIVITAS (v3.1)
+  // STATE AKTIVITAS
   // ============================================
-  // Format key: lab[modul]_state_[huruf]_[user_id]
-  // Contoh   : labdsi1_state_a_budi7a
-  // TTL      : 24 jam
-  // Binding  : ke user_id aktif (ambilSession().user_id)
-  // ============================================
-
-  const STATE_TTL_MS = 24 * 60 * 60 * 1000;   // 24 jam
-  const STATE_THROTTLE_MS = 1000;              // min 1 detik antar-simpan
+  const STATE_TTL_MS = 24 * 60 * 60 * 1000;
+  const STATE_THROTTLE_MS = 1000;
   const STATE_PREFIX = 'lab';
   const STATE_SUFFIX = '_state_';
-
-  // Throttle per key: { [key]: timestampTerakhirSimpan }
   const stateThrottleMap = {};
 
-  /**
-   * Ambil user_id aktif. Fallback ke 'anon' kalau tidak ada session.
-   */
   function ambilUserIdUntukState() {
     try {
       const s = window.ambilSession ? window.ambilSession() : null;
@@ -651,26 +461,11 @@
     } catch (e) {}
     return 'anon';
   }
-
-  /**
-   * Bentuk key state lengkap.
-   * @param {string} keyBase — mis. 'labdsi1_state_a'
-   * @returns {string} key final (dengan suffix _user_id)
-   */
   function bentukKeyState(keyBase) {
     const uid = ambilUserIdUntukState();
-    // Kalau keyBase sudah mengandung '_state_', tambahkan suffix uid
-    if (keyBase.indexOf(STATE_SUFFIX) !== -1) {
-      return keyBase + '_' + uid;
-    }
-    // Kalau keyBase cuma 'dsi1_a', bangun dari awal
+    if (keyBase.indexOf(STATE_SUFFIX) !== -1) return keyBase + '_' + uid;
     return STATE_PREFIX + keyBase + STATE_SUFFIX + '_' + uid;
   }
-
-  /**
-   * Bersihkan state kadaluarsa (TTL > 24 jam) untuk semua key 'lab*_state_*'.
-   * Dipanggil otomatis saat simpan.
-   */
   function bersihkanStateKadaluarsa() {
     try {
       const now = Date.now();
@@ -686,95 +481,44 @@
           const d = JSON.parse(raw);
           const ts = Number(d && d.__ts) || 0;
           if (!ts || (now - ts) > STATE_TTL_MS) hapus.push(k);
-        } catch (e) {
-          // JSON rusak → hapus
-          hapus.push(k);
-        }
+        } catch (e) { hapus.push(k); }
       }
-      hapus.forEach(function(k) {
-        try { localStorage.removeItem(k); } catch (e) {}
-      });
+      hapus.forEach(function(k) { try { localStorage.removeItem(k); } catch (e) {} });
     } catch (e) {}
   }
-
-  /**
-   * Simpan state aktivitas.
-   * @param {string} keyBase — mis. 'labdsi1_state_a'
-   * @param {object} obj     — state yang mau disimpan (plain object)
-   * @param {object} [opts]  — { force: true } untuk lewati throttle
-   * @returns {boolean} true kalau tersimpan
-   */
   window.dutaSimpanState = function(keyBase, obj, opts) {
     if (!keyBase || typeof obj !== 'object' || obj === null) return false;
     try {
       const o = opts || {};
       const force = o.force === true;
       const finalKey = bentukKeyState(keyBase);
-
-      // Throttle
       const now = Date.now();
       const terakhir = stateThrottleMap[finalKey] || 0;
       if (!force && (now - terakhir) < STATE_THROTTLE_MS) return false;
-
-      // Tambah timestamp internal
       const data = Object.assign({}, obj);
       data.__ts = now;
-
       localStorage.setItem(finalKey, JSON.stringify(data));
       stateThrottleMap[finalKey] = now;
-
-      // Auto-cleanup (best-effort, tidak blocking)
       bersihkanStateKadaluarsa();
-
       return true;
-    } catch (e) {
-      return false;
-    }
+    } catch (e) { return false; }
   };
-
-  /**
-   * Ambil state aktivitas untuk user aktif.
-   * @param {string} keyBase
-   * @returns {object|null} state (tanpa __ts) atau null kalau tidak ada/kadaluarsa
-   */
   window.dutaAmbilState = function(keyBase) {
     if (!keyBase) return null;
     try {
       const finalKey = bentukKeyState(keyBase);
       const raw = localStorage.getItem(finalKey);
       if (!raw) return null;
-
       let d;
-      try { d = JSON.parse(raw); } catch (e) {
-        try { localStorage.removeItem(finalKey); } catch (e2) {}
-        return null;
-      }
-      if (!d || typeof d !== 'object') {
-        try { localStorage.removeItem(finalKey); } catch (e2) {}
-        return null;
-      }
-
-      // Cek TTL
+      try { d = JSON.parse(raw); } catch (e) { try { localStorage.removeItem(finalKey); } catch (e2) {} return null; }
+      if (!d || typeof d !== 'object') { try { localStorage.removeItem(finalKey); } catch (e2) {} return null; }
       const ts = Number(d.__ts) || 0;
-      if (!ts || (Date.now() - ts) > STATE_TTL_MS) {
-        try { localStorage.removeItem(finalKey); } catch (e2) {}
-        return null;
-      }
-
-      // Buang __ts dari hasil
+      if (!ts || (Date.now() - ts) > STATE_TTL_MS) { try { localStorage.removeItem(finalKey); } catch (e2) {} return null; }
       const hasil = Object.assign({}, d);
       delete hasil.__ts;
       return hasil;
-    } catch (e) {
-      return null;
-    }
+    } catch (e) { return null; }
   };
-
-  /**
-   * Hapus state aktivitas untuk user aktif.
-   * @param {string} keyBase
-   * @returns {boolean}
-   */
   window.dutaHapusState = function(keyBase) {
     if (!keyBase) return false;
     try {
@@ -782,114 +526,63 @@
       localStorage.removeItem(finalKey);
       delete stateThrottleMap[finalKey];
       return true;
-    } catch (e) {
-      return false;
-    }
+    } catch (e) { return false; }
   };
-
-  /**
-   * Auto-save berkala. Panggil getterFn() tiap intervalMs, simpan hasilnya.
-   * @param {string} keyBase
-   * @param {Function} getterFn — return object state
-   * @param {number} [intervalMs=5000]
-   * @returns {number} intervalId (untuk clearInterval)
-   */
   window.dutaAutoSave = function(keyBase, getterFn, intervalMs) {
     if (!keyBase || typeof getterFn !== 'function') return null;
     const ms = Number(intervalMs) || 5000;
-    const id = setInterval(function() {
+    return setInterval(function() {
       try {
         const obj = getterFn();
-        if (obj && typeof obj === 'object') {
-          window.dutaSimpanState(keyBase, obj, { force: true });
-        }
+        if (obj && typeof obj === 'object') window.dutaSimpanState(keyBase, obj, { force: true });
       } catch (e) {}
     }, ms);
-    return id;
   };
-
-  /**
-   * Helper: pasang listener 'input' + 'change' pada textarea/input untuk auto-save.
-   * @param {string} keyBase
-   * @param {Function} getterFn
-   * @param {Array<HTMLElement>} elArr — elemen yang dipantau
-   */
   window.dutaPasangAutoSaveInput = function(keyBase, getterFn, elArr) {
-    if (!keyBase || typeof getterFn !== 'function') return;
-    if (!Array.isArray(elArr)) return;
+    if (!keyBase || typeof getterFn !== 'function' || !Array.isArray(elArr)) return;
     elArr.forEach(function(el) {
       if (!el || !el.addEventListener) return;
       el.addEventListener('input', function() {
-        try {
-          const obj = getterFn();
-          if (obj && typeof obj === 'object') {
-            window.dutaSimpanState(keyBase, obj, { force: true });
-          }
-        } catch (e) {}
+        try { const obj = getterFn(); if (obj && typeof obj === 'object') window.dutaSimpanState(keyBase, obj, { force: true }); } catch (e) {}
       });
       el.addEventListener('change', function() {
-        try {
-          const obj = getterFn();
-          if (obj && typeof obj === 'object') {
-            window.dutaSimpanState(keyBase, obj, { force: true });
-          }
-        } catch (e) {}
+        try { const obj = getterFn(); if (obj && typeof obj === 'object') window.dutaSimpanState(keyBase, obj, { force: true }); } catch (e) {}
       });
     });
   };
 
   // ============================================
-  // KIRIM NILAI BAGIAN (LAMA)
+  // KIRIM NILAI (LAMA)
   // ============================================
   window.kirimNilaiBagian = async function(modul, bagian, nilai, totalBagian, nilaiAkhir) {
     const apiUrl = window.DUTA_API && window.DUTA_API.url;
     if (!apiUrl) return { ok: false, error: 'URL API tidak tersedia' };
-
     const idTersimpan = window.ambilIdModul(modul);
     const userId = window.ambilUserId();
-    let payload;
-    let idUntukDipakai;
-
+    let payload; let idUntukDipakai;
     if (idTersimpan) {
       idUntukDipakai = idTersimpan;
-      payload = {
-        sheetName: modul, id: idTersimpan,
-        bagian: bagian, nilai: Number(nilai) || 0
-      };
-      if (nilaiAkhir !== undefined && nilaiAkhir !== null) {
-        payload.nilaiAkhir = Number(nilaiAkhir) || 0;
-      }
+      payload = { sheetName: modul, id: idTersimpan, bagian: bagian, nilai: Number(nilai) || 0 };
+      if (nilaiAkhir !== undefined && nilaiAkhir !== null) payload.nilaiAkhir = Number(nilaiAkhir) || 0;
     } else {
       const siswa = window.ambilIdentitasSiswa();
       if (!siswa) return { ok: false, error: 'Identitas siswa belum diisi' };
-      if (!Array.isArray(totalBagian) || totalBagian.length === 0) {
-        return { ok: false, error: 'totalBagian wajib diisi' };
-      }
+      if (!Array.isArray(totalBagian) || totalBagian.length === 0) return { ok: false, error: 'totalBagian wajib diisi' };
       idUntukDipakai = userId || generateIdKlien(modul);
       payload = {
         sheetName: modul, id: idUntukDipakai,
         sekolah: normalisasiSekolah(siswa.sekolah || ''),
         nama: normalisasiNama(siswa.nama || ''),
         kelas: normalisasiKelas(siswa.kelas || ''),
-        bagian: bagian,
-        nilai: Number(nilai) || 0, totalBagian: totalBagian
+        bagian: bagian, nilai: Number(nilai) || 0, totalBagian: totalBagian
       };
       window.simpanIdModul(modul, idUntukDipakai);
     }
-
     try {
-      await fetch(apiUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      });
+      await fetch(apiUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
       return { ok: true, mode: idTersimpan ? 'update' : 'insert', id: idUntukDipakai };
-    } catch (err) {
-      return { ok: false, error: err.message };
-    }
+    } catch (err) { return { ok: false, error: err.message }; }
   };
-
   function generateIdKlien(modul) {
     const kode = (modul || 'DUTA').toUpperCase().replace(/[^A-Z0-9]/g, '');
     const now = new Date();
@@ -899,109 +592,297 @@
     const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
     return kode + '-' + tgl + '-' + jam + '-' + rand;
   }
-
   window.kirimNilaiKeSheet = async function(sheetName, nama, kelas, nilai) {
     const apiUrl = window.DUTA_API && window.DUTA_API.url;
     if (!apiUrl) return { ok: false, error: 'URL API tidak tersedia' };
     try {
       await fetch(apiUrl, {
-        method: 'POST', mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          sheetName: sheetName,
-          nama: normalisasiNama(nama),
-          kelas: normalisasiKelas(kelas),
-          nilai: nilai,
-          bagian: 'nilai_akhir', totalBagian: ['nilai_akhir']
-        })
+        method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ sheetName: sheetName, nama: normalisasiNama(nama), kelas: normalisasiKelas(kelas), nilai: nilai, bagian: 'nilai_akhir', totalBagian: ['nilai_akhir'] })
       });
       return { ok: true };
-    } catch (err) {
-      return { ok: false, error: err.message };
-    }
+    } catch (err) { return { ok: false, error: err.message }; }
   };
 
   // ============================================
-  // ===== DASHBOARD GURU — API BARU =====
+  // DASHBOARD GURU API
   // ============================================
   window.dutaGetAllProgress = async function(username, password) {
     if (!username) return { ok: false, error: 'Username guru wajib diisi' };
-    return await window.dutaFetch({
-      action: 'getAllProgress',
-      username: username,
-      password: password || ''
-    });
+    return await window.dutaFetch({ action: 'getAllProgress', username: username, password: password || '' });
   };
-
   window.dutaUnlockModul = async function(guruUsername, guruPassword, userIdTarget, modul) {
     if (!guruUsername) return { ok: false, error: 'Username guru wajib diisi' };
     if (!userIdTarget) return { ok: false, error: 'userId target wajib diisi' };
     if (!modul) return { ok: false, error: 'modul wajib diisi' };
-    return await window.dutaFetch({
-      action: 'unlockModul',
-      username: guruUsername,
-      password: guruPassword || '',
-      userId: userIdTarget,
-      modul: modul
-    });
+    return await window.dutaFetch({ action: 'unlockModul', username: guruUsername, password: guruPassword || '', userId: userIdTarget, modul: modul });
   };
-
   window.dutaUpdateSiswa = async function(opts) {
     const o = opts || {};
     if (!o.username) return { ok: false, error: 'Username guru wajib diisi' };
     if (!o.userId) return { ok: false, error: 'userId target wajib diisi' };
-
-    const payload = {
-      action: 'updateSiswa',
-      username: o.username,
-      password: o.password || '',
-      userId: o.userId
-    };
-    if (o.nama !== undefined)          payload.nama          = normalisasiNama(o.nama);
-    if (o.kelas !== undefined)         payload.kelas         = normalisasiKelas(o.kelas);
-    if (o.sekolah !== undefined)       payload.sekolah       = normalisasiSekolah(o.sekolah);
+    const payload = { action: 'updateSiswa', username: o.username, password: o.password || '', userId: o.userId };
+    if (o.nama !== undefined) payload.nama = normalisasiNama(o.nama);
+    if (o.kelas !== undefined) payload.kelas = normalisasiKelas(o.kelas);
+    if (o.sekolah !== undefined) payload.sekolah = normalisasiSekolah(o.sekolah);
     if (o.passwordSiswa !== undefined) payload.passwordSiswa = String(o.passwordSiswa);
-
     return await window.dutaFetch(payload);
   };
-
   window.dutaHapusTamuBulk = async function(username, password, userIds) {
     if (!username) return { ok: false, error: 'Username guru wajib diisi' };
-    if (!Array.isArray(userIds) || userIds.length === 0) {
-      return { ok: false, error: 'Tidak ada userId yang dikirim' };
-    }
-    return await window.dutaFetch({
-      action: 'hapusTamuBulk',
-      username: username,
-      password: password || '',
-      userIds: userIds
-    });
+    if (!Array.isArray(userIds) || userIds.length === 0) return { ok: false, error: 'Tidak ada userId yang dikirim' };
+    return await window.dutaFetch({ action: 'hapusTamuBulk', username: username, password: password || '', userIds: userIds });
   };
-
   window.dutaBackupData = async function(username, password) {
     if (!username) return { ok: false, error: 'Username guru wajib diisi' };
-    return await window.dutaFetch({
-      action: 'getBackupData',
-      username: username,
-      password: password || ''
-    });
+    return await window.dutaFetch({ action: 'getBackupData', username: username, password: password || '' });
   };
-
   window.dutaRestoreBackup = async function(username, password, backupObj) {
     if (!username) return { ok: false, error: 'Username guru wajib diisi' };
-    if (!backupObj || typeof backupObj !== 'object') {
-      return { ok: false, error: 'Data backup tidak valid' };
-    }
-    return await window.dutaFetch({
-      action: 'restoreBackup',
-      username: username,
-      password: password || '',
-      backup: backupObj
-    });
+    if (!backupObj || typeof backupObj !== 'object') return { ok: false, error: 'Data backup tidak valid' };
+    return await window.dutaFetch({ action: 'restoreBackup', username: username, password: password || '', backup: backupObj });
   };
 
   // ============================================
-  // HEADER (banner + bar user menyatu)
+  // FAVICON TERPUSAT
+  // ============================================
+  function renderFavicon() {
+    const head = document.head;
+    if (!head) return;
+    head.querySelectorAll('link[rel*="icon"]').forEach(function(el) { el.remove(); });
+
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/png';
+    link.href = getRoot() + 'favicon.png';
+    head.appendChild(link);
+
+    const apple = document.createElement('link');
+    apple.rel = 'apple-touch-icon';
+    apple.href = getRoot() + 'favicon.png';
+    head.appendChild(apple);
+  }
+
+  // ============================================
+  // AUTO-DETECT ROOT (v2 — fix file vs folder)
+  // ============================================
+  function autoDetectRoot() {
+    if (typeof window.DUTA_ROOT === 'string' && window.DUTA_ROOT !== '') {
+      return window.DUTA_ROOT;
+    }
+
+    const path = window.location.pathname;
+    const marker = '/informatikaduta/';
+    const idx = path.indexOf(marker);
+
+    // Kalau tidak ada marker '/informatikaduta/', fallback hitung slash
+    if (idx === -1) {
+      const parts = path.split('/').filter(Boolean);
+      // parts[0] = folder proyek (mis. 'informatikaduta')
+      // sisanya = subfolder/file
+      if (parts.length <= 1) return '';
+      // Kalau bagian terakhir adalah file (.html atau tanpa ekstensi),
+      // kurangi 1. Tapi kita tidak tahu pasti mana file, mana folder.
+      // Asumsi: kalau ada '.' di segmen terakhir → file.
+      const last = parts[parts.length - 1];
+      const isFile = last.indexOf('.') !== -1;
+      const depth = isFile ? parts.length - 2 : parts.length - 1;
+      return '../'.repeat(depth);
+    }
+
+    // Ada marker → ambil path setelah '/informatikaduta/'
+    let after = path.substring(idx + marker.length); // mis. 'login' atau 'tik/materitik'
+    // Buang query string & hash
+    after = after.split('?')[0].split('#')[0];
+    // Buang trailing slash
+    after = after.replace(/\/+$/, '');
+
+    if (after === '') return ''; // di root
+
+    // Pecah per segmen
+    let segmen = after.split('/').filter(Boolean);
+    // Contoh: 'login'          → ['login']
+    //         'tik/materitik'  → ['tik', 'materitik']
+    //         'dashboard/guru' → ['dashboard', 'guru']
+
+    // Tentukan apakah segmen terakhir adalah FILE atau FOLDER
+    const last = segmen[segmen.length - 1];
+    const isFile = last.indexOf('.') !== -1;
+
+    // Kalau bukan file (tanpa titik), cek apakah ini nama halaman yang dikenal.
+    // Daftar halaman root yang sering diakses tanpa .html
+    const HALAMAN_ROOT = ['index', 'login', 'daftar', '404', ''];
+    const HALAMAN_SUBFOLDER = ['materitik','materisk','materijki','materidsi','materiad','materibk','materidap'];
+
+    let jumlahFolder = segmen.length;
+
+    if (isFile) {
+      // Ada ekstensi .html → pasti file → kurangi 1
+      jumlahFolder = segmen.length - 1;
+    } else if (segmen.length === 1) {
+      // Satu segmen tanpa ekstensi
+      // Kalau nama halaman root → root ('')
+      // Kalau nama folder (mis. 'tik') → tapi ini tidak mungkin karena
+      // folder 'tik' belum tentu ada index.html. Anggap file.
+      if (HALAMAN_ROOT.indexOf(last) !== -1) {
+        jumlahFolder = 0;
+      } else {
+        // Anggap file di root (mis. 'login', 'daftar')
+        jumlahFolder = 0;
+      }
+    } else {
+      // Lebih dari 1 segmen, tanpa ekstensi
+      // Cek apakah segmen terakhir adalah nama halaman yang dikenal
+      if (HALAMAN_ROOT.indexOf(last) !== -1) {
+        jumlahFolder = segmen.length - 1;
+      } else if (HALAMAN_SUBFOLDER.indexOf(last) !== -1) {
+        jumlahFolder = segmen.length - 1;
+      } else {
+        // Asumsi file (mis. 'tik/materitik' → materitik adalah file)
+        jumlahFolder = segmen.length - 1;
+      }
+    }
+
+    if (jumlahFolder <= 0) return '';
+    return '../'.repeat(jumlahFolder);
+  }
+
+  // ============================================
+  // AUTO-DETECT MODUL AKTIF
+  // ============================================
+  function autoDetectModulAktif() {
+    if (typeof window.DUTA_MODUL_AKTIF === 'string' && window.DUTA_MODUL_AKTIF !== '') return window.DUTA_MODUL_AKTIF;
+    const path = window.location.pathname.toLowerCase();
+    let m = path.match(/\/aktivitas([a-z]+)(\d+)[a-z](?:\.html)?$/);
+    if (m) return m[1] + m[2];
+    m = path.match(/\/materi([a-z]+)(\d+)(?:\.html)?$/);
+    if (m) return m[1] + m[2];
+    m = path.match(/\/([a-z]+)(\d+)(?:\.html)?$/);
+    if (m && ['tik','sk','jki','dsi','ad','bk','ap'].indexOf(m[1]) !== -1) return m[1] + m[2];
+    return '';
+  }
+
+  // ============================================
+  // NAVBAR
+  // ============================================
+  var MENU_MODUL = [
+    { label: 'Teknologi Informasi dan Komunikasi',  href: 'tik/materitik', ikon: '🖥️' },
+    { label: 'Sistem Komputer',   href: 'sk/materisk',   ikon: '⚙️' },
+    { label: 'Jaringan Komputer dan Internet',  href: 'jki/materijki', ikon: '🌐' },
+    { label: 'Dampak Sosial dan Informatika',  href: 'dsi/materidsi', ikon: '⚖️' },
+    { label: 'Analisis Data',   href: 'ad/materiad',   ikon: '📊' },
+    { label: 'Berpikir Komputasional',   href: 'bk/materibk',   ikon: '🧠' },
+    { label: 'Algoritma Pemrograman',   href: 'ap/materidap',  ikon: '💻' }
+  ];
+
+  function renderNavbar() {
+    var host = document.getElementById('duta-navbar-host');
+    if (!host) return;
+    var root = getRoot();
+    var path = window.location.pathname.toLowerCase();
+
+    function isAktif(href) {
+      if (!href) return path.replace(/\/+$/, '') === '/informatikaduta' || path === '/informatikaduta/';
+      var clean = href.replace(/\.html$/, '');
+      return path.indexOf('/' + clean) !== -1;
+    }
+
+    var modulItems = MENU_MODUL.map(function(m) {
+      var aktif = isAktif(m.href) ? ' class="nav-drop-item aktif"' : ' class="nav-drop-item"';
+      return '<a href="' + root + m.href + '"' + aktif + '>' +
+             '<span class="ndi-ikon">' + m.ikon + '</span>' +
+             '<span>' + m.label + '</span></a>';
+    }).join('');
+
+    host.innerHTML =
+      '<nav class="duta-navbar" aria-label="Navigasi utama">' +
+        '<a href="' + root + 'index" class="nav-link' + (isAktif('') ? ' aktif' : '') + '">🏠 Beranda</a>' +
+        '<div class="nav-dropdown">' +
+          '<button type="button" class="nav-link nav-drop-toggle" aria-haspopup="true" aria-expanded="false">' +
+            '📚 Modul <span class="nav-caret">▾</span>' +
+          '</button>' +
+          '<div class="nav-drop-menu" role="menu">' + modulItems + '</div>' +
+        '</div>' +
+        '<a href="' + root + 'ujian/daftarujian" class="nav-link' + (isAktif('ujian/daftarujian') ? ' aktif' : '') + '">📝 Ujian</a>' +
+        '<a href="' + root + 'dashboard/siswa" class="nav-link' + (isAktif('dashboard/siswa') ? ' aktif' : '') + '">📊 Dashboard</a>' +
+      '</nav>';
+
+    var toggle = host.querySelector('.nav-drop-toggle');
+    var dropdown = host.querySelector('.nav-dropdown');
+    if (toggle && dropdown) {
+      toggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var open = dropdown.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+      document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target)) {
+          dropdown.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+  }
+
+  // ============================================
+  // BREADCRUMB
+  // ============================================
+  function renderBreadcrumb() {
+  var host = document.getElementById('duta-breadcrumb-host');
+  if (!host) return;
+  var root = getRoot();
+  var path = window.location.pathname.toLowerCase();
+  var marker = '/informatikaduta/';
+  var idx = path.indexOf(marker);
+  var rel = '';
+  if (idx !== -1) rel = path.substring(idx + marker.length);
+  else rel = path.replace(/^\/+/, '');
+  rel = rel.replace(/\.html$/, '').replace(/\/+$/, '');
+  if (rel === 'index') rel = '';
+
+  fetch(root + 'partials/breadcrumb.json', { cache: 'no-cache' })
+    .then(function(res) { if (!res.ok) throw new Error('JSON tidak ditemukan'); return res.json(); })
+    .then(function(data) {
+      var items = data[rel] || [];
+      if (!items || items.length === 0) { host.innerHTML = ''; return; }
+      var html = '<nav class="breadcrumb-wrapper" aria-label="Breadcrumb"><ol class="breadcrumb">';
+      items.forEach(function(it, i) {
+        var terakhir = (i === items.length - 1);
+        var punyaHref = Object.prototype.hasOwnProperty.call(it, 'href') && it.href !== undefined && it.href !== null;
+
+        if (terakhir) {
+          html += '<li aria-current="page">' + escapeHtml(it.label) + '</li>';
+        } else if (punyaHref && it.href !== rel) {
+          var hrefFinal = (it.href === '') ? 'index' : it.href;
+          html += '<li><a href="' + root + hrefFinal + '">' + escapeHtml(it.label) + '</a></li>';
+        } else {
+          html += '<li>' + escapeHtml(it.label) + '</li>';
+        }
+      });
+      html += '</ol></nav>';
+      host.innerHTML = html;
+    })
+    .catch(function() { host.innerHTML = ''; });
+}
+
+  // ============================================
+  // INIT SEMUA
+  // ============================================
+  function initDutaPage() {
+    if (typeof window.DUTA_ROOT !== 'string' || window.DUTA_ROOT === '') {
+      window.DUTA_ROOT = autoDetectRoot();
+    }
+    if (typeof window.DUTA_MODUL_AKTIF !== 'string' || window.DUTA_MODUL_AKTIF === '') {
+      window.DUTA_MODUL_AKTIF = autoDetectModulAktif();
+    }
+    renderFavicon();
+    renderNavbar();
+    renderBreadcrumb();
+  }
+  window.initDutaPage = initDutaPage;
+
+  // ============================================
+  // HEADER (banner + bar user + slot navbar)
   // ============================================
   function renderHeader() {
     const el = document.getElementById('header-utama');
@@ -1011,60 +892,47 @@
     let barHtml = '';
 
     if (!session) {
-      barHtml = `
-        <span class="ub-info ub-guest">👤 Tamu</span>
-        <a href="javascript:void(0)" class="ub-btn ub-login" id="ubAksiLogin">🔑 Login</a>
-      `;
+      barHtml = '<span class="ub-info ub-guest">👤 Tamu</span>' +
+                '<a href="javascript:void(0)" class="ub-btn ub-login" id="ubAksiLogin">🔑 Login</a>';
     } else if (session.tipe === 'login') {
-      barHtml = `
-        <span class="ub-info ub-login" title="Login: ${escapeHtml(session.user_id)}">
-          👤 ${escapeHtml(session.nama || session.user_id)}
-        </span>
-        <button type="button" class="ub-btn ub-logout" id="ubAksiLogout">🚪 Logout</button>
-      `;
+      barHtml = '<span class="ub-info ub-login" title="Login: ' + escapeHtml(session.user_id) + '">👤 ' + escapeHtml(session.nama || session.user_id) + '</span>' +
+                '<button type="button" class="ub-btn ub-logout" id="ubAksiLogout">🚪 Logout</button>';
     } else {
-      barHtml = `
-        <span class="ub-info ub-tamu" title="Kode: ${escapeHtml(session.user_id)}">
-          🎭 ${escapeHtml(session.user_id)}
-        </span>
-        <button type="button" class="ub-btn ub-reset" id="ubAksiReset" title="Reset data tamu & progres">🗑️</button>
-        <a href="javascript:void(0)" class="ub-btn ub-login" id="ubAksiLogin">🔑 Login</a>
-      `;
+      barHtml = '<span class="ub-info ub-tamu" title="Kode: ' + escapeHtml(session.user_id) + '">🎭 ' + escapeHtml(session.user_id) + '</span>' +
+                '<button type="button" class="ub-btn ub-reset" id="ubAksiReset" title="Reset data tamu & progres">🗑️</button>' +
+                '<a href="javascript:void(0)" class="ub-btn ub-login" id="ubAksiLogin">🔑 Login</a>';
     }
 
-    el.innerHTML = `
-      <div class="banner">
-        <div class="banner-brand">
-          <h1>📡 Informatika DUTA</h1>
-          <span class="sub">SMPN 2 Talegong</span>
-        </div>
-        <div class="duta-user-bar" id="duta-user-bar">
-          ${barHtml}
-        </div>
-      </div>
-    `;
+    el.innerHTML =
+      '<div class="banner">' +
+        '<div class="banner-brand">' +
+          '<h1>📡 Informatika DUTA</h1>' +
+          '<span class="sub">SMPN 2 Talegong</span>' +
+        '</div>' +
+        '<div class="duta-navbar-slot" id="duta-navbar-host"></div>' +
+        '<div class="duta-user-bar" id="duta-user-bar">' + barHtml + '</div>' +
+      '</div>';
 
     const btnLogin  = document.getElementById('ubAksiLogin');
     const btnLogout = document.getElementById('ubAksiLogout');
     const btnReset  = document.getElementById('ubAksiReset');
-
     if (btnLogin)  btnLogin.addEventListener('click', aksiLogin);
     if (btnLogout) btnLogout.addEventListener('click', aksiLogout);
     if (btnReset)  btnReset.addEventListener('click', aksiResetTamu);
+
+    // ⬇️ PENTING: render navbar SETELAH slot-nya ada
+    renderNavbar();
   }
 
   function escapeHtml(s) {
-    return String(s || '')
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   function aksiLogin() {
     const currentPath = window.location.pathname + window.location.search;
     try { sessionStorage.setItem('duta_redirect_after_login', currentPath); } catch (e) {}
-    window.location.href = getRoot() + 'login.html';
+    window.location.href = getRoot() + 'login';
   }
-
   function aksiLogout() {
     tampilkanModal({
       judul: 'Logout',
@@ -1073,21 +941,16 @@
       onLanjut: function() {
         window.hapusSession();
         window.hapusSemuaLocalStorageUser();
-        window.location.href = getRoot() + 'index.html';
+        window.location.href = getRoot() + 'index';
       }
     });
   }
-
   async function aksiResetTamu() {
     const session = window.ambilSession();
-    if (!session || session.tipe !== 'tamu') {
-      alert('Reset hanya tersedia untuk mode Tamu.');
-      return;
-    }
+    if (!session || session.tipe !== 'tamu') { alert('Reset hanya tersedia untuk mode Tamu.'); return; }
     tampilkanModal({
       judul: 'Reset Data Tamu',
-      pesan: 'Semua data tamu <strong>' + escapeHtml(session.user_id) +
-             '</strong> dan progres belajarnya akan dihapus permanen.<br><br>Lanjutkan?',
+      pesan: 'Semua data tamu <strong>' + escapeHtml(session.user_id) + '</strong> dan progres belajarnya akan dihapus permanen.<br><br>Lanjutkan?',
       tombolLanjut: '🗑️ Lanjut Hapus',
       onLanjut: async function() {
         tampilkanLoading(true);
@@ -1096,7 +959,7 @@
         if (hasil && hasil.ok) {
           alert('✅ Reset berhasil.');
           window.hapusSession();
-          window.location.href = getRoot() + 'index.html';
+          window.location.href = getRoot() + 'index';
         } else {
           alert('⚠️ Gagal reset: ' + ((hasil && hasil.error) || 'Tidak diketahui'));
         }
@@ -1105,36 +968,30 @@
   }
 
   // ============================================
-  // MODAL SEDERHANA
+  // MODAL
   // ============================================
   function tampilkanModal(opts) {
     const lama = document.getElementById('duta-modal');
     if (lama) lama.remove();
-
     const modal = document.createElement('div');
     modal.id = 'duta-modal';
     modal.className = 'duta-modal-overlay';
-    modal.innerHTML = `
-      <div class="duta-modal-box">
-        <h3 class="duta-modal-title">${escapeHtml(opts.judul || 'Konfirmasi')}</h3>
-        <div class="duta-modal-body">${opts.pesan || ''}</div>
-        <div class="duta-modal-actions">
-          <button type="button" class="duta-modal-btn duta-modal-batal">Batal</button>
-          <button type="button" class="duta-modal-btn duta-modal-lanjut">${escapeHtml(opts.tombolLanjut || 'Lanjut')}</button>
-        </div>
-      </div>
-    `;
+    modal.innerHTML =
+      '<div class="duta-modal-box">' +
+        '<h3 class="duta-modal-title">' + escapeHtml(opts.judul || 'Konfirmasi') + '</h3>' +
+        '<div class="duta-modal-body">' + (opts.pesan || '') + '</div>' +
+        '<div class="duta-modal-actions">' +
+          '<button type="button" class="duta-modal-btn duta-modal-batal">Batal</button>' +
+          '<button type="button" class="duta-modal-btn duta-modal-lanjut">' + escapeHtml(opts.tombolLanjut || 'Lanjut') + '</button>' +
+        '</div>' +
+      '</div>';
     document.body.appendChild(modal);
-
     modal.querySelector('.duta-modal-batal').addEventListener('click', function() { modal.remove(); });
     modal.querySelector('.duta-modal-lanjut').addEventListener('click', function() {
       modal.remove();
       if (typeof opts.onLanjut === 'function') opts.onLanjut();
     });
-
-    const esc = function(e) {
-      if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', esc); }
-    };
+    const esc = function(e) { if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', esc); } };
     document.addEventListener('keydown', esc);
   }
   window.tampilkanModal = tampilkanModal;
@@ -1143,16 +1000,13 @@
     const lama = document.getElementById('duta-modal-loading');
     if (lama) lama.remove();
     if (!aktif) return;
-
     const el = document.createElement('div');
     el.id = 'duta-modal-loading';
     el.className = 'duta-modal-overlay';
-    el.innerHTML = `
-      <div class="duta-modal-box" style="text-align:center; max-width:220px;">
-        <div class="duta-spinner"></div>
-        <div style="margin-top:0.6rem; font-weight:700; color:#5c2f8a;">Memproses…</div>
-      </div>
-    `;
+    el.innerHTML = '<div class="duta-modal-box" style="text-align:center; max-width:220px;">' +
+                   '<div class="duta-spinner"></div>' +
+                   '<div style="margin-top:0.6rem; font-weight:700; color:#5c2f8a;">Memproses…</div>' +
+                   '</div>';
     document.body.appendChild(el);
   }
   window.tampilkanLoading = tampilkanLoading;
@@ -1164,19 +1018,18 @@
     const el = document.getElementById('footer-utama');
     if (!el) return;
     const year = new Date().getFullYear();
-    el.innerHTML = `
-      <div class="container" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem 1rem; padding:0.5rem 1rem;">
-        <div><span style="font-weight:600; color:#4d3829;">Kiki Husni Kamil, S.Pd.</span> · Guru Informatika</div>
-        <div style="text-align:right;">
-          <span>&copy; ${year} SMPN 2 Talegong</span><br>
-          <span style="font-size:0.85rem; opacity:0.7;">Terbit: 2026-08-05</span>
-        </div>
-      </div>
-    `;
+    el.innerHTML =
+      '<div class="container" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem 1rem; padding:0.5rem 1rem;">' +
+        '<div><span style="font-weight:600; color:#4d3829;">Kiki Husni Kamil, S.Pd.</span> · Guru Informatika</div>' +
+        '<div style="text-align:right;">' +
+          '<span>&copy; ' + year + ' SMPN 2 Talegong</span><br>' +
+          '<span style="font-size:0.85rem; opacity:0.7;">Terbit: 2026-08-05</span>' +
+        '</div>' +
+      '</div>';
   }
 
   // ============================================
-  // COLLAPSIBLE INFO & SCROLL TOP
+  // INFO TOGGLE & SCROLL TOP
   // ============================================
   function initInfoToggle() {
     const wrapper = document.getElementById('info-collapsible');
@@ -1189,13 +1042,10 @@
       if (label) label.textContent = exp ? 'Sembunyikan' : 'Baca selengkapnya';
     });
   }
-
   function initScrollButton() {
     const btn = document.getElementById('scrollTopBtn');
     if (!btn) return;
-    btn.addEventListener('click', function() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    btn.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
     function toggle() { btn.style.display = window.scrollY > 120 ? 'flex' : 'none'; }
     window.addEventListener('scroll', toggle);
     toggle();
@@ -1209,73 +1059,68 @@
     const containerId = opts.containerId || 'duta-lanjut-container';
     const container = document.getElementById(containerId);
     if (!container) return;
-
     container.innerHTML = '';
-
     const session = window.ambilSession();
     if (!session) return;
-
     const hasil = await window.dutaAmbilProgress(modul);
-    if (!hasil || !hasil.ok || !hasil.progress || hasil.progress.length === 0) {
-      return;
-    }
-
+    if (!hasil || !hasil.ok || !hasil.progress || hasil.progress.length === 0) return;
     const p = hasil.progress[0];
     const bagianTerakhir = p.bagian_terakhir || '';
     const selesai = p.nilai_akhir > 0;
-
     const btn = document.createElement('a');
     btn.className = 'duta-lanjut-btn';
     btn.href = '#';
-
-    if (selesai) {
-      btn.innerHTML = `🔄 <strong>Ulangi Modul Ini</strong> — Nilai akhir: ${p.nilai_akhir}`;
-    } else if (bagianTerakhir) {
-      btn.innerHTML = `▶️ <strong>Lanjutkan dari Bagian ${bagianTerakhir.toUpperCase()}</strong> — Progres tersimpan`;
-    } else {
-      return;
-    }
-
+    if (selesai) btn.innerHTML = '🔄 <strong>Ulangi Modul Ini</strong> — Nilai akhir: ' + p.nilai_akhir;
+    else if (bagianTerakhir) btn.innerHTML = '▶️ <strong>Lanjutkan dari Bagian ' + bagianTerakhir.toUpperCase() + '</strong> — Progres tersimpan';
+    else return;
     const mapBagianKeFile = opts.mapBagianKeFile || {};
     const fileTujuan = mapBagianKeFile[bagianTerakhir] || opts.halamanAwal;
     btn.href = fileTujuan;
-
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      window.location.href = fileTujuan;
-    });
-
+    btn.addEventListener('click', function(e) { e.preventDefault(); window.location.href = fileTujuan; });
     container.appendChild(btn);
   };
 
   // ============================================
-  // SLIDING EXPIRATION — LISTENER GLOBAL
+  // SLIDING EXPIRATION LISTENER
   // ============================================
   function initAktivitasListener() {
     const events = ['click', 'keydown', 'mousemove', 'scroll', 'touchstart'];
     let throttleTimer = null;
     function handle() {
       if (throttleTimer) return;
-      throttleTimer = setTimeout(function() {
-        throttleTimer = null;
-        catatAktivitas(true);
-      }, THROTTLE_AKTIVITAS_MS);
+      throttleTimer = setTimeout(function() { throttleTimer = null; catatAktivitas(true); }, THROTTLE_AKTIVITAS_MS);
     }
-    events.forEach(function(ev) {
-      document.addEventListener(ev, handle, { passive: true });
-    });
+    events.forEach(function(ev) { document.addEventListener(ev, handle, { passive: true }); });
   }
 
   // ============================================
   // EKSEKUSI
   // ============================================
   document.addEventListener('DOMContentLoaded', function() {
+    // 1. Set root & modul dulu (biar getRoot() benar)
+    if (typeof window.DUTA_ROOT !== 'string' || window.DUTA_ROOT === '') {
+      window.DUTA_ROOT = autoDetectRoot();
+    }
+    if (typeof window.DUTA_MODUL_AKTIF !== 'string' || window.DUTA_MODUL_AKTIF === '') {
+      window.DUTA_MODUL_AKTIF = autoDetectModulAktif();
+    }
+
+    // 2. Render favicon paling awal
+    renderFavicon();
+
+    // 3. Render header (yang juga render navbar di dalamnya)
     renderHeader();
+
+    // 4. Render footer, breadcrumb, dll.
     renderFooter();
+    renderBreadcrumb();
     initInfoToggle();
     initScrollButton();
     initAktivitasListener();
+
+    // 5. Expose initDutaPage untuk kompatibilitas
+    window.initDutaPage = initDutaPage;
   });
 
-  console.log('✅ script.js Fase C v3.1 siap. (+ sliding expiration 60 menit + state aktivitas)');
+  console.log('✅ script.js v3.2 siap. (favicon + navbar + breadcrumb terpusat)');
 })();

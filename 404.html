@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>404 · Halaman Tidak Ditemukan · Portal Informatika DUTA</title>
+  <link rel="stylesheet" href="/informatikaduta/desain.css">
+  <style>
+    .error-wrap {
+      max-width: 560px; margin: 3rem auto; text-align: center;
+      background: #fff; border-radius: 24px; padding: 2.5rem 2rem;
+      box-shadow: 0 12px 40px rgba(80, 40, 100, 0.12);
+      border: 3px solid #f0e6ff;
+    }
+    .error-icon { font-size: 4rem; margin-bottom: 0.5rem; }
+    .error-code {
+      font-size: 3.5rem; font-weight: 800; line-height: 1;
+      background: linear-gradient(100deg, #ff6b6b, #8a4bbf, #4fb0c6);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; margin-bottom: 0.4rem;
+    }
+    .error-title { font-size: 1.3rem; font-weight: 800; color: #3b2b1e; margin-bottom: 0.5rem; }
+    .error-desc { color: #7a6656; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6; }
+    .error-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
+    .error-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.7rem 1.4rem; border-radius: 30px; text-decoration: none;
+      font-weight: 700; font-size: 0.9rem; font-family: inherit;
+      border: 2px solid transparent; transition: all 0.2s ease;
+    }
+    .error-btn.primary {
+      background: linear-gradient(135deg, #b07be0, #5c7cfa); color: #fff;
+      box-shadow: 0 4px 14px rgba(176, 123, 224, 0.3);
+    }
+    .error-btn.primary:hover { transform: translateY(-2px); filter: brightness(1.05); }
+    .error-btn.secondary {
+      background: #f5ede6; color: #4d3829; border-color: #d9cdbf;
+    }
+    .error-btn.secondary:hover { background: #e8dcd0; }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <div id="duta-navbar-host"></div>
+  <div id="duta-breadcrumb-host"></div>
+
+  <main class="container">
+    <div class="error-wrap">
+      <div class="error-icon">🧭</div>
+      <div class="error-code">404</div>
+      <div class="error-title">Halaman Tidak Ditemukan</div>
+      <div class="error-desc">
+        Maaf, halaman yang kamu cari tidak ada atau sudah dipindahkan.
+        Coba kembali ke beranda atau jelajahi modul yang tersedia.
+      </div>
+      <div class="error-actions">
+        <a href="/informatikaduta/" class="error-btn primary">🏠 Kembali ke Beranda</a>
+        <a href="/informatikaduta/ujian/daftarujian" class="error-btn secondary">📝 Ujian Aktif</a>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="/informatikaduta/script.js"></script>
+  <script>window.DUTA_ROOT = '/informatikaduta/';</script>
+
+</body>
+</html>

@@ -12,7 +12,7 @@
       border: 2px solid #b07be0;
       position: relative;
       overflow: hidden;
-      display: none; /* default: hidden, JS akan tampilkan */
+      display: none;
     }
     .portal-card.dashboard-card.show {
       display: flex;
@@ -21,9 +21,7 @@
     .portal-card.dashboard-card::before {
       background: linear-gradient(180deg, #b07be0, #f26d8a);
     }
-    .portal-card.dashboard-card h2 {
-      color: #5c2f8a;
-    }
+    .portal-card.dashboard-card h2 { color: #5c2f8a; }
     .portal-card.dashboard-card:hover {
       border-color: #8a4bbf;
       box-shadow: 0 18px 36px rgba(138, 75, 191, 0.2);
@@ -33,7 +31,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Label kecil untuk peran (siswa/guru) */
     .portal-card.dashboard-card .role-badge {
       position: absolute;
       top: 1rem;
@@ -57,15 +54,11 @@
 </head>
 <body>
 
-  <!-- HEADER DINAMIS (banner + bar user, diisi script.js) -->
+  <!-- HEADER: banner + bar user + navbar (di-render script.js) -->
   <header id="header-utama"></header>
 
-  <!-- BREADCRUMB -->
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li>Beranda</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
 
@@ -116,49 +109,49 @@
         <p id="dashDesc">Lihat progres belajar dan nilai yang sudah kamu capai.</p>
       </a>
 
-      <a class="portal-card" href="./tik/materitik.html">
+      <a class="portal-card" href="tik/materitik">
         <span class="ikon" aria-hidden="true">🖥️</span>
         <h2>Teknologi Informasi dan Komunikasi</h2>
         <p>Perangkat, aplikasi, dan pemanfaatan TIK dalam kehidupan sehari-hari.</p>
       </a>
 
-      <a class="portal-card" href="./sk/materisk.html">
+      <a class="portal-card" href="sk/materisk">
         <span class="ikon" aria-hidden="true">⚙️</span>
         <h2>Sistem Komputer</h2>
         <p>Perangkat keras, perangkat lunak, dan cara kerja sistem komputer.</p>
       </a>
 
-      <a class="portal-card" href="./jki/materijki.html">
+      <a class="portal-card" href="jki/materijki">
         <span class="ikon" aria-hidden="true">🌐</span>
         <h2>Jaringan Komputer dan Internet</h2>
         <p>Konsep jaringan, konektivitas, dan layanan internet.</p>
       </a>
 
-      <a class="portal-card" href="./dsi/materidsi.html">
+      <a class="portal-card" href="dsi/materidsi">
         <span class="ikon" aria-hidden="true">⚖️</span>
         <h2>Dampak Sosial dan Informatika</h2>
         <p>Etika, keamanan, dan dampak teknologi bagi masyarakat.</p>
       </a>
 
-      <a class="portal-card" href="./ad/materiad.html">
+      <a class="portal-card" href="ad/materiad">
         <span class="ikon" aria-hidden="true">📊</span>
         <h2>Analisis Data</h2>
         <p>Mengumpulkan, mengolah, dan memaknai data.</p>
       </a>
 
-      <a class="portal-card" href="./bk/materibk.html">
+      <a class="portal-card" href="bk/materibk">
         <span class="ikon" aria-hidden="true">🧠</span>
         <h2>Berpikir Komputasional</h2>
         <p>Dekomposisi, pola, abstraksi, dan algoritma.</p>
       </a>
 
-      <a class="portal-card" href="./ap/materidap.html">
+      <a class="portal-card" href="ap/materidap">
         <span class="ikon" aria-hidden="true">💻</span>
         <h2>Algoritma Pemrograman</h2>
         <p>Langkah-langkah logis dan dasar-dasar pemrograman.</p>
       </a>
 
-      <a class="portal-card ujian" href="./ujian/daftarujian.html">
+      <a class="portal-card ujian" href="ujian/daftarujian">
         <span class="ikon" aria-hidden="true">📝</span>
         <h2>Ujian Aktif</h2>
         <p>Daftar ujian yang sedang berlangsung. Kerjakan dengan jujur dan teliti.</p>
@@ -168,15 +161,10 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer id="footer-utama"></footer>
-
-  <!-- TOMBOL FLOATING -->
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
-  <!-- PENANDA POSISI HALAMAN + SCRIPT GLOBAL -->
   <script src="script.js"></script>
-  <script>window.DUTA_ROOT = '';</script>
 
   <!-- ===== SCRIPT KHUSUS: KARTU DASHBOARD ===== -->
   <script>
@@ -190,14 +178,18 @@
         const dashDesc = document.getElementById('dashDesc');
         if (!kartu) return;
 
-        // ===== 1) Cek guru (sessionStorage.duta_guru) =====
+        const root = (typeof window.getRoot === 'function') ? window.getRoot() : '';
+
+        // ===== 1) Cek guru =====
         let guru = null;
         try {
-          guru = JSON.parse(sessionStorage.getItem('duta_guru') || 'null');
+          guru = (typeof window.ambilSessionGuru === 'function')
+            ? window.ambilSessionGuru()
+            : JSON.parse(sessionStorage.getItem('duta_guru') || 'null');
         } catch (e) { guru = null; }
 
         if (guru && guru.username) {
-          kartu.href = 'dashboard/guru.html';
+          kartu.href = root + 'dashboard/guru';
           kartu.classList.add('show');
           roleBadge.textContent = 'Guru';
           roleBadge.classList.add('guru');
@@ -206,10 +198,10 @@
           return;
         }
 
-        // ===== 2) Cek siswa login (localStorage.duta_session tipe 'login') =====
+        // ===== 2) Cek siswa login =====
         const session = window.ambilSession && window.ambilSession();
         if (session && session.tipe === 'login') {
-          kartu.href = 'dashboard/siswa.html';
+          kartu.href = root + 'dashboard/siswa';
           kartu.classList.add('show');
           roleBadge.textContent = 'Siswa';
           dashTitle.textContent = 'Dashboard Saya';
@@ -217,18 +209,13 @@
           return;
         }
 
-        // ===== 3) Tamu berkode (tipe 'tamu') → TIDAK tampil =====
-        // ===== 4) Tamu anonim → TIDAK tampil =====
-        // (kartu tetap hidden)
+        // ===== 3) Tamu berkode & 4) Tamu anonim → tidak tampil =====
       }
 
-      // Jalankan setelah DOM + script.js selesai init
       document.addEventListener('DOMContentLoaded', function() {
-        // Beri jeda kecil supaya script.js selesai render header/session
         setTimeout(tampilkanKartuDashboard, 150);
       });
 
-      // Kalau user login/logout di tab lain, refresh tampilan
       window.addEventListener('storage', function(e) {
         if (e.key === 'duta_session' || e.key === 'duta_guru') {
           tampilkanKartuDashboard();

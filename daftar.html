@@ -89,13 +89,8 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(176, 123, 224, 0.35);
     }
-    .suggest-item:active {
-      transform: translateY(0);
-    }
-    .suggest-item.terpilih {
-      background: #b07be0;
-      color: #fff;
-    }
+    .suggest-item:active { transform: translateY(0); }
+    .suggest-item.terpilih { background: #b07be0; color: #fff; }
     .suggest-item.loading {
       opacity: 0.6;
       cursor: wait;
@@ -253,9 +248,7 @@
       background: #f0e6ff;
       transform: scale(1.08);
     }
-    .kredensial-item .ki-btn:active {
-      transform: scale(0.95);
-    }
+    .kredensial-item .ki-btn:active { transform: scale(0.95); }
 
     /* Peringatan catat */
     .peringatan-catat {
@@ -401,12 +394,7 @@
 
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="index.html">Beranda</a></li>
-      <li>Daftar Akun</li>
-    </ol>
-  </nav>
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
     <div class="auth-wrapper">
@@ -427,7 +415,7 @@
         <div class="lb-desc" style="margin-top:0.6rem; font-size:0.8rem; font-style:italic;">
           Silakan login dengan salah satu akun yang sudah terdaftar, atau tunggu hingga waktu habis.
         </div>
-        <a href="login.html" class="dd-btn primary" style="margin-top:0.8rem; text-decoration:none; display:inline-flex;">
+        <a href="login" class="dd-btn primary" style="margin-top:0.8rem; text-decoration:none; display:inline-flex;">
           🔑 Login Sekarang
         </a>
       </div>
@@ -514,7 +502,7 @@
               placeholder="Min 4 karakter"
               maxlength="50"
               autocomplete="new-password">
-            <div class="hint">Min 4 karakter. Tidak boleh sama dengan username.</div>
+            <div class="hint">Min 4 karakter. Tidak boleh sama dengan username. Tidak boleh mengandung spasi.</div>
           </div>
 
           <div class="auth-form-group">
@@ -534,12 +522,12 @@
 
         <div class="auth-divider">atau</div>
 
-        <a href="index.html" class="btn-auth-secondary">
+        <a href="index" class="btn-auth-secondary">
           🎭 Lanjut sebagai Tamu
         </a>
 
         <p class="auth-footer-text">
-          Sudah punya akun? <a href="login.html">Login di sini</a>
+          Sudah punya akun? <a href="login">Login di sini</a>
         </p>
       </div>
 
@@ -558,9 +546,9 @@
       // ============================================
       // KONFIGURASI RATE LIMIT
       // ============================================
-      const MAX_DAFTAR = 3;              // maksimal 3 pendaftaran
-      const DURASI_LOCKOUT_MS = 5 * 60 * 1000; // 5 menit
-      const KEY_DAFTAR_LOG = 'duta_daftar_log'; // { count, firstAt }
+      const MAX_DAFTAR = 3;
+      const DURASI_LOCKOUT_MS = 5 * 60 * 1000;
+      const KEY_DAFTAR_LOG = 'duta_daftar_log';
 
       // ============================================
       // DOM REFS
@@ -589,112 +577,71 @@
 
       const elLockoutBanner = document.getElementById('lockoutBanner');
       const elLockoutTimer = document.getElementById('lockoutTimer');
-      const elLockoutDesc = document.getElementById('lockoutDesc');
       const elFormWrapper = document.getElementById('formWrapper');
 
       const elCounterPendaftaran = document.getElementById('counterPendaftaran');
       const elCounterText = document.getElementById('counterText');
 
-      // Sembunyikan bar user di halaman daftar (belum login)
+      // Sembunyikan bar user di halaman daftar
       const styleHide = document.createElement('style');
       styleHide.textContent = '#duta-user-bar { display: none !important; }';
       document.head.appendChild(styleHide);
 
       // ============================================
-      // PASTIKAN dutaNormalisasi tersedia
+      // NORMALISASI
       // ============================================
       function normalisasiNama(str) {
-        if (window.dutaNormalisasi && window.dutaNormalisasi.nama) {
-          return window.dutaNormalisasi.nama(str);
-        }
+        if (window.dutaNormalisasi && window.dutaNormalisasi.nama) return window.dutaNormalisasi.nama(str);
         return String(str || '').trim();
       }
       function normalisasiKelas(str) {
-        if (window.dutaNormalisasi && window.dutaNormalisasi.kelas) {
-          return window.dutaNormalisasi.kelas(str);
-        }
+        if (window.dutaNormalisasi && window.dutaNormalisasi.kelas) return window.dutaNormalisasi.kelas(str);
         return String(str || '').trim();
       }
       function normalisasiSekolah(str) {
-        if (window.dutaNormalisasi && window.dutaNormalisasi.sekolah) {
-          return window.dutaNormalisasi.sekolah(str);
-        }
+        if (window.dutaNormalisasi && window.dutaNormalisasi.sekolah) return window.dutaNormalisasi.sekolah(str);
         return String(str || '').trim();
       }
 
       // ============================================
-      // RATE LIMIT — CEK & SIMPAN
+      // RATE LIMIT
       // ============================================
       function bacaLog() {
         try {
           const raw = localStorage.getItem(KEY_DAFTAR_LOG);
           if (!raw) return { count: 0, firstAt: 0 };
           const d = JSON.parse(raw);
-          return {
-            count: Number(d.count) || 0,
-            firstAt: Number(d.firstAt) || 0
-          };
-        } catch (e) {
-          return { count: 0, firstAt: 0 };
-        }
+          return { count: Number(d.count) || 0, firstAt: Number(d.firstAt) || 0 };
+        } catch (e) { return { count: 0, firstAt: 0 }; }
       }
-
       function simpanLog(log) {
-        try {
-          localStorage.setItem(KEY_DAFTAR_LOG, JSON.stringify(log));
-        } catch (e) {}
+        try { localStorage.setItem(KEY_DAFTAR_LOG, JSON.stringify(log)); } catch (e) {}
       }
-
       function resetLog() {
         try { localStorage.removeItem(KEY_DAFTAR_LOG); } catch (e) {}
       }
-
-      /**
-       * Cek apakah user masih dalam masa lockout.
-       * Return { lockout: bool, sisaMs, sisaDetik, sisaMenit, log }
-       */
       function cekLockout() {
         const log = bacaLog();
-        if (log.count < MAX_DAFTAR) {
-          return { lockout: false, sisaMs: 0, sisaDetik: 0, sisaMenit: 0, log: log };
-        }
+        if (log.count < MAX_DAFTAR) return { lockout: false, sisaMs: 0, sisaDetik: 0, sisaMenit: 0, log: log };
         const elapsed = Date.now() - log.firstAt;
         const sisaMs = DURASI_LOCKOUT_MS - elapsed;
         if (sisaMs <= 0) {
-          // Lockout sudah habis → reset
           resetLog();
           return { lockout: false, sisaMs: 0, sisaDetik: 0, sisaMenit: 0, log: { count: 0, firstAt: 0 } };
         }
         return {
-          lockout: true,
-          sisaMs: sisaMs,
+          lockout: true, sisaMs: sisaMs,
           sisaDetik: Math.ceil(sisaMs / 1000),
           sisaMenit: Math.ceil(sisaMs / 60000),
           log: log
         };
       }
-
-      /**
-       * Catat 1 pendaftaran sukses.
-       * - Jika count = 0 → set firstAt = now, count = 1
-       * - Jika count > 0 dan masih dalam window 5 menit → count++
-       * - Jika count > 0 tapi window sudah lewat → reset
-       */
       function catatPendaftaranSukses() {
         let log = bacaLog();
         const now = Date.now();
-
-        // Kalau window sudah lewat, reset dulu
-        if (log.count > 0 && (now - log.firstAt) > DURASI_LOCKOUT_MS) {
-          log = { count: 0, firstAt: 0 };
-        }
-
-        if (log.count === 0) {
-          log.firstAt = now;
-          log.count = 1;
-        } else {
-          log.count++;
-        }
+        if (log.count > 0 && (now - log.firstAt) > DURASI_LOCKOUT_MS) log = { count: 0, firstAt: 0 };
+        if (log.count === 0) { log.firstAt = now; log.count = 1; }
+        else { log.count++; }
         simpanLog(log);
         return log;
       }
@@ -707,53 +654,36 @@
       function tampilkanLockout() {
         const cek = cekLockout();
         if (!cek.lockout) {
-          // Sembunyikan lockout, tampilkan form
           elLockoutBanner.classList.remove('show');
           elFormWrapper.style.display = 'block';
-          if (lockoutInterval) {
-            clearInterval(lockoutInterval);
-            lockoutInterval = null;
-          }
+          if (lockoutInterval) { clearInterval(lockoutInterval); lockoutInterval = null; }
           updateCounter();
           return;
         }
-
-        // Tampilkan lockout, sembunyikan form
         elLockoutBanner.classList.add('show');
         elFormWrapper.style.display = 'none';
         elCounterPendaftaran.classList.remove('show');
 
-        // Update timer tiap detik
         function updateTimer() {
           const cekNow = cekLockout();
-          if (!cekNow.lockout) {
-            // Lockout habis → kembali ke form
-            tampilkanLockout();
-            return;
-          }
+          if (!cekNow.lockout) { tampilkanLockout(); return; }
           const totalDetik = cekNow.sisaDetik;
           const menit = Math.floor(totalDetik / 60);
           const detik = totalDetik % 60;
           elLockoutTimer.textContent =
-            (menit < 10 ? '0' : '') + menit + ':' +
-            (detik < 10 ? '0' : '') + detik;
+            (menit < 10 ? '0' : '') + menit + ':' + (detik < 10 ? '0' : '') + detik;
         }
         updateTimer();
-
         if (lockoutInterval) clearInterval(lockoutInterval);
         lockoutInterval = setInterval(updateTimer, 1000);
       }
 
       function updateCounter() {
         const log = bacaLog();
-        if (log.count <= 0) {
-          elCounterPendaftaran.classList.remove('show');
-          return;
-        }
+        if (log.count <= 0) { elCounterPendaftaran.classList.remove('show'); return; }
         const sisa = MAX_DAFTAR - log.count;
         elCounterPendaftaran.classList.add('show');
         elCounterPendaftaran.classList.remove('warn', 'danger');
-
         if (sisa <= 0) {
           elCounterPendaftaran.classList.add('danger');
           elCounterText.textContent = '⚠️ Batas pendaftaran tercapai.';
@@ -765,7 +695,6 @@
         }
       }
 
-      // Cek saat halaman dibuka
       tampilkanLockout();
 
       // ============================================
@@ -773,22 +702,13 @@
       // ============================================
       function updatePreview(inputEl, previewBox, previewVal) {
         const raw = inputEl.value.trim();
-        if (!raw) {
-          previewBox.classList.remove('show');
-          previewVal.textContent = '—';
-          return;
-        }
+        if (!raw) { previewBox.classList.remove('show'); previewVal.textContent = '—'; return; }
         let hasil = '';
         if (inputEl === elNama) hasil = normalisasiNama(raw);
         else if (inputEl === elKelas) hasil = normalisasiKelas(raw);
         else if (inputEl === elSekolah) hasil = normalisasiSekolah(raw);
-
-        if (hasil) {
-          previewVal.textContent = hasil;
-          previewBox.classList.add('show');
-        } else {
-          previewBox.classList.remove('show');
-        }
+        if (hasil) { previewVal.textContent = hasil; previewBox.classList.add('show'); }
+        else { previewBox.classList.remove('show'); }
       }
 
       elNama.addEventListener('input', function() {
@@ -808,73 +728,48 @@
       let suggestTimer = null;
 
       function jadwalkanSuggestUsername() {
-        // Debounce 600ms — tunggu user selesai mengetik nama
         if (suggestTimer) clearTimeout(suggestTimer);
-        suggestTimer = setTimeout(() => {
-          generateSuggestUsername();
-        }, 600);
+        suggestTimer = setTimeout(function() { generateSuggestUsername(); }, 600);
       }
 
-      /**
-       * Generate kandidat username dari nama lengkap.
-       * Contoh: "Budi Santoso" → budi, santoso, budisantoso, budi.santoso, budi_santoso, budi7a, dll.
-       */
       function generateKandidatUsername(namaLengkap, kelas) {
         const nama = normalisasiNama(namaLengkap);
         if (!nama) return [];
-
         const kata = nama.toLowerCase().split(/\s+/).filter(Boolean);
         if (kata.length === 0) return [];
-
         const kelasBersih = (kelas || '').toLowerCase().replace(/[^a-z0-9]/g, '');
         const kandidat = [];
         const first = kata[0];
         const last = kata[kata.length - 1];
 
-        // 1. Nama depan saja
         if (first.length >= 3) kandidat.push(first);
-
-        // 2. Nama belakang saja
         if (last.length >= 3 && last !== first) kandidat.push(last);
-
-        // 3. Gabung tanpa separator
         if (kata.length >= 2) {
           const gabung = kata.join('');
           if (gabung.length >= 3 && gabung.length <= 30) kandidat.push(gabung);
         }
-
-        // 4. Gabung dengan titik
         if (kata.length >= 2) {
           const dot = kata.join('.');
           if (dot.length >= 3 && dot.length <= 30) kandidat.push(dot);
         }
-
-        // 5. Gabung dengan underscore
         if (kata.length >= 2) {
           const und = kata.join('_');
           if (und.length >= 3 && und.length <= 30) kandidat.push(und);
         }
-
-        // 6. Nama depan + kelas (kalau ada)
         if (kelasBersih) {
           const fdKelas = first + kelasBersih;
           if (fdKelas.length >= 3 && fdKelas.length <= 30) kandidat.push(fdKelas);
         }
-
-        // 7. Gabung + kelas
         if (kata.length >= 2 && kelasBersih) {
           const gabungKelas = kata.join('') + kelasBersih;
           if (gabungKelas.length >= 3 && gabungKelas.length <= 30) kandidat.push(gabungKelas);
         }
-
-        // 8. Nama depan + angka (fallback)
         kandidat.push(first + '1');
         kandidat.push(first + '123');
 
-        // Hapus duplikat, filter valid, batasi max 6 kandidat awal
         const unik = [];
         const sudahAda = {};
-        kandidat.forEach(k => {
+        kandidat.forEach(function(k) {
           const kk = k.toLowerCase();
           if (sudahAda[kk]) return;
           if (kk.length < 3 || kk.length > 30) return;
@@ -882,7 +777,6 @@
           sudahAda[kk] = true;
           unik.push(kk);
         });
-
         return unik.slice(0, 8);
       }
 
@@ -890,77 +784,51 @@
 
       async function generateSuggestUsername() {
         const nama = elNama.value.trim();
-        if (nama.length < 2) {
-          elSuggestBox.classList.remove('show');
-          return;
-        }
+        if (nama.length < 2) { elSuggestBox.classList.remove('show'); return; }
 
-        // Tampilkan loading
         elSuggestBox.classList.add('show');
         elSuggestHint.textContent = 'Memeriksa ketersediaan...';
         elSuggestList.innerHTML = '<span class="suggest-item loading">⏳ Memuat...</span>';
 
         const kelas = elKelas.value.trim();
         const kandidat = generateKandidatUsername(nama, kelas);
+        if (kandidat.length === 0) { elSuggestBox.classList.remove('show'); return; }
 
-        if (kandidat.length === 0) {
-          elSuggestBox.classList.remove('show');
-          return;
-        }
-
-        // Request ID untuk menghindari race condition
         const reqId = ++suggestRequestId;
 
-        // Cek ketersediaan satu per satu (paralel, max 8 request)
         const hasilCek = await Promise.all(
-          kandidat.map(async (u) => {
+          kandidat.map(async function(u) {
             try {
               const res = await window.dutaCekUser(u);
-              return {
-                username: u,
-                tersedia: (res && res.ok && res.tersedia) ? true : false
-              };
-            } catch (e) {
-              return { username: u, tersedia: false };
-            }
+              return { username: u, tersedia: (res && res.ok && res.tersedia) ? true : false };
+            } catch (e) { return { username: u, tersedia: false }; }
           })
         );
 
-        // Kalau request ini bukan yang terakhir, abaikan hasilnya
         if (reqId !== suggestRequestId) return;
 
-        // Filter yang tersedia saja
-        const tersedia = hasilCek.filter(h => h.tersedia).map(h => h.username);
+        const tersedia = hasilCek.filter(function(h) { return h.tersedia; }).map(function(h) { return h.username; });
 
-        // Kalau tidak ada yang tersedia, tambahkan suffix angka
         if (tersedia.length === 0) {
-          // Coba tambah angka ke kandidat pertama
           const base = kandidat[0];
           const tambahan = [];
           for (let i = 1; i <= 5; i++) {
             const baru = base + i;
             if (baru.length <= 30) tambahan.push(baru);
           }
-          // Cek batch kedua
           const hasilCek2 = await Promise.all(
-            tambahan.map(async (u) => {
+            tambahan.map(async function(u) {
               try {
                 const res = await window.dutaCekUser(u);
-                return {
-                  username: u,
-                  tersedia: (res && res.ok && res.tersedia) ? true : false
-                };
-              } catch (e) {
-                return { username: u, tersedia: false };
-              }
+                return { username: u, tersedia: (res && res.ok && res.tersedia) ? true : false };
+              } catch (e) { return { username: u, tersedia: false }; }
             })
           );
           if (reqId !== suggestRequestId) return;
-          const tersedia2 = hasilCek2.filter(h => h.tersedia).map(h => h.username);
+          const tersedia2 = hasilCek2.filter(function(h) { return h.tersedia; }).map(function(h) { return h.username; });
           tampilkanSuggest(tersedia2);
           return;
         }
-
         tampilkanSuggest(tersedia);
       }
 
@@ -970,34 +838,26 @@
           elSuggestList.innerHTML = '';
           return;
         }
-
         elSuggestHint.innerHTML = '💡 <strong>' + daftar.length + ' username tersedia</strong> — klik untuk memakai:';
         elSuggestList.innerHTML = '';
-
-        daftar.forEach(u => {
+        daftar.forEach(function(u) {
           const btn = document.createElement('button');
           btn.type = 'button';
           btn.className = 'suggest-item';
           btn.textContent = u;
           btn.addEventListener('click', function() {
             elUsername.value = u;
-            // Tandai terpilih
-            elSuggestList.querySelectorAll('.suggest-item').forEach(el => el.classList.remove('terpilih'));
+            elSuggestList.querySelectorAll('.suggest-item').forEach(function(el) { el.classList.remove('terpilih'); });
             btn.classList.add('terpilih');
-            // Fokus ke password
             elPassword.focus();
           });
           elSuggestList.appendChild(btn);
         });
-
-        // Tombol refresh
         const btnRefresh = document.createElement('button');
         btnRefresh.type = 'button';
         btnRefresh.className = 'suggest-refresh';
         btnRefresh.textContent = '🔄 Cari lagi';
-        btnRefresh.addEventListener('click', function() {
-          generateSuggestUsername();
-        });
+        btnRefresh.addEventListener('click', function() { generateSuggestUsername(); });
         elSuggestList.appendChild(btnRefresh);
       }
 
@@ -1020,7 +880,7 @@
       }
 
       // ============================================
-      // VALIDASI CLIENT-SIDE
+      // VALIDASI
       // ============================================
       function validasiUsername(u) {
         if (!u) return 'Username wajib diisi.';
@@ -1029,69 +889,55 @@
         if (!/^[a-zA-Z0-9._-]+$/.test(u)) return 'Username hanya boleh huruf, angka, titik, garis bawah, dan strip.';
         return null;
       }
-
       function validasiPassword(p, u) {
-		  if (!p) return 'Password wajib diisi.';
-		  if (p.length < 4) return 'Password minimal 4 karakter.';
-		  if (p.length > 50) return 'Password maksimal 50 karakter.';
-		if (/\s/.test(p)) return 'Password tidak boleh mengandung spasi.';
-		  if (/\s/.test(p)) return 'Password tidak boleh mengandung spasi.';  // ⬅️ BARIS BARU
-		  if (p.toLowerCase() === u.toLowerCase()) return 'Password tidak boleh sama dengan username.';
-		  return null;
-		}
+        if (!p) return 'Password wajib diisi.';
+        if (p.length < 4) return 'Password minimal 4 karakter.';
+        if (p.length > 50) return 'Password maksimal 50 karakter.';
+        if (/\s/.test(p)) return 'Password tidak boleh mengandung spasi.';
+        if (p.toLowerCase() === u.toLowerCase()) return 'Password tidak boleh sama dengan username.';
+        return null;
+      }
 
       // ============================================
-      // MODAL SUKSES DAFTAR
+      // MODAL SUKSES
       // ============================================
       function tampilkanModalSukses(username, password, nama, kelas) {
-        // Hapus modal lama kalau ada
         const lama = document.getElementById('dutaDaftarModal');
         if (lama) lama.remove();
 
         const modal = document.createElement('div');
         modal.id = 'dutaDaftarModal';
         modal.className = 'duta-daftar-modal';
-        modal.innerHTML = `
-          <div class="duta-daftar-box">
-            <div class="dd-title">Pendaftaran Berhasil!</div>
-            <div class="dd-sub">
-              Akun <strong>${escapeHtml(nama)}</strong> (${escapeHtml(kelas)}) sudah terdaftar.
-            </div>
-
-            <div class="kredensial-box">
-              <div class="kredensial-item">
-                <span class="ki-label">Username</span>
-                <span class="ki-value" id="kiUsername">${escapeHtml(username)}</span>
-                <button type="button" class="ki-btn" id="kiBtnUser" title="Salin username">📋</button>
-              </div>
-              <div class="kredensial-item">
-                <span class="ki-label">Password</span>
-                <span class="ki-value hidden-pass" id="kiPassword">••••••••</span>
-                <button type="button" class="ki-btn" id="kiBtnPass" title="Lihat / sembunyikan password">👁️</button>
-                <button type="button" class="ki-btn" id="kiBtnCopyPass" title="Salin password">📋</button>
-              </div>
-            </div>
-
-            <div class="peringatan-catat">
-              <strong>⚠️ Penting — Catat sekarang!</strong>
-              Username dan password ini <strong>tidak akan ditampilkan lagi</strong>.
-              Catat di buku, notes HP, atau screenshot halaman ini. Kalau lupa, kamu
-              harus menghubungi Bapak/Ibu Guru Informatika.
-            </div>
-
-            <div class="dd-actions">
-              <button type="button" class="dd-btn secondary" id="ddBtnTetap">
-                ➕ Daftar Lagi
-              </button>
-              <button type="button" class="dd-btn primary" id="ddBtnLogin">
-                🔑 Kembali ke Login
-              </button>
-            </div>
-          </div>
-        `;
+        modal.innerHTML =
+          '<div class="duta-daftar-box">' +
+            '<div class="dd-title">Pendaftaran Berhasil!</div>' +
+            '<div class="dd-sub">Akun <strong>' + escapeHtml(nama) + '</strong> (' + escapeHtml(kelas) + ') sudah terdaftar.</div>' +
+            '<div class="kredensial-box">' +
+              '<div class="kredensial-item">' +
+                '<span class="ki-label">Username</span>' +
+                '<span class="ki-value" id="kiUsername">' + escapeHtml(username) + '</span>' +
+                '<button type="button" class="ki-btn" id="kiBtnUser" title="Salin username">📋</button>' +
+              '</div>' +
+              '<div class="kredensial-item">' +
+                '<span class="ki-label">Password</span>' +
+                '<span class="ki-value hidden-pass" id="kiPassword">••••••••</span>' +
+                '<button type="button" class="ki-btn" id="kiBtnPass" title="Lihat / sembunyikan password">👁️</button>' +
+                '<button type="button" class="ki-btn" id="kiBtnCopyPass" title="Salin password">📋</button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="peringatan-catat">' +
+              '<strong>⚠️ Penting — Catat sekarang!</strong>' +
+              'Username dan password ini <strong>tidak akan ditampilkan lagi</strong>. ' +
+              'Catat di buku, notes HP, atau screenshot halaman ini. Kalau lupa, kamu ' +
+              'harus menghubungi Bapak/Ibu Guru Informatika.' +
+            '</div>' +
+            '<div class="dd-actions">' +
+              '<button type="button" class="dd-btn secondary" id="ddBtnTetap">➕ Daftar Lagi</button>' +
+              '<button type="button" class="dd-btn primary" id="ddBtnLogin">🔑 Kembali ke Login</button>' +
+            '</div>' +
+          '</div>';
         document.body.appendChild(modal);
 
-        // Toggle password visibility
         const elKiPass = modal.querySelector('#kiPassword');
         const elBtnPass = modal.querySelector('#kiBtnPass');
         let passTerlihat = false;
@@ -1110,40 +956,26 @@
           }
         });
 
-        // Salin username
-        const elBtnUser = modal.querySelector('#kiBtnUser');
-        elBtnUser.addEventListener('click', function() {
-          salinKeClipboard(username, elBtnUser, '📋', '✅');
+        modal.querySelector('#kiBtnUser').addEventListener('click', function() {
+          salinKeClipboard(username, this, '📋', '✅');
+        });
+        modal.querySelector('#kiBtnCopyPass').addEventListener('click', function() {
+          salinKeClipboard(password, this, '📋', '✅');
         });
 
-        // Salin password
-        const elBtnCopyPass = modal.querySelector('#kiBtnCopyPass');
-        elBtnCopyPass.addEventListener('click', function() {
-          salinKeClipboard(password, elBtnCopyPass, '📋', '✅');
-        });
-
-        // Tombol "Tetap di Sini"
         modal.querySelector('#ddBtnTetap').addEventListener('click', function() {
           modal.remove();
-          // Reset form
           resetForm();
-          // Update counter
           updateCounter();
-          // Cek apakah sekarang sudah lockout
           const cek = cekLockout();
-          if (cek.lockout) {
-            tampilkanLockout();
-          }
-          // Scroll ke atas
+          if (cek.lockout) tampilkanLockout();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Tombol "Kembali ke Login"
         modal.querySelector('#ddBtnLogin').addEventListener('click', function() {
-          window.location.href = 'login.html';
+          window.location.href = 'login';
         });
 
-        // Klik overlay untuk tutup (opsional)
         modal.addEventListener('click', function(e) {
           if (e.target === modal) {
             modal.remove();
@@ -1160,18 +992,15 @@
           if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(teks).then(function() {
               btn.textContent = iconSukses;
-              setTimeout(() => { btn.textContent = iconAsal; }, 1200);
+              setTimeout(function() { btn.textContent = iconAsal; }, 1200);
             }).catch(function() {
               fallbackCopy(teks, btn, iconAsal, iconSukses);
             });
           } else {
             fallbackCopy(teks, btn, iconAsal, iconSukses);
           }
-        } catch (e) {
-          fallbackCopy(teks, btn, iconAsal, iconSukses);
-        }
+        } catch (e) { fallbackCopy(teks, btn, iconAsal, iconSukses); }
       }
-
       function fallbackCopy(teks, btn, iconAsal, iconSukses) {
         const ta = document.createElement('textarea');
         ta.value = teks;
@@ -1182,7 +1011,7 @@
         try {
           document.execCommand('copy');
           btn.textContent = iconSukses;
-          setTimeout(() => { btn.textContent = iconAsal; }, 1200);
+          setTimeout(function() { btn.textContent = iconAsal; }, 1200);
         } catch (e) {}
         document.body.removeChild(ta);
       }
@@ -1212,83 +1041,43 @@
       }
 
       // ============================================
-      // SUBMIT HANDLER
+      // SUBMIT
       // ============================================
       elForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         sembunyikanPesan();
 
-        // Cek lockout dulu
         const cekL = cekLockout();
-        if (cekL.lockout) {
-          tampilkanLockout();
-          return;
-        }
+        if (cekL.lockout) { tampilkanLockout(); return; }
 
-        // Ambil nilai MENTAH
-        const namaMentah    = elNama.value.trim();
-        const kelasMentah   = elKelas.value.trim();
+        const namaMentah = elNama.value.trim();
+        const kelasMentah = elKelas.value.trim();
         const sekolahMentah = elSekolah.value.trim();
         const usernameMentah = elUsername.value.trim().toLowerCase();
         const passwordMentah = elPassword.value;
         const password2Mentah = elPassword2.value;
 
-        // Normalisasi
-        const nama    = normalisasiNama(namaMentah);
-        const kelas   = normalisasiKelas(kelasMentah);
+        const nama = normalisasiNama(namaMentah);
+        const kelas = normalisasiKelas(kelasMentah);
         const sekolah = normalisasiSekolah(sekolahMentah);
         const username = usernameMentah;
         const password = passwordMentah;
         const password2 = password2Mentah;
 
-        // ===== VALIDASI =====
-        if (!nama) {
-          tampilError('Nama lengkap wajib diisi.');
-          elNama.focus();
-          return;
-        }
-        if (nama.length < 2) {
-          tampilError('Nama minimal 2 karakter.');
-          elNama.focus();
-          return;
-        }
-        if (!kelas) {
-          tampilError('Kelas wajib diisi.');
-          elKelas.focus();
-          return;
-        }
-        if (kelas.length > 10) {
-          tampilError('Kelas maksimal 10 karakter.');
-          elKelas.focus();
-          return;
-        }
-        if (!sekolah) {
-          tampilError('Nama sekolah wajib diisi.');
-          elSekolah.focus();
-          return;
-        }
-        if (sekolah.length < 3) {
-          tampilError('Nama sekolah minimal 3 karakter.');
-          elSekolah.focus();
-          return;
-        }
-        if (sekolah.length > 60) {
-          tampilError('Nama sekolah maksimal 60 karakter.');
-          elSekolah.focus();
-          return;
-        }
+        if (!nama) { tampilError('Nama lengkap wajib diisi.'); elNama.focus(); return; }
+        if (nama.length < 2) { tampilError('Nama minimal 2 karakter.'); elNama.focus(); return; }
+        if (!kelas) { tampilError('Kelas wajib diisi.'); elKelas.focus(); return; }
+        if (kelas.length > 10) { tampilError('Kelas maksimal 10 karakter.'); elKelas.focus(); return; }
+        if (!sekolah) { tampilError('Nama sekolah wajib diisi.'); elSekolah.focus(); return; }
+        if (sekolah.length < 3) { tampilError('Nama sekolah minimal 3 karakter.'); elSekolah.focus(); return; }
+        if (sekolah.length > 60) { tampilError('Nama sekolah maksimal 60 karakter.'); elSekolah.focus(); return; }
+
         const errU = validasiUsername(username);
-        if (errU) {
-          tampilError(errU);
-          elUsername.focus();
-          return;
-        }
+        if (errU) { tampilError(errU); elUsername.focus(); return; }
+
         const errP = validasiPassword(password, username);
-        if (errP) {
-          tampilError(errP);
-          elPassword.focus();
-          return;
-        }
+        if (errP) { tampilError(errP); elPassword.focus(); return; }
+
         if (password !== password2) {
           tampilError('Password dan ulangi password tidak sama.');
           elPassword2.focus();
@@ -1299,12 +1088,10 @@
         elBtn.textContent = '⏳ Memeriksa...';
 
         try {
-          // ===== 1. Cek username tersedia =====
           const cek = await window.dutaCekUser(username);
 
           if (!cek || !cek.ok) {
-            const pesan = (cek && cek.error) || 'Gagal memeriksa username.';
-            tampilError(pesan);
+            tampilError((cek && cek.error) || 'Gagal memeriksa username.');
             elBtn.disabled = false;
             elBtn.textContent = '✨ Daftar Sekarang';
             return;
@@ -1318,26 +1105,19 @@
             return;
           }
 
-          // ===== 2. Proses daftar =====
           elBtn.textContent = '⏳ Mendaftar...';
           const hasil = await window.dutaDaftar(username, password, nama, kelas, sekolah);
 
           if (hasil && hasil.ok) {
-            // ✅ Catat pendaftaran sukses untuk rate limit
             catatPendaftaranSukses();
-
-            // ✅ Tampilkan modal sukses
             tampilkanModalSukses(username, password, nama, kelas);
-
             elBtn.disabled = false;
             elBtn.textContent = '✨ Daftar Sekarang';
           } else {
-            const pesan = (hasil && hasil.error) || 'Pendaftaran gagal. Coba lagi.';
-            tampilError(pesan);
+            tampilError((hasil && hasil.error) || 'Pendaftaran gagal. Coba lagi.');
             elBtn.disabled = false;
             elBtn.textContent = '✨ Daftar Sekarang';
           }
-
         } catch (err) {
           tampilError('Gagal terhubung ke server.');
           elBtn.disabled = false;
@@ -1345,7 +1125,6 @@
         }
       });
 
-      // Enter di password2 langsung submit
       elPassword2.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
           e.preventDefault();

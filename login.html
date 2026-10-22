@@ -8,14 +8,11 @@
 </head>
 <body>
 
+  <!-- HEADER: banner + bar user + navbar (di-render script.js) -->
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="index.html">Beranda</a></li>
-      <li>Login</li>
-    </ol>
-  </nav>
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
     <div class="auth-wrapper">
@@ -57,12 +54,12 @@
 
       <div class="auth-divider">atau</div>
 
-      <a href="index.html" class="btn-auth-secondary">
+      <a href="index" class="btn-auth-secondary">
         🎭 Lanjut sebagai Tamu
       </a>
 
       <p class="auth-footer-text">
-        Belum punya akun? <a href="daftar.html">Daftar di sini</a>
+        Belum punya akun? <a href="daftar">Daftar di sini</a>
       </p>
 
     </div>
@@ -72,7 +69,6 @@
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="script.js"></script>
-  <script>window.DUTA_ROOT = '';</script>
 
   <script>
     (function() {
@@ -100,16 +96,14 @@
 
       // ===== AUTO-REDIRECT kalau sudah login =====
       document.addEventListener('DOMContentLoaded', function() {
-        // Cek session siswa
         const session = window.ambilSession && window.ambilSession();
         if (session && session.tipe === 'login') {
           redirectSetelahLogin();
           return;
         }
-        // Cek session guru
         const guru = ambilSessionGuruLokal();
         if (guru && guru.username) {
-          window.location.href = 'dashboard/guru.html';
+          window.location.href = 'dashboard/guru';
         }
       });
 
@@ -119,13 +113,11 @@
         elError.classList.add('show');
         elSuccess.classList.remove('show');
       }
-
       function tampilSukses(pesan) {
         elSuccess.textContent = '✅ ' + pesan;
         elSuccess.classList.add('show');
         elError.classList.remove('show');
       }
-
       function sembunyikanPesan() {
         elError.classList.remove('show');
         elSuccess.classList.remove('show');
@@ -133,7 +125,7 @@
 
       // ===== REDIRECT SETELAH LOGIN SISWA =====
       function redirectSetelahLogin() {
-        let tujuan = 'index.html';
+        let tujuan = 'index';
         try {
           const simpan = sessionStorage.getItem('duta_redirect_after_login');
           if (simpan) {
@@ -152,7 +144,6 @@
         const username = elUsername.value.trim().toLowerCase();
         const password = elPassword.value;
 
-        // Validasi dasar
         if (!username) {
           tampilError('Username wajib diisi.');
           elUsername.focus();
@@ -168,11 +159,10 @@
         elBtn.textContent = '⏳ Memproses...';
 
         try {
-          // ===== 1) Coba login sebagai SISWA dulu (sheet Users) =====
+          // ===== 1) Coba login sebagai SISWA dulu =====
           const hasilSiswa = await window.dutaLogin(username, password);
 
           if (hasilSiswa && hasilSiswa.ok) {
-            // Simpan juga ke sessionStorage untuk dashboard siswa
             try {
               sessionStorage.setItem('duta_siswa_dash', JSON.stringify({
                 user_id: hasilSiswa.user_id,
@@ -187,19 +177,16 @@
             return;
           }
 
-          // ===== 2) Kalau gagal, coba login sebagai GURU (sheet Guru) =====
+          // ===== 2) Kalau gagal, coba login sebagai GURU =====
           let hasilGuru = null;
           if (typeof window.dutaLoginGuru === 'function') {
-            // Pakai helper baru (otomatis simpan session + sekolah)
             hasilGuru = await window.dutaLoginGuru(username, password);
           } else {
-            // Fallback: panggil API manual
             hasilGuru = await window.dutaFetch({
               action: 'loginGuru',
               username: username,
               password: password
             });
-            // Simpan manual kalau berhasil
             if (hasilGuru && hasilGuru.ok && hasilGuru.tipe === 'guru') {
               try {
                 sessionStorage.setItem('duta_guru', JSON.stringify({
@@ -215,7 +202,7 @@
           if (hasilGuru && hasilGuru.ok && hasilGuru.tipe === 'guru') {
             tampilSukses('Login guru berhasil. Mengalihkan...');
             setTimeout(function() {
-              window.location.href = 'dashboard/guru.html';
+              window.location.href = 'dashboard/guru';
             }, 700);
             return;
           }

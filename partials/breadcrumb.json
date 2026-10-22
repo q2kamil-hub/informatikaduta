@@ -1,0 +1,2519 @@
+{
+  "": [],
+
+  "login": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Login" }
+  ],
+
+  "daftar": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Daftar Akun" }
+  ],
+
+  "dashboard/guru": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dashboard Guru" }
+  ],
+
+  "dashboard/siswa": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dashboard Siswa" }
+  ],
+
+  "ujian/daftarujian": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Ujian Aktif" }
+  ],
+
+  "tik/materitik": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi" }
+  ],
+  "tik/tik1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 1" }
+  ],
+  "tik/materitik1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 1", "href": "tik/tik1" },
+    { "label": "Materi" }
+  ],
+  "tik/aktivitastik1a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 1", "href": "tik/tik1" },
+    { "label": "Aktivitas A" }
+  ],
+  "tik/aktivitastik1b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 1", "href": "tik/tik1" },
+    { "label": "Aktivitas B" }
+  ],
+  "tik/aktivitastik1c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 1", "href": "tik/tik1" },
+    { "label": "Aktivitas C" }
+  ],
+  "tik/aktivitastik1d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 1", "href": "tik/tik1" },
+    { "label": "Kuis Akhir" }
+  ],
+  "tik/tik2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 2" }
+  ],
+  "tik/materitik2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 2", "href": "tik/tik2" },
+    { "label": "Materi" }
+  ],
+  "tik/aktivitastik2a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 2", "href": "tik/tik2" },
+    { "label": "Aktivitas A" }
+  ],
+  "tik/aktivitastik2b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 2", "href": "tik/tik2" },
+    { "label": "Aktivitas B" }
+  ],
+  "tik/aktivitastik2c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 2", "href": "tik/tik2" },
+    { "label": "Aktivitas C" }
+  ],
+  "tik/aktivitastik2d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 2", "href": "tik/tik2" },
+    { "label": "Kuis Akhir" }
+  ],
+  "tik/tik3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 3" }
+  ],
+  "tik/materitik3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 3", "href": "tik/tik3" },
+    { "label": "Materi" }
+  ],
+  "tik/aktivitastik3a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 3", "href": "tik/tik3" },
+    { "label": "Aktivitas A" }
+  ],
+  "tik/aktivitastik3b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 3", "href": "tik/tik3" },
+    { "label": "Aktivitas B" }
+  ],
+  "tik/aktivitastik3c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 3", "href": "tik/tik3" },
+    { "label": "Aktivitas C" }
+  ],
+  "tik/aktivitastik3d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 3", "href": "tik/tik3" },
+    { "label": "Kuis Akhir" }
+  ],
+  "tik/tik4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 4" }
+  ],
+  "tik/materitik4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 4", "href": "tik/tik4" },
+    { "label": "Materi" }
+  ],
+  "tik/aktivitastik4a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 4", "href": "tik/tik4" },
+    { "label": "Aktivitas A" }
+  ],
+  "tik/aktivitastik4b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 4", "href": "tik/tik4" },
+    { "label": "Aktivitas B" }
+  ],
+  "tik/aktivitastik4c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 4", "href": "tik/tik4" },
+    { "label": "Aktivitas C" }
+  ],
+  "tik/aktivitastik4d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 4", "href": "tik/tik4" },
+    { "label": "Kuis Akhir" }
+  ],
+  "tik/tik5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 5" }
+  ],
+  "tik/materitik5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 5", "href": "tik/tik5" },
+    { "label": "Materi" }
+  ],
+  "tik/aktivitastik5a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 5", "href": "tik/tik5" },
+    { "label": "Aktivitas A" }
+  ],
+  "tik/aktivitastik5b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 5", "href": "tik/tik5" },
+    { "label": "Aktivitas B" }
+  ],
+  "tik/aktivitastik5c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 5", "href": "tik/tik5" },
+    { "label": "Aktivitas C" }
+  ],
+  "tik/aktivitastik5d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 5", "href": "tik/tik5" },
+    { "label": "Kuis Akhir" }
+  ],
+  "tik/tik6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 6" }
+  ],
+  "tik/materitik6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 6", "href": "tik/tik6" },
+    { "label": "Materi" }
+  ],
+  "tik/aktivitastik6a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 6", "href": "tik/tik6" },
+    { "label": "Aktivitas A" }
+  ],
+  "tik/aktivitastik6b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 6", "href": "tik/tik6" },
+    { "label": "Aktivitas B" }
+  ],
+  "tik/aktivitastik6c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 6", "href": "tik/tik6" },
+    { "label": "Aktivitas C" }
+  ],
+  "tik/aktivitastik6d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 6", "href": "tik/tik6" },
+    { "label": "Kuis Akhir" }
+  ],
+  "tik/tik7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 7" }
+  ],
+  "tik/materitik7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 7", "href": "tik/tik7" },
+    { "label": "Materi" }
+  ],
+  "tik/aktivitastik7a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 7", "href": "tik/tik7" },
+    { "label": "Aktivitas A" }
+  ],
+  "tik/aktivitastik7b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 7", "href": "tik/tik7" },
+    { "label": "Aktivitas B" }
+  ],
+  "tik/aktivitastik7c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 7", "href": "tik/tik7" },
+    { "label": "Aktivitas C" }
+  ],
+  "tik/aktivitastik7d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 7", "href": "tik/tik7" },
+    { "label": "Kuis Akhir" }
+  ],
+  "tik/tik8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 8" }
+  ],
+  "tik/materitik8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 8", "href": "tik/tik8" },
+    { "label": "Materi" }
+  ],
+  "tik/aktivitastik8a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 8", "href": "tik/tik8" },
+    { "label": "Aktivitas A" }
+  ],
+  "tik/aktivitastik8b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 8", "href": "tik/tik8" },
+    { "label": "Aktivitas B" }
+  ],
+  "tik/aktivitastik8c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 8", "href": "tik/tik8" },
+    { "label": "Aktivitas C" }
+  ],
+  "tik/aktivitastik8d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 8", "href": "tik/tik8" },
+    { "label": "Kuis Akhir" }
+  ],
+  "tik/tik9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 9" }
+  ],
+  "tik/materitik9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 9", "href": "tik/tik9" },
+    { "label": "Materi" }
+  ],
+  "tik/aktivitastik9a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 9", "href": "tik/tik9" },
+    { "label": "Aktivitas A" }
+  ],
+  "tik/aktivitastik9b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 9", "href": "tik/tik9" },
+    { "label": "Aktivitas B" }
+  ],
+  "tik/aktivitastik9c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 9", "href": "tik/tik9" },
+    { "label": "Aktivitas C" }
+  ],
+  "tik/aktivitastik9d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 9", "href": "tik/tik9" },
+    { "label": "Kuis Akhir" }
+  ],
+  "tik/tik10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 10" }
+  ],
+  "tik/materitik10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 10", "href": "tik/tik10" },
+    { "label": "Materi" }
+  ],
+  "tik/aktivitastik10a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 10", "href": "tik/tik10" },
+    { "label": "Aktivitas A" }
+  ],
+  "tik/aktivitastik10b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 10", "href": "tik/tik10" },
+    { "label": "Aktivitas B" }
+  ],
+  "tik/aktivitastik10c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 10", "href": "tik/tik10" },
+    { "label": "Aktivitas C" }
+  ],
+  "tik/aktivitastik10d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
+    { "label": "Modul 10", "href": "tik/tik10" },
+    { "label": "Kuis Akhir" }
+  ],
+
+  "sk/materisk": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer" }
+  ],
+  "sk/sk1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 1" }
+  ],
+  "sk/materisk1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 1", "href": "sk/sk1" },
+    { "label": "Materi" }
+  ],
+  "sk/aktivitassk1a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 1", "href": "sk/sk1" },
+    { "label": "Aktivitas A" }
+  ],
+  "sk/aktivitassk1b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 1", "href": "sk/sk1" },
+    { "label": "Aktivitas B" }
+  ],
+  "sk/aktivitassk1c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 1", "href": "sk/sk1" },
+    { "label": "Aktivitas C" }
+  ],
+  "sk/aktivitassk1d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 1", "href": "sk/sk1" },
+    { "label": "Kuis Akhir" }
+  ],
+  "sk/sk2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 2" }
+  ],
+  "sk/materisk2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 2", "href": "sk/sk2" },
+    { "label": "Materi" }
+  ],
+  "sk/aktivitassk2a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 2", "href": "sk/sk2" },
+    { "label": "Aktivitas A" }
+  ],
+  "sk/aktivitassk2b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 2", "href": "sk/sk2" },
+    { "label": "Aktivitas B" }
+  ],
+  "sk/aktivitassk2c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 2", "href": "sk/sk2" },
+    { "label": "Aktivitas C" }
+  ],
+  "sk/aktivitassk2d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 2", "href": "sk/sk2" },
+    { "label": "Kuis Akhir" }
+  ],
+  "sk/sk3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 3" }
+  ],
+  "sk/materisk3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 3", "href": "sk/sk3" },
+    { "label": "Materi" }
+  ],
+  "sk/aktivitassk3a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 3", "href": "sk/sk3" },
+    { "label": "Aktivitas A" }
+  ],
+  "sk/aktivitassk3b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 3", "href": "sk/sk3" },
+    { "label": "Aktivitas B" }
+  ],
+  "sk/aktivitassk3c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 3", "href": "sk/sk3" },
+    { "label": "Aktivitas C" }
+  ],
+  "sk/aktivitassk3d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 3", "href": "sk/sk3" },
+    { "label": "Kuis Akhir" }
+  ],
+  "sk/sk4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 4" }
+  ],
+  "sk/materisk4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 4", "href": "sk/sk4" },
+    { "label": "Materi" }
+  ],
+  "sk/aktivitassk4a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 4", "href": "sk/sk4" },
+    { "label": "Aktivitas A" }
+  ],
+  "sk/aktivitassk4b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 4", "href": "sk/sk4" },
+    { "label": "Aktivitas B" }
+  ],
+  "sk/aktivitassk4c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 4", "href": "sk/sk4" },
+    { "label": "Aktivitas C" }
+  ],
+  "sk/aktivitassk4d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 4", "href": "sk/sk4" },
+    { "label": "Kuis Akhir" }
+  ],
+  "sk/sk5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 5" }
+  ],
+  "sk/materisk5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 5", "href": "sk/sk5" },
+    { "label": "Materi" }
+  ],
+  "sk/aktivitassk5a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 5", "href": "sk/sk5" },
+    { "label": "Aktivitas A" }
+  ],
+  "sk/aktivitassk5b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 5", "href": "sk/sk5" },
+    { "label": "Aktivitas B" }
+  ],
+  "sk/aktivitassk5c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 5", "href": "sk/sk5" },
+    { "label": "Aktivitas C" }
+  ],
+  "sk/aktivitassk5d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 5", "href": "sk/sk5" },
+    { "label": "Kuis Akhir" }
+  ],
+  "sk/sk6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 6" }
+  ],
+  "sk/materisk6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 6", "href": "sk/sk6" },
+    { "label": "Materi" }
+  ],
+  "sk/aktivitassk6a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 6", "href": "sk/sk6" },
+    { "label": "Aktivitas A" }
+  ],
+  "sk/aktivitassk6b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 6", "href": "sk/sk6" },
+    { "label": "Aktivitas B" }
+  ],
+  "sk/aktivitassk6c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 6", "href": "sk/sk6" },
+    { "label": "Aktivitas C" }
+  ],
+  "sk/aktivitassk6d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 6", "href": "sk/sk6" },
+    { "label": "Kuis Akhir" }
+  ],
+  "sk/sk7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 7" }
+  ],
+  "sk/materisk7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 7", "href": "sk/sk7" },
+    { "label": "Materi" }
+  ],
+  "sk/aktivitassk7a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 7", "href": "sk/sk7" },
+    { "label": "Aktivitas A" }
+  ],
+  "sk/aktivitassk7b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 7", "href": "sk/sk7" },
+    { "label": "Aktivitas B" }
+  ],
+  "sk/aktivitassk7c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 7", "href": "sk/sk7" },
+    { "label": "Aktivitas C" }
+  ],
+  "sk/aktivitassk7d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 7", "href": "sk/sk7" },
+    { "label": "Kuis Akhir" }
+  ],
+  "sk/sk8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 8" }
+  ],
+  "sk/materisk8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 8", "href": "sk/sk8" },
+    { "label": "Materi" }
+  ],
+  "sk/aktivitassk8a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 8", "href": "sk/sk8" },
+    { "label": "Aktivitas A" }
+  ],
+  "sk/aktivitassk8b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 8", "href": "sk/sk8" },
+    { "label": "Aktivitas B" }
+  ],
+  "sk/aktivitassk8c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 8", "href": "sk/sk8" },
+    { "label": "Aktivitas C" }
+  ],
+  "sk/aktivitassk8d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 8", "href": "sk/sk8" },
+    { "label": "Kuis Akhir" }
+  ],
+  "sk/sk9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 9" }
+  ],
+  "sk/materisk9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 9", "href": "sk/sk9" },
+    { "label": "Materi" }
+  ],
+  "sk/aktivitassk9a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 9", "href": "sk/sk9" },
+    { "label": "Aktivitas A" }
+  ],
+  "sk/aktivitassk9b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 9", "href": "sk/sk9" },
+    { "label": "Aktivitas B" }
+  ],
+  "sk/aktivitassk9c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 9", "href": "sk/sk9" },
+    { "label": "Aktivitas C" }
+  ],
+  "sk/aktivitassk9d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 9", "href": "sk/sk9" },
+    { "label": "Kuis Akhir" }
+  ],
+  "sk/sk10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 10" }
+  ],
+  "sk/materisk10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 10", "href": "sk/sk10" },
+    { "label": "Materi" }
+  ],
+  "sk/aktivitassk10a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 10", "href": "sk/sk10" },
+    { "label": "Aktivitas A" }
+  ],
+  "sk/aktivitassk10b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 10", "href": "sk/sk10" },
+    { "label": "Aktivitas B" }
+  ],
+  "sk/aktivitassk10c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 10", "href": "sk/sk10" },
+    { "label": "Aktivitas C" }
+  ],
+  "sk/aktivitassk10d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Sistem Komputer", "href": "sk/materisk" },
+    { "label": "Modul 10", "href": "sk/sk10" },
+    { "label": "Kuis Akhir" }
+  ],
+
+  "jki/materijki": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet" }
+  ],
+  "jki/jki1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 1" }
+  ],
+  "jki/materijki1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 1", "href": "jki/jki1" },
+    { "label": "Materi" }
+  ],
+  "jki/aktivitasjki1a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 1", "href": "jki/jki1" },
+    { "label": "Aktivitas A" }
+  ],
+  "jki/aktivitasjki1b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 1", "href": "jki/jki1" },
+    { "label": "Aktivitas B" }
+  ],
+  "jki/aktivitasjki1c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 1", "href": "jki/jki1" },
+    { "label": "Aktivitas C" }
+  ],
+  "jki/aktivitasjki1d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 1", "href": "jki/jki1" },
+    { "label": "Kuis Akhir" }
+  ],
+  "jki/jki2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 2" }
+  ],
+  "jki/materijki2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 2", "href": "jki/jki2" },
+    { "label": "Materi" }
+  ],
+  "jki/aktivitasjki2a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 2", "href": "jki/jki2" },
+    { "label": "Aktivitas A" }
+  ],
+  "jki/aktivitasjki2b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 2", "href": "jki/jki2" },
+    { "label": "Aktivitas B" }
+  ],
+  "jki/aktivitasjki2c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 2", "href": "jki/jki2" },
+    { "label": "Aktivitas C" }
+  ],
+  "jki/aktivitasjki2d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 2", "href": "jki/jki2" },
+    { "label": "Kuis Akhir" }
+  ],
+  "jki/jki3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 3" }
+  ],
+  "jki/materijki3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 3", "href": "jki/jki3" },
+    { "label": "Materi" }
+  ],
+  "jki/aktivitasjki3a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 3", "href": "jki/jki3" },
+    { "label": "Aktivitas A" }
+  ],
+  "jki/aktivitasjki3b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 3", "href": "jki/jki3" },
+    { "label": "Aktivitas B" }
+  ],
+  "jki/aktivitasjki3c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 3", "href": "jki/jki3" },
+    { "label": "Aktivitas C" }
+  ],
+  "jki/aktivitasjki3d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 3", "href": "jki/jki3" },
+    { "label": "Kuis Akhir" }
+  ],
+  "jki/jki4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 4" }
+  ],
+  "jki/materijki4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 4", "href": "jki/jki4" },
+    { "label": "Materi" }
+  ],
+  "jki/aktivitasjki4a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 4", "href": "jki/jki4" },
+    { "label": "Aktivitas A" }
+  ],
+  "jki/aktivitasjki4b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 4", "href": "jki/jki4" },
+    { "label": "Aktivitas B" }
+  ],
+  "jki/aktivitasjki4c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 4", "href": "jki/jki4" },
+    { "label": "Aktivitas C" }
+  ],
+  "jki/aktivitasjki4d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 4", "href": "jki/jki4" },
+    { "label": "Kuis Akhir" }
+  ],
+  "jki/jki5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 5" }
+  ],
+  "jki/materijki5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 5", "href": "jki/jki5" },
+    { "label": "Materi" }
+  ],
+  "jki/aktivitasjki5a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 5", "href": "jki/jki5" },
+    { "label": "Aktivitas A" }
+  ],
+  "jki/aktivitasjki5b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 5", "href": "jki/jki5" },
+    { "label": "Aktivitas B" }
+  ],
+  "jki/aktivitasjki5c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 5", "href": "jki/jki5" },
+    { "label": "Aktivitas C" }
+  ],
+  "jki/aktivitasjki5d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 5", "href": "jki/jki5" },
+    { "label": "Kuis Akhir" }
+  ],
+  "jki/jki6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 6" }
+  ],
+  "jki/materijki6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 6", "href": "jki/jki6" },
+    { "label": "Materi" }
+  ],
+  "jki/aktivitasjki6a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 6", "href": "jki/jki6" },
+    { "label": "Aktivitas A" }
+  ],
+  "jki/aktivitasjki6b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 6", "href": "jki/jki6" },
+    { "label": "Aktivitas B" }
+  ],
+  "jki/aktivitasjki6c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 6", "href": "jki/jki6" },
+    { "label": "Aktivitas C" }
+  ],
+  "jki/aktivitasjki6d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 6", "href": "jki/jki6" },
+    { "label": "Kuis Akhir" }
+  ],
+  "jki/jki7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 7" }
+  ],
+  "jki/materijki7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 7", "href": "jki/jki7" },
+    { "label": "Materi" }
+  ],
+  "jki/aktivitasjki7a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 7", "href": "jki/jki7" },
+    { "label": "Aktivitas A" }
+  ],
+  "jki/aktivitasjki7b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 7", "href": "jki/jki7" },
+    { "label": "Aktivitas B" }
+  ],
+  "jki/aktivitasjki7c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 7", "href": "jki/jki7" },
+    { "label": "Aktivitas C" }
+  ],
+  "jki/aktivitasjki7d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 7", "href": "jki/jki7" },
+    { "label": "Kuis Akhir" }
+  ],
+  "jki/jki8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 8" }
+  ],
+  "jki/materijki8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 8", "href": "jki/jki8" },
+    { "label": "Materi" }
+  ],
+  "jki/aktivitasjki8a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 8", "href": "jki/jki8" },
+    { "label": "Aktivitas A" }
+  ],
+  "jki/aktivitasjki8b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 8", "href": "jki/jki8" },
+    { "label": "Aktivitas B" }
+  ],
+  "jki/aktivitasjki8c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 8", "href": "jki/jki8" },
+    { "label": "Aktivitas C" }
+  ],
+  "jki/aktivitasjki8d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 8", "href": "jki/jki8" },
+    { "label": "Kuis Akhir" }
+  ],
+  "jki/jki9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 9" }
+  ],
+  "jki/materijki9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 9", "href": "jki/jki9" },
+    { "label": "Materi" }
+  ],
+  "jki/aktivitasjki9a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 9", "href": "jki/jki9" },
+    { "label": "Aktivitas A" }
+  ],
+  "jki/aktivitasjki9b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 9", "href": "jki/jki9" },
+    { "label": "Aktivitas B" }
+  ],
+  "jki/aktivitasjki9c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 9", "href": "jki/jki9" },
+    { "label": "Aktivitas C" }
+  ],
+  "jki/aktivitasjki9d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 9", "href": "jki/jki9" },
+    { "label": "Kuis Akhir" }
+  ],
+  "jki/jki10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 10" }
+  ],
+  "jki/materijki10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 10", "href": "jki/jki10" },
+    { "label": "Materi" }
+  ],
+  "jki/aktivitasjki10a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 10", "href": "jki/jki10" },
+    { "label": "Aktivitas A" }
+  ],
+  "jki/aktivitasjki10b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 10", "href": "jki/jki10" },
+    { "label": "Aktivitas B" }
+  ],
+  "jki/aktivitasjki10c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 10", "href": "jki/jki10" },
+    { "label": "Aktivitas C" }
+  ],
+  "jki/aktivitasjki10d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Jaringan Komputer dan Internet", "href": "jki/materijki" },
+    { "label": "Modul 10", "href": "jki/jki10" },
+    { "label": "Kuis Akhir" }
+  ],
+
+  "dsi/materidsi": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika" }
+  ],
+  "dsi/dsi1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 1" }
+  ],
+  "dsi/materidsi1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 1", "href": "dsi/dsi1" },
+    { "label": "Materi" }
+  ],
+  "dsi/aktivitasdsi1a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 1", "href": "dsi/dsi1" },
+    { "label": "Aktivitas A" }
+  ],
+  "dsi/aktivitasdsi1b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 1", "href": "dsi/dsi1" },
+    { "label": "Aktivitas B" }
+  ],
+  "dsi/aktivitasdsi1c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 1", "href": "dsi/dsi1" },
+    { "label": "Aktivitas C" }
+  ],
+  "dsi/aktivitasdsi1d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 1", "href": "dsi/dsi1" },
+    { "label": "Aktivitas D" }
+  ],
+  "dsi/aktivitasdsi1e": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 1", "href": "dsi/dsi1" },
+    { "label": "Kuis Akhir" }
+  ],
+  "dsi/dsi2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 2" }
+  ],
+  "dsi/materidsi2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 2", "href": "dsi/dsi2" },
+    { "label": "Materi" }
+  ],
+  "dsi/aktivitasdsi2a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 2", "href": "dsi/dsi2" },
+    { "label": "Aktivitas A" }
+  ],
+  "dsi/aktivitasdsi2b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 2", "href": "dsi/dsi2" },
+    { "label": "Aktivitas B" }
+  ],
+  "dsi/aktivitasdsi2c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 2", "href": "dsi/dsi2" },
+    { "label": "Aktivitas C" }
+  ],
+  "dsi/aktivitasdsi2d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 2", "href": "dsi/dsi2" },
+    { "label": "Kuis Akhir" }
+  ],
+  "dsi/dsi3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 3" }
+  ],
+  "dsi/materidsi3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 3", "href": "dsi/dsi3" },
+    { "label": "Materi" }
+  ],
+  "dsi/aktivitasdsi3a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 3", "href": "dsi/dsi3" },
+    { "label": "Aktivitas A" }
+  ],
+  "dsi/aktivitasdsi3b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 3", "href": "dsi/dsi3" },
+    { "label": "Aktivitas B" }
+  ],
+  "dsi/aktivitasdsi3c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 3", "href": "dsi/dsi3" },
+    { "label": "Aktivitas C" }
+  ],
+  "dsi/aktivitasdsi3d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 3", "href": "dsi/dsi3" },
+    { "label": "Kuis Akhir" }
+  ],
+  "dsi/dsi4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 4" }
+  ],
+  "dsi/materidsi4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 4", "href": "dsi/dsi4" },
+    { "label": "Materi" }
+  ],
+  "dsi/aktivitasdsi4a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 4", "href": "dsi/dsi4" },
+    { "label": "Aktivitas A" }
+  ],
+  "dsi/aktivitasdsi4b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 4", "href": "dsi/dsi4" },
+    { "label": "Aktivitas B" }
+  ],
+  "dsi/aktivitasdsi4c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 4", "href": "dsi/dsi4" },
+    { "label": "Aktivitas C" }
+  ],
+  "dsi/aktivitasdsi4d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 4", "href": "dsi/dsi4" },
+    { "label": "Kuis Akhir" }
+  ],
+  "dsi/dsi5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 5" }
+  ],
+  "dsi/materidsi5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 5", "href": "dsi/dsi5" },
+    { "label": "Materi" }
+  ],
+  "dsi/aktivitasdsi5a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 5", "href": "dsi/dsi5" },
+    { "label": "Aktivitas A" }
+  ],
+  "dsi/aktivitasdsi5b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 5", "href": "dsi/dsi5" },
+    { "label": "Aktivitas B" }
+  ],
+  "dsi/aktivitasdsi5c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 5", "href": "dsi/dsi5" },
+    { "label": "Aktivitas C" }
+  ],
+  "dsi/aktivitasdsi5d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 5", "href": "dsi/dsi5" },
+    { "label": "Kuis Akhir" }
+  ],
+  "dsi/dsi6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 6" }
+  ],
+  "dsi/materidsi6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 6", "href": "dsi/dsi6" },
+    { "label": "Materi" }
+  ],
+  "dsi/aktivitasdsi6a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 6", "href": "dsi/dsi6" },
+    { "label": "Aktivitas A" }
+  ],
+  "dsi/aktivitasdsi6b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 6", "href": "dsi/dsi6" },
+    { "label": "Aktivitas B" }
+  ],
+  "dsi/aktivitasdsi6c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 6", "href": "dsi/dsi6" },
+    { "label": "Aktivitas C" }
+  ],
+  "dsi/aktivitasdsi6d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 6", "href": "dsi/dsi6" },
+    { "label": "Kuis Akhir" }
+  ],
+  "dsi/dsi7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 7" }
+  ],
+  "dsi/materidsi7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 7", "href": "dsi/dsi7" },
+    { "label": "Materi" }
+  ],
+  "dsi/aktivitasdsi7a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 7", "href": "dsi/dsi7" },
+    { "label": "Aktivitas A" }
+  ],
+  "dsi/aktivitasdsi7b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 7", "href": "dsi/dsi7" },
+    { "label": "Aktivitas B" }
+  ],
+  "dsi/aktivitasdsi7c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 7", "href": "dsi/dsi7" },
+    { "label": "Aktivitas C" }
+  ],
+  "dsi/aktivitasdsi7d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 7", "href": "dsi/dsi7" },
+    { "label": "Kuis Akhir" }
+  ],
+  "dsi/dsi8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 8" }
+  ],
+  "dsi/materidsi8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 8", "href": "dsi/dsi8" },
+    { "label": "Materi" }
+  ],
+  "dsi/aktivitasdsi8a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 8", "href": "dsi/dsi8" },
+    { "label": "Aktivitas A" }
+  ],
+  "dsi/aktivitasdsi8b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 8", "href": "dsi/dsi8" },
+    { "label": "Aktivitas B" }
+  ],
+  "dsi/aktivitasdsi8c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 8", "href": "dsi/dsi8" },
+    { "label": "Aktivitas C" }
+  ],
+  "dsi/aktivitasdsi8d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 8", "href": "dsi/dsi8" },
+    { "label": "Kuis Akhir" }
+  ],
+  "dsi/dsi9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 9" }
+  ],
+  "dsi/materidsi9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 9", "href": "dsi/dsi9" },
+    { "label": "Materi" }
+  ],
+  "dsi/aktivitasdsi9a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 9", "href": "dsi/dsi9" },
+    { "label": "Aktivitas A" }
+  ],
+  "dsi/aktivitasdsi9b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 9", "href": "dsi/dsi9" },
+    { "label": "Aktivitas B" }
+  ],
+  "dsi/aktivitasdsi9c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 9", "href": "dsi/dsi9" },
+    { "label": "Aktivitas C" }
+  ],
+  "dsi/aktivitasdsi9d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 9", "href": "dsi/dsi9" },
+    { "label": "Kuis Akhir" }
+  ],
+  "dsi/dsi10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 10" }
+  ],
+  "dsi/materidsi10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 10", "href": "dsi/dsi10" },
+    { "label": "Materi" }
+  ],
+  "dsi/aktivitasdsi10a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 10", "href": "dsi/dsi10" },
+    { "label": "Aktivitas A" }
+  ],
+  "dsi/aktivitasdsi10b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 10", "href": "dsi/dsi10" },
+    { "label": "Aktivitas B" }
+  ],
+  "dsi/aktivitasdsi10c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 10", "href": "dsi/dsi10" },
+    { "label": "Aktivitas C" }
+  ],
+  "dsi/aktivitasdsi10d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Dampak Sosial Informatika", "href": "dsi/materidsi" },
+    { "label": "Modul 10", "href": "dsi/dsi10" },
+    { "label": "Kuis Akhir" }
+  ],
+
+  "ad/materiad": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data" }
+  ],
+  "ad/ad1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 1" }
+  ],
+  "ad/materiad1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 1", "href": "ad/ad1" },
+    { "label": "Materi" }
+  ],
+  "ad/aktivitasaad1a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 1", "href": "ad/ad1" },
+    { "label": "Aktivitas A" }
+  ],
+  "ad/aktivitasaad1b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 1", "href": "ad/ad1" },
+    { "label": "Aktivitas B" }
+  ],
+  "ad/aktivitasaad1c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 1", "href": "ad/ad1" },
+    { "label": "Aktivitas C" }
+  ],
+  "ad/aktivitasaad1d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 1", "href": "ad/ad1" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ad/ad2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 2" }
+  ],
+  "ad/materiad2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 2", "href": "ad/ad2" },
+    { "label": "Materi" }
+  ],
+  "ad/aktivitasaad2a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 2", "href": "ad/ad2" },
+    { "label": "Aktivitas A" }
+  ],
+  "ad/aktivitasaad2b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 2", "href": "ad/ad2" },
+    { "label": "Aktivitas B" }
+  ],
+  "ad/aktivitasaad2c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 2", "href": "ad/ad2" },
+    { "label": "Aktivitas C" }
+  ],
+  "ad/aktivitasaad2d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 2", "href": "ad/ad2" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ad/ad3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 3" }
+  ],
+  "ad/materiad3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 3", "href": "ad/ad3" },
+    { "label": "Materi" }
+  ],
+  "ad/aktivitasaad3a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 3", "href": "ad/ad3" },
+    { "label": "Aktivitas A" }
+  ],
+  "ad/aktivitasaad3b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 3", "href": "ad/ad3" },
+    { "label": "Aktivitas B" }
+  ],
+  "ad/aktivitasaad3c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 3", "href": "ad/ad3" },
+    { "label": "Aktivitas C" }
+  ],
+  "ad/aktivitasaad3d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 3", "href": "ad/ad3" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ad/ad4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 4" }
+  ],
+  "ad/materiad4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 4", "href": "ad/ad4" },
+    { "label": "Materi" }
+  ],
+  "ad/aktivitasaad4a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 4", "href": "ad/ad4" },
+    { "label": "Aktivitas A" }
+  ],
+  "ad/aktivitasaad4b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 4", "href": "ad/ad4" },
+    { "label": "Aktivitas B" }
+  ],
+  "ad/aktivitasaad4c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 4", "href": "ad/ad4" },
+    { "label": "Aktivitas C" }
+  ],
+  "ad/aktivitasaad4d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 4", "href": "ad/ad4" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ad/ad5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 5" }
+  ],
+  "ad/materiad5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 5", "href": "ad/ad5" },
+    { "label": "Materi" }
+  ],
+  "ad/aktivitasaad5a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 5", "href": "ad/ad5" },
+    { "label": "Aktivitas A" }
+  ],
+  "ad/aktivitasaad5b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 5", "href": "ad/ad5" },
+    { "label": "Aktivitas B" }
+  ],
+  "ad/aktivitasaad5c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 5", "href": "ad/ad5" },
+    { "label": "Aktivitas C" }
+  ],
+  "ad/aktivitasaad5d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 5", "href": "ad/ad5" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ad/ad6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 6" }
+  ],
+  "ad/materiad6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 6", "href": "ad/ad6" },
+    { "label": "Materi" }
+  ],
+  "ad/aktivitasaad6a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 6", "href": "ad/ad6" },
+    { "label": "Aktivitas A" }
+  ],
+  "ad/aktivitasaad6b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 6", "href": "ad/ad6" },
+    { "label": "Aktivitas B" }
+  ],
+  "ad/aktivitasaad6c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 6", "href": "ad/ad6" },
+    { "label": "Aktivitas C" }
+  ],
+  "ad/aktivitasaad6d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 6", "href": "ad/ad6" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ad/ad7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 7" }
+  ],
+  "ad/materiad7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 7", "href": "ad/ad7" },
+    { "label": "Materi" }
+  ],
+  "ad/aktivitasaad7a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 7", "href": "ad/ad7" },
+    { "label": "Aktivitas A" }
+  ],
+  "ad/aktivitasaad7b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 7", "href": "ad/ad7" },
+    { "label": "Aktivitas B" }
+  ],
+  "ad/aktivitasaad7c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 7", "href": "ad/ad7" },
+    { "label": "Aktivitas C" }
+  ],
+  "ad/aktivitasaad7d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 7", "href": "ad/ad7" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ad/ad8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 8" }
+  ],
+  "ad/materiad8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 8", "href": "ad/ad8" },
+    { "label": "Materi" }
+  ],
+  "ad/aktivitasaad8a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 8", "href": "ad/ad8" },
+    { "label": "Aktivitas A" }
+  ],
+  "ad/aktivitasaad8b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 8", "href": "ad/ad8" },
+    { "label": "Aktivitas B" }
+  ],
+  "ad/aktivitasaad8c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 8", "href": "ad/ad8" },
+    { "label": "Aktivitas C" }
+  ],
+  "ad/aktivitasaad8d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 8", "href": "ad/ad8" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ad/ad9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 9" }
+  ],
+  "ad/materiad9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 9", "href": "ad/ad9" },
+    { "label": "Materi" }
+  ],
+  "ad/aktivitasaad9a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 9", "href": "ad/ad9" },
+    { "label": "Aktivitas A" }
+  ],
+  "ad/aktivitasaad9b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 9", "href": "ad/ad9" },
+    { "label": "Aktivitas B" }
+  ],
+  "ad/aktivitasaad9c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 9", "href": "ad/ad9" },
+    { "label": "Aktivitas C" }
+  ],
+  "ad/aktivitasaad9d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 9", "href": "ad/ad9" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ad/ad10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 10" }
+  ],
+  "ad/materiad10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 10", "href": "ad/ad10" },
+    { "label": "Materi" }
+  ],
+  "ad/aktivitasaad10a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 10", "href": "ad/ad10" },
+    { "label": "Aktivitas A" }
+  ],
+  "ad/aktivitasaad10b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 10", "href": "ad/ad10" },
+    { "label": "Aktivitas B" }
+  ],
+  "ad/aktivitasaad10c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 10", "href": "ad/ad10" },
+    { "label": "Aktivitas C" }
+  ],
+  "ad/aktivitasaad10d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Analisis Data", "href": "ad/materiad" },
+    { "label": "Modul 10", "href": "ad/ad10" },
+    { "label": "Kuis Akhir" }
+  ],
+
+  "bk/materibk": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional" }
+  ],
+  "bk/bk1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 1" }
+  ],
+  "bk/materibk1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 1", "href": "bk/bk1" },
+    { "label": "Materi" }
+  ],
+  "bk/aktivitasbk1a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 1", "href": "bk/bk1" },
+    { "label": "Aktivitas A" }
+  ],
+  "bk/aktivitasbk1b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 1", "href": "bk/bk1" },
+    { "label": "Aktivitas B" }
+  ],
+  "bk/aktivitasbk1c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 1", "href": "bk/bk1" },
+    { "label": "Aktivitas C" }
+  ],
+  "bk/aktivitasbk1d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 1", "href": "bk/bk1" },
+    { "label": "Kuis Akhir" }
+  ],
+  "bk/bk2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 2" }
+  ],
+  "bk/materibk2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 2", "href": "bk/bk2" },
+    { "label": "Materi" }
+  ],
+  "bk/aktivitasbk2a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 2", "href": "bk/bk2" },
+    { "label": "Aktivitas A" }
+  ],
+  "bk/aktivitasbk2b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 2", "href": "bk/bk2" },
+    { "label": "Aktivitas B" }
+  ],
+  "bk/aktivitasbk2c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 2", "href": "bk/bk2" },
+    { "label": "Aktivitas C" }
+  ],
+  "bk/aktivitasbk2d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 2", "href": "bk/bk2" },
+    { "label": "Kuis Akhir" }
+  ],
+  "bk/bk3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 3" }
+  ],
+  "bk/materibk3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 3", "href": "bk/bk3" },
+    { "label": "Materi" }
+  ],
+  "bk/aktivitasbk3a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 3", "href": "bk/bk3" },
+    { "label": "Aktivitas A" }
+  ],
+  "bk/aktivitasbk3b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 3", "href": "bk/bk3" },
+    { "label": "Aktivitas B" }
+  ],
+  "bk/aktivitasbk3c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 3", "href": "bk/bk3" },
+    { "label": "Aktivitas C" }
+  ],
+  "bk/aktivitasbk3d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 3", "href": "bk/bk3" },
+    { "label": "Kuis Akhir" }
+  ],
+  "bk/bk4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 4" }
+  ],
+  "bk/materibk4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 4", "href": "bk/bk4" },
+    { "label": "Materi" }
+  ],
+  "bk/aktivitasbk4a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 4", "href": "bk/bk4" },
+    { "label": "Aktivitas A" }
+  ],
+  "bk/aktivitasbk4b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 4", "href": "bk/bk4" },
+    { "label": "Aktivitas B" }
+  ],
+  "bk/aktivitasbk4c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 4", "href": "bk/bk4" },
+    { "label": "Aktivitas C" }
+  ],
+  "bk/aktivitasbk4d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 4", "href": "bk/bk4" },
+    { "label": "Kuis Akhir" }
+  ],
+  "bk/bk5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 5" }
+  ],
+  "bk/materibk5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 5", "href": "bk/bk5" },
+    { "label": "Materi" }
+  ],
+  "bk/aktivitasbk5a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 5", "href": "bk/bk5" },
+    { "label": "Aktivitas A" }
+  ],
+  "bk/aktivitasbk5b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 5", "href": "bk/bk5" },
+    { "label": "Aktivitas B" }
+  ],
+  "bk/aktivitasbk5c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 5", "href": "bk/bk5" },
+    { "label": "Aktivitas C" }
+  ],
+  "bk/aktivitasbk5d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 5", "href": "bk/bk5" },
+    { "label": "Kuis Akhir" }
+  ],
+  "bk/bk6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Tumpukan (Stack)" }
+  ],
+  "bk/materibk6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Tumpukan (Stack)", "href": "bk/bk6" },
+    { "label": "Materi" }
+  ],
+  "bk/aktivitasbk6a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Tumpukan (Stack)", "href": "bk/bk6" },
+    { "label": "Aktivitas A" }
+  ],
+  "bk/aktivitasbk6b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Tumpukan (Stack)", "href": "bk/bk6" },
+    { "label": "Aktivitas B" }
+  ],
+  "bk/aktivitasbk6c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Tumpukan (Stack)", "href": "bk/bk6" },
+    { "label": "Aktivitas C" }
+  ],
+  "bk/aktivitasbk6d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Tumpukan (Stack)", "href": "bk/bk6" },
+    { "label": "Kuis Akhir" }
+  ],
+  "bk/bk7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 7" }
+  ],
+  "bk/materibk7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 7", "href": "bk/bk7" },
+    { "label": "Materi" }
+  ],
+  "bk/aktivitasbk7a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 7", "href": "bk/bk7" },
+    { "label": "Aktivitas A" }
+  ],
+  "bk/aktivitasbk7b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 7", "href": "bk/bk7" },
+    { "label": "Aktivitas B" }
+  ],
+  "bk/aktivitasbk7c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 7", "href": "bk/bk7" },
+    { "label": "Aktivitas C" }
+  ],
+  "bk/aktivitasbk7d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 7", "href": "bk/bk7" },
+    { "label": "Kuis Akhir" }
+  ],
+  "bk/bk8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 8" }
+  ],
+  "bk/materibk8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 8", "href": "bk/bk8" },
+    { "label": "Materi" }
+  ],
+  "bk/aktivitasbk8a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 8", "href": "bk/bk8" },
+    { "label": "Aktivitas A" }
+  ],
+  "bk/aktivitasbk8b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 8", "href": "bk/bk8" },
+    { "label": "Aktivitas B" }
+  ],
+  "bk/aktivitasbk8c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 8", "href": "bk/bk8" },
+    { "label": "Aktivitas C" }
+  ],
+  "bk/aktivitasbk8d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 8", "href": "bk/bk8" },
+    { "label": "Kuis Akhir" }
+  ],
+  "bk/bk9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 9" }
+  ],
+  "bk/materibk9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 9", "href": "bk/bk9" },
+    { "label": "Materi" }
+  ],
+  "bk/aktivitasbk9a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 9", "href": "bk/bk9" },
+    { "label": "Aktivitas A" }
+  ],
+  "bk/aktivitasbk9b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 9", "href": "bk/bk9" },
+    { "label": "Aktivitas B" }
+  ],
+  "bk/aktivitasbk9c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 9", "href": "bk/bk9" },
+    { "label": "Aktivitas C" }
+  ],
+  "bk/aktivitasbk9d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 9", "href": "bk/bk9" },
+    { "label": "Kuis Akhir" }
+  ],
+  "bk/bk10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 10" }
+  ],
+  "bk/materibk10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 10", "href": "bk/bk10" },
+    { "label": "Materi" }
+  ],
+  "bk/aktivitasbk10a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 10", "href": "bk/bk10" },
+    { "label": "Aktivitas A" }
+  ],
+  "bk/aktivitasbk10b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 10", "href": "bk/bk10" },
+    { "label": "Aktivitas B" }
+  ],
+  "bk/aktivitasbk10c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 10", "href": "bk/bk10" },
+    { "label": "Aktivitas C" }
+  ],
+  "bk/aktivitasbk10d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Berpikir Komputasional", "href": "bk/materibk" },
+    { "label": "Modul 10", "href": "bk/bk10" },
+    { "label": "Kuis Akhir" }
+  ],
+
+  "ap/materidap": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman" }
+  ],
+  "ap/ap1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 1" }
+  ],
+  "ap/materiap1": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 1", "href": "ap/ap1" },
+    { "label": "Materi" }
+  ],
+  "ap/aktivitasaap1a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 1", "href": "ap/ap1" },
+    { "label": "Aktivitas A" }
+  ],
+  "ap/aktivitasaap1b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 1", "href": "ap/ap1" },
+    { "label": "Aktivitas B" }
+  ],
+  "ap/aktivitasaap1c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 1", "href": "ap/ap1" },
+    { "label": "Aktivitas C" }
+  ],
+  "ap/aktivitasaap1d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 1", "href": "ap/ap1" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ap/ap2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 2" }
+  ],
+  "ap/materiap2": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 2", "href": "ap/ap2" },
+    { "label": "Materi" }
+  ],
+  "ap/aktivitasaap2a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 2", "href": "ap/ap2" },
+    { "label": "Aktivitas A" }
+  ],
+  "ap/aktivitasaap2b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 2", "href": "ap/ap2" },
+    { "label": "Aktivitas B" }
+  ],
+  "ap/aktivitasaap2c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 2", "href": "ap/ap2" },
+    { "label": "Aktivitas C" }
+  ],
+  "ap/aktivitasaap2d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 2", "href": "ap/ap2" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ap/ap3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 3" }
+  ],
+  "ap/materiap3": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 3", "href": "ap/ap3" },
+    { "label": "Materi" }
+  ],
+  "ap/aktivitasaap3a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 3", "href": "ap/ap3" },
+    { "label": "Aktivitas A" }
+  ],
+  "ap/aktivitasaap3b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 3", "href": "ap/ap3" },
+    { "label": "Aktivitas B" }
+  ],
+  "ap/aktivitasaap3c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 3", "href": "ap/ap3" },
+    { "label": "Aktivitas C" }
+  ],
+  "ap/aktivitasaap3d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 3", "href": "ap/ap3" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ap/ap4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 4" }
+  ],
+  "ap/materiap4": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 4", "href": "ap/ap4" },
+    { "label": "Materi" }
+  ],
+  "ap/aktivitasaap4a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 4", "href": "ap/ap4" },
+    { "label": "Aktivitas A" }
+  ],
+  "ap/aktivitasaap4b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 4", "href": "ap/ap4" },
+    { "label": "Aktivitas B" }
+  ],
+  "ap/aktivitasaap4c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 4", "href": "ap/ap4" },
+    { "label": "Aktivitas C" }
+  ],
+  "ap/aktivitasaap4d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 4", "href": "ap/ap4" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ap/ap5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 5" }
+  ],
+  "ap/materiap5": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 5", "href": "ap/ap5" },
+    { "label": "Materi" }
+  ],
+  "ap/aktivitasaap5a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 5", "href": "ap/ap5" },
+    { "label": "Aktivitas A" }
+  ],
+  "ap/aktivitasaap5b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 5", "href": "ap/ap5" },
+    { "label": "Aktivitas B" }
+  ],
+  "ap/aktivitasaap5c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 5", "href": "ap/ap5" },
+    { "label": "Aktivitas C" }
+  ],
+  "ap/aktivitasaap5d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 5", "href": "ap/ap5" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ap/ap6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 6" }
+  ],
+  "ap/materiap6": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 6", "href": "ap/ap6" },
+    { "label": "Materi" }
+  ],
+  "ap/aktivitasaap6a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 6", "href": "ap/ap6" },
+    { "label": "Aktivitas A" }
+  ],
+  "ap/aktivitasaap6b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 6", "href": "ap/ap6" },
+    { "label": "Aktivitas B" }
+  ],
+  "ap/aktivitasaap6c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 6", "href": "ap/ap6" },
+    { "label": "Aktivitas C" }
+  ],
+  "ap/aktivitasaap6d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 6", "href": "ap/ap6" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ap/ap7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 7" }
+  ],
+  "ap/materiap7": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 7", "href": "ap/ap7" },
+    { "label": "Materi" }
+  ],
+  "ap/aktivitasaap7a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 7", "href": "ap/ap7" },
+    { "label": "Aktivitas A" }
+  ],
+  "ap/aktivitasaap7b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 7", "href": "ap/ap7" },
+    { "label": "Aktivitas B" }
+  ],
+  "ap/aktivitasaap7c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 7", "href": "ap/ap7" },
+    { "label": "Aktivitas C" }
+  ],
+  "ap/aktivitasaap7d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 7", "href": "ap/ap7" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ap/ap8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 8" }
+  ],
+  "ap/materiap8": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 8", "href": "ap/ap8" },
+    { "label": "Materi" }
+  ],
+  "ap/aktivitasaap8a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 8", "href": "ap/ap8" },
+    { "label": "Aktivitas A" }
+  ],
+  "ap/aktivitasaap8b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 8", "href": "ap/ap8" },
+    { "label": "Aktivitas B" }
+  ],
+  "ap/aktivitasaap8c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 8", "href": "ap/ap8" },
+    { "label": "Aktivitas C" }
+  ],
+  "ap/aktivitasaap8d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 8", "href": "ap/ap8" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ap/ap9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 9" }
+  ],
+  "ap/materiap9": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 9", "href": "ap/ap9" },
+    { "label": "Materi" }
+  ],
+  "ap/aktivitasaap9a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 9", "href": "ap/ap9" },
+    { "label": "Aktivitas A" }
+  ],
+  "ap/aktivitasaap9b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 9", "href": "ap/ap9" },
+    { "label": "Aktivitas B" }
+  ],
+  "ap/aktivitasaap9c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 9", "href": "ap/ap9" },
+    { "label": "Aktivitas C" }
+  ],
+  "ap/aktivitasaap9d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 9", "href": "ap/ap9" },
+    { "label": "Kuis Akhir" }
+  ],
+  "ap/ap10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 10" }
+  ],
+  "ap/materiap10": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 10", "href": "ap/ap10" },
+    { "label": "Materi" }
+  ],
+  "ap/aktivitasaap10a": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 10", "href": "ap/ap10" },
+    { "label": "Aktivitas A" }
+  ],
+  "ap/aktivitasaap10b": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 10", "href": "ap/ap10" },
+    { "label": "Aktivitas B" }
+  ],
+  "ap/aktivitasaap10c": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 10", "href": "ap/ap10" },
+    { "label": "Aktivitas C" }
+  ],
+  "ap/aktivitasaap10d": [
+    { "label": "Beranda", "href": "" },
+    { "label": "Algoritma Pemrograman", "href": "ap/materidap" },
+    { "label": "Modul 10", "href": "ap/ap10" },
+    { "label": "Kuis Akhir" }
+  ]
+}
