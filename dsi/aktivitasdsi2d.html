@@ -17,31 +17,71 @@
     .scenario-panel .scenario-title { font-size:1.4rem; font-weight:700; color:#3b2b1e; margin-bottom:0.3rem; }
     .scenario-panel .scenario-story { font-size:0.95rem; color:#5c4638; background:#f3ecff; padding:0.8rem 1.2rem; border-radius:12px; margin:0.5rem 0 1.2rem 0; border-left:4px solid #b07be0; line-height:1.7; }
 
-    /* ===== FORM IDENTITAS ===== */
-    .form-siswa-box { background:#fff; border-radius:20px; padding:1.5rem 1.8rem; margin:1.5rem 0; border:3px solid #b07be0; box-shadow:0 6px 20px rgba(176,123,224,0.15); position:relative; }
-    .form-siswa-box::before { content:'📝'; position:absolute; top:-18px; left:1.5rem; background:#fff; padding:0 0.5rem; font-size:1.5rem; }
-    .form-siswa-box .form-title { font-size:1.1rem; font-weight:700; color:#5c2f8a; margin-bottom:0.3rem; }
-    .form-siswa-box .form-desc { font-size:0.85rem; color:#5c4638; margin-bottom:1.2rem; line-height:1.6; }
-    .form-sekolah-wrapper, .form-jumlah-wrapper, .form-kelas-wrapper { display:flex; align-items:center; gap:0.8rem; margin-bottom:1rem; flex-wrap:wrap; }
-    .form-sekolah-wrapper { padding-bottom:1rem; border-bottom:2px dashed #e5dbd0; }
-    .form-jumlah-wrapper { padding-bottom:1rem; border-bottom:2px dashed #e5dbd0; }
-    .form-kelas-wrapper { padding-top:1rem; border-top:2px dashed #e5dbd0; }
-    .form-sekolah-wrapper label, .form-jumlah-wrapper label, .form-kelas-wrapper label { font-weight:700; color:#4d3829; font-size:0.95rem; min-width:90px; }
-    .form-sekolah-wrapper input[type="text"], .form-kelas-wrapper input[type="text"] { flex:1; min-width:180px; max-width:320px; padding:0.6rem 1rem; border-radius:10px; border:2px solid #e5dbd0; background:#fcfaf7; font-size:0.95rem; font-weight:600; color:#3d2c1f; outline:none; transition:all 0.15s; font-family:inherit; }
-    .form-sekolah-wrapper input[type="text"]:focus, .form-kelas-wrapper input[type="text"]:focus { border-color:#b07be0; background:#fff; box-shadow:0 0 0 3px rgba(176,123,224,0.18); }
-    .form-jumlah-wrapper select { padding:0.5rem 1rem; border-radius:10px; border:2px solid #b07be0; background:#f3ecff; font-size:1rem; font-weight:700; color:#5c2f8a; cursor:pointer; font-family:inherit; transition:all 0.15s; }
-    .form-siswa-list { display:flex; flex-direction:column; gap:0.7rem; margin-bottom:1rem; }
-    .form-siswa-item { display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; animation:slideIn 0.3s ease; }
-    @keyframes slideIn { from{opacity:0;transform:translateX(-10px);} to{opacity:1;transform:translateX(0);} }
-    .form-siswa-item .siswa-num { background:#b07be0; color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; flex-shrink:0; }
-    .form-siswa-item input[type="text"] { flex:1; min-width:180px; padding:0.6rem 1rem; border-radius:10px; border:2px solid #e5dbd0; background:#fcfaf7; font-size:0.92rem; color:#3d2c1f; outline:none; transition:all 0.15s; font-family:inherit; }
-    .form-siswa-item input[type="text"]:focus { border-color:#b07be0; background:#fff; box-shadow:0 0 0 3px rgba(176,123,224,0.18); }
-    .form-error { display:none; background:#fdf0f0; border:2px solid #d4a0a0; color:#a84a3a; padding:0.6rem 1rem; border-radius:10px; font-size:0.88rem; font-weight:600; margin-top:0.8rem; }
-    .form-error.show { display:block; animation:slideIn 0.3s ease; }
-    .btn-mulai { padding:1rem 3rem; font-size:1.1rem; font-weight:700; color:#fff; background:linear-gradient(135deg,#b07be0,#8a4bbf); border-radius:50px; border:none; cursor:pointer; transition:all 0.25s ease; box-shadow:0 6px 24px rgba(176,123,224,0.30); text-decoration:none; font-family:inherit; display:inline-flex; align-items:center; gap:0.5rem; }
-    .btn-mulai:hover:not(:disabled) { transform:translateY(-3px) scale(1.02); box-shadow:0 10px 32px rgba(176,123,224,0.40); }
-    .btn-mulai:disabled { opacity:0.4; cursor:not-allowed; transform:none !important; }
-    .btn-wrapper-mulai { text-align:center; margin-top:1.2rem; }
+    /* ===== INFO IDENTITAS (read-only, dari User Bar) ===== */
+    .info-identitas-box {
+      background: linear-gradient(135deg, #f3ecff, #e6f0ff);
+      border: 2px solid #b07be0;
+      border-radius: 18px;
+      padding: 1.1rem 1.3rem;
+      margin: 1.2rem 0;
+      box-shadow: 0 6px 18px rgba(176, 123, 224, 0.12);
+    }
+    .iib-header {
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-bottom: 0.7rem; padding-bottom: 0.6rem;
+      border-bottom: 2px dashed #d4b8f5;
+    }
+    .iib-icon { font-size: 1.3rem; line-height: 1; }
+    .iib-title { font-weight: 800; color: #5c2f8a; font-size: 0.95rem; flex: 1; }
+    .iib-badge {
+      background: #fff; color: #5c2f8a;
+      border: 2px solid #b07be0;
+      padding: 0.15rem 0.7rem; border-radius: 20px;
+      font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px;
+    }
+    .iib-body {
+      background: #fff; border-radius: 12px;
+      padding: 0.8rem 1rem; margin-bottom: 0.8rem; line-height: 1.5;
+    }
+    .iib-nama {
+      font-weight: 800; color: #3b2b1e;
+      font-size: 1rem; margin-bottom: 0.15rem; word-break: break-word;
+    }
+    .iib-meta { font-size: 0.82rem; color: #5c4638; }
+    .iib-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .btn-ubah-identitas {
+      padding: 0.75rem 1.5rem; border-radius: 30px;
+      border: 2px solid #b07be0; background: #fff;
+      color: #5c2f8a; font-weight: 700; font-size: 0.88rem;
+      font-family: inherit; cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-ubah-identitas:hover {
+      background: #f3ecff; transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(176, 123, 224, 0.25);
+    }
+    .iib-hint {
+      font-size: 0.78rem; color: #7a6656;
+      font-style: italic; margin-top: 0.6rem; line-height: 1.5;
+    }
+    .btn-mulai {
+      padding: 0.75rem 2rem; font-size: 0.95rem;
+      font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, #b07be0, #8a4bbf);
+      border-radius: 30px; border: none; cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 20px rgba(176, 123, 224, 0.3);
+      font-family: inherit;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-mulai:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 10px 28px rgba(176, 123, 224, 0.35);
+    }
+    .btn-mulai:disabled {
+      opacity: 0.45; cursor: not-allowed; transform: none !important;
+    }
 
     /* ===== SOAL ===== */
     .tes-header { background:#f3ecff; border-radius:12px; padding:0.9rem 1.2rem; margin-bottom:1rem; border-left:5px solid #b07be0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem; }
@@ -131,7 +171,6 @@
     /* ===== RESPONSIF ===== */
     @media (max-width:720px) {
       .scenario-panel { padding:1.2rem; }
-      .form-siswa-box { padding:1.2rem 1rem; }
       .sertifikat-box { padding:1.5rem 1.2rem; }
       .sertifikat-box .sf-nama { font-size:1.4rem; }
       .sertifikat-box .sf-title { font-size:1.3rem; }
@@ -145,21 +184,21 @@
       .soal-kuis .pertanyaan { font-size:0.92rem; }
       .soal-kuis .opsi-kuis label { font-size:0.85rem; padding:0.4rem 0.7rem; }
       .tes-header { flex-direction:column; align-items:flex-start; }
-      .form-siswa-item input[type="text"] { min-width:100px; }
       .status-kirim .btn-retry { margin-left:0; width:100%; text-align:center; }
       .sertifikat-box .sf-nama { font-size:1.2rem; }
       .sertifikat-box .sf-title { font-size:1.15rem; }
       .sertifikat-box .sf-level-badge { font-size:0.9rem; padding:0.4rem 1.2rem; }
       .sertifikat-actions { flex-direction:column; }
       .btn-sertifikat { width:100%; justify-content:center; }
+      .iib-actions { flex-direction:column; }
+      .btn-ubah-identitas,
+      .iib-actions .btn-mulai { width:100%; justify-content:center; }
     }
   </style>
 </head>
 <body>
 
   <header id="header-utama"></header>
-
-  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
   <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
@@ -188,45 +227,27 @@
             sesuai skormu. Jika belum lulus, kamu bisa mengulang kuis ini.
           </div>
 
-          <!-- FORM IDENTITAS -->
-          <div class="form-siswa-box" id="formSiswaBox">
-            <div class="form-title">📝 Identitas Penerima Sertifikat</div>
-            <div class="form-desc">
-              Isi identitas sebelum memulai. Nama akan tercantum di sertifikat digital.
-              Bisa diisi beberapa nama: <em>Budi &amp; Siti &amp; Raka</em>.
+          <!-- INFO IDENTITAS (read-only dari User Bar) -->
+          <div class="info-identitas-box" id="infoIdentitasBox">
+            <div class="iib-header">
+              <span class="iib-icon">👤</span>
+              <span class="iib-title">Identitas Penerima Sertifikat</span>
+              <span class="iib-badge" id="iibBadge">—</span>
             </div>
-
-            <div class="form-sekolah-wrapper">
-              <label for="inputSekolah">Sekolah:</label>
-              <input type="text" id="inputSekolah" placeholder="SMPN 2 Talegong" maxlength="60" autocomplete="off" spellcheck="false" oninput="cekFormSiswa()">
+            <div class="iib-body">
+              <div class="iib-nama" id="iibNama">—</div>
+              <div class="iib-meta" id="iibMeta">—</div>
             </div>
-
-            <div class="form-jumlah-wrapper">
-              <label for="jumlahSiswa">Jumlah Siswa:</label>
-              <select id="jumlahSiswa" onchange="updateFormSiswa(this.value)">
-                <option value="1" selected>1 orang</option>
-                <option value="2">2 orang</option>
-                <option value="3">3 orang</option>
-                <option value="4">4 orang</option>
-                <option value="5">5 orang</option>
-              </select>
-            </div>
-
-            <div class="form-siswa-list" id="formSiswaList"></div>
-
-            <div class="form-kelas-wrapper">
-              <label for="inputKelas">Kelas:</label>
-              <input type="text" id="inputKelas" placeholder="Contoh: 7A" maxlength="10" autocomplete="off" oninput="cekFormSiswa()">
-            </div>
-
-            <div class="form-error" id="formError">
-              ⚠️ Semua nama, kelas, dan sekolah harus diisi sebelum memulai!
-            </div>
-
-            <div class="btn-wrapper-mulai">
-              <button class="btn-mulai" id="btnMulai" onclick="mulaiKuis()" disabled>
+            <div class="iib-actions">
+              <button type="button" class="btn-ubah-identitas" id="btnUbahIdentitas">
+                ⚙️ Ubah Identitas
+              </button>
+              <button type="button" class="btn-mulai" id="btnMulai" onclick="mulaiKuis()">
                 🏆 Mulai Kuis Akhir
               </button>
+            </div>
+            <div class="iib-hint" id="iibHint">
+              Identitas dikelola dari menu pojok kanan atas. Klik <strong>⚙️ Ubah Identitas</strong> jika perlu.
             </div>
           </div>
 
@@ -313,8 +334,6 @@
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
   <script src="../script.js"></script>
-  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
-  <!-- ⚠️ TIDAK perlu window.DUTA_MODUL_AKTIF — auto-detect -->
 
   <script>
     (function() {
@@ -332,46 +351,43 @@
       // STATE
       // ============================================
       let daftarSiswa = [];
-      let jumlahSiswaSekarang = 1;
-
       let jawabanKuis = {};
       let kuisSubmitted = false;
       let kuisBenar = 0;
       let kuisSelesai = false;
       let lulus = false;
-
       let kirimTimeoutId = null;
       let kirimSukses = false;
 
       // ============================================
       // DOM REFS
       // ============================================
-      const elFormSiswaBox = document.getElementById('formSiswaBox');
-      const elFormSiswaList = document.getElementById('formSiswaList');
-      const elInputSekolah = document.getElementById('inputSekolah');
-      const elInputKelas = document.getElementById('inputKelas');
-      const elFormError = document.getElementById('formError');
-      const elBtnMulai = document.getElementById('btnMulai');
-      const elAreaKuis = document.getElementById('areaKuis');
+      const elInfoIdentitasBox = document.getElementById('infoIdentitasBox');
+      const elIibBadge         = document.getElementById('iibBadge');
+      const elIibNama          = document.getElementById('iibNama');
+      const elIibMeta          = document.getElementById('iibMeta');
+      const elBtnUbahIdentitas = document.getElementById('btnUbahIdentitas');
+      const elBtnMulai         = document.getElementById('btnMulai');
+      const elAreaKuis         = document.getElementById('areaKuis');
 
       const elSoalContainer = document.getElementById('soalContainer');
-      const elTesProgress = document.getElementById('tesProgress');
+      const elTesProgress   = document.getElementById('tesProgress');
       const elBtnPeriksaKuis = document.getElementById('btnPeriksaKuis');
-      const elBtnUlangiKuis = document.getElementById('btnUlangiKuis');
+      const elBtnUlangiKuis  = document.getElementById('btnUlangiKuis');
 
       const elSertifikatWrapper = document.getElementById('sertifikatWrapper');
-      const elSfNama = document.getElementById('sfNama');
-      const elSfKelas = document.getElementById('sfKelas');
-      const elSfBadge = document.getElementById('sfBadge');
-      const elSfSkor = document.getElementById('sfSkor');
+      const elSfNama    = document.getElementById('sfNama');
+      const elSfKelas   = document.getElementById('sfKelas');
+      const elSfBadge   = document.getElementById('sfBadge');
+      const elSfSkor    = document.getElementById('sfSkor');
       const elSfTanggal = document.getElementById('sfTanggal');
 
-      const elGagalBox = document.getElementById('gagalBox');
+      const elGagalBox  = document.getElementById('gagalBox');
       const elGagalDesc = document.getElementById('gagalDesc');
 
-      const elStatusKirim = document.getElementById('statusKirim');
-      const elStatusKirimText = document.getElementById('statusKirimText');
-      const elStatusSpinner = document.getElementById('statusSpinner');
+      const elStatusKirim      = document.getElementById('statusKirim');
+      const elStatusKirimText  = document.getElementById('statusKirimText');
+      const elStatusSpinner    = document.getElementById('statusSpinner');
 
       // ============================================
       // HELPERS
@@ -400,50 +416,6 @@
         };
       }
 
-      // ============================================
-      // FORM IDENTITAS
-      // ============================================
-      window.updateFormSiswa = function(jumlah) {
-        jumlahSiswaSekarang = parseInt(jumlah);
-        elFormSiswaList.innerHTML = '';
-        for (let i = 0; i < jumlahSiswaSekarang; i++) {
-          const div = document.createElement('div');
-          div.className = 'form-siswa-item';
-          div.innerHTML = '<span class="siswa-num">' + (i+1) + '</span><input type="text" id="namaSiswa_' + i + '" placeholder="Nama lengkap siswa ' + (i+1) + '" maxlength="40" autocomplete="off" oninput="cekFormSiswa()">';
-          elFormSiswaList.appendChild(div);
-        }
-        cekFormSiswa();
-      };
-
-      window.cekFormSiswa = function() {
-        const sekolah = elInputSekolah.value.trim();
-        const kelas = elInputKelas.value.trim();
-        let semuaNama = true;
-        for (let i = 0; i < jumlahSiswaSekarang; i++) {
-          const inp = document.getElementById('namaSiswa_' + i);
-          if (!inp || inp.value.trim() === '') { semuaNama = false; break; }
-        }
-        elBtnMulai.disabled = !(semuaNama && kelas !== '' && sekolah !== '');
-        elFormError.classList.remove('show');
-      };
-
-      function validasiFormSiswa() {
-        const sekolah = elInputSekolah.value.trim();
-        const kelas = elInputKelas.value.trim();
-        if (sekolah === '') { tampilErr('Sekolah harus diisi!'); return false; }
-        if (kelas === '') { tampilErr('Kelas harus diisi!'); return false; }
-        for (let i = 0; i < jumlahSiswaSekarang; i++) {
-          const inp = document.getElementById('namaSiswa_' + i);
-          if (!inp || inp.value.trim() === '') { tampilErr('Nama siswa ' + (i+1) + ' harus diisi!'); return false; }
-        }
-        elFormError.classList.remove('show');
-        return true;
-      }
-      function tampilErr(msg) {
-        elFormError.textContent = '⚠️ ' + msg;
-        elFormError.classList.add('show');
-      }
-
       function formatNamaSiswa(daftar) {
         if (!daftar || daftar.length === 0) return 'Siswa Informatika';
         if (daftar.length === 1) return daftar[0].nama;
@@ -454,28 +426,109 @@
       }
 
       // ============================================
+      // IDENTITAS — dari script.js (localStorage)
+      // ============================================
+      function refreshIdentitasUI() {
+        const s = window.ambilSession ? window.ambilSession() : null;
+
+        if (!s) {
+          elIibBadge.textContent = 'TAMU';
+          elIibNama.textContent = 'Belum ada identitas';
+          elIibMeta.textContent = 'Silakan login atau isi identitas tamu.';
+          elBtnMulai.disabled = true;
+          return;
+        }
+
+        if (window.sinkronkanIdentitasDenganSession) {
+          window.sinkronkanIdentitasDenganSession();
+        }
+        const dd = window.ambilIdentitasSiswaMulti ? window.ambilIdentitasSiswaMulti() : null;
+
+        if (s.tipe === 'login') {
+          elIibBadge.textContent = 'LOGIN';
+          const teman = (dd && Array.isArray(dd.teman)) ? dd.teman : [];
+          const semuaNama = [s.nama].concat(teman.map(function(t) { return t.nama; }));
+          elIibNama.textContent = semuaNama.join(' & ');
+          elIibMeta.textContent = 'Kelas ' + (s.kelas || '—') + ' · ' + (s.sekolah || '—') +
+            (teman.length > 0 ? ' · ' + teman.length + ' teman' : '');
+          elBtnMulai.disabled = false;
+        } else {
+          elIibBadge.textContent = 'TAMU';
+          if (!dd || !dd.tamu || !Array.isArray(dd.tamu.daftarNama) || dd.tamu.daftarNama.length === 0) {
+            elIibNama.textContent = s.nama || s.user_id;
+            elIibMeta.textContent = 'Kode: ' + s.user_id + ' · Isi identitas tamu dulu';
+            elBtnMulai.disabled = true;
+          } else {
+            elIibNama.textContent = dd.tamu.daftarNama.join(' & ');
+            elIibMeta.textContent = 'Kelas ' + (dd.tamu.kelas || '—') + ' · ' + (dd.tamu.sekolah || '—');
+            elBtnMulai.disabled = false;
+          }
+        }
+
+        // Siapkan daftarSiswa untuk sertifikat
+        daftarSiswa = [];
+        if (dd && dd.tipe === 'login') {
+          if (dd.utama) daftarSiswa.push(dd.utama);
+          (dd.teman || []).forEach(function(t) { daftarSiswa.push(t); });
+        } else if (dd && dd.tipe === 'tamu' && dd.tamu && Array.isArray(dd.tamu.daftarNama)) {
+          dd.tamu.daftarNama.forEach(function(nama) {
+            daftarSiswa.push({ nama: nama, kelas: dd.tamu.kelas, sekolah: dd.tamu.sekolah });
+          });
+        }
+      }
+
+      if (elBtnUbahIdentitas) {
+        elBtnUbahIdentitas.addEventListener('click', function() {
+          if (window.bukaModalIdentitas) window.bukaModalIdentitas();
+          else alert('Fitur identitas belum siap. Coba refresh halaman.');
+          setTimeout(refreshIdentitasUI, 500);
+        });
+      }
+
+      // ============================================
       // MULAI KUIS
       // ============================================
       window.mulaiKuis = async function() {
-        if (!validasiFormSiswa()) return;
+        refreshIdentitasUI();
 
-        daftarSiswa = [];
-        const sekolah = elInputSekolah.value.trim();
-        const kelas = elInputKelas.value.trim();
-        for (let i = 0; i < jumlahSiswaSekarang; i++) {
-          const inp = document.getElementById('namaSiswa_' + i);
-          daftarSiswa.push({ nama: inp.value.trim(), kelas: kelas, sekolah: sekolah });
+        const d = window.ambilIdentitasSiswaMulti ? window.ambilIdentitasSiswaMulti() : null;
+        const s = window.ambilSession ? window.ambilSession() : null;
+
+        if (!s) {
+          alert('⚠️ Silakan login atau isi identitas tamu terlebih dahulu.');
+          if (window.bukaModalIdentitas) window.bukaModalIdentitas();
+          return;
         }
 
-        const namaGabung = formatNamaSiswa(daftarSiswa);
+        let namaGabung = '';
+        let sekolahUtama = '';
+        let kelasUtama = '';
 
-        if (window.simpanIdentitasSiswa) window.simpanIdentitasSiswa(sekolah, namaGabung, kelas);
-        try { localStorage.setItem('labdsi2_siswa', JSON.stringify(daftarSiswa)); } catch (e) {}
+        if (d && d.tipe === 'login') {
+          const names = [];
+          if (d.utama && d.utama.nama) names.push(d.utama.nama);
+          (d.teman || []).forEach(function(t) { if (t && t.nama) names.push(t.nama); });
+          namaGabung = names.join(' & ');
+          sekolahUtama = (d.utama && d.utama.sekolah) || s.sekolah || '';
+          kelasUtama = (d.utama && d.utama.kelas) || s.kelas || '';
+        } else if (d && d.tipe === 'tamu' && d.tamu && Array.isArray(d.tamu.daftarNama) && d.tamu.daftarNama.length > 0) {
+          namaGabung = d.tamu.daftarNama.join(' & ');
+          sekolahUtama = d.tamu.sekolah;
+          kelasUtama = d.tamu.kelas;
+        } else {
+          alert('⚠️ Identitas belum lengkap. Klik "⚙️ Ubah Identitas" di atas.');
+          if (window.bukaModalIdentitas) window.bukaModalIdentitas();
+          return;
+        }
+
+        if (window.simpanIdentitasSiswa) {
+          window.simpanIdentitasSiswa(sekolahUtama, namaGabung, kelasUtama);
+        }
 
         elBtnMulai.disabled = true;
         elBtnMulai.textContent = '⏳ Menyiapkan sesi...';
 
-        const hasilSesi = await window.dutaPastikanPunyaKode(sekolah, namaGabung, kelas);
+        const hasilSesi = await window.dutaPastikanPunyaKode(sekolahUtama, namaGabung, kelasUtama);
         if (!hasilSesi || !hasilSesi.ok) {
           alert('⚠️ Gagal menyiapkan sesi: ' + ((hasilSesi && hasilSesi.error) || 'Tidak diketahui'));
           elBtnMulai.disabled = false;
@@ -485,12 +538,12 @@
 
         if (window.simpanIdModul) window.simpanIdModul(MODUL_KEY, hasilSesi.user_id);
 
-        elFormSiswaBox.style.display = 'none';
+        elInfoIdentitasBox.style.display = 'none';
         elAreaKuis.style.display = 'block';
         renderSoal();
         updateProgress();
 
-        setTimeout(() => { elAreaKuis.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 200);
+        setTimeout(function() { elAreaKuis.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 200);
       };
 
       // ============================================
@@ -736,8 +789,13 @@
       function tampilkanSertifikat() {
         const total = soalData.length;
         const namaGabung = formatNamaSiswa(daftarSiswa);
-        const kelas = elInputKelas.value.trim();
-        const sekolah = elInputSekolah.value.trim();
+
+        let kelas = '—';
+        let sekolah = '—';
+        if (daftarSiswa && daftarSiswa.length > 0) {
+          kelas = daftarSiswa[0].kelas || '—';
+          sekolah = daftarSiswa[0].sekolah || '—';
+        }
 
         let badgeHtml = '';
         let badgeClass = 'sf-level-badge ';
@@ -803,12 +861,12 @@
       });
 
       // ============================================
-      // SIMPAN NILAI KUIS (skor_kuis + nilai_akhir + kunci modul)
+      // SIMPAN NILAI KUIS — BULK
       // ============================================
       async function simpanNilaiKuis() {
         const skorKuis = Math.round(40 + (kuisBenar / soalData.length) * 60);
 
-        // Hitung nilai akhir: rata-rata skor a-c × 0.5 + skor kuis × 0.5
+        // Hitung kasar (backend akan timpa saat kunciModul:true)
         let nilaiAkhir = skorKuis;
         try {
           const prev = JSON.parse(localStorage.getItem('labdsi2_progress') || '{}');
@@ -831,6 +889,9 @@
           localStorage.setItem('labdsi2_progress', JSON.stringify(prev));
         } catch (e) {}
 
+        // Pastikan daftarSiswa terisi sebelum kirim
+        refreshIdentitasUI();
+
         elStatusKirim.className = 'status-kirim info show';
         elStatusSpinner.style.display = 'inline-block';
         elStatusKirimText.innerHTML = 'Mengirim nilai akhir (' + nilaiAkhir + ')...';
@@ -848,13 +909,9 @@
         }, 12000);
 
         try {
-          // PENTING: hanya kirim 'kuis' + kunciModul:true
-          const hasil = await window.dutaSimpanProgress(
-            MODUL_KEY,
-            'd',
-            { kuis: skorKuis },
-            nilaiAkhir,
-            { kunciModul: true }
+          // Kirim ke SEMUA user (utama + teman) via bulk
+          const hasil = await window.dutaSimpanProgressBulk(
+            MODUL_KEY, 'd', { kuis: skorKuis }, nilaiAkhir, { kunciModul: true }
           );
 
           if (selesaiKirim) return;
@@ -866,10 +923,24 @@
             kirimSukses = true;
             elStatusKirim.className = 'status-kirim success show';
             elStatusSpinner.style.display = 'none';
-            elStatusKirimText.innerHTML = '✅ Nilai akhir (<strong>' + nilaiAkhir + '</strong>) berhasil disimpan.' +
-              (hasil.locked ? ' <em>(Modul terkunci — nilai final dari percobaan pertama.)</em>' : '');
 
-            if (window.dutaBersihkanCacheStatus) window.dutaBersihkanCacheStatus(MODUL_KEY);
+            let pesanSukses = '✅ Nilai akhir (<strong>' + nilaiAkhir + '</strong>) berhasil disimpan';
+            if (hasil.results && Array.isArray(hasil.results)) {
+              const sukses = hasil.sukses || hasil.results.filter(function(r) { return r.ok; }).length;
+              const total = hasil.results.length;
+              pesanSukses += ' ke <strong>' + sukses + '/' + total + '</strong> siswa.';
+              const adaLocked = hasil.results.some(function(r) { return r.locked; });
+              if (adaLocked) {
+                pesanSukses += ' <em>(Sebagian modul terkunci — nilai final dari percobaan pertama.)</em>';
+              }
+            } else {
+              pesanSukses += '.';
+            }
+            elStatusKirimText.innerHTML = pesanSukses;
+
+            if (window.dutaBersihkanCacheStatus) {
+              window.dutaBersihkanCacheStatus(MODUL_KEY);
+            }
           } else {
             tampilkanGagalKirim(nilaiAkhir, (hasil && hasil.error) || 'Terjadi kesalahan.');
           }
@@ -905,34 +976,15 @@
       // INISIALISASI
       // ============================================
       document.addEventListener('DOMContentLoaded', function() {
-        // Pre-fill dari localStorage
-        let adaData = false;
-        try {
-          const siswa = JSON.parse(localStorage.getItem('labdsi2_siswa') || '[]');
-          if (Array.isArray(siswa) && siswa.length > 0) {
-            const jml = Math.min(siswa.length, 5);
-            document.getElementById('jumlahSiswa').value = String(jml);
-            updateFormSiswa(jml);
+        refreshIdentitasUI();
 
-            siswa.forEach((s, i) => {
-              const inp = document.getElementById('namaSiswa_' + i);
-              if (inp) inp.value = s.nama || '';
-            });
+        window.addEventListener('storage', function(e) {
+          if (e.key === 'duta_identitas_siswa') refreshIdentitasUI();
+        });
 
-            if (siswa[0]) {
-              document.getElementById('inputKelas').value = siswa[0].kelas || '';
-              document.getElementById('inputSekolah').value = siswa[0].sekolah || '';
-            }
-
-            cekFormSiswa();
-            adaData = true;
-          }
-        } catch (e) {}
-
-        if (!adaData) updateFormSiswa('1');
+        console.log('✅ DSI2 Bagian 4: Kuis Akhir & Sertifikat siap! (bulk progress + kunciModul)');
       });
 
-      console.log('✅ DSI2 Bagian 4: Kuis Akhir & Sertifikat siap!');
     })();
   </script>
 
