@@ -94,6 +94,11 @@
     }
     .btn-dash.danger:hover { background: #f8dcdc; border-color: #e8a8a8; }
     .btn-dash:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; }
+    .btn-dash.accent {
+      background: linear-gradient(135deg, #b07be0, #5c7cfa);
+      border-color: #b07be0; color: #fff;
+    }
+    .btn-dash.accent:hover { filter: brightness(1.05); }
 
     /* ===== STATS ===== */
     .stats-grid {
@@ -348,9 +353,7 @@
       transform: translateY(-1px);
       box-shadow: 0 3px 8px rgba(0,0,0,0.1);
     }
-    .tabel-progres .aksi-btn.detail:hover { background: #e6f0ff; border-color: #5c7cfa; }
     .tabel-progres .aksi-btn.unlock:hover { background: #fff3d6; border-color: #f4b942; }
-    .tabel-progres .aksi-btn.edit:hover { background: #f0e6ff; border-color: #b07be0; }
 
     .tabel-progres .cb-cell {
       width: 36px; text-align: center;
@@ -408,6 +411,9 @@
       box-shadow: 0 20px 60px rgba(40,20,50,0.3);
       border: 3px solid #f0e6ff;
     }
+    .duta-modal-box.modal-wide {
+      max-width: 760px;
+    }
     .duta-modal-title {
       font-size: 1.15rem; font-weight: 800;
       color: #5c2f8a; margin-bottom: 0.8rem;
@@ -428,57 +434,23 @@
     }
     .duta-modal-body strong { color: #5c2f8a; }
 
-    /* Detail modal */
-    .detail-section {
-      background: #faf7ff; border-radius: 12px;
-      padding: 0.8rem 1rem; margin-bottom: 0.8rem;
-      border: 1.5px solid #f0e6ff;
-    }
-    .detail-section h4 {
-      font-size: 0.8rem; font-weight: 800;
-      color: #5c2f8a; margin-bottom: 0.5rem;
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .detail-row {
-      display: flex; justify-content: space-between;
-      gap: 0.8rem; font-size: 0.85rem;
-      padding: 0.2rem 0;
-    }
-    .detail-row .dr-label { color: #7a6656; }
-    .detail-row .dr-value { font-weight: 600; color: #3a2b3e; text-align: right; }
-
-    .detail-table {
-      width: 100%; border-collapse: collapse;
-      font-size: 0.78rem; margin-top: 0.4rem;
-    }
-    .detail-table th {
-      background: #f0e6ff; color: #5c2f8a;
-      padding: 0.4rem 0.5rem; text-align: left;
-      font-weight: 700; font-size: 0.72rem;
-    }
-    .detail-table td {
-      padding: 0.4rem 0.5rem;
-      border-bottom: 1px solid #f0e6ff;
-    }
-    .detail-table tr:last-child td { border-bottom: none; }
-
-    /* Form edit */
-    .form-group {
-      margin-bottom: 0.9rem;
-    }
+    /* Form grup */
+    .form-group { margin-bottom: 0.9rem; }
     .form-group label {
       display: block; font-size: 0.82rem;
       font-weight: 700; color: #4d3829;
       margin-bottom: 0.3rem;
     }
-    .form-group input {
+    .form-group input,
+    .form-group select {
       width: 100%; padding: 0.6rem 0.9rem;
       border-radius: 10px; border: 2px solid #e5dbd0;
       background: #fcfaf7; font-size: 0.9rem;
       font-family: inherit; color: #3d2c1f;
       outline: none; transition: all 0.15s;
     }
-    .form-group input:focus {
+    .form-group input:focus,
+    .form-group select:focus {
       border-color: #f26d8a; background: #fff;
       box-shadow: 0 0 0 3px rgba(242,109,138,0.15);
     }
@@ -490,18 +462,8 @@
       font-size: 0.72rem; color: #a08674;
       margin-top: 0.2rem; font-style: italic;
     }
-    .input-with-btn {
-      display: flex; gap: 0.4rem;
-    }
-    .input-with-btn input { flex: 1; }
-    .input-with-btn button {
-      padding: 0 0.8rem; border-radius: 10px;
-      border: 2px solid #e5dbd0; background: #f5f0ea;
-      cursor: pointer; font-size: 1rem;
-      transition: all 0.15s;
-    }
-    .input-with-btn button:hover { background: #e8dcd0; }
 
+    /* Tombol modal */
     .modal-actions {
       display: flex; gap: 0.6rem;
       justify-content: flex-end; flex-wrap: wrap;
@@ -525,19 +487,168 @@
       color: #fff;
     }
     .modal-btn.simpan:hover { filter: brightness(1.05); }
-    .modal-btn.unlock {
-      background: linear-gradient(135deg, #f4b942, #e8a020);
-      color: #fff;
-    }
-    .modal-btn.unlock:hover { filter: brightness(1.05); }
     .modal-btn.hapus {
       background: linear-gradient(135deg, #f26d8a, #ef476f);
       color: #fff;
     }
     .modal-btn.hapus:hover { filter: brightness(1.05); }
+    .modal-btn.primary {
+      background: linear-gradient(135deg, #b07be0, #5c7cfa);
+      color: #fff;
+    }
+    .modal-btn.primary:hover { filter: brightness(1.05); }
     .modal-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
-    /* ===== MOBILE CARD VIEW ===== */
+    /* ===== MODAL LIHAT DATA SISWA ===== */
+    .lds-filter {
+      display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: flex-end;
+      margin-bottom: 1rem;
+      padding: 0.9rem 1rem;
+      background: #f8f4ef; border-radius: 12px;
+      border: 2px solid #e5dbd0;
+    }
+    .lds-filter .fg { flex: 1; min-width: 150px; margin: 0; }
+    .lds-filter .fg label {
+      font-size: 0.78rem; font-weight: 700;
+      color: #4d3829; display: block; margin-bottom: 0.3rem;
+    }
+    .lds-filter .fg select {
+      width: 100%; padding: 0.55rem 0.8rem;
+      border-radius: 8px; border: 2px solid #d9cdbf;
+      background: #fff; font-size: 0.88rem;
+      font-family: inherit; color: #3d2c1f;
+      cursor: pointer; outline: none;
+    }
+    .lds-filter .fg select:focus { border-color: #f26d8a; }
+    .lds-filter .btn-ambil {
+      padding: 0.6rem 1.3rem; border-radius: 30px;
+      background: linear-gradient(135deg, #b07be0, #5c7cfa);
+      color: #fff; font-weight: 700; font-size: 0.85rem;
+      border: none; cursor: pointer; font-family: inherit;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(176,123,224,0.3);
+      white-space: nowrap;
+    }
+    .lds-filter .btn-ambil:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(176,123,224,0.4);
+    }
+    .lds-filter .btn-ambil:disabled {
+      opacity: 0.55; cursor: not-allowed; transform: none !important;
+    }
+
+    /* Tabel siswa di modal */
+    .siswa-list-wrapper {
+      border: 2px solid #e5dbd0;
+      border-radius: 12px;
+      overflow: hidden;
+      max-height: 55vh;
+      overflow-y: auto;
+      background: #fff;
+    }
+    .siswa-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .siswa-table thead {
+      background: #f0e6ff; color: #5c2f8a;
+      position: sticky; top: 0; z-index: 1;
+    }
+    .siswa-table th {
+      padding: 0.55rem 0.7rem; text-align: left;
+      font-weight: 800; font-size: 0.78rem;
+      border-bottom: 2px solid #d4b3e8;
+      white-space: nowrap;
+    }
+    .siswa-table td {
+      padding: 0.55rem 0.7rem;
+      border-bottom: 1px solid #f0e6ff;
+      color: #2f2822; vertical-align: middle;
+    }
+    .siswa-table tbody tr:hover td {
+      background: #faf6ff;
+    }
+    .siswa-table tbody tr:last-child td { border-bottom: none; }
+
+    .siswa-table .st-nama { font-weight: 700; color: #3b2b1e; }
+    .siswa-table .st-username {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem; color: #5c2f8a;
+    }
+    .siswa-table .st-kelas {
+      display: inline-block; padding: 0.15rem 0.6rem;
+      border-radius: 10px; background: #f0e6ff;
+      color: #5c2f8a; font-weight: 700; font-size: 0.72rem;
+    }
+    .siswa-table .st-aksi {
+      white-space: nowrap; text-align: center;
+    }
+    .siswa-table .st-aksi-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; margin: 0 2px;
+      border-radius: 8px; border: 1.5px solid #e5dbd0;
+      background: #fff; cursor: pointer;
+      font-size: 0.85rem; transition: all 0.15s;
+    }
+    .siswa-table .st-aksi-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    .siswa-table .st-aksi-btn.pw:hover { background: #f3ecff; border-color: #b07be0; }
+    .siswa-table .st-aksi-btn.ganti:hover { background: #fff3d6; border-color: #f4b942; }
+    .siswa-table .st-aksi-btn.edit:hover { background: #e6f0ff; border-color: #5c7cfa; }
+
+    /* Password display di dalam baris */
+    .siswa-table .pw-display {
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      padding: 0.15rem 0.55rem;
+      background: #fff3d6;
+      border: 1.5px dashed #f0c896;
+      border-radius: 6px;
+      color: #7a4a00;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-right: 0.3rem;
+    }
+    .siswa-table .pw-display.hidden {
+      background: #f5f0ea;
+      color: #7a6656;
+      border-color: #d9cdbf;
+      letter-spacing: 2px;
+    }
+    .siswa-table .pw-info-row td {
+      background: #fffaf0;
+      border-bottom: 2px dashed #f0c896;
+      padding: 0.5rem 0.7rem;
+      font-size: 0.8rem;
+      color: #7a4a00;
+    }
+    .siswa-table .pw-info-row .btn-sembunyikan {
+      margin-left: 0.5rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px; border: 1.5px solid #f0c896;
+      background: #fff; color: #7a4a00;
+      font-family: inherit; font-size: 0.72rem;
+      font-weight: 700; cursor: pointer;
+    }
+    .siswa-table .pw-info-row .btn-sembunyikan:hover { background: #ffe8c2; }
+
+    .lds-empty {
+      padding: 2rem 1rem; text-align: center;
+      color: #7a6656; font-style: italic;
+      font-size: 0.88rem;
+    }
+    .lds-status {
+      margin-top: 0.6rem;
+      font-size: 0.82rem;
+      color: #7a6656;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* ===== MOBILE CARD VIEW (tabel utama) ===== */
     @media (max-width: 720px) {
       .guru-wrapper { padding: 0 0.6rem; margin: 0.8rem auto; }
       .dash-header { padding: 1rem; }
@@ -582,6 +693,14 @@
       .tabel-progres td.aksi-cell::before { display: none; }
       .pagination { flex-direction: column; align-items: stretch; }
       .pagination .pg-controls { justify-content: center; }
+
+      /* Modal di mobile */
+      .duta-modal-box.modal-wide { max-width: 100%; }
+      .lds-filter { flex-direction: column; }
+      .lds-filter .btn-ambil { width: 100%; }
+      .siswa-table { font-size: 0.78rem; }
+      .siswa-table th, .siswa-table td { padding: 0.4rem 0.5rem; }
+      .siswa-table .st-nama { font-size: 0.82rem; }
     }
   </style>
 </head>
@@ -620,6 +739,7 @@
               ⏱️ Auto 60s
             </label>
             <button class="btn-dash" id="btnStatistik">📊 Statistik</button>
+            <button class="btn-dash accent" id="btnLihatSiswa">👥 Lihat Data Siswa</button>
             <button class="btn-dash" id="btnExport">📥 Export CSV</button>
             <button class="btn-dash" id="btnBackup">💾 Backup</button>
             <button class="btn-dash" id="btnRestore">📤 Restore</button>
@@ -784,6 +904,11 @@
       let autoRefreshTimer = null;
       const AUTO_REFRESH_MS = 60000;
 
+      // State untuk modal Lihat Data Siswa
+      let listKelasCache = null;      // array kelas
+      let listSiswaAktif = [];         // array siswa yang sedang tampil di modal
+      let siswaPasswordTampil = {};    // { userId: password } untuk toggle lihat
+
       // ===== ELEMENT =====
       const elAksesDitolak = document.getElementById('aksesDitolak');
       const elDash = document.getElementById('dashboardArea');
@@ -796,6 +921,7 @@
       const elBtnBackup = document.getElementById('btnBackup');
       const elBtnRestore = document.getElementById('btnRestore');
       const elBtnLogout = document.getElementById('btnLogout');
+      const elBtnLihatSiswa = document.getElementById('btnLihatSiswa');
       const elStatistikSection = document.getElementById('statistikSection');
       const elBulkBar = document.getElementById('bulkBar');
       const elBulkInfo = document.getElementById('bulkInfo');
@@ -1053,10 +1179,6 @@
           if (d.status_modul === 'selesai') {
             btnUnlock = '<button class="aksi-btn unlock" title="Buka kunci" data-aksi="unlock" data-uid="' + escapeHtml(d.user_id) + '" data-modul="' + escapeHtml(d.modul) + '">🔓</button>';
           }
-          const btnEdit = d.tipe === 'login'
-            ? '<button class="aksi-btn edit" title="Edit identitas" data-aksi="edit" data-uid="' + escapeHtml(d.user_id) + '">✏️</button>'
-            : '';
-          const btnDetail = '<button class="aksi-btn detail" title="Detail" data-aksi="detail" data-uid="' + escapeHtml(d.user_id) + '">👁️</button>';
 
           return '<tr class="' + rowClass + '">' +
             cbCell +
@@ -1077,7 +1199,7 @@
               (d.nilai_akhir > 0 ? d.nilai_akhir : '–') + '</td>' +
             '<td data-label="Status">' + badgeStatus + '</td>' +
             '<td data-label="Update" style="font-size:0.75rem; color:#7a6656; white-space:nowrap;">' + formatTanggal(d.waktu_update) + '</td>' +
-            '<td class="aksi-cell">' + btnDetail + btnUnlock + btnEdit + '</td>' +
+            '<td class="aksi-cell">' + btnUnlock + '</td>' +
           '</tr>';
         }).join('');
 
@@ -1142,15 +1264,14 @@
             const modul = this.dataset.modul || '';
             const data = semuaData.find(function(d) { return d.user_id === uid && (!modul || d.modul === modul); });
             if (!data) return;
-            if (aksi === 'detail') bukaDetailSiswa(data);
-            else if (aksi === 'unlock') konfirmasiUnlock(data);
-            else if (aksi === 'edit') bukaEditIdentitas(data);
+            if (aksi === 'unlock') konfirmasiUnlock(data);
           });
         });
       }
 
       // ===== MODAL HELPER =====
-      function buatModal(judul, bodyHtml, actionsHtml) {
+      function buatModal(judul, bodyHtml, actionsHtml, opts) {
+        const o = opts || {};
         const lama = document.getElementById('guru-modal');
         if (lama) lama.remove();
 
@@ -1158,7 +1279,7 @@
         modal.id = 'guru-modal';
         modal.className = 'duta-modal-overlay';
         modal.innerHTML =
-          '<div class="duta-modal-box">' +
+          '<div class="duta-modal-box' + (o.wide ? ' modal-wide' : '') + '">' +
             '<div class="duta-modal-title">' +
               '<span>' + escapeHtml(judul) + '</span>' +
               '<button type="button" class="duta-modal-close" aria-label="Tutup">×</button>' +
@@ -1179,131 +1300,7 @@
         return modal;
       }
 
-      // ===== DETAIL SISWA =====
-      function bukaDetailSiswa(data) {
-        const semuaModul = semuaData.filter(function(d) { return d.user_id === data.user_id; });
-
-        const rowsModul = semuaModul.map(function(m) {
-          const status = m.status_modul === 'selesai'
-            ? '<span class="badge-status selesai">✅ selesai</span>'
-            : '<span class="badge-status proses">⏳ proses</span>';
-          return '<tr>' +
-            '<td><strong>' + escapeHtml(m.modul.toUpperCase()) + '</strong></td>' +
-            '<td>' + (m.bagian_terakhir || '–').toUpperCase() + '</td>' +
-            '<td>' + (m.skor_kuis || '–') + '</td>' +
-            '<td>' + (m.nilai_akhir > 0 ? m.nilai_akhir : '–') + '</td>' +
-            '<td>' + status + '</td>' +
-            '<td style="font-size:0.72rem;">' + formatTanggal(m.waktu_update) + '</td>' +
-          '</tr>';
-        }).join('');
-
-        const tipeLabel = data.tipe === 'login'
-          ? '<span class="badge-tipe login">login</span>'
-          : '<span class="badge-tipe tamu">tamu</span>';
-
-        const bodyHtml =
-          '<div class="detail-section">' +
-            '<h4>Identitas</h4>' +
-            '<div class="detail-row"><span class="dr-label">Nama</span><span class="dr-value">' + escapeHtml(data.nama || data.nama_siswa || '–') + '</span></div>' +
-            '<div class="detail-row"><span class="dr-label">Kelas</span><span class="dr-value">' + escapeHtml(data.kelas || '–') + '</span></div>' +
-            '<div class="detail-row"><span class="dr-label">Sekolah</span><span class="dr-value">' + escapeHtml(data.sekolah || '–') + '</span></div>' +
-            '<div class="detail-row"><span class="dr-label">User ID</span><span class="dr-value">' + escapeHtml(data.user_id) + ' ' + tipeLabel + '</span></div>' +
-          '</div>' +
-          '<div class="detail-section">' +
-            '<h4>Riwayat Modul</h4>' +
-            '<table class="detail-table">' +
-              '<thead><tr><th>Modul</th><th>Bagian</th><th>Kuis</th><th>Nilai</th><th>Status</th><th>Update</th></tr></thead>' +
-              '<tbody>' + (rowsModul || '<tr><td colspan="6" style="text-align:center; color:#a08674;">Belum ada riwayat</td></tr>') + '</tbody>' +
-            '</table>' +
-          '</div>';
-
-        const modal = buatModal('👁️ Detail Siswa', bodyHtml,
-          '<button class="modal-btn batal" data-act="tutup">Tutup</button>');
-        modal.querySelector('[data-act="tutup"]').addEventListener('click', function() { modal.remove(); });
-      }
-
-      // ===== EDIT IDENTITAS =====
-      function bukaEditIdentitas(data) {
-        if (data.tipe !== 'login') { alert('Tamu tidak bisa diedit.'); return; }
-
-        const bodyHtml =
-          '<div class="form-group">' +
-            '<label>Username (tidak bisa diubah)</label>' +
-            '<input type="text" value="' + escapeHtml(data.user_id) + '" disabled>' +
-          '</div>' +
-          '<div class="form-group">' +
-            '<label for="editNama">Nama</label>' +
-            '<input type="text" id="editNama" value="' + escapeHtml(data.nama || '') + '" maxlength="60">' +
-          '</div>' +
-          '<div class="form-group">' +
-            '<label for="editKelas">Kelas</label>' +
-            '<input type="text" id="editKelas" value="' + escapeHtml(data.kelas || '') + '" maxlength="10">' +
-            '<div class="hint">Contoh: 7A, 8B, 9C</div>' +
-          '</div>' +
-          '<div class="form-group">' +
-            '<label for="editSekolah">Sekolah</label>' +
-            '<input type="text" id="editSekolah" value="' + escapeHtml(data.sekolah || '') + '" maxlength="80">' +
-            '<div class="hint">⚠️ Mengubah sekolah akan memindahkan siswa ini ke dashboard guru sekolah lain.</div>' +
-          '</div>' +
-          '<div class="form-group">' +
-            '<label for="editPassword">Password Siswa</label>' +
-            '<div class="input-with-btn">' +
-              '<input type="password" id="editPassword" value="" placeholder="Kosongkan jika tidak diubah">' +
-              '<button type="button" id="btnLihatPassword" title="Lihat / sembunyikan">👁️</button>' +
-            '</div>' +
-            '<div class="hint">Kosongkan jika tidak ingin mengubah password.</div>' +
-          '</div>';
-
-        const modal = buatModal('✏️ Edit Identitas Siswa', bodyHtml,
-          '<button class="modal-btn batal" data-act="batal">Batal</button>' +
-          '<button class="modal-btn simpan" data-act="simpan">💾 Simpan</button>');
-
-        const elPass = modal.querySelector('#editPassword');
-        const btnLihat = modal.querySelector('#btnLihatPassword');
-        btnLihat.addEventListener('click', function() {
-          elPass.type = elPass.type === 'password' ? 'text' : 'password';
-        });
-
-        modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
-        modal.querySelector('[data-act="simpan"]').addEventListener('click', async function() {
-          const namaBaru = modal.querySelector('#editNama').value.trim();
-          const kelasBaru = modal.querySelector('#editKelas').value.trim();
-          const sekolahBaru = modal.querySelector('#editSekolah').value.trim();
-          const passBaru = elPass.value;
-
-          if (!namaBaru || !kelasBaru || !sekolahBaru) {
-            alert('Nama, kelas, dan sekolah wajib diisi.');
-            return;
-          }
-
-          const opts = {
-            username: dataGuru.username,
-            password: dataGuru.password || '',
-            userId: data.user_id,
-            nama: namaBaru,
-            kelas: kelasBaru,
-            sekolah: sekolahBaru
-          };
-          if (passBaru) opts.passwordSiswa = passBaru;
-
-          this.disabled = true;
-          this.textContent = '⏳ Menyimpan...';
-
-          const hasil = await window.dutaUpdateSiswa(opts);
-
-          if (hasil && hasil.ok) {
-            modal.remove();
-            alert('✅ Identitas berhasil diperbarui.');
-            muatData();
-          } else {
-            alert('⚠️ Gagal: ' + ((hasil && hasil.error) || 'Tidak diketahui'));
-            this.disabled = false;
-            this.textContent = '💾 Simpan';
-          }
-        });
-      }
-
-      // ===== KONFIRMASI UNLOCK =====
+      // ===== KONFIRMASI UNLOCK (dipertahankan) =====
       function konfirmasiUnlock(data) {
         const bodyHtml =
           '<p>Buka kunci modul <strong>' + escapeHtml(data.modul.toUpperCase()) + '</strong> untuk ' +
@@ -1315,7 +1312,7 @@
 
         const modal = buatModal('🔓 Buka Kunci Modul?', bodyHtml,
           '<button class="modal-btn batal" data-act="batal">Batal</button>' +
-          '<button class="modal-btn unlock" data-act="unlock">🔓 Ya, Buka Kunci</button>');
+          '<button class="modal-btn primary" data-act="unlock">🔓 Ya, Buka Kunci</button>');
 
         modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
         modal.querySelector('[data-act="unlock"]').addEventListener('click', async function() {
@@ -1341,7 +1338,346 @@
         });
       }
 
-      // ===== BULK HAPUS =====
+      // ============================================================
+      // ===== MODAL LIHAT DATA SISWA ==============================
+      // ============================================================
+      async function bukaModalLihatSiswa() {
+        // Reset state
+        listSiswaAktif = [];
+        siswaPasswordTampil = {};
+
+        const bodyHtml =
+          '<div class="lds-filter">' +
+            '<div class="fg">' +
+              '<label for="ldsFilterKelas">Filter Kelas</label>' +
+              '<select id="ldsFilterKelas">' +
+                '<option value="">— Semua Kelas —</option>' +
+              '</select>' +
+            '</div>' +
+            '<button type="button" class="btn-ambil" id="ldsBtnAmbil">📥 Ambil Data Siswa</button>' +
+          '</div>' +
+
+          '<div id="ldsHasil">' +
+            '<div class="lds-empty">Pilih kelas (atau biarkan kosong untuk semua) lalu klik <strong>Ambil Data Siswa</strong>.</div>' +
+          '</div>' +
+
+          '<div class="lds-status" id="ldsStatus"></div>';
+
+        const modal = buatModal('👥 Lihat Data Siswa', bodyHtml,
+          '<button class="modal-btn batal" data-act="tutup">Tutup</button>',
+          { wide: true });
+
+        const elKelas = modal.querySelector('#ldsFilterKelas');
+        const elBtnAmbil = modal.querySelector('#ldsBtnAmbil');
+        const elHasil = modal.querySelector('#ldsHasil');
+        const elStatus = modal.querySelector('#ldsStatus');
+
+        // Load daftar kelas
+        elBtnAmbil.disabled = true;
+        elStatus.textContent = 'Memuat daftar kelas...';
+
+        try {
+          if (!listKelasCache) {
+            const resKelas = await window.dutaFetch({
+              action: 'listKelasGuru',
+              username: dataGuru.username,
+              password: dataGuru.password || ''
+            });
+            if (resKelas && resKelas.ok) {
+              listKelasCache = resKelas.kelas || [];
+            } else {
+              listKelasCache = [];
+            }
+          }
+
+          if (listKelasCache.length === 0) {
+            elKelas.innerHTML = '<option value="">(Tidak ada kelas)</option>';
+            elStatus.textContent = 'Tidak ada kelas terdaftar di sekolah Anda.';
+          } else {
+            elKelas.innerHTML = '<option value="">— Semua Kelas —</option>' +
+              listKelasCache.map(function(k) {
+                return '<option value="' + escapeHtml(k) + '">' + escapeHtml(k) + '</option>';
+              }).join('');
+            elStatus.textContent = '';
+            elBtnAmbil.disabled = false;
+          }
+        } catch (e) {
+          elStatus.textContent = '⚠️ Gagal memuat daftar kelas: ' + (e.message || 'Tidak diketahui');
+        }
+
+        // Event: Ambil data siswa
+        elBtnAmbil.addEventListener('click', async function() {
+          const kelasDipilih = elKelas.value;
+          elBtnAmbil.disabled = true;
+          elBtnAmbil.textContent = '⏳ Memuat...';
+          elStatus.textContent = 'Mengambil data siswa...';
+          siswaPasswordTampil = {};
+
+          try {
+            const res = await window.dutaFetch({
+              action: 'listSiswaGuru',
+              username: dataGuru.username,
+              password: dataGuru.password || '',
+              kelas: kelasDipilih
+            });
+
+            if (!res || !res.ok) {
+              elHasil.innerHTML = '<div class="lds-empty">⚠️ Gagal: ' +
+                escapeHtml((res && res.error) || 'Tidak diketahui') + '</div>';
+              elStatus.textContent = '';
+              elBtnAmbil.disabled = false;
+              elBtnAmbil.textContent = '📥 Ambil Data Siswa';
+              return;
+            }
+
+            listSiswaAktif = res.siswa || [];
+            renderTabelSiswa(elHasil, listSiswaAktif);
+
+            if (listSiswaAktif.length === 0) {
+              elStatus.textContent = 'Tidak ada siswa pada filter ini.';
+            } else {
+              const labelKelas = kelasDipilih ? 'kelas ' + kelasDipilih : 'semua kelas';
+              elStatus.textContent = 'Menampilkan ' + listSiswaAktif.length + ' siswa (' + labelKelas + ').';
+            }
+
+          } catch (e) {
+            elHasil.innerHTML = '<div class="lds-empty">⚠️ Gagal terhubung: ' +
+              escapeHtml(e.message || 'Tidak diketahui') + '</div>';
+            elStatus.textContent = '';
+          }
+
+          elBtnAmbil.disabled = false;
+          elBtnAmbil.textContent = '📥 Ambil Data Siswa';
+        });
+
+        modal.querySelector('[data-act="tutup"]').addEventListener('click', function() { modal.remove(); });
+      }
+
+      // Render tabel siswa di dalam modal
+      function renderTabelSiswa(elHasil, siswa) {
+        if (siswa.length === 0) {
+          elHasil.innerHTML = '<div class="lds-empty">Tidak ada siswa pada filter ini.</div>';
+          return;
+        }
+
+        let html = '<div class="siswa-list-wrapper">' +
+          '<table class="siswa-table" id="ldsTabelSiswa">' +
+            '<thead>' +
+              '<tr>' +
+                '<th>Nama</th>' +
+                '<th>Username</th>' +
+                '<th>Kelas</th>' +
+                '<th style="text-align:center;">Aksi</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody>';
+
+        siswa.forEach(function(s) {
+          const pwTampil = siswaPasswordTampil[s.username];
+          const adaPw = typeof pwTampil === 'string';
+
+          html += '<tr data-uid="' + escapeHtml(s.username) + '">' +
+            '<td class="st-nama">' + escapeHtml(s.nama) + '</td>' +
+            '<td class="st-username">' + escapeHtml(s.username) + '</td>' +
+            '<td><span class="st-kelas">' + escapeHtml(s.kelas || '—') + '</span></td>' +
+            '<td class="st-aksi">' +
+              '<button class="st-aksi-btn pw" data-aksi="pw" data-uid="' + escapeHtml(s.username) + '" title="Lihat password">👁️</button>' +
+              '<button class="st-aksi-btn ganti" data-aksi="ganti" data-uid="' + escapeHtml(s.username) + '" title="Ganti password">🔑</button>' +
+              '<button class="st-aksi-btn edit" data-aksi="edit" data-uid="' + escapeHtml(s.username) + '" title="Edit nama & kelas">✏️</button>' +
+            '</td>' +
+          '</tr>';
+
+          // Baris info password (jika sedang tampil)
+          if (adaPw) {
+            html += '<tr class="pw-info-row" data-pw-uid="' + escapeHtml(s.username) + '">' +
+              '<td colspan="4">' +
+                '🔓 Password: <span class="pw-display">' + escapeHtml(pwTampil) + '</span>' +
+                '<button class="btn-sembunyikan" data-aksi="sembunyikan" data-uid="' + escapeHtml(s.username) + '">Sembunyikan</button>' +
+              '</td>' +
+            '</tr>';
+          }
+        });
+
+        html += '</tbody></table></div>';
+        elHasil.innerHTML = html;
+
+		// Event: aksi per baris
+		elHasil.querySelectorAll('.st-aksi-btn').forEach(function(btn) {
+		  btn.addEventListener('click', function() {
+			const aksi = this.dataset.aksi;
+			const uid = this.dataset.uid;
+			const siswaData = listSiswaAktif.find(function(x) { return x.username === uid; });
+			if (!siswaData) return;
+
+			if (aksi === 'pw') toggleLihatPassword(siswaData, elHasil, this);
+			else if (aksi === 'ganti') bukaGantiPassword(siswaData);
+			else if (aksi === 'edit') bukaEditNamaKelas(siswaData);
+		  });
+		});
+
+        // Event: sembunyikan password
+        elHasil.querySelectorAll('.btn-sembunyikan').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            const uid = this.dataset.uid;
+            delete siswaPasswordTampil[uid];
+            // Re-render ulang tabel dengan data yang sama
+            renderTabelSiswa(elHasil, listSiswaAktif);
+          });
+        });
+      }
+
+      // ===== LIHAT PASSWORD — LANGSUNG TANPA KONFIRMASI =====
+	async function toggleLihatPassword(siswa, elHasil, btnMata) {
+	  // Jika sudah tampil → sembunyikan
+	  if (siswaPasswordTampil[siswa.username] !== undefined) {
+		delete siswaPasswordTampil[siswa.username];
+		renderTabelSiswa(elHasil, listSiswaAktif);
+		return;
+	  }
+
+	  // Jika belum tampil → panggil API
+	  if (btnMata) {
+		btnMata.disabled = true;
+		btnMata.textContent = '⏳';
+	  }
+
+	  try {
+		const res = await window.dutaFetch({
+		  action: 'getPasswordSiswa',
+		  username: dataGuru.username,
+		  password: dataGuru.password || '',
+		  userId: siswa.username
+		});
+
+		if (res && res.ok) {
+		  siswaPasswordTampil[siswa.username] = res.password || '(kosong)';
+		  renderTabelSiswa(elHasil, listSiswaAktif);
+		} else {
+		  alert('⚠️ Gagal ambil password: ' + ((res && res.error) || 'Tidak diketahui'));
+		  if (btnMata) {
+			btnMata.disabled = false;
+			btnMata.textContent = '👁️';
+		  }
+		}
+	  } catch (e) {
+		alert('⚠️ Gagal terhubung: ' + (e.message || 'Tidak diketahui'));
+		if (btnMata) {
+		  btnMata.disabled = false;
+		  btnMata.textContent = '👁️';
+		}
+	  }
+	}
+
+      // ===== GANTI PASSWORD =====
+      function bukaGantiPassword(siswa) {
+        const bodyHtml =
+          '<p>Ganti password untuk <strong>' + escapeHtml(siswa.nama) + '</strong> ' +
+          '<span style="color:#7a6656; font-size:0.85rem;">(@' + escapeHtml(siswa.username) + ')</span>?</p>' +
+          '<div class="form-group" style="margin-top:0.8rem;">' +
+            '<label for="gpPasswordBaru">Password Baru</label>' +
+            '<input type="password" id="gpPasswordBaru" placeholder="Min 4, maks 50, tanpa spasi" maxlength="50" autocomplete="off">' +
+            '<div class="hint">Panjang 4–50 karakter, tanpa spasi, tidak sama dengan username.</div>' +
+          '</div>' +
+          '<div class="form-group">' +
+            '<label for="gpPasswordKonfirm">Konfirmasi Password Baru</label>' +
+            '<input type="password" id="gpPasswordKonfirm" placeholder="Ulangi password baru" maxlength="50" autocomplete="off">' +
+          '</div>';
+
+        const modal = buatModal('🔑 Ganti Password', bodyHtml,
+          '<button class="modal-btn batal" data-act="batal">Batal</button>' +
+          '<button class="modal-btn simpan" data-act="simpan">💾 Simpan Password</button>');
+
+        modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
+        modal.querySelector('[data-act="simpan"]').addEventListener('click', async function() {
+          const pass1 = modal.querySelector('#gpPasswordBaru').value;
+          const pass2 = modal.querySelector('#gpPasswordKonfirm').value;
+
+          if (!pass1) { alert('Password baru wajib diisi.'); return; }
+          if (pass1.length < 4) { alert('Password minimal 4 karakter.'); return; }
+          if (pass1.length > 50) { alert('Password maksimal 50 karakter.'); return; }
+          if (/\s/.test(pass1)) { alert('Password tidak boleh mengandung spasi.'); return; }
+          if (pass1.toLowerCase() === siswa.username.toLowerCase()) {
+            alert('Password tidak boleh sama dengan username.'); return;
+          }
+          if (pass1 !== pass2) { alert('Konfirmasi password tidak cocok.'); return; }
+
+          this.disabled = true;
+          this.textContent = '⏳ Menyimpan...';
+
+          const hasil = await window.dutaUpdateSiswa({
+            username: dataGuru.username,
+            password: dataGuru.password || '',
+            userId: siswa.username,
+            passwordSiswa: pass1
+          });
+
+          if (hasil && hasil.ok) {
+            modal.remove();
+            // Hapus password lama dari cache jika ada (agar guru lihat password baru)
+            delete siswaPasswordTampil[siswa.username];
+            alert('✅ Password berhasil diubah.');
+          } else {
+            alert('⚠️ Gagal: ' + ((hasil && hasil.error) || 'Tidak diketahui'));
+            this.disabled = false;
+            this.textContent = '💾 Simpan Password';
+          }
+        });
+      }
+
+      // ===== EDIT NAMA & KELAS =====
+      function bukaEditNamaKelas(siswa) {
+        const bodyHtml =
+          '<p>Edit identitas <strong>@' + escapeHtml(siswa.username) + '</strong>:</p>' +
+          '<div class="form-group" style="margin-top:0.8rem;">' +
+            '<label for="enNama">Nama Lengkap</label>' +
+            '<input type="text" id="enNama" value="' + escapeHtml(siswa.nama) + '" maxlength="60" autocomplete="off">' +
+          '</div>' +
+          '<div class="form-group">' +
+            '<label for="enKelas">Kelas</label>' +
+            '<input type="text" id="enKelas" value="' + escapeHtml(siswa.kelas === '—' ? '' : siswa.kelas) + '" maxlength="10" placeholder="Contoh: 7A" autocomplete="off">' +
+            '<div class="hint">Contoh: 7A, 8B, 9C</div>' +
+          '</div>';
+
+        const modal = buatModal('✏️ Edit Nama & Kelas', bodyHtml,
+          '<button class="modal-btn batal" data-act="batal">Batal</button>' +
+          '<button class="modal-btn simpan" data-act="simpan">💾 Simpan Perubahan</button>');
+
+        modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
+        modal.querySelector('[data-act="simpan"]').addEventListener('click', async function() {
+          const namaBaru = modal.querySelector('#enNama').value.trim();
+          const kelasBaru = modal.querySelector('#enKelas').value.trim();
+
+          if (!namaBaru) { alert('Nama wajib diisi.'); return; }
+          if (!kelasBaru) { alert('Kelas wajib diisi.'); return; }
+
+          this.disabled = true;
+          this.textContent = '⏳ Menyimpan...';
+
+          const hasil = await window.dutaUpdateSiswa({
+            username: dataGuru.username,
+            password: dataGuru.password || '',
+            userId: siswa.username,
+            nama: namaBaru,
+            kelas: kelasBaru
+          });
+
+          if (hasil && hasil.ok) {
+            modal.remove();
+            // Update data di listSiswaAktif
+            siswa.nama = namaBaru;
+            siswa.kelas = kelasBaru;
+            const elHasil = document.querySelector('#ldsHasil');
+            if (elHasil) renderTabelSiswa(elHasil, listSiswaAktif);
+            alert('✅ Identitas berhasil diperbarui.');
+          } else {
+            alert('⚠️ Gagal: ' + ((hasil && hasil.error) || 'Tidak diketahui'));
+            this.disabled = false;
+            this.textContent = '💾 Simpan Perubahan';
+          }
+        });
+      }
+
+      // ===== BULK HAPUS (dipertahankan) =====
       elBtnHapusBulk.addEventListener('click', function() {
         const userIds = Array.from(dipilih);
         if (userIds.length === 0) return;
@@ -1388,7 +1724,7 @@
         updateBulkBar();
       });
 
-      // ===== STATISTIK =====
+      // ===== STATISTIK (dipertahankan) =====
       elBtnStatistik.addEventListener('click', function() {
         const aktif = elStatistikSection.classList.toggle('show');
         if (aktif) renderStatistik();
@@ -1439,7 +1775,7 @@
         }).join('');
       }
 
-      // ===== EXPORT CSV =====
+      // ===== EXPORT CSV (dipertahankan) =====
       elBtnExport.addEventListener('click', function() {
         terapkanFilter();
         terapkanSort();
@@ -1476,7 +1812,7 @@
         URL.revokeObjectURL(url);
       });
 
-      // ===== BACKUP =====
+      // ===== BACKUP (dipertahankan) =====
       elBtnBackup.addEventListener('click', async function() {
         this.disabled = true;
         this.textContent = '⏳ Menyiapkan...';
@@ -1500,7 +1836,7 @@
         alert('✅ Backup berhasil diunduh.');
       });
 
-      // ===== RESTORE =====
+      // ===== RESTORE (dipertahankan) =====
       elBtnRestore.addEventListener('click', function() {
         const input = document.createElement('input');
         input.type = 'file';
@@ -1589,6 +1925,11 @@
         ukuranHalaman = Number(this.value);
         halaman = 1;
         renderTabel();
+      });
+
+      // ===== TOMBOL LIHAT SISWA =====
+      elBtnLihatSiswa.addEventListener('click', function() {
+        bukaModalLihatSiswa();
       });
 
       // ===== MUAT ULANG =====
