@@ -106,6 +106,126 @@
   window.hapusIdentitasSiswa = function() {
     try { localStorage.removeItem('duta_siswa'); } catch (e) {}
   };
+  
+    // ============================================
+  // IDENTITAS SISWA MULTI-USER (baru)
+  // ============================================
+  // Struktur localStorage `duta_identitas_siswa`:
+  // {
+  //   tipe: 'login' | 'tamu',
+  //   utama: { username, nama, kelas, sekolah },
+  //   teman: [ { username, nama, kelas, sekolah }, ... ],   // maks 4 (total 5)
+  //   tamu:  { sekolah, kelas, daftarNama: [..] } | null
+  // }
+  const KEY_IDENTITAS = 'duta_identitas_siswa';
+  const MAKS_TEMAN = 5;
+
+  function ambilIdentitasSiswaMulti() {
+    try {
+      const raw = localStorage.getItem(KEY_IDENTITAS);
+      if (!raw) return null;
+      const d = JSON.parse(raw);
+      if (!d || !d.tipe) return null;
+      return d;
+    } catch (e) { return null; }
+  }
+  window.ambilIdentitasSiswaMulti = ambilIdentitasSiswaMulti;
+
+  function simpanIdentitasSiswaMulti(obj) {
+    try {
+      if (!obj || !obj.tipe) { localStorage.removeItem(KEY_IDENTITAS); return; }
+      if (!Array.isArray(obj.teman)) obj.teman = [];
+      localStorage.setItem(KEY_IDENTITAS, JSON.stringify(obj));
+    } catch (e) {}
+    // trigger render ulang user bar
+    try { renderUserBar(); } catch (e) {}
+  }
+  window.simpanIdentitasSiswaMulti = simpanIdentitasSiswaMulti;
+
+  function hapusIdentitasSiswaMulti() {
+    try { localStorage.removeItem(KEY_IDENTITAS); } catch (e) {}
+    try { renderUserBar(); } catch (e) {}
+  }
+  window.hapusIdentitasSiswaMulti = hapusIdentitasSiswaMulti;
+
+  /**
+   * Sinkronkan localStorage identitas dengan session aktif.
+   * - Jika login & tipe beda → reset.
+   * - Jika tamu & tipe beda → reset.
+   * - Pastikan utama = data session.
+   */
+  function sinkronkanIdentitasDenganSession() {
+    const s = window.ambilSession ? window.ambilSession() : null;
+    const d = ambilIdentitasSiswaMulti();
+    if (!s) return null;
+
+    if (!d || d.tipe !== s.tipe) {
+      // buat baru
+      if (s.tipe === 'login') {
+        const baru = {
+          tipe: 'login',
+          utama: { username: s.user_id, nama: s.nama, kelas: s.kelas, sekolah: s.sekolah },
+          teman: []
+        };
+        simpanIdentitasSiswaMulti(baru);
+        return baru;
+      } else {
+        // tamu — biarkan kosong dulu, akan diisi lewat modal
+        const baru = {
+          tipe: 'tamu',
+          utama: { username: s.user_id, nama: s.nama, kelas: s.kelas, sekolah: s.sekolah },
+          teman: [],
+          tamu: null
+        };
+        simpanIdentitasSiswaMulti(baru);
+        return baru;
+      }
+    }
+
+    // Sinkronkan identitas utama (nama/kelas/sekolah bisa berubah dari login)
+    d.utama = {
+      username: s.user_id,
+      nama: s.nama,
+      kelas: s.kelas,
+      sekolah: s.sekolah
+    };
+    simpanIdentitasSiswaMulti(d);
+    return d;
+  }
+  window.sinkronkanIdentitasDenganSession = sinkronkanIdentitasDenganSession;
+
+  /**
+   * Kumpulkan userIds untuk progress bulk.
+   * - login: [utama.username, teman[0].username, ...]
+   * - tamu : tidak ada (pakai single userId session)
+   * Return: { userIds: [...], namaGabung: '...' }
+   */
+  function ambilUserIdsUntukProgress() {
+    const d = ambilIdentitasSiswaMulti();
+    if (!d) return { userIds: [], namaGabung: '' };
+
+    if (d.tipe === 'login') {
+      const ids = [];
+      const names = [];
+      if (d.utama && d.utama.username) {
+        ids.push(d.utama.username);
+        names.push(d.utama.nama || d.utama.username);
+      }
+      (d.teman || []).forEach(function(t) {
+        if (t && t.username) {
+          ids.push(t.username);
+          names.push(t.nama || t.username);
+        }
+      });
+      return { userIds: ids, namaGabung: names.join(' & ') };
+    }
+
+    // tamu — pakai session
+    const s = window.ambilSession ? window.ambilSession() : null;
+    if (!s) return { userIds: [], namaGabung: '' };
+    return { userIds: [s.user_id], namaGabung: s.nama || s.user_id };
+  }
+  window.ambilUserIdsUntukProgress = ambilUserIdsUntukProgress;
 
   // ============================================
   // ID PER MODUL
@@ -352,6 +472,27 @@
       kunciModul: (opsi && opsi.kunciModul === true)
     });
   };
+  
+    window.dutaSimpanProgressBulk = async function(modul, bagianTerakhir, skor, nilaiAkhir, opsi) {
+    const info = ambilUserIdsUntukProgress();
+    if (!info.userIds || info.userIds.length === 0) {
+      return { ok: false, error: 'Tidak ada user ID (belum login/tamu atau identitas kosong)' };
+    }
+    if (info.userIds.length === 1) {
+      // fallback single (hemat request)
+      return await window.dutaSimpanProgress(modul, bagianTerakhir, skor, nilaiAkhir, opsi);
+    }
+    return await window.dutaFetch({
+      action: 'simpanProgressBulk',
+      userIds: info.userIds,
+      modul: modul,
+      bagianTerakhir: bagianTerakhir || '',
+      skor: skor || {},
+      nilaiAkhir: nilaiAkhir || 0,
+      namaSiswa: info.namaGabung,
+      kunciModul: (opsi && opsi.kunciModul === true)
+    });
+  };
 
   // ============================================
   // CEK STATUS MODUL
@@ -425,6 +566,7 @@
     if (!session) return { ok: false, error: 'Tidak ada session aktif' };
     if (session.tipe !== 'tamu') return { ok: false, error: 'Reset hanya untuk tamu' };
     const hasil = await window.dutaFetch({ action: 'resetUser', userId: session.user_id });
+	hapusIdentitasSiswaMulti();
     hapusSemuaLocalStorageUser();
     return hasil;
   };
@@ -804,7 +946,7 @@
           '<div class="nav-drop-menu" role="menu">' + modulItems + '</div>' +
         '</div>' +
         '<a href="' + root + 'ujian/daftarujian" class="nav-link' + (isAktif('ujian/daftarujian') ? ' aktif' : '') + '">📝 Ujian</a>' +
-        '<a href="' + root + 'dashboard/siswa" class="nav-link' + (isAktif('dashboard/siswa') ? ' aktif' : '') + '">📊 Dashboard</a>' +
+        '<a href="javascript:void(0)" class="nav-link' + (isAktif('dashboard/siswa') ? ' aktif' : '') + '" onclick="cekAksesDashboard()">📊 Dashboard</a>' +
       '</nav>';
 
     var toggle = host.querySelector('.nav-drop-toggle');
@@ -823,6 +965,33 @@
       });
     }
   }
+  
+    // ============================================
+  // CEK AKSES DASHBOARD (Tamu / Belum Login tidak boleh masuk)
+  // ============================================
+  window.cekAksesDashboard = function() {
+    const s = window.ambilSession ? window.ambilSession() : null;
+    
+    // Jika belum login atau mode tamu
+    if (!s || s.tipe !== 'login') {
+      tampilkanModal({
+        judul: '🔒 Akses Terbatas',
+        pesan: '<p style="margin-bottom:0.8rem;">Halaman Dashboard hanya tersedia untuk siswa yang sudah login.</p>' +
+               '<p style="font-size:0.85rem; color:#7a6656;">Silakan login menggunakan akun siswa Anda untuk melihat progres belajar.</p>',
+        tombolLanjut: '🔑 Login Sekarang',
+        onLanjut: function() {
+          // Simpan URL agar setelah login bisa balik ke sini
+          const currentPath = window.location.pathname + window.location.search;
+          try { sessionStorage.setItem('duta_redirect_after_login', currentPath); } catch (e) {}
+          window.location.href = getRoot() + 'login';
+        }
+      });
+      return;
+    }
+
+    // Jika login sebagai siswa, arahkan ke halaman dashboard
+    window.location.href = getRoot() + 'dashboard/siswa';
+  };
 
   // ============================================
   // BREADCRUMB
@@ -888,21 +1057,6 @@
     const el = document.getElementById('header-utama');
     if (!el) return;
 
-    const session = window.ambilSession();
-    let barHtml = '';
-
-    if (!session) {
-      barHtml = '<span class="ub-info ub-guest">👤 Tamu</span>' +
-                '<a href="javascript:void(0)" class="ub-btn ub-login" id="ubAksiLogin">🔑 Login</a>';
-    } else if (session.tipe === 'login') {
-      barHtml = '<span class="ub-info ub-login" title="Login: ' + escapeHtml(session.user_id) + '">👤 ' + escapeHtml(session.nama || session.user_id) + '</span>' +
-                '<button type="button" class="ub-btn ub-logout" id="ubAksiLogout">🚪 Logout</button>';
-    } else {
-      barHtml = '<span class="ub-info ub-tamu" title="Kode: ' + escapeHtml(session.user_id) + '">🎭 ' + escapeHtml(session.user_id) + '</span>' +
-                '<button type="button" class="ub-btn ub-reset" id="ubAksiReset" title="Reset data tamu & progres">🗑️</button>' +
-                '<a href="javascript:void(0)" class="ub-btn ub-login" id="ubAksiLogin">🔑 Login</a>';
-    }
-
     el.innerHTML =
       '<div class="banner">' +
         '<div class="banner-brand">' +
@@ -910,18 +1064,190 @@
           '<span class="sub">SMPN 2 Talegong</span>' +
         '</div>' +
         '<div class="duta-navbar-slot" id="duta-navbar-host"></div>' +
-        '<div class="duta-user-bar" id="duta-user-bar">' + barHtml + '</div>' +
+        '<div class="duta-user-bar" id="duta-user-bar"></div>' +
       '</div>';
 
-    const btnLogin  = document.getElementById('ubAksiLogin');
-    const btnLogout = document.getElementById('ubAksiLogout');
-    const btnReset  = document.getElementById('ubAksiReset');
-    if (btnLogin)  btnLogin.addEventListener('click', aksiLogin);
-    if (btnLogout) btnLogout.addEventListener('click', aksiLogout);
-    if (btnReset)  btnReset.addEventListener('click', aksiResetTamu);
-
-    // ⬇️ PENTING: render navbar SETELAH slot-nya ada
+    renderUserBar();
     renderNavbar();
+  }
+
+  function renderUserBar() {
+    const host = document.getElementById('duta-user-bar');
+    if (!host) return;
+
+    const s = window.ambilSession ? window.ambilSession() : null;
+
+    if (!s) {
+      // guest
+      host.innerHTML =
+        '<span class="ub-info ub-guest" title="Belum login">👤 Tamu</span>' +
+        '<a href="javascript:void(0)" class="ub-btn ub-login" id="ubAksiLogin">🔑 Login</a>';
+      const btnLogin = document.getElementById('ubAksiLogin');
+      if (btnLogin) btnLogin.addEventListener('click', aksiLogin);
+      return;
+    }
+
+    // sinkronkan identitas
+    sinkronkanIdentitasDenganSession();
+    const d = ambilIdentitasSiswaMulti();
+    const jumlahTeman = (d && Array.isArray(d.teman)) ? d.teman.length : 0;
+
+    let infoClass, infoIcon, infoLabel;
+    if (s.tipe === 'login') {
+      infoClass = 'ub-login';
+      infoIcon  = '👤';
+      infoLabel = s.nama || s.user_id;
+    } else {
+      infoClass = 'ub-tamu';
+      infoIcon  = '🎭';
+      infoLabel = s.user_id;
+    }
+
+    const badgeTeman = jumlahTeman > 0
+      ? '<span class="ub-badge-teman" title="' + jumlahTeman + ' teman belajar">👥 +' + jumlahTeman + '</span>'
+      : '';
+
+    // Tombol identitas: "Kelola" untuk login, "Identitas" untuk tamu
+    const labelIdentitas = s.tipe === 'login' ? '⚙️ Identitas' : '📝 Identitas';
+
+    host.innerHTML =
+      '<button type="button" class="ub-trigger" id="ubTrigger" aria-haspopup="true" aria-expanded="false">' +
+        '<span class="ub-info ' + infoClass + '" title="' + escapeHtml(infoLabel) + '">' +
+          infoIcon + ' <span class="ub-nama">' + escapeHtml(truncate(infoLabel, 18)) + '</span>' +
+        '</span>' +
+        badgeTeman +
+        '<span class="ub-caret">▾</span>' +
+      '</button>' +
+      '<div class="ub-dropdown" id="ubDropdown" role="menu">' +
+        '<div class="ub-drop-header">' +
+          '<div class="ub-drop-nama">' + escapeHtml(s.nama || s.user_id) + '</div>' +
+          '<div class="ub-drop-meta">' +
+            (s.tipe === 'login'
+              ? 'Kelas ' + escapeHtml(s.kelas || '—') + ' · ' + escapeHtml(s.sekolah || '—')
+              : 'Kode Tamu') +
+          '</div>' +
+        '</div>' +
+        '<div class="ub-drop-section" id="ubDropTemanSection"></div>' +
+        '<div class="ub-drop-actions">' +
+          '<button type="button" class="ub-drop-btn" id="ubAksiIdentitas">' + labelIdentitas + '</button>' +
+          '<button type="button" class="ub-drop-btn ub-drop-btn-danger" id="ubAksiLogout">🚪 Logout</button>' +
+        '</div>' +
+      '</div>';
+
+    // Render daftar teman di dropdown
+    renderTemanDropdown();
+
+    // Event trigger
+    const trigger = document.getElementById('ubTrigger');
+    const dropdown = document.getElementById('ubDropdown');
+    if (trigger && dropdown) {
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const open = host.classList.toggle('open');
+        trigger.setAttribute('aria-expanded', String(open));
+      });
+      document.addEventListener('click', function(e) {
+        if (!host.contains(e.target)) {
+          host.classList.remove('open');
+          if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+      const esc = function(e) {
+        if (e.key === 'Escape') {
+          host.classList.remove('open');
+          if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        }
+      };
+      document.addEventListener('keydown', esc);
+    }
+
+    const btnId = document.getElementById('ubAksiIdentitas');
+    const btnOut = document.getElementById('ubAksiLogout');
+    if (btnId) btnId.addEventListener('click', function() {
+      host.classList.remove('open');
+      bukaModalIdentitas();
+    });
+    if (btnOut) btnOut.addEventListener('click', function() {
+      host.classList.remove('open');
+      aksiLogout();
+    });
+  }
+  window.renderUserBar = renderUserBar;
+
+  function renderTemanDropdown() {
+    const sec = document.getElementById('ubDropTemanSection');
+    if (!sec) return;
+    const d = ambilIdentitasSiswaMulti();
+    if (!d) { sec.innerHTML = ''; return; }
+
+    if (d.tipe === 'tamu') {
+      const t = d.tamu;
+      if (!t || !Array.isArray(t.daftarNama) || t.daftarNama.length === 0) {
+        sec.innerHTML = '<div class="ub-drop-empty">Belum ada identitas tamu. Klik <strong>📝 Identitas</strong>.</div>';
+      } else {
+        const nama = t.daftarNama.map(function(n) { return escapeHtml(n); }).join(', ');
+        sec.innerHTML =
+          '<div class="ub-drop-label">👥 Identitas Tamu (' + t.daftarNama.length + ')</div>' +
+          '<div class="ub-drop-tamu">' +
+            '<div><strong>' + escapeHtml(nama) + '</strong></div>' +
+            '<div style="font-size:0.78rem;color:#7a6656;">Kelas ' + escapeHtml(t.kelas || '—') + ' · ' + escapeHtml(t.sekolah || '—') + '</div>' +
+          '</div>';
+      }
+      return;
+    }
+
+    // login
+    const teman = d.teman || [];
+    if (teman.length === 0) {
+      sec.innerHTML = '<div class="ub-drop-empty">Belum ada teman. Klik <strong>⚙️ Identitas</strong> untuk menambah.</div>';
+      return;
+    }
+    let html = '<div class="ub-drop-label">👥 Teman belajar (' + teman.length + '/' + (MAKS_TEMAN - 1) + ')</div>';
+    html += '<div class="ub-drop-teman-list">';
+    teman.forEach(function(t, idx) {
+      html +=
+        '<div class="ub-chip">' +
+          '<span class="ub-chip-avatar">' + escapeHtml((t.nama || '?').charAt(0).toUpperCase()) + '</span>' +
+          '<span class="ub-chip-body">' +
+            '<span class="ub-chip-nama">' + escapeHtml(t.nama || t.username) + '</span>' +
+            '<span class="ub-chip-meta">@' + escapeHtml(t.username) + ' · ' + escapeHtml(t.kelas || '—') + '</span>' +
+          '</span>' +
+          '<button type="button" class="ub-chip-hapus" data-idx="' + idx + '" title="Hapus teman">✕</button>' +
+        '</div>';
+    });
+    html += '</div>';
+    sec.innerHTML = html;
+
+    sec.querySelectorAll('.ub-chip-hapus').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const i = parseInt(btn.dataset.idx);
+        if (isNaN(i)) return;
+        const d2 = ambilIdentitasSiswaMulti();
+        if (!d2 || !Array.isArray(d2.teman)) return;
+        const t = d2.teman[i];
+        if (!t) return;
+        const nama = t.nama || t.username;
+        tampilkanModal({
+          judul: 'Hapus Teman',
+          pesan: '<p>Hapus <strong>' + escapeHtml(nama) + '</strong> dari daftar teman belajar?</p>' +
+                 '<p style="font-size:0.85rem;color:#7a6656;margin-top:0.6rem;">' +
+                 'Catatan: nilai yang sudah tersimpan di sheet <strong>tidak ikut terhapus</strong>. ' +
+                 'Penghapusan hanya mempengaruhi pengiriman nilai berikutnya.</p>',
+          tombolLanjut: '✕ Hapus',
+          onLanjut: function() {
+            d2.teman.splice(i, 1);
+            simpanIdentitasSiswaMulti(d2);
+            renderUserBar();
+          }
+        });
+      });
+    });
+  }
+
+  function truncate(s, n) {
+    s = String(s || '');
+    return s.length > n ? s.substring(0, n - 1) + '…' : s;
   }
 
   function escapeHtml(s) {
@@ -940,6 +1266,7 @@
       tombolLanjut: '🚪 Logout',
       onLanjut: function() {
         window.hapusSession();
+        hapusIdentitasSiswaMulti();
         window.hapusSemuaLocalStorageUser();
         window.location.href = getRoot() + 'index';
       }
@@ -965,6 +1292,372 @@
         }
       }
     });
+  }
+  
+    // ============================================
+  // MODAL IDENTITAS (LOGIN: tambah teman | TAMU: isi manual)
+  // ============================================
+  function bukaModalIdentitas() {
+    const s = window.ambilSession ? window.ambilSession() : null;
+    if (!s) { aksiLogin(); return; }
+    if (s.tipe === 'login') bukaModalIdentitasLogin();
+    else bukaModalIdentitasTamu();
+  }
+  window.bukaModalIdentitas = bukaModalIdentitas;
+
+  // ---------- MODAL LOGIN: KELOLA TEMAN ----------
+  function bukaModalIdentitasLogin() {
+    const s = window.ambilSession();
+    if (!s) return;
+    sinkronkanIdentitasDenganSession();
+    const d = ambilIdentitasSiswaMulti() || { tipe:'login', utama:{}, teman:[] };
+
+    const modal = document.createElement('div');
+    modal.id = 'duta-modal-identitas';
+    modal.className = 'duta-modal-overlay';
+    modal.innerHTML =
+      '<div class="duta-modal-box duta-modal-identitas-box">' +
+        '<h3 class="duta-modal-title">⚙️ Kelola Identitas Belajar</h3>' +
+        '<div class="duta-modal-body">' +
+          '<div class="identitas-utama-card">' +
+            '<div class="iuc-avatar">' + escapeHtml((s.nama || '?').charAt(0).toUpperCase()) + '</div>' +
+            '<div class="iuc-body">' +
+              '<div class="iuc-nama">' + escapeHtml(s.nama || s.user_id) + '</div>' +
+              '<div class="iuc-meta">@' + escapeHtml(s.user_id) + ' · Kelas ' + escapeHtml(s.kelas || '—') + ' · ' + escapeHtml(s.sekolah || '—') + '</div>' +
+            '</div>' +
+            '<span class="iuc-badge">UTAMA</span>' +
+          '</div>' +
+
+          '<div class="teman-section">' +
+            '<div class="teman-section-title">' +
+              '👥 Teman Belajar <span class="teman-count" id="mTemanCount">0/' + (MAKS_TEMAN - 1) + '</span>' +
+            '</div>' +
+            '<div class="teman-chip-list" id="mTemanList"></div>' +
+          '</div>' +
+
+          '<div class="tambah-teman-section">' +
+            '<div class="tambah-teman-label">➕ Tambah Teman</div>' +
+            '<div class="tambah-teman-row">' +
+              '<input type="text" id="mInputUsername" placeholder="Username teman" maxlength="30" autocomplete="off" spellcheck="false">' +
+              '<button type="button" class="btn-cek" id="mBtnCek">🔍 Cek</button>' +
+            '</div>' +
+            '<div class="tambah-teman-hint" id="mHint">Ketik username, lalu klik <strong>Cek</strong>.</div>' +
+
+            '<div class="tambah-teman-confirm" id="mConfirmBox" style="display:none;">' +
+              '<div class="confirm-user" id="mConfirmUser"></div>' +
+              '<div class="tambah-teman-row" style="margin-top:0.5rem;">' +
+                '<input type="password" id="mInputPassword" placeholder="Password teman (untuk verifikasi)" maxlength="50" autocomplete="off">' +
+                '<button type="button" class="btn-tambah" id="mBtnTambah">✓ Tambah</button>' +
+              '</div>' +
+              '<div class="tambah-teman-hint">Password hanya untuk verifikasi, tidak disimpan.</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="duta-modal-actions">' +
+          '<button type="button" class="duta-modal-btn duta-modal-batal" id="mBtnTutup">Tutup</button>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(modal);
+
+    // State lokal modal
+    let userTerverifikasi = null;
+
+    const elList = modal.querySelector('#mTemanList');
+    const elCount = modal.querySelector('#mTemanCount');
+    const elInput = modal.querySelector('#mInputUsername');
+    const elBtnCek = modal.querySelector('#mBtnCek');
+    const elHint = modal.querySelector('#mHint');
+    const elConfirmBox = modal.querySelector('#mConfirmBox');
+    const elConfirmUser = modal.querySelector('#mConfirmUser');
+    const elPwd = modal.querySelector('#mInputPassword');
+    const elBtnTambah = modal.querySelector('#mBtnTambah');
+
+    function refresh() {
+      const dd = ambilIdentitasSiswaMulti();
+      const teman = (dd && Array.isArray(dd.teman)) ? dd.teman : [];
+      elCount.textContent = teman.length + '/' + (MAKS_TEMAN - 1);
+      elList.innerHTML = '';
+      if (teman.length === 0) {
+        elList.innerHTML = '<div class="teman-empty">Belum ada teman. Tambahkan jika satu komputer dipakai lebih dari satu orang.</div>';
+        return;
+      }
+      teman.forEach(function(t, idx) {
+        const chip = document.createElement('div');
+        chip.className = 'teman-chip';
+        chip.innerHTML =
+          '<span class="tc-avatar">' + escapeHtml((t.nama || '?').charAt(0).toUpperCase()) + '</span>' +
+          '<span class="tc-body">' +
+            '<span class="tc-nama">' + escapeHtml(t.nama || t.username) + '</span>' +
+            '<span class="tc-meta">@' + escapeHtml(t.username) + ' · Kelas ' + escapeHtml(t.kelas || '—') + '</span>' +
+          '</span>' +
+          '<button type="button" class="tc-hapus" data-idx="' + idx + '">✕</button>';
+        elList.appendChild(chip);
+      });
+      elList.querySelectorAll('.tc-hapus').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const i = parseInt(btn.dataset.idx);
+          if (isNaN(i)) return;
+          const dd2 = ambilIdentitasSiswaMulti();
+          if (!dd2 || !dd2.teman[i]) return;
+          const t = dd2.teman[i];
+          tampilkanModal({
+            judul: 'Hapus Teman',
+            pesan: '<p>Hapus <strong>' + escapeHtml(t.nama || t.username) + '</strong> dari daftar?</p>' +
+                   '<p style="font-size:0.85rem;color:#7a6656;">Nilai yang sudah tersimpan di sheet tidak ikut terhapus.</p>',
+            tombolLanjut: '✕ Hapus',
+            onLanjut: function() {
+              dd2.teman.splice(i, 1);
+              simpanIdentitasSiswaMulti(dd2);
+              refresh();
+              renderUserBar();
+            }
+          });
+        });
+      });
+    }
+    refresh();
+
+    // Cek username
+    elBtnCek.addEventListener('click', async function() {
+      const u = (elInput.value || '').trim().toLowerCase();
+      if (!u) { setHint('⚠️ Ketik username dulu.', 'error'); return; }
+      if (!/^[a-zA-Z0-9._-]{3,30}$/.test(u)) { setHint('⚠️ Username tidak valid.', 'error'); return; }
+      if (u === (s.user_id || '').toLowerCase()) { setHint('⚠️ Itu username kamu sendiri.', 'error'); return; }
+
+      const dd = ambilIdentitasSiswaMulti();
+      if (dd && dd.teman && dd.teman.some(function(t) { return (t.username || '').toLowerCase() === u; })) {
+        setHint('⚠️ Username sudah ada di daftar.', 'error'); return;
+      }
+      if (dd && dd.teman && dd.teman.length >= (MAKS_TEMAN - 1)) {
+        setHint('⚠️ Maksimal ' + (MAKS_TEMAN - 1) + ' teman.', 'error'); return;
+      }
+
+      elBtnCek.disabled = true;
+      elBtnCek.textContent = '⏳...';
+      setHint('Mencari "' + u + '"...', '');
+      elConfirmBox.style.display = 'none';
+      userTerverifikasi = null;
+
+      let hasil;
+      try {
+        hasil = await window.dutaFetch({ action: 'cariUser', username: u });
+      } catch (e) { hasil = { ok: false, error: e.message }; }
+
+      elBtnCek.disabled = false;
+      elBtnCek.textContent = '🔍 Cek';
+
+      if (!hasil || !hasil.ok) { setHint('⚠️ Gagal: ' + ((hasil && hasil.error) || 'Tidak diketahui'), 'error'); return; }
+      if (hasil.tersedia) { setHint('❌ Username belum terdaftar.', 'error'); return; }
+
+      const usr = hasil.user;
+      if (!usr) { setHint('⚠️ Data user tidak lengkap.', 'error'); return; }
+
+      const sekolahUtama = (s.sekolah || '').toUpperCase();
+      const sekolahTeman = (usr.sekolah || '').toUpperCase();
+      if (sekolahUtama && sekolahTeman && sekolahUtama !== sekolahTeman) {
+        setHint('❌ "' + usr.nama + '" dari sekolah berbeda.', 'error'); return;
+      }
+
+      userTerverifikasi = usr;
+      elConfirmUser.innerHTML =
+        '<span class="cu-avatar">' + escapeHtml((usr.nama || '?').charAt(0).toUpperCase()) + '</span>' +
+        '<span class="cu-body">' +
+          '<span class="cu-nama">' + escapeHtml(usr.nama) + '</span>' +
+          '<span class="cu-meta">@' + escapeHtml(usr.username) + ' · Kelas ' + escapeHtml(usr.kelas || '—') + '</span>' +
+        '</span>';
+      elConfirmBox.style.display = 'block';
+      elPwd.value = '';
+      elPwd.focus();
+      setHint('✅ User ditemukan. Masukkan password untuk verifikasi.', 'success');
+    });
+
+    elPwd.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); elBtnTambah.click(); }
+    });
+
+    elBtnTambah.addEventListener('click', async function() {
+      if (!userTerverifikasi) return;
+      const pwd = (elPwd.value || '');
+      if (!pwd) { setHint('⚠️ Masukkan password teman.', 'error'); return; }
+      elBtnTambah.disabled = true;
+      elBtnTambah.textContent = '⏳...';
+      setHint('Memverifikasi password...', '');
+
+      // Verifikasi via API login — JANGAN timpa session utama
+      let hasil;
+      try {
+        // simpan session utama dulu
+        const sessionAsli = localStorage.getItem('duta_session');
+        const aktivitasAsli = localStorage.getItem('duta_aktivitas_terakhir');
+
+        const res = await window.dutaFetch({
+          action: 'login',
+          username: userTerverifikasi.username,
+          password: pwd
+        });
+
+        // pulihkan session utama (login() di script.js lama akan timpa — hindari dengan fetch langsung)
+        if (sessionAsli !== null) localStorage.setItem('duta_session', sessionAsli);
+        else localStorage.removeItem('duta_session');
+        if (aktivitasAsli !== null) localStorage.setItem('duta_aktivitas_terakhir', aktivitasAsli);
+        else localStorage.removeItem('duta_aktivitas_terakhir');
+
+        hasil = res;
+      } catch (e) { hasil = { ok: false, error: e.message }; }
+
+      elBtnTambah.disabled = false;
+      elBtnTambah.textContent = '✓ Tambah';
+
+      if (!hasil || !hasil.ok) {
+        setHint('❌ Password salah atau verifikasi gagal.', 'error');
+        return;
+      }
+
+      // Simpan teman
+      const dd = ambilIdentitasSiswaMulti() || { tipe:'login', utama:{}, teman:[] };
+      if (!Array.isArray(dd.teman)) dd.teman = [];
+      dd.teman.push({
+        username: userTerverifikasi.username,
+        nama: userTerverifikasi.nama,
+        kelas: userTerverifikasi.kelas,
+        sekolah: userTerverifikasi.sekolah
+      });
+      simpanIdentitasSiswaMulti(dd);
+      userTerverifikasi = null;
+      elConfirmBox.style.display = 'none';
+      elInput.value = '';
+      setHint('✅ Teman ditambahkan.', 'success');
+      refresh();
+      renderUserBar();
+    });
+
+    // Tutup
+    modal.querySelector('#mBtnTutup').addEventListener('click', function() { modal.remove(); });
+    const esc = function(e) { if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', esc); } };
+    document.addEventListener('keydown', esc);
+    modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+
+    function setHint(msg, tipe) {
+      elHint.className = 'tambah-teman-hint' + (tipe ? ' ' + tipe : '');
+      elHint.innerHTML = msg;
+    }
+  }
+
+  // ---------- MODAL TAMU: IDENTITAS MANUAL ----------
+  function bukaModalIdentitasTamu() {
+    const s = window.ambilSession();
+    if (!s) return;
+    const d = ambilIdentitasSiswaMulti() || { tipe:'tamu', utama:{}, teman:[], tamu:null };
+    const tamu = d.tamu || { sekolah: s.sekolah || '', kelas: s.kelas || '', daftarNama: [s.nama || ''] };
+
+    const modal = document.createElement('div');
+    modal.id = 'duta-modal-identitas-tamu';
+    modal.className = 'duta-modal-overlay';
+    modal.innerHTML =
+      '<div class="duta-modal-box duta-modal-identitas-box">' +
+        '<h3 class="duta-modal-title">📝 Identitas Tamu</h3>' +
+        '<div class="duta-modal-body">' +
+          '<p style="font-size:0.88rem;color:#5c4638;margin-bottom:1rem;line-height:1.6;">' +
+            'Isi identitas untuk pengiriman nilai. Kode tamu kamu: <strong>' + escapeHtml(s.user_id) + '</strong>' +
+          '</p>' +
+          '<div class="form-row">' +
+            '<label for="mTamuSekolah">Sekolah</label>' +
+            '<input type="text" id="mTamuSekolah" maxlength="60" placeholder="SMPN 2 Talegong" value="' + escapeHtml(tamu.sekolah || '') + '">' +
+          '</div>' +
+          '<div class="form-row">' +
+            '<label for="mTamuKelas">Kelas</label>' +
+            '<input type="text" id="mTamuKelas" maxlength="10" placeholder="7A" value="' + escapeHtml(tamu.kelas || '') + '">' +
+          '</div>' +
+          '<div class="form-row">' +
+            '<label for="mTamuJumlah">Jumlah Siswa</label>' +
+            '<select id="mTamuJumlah">' +
+              [1,2,3,4,5].map(function(n) {
+                const sel = (tamu.daftarNama && tamu.daftarNama.length === n) ? ' selected' : '';
+                return '<option value="' + n + '"' + sel + '>' + n + ' orang</option>';
+              }).join('') +
+            '</select>' +
+          '</div>' +
+          '<div id="mTamuNamaList"></div>' +
+          '<div class="form-error" id="mTamuError" style="display:none;"></div>' +
+        '</div>' +
+        '<div class="duta-modal-actions">' +
+          '<button type="button" class="duta-modal-btn duta-modal-batal" id="mTamuBatal">Batal</button>' +
+          '<button type="button" class="duta-modal-btn duta-modal-lanjut" id="mTamuSimpan">💾 Simpan</button>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(modal);
+
+    const elJumlah = modal.querySelector('#mTamuJumlah');
+    const elList = modal.querySelector('#mTamuNamaList');
+    const elErr = modal.querySelector('#mTamuError');
+    const elSekolah = modal.querySelector('#mTamuSekolah');
+    const elKelas = modal.querySelector('#mTamuKelas');
+    const elSimpan = modal.querySelector('#mTamuSimpan');
+
+    function renderNama(jumlah, presetNama) {
+      const namaArr = Array.isArray(presetNama) ? presetNama.slice() : [];
+      let html = '';
+      for (let i = 0; i < jumlah; i++) {
+        const val = namaArr[i] || (i === 0 ? (s.nama || '') : '');
+        html +=
+          '<div class="form-row">' +
+            '<label>Nama ' + (i + 1) + '</label>' +
+            '<input type="text" class="m-tamu-nama" maxlength="40" placeholder="Nama lengkap" value="' + escapeHtml(val) + '">' +
+          '</div>';
+      }
+      elList.innerHTML = html;
+    }
+    renderNama(parseInt(elJumlah.value), tamu.daftarNama);
+
+    elJumlah.addEventListener('change', function() {
+      renderNama(parseInt(elJumlah.value), null);
+    });
+
+    elSimpan.addEventListener('click', function() {
+      const sekolah = (elSekolah.value || '').trim();
+      const kelas = (elKelas.value || '').trim();
+      const jumlah = parseInt(elJumlah.value) || 1;
+      if (!sekolah) { showErr('Sekolah wajib diisi.'); return; }
+      if (!kelas) { showErr('Kelas wajib diisi.'); return; }
+      const inputs = elList.querySelectorAll('.m-tamu-nama');
+      const daftarNama = [];
+      for (let i = 0; i < inputs.length; i++) {
+        const v = (inputs[i].value || '').trim();
+        if (!v) { showErr('Nama siswa ' + (i + 1) + ' wajib diisi.'); return; }
+        daftarNama.push(v);
+      }
+
+      const dd = ambilIdentitasSiswaMulti() || { tipe:'tamu', utama:{}, teman:[], tamu:null };
+      dd.tipe = 'tamu';
+      dd.tamu = { sekolah: sekolah, kelas: kelas, daftarNama: daftarNama };
+      // Update utama juga (nama gabungan)
+      dd.utama = {
+        username: s.user_id,
+        nama: daftarNama.join(' & '),
+        kelas: kelas,
+        sekolah: sekolah
+      };
+      simpanIdentitasSiswaMulti(dd);
+
+      // Simpan juga ke key lama (kompatibilitas)
+      try { window.simpanIdentitasSiswa(sekolah, daftarNama.join(' & '), kelas); } catch (e) {}
+
+      modal.remove();
+      renderUserBar();
+    });
+
+    modal.querySelector('#mTamuBatal').addEventListener('click', function() { modal.remove(); });
+    const esc = function(e) { if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', esc); } };
+    document.addEventListener('keydown', esc);
+    modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+
+    function showErr(msg) {
+      elErr.textContent = '⚠️ ' + msg;
+      elErr.style.display = 'block';
+      elErr.classList.add('show');
+    }
   }
 
   // ============================================

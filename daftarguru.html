@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Daftar Guru · Portal Informatika DUTA</title>
+  <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== FORM GURU ===== */
+    .auth-icon { color: #2d7d46; }
+    .auth-title { background: linear-gradient(100deg, #2d7d46, #4fa86a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    .input-preview {
+      display: none;
+      margin-top: 0.4rem;
+      padding: 0.35rem 0.7rem;
+      background: #f0f8eb;
+      border: 1.5px dashed #8aaa7a;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      color: #2d5a1e;
+      line-height: 1.4;
+    }
+    .input-preview.show { display: block; }
+    .input-preview strong {
+      color: #1f5f32;
+      font-family: 'Courier New', monospace;
+      background: #fff;
+      padding: 0.05rem 0.4rem;
+      border-radius: 4px;
+    }
+    .input-preview .pv-label {
+      font-size: 0.7rem;
+      color: #5c8a6a;
+      font-style: italic;
+    }
+
+    /* ===== MODAL SUKSES DAFTAR GURU ===== */
+    .duta-daftar-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 40, 30, 0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 1rem;
+      animation: modalFadeIn 0.25s ease;
+    }
+    @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    .duta-daftar-box {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2.5rem 2rem 2rem;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 24px 60px rgba(20, 40, 30, 0.4);
+      border: 3px solid #4fa86a;
+      animation: modalSlideUp 0.3s ease;
+      text-align: center;
+      position: relative;
+    }
+    @keyframes modalSlideUp {
+      from { transform: translateY(30px) scale(0.95); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .duta-daftar-box::before {
+      content: '👨‍🏫';
+      position: absolute;
+      top: -24px; left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      border: 3px solid #4fa86a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+    .duta-daftar-box .dd-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #1f5f32;
+      margin-bottom: 0.5rem;
+    }
+    .duta-daftar-box .dd-sub {
+      font-size: 0.95rem;
+      color: #5c4638;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .duta-daftar-box .dd-sub strong { color: #2d7d46; }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.4rem 1.2rem;
+      background: #fff8e6;
+      border: 2px dashed #f4b942;
+      border-radius: 20px;
+      color: #8a5e00;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-wa {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.85rem 1.5rem;
+      background: #25D366;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1rem;
+      text-decoration: none;
+      border-radius: 40px;
+      box-shadow: 0 6px 18px rgba(37, 211, 102, 0.3);
+      transition: all 0.2s ease;
+      margin-bottom: 1rem;
+    }
+    .btn-wa:hover {
+      background: #1EBE56;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(37, 211, 102, 0.4);
+    }
+
+    /* ===== FAB KEMBALI (SISWA) ===== */
+    .fab-siswa {
+      position: fixed;
+      bottom: 6rem;
+      right: 1.5rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #b07be0, #5c7cfa);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(92, 124, 250, 0.4);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 999;
+    }
+    .fab-siswa:hover {
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 10px 26px rgba(92, 124, 250, 0.6);
+    }
+    .fab-siswa::before {
+      content: 'Daftar sebagai Siswa';
+      position: absolute;
+      right: 70px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #4d3829;
+      color: #fff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .fab-siswa:hover::before { opacity: 1; }
+
+    @media (max-width: 480px) {
+      .duta-daftar-box { padding: 2rem 1.2rem 1.5rem; }
+      .fab-siswa {
+        bottom: 5rem;
+        right: 1rem;
+        width: 46px;
+        height: 46px;
+        font-size: 1.3rem;
+      }
+      .fab-siswa::before { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+
+  <div id="duta-breadcrumb-host"></div>
+
+  <main class="container" id="konten-utama">
+    <div class="auth-wrapper" style="border-color: #b8e5c8;">
+
+      <span class="auth-icon" aria-hidden="true">👨‍🏫</span>
+      <h1 class="auth-title">Daftar Guru</h1>
+      <p class="auth-sub">Buat akun pengajar untuk mengelola kelas</p>
+
+      <div id="formWrapper">
+        <div class="auth-error" id="authError"></div>
+        <div class="auth-success" id="authSuccess"></div>
+
+        <form id="formDaftarGuru" autocomplete="off" novalidate>
+
+          <div class="auth-form-group">
+            <label for="inputNama">Nama Lengkap &amp; Gelar</label>
+            <input
+              type="text"
+              id="inputNama"
+              placeholder="Contoh: Kiki Husni Kamil, S.Pd."
+              maxlength="60"
+              autocomplete="name">
+            <div class="hint">Nama akan tampil di dashboard.</div>
+            <div class="input-preview" id="previewNama">
+              <span class="pv-label">Akan disimpan sebagai:</span>
+              <strong id="previewNamaVal">—</strong>
+            </div>
+          </div>
+
+          <div class="auth-form-group">
+            <label for="inputSekolah">Asal Sekolah</label>
+            <input
+              type="text"
+              id="inputSekolah"
+              list="sekolahList"
+              placeholder="Ketik untuk mencari sekolah..."
+              maxlength="60"
+              autocomplete="off">
+            <datalist id="sekolahList">
+              <!-- Opsi diisi via JS -->
+            </datalist>
+            <div class="input-preview" id="previewSekolah">
+              <span class="pv-label">Akan disimpan sebagai:</span>
+              <strong id="previewSekolahVal">—</strong>
+            </div>
+          </div>
+
+          <div class="auth-form-group">
+            <label for="inputKontak">Nomor WhatsApp (Kontak)</label>
+            <input
+              type="tel"
+              id="inputKontak"
+              placeholder="Contoh: 085222250973"
+              maxlength="20"
+              autocomplete="tel">
+            <div class="hint">Gunakan format 08... atau 628...</div>
+          </div>
+
+          <div class="auth-form-group">
+            <label for="inputUsername">Username</label>
+            <input
+              type="text"
+              id="inputUsername"
+              placeholder="Contoh: kikikamil"
+              maxlength="30"
+              autocomplete="username"
+              autocapitalize="none"
+              spellcheck="false">
+            <div class="hint">Min 3 karakter. Huruf, angka, titik, garis bawah, strip.</div>
+          </div>
+
+          <div class="auth-form-group">
+            <label for="inputPassword">Password</label>
+            <input
+              type="password"
+              id="inputPassword"
+              placeholder="Min 6 karakter"
+              maxlength="50"
+              autocomplete="new-password">
+            <div class="hint">Min 6 karakter. Tidak boleh sama dengan username.</div>
+          </div>
+
+          <div class="auth-form-group">
+            <label for="inputPassword2">Ulangi Password</label>
+            <input
+              type="password"
+              id="inputPassword2"
+              placeholder="Ketik ulang password"
+              maxlength="50"
+              autocomplete="new-password">
+          </div>
+
+          <button type="submit" class="btn-auth" id="btnDaftar" style="background: linear-gradient(135deg, #2d7d46, #4fa86a); box-shadow: 0 6px 18px rgba(45, 125, 70, 0.25);">
+            ✨ Daftar Sebagai Guru
+          </button>
+        </form>
+
+        <div class="auth-divider">atau</div>
+
+        <a href="login" class="btn-auth-secondary">
+          🔑 Sudah punya akun? Login
+        </a>
+
+        <p class="auth-footer-text">
+          Ingin mendaftar sebagai siswa? <a href="daftar">Klik di sini</a>
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+  
+  <!-- FAB Kembali ke Daftar Siswa -->
+  <a href="daftar" class="fab-siswa" aria-label="Daftar Siswa">🎓</a>
+
+  <script src="script.js"></script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const elForm = document.getElementById('formDaftarGuru');
+      const elNama = document.getElementById('inputNama');
+      const elSekolah = document.getElementById('inputSekolah');
+      const elSekolahList = document.getElementById('sekolahList');
+      const elKontak = document.getElementById('inputKontak');
+      const elUsername = document.getElementById('inputUsername');
+      const elPassword = document.getElementById('inputPassword');
+      const elPassword2 = document.getElementById('inputPassword2');
+      const elBtn = document.getElementById('btnDaftar');
+      const elError = document.getElementById('authError');
+      const elSuccess = document.getElementById('authSuccess');
+
+      const elPreviewNama = document.getElementById('previewNama');
+      const elPreviewNamaVal = document.getElementById('previewNamaVal');
+      const elPreviewSekolah = document.getElementById('previewSekolah');
+      const elPreviewSekolahVal = document.getElementById('previewSekolahVal');
+
+      // Sembunyikan bar user di halaman daftar
+      const styleHide = document.createElement('style');
+      styleHide.textContent = '#duta-user-bar { display: none !important; }';
+      document.head.appendChild(styleHide);
+
+      // ============================================
+      // NORMALISASI & HELPER
+      // ============================================
+      function normalisasiNama(str) {
+        if (window.dutaNormalisasi && window.dutaNormalisasi.nama) return window.dutaNormalisasi.nama(str);
+        return String(str || '').trim();
+      }
+      function normalisasiSekolah(str) {
+        if (window.dutaNormalisasi && window.dutaNormalisasi.sekolah) return window.dutaNormalisasi.sekolah(str);
+        return String(str || '').trim();
+      }
+      // Normalisasi kontak sederhana (hanya angka, ubah +62 jadi 62, 08 jadi 62)
+      function normalisasiKontak(str) {
+        let s = String(str || '').replace(/[^0-9]/g, '');
+        if (s.indexOf('08') === 0) {
+          s = '62' + s.substring(1);
+        }
+        return s;
+      }
+
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      // ============================================
+      // PREVIEW REAL-TIME
+      // ============================================
+      elNama.addEventListener('input', function() {
+        const raw = this.value.trim();
+        if (!raw) { elPreviewNama.classList.remove('show'); return; }
+        elPreviewNamaVal.textContent = normalisasiNama(raw);
+        elPreviewNama.classList.add('show');
+      });
+
+      elSekolah.addEventListener('input', function() {
+        const raw = this.value.trim();
+        if (!raw) { elPreviewSekolah.classList.remove('show'); return; }
+        elPreviewSekolahVal.textContent = normalisasiSekolah(raw);
+        elPreviewSekolah.classList.add('show');
+      });
+
+      // ============================================
+      // LOAD DATA SEKOLAH (Datalist)
+      // ============================================
+      async function loadSekolah() {
+        try {
+          const res = await window.dutaFetch({ action: 'listSekolahGuru' });
+          if (res && res.ok && Array.isArray(res.sekolah)) {
+            elSekolahList.innerHTML = res.sekolah.map(function(s) {
+              return '<option value="' + escapeHtml(s) + '"></option>';
+            }).join('');
+          }
+        } catch (e) {
+          console.warn('Gagal memuat daftar sekolah:', e);
+        }
+      }
+
+      // ============================================
+      // PESAN ERROR / SUKSES
+      // ============================================
+      function tampilError(pesan) {
+        elError.textContent = '⚠️ ' + pesan;
+        elError.classList.add('show');
+        elSuccess.classList.remove('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      function tampilSukses(pesan) {
+        elSuccess.textContent = '✅ ' + pesan;
+        elSuccess.classList.add('show');
+        elError.classList.remove('show');
+      }
+      function sembunyikanPesan() {
+        elError.classList.remove('show');
+        elSuccess.classList.remove('show');
+      }
+
+      // ============================================
+      // VALIDASI
+      // ============================================
+      function validasiUsername(u) {
+        if (!u) return 'Username wajib diisi.';
+        if (u.length < 3) return 'Username minimal 3 karakter.';
+        if (u.length > 30) return 'Username maksimal 30 karakter.';
+        if (!/^[a-zA-Z0-9._-]+$/.test(u)) return 'Username hanya boleh huruf, angka, titik, garis bawah, dan strip.';
+        return null;
+      }
+      function validasiPassword(p, u) {
+        if (!p) return 'Password wajib diisi.';
+        if (p.length < 6) return 'Password minimal 6 karakter (khusus guru).';
+        if (p.length > 50) return 'Password maksimal 50 karakter.';
+        if (/\s/.test(p)) return 'Password tidak boleh mengandung spasi.';
+        if (p.toLowerCase() === u.toLowerCase()) return 'Password tidak boleh sama dengan username.';
+        return null;
+      }
+
+      // ============================================
+      // MODAL SUKSES
+      // ============================================
+      function tampilkanModalSukses() {
+        const lama = document.getElementById('dutaDaftarModal');
+        if (lama) lama.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'dutaDaftarModal';
+        modal.className = 'duta-daftar-modal';
+        modal.innerHTML =
+          '<div class="duta-daftar-box">' +
+            '<div class="dd-title">Pendaftaran Berhasil!</div>' +
+            '<div class="dd-sub">' +
+              'Akun Guru Anda telah dibuat dan sedang dalam proses verifikasi.' +
+            '</div>' +
+            '<div class="status-badge">⏳ Status: Menunggu Persetujuan</div>' +
+            '<p style="font-size: 0.9rem; color: #5c4638; margin-bottom: 1.5rem; line-height: 1.6;">' +
+              'Silakan hubungi Admin (Kiki Husni Kamil, S.Pd.) melalui WhatsApp untuk mempercepat proses persetujuan akun Anda.' +
+            '</p>' +
+            '<a href="https://wa.me/6285222250973" target="_blank" rel="noopener" class="btn-wa">' +
+              '💬 Hubungi Admin via WA' +
+            '</a>' +
+            '<button type="button" class="btn-auth-secondary" id="ddBtnTutup" style="margin-top: 0.5rem; border: none; background: transparent; text-decoration: underline;">' +
+              'Tutup Halaman' +
+            '</button>' +
+          '</div>';
+        document.body.appendChild(modal);
+
+        modal.querySelector('#ddBtnTutup').addEventListener('click', function() {
+          window.location.href = 'login';
+        });
+      }
+
+      // ============================================
+      // SUBMIT
+      // ============================================
+      elForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        sembunyikanPesan();
+
+        const namaMentah = elNama.value.trim();
+        const sekolahMentah = elSekolah.value.trim();
+        const kontakMentah = elKontak.value.trim();
+        const usernameMentah = elUsername.value.trim().toLowerCase();
+        const passwordMentah = elPassword.value;
+        const password2Mentah = elPassword2.value;
+
+        const nama = normalisasiNama(namaMentah);
+        const sekolah = normalisasiSekolah(sekolahMentah);
+        const kontak = normalisasiKontak(kontakMentah);
+        const username = usernameMentah;
+        const password = passwordMentah;
+        const password2 = password2Mentah;
+
+        // Validasi Frontend
+        if (!nama) { tampilError('Nama lengkap wajib diisi.'); elNama.focus(); return; }
+        if (nama.length < 2) { tampilError('Nama minimal 2 karakter.'); elNama.focus(); return; }
+        
+        if (!sekolah) { tampilError('Nama sekolah wajib diisi.'); elSekolah.focus(); return; }
+        if (sekolah.length < 3) { tampilError('Nama sekolah minimal 3 karakter.'); elSekolah.focus(); return; }
+        if (sekolah.length > 60) { tampilError('Nama sekolah maksimal 60 karakter.'); elSekolah.focus(); return; }
+
+        if (!kontakMentah) { tampilError('Nomor WhatsApp wajib diisi.'); elKontak.focus(); return; }
+        if (kontak.length < 9 || kontak.length > 15) { tampilError('Nomor WA tidak valid (9-15 digit).'); elKontak.focus(); return; }
+
+        const errU = validasiUsername(username);
+        if (errU) { tampilError(errU); elUsername.focus(); return; }
+
+        const errP = validasiPassword(password, username);
+        if (errP) { tampilError(errP); elPassword.focus(); return; }
+
+        if (password !== password2) {
+          tampilError('Password dan ulangi password tidak sama.');
+          elPassword2.focus();
+          return;
+        }
+
+        elBtn.disabled = true;
+        elBtn.textContent = '⏳ Mendaftar...';
+
+        try {
+          // Panggil API registerGuru
+          const hasil = await window.dutaFetch({
+            action: 'registerGuru',
+            username: username,
+            password: password,
+            nama: nama,
+            sekolah: sekolah,
+            kontak: kontak
+          });
+
+          if (hasil && hasil.ok) {
+            tampilkanModalSukses();
+            elBtn.disabled = false;
+            elBtn.textContent = '✨ Daftar Sebagai Guru';
+          } else {
+            tampilError((hasil && hasil.error) || 'Pendaftaran gagal. Coba lagi.');
+            elBtn.disabled = false;
+            elBtn.textContent = '✨ Daftar Sebagai Guru';
+          }
+        } catch (err) {
+          tampilError('Gagal terhubung ke server.');
+          elBtn.disabled = false;
+          elBtn.textContent = '✨ Daftar Sebagai Guru';
+        }
+      });
+
+      elPassword2.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          elForm.requestSubmit ? elForm.requestSubmit() : elForm.dispatchEvent(new Event('submit'));
+        }
+      });
+
+      // ============================================
+      // INIT
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        loadSekolah();
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

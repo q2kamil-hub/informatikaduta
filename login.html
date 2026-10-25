@@ -5,6 +5,149 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Login · Portal Informatika DUTA</title>
   <link rel="stylesheet" href="desain.css">
+  <style>
+    /* ===== CSS LOKAL LOGIN — Dropdown & Form Tamu ===== */
+    .auth-form-group select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #e5dbd0;
+      background: #fcfaf7;
+      font-size: 0.95rem;
+      font-family: inherit;
+      font-weight: 600;
+      color: #3d2c1f;
+      outline: none;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .auth-form-group select:focus {
+      border-color: var(--c-bk, #f26d8a);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(242, 109, 138, 0.15);
+    }
+
+    /* ===== MODE TAMU (form) ===== */
+    .form-tamu-box {
+      display: none;
+      margin-top: 1rem;
+      padding: 1.2rem 1.4rem;
+      background: linear-gradient(135deg, #fff8e6, #ffe8c2);
+      border: 2px solid #f0c896;
+      border-radius: 16px;
+      animation: tamuSlide 0.3s ease;
+    }
+    .form-tamu-box.show { display: block; }
+    @keyframes tamuSlide {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .form-tamu-box .ft-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #7a4a00;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .form-tamu-box .ft-desc {
+      font-size: 0.82rem;
+      color: #8a5e00;
+      margin-bottom: 0.8rem;
+      line-height: 1.5;
+      font-style: italic;
+    }
+    .form-tamu-box .ft-row {
+      margin-bottom: 0.7rem;
+    }
+    .form-tamu-box .ft-row label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #5c3400;
+      margin-bottom: 0.3rem;
+    }
+    .form-tamu-box .ft-row input {
+      width: 100%;
+      padding: 0.6rem 0.9rem;
+      border-radius: 10px;
+      border: 2px solid #e5dbd0;
+      background: #fff;
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: #3d2c1f;
+      outline: none;
+      transition: all 0.15s;
+    }
+    .form-tamu-box .ft-row input:focus {
+      border-color: #e8a020;
+      box-shadow: 0 0 0 3px rgba(232, 160, 32, 0.18);
+    }
+    .form-tamu-box .ft-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.6rem;
+    }
+    .form-tamu-box .btn-daftar-tamu {
+      flex: 1;
+      padding: 0.7rem 1.5rem;
+      border-radius: 30px;
+      border: none;
+      background: linear-gradient(135deg, #e8a020, #c88010);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.9rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(232, 160, 32, 0.3);
+    }
+    .form-tamu-box .btn-daftar-tamu:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(232, 160, 32, 0.4);
+    }
+    .form-tamu-box .btn-daftar-tamu:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    .form-tamu-box .btn-batal-tamu {
+      padding: 0.7rem 1.2rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      color: #5c4638;
+      font-weight: 700;
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .form-tamu-box .btn-batal-tamu:hover {
+      background: #f5ede6;
+    }
+    .form-tamu-box .ft-error {
+      display: none;
+      background: #fdf0f0;
+      border: 2px solid #d4a0a0;
+      color: #a84a3a;
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-top: 0.6rem;
+    }
+    .form-tamu-box .ft-error.show { display: block; }
+
+    @media (max-width: 480px) {
+      .form-tamu-box { padding: 1rem; }
+      .form-tamu-box .ft-actions { flex-direction: column-reverse; }
+      .form-tamu-box .btn-daftar-tamu,
+      .form-tamu-box .btn-batal-tamu { width: 100%; text-align: center; }
+    }
+  </style>
 </head>
 <body>
 
@@ -25,6 +168,16 @@
       <div class="auth-success" id="authSuccess"></div>
 
       <form id="formLogin" autocomplete="off" novalidate>
+
+        <!-- Dropdown: Login sebagai -->
+        <div class="auth-form-group">
+          <label for="inputTipeAkun">Login sebagai</label>
+          <select id="inputTipeAkun">
+            <option value="siswa" selected>🎓 Siswa</option>
+            <option value="guru">👨‍🏫 Guru</option>
+          </select>
+        </div>
+
         <div class="auth-form-group">
           <label for="inputUsername">Username</label>
           <input
@@ -54,9 +207,39 @@
 
       <div class="auth-divider">atau</div>
 
-      <a href="index" class="btn-auth-secondary">
+      <button type="button" class="btn-auth-secondary" id="btnLanjutTamu">
         🎭 Lanjut sebagai Tamu
-      </a>
+      </button>
+
+      <!-- FORM TAMU (tersembunyi, muncul setelah klik "Lanjut sebagai Tamu") -->
+      <div class="form-tamu-box" id="formTamuBox">
+        <div class="ft-title">🎭 Masuk sebagai Tamu</div>
+        <div class="ft-desc">
+          Isi identitas untuk membuat kode tamu. Kode ini akan dipakai untuk menyimpan progres belajarmu.
+        </div>
+
+        <div class="ft-row">
+          <label for="tamuSekolah">Sekolah</label>
+          <input type="text" id="tamuSekolah" placeholder="SMPN 2 Talegong" maxlength="60" autocomplete="off">
+        </div>
+
+        <div class="ft-row">
+          <label for="tamuKelas">Kelas</label>
+          <input type="text" id="tamuKelas" placeholder="Contoh: 8A" maxlength="10" autocomplete="off">
+        </div>
+
+        <div class="ft-row">
+          <label for="tamuNama">Nama Lengkap</label>
+          <input type="text" id="tamuNama" placeholder="Contoh: Budi Santoso" maxlength="40" autocomplete="off">
+        </div>
+
+        <div class="ft-error" id="tamuError"></div>
+
+        <div class="ft-actions">
+          <button type="button" class="btn-batal-tamu" id="btnBatalTamu">Batal</button>
+          <button type="button" class="btn-daftar-tamu" id="btnDaftarTamu">🎭 Daftar Tamu</button>
+        </div>
+      </div>
 
       <p class="auth-footer-text">
         Belum punya akun? <a href="daftar">Daftar di sini</a>
@@ -79,12 +262,24 @@
       styleHide.textContent = '#duta-user-bar { display: none !important; }';
       document.head.appendChild(styleHide);
 
+      // ===== DOM REFS =====
       const elForm = document.getElementById('formLogin');
+      const elTipeAkun = document.getElementById('inputTipeAkun');
       const elUsername = document.getElementById('inputUsername');
       const elPassword = document.getElementById('inputPassword');
       const elBtn = document.getElementById('btnLogin');
       const elError = document.getElementById('authError');
       const elSuccess = document.getElementById('authSuccess');
+
+      // Form tamu
+      const elBtnLanjutTamu = document.getElementById('btnLanjutTamu');
+      const elFormTamuBox = document.getElementById('formTamuBox');
+      const elTamuSekolah = document.getElementById('tamuSekolah');
+      const elTamuKelas = document.getElementById('tamuKelas');
+      const elTamuNama = document.getElementById('tamuNama');
+      const elTamuError = document.getElementById('tamuError');
+      const elBtnDaftarTamu = document.getElementById('btnDaftarTamu');
+      const elBtnBatalTamu = document.getElementById('btnBatalTamu');
 
       // ===== HELPER: session guru =====
       function ambilSessionGuruLokal() {
@@ -98,6 +293,11 @@
       document.addEventListener('DOMContentLoaded', function() {
         const session = window.ambilSession && window.ambilSession();
         if (session && session.tipe === 'login') {
+          redirectSetelahLogin();
+          return;
+        }
+        if (session && session.tipe === 'tamu') {
+          // Tamu sudah ada session → langsung redirect balik (tidak perlu login lagi)
           redirectSetelahLogin();
           return;
         }
@@ -123,7 +323,7 @@
         elSuccess.classList.remove('show');
       }
 
-      // ===== REDIRECT SETELAH LOGIN SISWA =====
+      // ===== REDIRECT SETELAH LOGIN =====
       function redirectSetelahLogin() {
         let tujuan = 'index';
         try {
@@ -136,11 +336,12 @@
         window.location.href = tujuan;
       }
 
-      // ===== SUBMIT FORM =====
+      // ===== SUBMIT FORM LOGIN =====
       elForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         sembunyikanPesan();
 
+        const tipe = elTipeAkun.value; // 'siswa' | 'guru'
         const username = elUsername.value.trim().toLowerCase();
         const password = elPassword.value;
 
@@ -159,69 +360,68 @@
         elBtn.textContent = '⏳ Memproses...';
 
         try {
-          // ===== 1) Coba login sebagai SISWA dulu =====
-          const hasilSiswa = await window.dutaLogin(username, password);
+          // ===== LOGIN SEBAGAI SISWA =====
+          if (tipe === 'siswa') {
+            const hasilSiswa = await window.dutaLogin(username, password);
 
-          if (hasilSiswa && hasilSiswa.ok) {
-            try {
-              sessionStorage.setItem('duta_siswa_dash', JSON.stringify({
-                user_id: hasilSiswa.user_id,
-                nama: hasilSiswa.nama,
-                kelas: hasilSiswa.kelas,
-                sekolah: hasilSiswa.sekolah
-              }));
-            } catch (e) {}
-
-            tampilSukses('Login berhasil. Mengalihkan...');
-            setTimeout(redirectSetelahLogin, 700);
-            return;
-          }
-
-          // ===== 2) Kalau gagal, coba login sebagai GURU =====
-          let hasilGuru = null;
-          if (typeof window.dutaLoginGuru === 'function') {
-            hasilGuru = await window.dutaLoginGuru(username, password);
-          } else {
-            hasilGuru = await window.dutaFetch({
-              action: 'loginGuru',
-              username: username,
-              password: password
-            });
-            if (hasilGuru && hasilGuru.ok && hasilGuru.tipe === 'guru') {
+            if (hasilSiswa && hasilSiswa.ok) {
               try {
-                sessionStorage.setItem('duta_guru', JSON.stringify({
-                  username: hasilGuru.user_id,
-                  nama: hasilGuru.nama,
-                  sekolah: hasilGuru.sekolah || '',
-                  password: password
+                sessionStorage.setItem('duta_siswa_dash', JSON.stringify({
+                  user_id: hasilSiswa.user_id,
+                  nama: hasilSiswa.nama,
+                  kelas: hasilSiswa.kelas,
+                  sekolah: hasilSiswa.sekolah
                 }));
               } catch (e) {}
-            }
-          }
 
-          if (hasilGuru && hasilGuru.ok && hasilGuru.tipe === 'guru') {
-            tampilSukses('Login guru berhasil. Mengalihkan...');
-            setTimeout(function() {
-              window.location.href = 'dashboard/guru';
-            }, 700);
+              tampilSukses('Login berhasil. Mengalihkan...');
+              setTimeout(redirectSetelahLogin, 700);
+              return;
+            }
+
+            // Gagal login siswa
+            tampilError((hasilSiswa && hasilSiswa.error) || 'Username atau password salah.');
+            elBtn.disabled = false;
+            elBtn.textContent = '🔑 Masuk';
             return;
           }
 
-          // ===== 3) Dua-duanya gagal =====
-          let pesan = 'Username atau password salah.';
+          // ===== LOGIN SEBAGAI GURU =====
+          if (tipe === 'guru') {
+            let hasilGuru = null;
+            if (typeof window.dutaLoginGuru === 'function') {
+              hasilGuru = await window.dutaLoginGuru(username, password);
+            } else {
+              hasilGuru = await window.dutaFetch({
+                action: 'loginGuru',
+                username: username,
+                password: password
+              });
+              if (hasilGuru && hasilGuru.ok && hasilGuru.tipe === 'guru') {
+                try {
+                  sessionStorage.setItem('duta_guru', JSON.stringify({
+                    username: hasilGuru.user_id,
+                    nama: hasilGuru.nama,
+                    sekolah: hasilGuru.sekolah || '',
+                    password: password
+                  }));
+                } catch (e) {}
+              }
+            }
 
-          if (hasilSiswa && hasilSiswa.error === 'Password salah') {
-            pesan = 'Password salah.';
-          } else if (hasilGuru && hasilGuru.error === 'Password salah') {
-            pesan = 'Password salah.';
-          } else if (hasilSiswa && hasilSiswa.error === 'Username tidak ditemukan' &&
-                     hasilGuru && hasilGuru.error === 'Bukan akun guru') {
-            pesan = 'Username tidak ditemukan. Pastikan sudah daftar atau hubungi guru.';
+            if (hasilGuru && hasilGuru.ok && hasilGuru.tipe === 'guru') {
+              tampilSukses('Login guru berhasil. Mengalihkan...');
+              setTimeout(function() {
+                window.location.href = 'dashboard/guru';
+              }, 700);
+              return;
+            }
+
+            tampilError((hasilGuru && hasilGuru.error) || 'Username atau password guru salah.');
+            elBtn.disabled = false;
+            elBtn.textContent = '🔑 Masuk';
+            return;
           }
-
-          tampilError(pesan);
-          elBtn.disabled = false;
-          elBtn.textContent = '🔑 Masuk';
 
         } catch (err) {
           tampilError('Gagal terhubung ke server.');
@@ -236,6 +436,110 @@
           e.preventDefault();
           elForm.requestSubmit ? elForm.requestSubmit() : elForm.dispatchEvent(new Event('submit'));
         }
+      });
+
+      // ===== MODE TAMU =====
+      elBtnLanjutTamu.addEventListener('click', function() {
+        sembunyikanPesan();
+        elFormTamuBox.classList.add('show');
+        elTamuSekolah.value = '';
+        elTamuKelas.value = '';
+        elTamuNama.value = '';
+        elTamuError.classList.remove('show');
+        setTimeout(function() { elTamuSekolah.focus(); }, 200);
+      });
+
+      elBtnBatalTamu.addEventListener('click', function() {
+        elFormTamuBox.classList.remove('show');
+      });
+
+      function tampilTamuError(pesan) {
+        elTamuError.textContent = '⚠️ ' + pesan;
+        elTamuError.classList.add('show');
+      }
+
+      elBtnDaftarTamu.addEventListener('click', async function() {
+        const sekolah = elTamuSekolah.value.trim();
+        const kelas = elTamuKelas.value.trim();
+        const nama = elTamuNama.value.trim();
+
+        // Validasi
+        if (!nama) {
+          tampilTamuError('Nama wajib diisi.');
+          elTamuNama.focus();
+          return;
+        }
+        if (!kelas) {
+          tampilTamuError('Kelas wajib diisi.');
+          elTamuKelas.focus();
+          return;
+        }
+        if (!sekolah) {
+          tampilTamuError('Sekolah wajib diisi.');
+          elTamuSekolah.focus();
+          return;
+        }
+
+        elTamuError.classList.remove('show');
+        elBtnDaftarTamu.disabled = true;
+        elBtnDaftarTamu.textContent = '⏳ Membuat kode tamu...';
+
+        try {
+          const hasil = await window.dutaBuatTamu(sekolah, nama, kelas);
+
+          if (!hasil || !hasil.ok) {
+            tampilTamuError('Gagal membuat kode tamu: ' + ((hasil && hasil.error) || 'Tidak diketahui'));
+            elBtnDaftarTamu.disabled = false;
+            elBtnDaftarTamu.textContent = '🎭 Daftar Tamu';
+            return;
+          }
+
+          // Sukses — session tamu sudah disimpan otomatis oleh dutaBuatTamu()
+          // Simpan juga identitas tamu lengkap ke duta_identitas_siswa
+          try {
+            if (window.simpanIdentitasSiswaMulti) {
+              window.simpanIdentitasSiswaMulti({
+                tipe: 'tamu',
+                utama: {
+                  username: hasil.kode_tamu,
+                  nama: nama,
+                  kelas: kelas,
+                  sekolah: sekolah
+                },
+                teman: [],
+                tamu: {
+                  sekolah: sekolah,
+                  kelas: kelas,
+                  daftarNama: [nama]
+                }
+              });
+            }
+            // Juga simpan ke key lama untuk kompatibilitas
+            if (window.simpanIdentitasSiswa) {
+              window.simpanIdentitasSiswa(sekolah, nama, kelas);
+            }
+          } catch (e) {}
+
+          tampilSukses('Berhasil! Kode tamu: ' + hasil.kode_tamu + '. Mengalihkan...');
+          setTimeout(function() {
+            redirectSetelahLogin();
+          }, 900);
+
+        } catch (err) {
+          tampilTamuError('Gagal terhubung ke server: ' + (err.message || 'Tidak diketahui'));
+          elBtnDaftarTamu.disabled = false;
+          elBtnDaftarTamu.textContent = '🎭 Daftar Tamu';
+        }
+      });
+
+      // Enter di input tamu = submit
+      [elTamuSekolah, elTamuKelas, elTamuNama].forEach(function(el) {
+        el.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            elBtnDaftarTamu.click();
+          }
+        });
       });
 
     })();

@@ -6,32 +6,6 @@
   <title>Daftar Akun · Portal Informatika DUTA</title>
   <link rel="stylesheet" href="desain.css">
   <style>
-    /* ===== PREVIEW NORMALISASI ===== */
-    .input-preview {
-      display: none;
-      margin-top: 0.4rem;
-      padding: 0.35rem 0.7rem;
-      background: #f0f8eb;
-      border: 1.5px dashed #8aaa7a;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      color: #2d5a1e;
-      line-height: 1.4;
-    }
-    .input-preview.show { display: block; }
-    .input-preview strong {
-      color: #1f5f32;
-      font-family: 'Courier New', monospace;
-      background: #fff;
-      padding: 0.05rem 0.4rem;
-      border-radius: 4px;
-    }
-    .input-preview .pv-label {
-      font-size: 0.7rem;
-      color: #5c8a6a;
-      font-style: italic;
-    }
-
     /* ===== SUGGEST USERNAME ===== */
     .suggest-box {
       display: none;
@@ -268,7 +242,7 @@
       font-size: 0.88rem;
     }
 
-    /* Tombol aksi */
+    /* Tombol aksi modal */
     .dd-actions {
       display: flex;
       flex-wrap: wrap;
@@ -379,6 +353,74 @@
       color: #a84a3a;
     }
 
+    /* ===== DROPDOWN KELAS 2 KOLOM ===== */
+    .kelas-wrapper {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .kelas-wrapper select {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #e5dbd0;
+      background: #fcfaf7;
+      font-size: 0.95rem;
+      font-family: inherit;
+      font-weight: 600;
+      color: #3d2c1f;
+      outline: none;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .kelas-wrapper select:focus {
+      border-color: #b07be0;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(176, 123, 224, 0.15);
+    }
+
+    /* ===== FLOATING BUTTON GURU ===== */
+    .fab-guru {
+      position: fixed;
+      bottom: 6rem;
+      right: 1.5rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2d7d46, #4fa86a);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(45, 125, 70, 0.4);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 999;
+    }
+    .fab-guru:hover {
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 10px 26px rgba(45, 125, 70, 0.6);
+    }
+    .fab-guru::before {
+      content: 'Mendaftar sebagai guru';
+      position: absolute;
+      right: 70px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #4d3829;
+      color: #fff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .fab-guru:hover::before { opacity: 1; }
+
     @media (max-width: 480px) {
       .duta-daftar-box { padding: 1.5rem 1.1rem 1.2rem; }
       .duta-daftar-box .dd-title { font-size: 1.15rem; }
@@ -387,6 +429,14 @@
       .dd-actions { flex-direction: column; }
       .dd-btn { width: 100%; }
       .lockout-banner .lb-timer { font-size: 1.2rem; padding: 0.3rem 1rem; }
+      .fab-guru {
+        bottom: 5rem;
+        right: 1rem;
+        width: 46px;
+        height: 46px;
+        font-size: 1.3rem;
+      }
+      .fab-guru::before { display: none; } /* Tooltip mati di mobile */
     }
   </style>
 </head>
@@ -440,38 +490,36 @@
               maxlength="40"
               autocomplete="name">
             <div class="hint">Nama akan muncul di sertifikat digital.</div>
-            <div class="input-preview" id="previewNama">
-              <span class="pv-label">Akan disimpan sebagai:</span>
-              <strong id="previewNamaVal">—</strong>
-            </div>
           </div>
 
           <div class="auth-form-group">
-            <label for="inputKelas">Kelas</label>
-            <input
-              type="text"
-              id="inputKelas"
-              placeholder="Contoh: 7A"
-              maxlength="10">
-            <div class="hint">Bisa ditulis 7A, VIIA, VII A, 7 a — otomatis dirapikan.</div>
-            <div class="input-preview" id="previewKelas">
-              <span class="pv-label">Akan disimpan sebagai:</span>
-              <strong id="previewKelasVal">—</strong>
+            <label for="inputKelasAngka">Kelas</label>
+            <div class="kelas-wrapper">
+              <select id="inputKelasAngka">
+                <option value="">Pilih Angka</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+              </select>
+              <select id="inputKelasHuruf">
+                <option value="">-</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+              </select>
             </div>
           </div>
 
           <div class="auth-form-group">
             <label for="inputSekolah">Nama Sekolah</label>
-            <input
-              type="text"
-              id="inputSekolah"
-              placeholder="Contoh: SMPN 2 Talegong"
-              maxlength="60">
-            <div class="hint">Nama sekolah akan tercantum di sertifikat digital.</div>
-            <div class="input-preview" id="previewSekolah">
-              <span class="pv-label">Akan disimpan sebagai:</span>
-              <strong id="previewSekolahVal">—</strong>
-            </div>
+			<select id="inputSekolah" style="width: 100%; padding: 0.7rem 1rem; border-radius: 10px; border: 2px solid #e5dbd0; background: #fcfaf7; font-size: 0.95rem; font-family: inherit; font-weight: 600; color: #3d2c1f; outline: none;">
+              <option value="">— Memuat daftar sekolah... —</option>
+            </select>
+            <div class="hint">Sekolah belum ada di daftar? Minta Guru Informatika/TIK Anda untuk mendaftar terlebih dahulu.</div>
           </div>
 
           <div class="auth-form-group">
@@ -522,7 +570,7 @@
 
         <div class="auth-divider">atau</div>
 
-        <a href="index" class="btn-auth-secondary">
+        <a href="login" class="btn-auth-secondary">
           🎭 Lanjut sebagai Tamu
         </a>
 
@@ -535,7 +583,10 @@
   </main>
 
   <footer id="footer-utama"></footer>
+  
+  <!-- Tombol Scroll & FAB Guru -->
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+  <a href="daftarguru" class="fab-guru" aria-label="Daftar Guru">👨‍🏫</a>
 
   <script src="script.js"></script>
 
@@ -555,21 +606,20 @@
       // ============================================
       const elForm = document.getElementById('formDaftar');
       const elNama = document.getElementById('inputNama');
-      const elKelas = document.getElementById('inputKelas');
+      
+      // Kelas (2 Dropdown)
+      const elKelasAngka = document.getElementById('inputKelasAngka');
+      const elKelasHuruf = document.getElementById('inputKelasHuruf');
+      
       const elSekolah = document.getElementById('inputSekolah');
+      const elSekolahList = document.getElementById('sekolahList');
+      
       const elUsername = document.getElementById('inputUsername');
       const elPassword = document.getElementById('inputPassword');
       const elPassword2 = document.getElementById('inputPassword2');
       const elBtn = document.getElementById('btnDaftar');
       const elError = document.getElementById('authError');
       const elSuccess = document.getElementById('authSuccess');
-
-      const elPreviewNama = document.getElementById('previewNama');
-      const elPreviewNamaVal = document.getElementById('previewNamaVal');
-      const elPreviewKelas = document.getElementById('previewKelas');
-      const elPreviewKelasVal = document.getElementById('previewKelasVal');
-      const elPreviewSekolah = document.getElementById('previewSekolah');
-      const elPreviewSekolahVal = document.getElementById('previewSekolahVal');
 
       const elSuggestBox = document.getElementById('suggestBox');
       const elSuggestList = document.getElementById('suggestList');
@@ -588,19 +638,37 @@
       document.head.appendChild(styleHide);
 
       // ============================================
-      // NORMALISASI
+      // NORMALISASI & HELPER
       // ============================================
       function normalisasiNama(str) {
         if (window.dutaNormalisasi && window.dutaNormalisasi.nama) return window.dutaNormalisasi.nama(str);
         return String(str || '').trim();
       }
-      function normalisasiKelas(str) {
-        if (window.dutaNormalisasi && window.dutaNormalisasi.kelas) return window.dutaNormalisasi.kelas(str);
-        return String(str || '').trim();
-      }
       function normalisasiSekolah(str) {
         if (window.dutaNormalisasi && window.dutaNormalisasi.sekolah) return window.dutaNormalisasi.sekolah(str);
         return String(str || '').trim();
+      }
+
+      // ============================================
+      // LOAD DATA SEKOLAH (Datalist)
+      // ============================================
+      async function loadSekolah() {
+        try {
+          const res = await window.dutaFetch({ action: 'listSekolahGuru' });
+          if (res && res.ok && Array.isArray(res.sekolah)) {
+            if (res.sekolah.length === 0) {
+              elSekolah.innerHTML = '<option value="">— Belum ada sekolah terdaftar —</option>';
+            } else {
+              elSekolah.innerHTML = '<option value="">— Pilih Sekolah —</option>' + 
+                res.sekolah.map(function(s) {
+                  return '<option value="' + escapeHtml(s) + '">' + escapeHtml(s) + '</option>';
+                }).join('');
+            }
+          }
+        } catch (e) {
+          elSekolah.innerHTML = '<option value="">— Gagal memuat sekolah —</option>';
+          console.warn('Gagal memuat daftar sekolah:', e);
+        }
       }
 
       // ============================================
@@ -698,31 +766,6 @@
       tampilkanLockout();
 
       // ============================================
-      // PREVIEW REAL-TIME
-      // ============================================
-      function updatePreview(inputEl, previewBox, previewVal) {
-        const raw = inputEl.value.trim();
-        if (!raw) { previewBox.classList.remove('show'); previewVal.textContent = '—'; return; }
-        let hasil = '';
-        if (inputEl === elNama) hasil = normalisasiNama(raw);
-        else if (inputEl === elKelas) hasil = normalisasiKelas(raw);
-        else if (inputEl === elSekolah) hasil = normalisasiSekolah(raw);
-        if (hasil) { previewVal.textContent = hasil; previewBox.classList.add('show'); }
-        else { previewBox.classList.remove('show'); }
-      }
-
-      elNama.addEventListener('input', function() {
-        updatePreview(elNama, elPreviewNama, elPreviewNamaVal);
-        jadwalkanSuggestUsername();
-      });
-      elKelas.addEventListener('input', function() {
-        updatePreview(elKelas, elPreviewKelas, elPreviewKelasVal);
-      });
-      elSekolah.addEventListener('input', function() {
-        updatePreview(elSekolah, elPreviewSekolah, elPreviewSekolahVal);
-      });
-
-      // ============================================
       // SUGGEST USERNAME
       // ============================================
       let suggestTimer = null;
@@ -732,12 +775,12 @@
         suggestTimer = setTimeout(function() { generateSuggestUsername(); }, 600);
       }
 
-      function generateKandidatUsername(namaLengkap, kelas) {
+      function generateKandidatUsername(namaLengkap, kelasGabung) {
         const nama = normalisasiNama(namaLengkap);
         if (!nama) return [];
         const kata = nama.toLowerCase().split(/\s+/).filter(Boolean);
         if (kata.length === 0) return [];
-        const kelasBersih = (kelas || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const kelasBersih = (kelasGabung || '').toLowerCase().replace(/[^a-z0-9]/g, '');
         const kandidat = [];
         const first = kata[0];
         const last = kata[kata.length - 1];
@@ -790,8 +833,9 @@
         elSuggestHint.textContent = 'Memeriksa ketersediaan...';
         elSuggestList.innerHTML = '<span class="suggest-item loading">⏳ Memuat...</span>';
 
-        const kelas = elKelas.value.trim();
-        const kandidat = generateKandidatUsername(nama, kelas);
+        // Gabung kelas (angka + huruf) untuk kandidat
+        const kelasGabung = (elKelasAngka.value || '') + (elKelasHuruf.value || '');
+        const kandidat = generateKandidatUsername(nama, kelasGabung);
         if (kandidat.length === 0) { elSuggestBox.classList.remove('show'); return; }
 
         const reqId = ++suggestRequestId;
@@ -901,7 +945,7 @@
       // ============================================
       // MODAL SUKSES
       // ============================================
-      function tampilkanModalSukses(username, password, nama, kelas) {
+      function tampilkanModalSukses(username, password, nama, kelasGabung) {
         const lama = document.getElementById('dutaDaftarModal');
         if (lama) lama.remove();
 
@@ -911,7 +955,7 @@
         modal.innerHTML =
           '<div class="duta-daftar-box">' +
             '<div class="dd-title">Pendaftaran Berhasil!</div>' +
-            '<div class="dd-sub">Akun <strong>' + escapeHtml(nama) + '</strong> (' + escapeHtml(kelas) + ') sudah terdaftar.</div>' +
+            '<div class="dd-sub">Akun <strong>' + escapeHtml(nama) + '</strong> (' + escapeHtml(kelasGabung) + ') sudah terdaftar.</div>' +
             '<div class="kredensial-box">' +
               '<div class="kredensial-item">' +
                 '<span class="ki-label">Username</span>' +
@@ -1018,14 +1062,12 @@
 
       function resetForm() {
         elNama.value = '';
-        elKelas.value = '';
+        elKelasAngka.value = '';
+        elKelasHuruf.value = '';
         elSekolah.value = '';
         elUsername.value = '';
         elPassword.value = '';
         elPassword2.value = '';
-        elPreviewNama.classList.remove('show');
-        elPreviewKelas.classList.remove('show');
-        elPreviewSekolah.classList.remove('show');
         elSuggestBox.classList.remove('show');
         elSuggestList.innerHTML = '';
         sembunyikanPesan();
@@ -1051,14 +1093,18 @@
         if (cekL.lockout) { tampilkanLockout(); return; }
 
         const namaMentah = elNama.value.trim();
-        const kelasMentah = elKelas.value.trim();
+        const kelasAngka = elKelasAngka.value;
+        const kelasHuruf = elKelasHuruf.value;
         const sekolahMentah = elSekolah.value.trim();
         const usernameMentah = elUsername.value.trim().toLowerCase();
         const passwordMentah = elPassword.value;
         const password2Mentah = elPassword2.value;
 
+        // Gabungkan kelas
+        const kelasMentah = kelasAngka + kelasHuruf;
+
         const nama = normalisasiNama(namaMentah);
-        const kelas = normalisasiKelas(kelasMentah);
+        const kelas = kelasMentah; // sudah terstruktur 7A, 8B, dsb.
         const sekolah = normalisasiSekolah(sekolahMentah);
         const username = usernameMentah;
         const password = passwordMentah;
@@ -1066,8 +1112,7 @@
 
         if (!nama) { tampilError('Nama lengkap wajib diisi.'); elNama.focus(); return; }
         if (nama.length < 2) { tampilError('Nama minimal 2 karakter.'); elNama.focus(); return; }
-        if (!kelas) { tampilError('Kelas wajib diisi.'); elKelas.focus(); return; }
-        if (kelas.length > 10) { tampilError('Kelas maksimal 10 karakter.'); elKelas.focus(); return; }
+        if (!kelasAngka) { tampilError('Pilih angka kelas (7/8/9).'); elKelasAngka.focus(); return; }
         if (!sekolah) { tampilError('Nama sekolah wajib diisi.'); elSekolah.focus(); return; }
         if (sekolah.length < 3) { tampilError('Nama sekolah minimal 3 karakter.'); elSekolah.focus(); return; }
         if (sekolah.length > 60) { tampilError('Nama sekolah maksimal 60 karakter.'); elSekolah.focus(); return; }
@@ -1130,6 +1175,16 @@
           e.preventDefault();
           elForm.requestSubmit ? elForm.requestSubmit() : elForm.dispatchEvent(new Event('submit'));
         }
+      });
+
+      // Listener input nama untuk suggest
+      elNama.addEventListener('input', jadwalkanSuggestUsername);
+
+      // ============================================
+      // INIT
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        loadSekolah();
       });
 
     })();
