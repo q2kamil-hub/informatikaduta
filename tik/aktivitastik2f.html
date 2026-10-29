@@ -977,13 +977,19 @@
         }, 12000);
 
         try {
-          // PENTING (mengikuti pola aktivitasdsi1e.html):
-          // - Kirim hanya {kuis: skorKuis} — JANGAN kirim a/b/c/d/e supaya skor lama tidak tertimpa 0.
-          // - Kirim nilaiAkhir: 0 — backend akan MENGHITUNG ULANG dari skor a–f + kuis saat kunciModul:true.
-          // - Kirim opsi {kunciModul: true} — backend akan menandai status_modul = 'selesai'.
-          // - Pakai dutaSimpanProgressBulk → kirim ke utama + semua teman (multi-user).
+// PENTING:
+// - Kirim HANYA { kuis: skorKuis } — JANGAN kirim a/b/c/d/e/f supaya skor lama tidak tertimpa 0.
+// - Kirim nilaiAkhir: 0 — backend MENGHITUNG ULANG nilai_akhir saat kunciModul:true
+//   dengan rumus: round( rata(bagian di totalBagianAktif) × 0.5 + skor_kuis × 0.5 ).
+// - bagianTerakhir = bagian kuis akhir modul ini (bisa 'd', 'e', 'f', dst.).
+// - kunciModul: true → backend menandai status_modul = 'selesai' (modul terkunci).
+// - totalBagianAktif = SEMUA bagian aktivitas yang dinilai, TANPA bagian kuis akhir.
+//   Contoh: modul dengan halaman a–d (d=kuis) → ['a','b','c']
+//           modul dengan halaman a–f (f=kuis) → ['a','b','c','d','e']
+// - Pakai dutaSimpanProgressBulk → kirim ke utama + semua teman (multi-user)
           const hasil = await window.dutaSimpanProgressBulk(
-            MODUL_KEY, 'f', { kuis: skorKuis }, 0, { kunciModul: true }
+            MODUL_KEY, 'f', { kuis: skorKuis }, 0,
+            { kunciModul: true, totalBagianAktif: ['a', 'b', 'c', 'd', 'e'] }
           );
 
           if (selesaiKirim) return;
