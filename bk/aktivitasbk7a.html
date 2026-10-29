@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Pohon &amp; Jaringan Lab · Bagian 1: Pohon (Tree) — Struktur Bercabang · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <link rel="stylesheet" href="desainbk7.css">
+  <style>
+    /* ===== CSS UNIK BAGIAN 1: INFO IDENTITAS + SIMULASI SILSILAH ===== */
+
+    /* Info identitas (read-only, dari User Bar) */
+    .info-identitas-box {
+      background: linear-gradient(135deg, #e8f5ee, #eef2ff);
+      border: 2px solid var(--bk7-hijau, #6ecb8f);
+      border-radius: 18px;
+      padding: 1.1rem 1.3rem;
+      margin: 1.2rem 0;
+      box-shadow: 0 6px 18px rgba(110, 203, 143, 0.12);
+    }
+    .iib-header {
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-bottom: 0.7rem; padding-bottom: 0.6rem;
+      border-bottom: 2px dashed #b8e5c8;
+    }
+    .iib-icon { font-size: 1.3rem; line-height: 1; }
+    .iib-title { font-weight: 800; color: #2d5a1e; font-size: 0.95rem; flex: 1; }
+    .iib-badge {
+      background: #fff; color: #2d5a1e;
+      border: 2px solid var(--bk7-hijau, #6ecb8f);
+      padding: 0.15rem 0.7rem; border-radius: 20px;
+      font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px;
+    }
+    .iib-body {
+      background: #fff; border-radius: 12px;
+      padding: 0.8rem 1rem; margin-bottom: 0.8rem; line-height: 1.5;
+    }
+    .iib-nama {
+      font-weight: 800; color: #3b2b1e;
+      font-size: 1rem; margin-bottom: 0.15rem; word-break: break-word;
+    }
+    .iib-meta { font-size: 0.82rem; color: #5c4638; }
+    .iib-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .btn-ubah-identitas {
+      padding: 0.75rem 1.5rem; border-radius: 30px;
+      border: 2px solid var(--bk7-utama, #5c7cfa); background: #fff;
+      color: var(--bk7-utama-dark, #3a5ad0); font-weight: 700; font-size: 0.88rem;
+      font-family: inherit; cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-ubah-identitas:hover {
+      background: var(--bk7-soft, #eef2ff); transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(92, 124, 250, 0.25);
+    }
+    .iib-hint {
+      font-size: 0.78rem; color: #7a6656;
+      font-style: italic; margin-top: 0.6rem; line-height: 1.5;
+    }
+    .btn-mulai {
+      padding: 0.75rem 2rem; font-size: 0.95rem;
+      font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, var(--bk7-utama, #5c7cfa), var(--bk7-ungu, #8a4bbf));
+      border-radius: 30px; border: none; cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 20px rgba(92, 124, 250, 0.30);
+      font-family: inherit;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-mulai:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 10px 28px rgba(92, 124, 250, 0.40);
+    }
+    .btn-mulai:disabled {
+      opacity: 0.45; cursor: not-allowed; transform: none !important;
+    }
+
+    /* ===== KANVAS SILSILAH ===== */
+    .silsilah-kanvas-wrapper {
+      position: relative;
+      margin: 1rem 0;
+    }
+    .silsilah-kanvas {
+      position: relative;
+      width: 100%;
+      min-height: 380px;
+      background:
+        linear-gradient(#eef2ff 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(90deg, #eef2ff 1px, transparent 1px) 0 0 / 28px 28px,
+        #fdfcff;
+      border: 2px dashed var(--bk7-utama, #5c7cfa);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      touch-action: none;
+    }
+    .silsilah-kanvas.drag-over {
+      border-color: var(--bk7-hijau, #6ecb8f);
+      background-color: #f0f8eb;
+    }
+    .silsilah-kanvas .sk-hint {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #a8b8e8;
+      font-style: italic;
+      font-size: 0.88rem;
+      pointer-events: none;
+      padding: 1rem 1.5rem;
+      background: rgba(255,255,255,0.85);
+      border-radius: 10px;
+      line-height: 1.6;
+      z-index: 0;
+    }
+    .silsilah-kanvas svg.kanvas-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Kartu nama draggable */
+    .kartu-orang {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.95rem;
+      background: #fff;
+      border: 2.5px solid var(--bk7-utama, #5c7cfa);
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: var(--bk7-utama-dark, #3a5ad0);
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+      transition: box-shadow 0.15s ease, transform 0.15s ease;
+      touch-action: none;
+      z-index: 5;
+      white-space: nowrap;
+    }
+    .kartu-orang:hover {
+      box-shadow: 0 6px 18px rgba(92, 124, 250, 0.30);
+      z-index: 10;
+    }
+    .kartu-orang:active { cursor: grabbing; }
+    .kartu-orang.dragging {
+      opacity: 0.85;
+      cursor: grabbing;
+      z-index: 100;
+      box-shadow: 0 12px 28px rgba(92, 124, 250, 0.40);
+      transform: scale(1.05);
+    }
+    .kartu-orang.root {
+      background: linear-gradient(135deg, var(--bk7-utama, #5c7cfa), var(--bk7-ungu, #8a4bbf));
+      color: #fff;
+      border-color: var(--bk7-utama-dark, #3a5ad0);
+    }
+    .kartu-orang.leaf {
+      background: var(--bk7-soft-hijau, #e8f5e0);
+      border-color: var(--bk7-hijau-dark, #4fa86a);
+      color: #2d5a1e;
+    }
+    .kartu-orang .ko-icon { font-size: 1.05rem; line-height: 1; }
+
+    /* Palet kartu (di luar kanvas) */
+    .palet-orang {
+      display: flex; flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.9rem 1rem;
+      background: #fff;
+      border-radius: 12px;
+      border: 2px dashed #b8c4e8;
+      margin-top: 1rem;
+      min-height: 70px;
+      align-items: center;
+    }
+    .palet-orang .po-label {
+      font-size: 0.7rem;
+      letter-spacing: 1.2px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--bk7-utama, #5c7cfa);
+      margin-right: 0.5rem;
+      flex-basis: 100%;
+      margin-bottom: 0.3rem;
+    }
+    .palet-orang .kartu-orang {
+      position: static;
+      cursor: grab;
+    }
+    .palet-orang .po-empty {
+      font-size: 0.82rem;
+      color: #a89684;
+      font-style: italic;
+      padding: 0.4rem 0;
+    }
+
+    /* Tombol sambung/hapus garis */
+    .sambung-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      background: var(--bk7-soft, #eef2ff);
+      border: 2px solid var(--bk7-utama, #5c7cfa);
+      border-radius: 12px;
+      margin-top: 0.8rem;
+    }
+    .sambung-panel .sp-label {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--bk7-utama-dark, #3a5ad0);
+      margin-right: 0.3rem;
+    }
+    .sambung-panel select {
+      padding: 0.45rem 0.7rem;
+      border: 2px solid #b8c4e8;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.82rem;
+      color: #2f2822;
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      max-width: 150px;
+    }
+    .sambung-panel select:focus { border-color: var(--bk7-utama, #5c7cfa); }
+    .sambung-panel .sp-arrow { font-weight: 800; color: var(--bk7-utama, #5c7cfa); font-size: 1.1rem; }
+    .sambung-panel button {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      border: none;
+      background: linear-gradient(135deg, var(--bk7-utama, #5c7cfa), var(--bk7-ungu, #8a4bbf));
+      color: #fff;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .sambung-panel button:hover:not(:disabled) {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+    .sambung-panel button.btn-hapus-garis {
+      background: #fdf0f0;
+      color: var(--bk7-danger, #b33c3c);
+      border: 2px solid #f0c0c0;
+    }
+    .sambung-panel button.btn-hapus-garis:hover:not(:disabled) {
+      background: #f8dcdc;
+      border-color: #e8a8a8;
+    }
+    .sambung-panel button:disabled {
+      opacity: 0.45; cursor: not-allowed; transform: none !important;
+    }
+
+    /* Panel status kanvas */
+    .kanvas-info-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      margin-top: 0.8rem;
+    }
+    .kib-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.3rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: var(--bk7-soft, #eef2ff);
+      color: var(--bk7-utama-dark, #3a5ad0);
+      border: 2px solid var(--bk7-utama, #5c7cfa);
+    }
+    .kib-item.ok {
+      background: var(--bk7-soft-hijau, #e8f5e0);
+      color: #2d5a1e;
+      border-color: var(--bk7-hijau-dark, #4fa86a);
+    }
+    .kib-item.warn {
+      background: var(--bk7-soft-oranye, #fff8e6);
+      color: #8a5e00;
+      border-color: var(--bk7-oranye-dark, #d4a030);
+    }
+    .kib-item.error {
+      background: var(--bk7-danger-soft, #fdf0f0);
+      color: var(--bk7-danger, #b33c3c);
+      border-color: #d4a0a0;
+    }
+
+    /* Legend garis */
+    .legend-garis {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      font-size: 0.78rem;
+      color: #7a6656;
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.8rem;
+      background: #f8f4ef;
+      border-radius: 8px;
+    }
+    .legend-garis .lg-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .legend-garis .lg-line {
+      display: inline-block;
+      width: 28px;
+      height: 3px;
+      border-radius: 2px;
+    }
+    .legend-garis .lg-line.tree { background: var(--bk7-hijau-dark, #4fa86a); }
+    .legend-garis .lg-line.graph { background: var(--bk7-oranye-dark, #d4a030); }
+    .legend-garis .lg-line.cycle {
+      background: repeating-linear-gradient(90deg, var(--bk7-danger, #b33c3c) 0 6px, transparent 6px 10px);
+    }
+
+    @media (max-width: 480px) {
+      .iib-actions { flex-direction: column; }
+      .btn-ubah-identitas,
+      .iib-actions .btn-mulai { width: 100%; justify-content: center; }
+      .silsilah-kanvas { min-height: 320px; }
+      .kartu-orang { font-size: 0.78rem; padding: 0.45rem 0.75rem; }
+      .sambung-panel select { max-width: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+  <div id="duta-breadcrumb-host"></div>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <!-- PROGRESS BAR -->
+        <div class="progress-lapis" id="progressLapis">
+          <span class="pl-step active" data-step="lapis1"><span class="pl-num">1</span><span class="pl-label">Menjelajah</span></span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis2"><span class="pl-num">2</span><span class="pl-label">Tantangan</span></span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis3"><span class="pl-num">3</span><span class="pl-label">Penamaan</span></span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="tes"><span class="pl-num">4</span><span class="pl-label">Tes Pemahaman</span></span>
+        </div>
+
+        <!-- INFO IDENTITAS (read-only, dari User Bar) -->
+        <div class="info-identitas-box" id="infoIdentitasBox">
+          <div class="iib-header">
+            <span class="iib-icon">👤</span>
+            <span class="iib-title">Identitas Belajar</span>
+            <span class="iib-badge" id="iibBadge">—</span>
+          </div>
+          <div class="iib-body">
+            <div class="iib-nama" id="iibNama">—</div>
+            <div class="iib-meta" id="iibMeta">—</div>
+          </div>
+          <div class="iib-actions">
+            <button type="button" class="btn-ubah-identitas" id="btnUbahIdentitas">
+              ⚙️ Ubah Identitas
+            </button>
+            <button type="button" class="btn-mulai" id="btnMulai" onclick="mulaiAktivitas()">
+              🚀 Mulai Aktivitas
+            </button>
+          </div>
+          <div class="iib-hint" id="iibHint">
+            Identitas dikelola dari menu pojok kanan atas. Klik <strong>⚙️ Ubah Identitas</strong> jika perlu.
+          </div>
+        </div>
+
+        <!-- AREA SIMULASI -->
+        <div id="area-simulasi">
+          <div class="scenario-panel">
+
+            <div class="scenario-title">🌳 Aktivitas: Silsilah Keluarga Budi</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Budi mendapat tugas membuat silsilah keluarganya.
+              Ia menggambar di kertas: Kakek dan Nenek di paling atas, lalu Ayah dan Ibu
+              di bawahnya, lalu Budi dan adiknya Siti di paling bawah. Ada juga Paman
+              (saudara Ayah).
+              <br><br>
+              Sekarang giliranmu! Susun 7 kartu anggota keluarga di bawah ini menjadi
+              <strong>silsilah keluarga</strong>. Hubungkan dengan garis: siapa orang tua siapa.
+              Amati: apakah ada garis yang boleh melingkar?
+            </div>
+
+            <div class="lapis-header lapis-1">
+              <span class="lapis-num">LAPIS 1</span>
+              <span>🖐️ Menjelajah Bebas — Susun Silsilah Keluarga</span>
+            </div>
+
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              <strong>Instruksi:</strong> (1) <strong>Seret</strong> kartu dari palet bawah ke
+              kanvas. (2) <strong>Seret</strong> kartu di kanvas untuk memindahkan posisi.
+              (3) Gunakan panel <strong>🔗 Sambung</strong> untuk menghubungkan orang tua → anak.
+              (4) Amati: apakah setiap anak punya tepat satu garis ke atas? Apakah ada garis melingkar?
+            </p>
+
+            <div class="misi-info" id="misiInfo">
+              <div class="mi-label">STATUS SILSILAH</div>
+              <div id="misiText">Belum ada kartu di kanvas. Seret kartu dari palet bawah.</div>
+            </div>
+
+            <div class="stats-bar">
+              <div class="stat">
+                <span>👥</span>
+                <span>Kartu di kanvas:</span>
+                <span class="num tree" id="statKartu">0</span>
+              </div>
+              <div class="stat">
+                <span>🔗</span>
+                <span>Garis:</span>
+                <span class="num tree" id="statGaris">0</span>
+              </div>
+              <div class="stat">
+                <span>⚠️</span>
+                <span>Siklus:</span>
+                <span class="num pop" id="statSiklus">0</span>
+              </div>
+            </div>
+
+            <!-- KANVAS -->
+            <div class="silsilah-kanvas-wrapper">
+              <div class="silsilah-kanvas" id="silsilahKanvas">
+                <div class="sk-hint" id="skHint">
+                  🖱️ Seret kartu ke sini<br>
+                  <span style="font-size:0.8rem;">Kakek &amp; Nenek di paling atas, lalu Ayah/Ibu/Paman, lalu Budi/Siti.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PALET -->
+            <div class="palet-orang" id="paletOrang">
+              <div class="po-label">📇 Palet Kartu — Seret ke Kanvas</div>
+              <!-- Kartu diisi via JS -->
+            </div>
+
+            <!-- PANEL SAMBUNG -->
+            <div class="sambung-panel" id="sambungPanel">
+              <span class="sp-label">🔗 Sambung:</span>
+              <select id="selOrangTua">
+                <option value="">— Orang tua —</option>
+              </select>
+              <span class="sp-arrow">→</span>
+              <select id="selAnak">
+                <option value="">— Anak —</option>
+              </select>
+              <button type="button" id="btnSambung" disabled>🔗 Sambung</button>
+              <button type="button" class="btn-hapus-garis" id="btnHapusGaris" disabled>🗑️ Hapus Garis</button>
+            </div>
+
+            <!-- INFO BAR -->
+            <div class="kanvas-info-bar">
+              <span class="kib-item" id="kibKartu">📇 0 kartu</span>
+              <span class="kib-item" id="kibGaris">🔗 0 garis</span>
+              <span class="kib-item" id="kibSiklus">⚠️ 0 siklus</span>
+              <span class="kib-item" id="kibValid">🌳 Menunggu</span>
+            </div>
+
+            <!-- LEGEND -->
+            <div class="legend-garis">
+              <span class="lg-item"><span class="lg-line tree"></span> Garis silsilah (parent → child)</span>
+              <span class="lg-item"><span class="lg-line cycle"></span> Garis siklus (bukan pohon!)</span>
+            </div>
+
+            <!-- LOG -->
+            <div class="log-aktivitas" id="logAktivitas">
+              <div class="log-line log-info">Log aktivitas akan muncul di sini...</div>
+            </div>
+
+            <div class="feedback-box info show" id="feedbackBox">
+              <span class="fb-icon" id="fbIcon">💡</span>
+              <span class="fb-text" id="fbText">
+                Seret Kakek dan Nenek ke kanvas paling atas. Lalu Ayah, Ibu, Paman di bawahnya.
+                Terakhir Budi dan Siti. Hubungkan dengan garis: Kakek → Ayah, Nenek → Ayah, dst.
+              </span>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnSelesaiLapis1" onclick="selesaiLapis1()" disabled>
+                ✅ Selesai Menjelajah
+              </button>
+              <button class="btn-game secondary" id="btnResetLapis1" onclick="resetSilsilah()">
+                🔄 Reset Kanvas
+              </button>
+            </div>
+
+            <div class="mindful-box" id="mindful1">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 1</div>
+              <div class="mb-text">
+                <strong>Perhatikan pola!</strong> Setelah menyusun silsilah, apakah ada
+                garis yang <strong>melingkar</strong> (misal Budi → Kakek)? Apakah setiap
+                orang punya tepat <strong>satu garis ke atas</strong> (orang tua)?
+                Tulis 1–2 kalimat tentang pola yang kamu lihat.
+              </div>
+              <textarea id="mindful1Jawab" placeholder="Tulis pengamatanmu di sini..."></textarea>
+            </div>
+
+          </div>
+        </div><!-- end area-simulasi -->
+
+        <!-- AREA PILIH LEVEL -->
+        <div id="areaPilihLevel">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="pilih-level-box">
+              <div class="plb-title">★ Pilih Tingkat Tantanganmu</div>
+              <div class="plb-desc">
+                Sebelum masuk ke Lapis 2 (Tantangan Terarah), pilih tingkat yang paling
+                sesuai dengan kesiapanmu. <strong>Semua level dinilai sama</strong> —
+                yang berbeda hanya jumlah dan tingkat kesulitan tantangannya.
+              </div>
+
+              <div class="level-options" id="levelOptions">
+                <div class="level-option dasar" data-level="dasar">
+                  <span class="lo-icon">🟢</span>
+                  <span class="lo-name">Dasar</span>
+                  <span class="lo-desc">3 tantangan terbimbing dengan petunjuk lebih detail. Cocok kalau kamu ingin penguatan dulu.</span>
+                </div>
+                <div class="level-option reguler" data-level="reguler">
+                  <span class="lo-icon">🟡</span>
+                  <span class="lo-name">Reguler</span>
+                  <span class="lo-desc">3 tantangan standar. Cocok untuk sebagian besar siswa.</span>
+                </div>
+                <div class="level-option tantangan" data-level="tantangan">
+                  <span class="lo-icon">🔴</span>
+                  <span class="lo-name">Tantangan</span>
+                  <span class="lo-desc">3 tantangan standar + 1 tantangan bonus (studi kasus terbuka). Cocok kalau kamu ingin tantangan lebih.</span>
+                </div>
+              </div>
+
+              <div class="level-badge-terpilih" id="levelBadge">
+                <span>✅</span><span id="levelBadgeText">Kamu memilih level: —</span>
+              </div>
+            </div>
+
+            <div class="mindful-box" id="mindfulPilihLevel">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar — Sebelum Tantangan</div>
+              <div class="mb-text"><strong>Mengapa kamu memilih level ini?</strong> Tantangan apa yang kamu harapkan? Tulis 1 kalimat.</div>
+              <textarea id="mindfulPilihJawab" placeholder="Tulis alasanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis2" disabled>➡️ Lanjut ke Tantangan</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LAPIS 2 -->
+        <div id="areaLapis2" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-2">
+              <span class="lapis-num">LAPIS 2</span>
+              <span>🎯 Tantangan Terarah — Level <span id="lapis2LevelLabel">—</span></span>
+            </div>
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              Jawab dengan teliti! Sistem hanya memberi umpan balik, bukan jawaban langsung.
+              <span id="lapis2JumlahTantangan">3 tantangan</span> yang harus diselesaikan.
+            </p>
+            <div class="tantangan-list" id="tantanganList"></div>
+
+            <div class="mindful-box" id="mindful2" style="display:none;">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 2</div>
+              <div class="mb-text"><strong>Refleksi:</strong> Setelah mencoba berbagai tantangan, apa pola yang kamu lihat dari semua aktivitas tadi? Tulis 1–2 kalimat tentang pola yang kamu temukan.</div>
+              <textarea id="mindful2Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis3" disabled>➡️ Lapis 2 Selesai — Buka Penamaan Konsep</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LAPIS 3 -->
+        <div id="areaLapis3" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-3">
+              <span class="lapis-num">LAPIS 3</span>
+              <span>📖 Penamaan Konsep — Istilah Resmi</span>
+            </div>
+
+            <div class="penamaan-box show" id="penamaanKonten">
+              <h3>🏷️ Sekarang, Kita Beri Nama!</h3>
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822;">
+                Semua yang kamu alami di simulasi silsilah punya <strong>nama resmi</strong>
+                dalam ilmu komputer. Inilah saatnya menghubungkan pengalamanmu dengan
+                istilah formal.
+              </p>
+
+              <div class="notasi-box">
+                <strong>🌳 Pohon (Tree)</strong> adalah struktur data yang terdiri dari
+                <strong>simpul (node)</strong> yang dihubungkan oleh <strong>sisi (edge)</strong>,
+                <strong>tanpa membentuk siklus</strong>, dan memiliki <strong>satu akar (root)</strong>.
+                <br><br>
+                <strong>Pohon</strong> mirip silsilah keluarga: bercabang ke bawah dari satu
+                leluhur, dan tidak ada garis yang kembali ke atas.
+              </div>
+
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822; margin-top:1rem;">
+                <strong>Istilah-istilah kunci yang perlu kamu pahami:</strong>
+              </p>
+
+              <table class="tabel-istilah">
+                <thead>
+                  <tr>
+                    <th>Istilah</th>
+                    <th>Makna</th>
+                    <th>Kaitannya dengan Simulasi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Pohon (Tree)</strong></td>
+                    <td>Struktur data yang terdiri dari simpul dan sisi, tanpa siklus, dan memiliki satu akar.</td>
+                    <td>Silsilah keluarga yang bercabang ke bawah.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Akar (Root)</strong></td>
+                    <td>Simpul paling atas yang tidak memiliki orang tua.</td>
+                    <td>Kakek dan Nenek di paling atas silsilah.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Daun (Leaf)</strong></td>
+                    <td>Simpul paling bawah yang tidak memiliki anak.</td>
+                    <td>Budi dan Siti yang tidak punya anak di gambar.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Cabang (Branch)</strong></td>
+                    <td>Simpul yang memiliki anak.</td>
+                    <td>Ayah, Ibu, Paman.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sisi (Edge)</strong></td>
+                    <td>Garis yang menghubungkan simpul.</td>
+                    <td>Garis dari Ayah ke Budi.</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="koneksi">
+                <strong>💡 Koneksi Dunia Nyata:</strong><br>
+                Saat kamu membuka <strong>File Explorer</strong> di komputer dan melihat
+                folder bertingkat (folder di dalam folder), itu adalah <strong>pohon</strong>.
+                Kamu tidak akan pernah menemukan folder yang menjadi induk dari dirinya sendiri —
+                itu sebabnya pohon <strong>tidak boleh melingkar</strong>. Contoh lain:
+                <strong>struktur organisasi sekolah</strong> (Kepala Sekolah → Wakil → Guru → Siswa)
+                juga berbentuk pohon.
+              </div>
+            </div>
+
+            <div class="link-materi-wrapper">
+              <a href="materibk7" target="_blank" rel="noopener" class="link-materi-bawah">
+                📚 Baca Materi Lengkap (buka tab baru)
+              </a>
+            </div>
+
+            <div class="mindful-box" id="mindful3">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 3</div>
+              <div class="mb-text">
+                Dengan istilah resmi: <strong>mengapa pohon (tree) tidak boleh melingkar</strong>?
+                Tulis dengan bahasamu sendiri, kaitkan dengan pengalamanmu di simulasi
+                silsilah keluarga.
+              </div>
+              <textarea id="mindful3Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <div class="kuis-kilat-box" id="kuisKilatBox">
+              <div class="kk-title">⚡ Kuis Kilat <span class="badge">2 SOAL</span></div>
+              <div id="kuisKilatContent"></div>
+              <div class="kk-hasil" id="kkHasil"></div>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutTes" disabled>➡️ Lanjut ke Tes Pemahaman</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TES PEMAHAMAN -->
+        <div class="tes-section" id="tesSection">
+          <div class="tes-header">
+            <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 4 soal · Minimal 3 benar untuk lanjut</div>
+            <div class="tes-progress" id="tesProgress">Terjawab: 0 / 4</div>
+          </div>
+          <div id="soalContainer"></div>
+          <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+          <button class="btn-ulangi-tes" id="btnUlangiTes">🔄 Ulangi Tes Pemahaman</button>
+        </div>
+
+        <div class="hasil-tes" id="hasilTes">
+          <div class="hasil-icon" id="hasilIcon">🏆</div>
+          <div class="hasil-title" id="hasilTitle">Selamat!</div>
+          <div class="hasil-skor" id="hasilSkor">0 / 4</div>
+          <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 1.</div>
+        </div>
+
+        <!-- REFLEKSI -->
+        <div class="refleksi-box" id="refleksiBox">
+          <h3>🪞 Refleksi</h3>
+
+          <div class="refleksi-item">
+            <label><span class="tag">PELAJARAN</span> Apa yang saya pelajari tentang pohon (tree) dari aktivitas ini?</label>
+            <textarea id="refPelajaran" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">PENERAPAN</span> Di mana lagi saya akan menggunakan konsep pohon (tree)?</label>
+            <textarea id="refPenerapan" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="exit-ticket">
+            <div class="et-title">🎫 Exit Ticket</div>
+            <p style="font-size:0.85rem; color:#5c4638; margin-bottom:0.4rem;">
+              Sebutkan <strong>satu contoh pohon</strong> yang kamu temukan di sekitarmu
+              (bukan yang sudah disebutkan di materi). Jelaskan mengapa itu disebut pohon.
+            </p>
+            <textarea id="exitTicket" placeholder="Contoh: Struktur organisasi RT — Ketua RT di atas, lalu wakil, sekretaris, dan warga di bawah."></textarea>
+          </div>
+
+          <div class="feedback-ai-box" id="feedbackAiBox">
+            <div class="fai-header">
+              <span class="fai-icon">🧑‍🏫</span>
+              <span>Catatan dari Guru</span>
+            </div>
+            <div class="fai-body" id="feedbackAiBody"></div>
+          </div>
+        </div>
+
+        <div class="game-actions" style="margin-top:0.6rem;">
+          <button type="button" class="btn-feedback-ai" id="btnMintaFeedback" disabled>
+            🧑‍🏫 Minta Feedback
+          </button>
+        </div>
+        <div class="feedback-ai-hint" id="feedbackAiHint" style="text-align:center;">
+          Isi Refleksi atau Exit Ticket dulu untuk mengaktifkan tombol.
+        </div>
+
+        <div class="status-kirim info" id="statusKirim">
+          <span class="spinner" id="statusSpinner"></span>
+          <span id="statusKirimText">Mengirim nilai...</span>
+        </div>
+
+        <div class="nav-bottom">
+          <a href="bk7" class="btn-nav-bawah">
+            <span class="back-arrow">←</span> Kembali ke Portal
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian">
+              Lanjut ke Bagian 2: Jaringan → 
+            </button>
+          </div>
+          <div class="nav-hint locked" id="hintLanjut">
+            🔒 Selesaikan semua tahap untuk membuka Bagian 2
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+  <script src="scriptbk.js"></script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI MODUL (spesifik Bagian 1)
+      // ============================================
+      const NAMA_SHEET = 'bk7';
+      const MODUL_KEY = 'bk7';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd'];
+      const AMBANG_LULUS = 3;
+      const STATE_KEY = 'labbk7_state_a';
+
+      // ============================================
+      // DATA ORANG (7 kartu)
+      // ============================================
+      const DAFTAR_ORANG = [
+        { id: 'kakek', nama: 'Kakek',  ikon: '👴', tipe: 'root' },
+        { id: 'nenek', nama: 'Nenek',  ikon: '👵', tipe: 'root' },
+        { id: 'ayah',  nama: 'Ayah',   ikon: '👨', tipe: 'branch' },
+        { id: 'ibu',   nama: 'Ibu',    ikon: '👩', tipe: 'branch' },
+        { id: 'paman', nama: 'Paman',  ikon: '🧑', tipe: 'branch' },
+        { id: 'budi',  nama: 'Budi',   ikon: '👦', tipe: 'leaf' },
+        { id: 'siti',  nama: 'Siti',   ikon: '👧', tipe: 'leaf' }
+      ];
+
+      // ============================================
+      // DATA TANTANGAN
+      // ============================================
+      const tantanganDasar = [
+        {
+          id: 'D1',
+          teks: 'Dalam silsilahmu, siapa yang berada di <strong>paling atas</strong> (tidak punya orang tua di gambar)?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Budi dan Siti', benar: false },
+            { v: 'B', label: 'Kakek dan Nenek', benar: true },
+            { v: 'C', label: 'Ayah dan Ibu', benar: false }
+          ],
+          hint: 'Yang paling atas tidak punya garis ke atas. Itulah akar (root).',
+          feedbackSalah: 'Yang paling atas adalah Kakek dan Nenek. Mereka tidak punya orang tua di gambar. Itulah akar (root).'
+        },
+        {
+          id: 'D2',
+          teks: 'Siapa yang berada di <strong>paling bawah</strong> (tidak punya anak di gambar)?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Kakek dan Nenek', benar: false },
+            { v: 'B', label: 'Ayah dan Ibu', benar: false },
+            { v: 'C', label: 'Budi dan Siti', benar: true }
+          ],
+          hint: 'Yang paling bawah tidak punya garis ke bawah. Itulah daun (leaf).',
+          feedbackSalah: 'Budi dan Siti berada di paling bawah (tidak punya anak). Itulah daun (leaf).'
+        },
+        {
+          id: 'D3',
+          teks: 'Berapa banyak garis yang menghubungkan <strong>Ayah</strong> ke <strong>Budi dan Siti</strong>?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: '1 garis', benar: false },
+            { v: 'B', label: '2 garis (satu ke Budi, satu ke Siti)', benar: true },
+            { v: 'C', label: '3 garis', benar: false }
+          ],
+          hint: 'Satu garis dari Ayah ke Budi, satu garis dari Ayah ke Siti. Total dua.',
+          feedbackSalah: 'Ayah punya 2 garis ke bawah: ke Budi dan ke Siti. Itu karena Budi dan Siti sama-sama anak Ayah.'
+        }
+      ];
+
+      const tantanganReguler = [
+        {
+          id: 'R1',
+          teks: 'Perhatikan gambar pohon dengan 5 simpul di bawah ini (dari atas ke bawah):<br><br><code>A</code><br>├── <code>B</code><br>│&nbsp;&nbsp;&nbsp;├── <code>D</code><br>│&nbsp;&nbsp;&nbsp;└── <code>E</code><br>└── <code>C</code><br><br>Manakah yang merupakan <strong>akar (root)</strong> dan <strong>daun (leaf)</strong>?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Akar = A; Daun = D, E, C', benar: true },
+            { v: 'B', label: 'Akar = D; Daun = A', benar: false },
+            { v: 'C', label: 'Akar = B; Daun = C', benar: false }
+          ],
+          hint: 'Akar = paling atas (A). Daun = paling bawah yang tidak punya anak (D, E, C).',
+          feedbackSalah: 'Akar = simpul paling atas = A. Daun = simpul paling bawah yang tidak punya anak = D, E, C.'
+        },
+        {
+          id: 'R2',
+          teks: 'Dalam pohon keluarga, apakah satu anak bisa punya <strong>lebih dari satu garis ke atas</strong> (orang tua)? Mengapa?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Bisa, sebanyak-banyaknya', benar: false },
+            { v: 'B', label: 'Tidak bisa — setiap simpul (kecuali akar) punya tepat satu orang tua', benar: true },
+            { v: 'C', label: 'Tergantung jumlah saudara', benar: false }
+          ],
+          hint: 'Dalam struktur pohon, hubungan harus satu arah: dari akar ke daun. Setiap simpul (kecuali akar) punya tepat satu orang tua.',
+          feedbackSalah: 'Dalam pohon, setiap simpul (kecuali akar) punya tepat satu orang tua. Itu yang membuatnya tidak melingkar.'
+        },
+        {
+          id: 'R3',
+          teks: 'Coba hubungkan <strong>Budi</strong> ke <strong>Kakek</strong>, lalu <strong>Kakek</strong> ke <strong>Budi</strong>. Apakah ini membentuk <strong>lingkaran (siklus)</strong>? Apakah pohon boleh melingkar?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Ya, membentuk siklus. Pohon boleh melingkar.', benar: false },
+            { v: 'B', label: 'Ya, membentuk siklus. Pohon TIDAK boleh melingkar.', benar: true },
+            { v: 'C', label: 'Tidak membentuk siklus. Pohon boleh melingkar.', benar: false }
+          ],
+          hint: 'Dua garis bolak-balik membentuk siklus. Pohon tidak boleh melingkar.',
+          feedbackSalah: 'Dua garis bolak-balik membentuk siklus. Pohon TIDAK boleh melingkar — itu yang membedakannya dari jaringan (graph).'
+        }
+      ];
+
+      const tantanganBonus = [
+        {
+          id: 'B1',
+          teks: '<strong>🔥 Tantangan Bonus (Pengayaan — Terbuka):</strong><br><br>"Budi membuat silsilah keluarganya. Menurutmu, mengapa silsilah keluarga disebut \'pohon\'? Apakah semua hubungan keluarga bisa digambarkan sebagai pohon? Jelaskan, minimal 3 kalimat."',
+          tipe: 'teks',
+          validasi: function(val) { return val.trim().length >= 80; },
+          hint: 'Pikirkan: (1) bentuk bercabang dari satu akar, (2) tidak ada siklus, (3) adakah hubungan keluarga yang membentuk siklus (misal pernikahan sepupu)?',
+          feedbackSalah: 'Argumenmu masih terlalu pendek. Tulis minimal 3 kalimat: (1) ciri pohon pada silsilah, (2) mengapa tidak melingkar, (3) kasus khusus yang mungkin bukan pohon.'
+        }
+      ];
+
+      // KUIS KILAT
+      const kuisKilatData = [
+        {
+          pertanyaan: 'Apa yang dimaksud dengan "akar" (root) dalam pohon?',
+          opsi: [
+            'Simpul paling bawah.',
+            'Simpul paling atas yang tidak punya orang tua.',
+            'Garis penghubung.',
+            'Daun.'
+          ],
+          kunci: 1,
+          penjelasan: 'Akar (root) adalah simpul paling atas yang tidak memiliki orang tua.'
+        },
+        {
+          pertanyaan: 'Manakah yang <strong>bukan</strong> contoh struktur pohon?',
+          opsi: [
+            'Silsilah keluarga.',
+            'Folder komputer.',
+            'Peta jalan dengan jalan memutar.',
+            'Struktur organisasi sekolah.'
+          ],
+          kunci: 2,
+          penjelasan: 'Peta jalan dengan jalan memutar membentuk siklus — itu jaringan (graph), bukan pohon.'
+        }
+      ];
+
+      // TES PEMAHAMAN
+      const soalData = [
+        {
+          pertanyaan: 'Dalam pohon, simpul yang tidak memiliki anak disebut...',
+          opsi: ['Akar', 'Cabang', 'Daun', 'Sisi'],
+          kunci: 2,
+          penjelasan: 'Daun (leaf) adalah simpul paling bawah yang tidak memiliki anak.'
+        },
+        {
+          pertanyaan: 'Mengapa pohon tidak boleh melingkar?',
+          opsi: [
+            'Karena akan membingungkan.',
+            'Karena struktur pohon memiliki arah satu arah dari akar ke daun.',
+            'Karena tidak ada aturan.',
+            'Karena pohon selalu lurus.'
+          ],
+          kunci: 1,
+          penjelasan: 'Pohon memiliki arah satu arah (dari akar ke daun), sehingga tidak boleh ada siklus.'
+        },
+        {
+          pertanyaan: 'Manakah yang merupakan contoh pohon?',
+          opsi: [
+            'Peta jalan dengan jalan memutar.',
+            'Silsilah keluarga.',
+            'Jaringan pertemanan di media sosial.',
+            'Daftar belanja.'
+          ],
+          kunci: 1,
+          penjelasan: 'Silsilah keluarga adalah contoh pohon — bercabang ke bawah, tanpa siklus.'
+        },
+        {
+          pertanyaan: 'Dalam silsilah keluarga, Kakek dan Nenek berada di paling atas. Mereka disebut...',
+          opsi: ['Daun', 'Cabang', 'Akar', 'Sisi'],
+          kunci: 2,
+          penjelasan: 'Kakek dan Nenek berada di paling atas = akar (root).'
+        }
+      ];
+
+      // ============================================
+      // STATE SIMULASI
+      // ============================================
+      let kartuDiKanvas = {};      // {id: {x, y}}
+      let kartuDiPalet = DAFTAR_ORANG.map(function(o) { return o.id; }); // id yang masih di palet
+      let garisList = [];          // [{dari: id, ke: id}]
+      let lapis1Selesai = false;
+      let daftarSiswa = [];
+
+      // Canvas bounds (diisi saat init)
+      let kanvasRect = null;
+      let KARTU_W = 130;
+      let KARTU_H = 44;
+
+      // Drag state
+      let dragState = null;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const elInfoIdentitasBox = document.getElementById('infoIdentitasBox');
+      const elIibBadge         = document.getElementById('iibBadge');
+      const elIibNama          = document.getElementById('iibNama');
+      const elIibMeta          = document.getElementById('iibMeta');
+      const elBtnUbahIdentitas = document.getElementById('btnUbahIdentitas');
+      const elBtnMulai         = document.getElementById('btnMulai');
+      const elAreaSimulasi     = document.getElementById('area-simulasi');
+      const elAreaPilihLevel   = document.getElementById('areaPilihLevel');
+
+      const elKanvas        = document.getElementById('silsilahKanvas');
+      const elSkHint        = document.getElementById('skHint');
+      const elPalet         = document.getElementById('paletOrang');
+      const elSelOrangTua   = document.getElementById('selOrangTua');
+      const elSelAnak       = document.getElementById('selAnak');
+      const elBtnSambung    = document.getElementById('btnSambung');
+      const elBtnHapusGaris = document.getElementById('btnHapusGaris');
+
+      const elMisiText   = document.getElementById('misiText');
+      const elStatKartu  = document.getElementById('statKartu');
+      const elStatGaris  = document.getElementById('statGaris');
+      const elStatSiklus = document.getElementById('statSiklus');
+
+      const elKibKartu  = document.getElementById('kibKartu');
+      const elKibGaris  = document.getElementById('kibGaris');
+      const elKibSiklus = document.getElementById('kibSiklus');
+      const elKibValid  = document.getElementById('kibValid');
+
+      const elLogAktivitas    = document.getElementById('logAktivitas');
+      const elBtnSelesaiLapis1 = document.getElementById('btnSelesaiLapis1');
+      const elBtnResetLapis1   = document.getElementById('btnResetLapis1');
+      const elMindful1         = document.getElementById('mindful1');
+
+      // ============================================
+      // HELPER
+      // ============================================
+      function tambahLog(text, tipe) {
+        const emptyEl = elLogAktivitas.querySelector('.log-info');
+        if (emptyEl && emptyEl.textContent.indexOf('Log aktivitas akan') !== -1) emptyEl.remove();
+        const line = document.createElement('div');
+        line.className = 'log-line';
+        const cls = tipe ? 'log-' + tipe : 'log-info';
+        const now = new Date();
+        const waktu = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+        line.innerHTML = '<span class="log-time">[' + waktu + ']</span> <span class="' + cls + '">' + text + '</span>';
+        elLogAktivitas.appendChild(line);
+        elLogAktivitas.scrollTop = elLogAktivitas.scrollHeight;
+      }
+
+      function cariOrang(id) {
+        return DAFTAR_ORANG.find(function(o) { return o.id === id; });
+      }
+
+      // ============================================
+      // IDENTITAS — dari script.js (localStorage)
+      // ============================================
+      function refreshIdentitasUI() {
+        const s = window.ambilSession ? window.ambilSession() : null;
+
+        if (!s) {
+          elIibBadge.textContent = 'TAMU';
+          elIibNama.textContent = 'Belum ada identitas';
+          elIibMeta.textContent = 'Silakan login atau isi identitas tamu.';
+          elBtnMulai.disabled = true;
+          return;
+        }
+
+        if (window.sinkronkanIdentitasDenganSession) {
+          window.sinkronkanIdentitasDenganSession();
+        }
+        const dd = window.ambilIdentitasSiswaMulti ? window.ambilIdentitasSiswaMulti() : null;
+
+        if (s.tipe === 'login') {
+          elIibBadge.textContent = 'LOGIN';
+          const teman = (dd && Array.isArray(dd.teman)) ? dd.teman : [];
+          const semuaNama = [s.nama].concat(teman.map(function(t) { return t.nama; }));
+          elIibNama.textContent = semuaNama.join(' & ');
+          elIibMeta.textContent = 'Kelas ' + (s.kelas || '—') + ' · ' + (s.sekolah || '—') +
+            (teman.length > 0 ? ' · ' + teman.length + ' teman' : '');
+          elBtnMulai.disabled = false;
+        } else {
+          elIibBadge.textContent = 'TAMU';
+          if (!dd || !dd.tamu || !Array.isArray(dd.tamu.daftarNama) || dd.tamu.daftarNama.length === 0) {
+            elIibNama.textContent = s.nama || s.user_id;
+            elIibMeta.textContent = 'Kode: ' + s.user_id + ' · Isi identitas tamu dulu';
+            elBtnMulai.disabled = true;
+          } else {
+            elIibNama.textContent = dd.tamu.daftarNama.join(' & ');
+            elIibMeta.textContent = 'Kelas ' + (dd.tamu.kelas || '—') + ' · ' + (dd.tamu.sekolah || '—');
+            elBtnMulai.disabled = false;
+          }
+        }
+
+        // Siapkan daftarSiswa
+        daftarSiswa = [];
+        if (dd && dd.tipe === 'login') {
+          if (dd.utama) daftarSiswa.push(dd.utama);
+          (dd.teman || []).forEach(function(t) { daftarSiswa.push(t); });
+        } else if (dd && dd.tipe === 'tamu' && dd.tamu && Array.isArray(dd.tamu.daftarNama)) {
+          dd.tamu.daftarNama.forEach(function(nama) {
+            daftarSiswa.push({ nama: nama, kelas: dd.tamu.kelas, sekolah: dd.tamu.sekolah });
+          });
+        }
+      }
+
+      if (elBtnUbahIdentitas) {
+        elBtnUbahIdentitas.addEventListener('click', function() {
+          if (window.bukaModalIdentitas) window.bukaModalIdentitas();
+          else alert('Fitur identitas belum siap. Coba refresh halaman.');
+          setTimeout(refreshIdentitasUI, 500);
+        });
+      }
+
+      function formatNamaSiswa(daftar) {
+        if (!daftar || daftar.length === 0) return 'Siswa Informatika';
+        if (daftar.length === 1) return daftar[0].nama;
+        if (daftar.length === 2) return daftar[0].nama + ' & ' + daftar[1].nama;
+        const names = daftar.map(function(s) { return s.nama; });
+        const last = names.pop();
+        return names.join(', ') + ' & ' + last;
+      }
+
+      // ============================================
+      // MULAI AKTIVITAS
+      // ============================================
+      window.mulaiAktivitas = async function() {
+        refreshIdentitasUI();
+
+        const d = window.ambilIdentitasSiswaMulti ? window.ambilIdentitasSiswaMulti() : null;
+        const s = window.ambilSession ? window.ambilSession() : null;
+
+        if (!s) {
+          alert('⚠️ Silakan login atau isi identitas tamu terlebih dahulu.');
+          if (window.bukaModalIdentitas) window.bukaModalIdentitas();
+          return;
+        }
+
+        let namaGabung = '';
+        let sekolahUtama = '';
+        let kelasUtama = '';
+
+        if (d && d.tipe === 'login') {
+          const names = [];
+          if (d.utama && d.utama.nama) names.push(d.utama.nama);
+          (d.teman || []).forEach(function(t) { if (t && t.nama) names.push(t.nama); });
+          namaGabung = names.join(' & ');
+          sekolahUtama = (d.utama && d.utama.sekolah) || s.sekolah || '';
+          kelasUtama = (d.utama && d.utama.kelas) || s.kelas || '';
+        } else if (d && d.tipe === 'tamu' && d.tamu && Array.isArray(d.tamu.daftarNama) && d.tamu.daftarNama.length > 0) {
+          namaGabung = d.tamu.daftarNama.join(' & ');
+          sekolahUtama = d.tamu.sekolah;
+          kelasUtama = d.tamu.kelas;
+        } else {
+          alert('⚠️ Identitas belum lengkap. Klik "⚙️ Ubah Identitas" di atas.');
+          if (window.bukaModalIdentitas) window.bukaModalIdentitas();
+          return;
+        }
+
+        if (window.simpanIdentitasSiswa) {
+          window.simpanIdentitasSiswa(sekolahUtama, namaGabung, kelasUtama);
+        }
+
+        elBtnMulai.disabled = true;
+        elBtnMulai.textContent = '⏳ Menyiapkan sesi...';
+
+        const hasilSesi = await window.dutaPastikanPunyaKode(sekolahUtama, namaGabung, kelasUtama);
+        if (!hasilSesi || !hasilSesi.ok) {
+          alert('⚠️ Gagal menyiapkan sesi: ' + ((hasilSesi && hasilSesi.error) || 'Tidak diketahui'));
+          elBtnMulai.disabled = false;
+          elBtnMulai.textContent = '🚀 Mulai Aktivitas';
+          return;
+        }
+
+        if (window.simpanIdModul) window.simpanIdModul(MODUL_KEY, hasilSesi.user_id);
+
+        elInfoIdentitasBox.style.display = 'none';
+        elAreaSimulasi.classList.add('active');
+
+        if (window.dutaHapusState) window.dutaHapusState(STATE_KEY);
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+
+        initSimulasi();
+
+        if (hasilSesi.tipe === 'tamu' && !hasilSesi.sudah_ada && !(d && d.tipe === 'tamu')) {
+          setTimeout(function() {
+            alert('🎭 Kamu masuk sebagai Tamu dengan kode: ' + hasilSesi.user_id +
+                  '\n\nSimpan kode ini jika ingin melanjutkan nanti.');
+          }, 300);
+        }
+
+        setTimeout(function() {
+          elAreaSimulasi.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      };
+
+      // ============================================
+      // SIMULASI SILSILAH KELUARGA
+      // ============================================
+      function initSimulasi() {
+        kartuDiKanvas = {};
+        kartuDiPalet = DAFTAR_ORANG.map(function(o) { return o.id; });
+        garisList = [];
+        lapis1Selesai = false;
+
+        // Reset stats
+        elStatKartu.textContent = '0';
+        elStatGaris.textContent = '0';
+        elStatSiklus.textContent = '0';
+
+        elLogAktivitas.innerHTML = '<div class="log-line log-info">Log aktivitas akan muncul di sini...</div>';
+
+        // Render kanvas & palet
+        renderKanvas();
+        renderPalet();
+
+        // Siapkan select
+        updateSelects();
+
+        // Reset tombol
+        elBtnSelesaiLapis1.disabled = true;
+        elMindful1.classList.remove('show');
+
+        // Info
+        elMisiText.innerHTML = 'Belum ada kartu di kanvas. Seret kartu dari palet bawah.';
+        updateKanvasInfo();
+
+        DUTA_BK.tampilFeedback('info', '💡',
+          'Seret Kakek dan Nenek ke kanvas paling atas. Lalu Ayah, Ibu, Paman di bawahnya. ' +
+          'Terakhir Budi dan Siti. Hubungkan dengan garis: Kakek → Ayah, Nenek → Ayah, dst.');
+
+        // Ukur canvas bounds
+        hitungKanvasBounds();
+      }
+
+      function hitungKanvasBounds() {
+        kanvasRect = elKanvas.getBoundingClientRect();
+      }
+
+      // ============================================
+      // RENDER KANVAS
+      // ============================================
+      function renderKanvas() {
+        // Hapus semua kartu lama (kecuali hint & svg)
+        elKanvas.querySelectorAll('.kartu-orang').forEach(function(el) { el.remove(); });
+        elKanvas.querySelectorAll('svg.kanvas-svg').forEach(function(el) { el.remove(); });
+
+        // Tampilkan / sembunyikan hint
+        if (Object.keys(kartuDiKanvas).length === 0) {
+          elSkHint.style.display = 'block';
+        } else {
+          elSkHint.style.display = 'none';
+        }
+
+        // Buat SVG untuk garis
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'kanvas-svg');
+        elKanvas.appendChild(svg);
+
+        // Render tiap kartu
+        Object.keys(kartuDiKanvas).forEach(function(id) {
+          const orang = cariOrang(id);
+          if (!orang) return;
+          const pos = kartuDiKanvas[id];
+          const el = document.createElement('div');
+          el.className = 'kartu-orang ' + orang.tipe;
+          el.dataset.id = id;
+          el.style.left = pos.x + 'px';
+          el.style.top  = pos.y + 'px';
+          el.innerHTML =
+            '<span class="ko-icon">' + orang.ikon + '</span>' +
+            '<span>' + DUTA_BK.escapeHtml(orang.nama) + '</span>';
+
+          // Drag events (mouse + touch)
+          el.addEventListener('pointerdown', function(e) { mulaiDrag(e, id); });
+          el.addEventListener('click', function(e) {
+            // Cegah drag click
+            e.stopPropagation();
+          });
+          elKanvas.appendChild(el);
+        });
+
+        // Gambar garis
+        gambarGaris(svg);
+
+        updateStats();
+      }
+
+      function renderPalet() {
+        elPalet.innerHTML = '<div class="po-label">📇 Palet Kartu — Seret ke Kanvas</div>';
+        if (kartuDiPalet.length === 0) {
+          elPalet.innerHTML += '<div class="po-empty">— semua kartu sudah di kanvas —</div>';
+          return;
+        }
+        kartuDiPalet.forEach(function(id) {
+          const orang = cariOrang(id);
+          if (!orang) return;
+          const el = document.createElement('div');
+          el.className = 'kartu-orang ' + orang.tipe;
+          el.dataset.id = id;
+          el.innerHTML =
+            '<span class="ko-icon">' + orang.ikon + '</span>' +
+            '<span>' + DUTA_BK.escapeHtml(orang.nama) + '</span>';
+          el.addEventListener('pointerdown', function(e) { mulaiDrag(e, id); });
+          elPalet.appendChild(el);
+        });
+      }
+
+      // ============================================
+      // DRAG & DROP (pointer events)
+      // ============================================
+      function mulaiDrag(e, id) {
+        e.preventDefault();
+        if (lapis1Selesai) return;
+
+        const dariPalet = kartuDiPalet.indexOf(id) !== -1;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (dariPalet) {
+          // Pindahkan kartu ke kanvas dulu
+          kartuDiPalet = kartuDiPalet.filter(function(x) { return x !== id; });
+          hitungKanvasBounds();
+
+          const x = (kanvasRect ? (e.clientX - kanvasRect.left) : 100) - (KARTU_W / 2);
+          const y = (kanvasRect ? (e.clientY - kanvasRect.top) : 100) - (KARTU_H / 2);
+          kartuDiKanvas[id] = {
+            x: Math.max(4, Math.min(x, (kanvasRect ? kanvasRect.width : 400) - KARTU_W - 4)),
+            y: Math.max(4, Math.min(y, (kanvasRect ? kanvasRect.height : 400) - KARTU_H - 4))
+          };
+          renderPalet();
+          renderKanvas();
+          updateSelects();
+          updateKanvasInfo();
+          tambahLog('📥 Kartu <strong>' + cariOrang(id).nama + '</strong> dipindahkan ke kanvas.', 'tree');
+
+          // Untuk kartu yang baru dipindah, mulai dari tengah kartu (offset = setengah kartu)
+          offsetX = KARTU_W / 2;
+          offsetY = KARTU_H / 2;
+        } else {
+          // Kartu sudah di kanvas — hitung offset dari posisi klik
+          const elKartu = elKanvas.querySelector('.kartu-orang[data-id="' + id + '"]');
+          if (!elKartu) return;
+          const rect = elKartu.getBoundingClientRect();
+          offsetX = e.clientX - rect.left;
+          offsetY = e.clientY - rect.top;
+        }
+
+        const elKartuAktif = elKanvas.querySelector('.kartu-orang[data-id="' + id + '"]');
+        if (elKartuAktif) mulaiDragDiKanvas(e, id, elKartuAktif, offsetX, offsetY);
+      }
+
+      function mulaiDragDiKanvas(e, id, elKartu, offsetX, offsetY) {
+        dragState = {
+          id: id,
+          offsetX: offsetX,
+          offsetY: offsetY
+        };
+        elKartu.classList.add('dragging');
+        hitungKanvasBounds();
+
+        document.addEventListener('pointermove', doDrag);
+        document.addEventListener('pointerup', endDrag);
+      }
+
+      function doDrag(e) {
+        if (!dragState) return;
+        e.preventDefault();
+        hitungKanvasBounds();
+        const x = e.clientX - kanvasRect.left - dragState.offsetX;
+        const y = e.clientY - kanvasRect.top - dragState.offsetY;
+        const maxX = (kanvasRect.width) - KARTU_W - 4;
+        const maxY = (kanvasRect.height) - KARTU_H - 4;
+        const clampedX = Math.max(4, Math.min(x, maxX));
+        const clampedY = Math.max(4, Math.min(y, maxY));
+
+        kartuDiKanvas[dragState.id] = { x: clampedX, y: clampedY };
+
+        const el = elKanvas.querySelector('.kartu-orang[data-id="' + dragState.id + '"]');
+        if (el) {
+          el.style.left = clampedX + 'px';
+          el.style.top  = clampedY + 'px';
+        }
+
+        // Update garis
+        const svg = elKanvas.querySelector('svg.kanvas-svg');
+        if (svg) gambarGaris(svg);
+      }
+
+      function endDrag(e) {
+        if (!dragState) return;
+        const el = elKanvas.querySelector('.kartu-orang[data-id="' + dragState.id + '"]');
+        if (el) el.classList.remove('dragging');
+
+        document.removeEventListener('pointermove', doDrag);
+        document.removeEventListener('pointerup', endDrag);
+
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+
+        dragState = null;
+        cekSiapSelesaiLapis1();
+      }
+
+      // ============================================
+      // GAMBAR GARIS (SVG)
+      // ============================================
+      function gambarGaris(svg) {
+        // Bersihkan
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+        // Deteksi siklus
+        const siklusSet = deteksiSiklus();
+
+        garisList.forEach(function(g) {
+          const dari = kartuDiKanvas[g.dari];
+          const ke = kartuDiKanvas[g.ke];
+          if (!dari || !ke) return;
+
+          const x1 = dari.x + KARTU_W / 2;
+          const y1 = dari.y + KARTU_H; // bawah kartu
+          const x2 = ke.x + KARTU_W / 2;
+          const y2 = ke.y;             // atas kartu
+
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x1);
+          line.setAttribute('y1', y1);
+          line.setAttribute('x2', x2);
+          line.setAttribute('y2', y2);
+          line.setAttribute('stroke-width', '3');
+          line.setAttribute('stroke-linecap', 'round');
+
+          const isSiklus = siklusSet.has(g.dari + '->' + g.ke) || siklusSet.has(g.ke + '->' + g.dari);
+          if (isSiklus) {
+            line.setAttribute('class', 'edge-cycle');
+            line.setAttribute('stroke', '#b33c3c');
+            line.setAttribute('stroke-dasharray', '6 4');
+          } else {
+            line.setAttribute('class', 'edge-tree');
+            line.setAttribute('stroke', '#4fa86a');
+          }
+          svg.appendChild(line);
+        });
+      }
+
+      // ============================================
+      // DETEKSI SIKLUS (DFS)
+      // ============================================
+      function deteksiSiklus() {
+        // Bangun adjacency: parent → children
+        const adj = {};
+        DAFTAR_ORANG.forEach(function(o) { adj[o.id] = []; });
+        garisList.forEach(function(g) {
+          if (adj[g.dari]) adj[g.dari].push(g.ke);
+        });
+
+        const siklusSet = new Set();
+        const visited = {};
+        const stack = {};
+
+        function dfs(node, path) {
+          if (stack[node]) {
+            // Siklus ditemukan: dari node sampai akhir path
+            const idx = path.indexOf(node);
+            if (idx !== -1) {
+              for (let i = idx; i < path.length - 1; i++) {
+                siklusSet.add(path[i] + '->' + path[i + 1]);
+              }
+              siklusSet.add(path[path.length - 1] + '->' + node);
+            }
+            return;
+          }
+          if (visited[node]) return;
+          visited[node] = true;
+          stack[node] = true;
+          path.push(node);
+          (adj[node] || []).forEach(function(next) { dfs(next, path); });
+          path.pop();
+          stack[node] = false;
+        }
+
+        Object.keys(adj).forEach(function(n) {
+          if (!visited[n]) dfs(n, []);
+        });
+
+        return siklusSet;
+      }
+
+      function hitungSiklus() {
+        return deteksiSiklus().size;
+      }
+
+      // ============================================
+      // PANEL SAMBUNG
+      // ============================================
+      function updateSelects() {
+        const idsDiKanvas = Object.keys(kartuDiKanvas);
+        const opsiHtml = idsDiKanvas.map(function(id) {
+          const o = cariOrang(id);
+          return '<option value="' + id + '">' + o.ikon + ' ' + DUTA_BK.escapeHtml(o.nama) + '</option>';
+        }).join('');
+
+        const valTua = elSelOrangTua.value;
+        const valAnak = elSelAnak.value;
+
+        elSelOrangTua.innerHTML = '<option value="">— Orang tua —</option>' + opsiHtml;
+        elSelAnak.innerHTML    = '<option value="">— Anak —</option>' + opsiHtml;
+
+        if (idsDiKanvas.indexOf(valTua) !== -1) elSelOrangTua.value = valTua;
+        if (idsDiKanvas.indexOf(valAnak) !== -1) elSelAnak.value = valAnak;
+
+        cekTombolSambung();
+      }
+
+      function cekTombolSambung() {
+        const tua = elSelOrangTua.value;
+        const anak = elSelAnak.value;
+        const valid = !!(tua && anak && tua !== anak);
+        elBtnSambung.disabled = !valid;
+        // Tombol hapus garis aktif jika ada garis yang cocok
+        const adaGaris = garisList.some(function(g) { return g.dari === tua && g.ke === anak; });
+        elBtnHapusGaris.disabled = !adaGaris;
+      }
+
+      elSelOrangTua.addEventListener('change', cekTombolSambung);
+      elSelAnak.addEventListener('change', cekTombolSambung);
+
+      elBtnSambung.addEventListener('click', function() {
+        const tua = elSelOrangTua.value;
+        const anak = elSelAnak.value;
+        if (!tua || !anak || tua === anak) return;
+
+        // Cek duplikat
+        if (garisList.some(function(g) { return g.dari === tua && g.ke === anak; })) {
+          DUTA_BK.tampilFeedback('warn', '⚠️', 'Garis <strong>' + cariOrang(tua).nama + ' → ' + cariOrang(anak).nama + '</strong> sudah ada.');
+          return;
+        }
+
+        garisList.push({ dari: tua, ke: anak });
+        const svg = elKanvas.querySelector('svg.kanvas-svg');
+        if (svg) gambarGaris(svg);
+
+        updateKanvasInfo();
+        tambahLog('🔗 Sambung <strong>' + cariOrang(tua).nama + ' → ' + cariOrang(anak).nama + '</strong>', 'tree');
+
+        cekTombolSambung();
+        cekSiapSelesaiLapis1();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+      });
+
+      elBtnHapusGaris.addEventListener('click', function() {
+        const tua = elSelOrangTua.value;
+        const anak = elSelAnak.value;
+        garisList = garisList.filter(function(g) { return !(g.dari === tua && g.ke === anak); });
+        const svg = elKanvas.querySelector('svg.kanvas-svg');
+        if (svg) gambarGaris(svg);
+        updateKanvasInfo();
+        tambahLog('🗑️ Hapus garis <strong>' + cariOrang(tua).nama + ' → ' + cariOrang(anak).nama + '</strong>', 'info');
+        cekTombolSambung();
+        cekSiapSelesaiLapis1();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+      });
+
+      // ============================================
+      // INFO KANVAS
+      // ============================================
+      function updateStats() {
+        elStatKartu.textContent = Object.keys(kartuDiKanvas).length;
+        elStatGaris.textContent = garisList.length;
+        elStatSiklus.textContent = hitungSiklus();
+      }
+
+      function updateKanvasInfo() {
+        const nKartu = Object.keys(kartuDiKanvas).length;
+        const nGaris = garisList.length;
+        const nSiklus = hitungSiklus();
+        const valid = (nKartu >= 5 && nGaris >= 4 && nSiklus === 0);
+
+        elKibKartu.textContent = '📇 ' + nKartu + ' kartu';
+        elKibKartu.className = 'kib-item' + (nKartu >= 5 ? ' ok' : '');
+
+        elKibGaris.textContent = '🔗 ' + nGaris + ' garis';
+        elKibGaris.className = 'kib-item' + (nGaris >= 4 ? ' ok' : '');
+
+        elKibSiklus.textContent = '⚠️ ' + nSiklus + ' siklus';
+        elKibSiklus.className = 'kib-item' + (nSiklus === 0 ? ' ok' : ' error');
+
+        if (valid) {
+          elKibValid.textContent = '🌳 Pohon valid!';
+          elKibValid.className = 'kib-item ok';
+        } else if (nSiklus > 0) {
+          elKibValid.textContent = '❌ Ada siklus — bukan pohon';
+          elKibValid.className = 'kib-item error';
+        } else if (nKartu < 5) {
+          elKibValid.textContent = '📇 Tambah kartu dulu';
+          elKibValid.className = 'kib-item warn';
+        } else {
+          elKibValid.textContent = '🔗 Tambah garis penghubung';
+          elKibValid.className = 'kib-item warn';
+        }
+
+        updateStats();
+      }
+
+      function cekSiapSelesaiLapis1() {
+        const nKartu = Object.keys(kartuDiKanvas).length;
+        const nGaris = garisList.length;
+        const nSiklus = hitungSiklus();
+        if (nKartu >= 5 && nGaris >= 4 && nSiklus === 0) {
+          elBtnSelesaiLapis1.disabled = false;
+          elMindful1.classList.add('show');
+        }
+      }
+
+      // ============================================
+      // RESET
+      // ============================================
+      window.resetSilsilah = function() {
+        initSimulasi();
+        tambahLog('🔄 Kanvas direset. Semua kartu kembali ke palet.', 'info');
+      };
+
+      // ============================================
+      // SELESAI LAPIS 1
+      // ============================================
+      window.selesaiLapis1 = function() {
+        const nKartu = Object.keys(kartuDiKanvas).length;
+        const nGaris = garisList.length;
+        const nSiklus = hitungSiklus();
+        if (nKartu < 5 || nGaris < 4 || nSiklus > 0) {
+          alert('⚠️ Pastikan minimal 5 kartu, 4 garis, dan tidak ada siklus ya!');
+          return;
+        }
+        const mindfulJawab = document.getElementById('mindful1Jawab').value.trim();
+        if (mindfulJawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 1 sebelum lanjut!');
+          document.getElementById('mindful1Jawab').focus();
+          return;
+        }
+
+        lapis1Selesai = true;
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+
+        elBtnSelesaiLapis1.disabled = true;
+        elBtnSelesaiLapis1.textContent = '✅ Lapis 1 Selesai';
+
+        elAreaSimulasi.style.display = 'none';
+        elAreaPilihLevel.classList.add('active');
+
+        setTimeout(function() { elAreaPilihLevel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
+      };
+
+      // ============================================
+      // SIMPAN SKOR BAGIAN 1 — BULK
+      // ============================================
+      function simpanSkorBagian1(correct, total) {
+        const skorBagian1 = Math.round(40 + (correct / total) * 60);
+        try {
+          const prev = JSON.parse(localStorage.getItem('labbk7_progress') || '{}');
+          prev.bagian = 1;
+          prev.skor = skorBagian1;
+          localStorage.setItem('labbk7_progress', JSON.stringify(prev));
+        } catch (e) {}
+
+        refreshIdentitasUI();
+
+        if (window.dutaSimpanProgressBulk) {
+          window.dutaSimpanProgressBulk(
+            MODUL_KEY, 'a', { a: skorBagian1 }, 0, { kunciModul: false }
+          ).then(function(hasil) {
+            if (!hasil || !hasil.ok) {
+              console.warn('[bulk] gagal kirim bagian a:', hasil);
+            } else {
+              console.log('[bulk] bagian a terkirim:', hasil);
+            }
+          }).catch(function(err) {
+            console.warn('[bulk] error:', err);
+          });
+        }
+      }
+
+      // ============================================
+      // STATE KUSTOM
+      // ============================================
+      function stateKustom() {
+        return {
+          formSudahDiisi: elInfoIdentitasBox ? elInfoIdentitasBox.style.display === 'none' : false,
+          lapis1Selesai: lapis1Selesai,
+          kartuDiKanvas: JSON.parse(JSON.stringify(kartuDiKanvas)),
+          kartuDiPalet: kartuDiPalet.slice(),
+          garisList: garisList.slice(),
+          mindful1Jawab: (document.getElementById('mindful1Jawab') || {}).value || ''
+        };
+      }
+
+      function bolehTawarkanRestore(s) {
+        if (!s.formSudahDiisi && (s.__lapisTerakhir === 'form' || !s.__lapisTerakhir)) return false;
+        return true;
+      }
+
+      // ============================================
+      // PULIHKAN TAMPILAN
+      // ============================================
+      function pulihkanTampilan(s) {
+        if (s.formSudahDiisi && elInfoIdentitasBox) elInfoIdentitasBox.style.display = 'none';
+
+        lapis1Selesai = !!s.lapis1Selesai;
+        kartuDiKanvas = s.kartuDiKanvas || {};
+        kartuDiPalet = Array.isArray(s.kartuDiPalet) ? s.kartuDiPalet.slice() : DAFTAR_ORANG.map(function(o) { return o.id; });
+        garisList = Array.isArray(s.garisList) ? s.garisList.slice() : [];
+
+        const m1 = document.getElementById('mindful1Jawab');
+        if (m1 && s.mindful1Jawab) m1.value = s.mindful1Jawab;
+
+        renderKanvas();
+        renderPalet();
+        updateSelects();
+        updateKanvasInfo();
+
+        const lapis = s.__lapisTerakhir || hitungLapisTerakhir();
+        if (lapis === 'form') return;
+
+        elAreaSimulasi.classList.add('active');
+
+        if (lapis === 'lapis1') {
+          DUTA_BK.updateProgressLapis('lapis1');
+          cekSiapSelesaiLapis1();
+          return;
+        }
+
+        elAreaSimulasi.style.display = 'none';
+
+        if (lapis === 'lapis2') {
+          elAreaPilihLevel.classList.remove('active');
+          document.getElementById('areaLapis2').style.display = 'block';
+          DUTA_BK.updateProgressLapis('lapis2');
+          if (DUTA_BK.getLevel()) {
+            const lbl = document.getElementById('lapis2LevelLabel');
+            if (lbl) {
+              const lv = DUTA_BK.getLevel();
+              lbl.textContent = lv === 'dasar' ? '🟢 Dasar' : lv === 'reguler' ? '🟡 Reguler' : '🔴 Tantangan';
+            }
+            const jml = document.getElementById('lapis2JumlahTantangan');
+            if (jml) jml.textContent = DUTA_BK.getLevel() === 'tantangan' ? '4 tantangan (3 inti + 1 bonus)' : '3 tantangan';
+            DUTA_BK.buildTantangan();
+            Object.keys(DUTA_BK.state.tantanganSelesai || {}).forEach(function(id) {
+              const el = document.getElementById('tantangan_' + id);
+              if (el) {
+                el.classList.add('selesai');
+                const btn = document.getElementById('btn_' + id);
+                if (btn) btn.disabled = true;
+              }
+            });
+            if (Object.keys(DUTA_BK.state.tantanganSelesai || {}).length > 0) DUTA_BK.cekSemuaTantangan();
+          }
+          return;
+        }
+
+        if (lapis === 'lapis3' || lapis === 'tes') {
+          elAreaPilihLevel.classList.remove('active');
+          document.getElementById('areaLapis2').style.display = 'none';
+          document.getElementById('areaLapis3').style.display = 'block';
+          DUTA_BK.updateProgressLapis('lapis3');
+          if (DUTA_BK.getLevel()) {
+            const lv = DUTA_BK.getLevel();
+            const lbl = document.getElementById('lapis2LevelLabel');
+            if (lbl) lbl.textContent = lv === 'dasar' ? '🟢 Dasar' : lv === 'reguler' ? '🟡 Reguler' : '🔴 Tantangan';
+          }
+          const btnL3 = document.getElementById('btnLanjutLapis3');
+          if (btnL3) { btnL3.disabled = true; btnL3.textContent = '✅ Lapis 2 Selesai'; }
+
+          if (DUTA_BK.isLapis3Dibaca()) {
+            DUTA_BK.tampilkanKontenLapis3SetelahBaca();
+            if (DUTA_BK.state.kuisKilatSubmitted) DUTA_BK.restoreKuisKilat();
+          }
+        }
+
+        if (lapis === 'tes') {
+          document.getElementById('tesSection').classList.add('active');
+          document.getElementById('refleksiBox').classList.add('show');
+          DUTA_BK.renderSoal();
+          DUTA_BK.updateTesProgress();
+          DUTA_BK.updateProgressLapis('tes');
+          const btnLt = document.getElementById('btnLanjutTes');
+          if (btnLt) { btnLt.disabled = true; btnLt.textContent = '✅ Selesai'; }
+          if (DUTA_BK.state.tesSubmitted) DUTA_BK.restoreTes();
+        }
+      }
+
+      function hitungLapisTerakhir() {
+        if (DUTA_BK.state.tesSelesai || DUTA_BK.state.tesSubmitted) return 'tes';
+        if (DUTA_BK.state.lapis3Dibaca && DUTA_BK.getLevel()) return 'lapis3';
+        if (lapis1Selesai && (DUTA_BK.getLevel() || DUTA_BK.state.tantanganSelesai)) return 'lapis2';
+        return 'lapis1';
+      }
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        refreshIdentitasUI();
+        window.addEventListener('storage', function(e) {
+          if (e.key === 'duta_identitas_siswa') refreshIdentitasUI();
+        });
+
+        // Hitung bounds saat resize
+        window.addEventListener('resize', function() {
+          if (elKanvas) hitungKanvasBounds();
+        });
+
+        DUTA_BK.init({
+          namaSheet: NAMA_SHEET,
+          modulKey: MODUL_KEY,
+          totalBagian: TOTAL_BAGIAN,
+          ambangLulus: AMBANG_LULUS,
+          stateKey: STATE_KEY,
+          bagianAktif: 'a',
+          fileBerikutnya: 'aktivitasbk7b',
+          kuisKilatData: kuisKilatData,
+          soalTesData: soalData,
+          tantanganDasar: tantanganDasar,
+          tantanganReguler: tantanganReguler,
+          tantanganBonus: tantanganBonus,
+          onLulus: simpanSkorBagian1,
+          onLapis2Selesai: function() {
+            if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+          },
+          stateKustom: stateKustom,
+          pulihkanTampilan: pulihkanTampilan,
+          bolehTawarkanRestore: bolehTawarkanRestore,
+          ringkasHasilUntukAI: function() {
+            return 'Kartu: ' + Object.keys(kartuDiKanvas).length + ', Garis: ' + garisList.length + ', Siklus: ' + hitungSiklus();
+          }
+        });
+
+        setTimeout(function() { DUTA_BK.tawarkanRestore(); }, 60);
+      });
+
+      console.log('✅ BK7 Bagian 1 siap! (Simulasi drag-drop silsilah + multi-user + bulk progress)');
+    })();
+  </script>
+
+</body>
+</html>

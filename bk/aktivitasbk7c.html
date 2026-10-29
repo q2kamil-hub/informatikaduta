@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Pohon &amp; Jaringan Lab · Bagian 3: Pohon vs Jaringan — Apa Bedanya? · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <link rel="stylesheet" href="desainbk7.css">
+  <style>
+    /* ===== CSS UNIK BAGIAN 3: KARTU PEMBANDING + GAME KLASIFIKASI ===== */
+
+    /* ===== KARTU KLASIFIKASI ===== */
+    .klasifikasi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .kartu-klasifikasi {
+      background: #fff;
+      border: 3px solid #e5dbd0;
+      border-radius: 18px;
+      padding: 1.1rem 1.2rem;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      position: relative;
+    }
+    .kartu-klasifikasi.dinilai {
+      border-color: var(--bk7-ungu, #8a4bbf);
+      background: #fdfaff;
+    }
+    .kartu-klasifikasi.benar {
+      border-color: var(--bk7-hijau-dark, #4fa86a);
+      background: var(--bk7-soft-hijau, #e8f5e0);
+    }
+    .kartu-klasifikasi.salah {
+      border-color: #d4a0a0;
+      background: var(--bk7-danger-soft, #fdf0f0);
+    }
+    .kartu-klasifikasi .kk-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+    .kartu-klasifikasi .kk-nomor {
+      background: var(--bk7-ungu, #8a4bbf);
+      color: #fff;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.78rem;
+      flex-shrink: 0;
+    }
+    .kartu-klasifikasi .kk-judul {
+      font-weight: 800;
+      color: #3b2b1e;
+      font-size: 0.95rem;
+      line-height: 1.3;
+    }
+    .kartu-klasifikasi .kk-gambar {
+      background: #f8f4ef;
+      border-radius: 10px;
+      padding: 0.7rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.72rem;
+      line-height: 1.4;
+      color: #3b2b1e;
+      white-space: pre;
+      overflow-x: auto;
+      text-align: center;
+      border: 1px solid #e5dbd0;
+    }
+    .kartu-klasifikasi .kk-deskripsi {
+      font-size: 0.83rem;
+      color: #5c4638;
+      line-height: 1.5;
+    }
+    .kartu-klasifikasi .kk-opsi {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: auto;
+    }
+    .kartu-klasifikasi .kk-opsi button {
+      flex: 1;
+      min-width: 100px;
+      padding: 0.55rem 0.9rem;
+      border-radius: 24px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #4d3829;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .kartu-klasifikasi .kk-opsi button:hover:not(:disabled) {
+      border-color: var(--bk7-ungu, #8a4bbf);
+      background: var(--bk7-soft-2, #f3ecff);
+      transform: translateY(-1px);
+    }
+    .kartu-klasifikasi .kk-opsi button.btn-pohon:hover:not(:disabled) {
+      border-color: var(--bk7-hijau-dark, #4fa86a);
+      background: var(--bk7-soft-hijau, #e8f5e0);
+      color: #2d5a1e;
+    }
+    .kartu-klasifikasi .kk-opsi button.btn-jaringan:hover:not(:disabled) {
+      border-color: var(--bk7-oranye-dark, #d4a030);
+      background: var(--bk7-soft-oranye, #fff8e6);
+      color: #8a5e00;
+    }
+    .kartu-klasifikasi .kk-opsi button.terpilih {
+      font-weight: 800;
+      box-shadow: 0 0 0 3px rgba(138, 75, 191, 0.30);
+    }
+    .kartu-klasifikasi .kk-opsi button.terpilih.btn-pohon {
+      background: var(--bk7-soft-hijau, #e8f5e0);
+      border-color: var(--bk7-hijau-dark, #4fa86a);
+      color: #2d5a1e;
+    }
+    .kartu-klasifikasi .kk-opsi button.terpilih.btn-jaringan {
+      background: var(--bk7-soft-oranye, #fff8e6);
+      border-color: var(--bk7-oranye-dark, #d4a030);
+      color: #8a5e00;
+    }
+    .kartu-klasifikasi .kk-opsi button:disabled {
+      cursor: default;
+      opacity: 0.65;
+    }
+    .kartu-klasifikasi .kk-alasan {
+      display: none;
+      margin-top: 0.4rem;
+    }
+    .kartu-klasifikasi .kk-alasan.show { display: block; }
+    .kartu-klasifikasi .kk-alasan label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--bk7-ungu-dark, #5c2f8a);
+      margin-bottom: 0.25rem;
+    }
+    .kartu-klasifikasi .kk-alasan input {
+      width: 100%;
+      padding: 0.45rem 0.7rem;
+      border: 1.5px solid #d4b8f5;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.82rem;
+      outline: none;
+    }
+    .kartu-klasifikasi .kk-alasan input:focus {
+      border-color: var(--bk7-ungu, #8a4bbf);
+      box-shadow: 0 0 0 3px rgba(138, 75, 191, 0.12);
+    }
+    .kartu-klasifikasi .kk-feedback {
+      font-size: 0.8rem;
+      line-height: 1.5;
+      padding: 0.5rem 0.7rem;
+      border-radius: 8px;
+      display: none;
+    }
+    .kartu-klasifikasi .kk-feedback.show { display: block; }
+    .kartu-klasifikasi .kk-feedback.ok {
+      background: var(--bk7-soft-hijau, #e8f5e0);
+      color: #2d5a1e;
+      border-left: 3px solid var(--bk7-hijau-dark, #4fa86a);
+    }
+    .kartu-klasifikasi .kk-feedback.no {
+      background: var(--bk7-danger-soft, #fdf0f0);
+      color: #a84a3a;
+      border-left: 3px solid #d97a6a;
+    }
+    .kartu-klasifikasi .kk-feedback .kf-kunci {
+      font-weight: 800;
+      color: var(--bk7-ungu-dark, #5c2f8a);
+    }
+
+    /* Panel pembanding (referensi) */
+    .pembanding-ref {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+      margin: 1.2rem 0;
+    }
+    .pr-card {
+      border-radius: 14px;
+      padding: 0.85rem 1rem;
+      border: 2px solid;
+      line-height: 1.5;
+    }
+    .pr-card.tree {
+      background: var(--bk7-soft-hijau, #e8f5e0);
+      border-color: var(--bk7-hijau, #6ecb8f);
+      color: #2d5a1e;
+    }
+    .pr-card.graph {
+      background: var(--bk7-soft-oranye, #fff8e6);
+      border-color: var(--bk7-oranye, #f4b942);
+      color: #5c3400;
+    }
+    .pr-card .pr-title {
+      font-weight: 800;
+      font-size: 0.92rem;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .pr-card .pr-list {
+      margin: 0.2rem 0 0 1rem;
+      padding: 0;
+      font-size: 0.82rem;
+    }
+    .pr-card .pr-list li { margin-bottom: 0.15rem; }
+
+    @media (max-width: 480px) {
+      .klasifikasi-grid { grid-template-columns: 1fr; }
+      .pembanding-ref { grid-template-columns: 1fr; }
+      .kartu-klasifikasi .kk-opsi button { min-width: unset; font-size: 0.8rem; padding: 0.5rem 0.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+  <div id="duta-breadcrumb-host"></div>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <!-- PROGRESS BAR -->
+        <div class="progress-lapis" id="progressLapis">
+          <span class="pl-step active" data-step="lapis1"><span class="pl-num">1</span><span class="pl-label">Menjelajah</span></span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis2"><span class="pl-num">2</span><span class="pl-label">Tantangan</span></span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis3"><span class="pl-num">3</span><span class="pl-label">Penamaan</span></span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="tes"><span class="pl-num">4</span><span class="pl-label">Tes Pemahaman</span></span>
+        </div>
+
+        <!-- AREA SIMULASI — LANGSUNG AKTIF (tanpa form identitas) -->
+        <div id="area-simulasi" class="active">
+          <div class="scenario-panel">
+
+            <div class="scenario-title">🔍 Aktivitas: Pohon atau Jaringan?</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Aurel melihat dua gambar di buku:
+              <strong>Gambar A</strong> — silsilah keluarga (pohon), dan
+              <strong>Gambar B</strong> — peta jalan dengan jalur memutar (jaringan).
+              Ia bertanya, <em>"Apa bedanya? Bukannya sama-sama titik dan garis?"</em>
+              <br><br>
+              Sekarang giliranmu! Kamu akan melihat 8 contoh gambar/struktur.
+              Tugasmu: tentukan mana yang <strong>Pohon (Tree)</strong> dan mana yang
+              <strong>Jaringan (Graph)</strong>. Lalu tulis <strong>alasan singkat</strong>
+              mengapa kamu memilih jawaban itu. Amati perbedaannya!
+            </div>
+
+            <div class="lapis-header lapis-1">
+              <span class="lapis-num">LAPIS 1</span>
+              <span>🖐️ Menjelajah Bebas — Klasifikasi Pohon atau Jaringan</span>
+            </div>
+
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              <strong>Instruksi:</strong> (1) Lihat gambar/deskripsi tiap kartu.
+              (2) Klik <strong>🌳 Pohon</strong> atau <strong>🕸️ Jaringan</strong>.
+              (3) Tulis <strong>alasan singkat</strong> di kolom yang muncul (min. 5 karakter).
+              (4) Klik <strong>✅ Cek Jawaban</strong> di bawah untuk melihat hasil.
+              Kamu harus menjawab <strong>semua 8 kartu</strong> dengan alasan sebelum bisa cek.
+            </p>
+
+            <div class="misi-info" id="misiInfo">
+              <div class="mi-label">STATUS KLASIFIKASI</div>
+              <div id="misiText">Belum ada kartu yang dinilai. Mulai dari kartu nomor 1.</div>
+            </div>
+
+            <div class="stats-bar">
+              <div class="stat">
+                <span>📇</span>
+                <span>Dinilai:</span>
+                <span class="num tree" id="statDinilai">0 / 8</span>
+              </div>
+              <div class="stat">
+                <span>✅</span>
+                <span>Benar:</span>
+                <span class="num tree" id="statBenar">0</span>
+              </div>
+              <div class="stat">
+                <span>❌</span>
+                <span>Salah:</span>
+                <span class="num pop" id="statSalah">0</span>
+              </div>
+            </div>
+
+            <!-- GRID KARTU -->
+            <div class="klasifikasi-grid" id="klasifikasiGrid"></div>
+
+            <!-- TOMBOL CEK -->
+            <div class="game-actions" style="margin-top:1.2rem;">
+              <button class="btn-game primary" id="btnCekJawaban" disabled>
+                ✅ Cek Jawaban
+              </button>
+              <button class="btn-game secondary" id="btnResetKlasifikasi" onclick="resetKlasifikasi()">
+                🔄 Reset
+              </button>
+            </div>
+
+            <!-- Referensi pembanding -->
+            <div class="pembanding-ref">
+              <div class="pr-card tree">
+                <div class="pr-title">🌳 Pohon (Tree)</div>
+                <ul class="pr-list">
+                  <li>Tidak boleh siklus</li>
+                  <li>Punya satu akar</li>
+                  <li>Hanya satu jalur</li>
+                  <li>Setiap simpul punya tepat satu orang tua</li>
+                </ul>
+              </div>
+              <div class="pr-card graph">
+                <div class="pr-title">🕸️ Jaringan (Graph)</div>
+                <ul class="pr-list">
+                  <li>Boleh ada siklus</li>
+                  <li>Tidak harus punya akar</li>
+                  <li>Bisa lebih dari satu jalur</li>
+                  <li>Tidak ada aturan orang tua</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mindful-box" id="mindful1">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 1</div>
+              <div class="mb-text">
+                <strong>Perhatikan pola!</strong> Apa yang membuat gambar 1 dan 2 disebut pohon?
+                Apa yang membuat gambar 3 dan 4 disebut jaringan? Tulis 1–2 kalimat tentang
+                perbedaan yang kamu temukan.
+              </div>
+              <textarea id="mindful1Jawab" placeholder="Tulis pengamatanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnSelesaiLapis1" onclick="selesaiLapis1()" disabled>
+                ✅ Selesai Menjelajah
+              </button>
+            </div>
+
+          </div>
+        </div><!-- end area-simulasi -->
+
+        <!-- AREA PILIH LEVEL -->
+        <div id="areaPilihLevel">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="pilih-level-box">
+              <div class="plb-title">★ Pilih Tingkat Tantanganmu</div>
+              <div class="plb-desc">
+                Sebelum masuk ke Lapis 2 (Tantangan Terarah), pilih tingkat yang paling
+                sesuai dengan kesiapanmu. <strong>Semua level dinilai sama</strong> —
+                yang berbeda hanya jumlah dan tingkat kesulitan tantangannya.
+              </div>
+
+              <div class="level-options" id="levelOptions">
+                <div class="level-option dasar" data-level="dasar">
+                  <span class="lo-icon">🟢</span>
+                  <span class="lo-name">Dasar</span>
+                  <span class="lo-desc">3 tantangan terbimbing dengan petunjuk lebih detail. Cocok kalau kamu ingin penguatan dulu.</span>
+                </div>
+                <div class="level-option reguler" data-level="reguler">
+                  <span class="lo-icon">🟡</span>
+                  <span class="lo-name">Reguler</span>
+                  <span class="lo-desc">3 tantangan standar. Cocok untuk sebagian besar siswa.</span>
+                </div>
+                <div class="level-option tantangan" data-level="tantangan">
+                  <span class="lo-icon">🔴</span>
+                  <span class="lo-name">Tantangan</span>
+                  <span class="lo-desc">3 tantangan standar + 1 tantangan bonus (studi kasus terbuka). Cocok kalau kamu ingin tantangan lebih.</span>
+                </div>
+              </div>
+
+              <div class="level-badge-terpilih" id="levelBadge">
+                <span>✅</span><span id="levelBadgeText">Kamu memilih level: —</span>
+              </div>
+            </div>
+
+            <div class="mindful-box" id="mindfulPilihLevel">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar — Sebelum Tantangan</div>
+              <div class="mb-text"><strong>Mengapa kamu memilih level ini?</strong> Tantangan apa yang kamu harapkan? Tulis 1 kalimat.</div>
+              <textarea id="mindfulPilihJawab" placeholder="Tulis alasanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis2" disabled>➡️ Lanjut ke Tantangan</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LAPIS 2 -->
+        <div id="areaLapis2" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-2">
+              <span class="lapis-num">LAPIS 2</span>
+              <span>🎯 Tantangan Terarah — Level <span id="lapis2LevelLabel">—</span></span>
+            </div>
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              Jawab dengan teliti! Sistem hanya memberi umpan balik, bukan jawaban langsung.
+              <span id="lapis2JumlahTantangan">3 tantangan</span> yang harus diselesaikan.
+            </p>
+            <div class="tantangan-list" id="tantanganList"></div>
+
+            <div class="mindful-box" id="mindful2" style="display:none;">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 2</div>
+              <div class="mb-text"><strong>Refleksi:</strong> Setelah mencoba berbagai tantangan, apa perbedaan utama yang kamu temukan antara pohon dan jaringan? Tulis 1–2 kalimat.</div>
+              <textarea id="mindful2Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis3" disabled>➡️ Lapis 2 Selesai — Buka Penamaan Konsep</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LAPIS 3 -->
+        <div id="areaLapis3" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-3">
+              <span class="lapis-num">LAPIS 3</span>
+              <span>📖 Penamaan Konsep — Istilah Resmi</span>
+            </div>
+
+            <div class="penamaan-box show" id="penamaanKonten">
+              <h3>🏷️ Sekarang, Kita Beri Nama!</h3>
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822;">
+                Semua yang kamu amati di simulasi klasifikasi punya <strong>nama resmi</strong>
+                dalam ilmu komputer. Inilah saatnya menghubungkan pengalamanmu dengan
+                istilah formal.
+              </p>
+
+              <div class="notasi-box">
+                <strong>🌳 Pohon (Tree)</strong> dan <strong>🕸️ Jaringan (Graph)</strong>
+                sama-sama terdiri dari <strong>simpul (node)</strong> dan <strong>sisi (edge)</strong>.
+                Perbedaannya: <strong>pohon tidak boleh memiliki siklus</strong> dan
+                <strong>memiliki satu akar</strong>, sedangkan <strong>jaringan boleh
+                memiliki siklus</strong> dan <strong>tidak harus punya akar</strong>.
+              </div>
+
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822; margin-top:1rem;">
+                <strong>Tabel Perbandingan Lengkap:</strong>
+              </p>
+
+              <table class="tabel-istilah">
+                <thead>
+                  <tr>
+                    <th>Aspek</th>
+                    <th>Pohon (Tree)</th>
+                    <th>Jaringan (Graph)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Siklus</strong></td>
+                    <td>Tidak boleh ada siklus.</td>
+                    <td>Boleh ada siklus.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Akar</strong></td>
+                    <td>Memiliki satu akar.</td>
+                    <td>Tidak harus memiliki akar.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Jalur</strong></td>
+                    <td>Hanya satu jalur antara dua simpul.</td>
+                    <td>Bisa lebih dari satu jalur.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Orang Tua</strong></td>
+                    <td>Setiap simpul (kecuali akar) punya tepat satu orang tua.</td>
+                    <td>Tidak ada aturan orang tua.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Contoh</strong></td>
+                    <td>Silsilah keluarga, folder komputer, struktur organisasi.</td>
+                    <td>Peta jalan, jaringan pertemanan, jaringan transportasi.</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="notasi-box">
+                <strong>💡 Analogi:</strong><br>
+                Setiap <strong>kucing</strong> adalah <strong>hewan</strong>, tetapi tidak setiap
+                <strong>hewan</strong> adalah <strong>kucing</strong>. Sama seperti:
+                setiap <strong>pohon</strong> adalah <strong>jaringan</strong>, tetapi tidak
+                setiap <strong>jaringan</strong> adalah <strong>pohon</strong>.
+                <br><br>
+                Jadi, <strong>pohon = jaringan yang tidak memiliki siklus dan memiliki satu akar</strong>.
+              </div>
+
+              <div class="koneksi">
+                <strong>💡 Kapan Pakai Pohon, Kapan Pakai Jaringan?</strong><br>
+                <strong>Pakai pohon</strong> saat hubungan bersifat <strong>hierarkis</strong>
+                (bertingkat) dan satu arah. Contoh: silsilah, folder, struktur organisasi.
+                <br>
+                <strong>Pakai jaringan</strong> saat hubungan bersifat <strong>saling terhubung</strong>
+                dan boleh memutar. Contoh: peta jalan, jaringan pertemanan, media sosial.
+              </div>
+            </div>
+
+            <div class="link-materi-wrapper">
+              <a href="materibk7" target="_blank" rel="noopener" class="link-materi-bawah">
+                📚 Baca Materi Lengkap (buka tab baru)
+              </a>
+            </div>
+
+            <div class="mindful-box" id="mindful3">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 3</div>
+              <div class="mb-text">
+                Dengan istilah resmi: <strong>apa perbedaan utama antara pohon (tree)
+                dan jaringan (graph)</strong>? Tulis dengan bahasamu sendiri, kaitkan dengan
+                pengalamanmu di simulasi klasifikasi.
+              </div>
+              <textarea id="mindful3Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <div class="kuis-kilat-box" id="kuisKilatBox">
+              <div class="kk-title">⚡ Kuis Kilat <span class="badge">2 SOAL</span></div>
+              <div id="kuisKilatContent"></div>
+              <div class="kk-hasil" id="kkHasil"></div>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutTes" disabled>➡️ Lanjut ke Tes Pemahaman</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TES PEMAHAMAN -->
+        <div class="tes-section" id="tesSection">
+          <div class="tes-header">
+            <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 4 soal · Minimal 3 benar untuk lanjut</div>
+            <div class="tes-progress" id="tesProgress">Terjawab: 0 / 4</div>
+          </div>
+          <div id="soalContainer"></div>
+          <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+          <button class="btn-ulangi-tes" id="btnUlangiTes">🔄 Ulangi Tes Pemahaman</button>
+        </div>
+
+        <div class="hasil-tes" id="hasilTes">
+          <div class="hasil-icon" id="hasilIcon">🏆</div>
+          <div class="hasil-title" id="hasilTitle">Selamat!</div>
+          <div class="hasil-skor" id="hasilSkor">0 / 4</div>
+          <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 3.</div>
+        </div>
+
+        <!-- REFLEKSI -->
+        <div class="refleksi-box" id="refleksiBox">
+          <h3>🪞 Refleksi</h3>
+
+          <div class="refleksi-item">
+            <label><span class="tag">PELAJARAN</span> Apa yang saya pelajari tentang perbedaan pohon (tree) dan jaringan (graph) dari aktivitas ini?</label>
+            <textarea id="refPelajaran" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">PENERAPAN</span> Di mana lagi saya akan menggunakan pemahaman tentang pohon dan jaringan?</label>
+            <textarea id="refPenerapan" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="exit-ticket">
+            <div class="et-title">🎫 Exit Ticket</div>
+            <p style="font-size:0.85rem; color:#5c4638; margin-bottom:0.4rem;">
+              Tuliskan <strong>satu contoh pohon</strong> dan <strong>satu contoh jaringan</strong>
+              yang kamu temukan di sekolahmu. Jelaskan singkat mengapa masing-masing disebut demikian.
+            </p>
+            <textarea id="exitTicket" placeholder="Contoh: Pohon — struktur organisasi kelas. Jaringan — rute jalan antar kelas di sekolah."></textarea>
+          </div>
+
+          <div class="feedback-ai-box" id="feedbackAiBox">
+            <div class="fai-header">
+              <span class="fai-icon">🧑‍🏫</span>
+              <span>Catatan dari Guru</span>
+            </div>
+            <div class="fai-body" id="feedbackAiBody"></div>
+          </div>
+        </div>
+
+        <div class="game-actions" style="margin-top:0.6rem;">
+          <button type="button" class="btn-feedback-ai" id="btnMintaFeedback" disabled>
+            🧑‍🏫 Minta Feedback
+          </button>
+        </div>
+        <div class="feedback-ai-hint" id="feedbackAiHint" style="text-align:center;">
+          Isi Refleksi atau Exit Ticket dulu untuk mengaktifkan tombol.
+        </div>
+
+        <div class="status-kirim info" id="statusKirim">
+          <span class="spinner" id="statusSpinner"></span>
+          <span id="statusKirimText">Mengirim nilai...</span>
+        </div>
+
+        <div class="nav-bottom">
+          <a href="aktivitasbk7b" class="btn-nav-bawah">
+            <span class="back-arrow">←</span> Kembali ke Bagian 2
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian">
+              Lanjut ke Kuis Akhir → 
+            </button>
+          </div>
+          <div class="nav-hint locked" id="hintLanjut">
+            🔒 Selesaikan semua tahap untuk membuka Kuis Akhir
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+  <script src="scriptbk.js"></script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI MODUL (spesifik Bagian 3)
+      // ============================================
+      const NAMA_SHEET = 'bk7';
+      const MODUL_KEY = 'bk7';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd'];
+      const AMBANG_LULUS = 3;
+      const STATE_KEY = 'labbk7_state_c';
+
+      // ============================================
+      // DATA KARTU KLASIFIKASI (8 kartu)
+      // ============================================
+      const DAFTAR_KARTU = [
+        {
+          id: 'k1',
+          judul: 'Silsilah Keluarga',
+          gambar: '👴 Kakek ═ 👵 Nenek\n     │\n     ├───────┐\n   👨 Ayah   🧑 Paman\n     │\n   👦 Budi',
+          deskripsi: 'Kakek & Nenek di atas, lalu Ayah & Paman, lalu Budi. Tidak ada garis yang kembali ke atas.',
+          kunci: 'pohon',
+          alasanBenar: 'Bercabang dari satu akar (Kakek-Nenek), tidak ada siklus, setiap orang punya satu orang tua.'
+        },
+        {
+          id: 'k2',
+          judul: 'Folder Komputer',
+          gambar: '📁 Tugas\n ├── 📁 IPA\n │    ├── 📄 laporan.docx\n │    └── 📄 foto.jpg\n └── 📁 IPS\n      └── 📄 catatan.docx',
+          deskripsi: 'Folder "Tugas" berisi sub-folder "IPA" dan "IPS", masing-masing berisi file.',
+          kunci: 'pohon',
+          alasanBenar: 'Folder bertingkat membentuk hierarki: satu akar (Tugas), tidak ada folder yang menjadi induk dari dirinya sendiri.'
+        },
+        {
+          id: 'k3',
+          judul: 'Peta Jalan dengan Jalur Memutar',
+          gambar: '🏠 Rumah ── 🏪 Pasar\n  │             │\n  │          🏫 Sekolah\n  │             │\n🌉 Jembatan ── 🛤️ Gang',
+          deskripsi: 'Ada beberapa jalur alternatif dari Rumah ke Sekolah. Jalan bisa memutar dan membentuk lingkaran.',
+          kunci: 'jaringan',
+          alasanBenar: 'Ada lebih dari satu jalur dan boleh melingkar (Rumah → Pasar → Jembatan → Rumah). Itu ciri graph.'
+        },
+        {
+          id: 'k4',
+          judul: 'Jaringan Pertemanan di Kelas',
+          gambar: '👧 Ani ── 👦 Budi\n  │            │\n  │            │\n👦 Cici ── 👧 Dewi',
+          deskripsi: 'Ani berteman Budi, Budi berteman Cici, Cici berteman Dewi, Dewi berteman Ani. Membentuk lingkaran.',
+          kunci: 'jaringan',
+          alasanBenar: 'Ada siklus (Ani → Budi → Cici → Dewi → Ani). Tidak ada aturan "orang tua". Ini graph.'
+        },
+        {
+          id: 'k5',
+          judul: 'Struktur Organisasi Sekolah',
+          gambar: '🏫 Kepala Sekolah\n ├── 👨‍💼 Wakil Kurikulum\n │    └── 👩‍🏫 Guru Mapel\n └── 👨‍💼 Wakil Kesiswaan\n      └── 👩‍🏫 Guru BK',
+          deskripsi: 'Kepala sekolah di atas, membawahi wakil-wakil, yang membawahi guru-guru. Satu arah ke bawah.',
+          kunci: 'pohon',
+          alasanBenar: 'Hierarki satu arah dari Kepala Sekolah ke bawah. Tidak ada siklus. Satu akar (Kepala Sekolah).'
+        },
+        {
+          id: 'k6',
+          judul: 'Rute Angkot di Kota',
+          gambar: '🚐 Terminal A ── 🚏 Pasar\n     │              │\n     │           🚏 Mall\n     │              │\n🚏 Stasiun ──── 🚏 Kampus',
+          deskripsi: 'Angkot berkeliling dari Terminal A ke Pasar, Mall, Kampus, Stasiun, dan kembali ke Terminal A.',
+          kunci: 'jaringan',
+          alasanBenar: 'Rute angkot biasanya membentuk siklus (berkeliling). Ada banyak jalur alternatif. Ini graph.'
+        },
+        {
+          id: 'k7',
+          judul: 'Bagan Turnamen Sepak Bola',
+          gambar: '        🏆 Final\n       ╱        ╲\n   Semifinal  Semifinal\n    ╱   ╲      ╱   ╲\n   A     B    C     D',
+          deskripsi: 'Turnamen sistem gugur: 4 tim di penyisihan, 2 semifinal, 1 final. Satu arah ke atas.',
+          kunci: 'pohon',
+          alasanBenar: 'Bagan turnamen membentuk pohon: dari final mundur ke penyisihan, tidak ada siklus, satu akar (juara).'
+        },
+        {
+          id: 'k8',
+          judul: 'Jaringan Transportasi Umum Kota',
+          gambar: '🚌 Bus A ── 🚇 MRT ── 🚌 Bus B\n    │           │           │\n   🚏 Halte ─── 🚏 Stasiun ─ 🚏 Terminal',
+          deskripsi: 'Bus, MRT, dan halte saling terhubung. Penumpang bisa transit dan memutar.',
+          kunci: 'jaringan',
+          alasanBenar: 'Banyak simpul (halte/stasiun) terhubung oleh banyak sisi (rute). Bisa transit dan memutar. Ini graph.'
+        }
+      ];
+
+      // ============================================
+      // DATA TANTANGAN
+      // ============================================
+      const tantanganDasar = [
+        {
+          id: 'D1',
+          teks: 'Gambar mana yang <strong>tidak boleh melingkar</strong>?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Pohon (tree)', benar: true },
+            { v: 'B', label: 'Jaringan (graph)', benar: false },
+            { v: 'C', label: 'Keduanya', benar: false }
+          ],
+          hint: 'Pohon tidak boleh memiliki siklus.',
+          feedbackSalah: 'Pohon (tree) tidak boleh melingkar. Jaringan (graph) boleh melingkar.'
+        },
+        {
+          id: 'D2',
+          teks: 'Gambar mana yang memiliki <strong>satu akar</strong> di paling atas?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Pohon (tree)', benar: true },
+            { v: 'B', label: 'Jaringan (graph)', benar: false },
+            { v: 'C', label: 'Keduanya', benar: false }
+          ],
+          hint: 'Akar (root) hanya ada di pohon.',
+          feedbackSalah: 'Hanya pohon (tree) yang memiliki satu akar. Jaringan tidak harus punya akar.'
+        },
+        {
+          id: 'D3',
+          teks: 'Gambar mana yang boleh memiliki <strong>banyak jalur alternatif</strong>?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Pohon (tree)', benar: false },
+            { v: 'B', label: 'Jaringan (graph)', benar: true },
+            { v: 'C', label: 'Keduanya', benar: false }
+          ],
+          hint: 'Jaringan boleh memiliki banyak jalur antara dua simpul.',
+          feedbackSalah: 'Jaringan (graph) boleh memiliki banyak jalur. Pohon hanya punya satu jalur antara dua simpul.'
+        }
+      ];
+
+      const tantanganReguler = [
+        {
+          id: 'R1',
+          teks: 'Sebutkan <strong>dua ciri pohon (tree)</strong>.',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Boleh melingkar dan tidak punya akar', benar: false },
+            { v: 'B', label: 'Tidak boleh melingkar dan memiliki satu akar', benar: true },
+            { v: 'C', label: 'Boleh banyak jalur dan tidak punya akar', benar: false }
+          ],
+          hint: 'Pohon = tanpa siklus + satu akar.',
+          feedbackSalah: 'Ciri pohon: (1) tidak boleh ada siklus, (2) memiliki satu akar.'
+        },
+        {
+          id: 'R2',
+          teks: 'Sebutkan <strong>dua ciri jaringan (graph)</strong>.',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Boleh melingkar dan boleh banyak jalur', benar: true },
+            { v: 'B', label: 'Tidak boleh melingkar dan hanya satu jalur', benar: false },
+            { v: 'C', label: 'Harus punya akar dan tidak boleh melingkar', benar: false }
+          ],
+          hint: 'Graph = boleh siklus + boleh banyak jalur.',
+          feedbackSalah: 'Ciri graph: (1) boleh ada siklus, (2) boleh memiliki banyak jalur antara dua simpul.'
+        },
+        {
+          id: 'R3',
+          teks: 'Manakah pasangan contoh yang <strong>tepat</strong>?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Pohon: silsilah; Jaringan: peta jalan', benar: true },
+            { v: 'B', label: 'Pohon: peta jalan; Jaringan: silsilah', benar: false },
+            { v: 'C', label: 'Pohon: jaringan pertemanan; Jaringan: folder', benar: false }
+          ],
+          hint: 'Silsilah = pohon (satu akar, tanpa siklus). Peta jalan = jaringan (boleh siklus).',
+          feedbackSalah: 'Pasangan tepat: silsilah = pohon, peta jalan = jaringan.'
+        }
+      ];
+
+      const tantanganBonus = [
+        {
+          id: 'B1',
+          teks: '<strong>🔥 Tantangan Bonus (Pengayaan — Terbuka):</strong><br><br>"Aurel bingung membedakan pohon dan jaringan. Menurutmu, apa cara paling mudah untuk membedakannya? Jelaskan, minimal 3 kalimat."',
+          tipe: 'teks',
+          validasi: function(val) { return val.trim().length >= 80; },
+          hint: 'Pikirkan: (1) cek apakah ada siklus, (2) cek apakah ada akar, (3) hitung jalur antara dua simpul.',
+          feedbackSalah: 'Argumenmu masih terlalu pendek. Tulis minimal 3 kalimat: (1) cek siklus, (2) cek akar, (3) cek jumlah jalur.'
+        }
+      ];
+
+      // KUIS KILAT
+      const kuisKilatData = [
+        {
+          pertanyaan: 'Apa yang membedakan pohon dari jaringan?',
+          opsi: [
+            'Pohon boleh melingkar, jaringan tidak.',
+            'Jaringan boleh melingkar, pohon tidak.',
+            'Keduanya sama.',
+            'Pohon tidak punya simpul.'
+          ],
+          kunci: 1,
+          penjelasan: 'Jaringan (graph) boleh melingkar, pohon (tree) tidak boleh.'
+        },
+        {
+          pertanyaan: 'Manakah yang merupakan contoh pohon?',
+          opsi: [
+            'Peta jalan.',
+            'Jaringan pertemanan.',
+            'Silsilah keluarga.',
+            'Jaringan transportasi.'
+          ],
+          kunci: 2,
+          penjelasan: 'Silsilah keluarga adalah pohon: bercabang dari satu akar, tanpa siklus.'
+        }
+      ];
+
+      // TES PEMAHAMAN
+      const soalData = [
+        {
+          pertanyaan: 'Pohon tidak boleh memiliki...',
+          opsi: ['Simpul', 'Sisi', 'Siklus', 'Akar'],
+          kunci: 2,
+          penjelasan: 'Pohon (tree) tidak boleh memiliki siklus.'
+        },
+        {
+          pertanyaan: 'Jaringan boleh memiliki...',
+          opsi: ['Hanya satu akar', 'Hanya satu jalur', 'Siklus', 'Tidak ada simpul'],
+          kunci: 2,
+          penjelasan: 'Jaringan (graph) boleh memiliki siklus.'
+        },
+        {
+          pertanyaan: 'Manakah yang merupakan contoh jaringan?',
+          opsi: [
+            'Silsilah keluarga.',
+            'Folder komputer.',
+            'Peta jalan dengan jalur alternatif.',
+            'Struktur organisasi sekolah.'
+          ],
+          kunci: 2,
+          penjelasan: 'Peta jalan dengan jalur alternatif (dan siklus) adalah contoh jaringan.'
+        },
+        {
+          pertanyaan: 'Apa persamaan pohon dan jaringan?',
+          opsi: [
+            'Keduanya tidak punya simpul.',
+            'Keduanya terdiri dari simpul dan sisi.',
+            'Keduanya boleh melingkar.',
+            'Keduanya tidak punya akar.'
+          ],
+          kunci: 1,
+          penjelasan: 'Persamaan: keduanya terdiri dari simpul (node) dan sisi (edge).'
+        }
+      ];
+
+      // ============================================
+      // STATE SIMULASI
+      // ============================================
+      let jawabanKartu = {};
+      let alasanKartu = {};
+      let kartuSudahDicek = false;
+      let jumlahBenar = 0;
+      let jumlahSalah = 0;
+      let lapis1Selesai = false;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const elAreaSimulasi     = document.getElementById('area-simulasi');
+      const elAreaPilihLevel   = document.getElementById('areaPilihLevel');
+
+      const elGrid         = document.getElementById('klasifikasiGrid');
+      const elBtnCek       = document.getElementById('btnCekJawaban');
+      const elBtnReset     = document.getElementById('btnResetKlasifikasi');
+      const elMisiText     = document.getElementById('misiText');
+      const elStatDinilai  = document.getElementById('statDinilai');
+      const elStatBenar    = document.getElementById('statBenar');
+      const elStatSalah    = document.getElementById('statSalah');
+      const elBtnSelesai   = document.getElementById('btnSelesaiLapis1');
+      const elMindful1     = document.getElementById('mindful1');
+
+      // ============================================
+      // SIMULASI KLASIFIKASI
+      // ============================================
+      function initSimulasi() {
+        jawabanKartu = {};
+        alasanKartu = {};
+        kartuSudahDicek = false;
+        jumlahBenar = 0;
+        jumlahSalah = 0;
+        lapis1Selesai = false;
+
+        elBtnCek.disabled = true;
+        elBtnCek.textContent = '✅ Cek Jawaban';
+        elBtnSelesai.disabled = true;
+        elMindful1.classList.remove('show');
+
+        renderKartu();
+        updateStats();
+
+        elMisiText.innerHTML = 'Belum ada kartu yang dinilai. Mulai dari kartu nomor 1.';
+      }
+
+      function renderKartu() {
+        elGrid.innerHTML = '';
+        DAFTAR_KARTU.forEach(function(k, idx) {
+          const div = document.createElement('div');
+          div.className = 'kartu-klasifikasi';
+          div.id = 'kartu_' + k.id;
+          div.dataset.id = k.id;
+
+          const jawab = jawabanKartu[k.id] || '';
+          const alasan = alasanKartu[k.id] || '';
+          const sudahDinilai = !!jawab;
+
+          if (sudahDinilai) div.classList.add('dinilai');
+
+          let feedbackHtml = '';
+          if (kartuSudahDicek) {
+            const benar = (jawab === k.kunci);
+            const labelBenar = k.kunci === 'pohon' ? '🌳 Pohon' : '🕸️ Jaringan';
+            if (benar) {
+              div.classList.remove('dinilai');
+              div.classList.add('benar');
+              feedbackHtml =
+                '<div class="kk-feedback ok show">' +
+                  '✅ <strong>Benar!</strong> Ini <span class="kf-kunci">' + labelBenar + '</span>. ' +
+                  DUTA_BK.escapeHtml(k.alasanBenar) +
+                '</div>';
+            } else {
+              div.classList.remove('dinilai');
+              div.classList.add('salah');
+              feedbackHtml =
+                '<div class="kk-feedback no show">' +
+                  '❌ <strong>Kurang tepat.</strong> Jawaban benar: <span class="kf-kunci">' + labelBenar + '</span>. ' +
+                  DUTA_BK.escapeHtml(k.alasanBenar) +
+                '</div>';
+            }
+          }
+
+          div.innerHTML =
+            '<div class="kk-header">' +
+              '<span class="kk-nomor">' + (idx + 1) + '</span>' +
+              '<span class="kk-judul">' + DUTA_BK.escapeHtml(k.judul) + '</span>' +
+            '</div>' +
+            '<div class="kk-gambar">' + DUTA_BK.escapeHtml(k.gambar) + '</div>' +
+            '<div class="kk-deskripsi">' + DUTA_BK.escapeHtml(k.deskripsi) + '</div>' +
+            '<div class="kk-opsi">' +
+              '<button type="button" class="btn-pohon' + (jawab === 'pohon' ? ' terpilih' : '') + '" ' +
+                'data-id="' + k.id + '" data-pilih="pohon"' + (kartuSudahDicek ? ' disabled' : '') + '>' +
+                '🌳 Pohon' +
+              '</button>' +
+              '<button type="button" class="btn-jaringan' + (jawab === 'jaringan' ? ' terpilih' : '') + '" ' +
+                'data-id="' + k.id + '" data-pilih="jaringan"' + (kartuSudahDicek ? ' disabled' : '') + '>' +
+                '🕸️ Jaringan' +
+              '</button>' +
+            '</div>' +
+            '<div class="kk-alasan' + (sudahDinilai ? ' show' : '') + '">' +
+              '<label for="alasan_' + k.id + '">Alasan singkat (min. 5 karakter):</label>' +
+              '<input type="text" id="alasan_' + k.id + '" maxlength="200" placeholder="Misal: ada siklus / tidak ada akar..." ' +
+                'value="' + DUTA_BK.escapeHtml(alasan) + '"' + (kartuSudahDicek ? ' disabled' : '') + '>' +
+            '</div>' +
+            feedbackHtml;
+
+          elGrid.appendChild(div);
+        });
+
+        elGrid.querySelectorAll('.kk-opsi button').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            if (kartuSudahDicek) return;
+            const id = btn.dataset.id;
+            const pilih = btn.dataset.pilih;
+            pilihKartu(id, pilih);
+          });
+        });
+
+        elGrid.querySelectorAll('.kk-alasan input').forEach(function(inp) {
+          inp.addEventListener('input', function() {
+            const id = inp.id.replace('alasan_', '');
+            alasanKartu[id] = inp.value;
+            cekSiapCek();
+            if (window.dutaSimpanState) {
+              window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+            }
+          });
+        });
+      }
+
+      function pilihKartu(id, pilih) {
+        if (kartuSudahDicek) return;
+        jawabanKartu[id] = pilih;
+
+        const div = document.getElementById('kartu_' + id);
+        if (div) {
+          div.classList.add('dinilai');
+          div.querySelectorAll('.kk-opsi button').forEach(function(b) {
+            b.classList.remove('terpilih');
+            if (b.dataset.pilih === pilih) b.classList.add('terpilih');
+          });
+          const elAlasan = div.querySelector('.kk-alasan');
+          if (elAlasan) {
+            elAlasan.classList.add('show');
+            const inp = elAlasan.querySelector('input');
+            if (inp) setTimeout(function() { inp.focus(); }, 100);
+          }
+        }
+
+        updateStats();
+        cekSiapCek();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+      }
+
+      function updateStats() {
+        const dinilai = Object.keys(jawabanKartu).filter(function(id) {
+          return jawabanKartu[id] && (alasanKartu[id] || '').trim().length >= 5;
+        }).length;
+        elStatDinilai.textContent = dinilai + ' / ' + DAFTAR_KARTU.length;
+
+        if (kartuSudahDicek) {
+          elStatBenar.textContent = jumlahBenar;
+          elStatSalah.textContent = jumlahSalah;
+        } else {
+          elStatBenar.textContent = '0';
+          elStatSalah.textContent = '0';
+        }
+
+        if (!kartuSudahDicek) {
+          if (dinilai === 0) {
+            elMisiText.innerHTML = 'Belum ada kartu yang dinilai. Mulai dari kartu nomor 1.';
+          } else if (dinilai < DAFTAR_KARTU.length) {
+            elMisiText.innerHTML = 'Sudah <strong>' + dinilai + '</strong> dari <strong>' +
+              DAFTAR_KARTU.length + '</strong> kartu dinilai. Lanjutkan!';
+          } else {
+            elMisiText.innerHTML = '✅ Semua kartu sudah dinilai. Klik <strong>Cek Jawaban</strong> untuk melihat hasil.';
+          }
+        }
+      }
+
+      function cekSiapCek() {
+        const semuaLengkap = DAFTAR_KARTU.every(function(k) {
+          return jawabanKartu[k.id] && (alasanKartu[k.id] || '').trim().length >= 5;
+        });
+        elBtnCek.disabled = !semuaLengkap || kartuSudahDicek;
+      }
+
+      // ============================================
+      // CEK JAWABAN
+      // ============================================
+      elBtnCek.addEventListener('click', function() {
+        if (kartuSudahDicek) return;
+
+        const belum = [];
+        DAFTAR_KARTU.forEach(function(k, idx) {
+          if (!jawabanKartu[k.id]) belum.push('kartu ' + (idx + 1) + ' (belum dipilih)');
+          else if ((alasanKartu[k.id] || '').trim().length < 5) belum.push('kartu ' + (idx + 1) + ' (alasan terlalu pendek)');
+        });
+
+        if (belum.length > 0) {
+          DUTA_BK.tampilFeedback('warn', '⚠️',
+            'Lengkapi dulu semua kartu:<br>' + belum.join('<br>'));
+          return;
+        }
+
+        jumlahBenar = 0;
+        jumlahSalah = 0;
+        DAFTAR_KARTU.forEach(function(k) {
+          if (jawabanKartu[k.id] === k.kunci) jumlahBenar++;
+          else jumlahSalah++;
+        });
+
+        kartuSudahDicek = true;
+
+        renderKartu();
+        updateStats();
+
+        elBtnCek.disabled = true;
+        elBtnCek.textContent = '📊 Skor: ' + jumlahBenar + '/' + DAFTAR_KARTU.length;
+
+        const total = DAFTAR_KARTU.length;
+        if (jumlahBenar === total) {
+          DUTA_BK.tampilFeedback('success', '🏆',
+            'Sempurna! Kamu berhasil mengklasifikasi <strong>semua ' + total + ' kartu</strong> dengan benar. ' +
+            'Kamu sudah paham betul perbedaan pohon dan jaringan!');
+        } else if (jumlahBenar >= Math.ceil(total * 0.75)) {
+          DUTA_BK.tampilFeedback('success', '🎉',
+            'Bagus! Kamu benar <strong>' + jumlahBenar + '/' + total + '</strong> kartu. ' +
+            'Coba baca ulang alasan pada kartu yang salah untuk memperdalam pemahaman.');
+        } else if (jumlahBenar >= Math.ceil(total * 0.5)) {
+          DUTA_BK.tampilFeedback('info', '📖',
+            'Kamu benar <strong>' + jumlahBenar + '/' + total + '</strong> kartu. ' +
+            'Baca lagi tabel perbandingan di bawah untuk memperkuat pemahaman.');
+        } else {
+          DUTA_BK.tampilFeedback('warn', '💡',
+            'Kamu benar <strong>' + jumlahBenar + '/' + total + '</strong> kartu. ' +
+            'Jangan menyerah! Baca lagi ciri-ciri pohon dan jaringan di panel pembanding.');
+        }
+
+        if (jumlahBenar >= 5) {
+          elBtnSelesai.disabled = false;
+          elMindful1.classList.add('show');
+        } else {
+          const btnReset = elBtnReset;
+          if (btnReset) btnReset.focus();
+        }
+
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+      });
+
+      // ============================================
+      // RESET
+      // ============================================
+      window.resetKlasifikasi = function() {
+        if (kartuSudahDicek) {
+          if (!confirm('Reset semua jawaban? Kamu harus menjawab ulang dari awal.')) return;
+        }
+        initSimulasi();
+        DUTA_BK.tampilFeedback('info', '💡',
+          'Kartu sudah direset. Mulai klasifikasi dari kartu nomor 1 lagi.');
+      };
+
+      // ============================================
+      // SELESAI LAPIS 1
+      // ============================================
+      window.selesaiLapis1 = function() {
+        if (jumlahBenar < 5) {
+          alert('⚠️ Kamu perlu minimal 5 kartu benar untuk lanjut. Sekarang baru ' + jumlahBenar + '/8. ' +
+                'Coba baca ulang alasan pada kartu yang salah, lalu reset dan coba lagi!');
+          return;
+        }
+        const mindfulJawab = document.getElementById('mindful1Jawab').value.trim();
+        if (mindfulJawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 1 sebelum lanjut!');
+          document.getElementById('mindful1Jawab').focus();
+          return;
+        }
+
+        lapis1Selesai = true;
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+
+        elBtnSelesai.disabled = true;
+        elBtnSelesai.textContent = '✅ Lapis 1 Selesai';
+
+        elAreaSimulasi.style.display = 'none';
+        elAreaPilihLevel.classList.add('active');
+
+        setTimeout(function() { elAreaPilihLevel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
+      };
+
+      // ============================================
+      // SIMPAN SKOR BAGIAN 3 — BULK
+      // ============================================
+      function simpanSkorBagian3(correct, total) {
+        const skorBagian3 = Math.round(40 + (correct / total) * 60);
+        try {
+          const prev = JSON.parse(localStorage.getItem('labbk7_progress') || '{}');
+          prev.bagian = 3;
+          prev.skorBagian3 = skorBagian3;
+          localStorage.setItem('labbk7_progress', JSON.stringify(prev));
+        } catch (e) {}
+
+        if (window.dutaSimpanProgressBulk) {
+          window.dutaSimpanProgressBulk(
+            MODUL_KEY, 'c', { c: skorBagian3 }, 0, { kunciModul: false }
+          ).then(function(hasil) {
+            if (!hasil || !hasil.ok) {
+              console.warn('[bulk] gagal kirim bagian c:', hasil);
+            } else {
+              console.log('[bulk] bagian c terkirim:', hasil);
+            }
+          }).catch(function(err) {
+            console.warn('[bulk] error:', err);
+          });
+        }
+      }
+
+      // ============================================
+      // STATE KUSTOM
+      // ============================================
+      function stateKustom() {
+        return {
+          lapis1Selesai: lapis1Selesai,
+          jawabanKartu: JSON.parse(JSON.stringify(jawabanKartu)),
+          alasanKartu: JSON.parse(JSON.stringify(alasanKartu)),
+          kartuSudahDicek: kartuSudahDicek,
+          jumlahBenar: jumlahBenar,
+          jumlahSalah: jumlahSalah,
+          mindful1Jawab: (document.getElementById('mindful1Jawab') || {}).value || ''
+        };
+      }
+
+      // ============================================
+      // PULIHKAN TAMPILAN
+      // ============================================
+      function pulihkanTampilan(s) {
+        lapis1Selesai = !!s.lapis1Selesai;
+        jawabanKartu = s.jawabanKartu || {};
+        alasanKartu = s.alasanKartu || {};
+        kartuSudahDicek = !!s.kartuSudahDicek;
+        jumlahBenar = Number(s.jumlahBenar) || 0;
+        jumlahSalah = Number(s.jumlahSalah) || 0;
+
+        const m1 = document.getElementById('mindful1Jawab');
+        if (m1 && s.mindful1Jawab) m1.value = s.mindful1Jawab;
+
+        renderKartu();
+        updateStats();
+
+        if (kartuSudahDicek) {
+          elBtnCek.disabled = true;
+          elBtnCek.textContent = '📊 Skor: ' + jumlahBenar + '/' + DAFTAR_KARTU.length;
+          if (jumlahBenar >= 5) {
+            elBtnSelesai.disabled = false;
+            elMindful1.classList.add('show');
+          }
+        } else {
+          elBtnCek.disabled = false;
+          elBtnCek.textContent = '✅ Cek Jawaban';
+        }
+
+        const lapis = s.__lapisTerakhir || hitungLapisTerakhir();
+        if (lapis === 'form') return;
+
+        elAreaSimulasi.classList.add('active');
+
+        if (lapis === 'lapis1') {
+          DUTA_BK.updateProgressLapis('lapis1');
+          return;
+        }
+
+        elAreaSimulasi.style.display = 'none';
+
+        if (lapis === 'lapis2') {
+          elAreaPilihLevel.classList.remove('active');
+          document.getElementById('areaLapis2').style.display = 'block';
+          DUTA_BK.updateProgressLapis('lapis2');
+          if (DUTA_BK.getLevel()) {
+            const lbl = document.getElementById('lapis2LevelLabel');
+            if (lbl) {
+              const lv = DUTA_BK.getLevel();
+              lbl.textContent = lv === 'dasar' ? '🟢 Dasar' : lv === 'reguler' ? '🟡 Reguler' : '🔴 Tantangan';
+            }
+            const jml = document.getElementById('lapis2JumlahTantangan');
+            if (jml) jml.textContent = DUTA_BK.getLevel() === 'tantangan' ? '4 tantangan (3 inti + 1 bonus)' : '3 tantangan';
+            DUTA_BK.buildTantangan();
+            Object.keys(DUTA_BK.state.tantanganSelesai || {}).forEach(function(id) {
+              const el = document.getElementById('tantangan_' + id);
+              if (el) {
+                el.classList.add('selesai');
+                const btn = document.getElementById('btn_' + id);
+                if (btn) btn.disabled = true;
+              }
+            });
+            if (Object.keys(DUTA_BK.state.tantanganSelesai || {}).length > 0) DUTA_BK.cekSemuaTantangan();
+          }
+          return;
+        }
+
+        if (lapis === 'lapis3' || lapis === 'tes') {
+          elAreaPilihLevel.classList.remove('active');
+          document.getElementById('areaLapis2').style.display = 'none';
+          document.getElementById('areaLapis3').style.display = 'block';
+          DUTA_BK.updateProgressLapis('lapis3');
+          if (DUTA_BK.getLevel()) {
+            const lv = DUTA_BK.getLevel();
+            const lbl = document.getElementById('lapis2LevelLabel');
+            if (lbl) lbl.textContent = lv === 'dasar' ? '🟢 Dasar' : lv === 'reguler' ? '🟡 Reguler' : '🔴 Tantangan';
+          }
+          const btnL3 = document.getElementById('btnLanjutLapis3');
+          if (btnL3) { btnL3.disabled = true; btnL3.textContent = '✅ Lapis 2 Selesai'; }
+
+          if (DUTA_BK.isLapis3Dibaca()) {
+            DUTA_BK.tampilkanKontenLapis3SetelahBaca();
+            if (DUTA_BK.state.kuisKilatSubmitted) DUTA_BK.restoreKuisKilat();
+          }
+        }
+
+        if (lapis === 'tes') {
+          document.getElementById('tesSection').classList.add('active');
+          document.getElementById('refleksiBox').classList.add('show');
+          DUTA_BK.renderSoal();
+          DUTA_BK.updateTesProgress();
+          DUTA_BK.updateProgressLapis('tes');
+          const btnLt = document.getElementById('btnLanjutTes');
+          if (btnLt) { btnLt.disabled = true; btnLt.textContent = '✅ Selesai'; }
+          if (DUTA_BK.state.tesSubmitted) DUTA_BK.restoreTes();
+        }
+      }
+
+      function hitungLapisTerakhir() {
+        if (DUTA_BK.state.tesSelesai || DUTA_BK.state.tesSubmitted) return 'tes';
+        if (DUTA_BK.state.lapis3Dibaca && DUTA_BK.getLevel()) return 'lapis3';
+        if (lapis1Selesai && (DUTA_BK.getLevel() || DUTA_BK.state.tantanganSelesai)) return 'lapis2';
+        return 'lapis1';
+      }
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        DUTA_BK.init({
+          namaSheet: NAMA_SHEET,
+          modulKey: MODUL_KEY,
+          totalBagian: TOTAL_BAGIAN,
+          ambangLulus: AMBANG_LULUS,
+          stateKey: STATE_KEY,
+          bagianAktif: 'c',
+          fileBerikutnya: 'aktivitasbk7d',
+          kuisKilatData: kuisKilatData,
+          soalTesData: soalData,
+          tantanganDasar: tantanganDasar,
+          tantanganReguler: tantanganReguler,
+          tantanganBonus: tantanganBonus,
+          onLulus: simpanSkorBagian3,
+          onLapis2Selesai: function() {
+            if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+          },
+          stateKustom: stateKustom,
+          pulihkanTampilan: pulihkanTampilan,
+          ringkasHasilUntukAI: function() {
+            return 'Kartu dinilai: ' + Object.keys(jawabanKartu).length +
+                   ', Benar: ' + jumlahBenar +
+                   ', Salah: ' + jumlahSalah;
+          }
+        });
+
+        // Langsung tampilkan simulasi (tanpa form identitas)
+        elAreaSimulasi.classList.add('active');
+        initSimulasi();
+
+        setTimeout(function() { DUTA_BK.tawarkanRestore(); }, 60);
+      });
+
+      console.log('✅ BK7 Bagian 3 siap! (Klasifikasi pohon vs jaringan — tanpa form identitas)');
+    })();
+  </script>
+
+</body>
+</html>

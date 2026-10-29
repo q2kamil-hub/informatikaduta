@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Materi Pohon &amp; Jaringan (Tree &amp; Graph) · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <!-- ⚠️ TIDAK perlu <link rel="icon"> — favicon di-render otomatis oleh script.js -->
+  <style>
+    /* ===== Aksen warna BK7: biru-ungu (beda dari BK6 hijau) ===== */
+    :root {
+      --bk7-utama: #5c7cfa;
+      --bk7-utama-dark: #3a5ad0;
+      --bk7-ungu: #8a4bbf;
+      --bk7-hijau: #6ecb8f;
+      --bk7-oranye: #f4b942;
+      --bk7-soft: #eef2ff;
+      --bk7-soft-2: #f3ecff;
+    }
+
+    /* ===== Gaya khusus halaman materi BK7 ===== */
+    .materi-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .materi-container h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--bk7-utama), var(--bk7-ungu), var(--bk7-hijau));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .materi-container .sub-judul {
+      font-size: 1.1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--bk7-utama);
+      padding-left: 1rem;
+      font-style: italic;
+    }
+
+    .materi-container h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 0.8rem 0;
+      color: var(--bk7-utama-dark);
+      border-left: 6px solid var(--bk7-utama);
+      padding-left: 1rem;
+      scroll-margin-top: 1rem;
+    }
+
+    .materi-container h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.2rem 0 0.3rem 0;
+      color: #4d3829;
+    }
+
+    .materi-container p {
+      margin-bottom: 1rem;
+      color: #2f2822;
+      line-height: 1.8;
+    }
+
+    .materi-container ul, .materi-container ol {
+      margin: 0.5rem 0 1.2rem 1.8rem;
+    }
+
+    .materi-container li {
+      margin-bottom: 0.4rem;
+      color: #2f2822;
+    }
+
+    .materi-container .highlight-box {
+      background: var(--bk7-soft);
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 8px solid var(--bk7-utama);
+      margin: 1.5rem 0;
+    }
+
+    .materi-container .highlight-box strong { color: var(--bk7-utama-dark); }
+    .materi-container .highlight-box ul { margin-bottom: 0; }
+    .materi-container .highlight-box ul li { margin-bottom: 0.2rem; }
+
+    /* Kotak khusus pohon (hijau) & jaringan (oranye) */
+    .materi-container .highlight-box.tree {
+      background: #e8f5e0;
+      border-left-color: #6ecb8f;
+    }
+    .materi-container .highlight-box.tree strong { color: #2d5a1e; }
+
+    .materi-container .highlight-box.graph {
+      background: #fff8e6;
+      border-left-color: #f4b942;
+    }
+    .materi-container .highlight-box.graph strong { color: #8a5e00; }
+
+    /* Kartu contoh baik/buruk */
+    .contoh-box {
+      background: #fffffffa;
+      border: 2px solid #dbb9a6;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .contoh-box .ce-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #7a6656;
+      margin-bottom: 0.5rem;
+    }
+    .contoh-box .ce-baik {
+      border-left: 6px solid #2d7d46;
+      background: #f0f8eb;
+      padding: 0.8rem 1.2rem;
+      border-radius: 10px;
+      margin-bottom: 0.8rem;
+    }
+    .contoh-box .ce-buruk {
+      border-left: 6px solid #b33c3c;
+      background: #fdf0f0;
+      padding: 0.8rem 1.2rem;
+      border-radius: 10px;
+    }
+    .contoh-box .ce-baik .ce-title { color: #2d5a1e; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.3rem; }
+    .contoh-box .ce-buruk .ce-title { color: #a84a3a; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.3rem; }
+    .contoh-box .ce-body {
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #2f2822;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    /* Tabel */
+    .tabel-materi {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .tabel-materi thead {
+      background: var(--bk7-utama);
+      color: #fff;
+    }
+    .tabel-materi th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+    .tabel-materi td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #e5dbd0;
+      background: #fffffffa;
+      vertical-align: top;
+    }
+    .tabel-materi tr:last-child td { border-bottom: none; }
+    .tabel-materi tr:hover td { background: var(--bk7-soft); }
+
+    /* Peta konsep */
+    .peta-konsep {
+      background: #2f2822;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      border: 3px solid var(--bk7-utama);
+    }
+    .peta-konsep pre {
+      font-family: 'Courier New', monospace;
+      color: #e5dbd0;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      text-align: left;
+      margin: 0;
+    }
+    .peta-konsep .hl-1 { color: #b8f5d4; font-weight: bold; }
+    .peta-konsep .hl-2 { color: #b8d4f5; font-weight: bold; }
+    .peta-konsep .hl-3 { color: #d4b8f5; font-weight: bold; }
+    .peta-konsep .hl-4 { color: #f5d4b8; font-weight: bold; }
+
+    /* Daftar Isi */
+    .toc-box {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0 2rem 0;
+      border: 2px solid #e5dbd0;
+    }
+    .toc-box .toc-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 1.05rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .toc-box ol {
+      margin: 0 0 0 1.2rem;
+      padding: 0;
+    }
+    .toc-box li {
+      margin-bottom: 0.4rem;
+    }
+    .toc-box a {
+      color: #4d3829;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dotted #bfaa9a;
+      transition: all 0.2s ease;
+    }
+    .toc-box a:hover {
+      color: var(--bk7-utama-dark);
+      border-bottom: 2px solid var(--bk7-utama);
+    }
+
+    /* Aktivitas grid */
+    .aktivitas-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .aktivitas-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 2px solid #e5dbd0;
+      padding: 1rem 1.2rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .aktivitas-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--bk7-utama);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+    .aktivitas-card .ac-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--bk7-utama);
+      letter-spacing: 1px;
+    }
+    .aktivitas-card .ac-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #3b2b1e;
+      line-height: 1.3;
+    }
+    .aktivitas-card .ac-desc {
+      font-size: 0.78rem;
+      color: #7a6656;
+      line-height: 1.4;
+    }
+    .aktivitas-card.final {
+      border-color: #d4a030;
+      background: #fffbf0;
+    }
+    .aktivitas-card.final .ac-num { color: #8a5e00; }
+
+    /* Kartu 3 level tantangan (info diferensiasi) */
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.8rem;
+      margin: 1.2rem 0;
+    }
+    .level-card {
+      border-radius: 14px;
+      padding: 0.9rem 1.1rem;
+      border: 2px solid;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+    .level-card.dasar {
+      background: #e8f5e0;
+      border-color: #8aaa7a;
+      color: #2d5a1e;
+    }
+    .level-card.reguler {
+      background: #fff8e6;
+      border-color: #d4a030;
+      color: #5c3400;
+    }
+    .level-card.tantangan {
+      background: #fde8e8;
+      border-color: #d4a0a0;
+      color: #a84a3a;
+    }
+    .level-card .lc-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+    .level-card .lc-desc {
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    /* Ilustrasi pohon visual (silsilah keluarga) */
+    .tree-visual {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem 1rem;
+      margin: 1.2rem 0;
+      border: 2px dashed #d9cdbf;
+      overflow-x: auto;
+    }
+    .tree-visual pre {
+      font-family: 'Courier New', monospace;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: #2f2822;
+      margin: 0;
+      text-align: center;
+    }
+    .tree-visual .tv-label {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #7a6656;
+      margin-top: 0.8rem;
+      font-weight: 700;
+    }
+
+    /* Ilustrasi graph visual (peta jalan) */
+    .graph-visual {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.5rem 1rem;
+      margin: 1.2rem 0;
+      border: 2px dashed #d9cdbf;
+      overflow-x: auto;
+    }
+    .graph-visual pre {
+      font-family: 'Courier New', monospace;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: #2f2822;
+      margin: 0;
+      text-align: center;
+    }
+    .graph-visual .gv-label {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #7a6656;
+      margin-top: 0.8rem;
+      font-weight: 700;
+    }
+
+    /* Navigasi bawah */
+    .nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e5dbd0;
+    }
+    .btn-nav {
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      border: 2px solid #d9cdbf;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #3b2b1e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-nav:hover {
+      background: var(--bk7-soft);
+      border-color: var(--bk7-utama);
+      transform: translateY(-2px);
+    }
+    .btn-nav.primary {
+      background: #4d3829;
+      border-color: #4d3829;
+      color: #fff;
+    }
+    .btn-nav.primary:hover {
+      background: #6b4f3a;
+      border-color: #6b4f3a;
+    }
+    .btn-nav .back-arrow { font-size: 1.2rem; }
+    .nav-hint {
+      font-size: 0.85rem;
+      color: #7a6656;
+      text-align: center;
+      width: 100%;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* Tombol floating daftar isi */
+    #tocBtn {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 1.5rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--bk7-soft);
+      border: 2px solid var(--bk7-utama);
+      font-size: 1.3rem;
+      color: var(--bk7-utama-dark);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 998;
+    }
+    #tocBtn:hover {
+      background: var(--bk7-utama);
+      color: #fff;
+      transform: scale(1.08);
+    }
+
+    /* Responsif */
+    @media (max-width: 720px) {
+      .materi-container h1 { font-size: 1.7rem; }
+      .materi-container h2 { font-size: 1.3rem; }
+      .materi-container h3 { font-size: 1.05rem; }
+      .tabel-materi { font-size: 0.8rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.5rem 0.6rem; }
+      .contoh-box { padding: 1rem 1.2rem; }
+      .peta-konsep pre { font-size: 0.58rem; }
+      #tocBtn { width: 40px; height: 40px; font-size: 1.1rem; left: 1rem; bottom: 1.8rem; }
+      .tree-visual pre, .graph-visual pre { font-size: 0.65rem; }
+    }
+    @media (max-width: 480px) {
+      .tabel-materi { font-size: 0.7rem; }
+      .tabel-materi th, .tabel-materi td { padding: 0.4rem 0.4rem; }
+      .materi-container ul, .materi-container ol { margin-left: 1.2rem; }
+      .contoh-box .ce-body { font-size: 0.78rem; }
+      .nav-bottom { flex-direction: column; align-items: stretch; }
+      .btn-nav { justify-content: center; }
+      .level-grid { grid-template-columns: 1fr; }
+      .tree-visual pre, .graph-visual pre { font-size: 0.58rem; }
+    }
+
+    /* Print */
+    @media print {
+      #tocBtn, #scrollTopBtn, .nav-bottom, .toc-box { display: none !important; }
+      body { background: #fff !important; }
+      .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
+      .peta-konsep { background: #f5ede6 !important; color: #2f2822 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER: banner + bar user + navbar (di-render script.js) -->
+  <header id="header-utama"></header>
+
+  <!-- BREADCRUMB: di-render script.js dari partials/breadcrumb.json -->
+  <div id="duta-breadcrumb-host"></div>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="materi-container">
+
+        <h1>🌳🕸️ Pohon &amp; Jaringan</h1>
+        <p class="sub-judul">Tree &amp; Graph · Organisasi Data Terstruktur</p>
+
+        <!-- PETA KONSEP -->
+        <h2 id="peta-konsep">🗺️ Peta Konsep Visual</h2>
+        <p>Sebelum masuk ke materi, perhatikan peta konsep berikut agar kamu tahu gambaran besar alur belajar modul ini.</p>
+
+        <div class="peta-konsep">
+<pre>
+              ┌──────────────────────────────────────────────┐
+              │   ORGANISASI DATA TERSTRUKTUR                │
+              │        POHON &amp; JARINGAN                      │
+              └──────────────────┬───────────────────────────┘
+                                 │
+     ┌───────────────────────────┼───────────────────────────┐
+     │                           │                           │
+     ▼                           ▼                           ▼
+<span class="hl-1">┌───────────┐</span>             <span class="hl-2">┌───────────┐</span>             <span class="hl-3">┌───────────┐</span>
+<span class="hl-1">│ BAGIAN 1  │</span>────────────▶<span class="hl-2">│ BAGIAN 2  │</span>────────────▶<span class="hl-3">│ BAGIAN 3  │</span>
+<span class="hl-1">│ POHON     │</span>             <span class="hl-2">│ JARINGAN  │</span>             <span class="hl-3">│ BEDA      │</span>
+<span class="hl-1">│ (TREE)    │</span>             <span class="hl-2">│ (GRAPH)   │</span>             <span class="hl-3">│ KEDUANYA  │</span>
+<span class="hl-1">└───────────┘</span>             <span class="hl-2">└───────────┘</span>             <span class="hl-3">└───────────┘</span>
+     │                           │                           │
+     ▼                           ▼                           ▼
+Silsilah keluarga,        Peta jalan,               Pohon = graph
+folder komputer,          jaringan pertemanan,      tanpa siklus;
+struktur organisasi       jaringan transportasi     graph boleh
+                                                    melingkar
+     │                           │                           │
+     └───────────────────────────┼───────────────────────────┘
+                                 ▼
+                         <span class="hl-4">┌─────────────────┐</span>
+                         <span class="hl-4">│  KUIS AKHIR (10) │</span>
+                         <span class="hl-4">│  + SERTIFIKAT    │</span>
+                         <span class="hl-4">└─────────────────┘</span>
+</pre>
+        </div>
+
+        <!-- PERTANYAAN PEMANTIK -->
+        <div class="highlight-box">
+          <strong>🤔 Pertanyaan Pemantik:</strong>
+          <p style="margin-top:0.3rem;">Bayangkan Raka ingin pergi dari rumahnya ke sekolah. Ia punya tiga pilihan jalan: lewat pasar, lewat jembatan, atau lewat gang kecil. Ketiganya bisa sampai ke sekolah. Di papan tulis, guru menggambar titik-titik (rumah, pasar, jembatan, sekolah) dan garis-garis yang menghubungkannya.</p>
+          <ol style="margin:0.3rem 0 0 1.2rem;">
+            <li>Pernahkah kamu melihat peta atau denah? Bagaimana bentuknya?</li>
+            <li>Menurutmu, apa bedanya "peta jalan" dengan "silsilah keluarga"?</li>
+            <li>Jika kamu ingin menyusun daftar lagu favorit secara berurutan, apakah itu termasuk "pohon" atau "jaringan"?</li>
+          </ol>
+        </div>
+
+        <!-- DAFTAR ISI -->
+        <div class="toc-box" id="daftarIsi">
+          <div class="toc-title">📑 Daftar Isi</div>
+          <ol>
+            <li><a href="#bagian-a">Pohon (Tree) — Struktur Bercabang</a></li>
+            <li><a href="#bagian-b">Jaringan (Graph) — Struktur Terhubung</a></li>
+            <li><a href="#bagian-c">Pohon vs Jaringan — Apa Bedanya?</a></li>
+            <li><a href="#bagian-d">Konteks Lokal Indonesia</a></li>
+            <li><a href="#bagian-e">Aktivitas Interaktif</a></li>
+            <li><a href="#bagian-f">Referensi</a></li>
+          </ol>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- A. POHON (TREE) -->
+        <!-- ================================================== -->
+        <h2 id="bagian-a">A. Pohon (Tree) — Struktur Bercabang</h2>
+
+        <h3>1. Situasi Masalah: "Silsilah Keluarga Budi"</h3>
+        <p>Budi mendapat tugas membuat silsilah keluarganya. Ia menggambar di kertas:</p>
+        <ul>
+          <li>Di paling atas, ada <strong>Kakek dan Nenek</strong>.</li>
+          <li>Di bawahnya, ada <strong>Ayah dan Ibu</strong>.</li>
+          <li>Di bawah Ayah dan Ibu, ada <strong>Budi dan adiknya, Siti</strong>.</li>
+        </ul>
+
+        <p>Gambar itu berbentuk seperti pohon yang bercabang ke bawah. Setiap orang punya garis penghubung ke orang tuanya.</p>
+
+        <p>Budi bingung: <em>"Kenapa disebut pohon keluarga, ya? Padahal bentuknya bukan pohon beneran."</em></p>
+
+        <div class="tree-visual">
+<pre>
+                  👴 Kakek  ═══  👵 Nenek
+                        │
+            ┌───────────┴───────────┐
+            │                       │
+        👨 Ayah                 🧑 Paman
+            │
+      ┌─────┴─────┐
+      │           │
+   👦 Budi     👧 Siti
+</pre>
+          <div class="tv-label">Silsilah Keluarga Budi<br>(bentuk bercabang ke bawah, tanpa melingkar)</div>
+        </div>
+
+        <p><strong>Pertanyaan:</strong> Menurutmu, mengapa gambar silsilah keluarga disebut "pohon"? Apa yang membuatnya mirip pohon?</p>
+
+        <p>Jawabannya: Disebut <strong>pohon</strong> karena strukturnya <strong>bercabang ke bawah</strong> dari satu titik puncak (Kakek-Nenek), dan <strong>tidak ada garis yang melingkar</strong> kembali ke atas. Setiap orang (kecuali leluhur teratas) punya tepat <strong>satu garis ke atas</strong> (orang tua).</p>
+
+        <h3>2. Ciri-Ciri Pohon (Tree)</h3>
+
+        <div class="highlight-box tree">
+          <strong>🌳 Ciri-ciri struktur pohon (tree):</strong>
+          <ul style="margin-top:0.3rem;">
+            <li>Memiliki <strong>satu akar (root)</strong> di paling atas.</li>
+            <li>Setiap simpul (kecuali akar) punya <strong>tepat satu orang tua</strong>.</li>
+            <li><strong>Tidak boleh ada siklus</strong> (garis yang kembali ke simpul awal).</li>
+            <li>Hanya ada <strong>satu jalur</strong> antara dua simpul mana pun.</li>
+            <li>Simpul paling bawah yang tidak punya anak disebut <strong>daun (leaf)</strong>.</li>
+          </ul>
+        </div>
+
+        <h3>3. Istilah Penting dalam Pohon</h3>
+
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Istilah</th>
+              <th>Makna</th>
+              <th>Contoh di Silsilah Budi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Akar (Root)</strong></td>
+              <td>Simpul paling atas yang tidak memiliki orang tua.</td>
+              <td>Kakek dan Nenek.</td>
+            </tr>
+            <tr>
+              <td><strong>Daun (Leaf)</strong></td>
+              <td>Simpul paling bawah yang tidak memiliki anak.</td>
+              <td>Budi dan Siti.</td>
+            </tr>
+            <tr>
+              <td><strong>Cabang (Branch)</strong></td>
+              <td>Simpul yang memiliki anak.</td>
+              <td>Ayah, Ibu, Paman.</td>
+            </tr>
+            <tr>
+              <td><strong>Sisi (Edge)</strong></td>
+              <td>Garis yang menghubungkan simpul.</td>
+              <td>Garis dari Ayah ke Budi.</td>
+            </tr>
+            <tr>
+              <td><strong>Simpul (Node)</strong></td>
+              <td>Titik dalam pohon.</td>
+              <td>Kakek, Nenek, Ayah, Budi, dll.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>4. Mengapa Pohon Tidak Boleh Melingkar?</h3>
+        <p>Bayangkan jika garis dari Budi kembali ke Kakek. Artinya, Budi adalah orang tua dari Kakeknya sendiri — itu mustahil! Dalam struktur pohon, hubungan harus <strong>satu arah</strong>: dari akar ke daun. Tidak ada jalan kembali.</p>
+
+        <div class="contoh-box">
+          <div class="ce-label">Perbandingan</div>
+          <div class="ce-baik">
+            <div class="ce-title">✅ Pohon (benar)</div>
+            <div class="ce-body">Kakek → Ayah → Budi
+Satu arah, tidak ada jalan kembali.
+Tidak ada siklus.</div>
+          </div>
+          <div class="ce-buruk">
+            <div class="ce-title">❌ Bukan pohon (salah)</div>
+            <div class="ce-body">Kakek → Ayah → Budi → Kakek
+Ada jalan kembali (siklus).
+Ini bukan pohon, tapi jaringan.</div>
+          </div>
+        </div>
+
+        <h3>5. Contoh Pohon di Sekitar Kita</h3>
+        <ul>
+          <li><strong>Silsilah keluarga</strong> — bercabang dari leluhur ke anak-cucu.</li>
+          <li><strong>Folder di komputer</strong> — folder utama berisi sub-folder, yang berisi file.</li>
+          <li><strong>Struktur organisasi sekolah</strong> — Kepala Sekolah → Wakil → Guru → Siswa.</li>
+          <li><strong>Bagan turnamen</strong> — dari babak final mundur ke penyisihan.</li>
+          <li><strong>Taksonomi makhluk hidup</strong> — Kingdom → Filum → Kelas → Ordo → Famili → Genus → Spesies.</li>
+        </ul>
+
+        <div class="highlight-box tree">
+          <strong>💡 Koneksi Dunia Nyata:</strong>
+          <p style="margin-top:0.3rem; margin-bottom:0;">Saat kamu membuka <strong>File Explorer</strong> di komputer dan melihat folder bertingkat (folder di dalam folder), itu adalah <strong>pohon</strong>. Kamu tidak akan pernah menemukan folder yang menjadi induk dari dirinya sendiri — itu sebabnya pohon tidak boleh melingkar.</p>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- B. JARINGAN (GRAPH) -->
+        <!-- ================================================== -->
+        <h2 id="bagian-b">B. Jaringan (Graph) — Struktur Terhubung</h2>
+
+        <h3>1. Situasi Masalah: "Peta Jalan ke Sekolah"</h3>
+        <p>Dewi menggambar peta jalan dari rumahnya ke sekolah. Ia menggambar titik-titik: <strong>Rumah, Pasar, Jembatan, Gang Kecil, Sekolah</strong>. Lalu ia menghubungkan dengan garis:</p>
+        <ul>
+          <li>Rumah → Pasar</li>
+          <li>Rumah → Jembatan</li>
+          <li>Pasar → Sekolah</li>
+          <li>Jembatan → Gang Kecil</li>
+          <li>Gang Kecil → Sekolah</li>
+        </ul>
+
+        <p>Ia memperhatikan: ada <strong>dua jalan</strong> yang bisa dilalui dari Rumah ke Sekolah (lewat Pasar, atau lewat Jembatan–Gang Kecil). Jalan itu bisa memutar, tapi tetap sampai.</p>
+
+        <div class="graph-visual">
+<pre>
+        🏠 Rumah
+         ╱     ╲
+        ╱       ╲
+   🏪 Pasar   🌉 Jembatan
+        ╲         │
+         ╲        │
+          ╲   🛤️ Gang Kecil
+           ╲      │
+            ╲     │
+             🏫 Sekolah
+</pre>
+          <div class="gv-label">Peta Jalan Dewi<br>(ada dua jalur alternatif dari Rumah ke Sekolah)</div>
+        </div>
+
+        <p><strong>Pertanyaan:</strong> Apa bedanya peta jalan Dewi dengan silsilah keluarga Budi? Apakah peta jalan boleh melingkar?</p>
+
+        <p>Jawabannya: Peta jalan Dewi boleh memiliki <strong>lebih dari satu jalur</strong> dan boleh <strong>melingkar</strong> (misal Rumah → Pasar → Jembatan → Rumah). Struktur seperti ini disebut <strong>jaringan (graph)</strong>, bukan pohon.</p>
+
+        <h3>2. Ciri-Ciri Jaringan (Graph)</h3>
+
+        <div class="highlight-box graph">
+          <strong>🕸️ Ciri-ciri struktur jaringan (graph):</strong>
+          <ul style="margin-top:0.3rem;">
+            <li>Terdiri dari <strong>simpul (vertex)</strong> dan <strong>sisi (edge)</strong>.</li>
+            <li><strong>Boleh memiliki siklus</strong> (jalur yang kembali ke simpul awal).</li>
+            <li><strong>Tidak harus punya akar</strong>.</li>
+            <li>Bisa ada <strong>lebih dari satu jalur</strong> antara dua simpul.</li>
+            <li>Semua simpul boleh terhubung ke banyak simpul lain.</li>
+          </ul>
+        </div>
+
+        <h3>3. Istilah Penting dalam Jaringan</h3>
+
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Istilah</th>
+              <th>Makna</th>
+              <th>Contoh di Peta Dewi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Simpul (Vertex)</strong></td>
+              <td>Titik dalam jaringan.</td>
+              <td>Rumah, Pasar, Jembatan, Gang Kecil, Sekolah.</td>
+            </tr>
+            <tr>
+              <td><strong>Sisi (Edge)</strong></td>
+              <td>Garis yang menghubungkan simpul.</td>
+              <td>Jalan dari Rumah ke Pasar.</td>
+            </tr>
+            <tr>
+              <td><strong>Jalur (Path)</strong></td>
+              <td>Rangkaian sisi yang menghubungkan dua simpul.</td>
+              <td>Rumah → Pasar → Sekolah.</td>
+            </tr>
+            <tr>
+              <td><strong>Siklus (Cycle)</strong></td>
+              <td>Jalur yang kembali ke simpul awal.</td>
+              <td>Rumah → Pasar → Jembatan → Rumah.</td>
+            </tr>
+            <tr>
+              <td><strong>Derajat (Degree)</strong></td>
+              <td>Banyaknya sisi yang terhubung ke suatu simpul.</td>
+              <td>Rumah punya derajat 2 (Pasar &amp; Jembatan).</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>4. Jaringan vs Pohon: Boleh Melingkar, Boleh Banyak Jalur</h3>
+        <p>Perbedaan paling jelas: <strong>jaringan boleh melingkar</strong>. Contohnya:</p>
+
+        <div class="contoh-box">
+          <div class="ce-label">Contoh Jaringan dengan Siklus</div>
+          <div class="ce-baik">
+            <div class="ce-title">✅ Jaringan (boleh siklus)</div>
+            <div class="ce-body">Rumah → Pasar → Jembatan → Rumah
+Ini sah dalam jaringan.
+Ada jalan memutar yang kembali ke awal.</div>
+          </div>
+        </div>
+
+        <p>Selain itu, jaringan boleh memiliki <strong>banyak jalur</strong> antara dua simpul. Ini tidak mungkin dalam pohon.</p>
+
+        <h3>5. Contoh Jaringan di Sekitar Kita</h3>
+        <ul>
+          <li><strong>Peta jalan raya</strong> — banyak jalur alternatif dan jalan memutar.</li>
+          <li><strong>Jaringan pertemanan</strong> — A berteman dengan B, B dengan C, C dengan A.</li>
+          <li><strong>Jaringan media sosial</strong> — Instagram, WhatsApp, Facebook.</li>
+          <li><strong>Jaringan transportasi</strong> — rute angkot, bus, kereta yang saling terhubung.</li>
+          <li><strong>Jaringan listrik</strong> — gardu induk terhubung ke banyak rumah.</li>
+          <li><strong>Jaringan komputer/internet</strong> — banyak perangkat saling terhubung.</li>
+        </ul>
+
+        <div class="highlight-box graph">
+          <strong>💡 Koneksi Dunia Nyata:</strong>
+          <p style="margin-top:0.3rem; margin-bottom:0;">Saat kamu membuka <strong>Google Maps</strong> dan mencari rute, sistem menampilkan beberapa alternatif jalan. Itu karena peta adalah <strong>jaringan (graph)</strong> — ada banyak jalur dan siklus. Kamu bisa memilih jalur tercepat, terpendek, atau menghindari macet.</p>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- C. POHON VS JARINGAN -->
+        <!-- ================================================== -->
+        <h2 id="bagian-c">C. Pohon vs Jaringan — Apa Bedanya?</h2>
+
+        <h3>1. Situasi Masalah: "Dua Gambar, Satu Pertanyaan"</h3>
+        <p>Aurel melihat dua gambar di buku:</p>
+        <ul>
+          <li><strong>Gambar A:</strong> Silsilah keluarga (pohon).</li>
+          <li><strong>Gambar B:</strong> Peta jalan dengan jalur memutar (jaringan).</li>
+        </ul>
+
+        <p>Ia bertanya, <em>"Apa bedanya? Bukannya sama-sama titik dan garis?"</em></p>
+
+        <p>Jawabannya: Keduanya memang terdiri dari titik (simpul) dan garis (sisi). Tapi ada perbedaan mendasar pada <strong>aturan strukturnya</strong>.</p>
+
+        <h3>2. Tabel Perbandingan</h3>
+
+        <table class="tabel-materi">
+          <thead>
+            <tr>
+              <th>Aspek</th>
+              <th>Pohon (Tree)</th>
+              <th>Jaringan (Graph)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Siklus</strong></td>
+              <td>Tidak boleh ada siklus.</td>
+              <td>Boleh ada siklus.</td>
+            </tr>
+            <tr>
+              <td><strong>Akar</strong></td>
+              <td>Memiliki satu akar.</td>
+              <td>Tidak harus memiliki akar.</td>
+            </tr>
+            <tr>
+              <td><strong>Jalur</strong></td>
+              <td>Hanya satu jalur antara dua simpul.</td>
+              <td>Bisa lebih dari satu jalur.</td>
+            </tr>
+            <tr>
+              <td><strong>Orang Tua</strong></td>
+              <td>Setiap simpul (kecuali akar) punya tepat satu orang tua.</td>
+              <td>Tidak ada aturan orang tua.</td>
+            </tr>
+            <tr>
+              <td><strong>Contoh</strong></td>
+              <td>Silsilah keluarga, folder komputer, struktur organisasi.</td>
+              <td>Peta jalan, jaringan pertemanan, jaringan transportasi.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>3. Hubungan Keduanya</h3>
+        <p>Menariknya: <strong>pohon adalah jenis khusus dari jaringan</strong>. Setiap pohon bisa disebut jaringan, tetapi tidak setiap jaringan bisa disebut pohon.</p>
+
+        <div class="highlight-box">
+          <strong>💡 Analogi:</strong>
+          <p style="margin-top:0.3rem; margin-bottom:0;">Setiap <strong>kucing</strong> adalah <strong>hewan</strong>, tetapi tidak setiap <strong>hewan</strong> adalah <strong>kucing</strong>. Sama seperti: setiap <strong>pohon</strong> adalah <strong>jaringan</strong>, tetapi tidak setiap <strong>jaringan</strong> adalah <strong>pohon</strong>.</p>
+        </div>
+
+        <p>Jadi, pohon = jaringan yang <strong>tidak memiliki siklus</strong> dan <strong>memiliki satu akar</strong>.</p>
+
+        <h3>4. Kapan Pakai Pohon, Kapan Pakai Jaringan?</h3>
+        <ul>
+          <li><strong>Pakai pohon</strong> saat hubungan bersifat <strong>hierarkis</strong> (bertingkat) dan satu arah. Contoh: silsilah, folder, struktur organisasi.</li>
+          <li><strong>Pakai jaringan</strong> saat hubungan bersifat <strong>saling terhubung</strong> dan boleh memutar. Contoh: peta jalan, jaringan pertemanan, media sosial.</li>
+        </ul>
+
+        <!-- ================================================== -->
+        <!-- D. KONTEKS LOKAL -->
+        <!-- ================================================== -->
+        <h2 id="bagian-d">D. Konteks Lokal Indonesia</h2>
+
+        <p>Konsep pohon dan jaringan sangat dekat dengan kehidupan sehari-hari di Indonesia:</p>
+
+        <h3>🌳 Contoh Pohon:</h3>
+        <ul>
+          <li><strong>Silsilah keluarga</strong> — banyak keluarga Indonesia menyimpan silsilah turun-temurun.</li>
+          <li><strong>Struktur organisasi RT/RW</strong> — Ketua RT → Wakil → Sekretaris → Bendahara → Warga.</li>
+          <li><strong>Folder di komputer sekolah</strong> — folder "Tugas" berisi sub-folder "IPA", "IPS", "Informatika".</li>
+          <li><strong>Bagan pertandingan sepak bola antar-kampung</strong> — dari penyisihan hingga final.</li>
+        </ul>
+
+        <h3>🕸️ Contoh Jaringan:</h3>
+        <ul>
+          <li><strong>Peta jalan antar-kota</strong> — banyak jalur alternatif, ada jalan memutar.</li>
+          <li><strong>Jaringan angkot di kota</strong> — rute saling terhubung dan bersilangan.</li>
+          <li><strong>Grup WhatsApp keluarga</strong> — anggota saling terhubung, bisa ada lingkaran pertemanan.</li>
+          <li><strong>Jaringan listrik desa</strong> — gardu terhubung ke banyak rumah, membentuk jaringan.</li>
+          <li><strong>Jaringan pertemanan di kelas</strong> — A berteman B, B berteman C, C berteman A.</li>
+        </ul>
+
+        <div class="highlight-box">
+          <strong>🇮🇩 Kearifan Lokal:</strong>
+          <p style="margin-top:0.3rem; margin-bottom:0;">Dalam budaya Indonesia, <strong>silsilah keluarga</strong> (pohon) dan <strong>peta jalan antar-daerah</strong> (jaringan) adalah dua cara kita memahami hubungan. Keduanya membantu kita berpikir terstruktur — salah satu inti dari <strong>Berpikir Komputasional</strong>.</p>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- E. AKTIVITAS -->
+        <!-- ================================================== -->
+        <h2 id="bagian-e">E. Aktivitas Interaktif</h2>
+        <p>Untuk memperdalam pemahaman, kerjakan aktivitas interaktif berikut secara berurutan. Setiap bagian harus diselesaikan (lulus tes pemahaman) sebelum lanjut ke bagian berikutnya.</p>
+
+        <!-- Info diferensiasi -->
+        <div class="highlight-box" style="background:#f0f8eb; border-left-color:#8aaa7a;">
+          <strong style="color:#2d5a1e;">★ Di Setiap Bagian, Kamu Bisa Memilih Tingkat Tantangan!</strong>
+          <p style="margin-top:0.5rem; margin-bottom:0.8rem;">Setelah menyelesaikan Lapis 1 (Menjelajah Bebas), kamu akan diminta memilih tingkat tantangan Lapis 2:</p>
+
+          <div class="level-grid">
+            <div class="level-card dasar">
+              <div class="lc-title">🟢 Dasar</div>
+              <div class="lc-desc">3 tantangan terbimbing dengan petunjuk lebih detail. Cocok kalau kamu ingin penguatan dulu.</div>
+            </div>
+            <div class="level-card reguler">
+              <div class="lc-title">🟡 Reguler</div>
+              <div class="lc-desc">3 tantangan standar seperti biasanya. Cocok untuk sebagian besar siswa.</div>
+            </div>
+            <div class="level-card tantangan">
+              <div class="lc-title">🔴 Tantangan</div>
+              <div class="lc-desc">3 tantangan standar + 1 tantangan bonus (studi kasus terbuka). Cocok kalau kamu ingin tantangan lebih.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="aktivitas-list">
+          <a href="aktivitasbk7a" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 1</span>
+            <span class="ac-title">🌳 Pohon (Tree) — Struktur Bercabang</span>
+            <span class="ac-desc">"Gambar Silsilahku" — menemukan pola struktur pohon melalui silsilah keluarga</span>
+          </a>
+          <a href="aktivitasbk7b" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 2</span>
+            <span class="ac-title">🕸️ Jaringan (Graph) — Struktur Terhubung</span>
+            <span class="ac-desc">"Peta Jaringan" — menemukan pola struktur jaringan melalui peta jalan</span>
+          </a>
+          <a href="aktivitasbk7c" class="aktivitas-card">
+            <span class="ac-num">BAGIAN 3</span>
+            <span class="ac-title">🔍 Pohon vs Jaringan — Apa Bedanya?</span>
+            <span class="ac-desc">"Pohon atau Jaringan?" — membedakan keduanya berdasarkan ciri-ciri</span>
+          </a>
+          <a href="aktivitasbk7d" class="aktivitas-card final">
+            <span class="ac-num">BAGIAN 4</span>
+            <span class="ac-title">🏆 Kuis Akhir &amp; Sertifikat</span>
+            <span class="ac-desc">Penilaian + sertifikat digital (lulus ≥7)</span>
+          </a>
+        </div>
+
+        <!-- ================================================== -->
+        <!-- F. REFERENSI -->
+        <!-- ================================================== -->
+        <h2 id="bagian-f">📚 Referensi Materi</h2>
+        <ul>
+          <li>Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi. (2021). <em>Buku Siswa Informatika SMP Kelas VII</em>. Jakarta: Pusat Kurikulum dan Perbukuan.</li>
+          <li>Bebras Indonesia. (2020). <em>Buku Bebras 2020 SMP: Berpikir Komputasional</em>. Diakses dari http://bebras.or.id</li>
+          <li>GeeksforGeeks. (2024). <em>Difference between Graph and Tree</em>. Diakses dari https://www.geeksforgeeks.org</li>
+          <li>Programiz. (2024). <em>Tree Data Structure</em>. Diakses dari https://www.programiz.com</li>
+          <li>Programiz. (2024). <em>Graph Data Structure</em>. Diakses dari https://www.programiz.com</li>
+          <li>Kurikulum Merdeka Informatika SMP Fase D — Elemen Berpikir Komputasional: "Mengenal organisasi data terstruktur sebagai pohon (tree) dan jaringan (graph)"</li>
+        </ul>
+
+        <!-- NAVIGASI -->
+        <div class="nav-bottom">
+          <a href="bk7" class="btn-nav">
+            <span class="back-arrow">←</span> Kembali ke Portal
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <a href="aktivitasbk7a" class="btn-nav primary">
+              🎮 Mulai Aktivitas Bagian 1 →
+            </a>
+          </div>
+          <div class="nav-hint">
+            💡 Sudah paham materinya? Mulai aktivitas interaktif untuk pengalaman belajar yang lebih dalam!
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+
+  <button id="tocBtn" aria-label="Daftar Isi" title="Ke Daftar Isi" onclick="scrollToTOC()">📑</button>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+  <!-- ⚠️ TIDAK perlu window.DUTA_ROOT — auto-detect -->
+
+  <script>
+    function scrollToTOC() {
+      const toc = document.getElementById('daftarIsi');
+      if (toc) {
+        toc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const target = document.querySelector(targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

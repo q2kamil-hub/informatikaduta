@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Pohon &amp; Jaringan Lab · Bagian 2: Jaringan (Graph) — Struktur Terhubung · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <link rel="stylesheet" href="desainbk7.css">
+  <style>
+    /* ===== CSS UNIK BAGIAN 2: KANVAS PETA JALAN ===== */
+
+    /* Kanvas peta jalan */
+    .peta-kanvas-wrapper {
+      position: relative;
+      margin: 1rem 0;
+    }
+    .peta-kanvas {
+      position: relative;
+      width: 100%;
+      min-height: 400px;
+      background:
+        linear-gradient(#fff8e6 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(90deg, #fff8e6 1px, transparent 1px) 0 0 / 28px 28px,
+        #fffdf7;
+      border: 2px dashed var(--bk7-oranye, #f4b942);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      touch-action: none;
+    }
+    .peta-kanvas.drag-over {
+      border-color: var(--bk7-oranye-dark, #d4a030);
+      background-color: #fff3d6;
+    }
+    .peta-kanvas .pk-hint {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #c9a86a;
+      font-style: italic;
+      font-size: 0.88rem;
+      pointer-events: none;
+      padding: 1rem 1.5rem;
+      background: rgba(255,255,255,0.85);
+      border-radius: 10px;
+      line-height: 1.6;
+      z-index: 0;
+    }
+    .peta-kanvas svg.kanvas-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .peta-kanvas svg.kanvas-svg line {
+      stroke: var(--bk7-oranye-dark, #d4a030);
+      stroke-width: 3;
+      stroke-linecap: round;
+      transition: all 0.2s ease;
+    }
+    .peta-kanvas svg.kanvas-svg line.jalur-utama {
+      stroke: var(--bk7-hijau-dark, #4fa86a);
+      stroke-width: 4.5;
+      filter: drop-shadow(0 0 4px rgba(110, 203, 143, 0.45));
+    }
+    .peta-kanvas svg.kanvas-svg line.siklus {
+      stroke: var(--bk7-ungu, #8a4bbf);
+      stroke-width: 3.5;
+      stroke-dasharray: 8 5;
+      animation: dashAnim 1.2s linear infinite;
+    }
+    @keyframes dashAnim {
+      to { stroke-dashoffset: -26; }
+    }
+
+    /* Titik simpul (vertex) */
+    .titik-simpul {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 84px;
+      height: 84px;
+      background: #fff;
+      border: 3px solid var(--bk7-oranye, #f4b942);
+      border-radius: 50%;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 4px 12px rgba(244, 185, 66, 0.25);
+      transition: box-shadow 0.15s ease, transform 0.15s ease;
+      touch-action: none;
+      z-index: 5;
+      text-align: center;
+      padding: 0.2rem;
+    }
+    .titik-simpul:hover {
+      box-shadow: 0 8px 22px rgba(244, 185, 66, 0.45);
+      transform: scale(1.05);
+      z-index: 10;
+    }
+    .titik-simpul:active { cursor: grabbing; }
+    .titik-simpul.dragging {
+      opacity: 0.85;
+      cursor: grabbing;
+      z-index: 100;
+      box-shadow: 0 14px 32px rgba(244, 185, 66, 0.55);
+      transform: scale(1.08);
+    }
+    .titik-simpul.rumah {
+      border-color: var(--bk7-hijau-dark, #4fa86a);
+      box-shadow: 0 4px 12px rgba(110, 203, 143, 0.35);
+    }
+    .titik-simpul.rumah:hover {
+      box-shadow: 0 8px 22px rgba(110, 203, 143, 0.55);
+    }
+    .titik-simpul.sekolah {
+      border-color: var(--bk7-utama, #5c7cfa);
+      box-shadow: 0 4px 12px rgba(92, 124, 250, 0.35);
+    }
+    .titik-simpul.sekolah:hover {
+      box-shadow: 0 8px 22px rgba(92, 124, 250, 0.55);
+    }
+    .titik-simpul.terhubung {
+      border-width: 4px;
+    }
+    .titik-simpul .ts-ikon {
+      font-size: 1.6rem;
+      line-height: 1;
+      margin-bottom: 0.1rem;
+    }
+    .titik-simpul .ts-label {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: #3b2b1e;
+      line-height: 1.1;
+      word-break: break-word;
+    }
+    .titik-simpul .ts-badge {
+      position: absolute;
+      top: -6px; right: -6px;
+      background: var(--bk7-oranye-dark, #d4a030);
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 800;
+      border-radius: 20px;
+      padding: 0.1rem 0.4rem;
+      min-width: 18px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .titik-simpul.rumah .ts-badge { background: var(--bk7-hijau-dark, #4fa86a); }
+    .titik-simpul.sekolah .ts-badge { background: var(--bk7-utama, #5c7cfa); }
+
+    /* Palet titik */
+    .palet-titik {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      padding: 0.9rem 1rem;
+      background: #fff;
+      border-radius: 12px;
+      border: 2px dashed var(--bk7-oranye, #f4b942);
+      margin-top: 1rem;
+      min-height: 100px;
+      align-items: center;
+    }
+    .palet-titik .pt-label {
+      font-size: 0.7rem;
+      letter-spacing: 1.2px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--bk7-oranye-dark, #d4a030);
+      margin-right: 0.5rem;
+      flex-basis: 100%;
+      margin-bottom: 0.3rem;
+    }
+    .palet-titik .titik-simpul {
+      position: static;
+      width: 64px;
+      height: 64px;
+    }
+    .palet-titik .titik-simpul .ts-ikon { font-size: 1.3rem; }
+    .palet-titik .titik-simpul .ts-label { font-size: 0.58rem; }
+    .palet-titik .pt-empty {
+      font-size: 0.82rem;
+      color: #a89684;
+      font-style: italic;
+      padding: 0.4rem 0;
+    }
+
+    /* Panel sambung jalan */
+    .jalan-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      background: var(--bk7-soft-oranye, #fff8e6);
+      border: 2px solid var(--bk7-oranye, #f4b942);
+      border-radius: 12px;
+      margin-top: 0.8rem;
+    }
+    .jalan-panel .jp-label {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--bk7-oranye-dark, #d4a030);
+      margin-right: 0.3rem;
+    }
+    .jalan-panel select {
+      padding: 0.45rem 0.7rem;
+      border: 2px solid #d4b878;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.82rem;
+      color: #2f2822;
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      max-width: 150px;
+    }
+    .jalan-panel select:focus { border-color: var(--bk7-oranye-dark, #d4a030); }
+    .jalan-panel .jp-arrow { font-weight: 800; color: var(--bk7-oranye-dark, #d4a030); font-size: 1.1rem; }
+    .jalan-panel button {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      border: none;
+      background: linear-gradient(135deg, var(--bk7-oranye, #f4b942), var(--bk7-oranye-dark, #d4a030));
+      color: #5c3400;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 8px rgba(244, 185, 66, 0.3);
+    }
+    .jalan-panel button:hover:not(:disabled) {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(244, 185, 66, 0.5);
+    }
+    .jalan-panel button.btn-hapus-jalan {
+      background: #fdf0f0;
+      color: var(--bk7-danger, #b33c3c);
+      border: 2px solid #f0c0c0;
+      box-shadow: none;
+    }
+    .jalan-panel button.btn-hapus-jalan:hover:not(:disabled) {
+      background: #f8dcdc;
+      border-color: #e8a8a8;
+    }
+    .jalan-panel button:disabled {
+      opacity: 0.45; cursor: not-allowed; transform: none !important;
+    }
+
+    /* Tombol cek jalur */
+    .cek-jalur-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      margin-top: 0.8rem;
+      padding: 0.7rem 1rem;
+      background: var(--bk7-soft-hijau, #e8f5e0);
+      border: 2px solid var(--bk7-hijau, #6ecb8f);
+      border-radius: 12px;
+    }
+    .cek-jalur-bar .cjb-label {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: #2d5a1e;
+      flex: 1;
+    }
+    .cek-jalur-bar .cjb-btn {
+      padding: 0.55rem 1.3rem;
+      border-radius: 20px;
+      border: none;
+      background: linear-gradient(135deg, var(--bk7-hijau, #6ecb8f), var(--bk7-hijau-dark, #4fa86a));
+      color: #fff;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 3px 10px rgba(110, 203, 143, 0.35);
+    }
+    .cek-jalur-bar .cjb-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(110, 203, 143, 0.5);
+    }
+    .cek-jalur-bar .cjb-btn:disabled {
+      opacity: 0.45; cursor: not-allowed; transform: none !important;
+    }
+    .cek-jalur-bar .cjb-result {
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      display: none;
+    }
+    .cek-jalur-bar .cjb-result.show { display: inline-block; }
+    .cek-jalur-bar .cjb-result.ok {
+      background: var(--bk7-soft-hijau, #e8f5e0);
+      color: #2d5a1e;
+      border: 2px solid var(--bk7-hijau, #6ecb8f);
+    }
+    .cek-jalur-bar .cjb-result.fail {
+      background: var(--bk7-danger-soft, #fdf0f0);
+      color: var(--bk7-danger, #b33c3c);
+      border: 2px solid #d4a0a0;
+    }
+
+    /* Legend */
+    .legend-jalan {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      font-size: 0.78rem;
+      color: #7a6656;
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.8rem;
+      background: #f8f4ef;
+      border-radius: 8px;
+    }
+    .legend-jalan .lj-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .legend-jalan .lj-line {
+      display: inline-block;
+      width: 28px;
+      height: 3px;
+      border-radius: 2px;
+    }
+    .legend-jalan .lj-line.jalan { background: var(--bk7-oranye-dark, #d4a030); }
+    .legend-jalan .lj-line.jalur { background: var(--bk7-hijau-dark, #4fa86a); height: 4px; }
+    .legend-jalan .lj-line.siklus {
+      background: repeating-linear-gradient(90deg, var(--bk7-ungu, #8a4bbf) 0 8px, transparent 8px 13px);
+    }
+
+    /* Info bar */
+    .kanvas-info-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      margin-top: 0.8rem;
+    }
+    .kib-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.3rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: var(--bk7-soft-oranye, #fff8e6);
+      color: #8a5e00;
+      border: 2px solid var(--bk7-oranye, #f4b942);
+    }
+    .kib-item.ok {
+      background: var(--bk7-soft-hijau, #e8f5e0);
+      color: #2d5a1e;
+      border-color: var(--bk7-hijau-dark, #4fa86a);
+    }
+    .kib-item.warn {
+      background: #fff3d6;
+      color: #8a5e00;
+      border-color: var(--bk7-oranye-dark, #d4a030);
+    }
+    .kib-item.error {
+      background: var(--bk7-danger-soft, #fdf0f0);
+      color: var(--bk7-danger, #b33c3c);
+      border-color: #d4a0a0;
+    }
+
+    /* Kartu pembanding (dipakai di Lapis 3) */
+    .pembanding-grid-mini {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+      margin: 0.8rem 0;
+    }
+    .pembanding-mini {
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      border: 2px solid;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .pembanding-mini.tree {
+      background: var(--bk7-soft-hijau, #e8f5e0);
+      border-color: var(--bk7-hijau, #6ecb8f);
+      color: #2d5a1e;
+    }
+    .pembanding-mini.graph {
+      background: var(--bk7-soft-oranye, #fff8e6);
+      border-color: var(--bk7-oranye, #f4b942);
+      color: #5c3400;
+    }
+    .pembanding-mini .pm-title {
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 480px) {
+      .iib-actions { flex-direction: column; }
+      .btn-ubah-identitas,
+      .iib-actions .btn-mulai { width: 100%; justify-content: center; }
+      .peta-kanvas { min-height: 320px; }
+      .titik-simpul { width: 68px; height: 68px; }
+      .titik-simpul .ts-ikon { font-size: 1.3rem; }
+      .titik-simpul .ts-label { font-size: 0.58rem; }
+      .jalan-panel select { max-width: 110px; }
+      .pembanding-grid-mini { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+  <div id="duta-breadcrumb-host"></div>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="aktivitas-wrapper">
+
+        <!-- PROGRESS BAR -->
+        <div class="progress-lapis" id="progressLapis">
+          <span class="pl-step active" data-step="lapis1"><span class="pl-num">1</span><span class="pl-label">Menjelajah</span></span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis2"><span class="pl-num">2</span><span class="pl-label">Tantangan</span></span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="lapis3"><span class="pl-num">3</span><span class="pl-label">Penamaan</span></span>
+          <span class="pl-sep">→</span>
+          <span class="pl-step" data-step="tes"><span class="pl-num">4</span><span class="pl-label">Tes Pemahaman</span></span>
+        </div>
+
+        <!-- AREA SIMULASI -->
+        <div id="area-simulasi" class="active">
+          <div class="scenario-panel">
+
+            <div class="scenario-title">🕸️ Aktivitas: Peta Jalan Dewi ke Sekolah</div>
+            <div class="scenario-story">
+              📖 <strong>Cerita:</strong> Dewi menggambar peta jalan dari rumahnya ke sekolah.
+              Ia menggambar titik-titik: Rumah, Pasar, Jembatan, Gang Kecil, Sekolah. Lalu
+              ia menghubungkan dengan garis: Rumah → Pasar, Rumah → Jembatan, Pasar → Sekolah,
+              Jembatan → Gang Kecil, Gang Kecil → Sekolah.
+              <br><br>
+              Ia memperhatikan: ada <strong>dua jalan</strong> yang bisa dilalui dari Rumah ke
+              Sekolah (lewat Pasar, atau lewat Jembatan–Gang Kecil). Jalan itu bisa memutar,
+              tapi tetap sampai.
+              <br><br>
+              Sekarang giliranmu! Susun peta jalanmu sendiri. Hubungkan titik-titik dengan
+              jalan. Boleh memutar, boleh bercabang — yang penting ada jalur dari
+              <strong>Rumah ke Sekolah</strong>. Amati: apakah peta jalan boleh melingkar?
+            </div>
+
+            <div class="lapis-header lapis-1">
+              <span class="lapis-num">LAPIS 1</span>
+              <span>🖐️ Menjelajah Bebas — Susun Peta Jalan</span>
+            </div>
+
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              <strong>Instruksi:</strong> (1) <strong>Seret</strong> titik dari palet bawah ke
+              kanvas. (2) Gunakan panel <strong>🛣️ Sambung Jalan</strong> untuk menghubungkan
+              dua titik. (3) Pastikan ada <strong>jalur dari Rumah ke Sekolah</strong>.
+              (4) Coba buat <strong>siklus</strong> (misal Rumah → Pasar → Jembatan → Rumah)
+              — apakah itu boleh? (5) Klik <strong>🔍 Cek Jalur</strong> untuk memverifikasi.
+            </p>
+
+            <div class="misi-info" id="misiInfo">
+              <div class="mi-label">STATUS PETA JALAN</div>
+              <div id="misiText">Belum ada titik di kanvas. Seret titik dari palet bawah.</div>
+            </div>
+
+            <div class="stats-bar">
+              <div class="stat">
+                <span>📍</span>
+                <span>Titik:</span>
+                <span class="num graph" id="statTitik">0</span>
+              </div>
+              <div class="stat">
+                <span>🛣️</span>
+                <span>Jalan:</span>
+                <span class="num graph" id="statJalan">0</span>
+              </div>
+              <div class="stat">
+                <span>🔄</span>
+                <span>Siklus:</span>
+                <span class="num top" id="statSiklus">0</span>
+              </div>
+              <div class="stat">
+                <span>🏁</span>
+                <span>Jalur R→S:</span>
+                <span class="num pop" id="statJalur">0</span>
+              </div>
+            </div>
+
+            <!-- KANVAS -->
+            <div class="peta-kanvas-wrapper">
+              <div class="peta-kanvas" id="petaKanvas">
+                <div class="pk-hint" id="pkHint">
+                  🖱️ Seret titik ke sini<br>
+                  <span style="font-size:0.8rem;">Rumah (🏠) dan Sekolah (🏫) wajib ada. Hubungkan dengan jalan.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PALET -->
+            <div class="palet-titik" id="paletTitik">
+              <div class="pt-label">📍 Palet Titik — Seret ke Kanvas</div>
+              <!-- Titik diisi via JS -->
+            </div>
+
+            <!-- PANEL JALAN -->
+            <div class="jalan-panel" id="jalanPanel">
+              <span class="jp-label">🛣️ Sambung Jalan:</span>
+              <select id="selDari">
+                <option value="">— Dari titik —</option>
+              </select>
+              <span class="jp-arrow">↔</span>
+              <select id="selKe">
+                <option value="">— Ke titik —</option>
+              </select>
+              <button type="button" id="btnSambungJalan" disabled>🛣️ Sambung</button>
+              <button type="button" class="btn-hapus-jalan" id="btnHapusJalan" disabled>🗑️ Hapus Jalan</button>
+            </div>
+
+            <!-- CEK JALUR -->
+            <div class="cek-jalur-bar">
+              <span class="cjb-label">🔍 Cek apakah ada jalur dari <strong>Rumah</strong> ke <strong>Sekolah</strong>:</span>
+              <button type="button" class="cjb-btn" id="btnCekJalur" disabled>🔍 Cek Jalur</button>
+              <span class="cjb-result" id="cjbResult"></span>
+            </div>
+
+            <!-- INFO BAR -->
+            <div class="kanvas-info-bar">
+              <span class="kib-item" id="kibTitik">📍 0 titik</span>
+              <span class="kib-item" id="kibJalan">🛣️ 0 jalan</span>
+              <span class="kib-item" id="kibSiklus">🔄 0 siklus</span>
+              <span class="kib-item" id="kibJalur">🏁 0 jalur</span>
+              <span class="kib-item" id="kibValid">🕸️ Menunggu</span>
+            </div>
+
+            <!-- LEGEND -->
+            <div class="legend-jalan">
+              <span class="lj-item"><span class="lj-line jalan"></span> Jalan (edge)</span>
+              <span class="lj-item"><span class="lj-line jalur"></span> Jalur Rumah → Sekolah</span>
+              <span class="lj-item"><span class="lj-line siklus"></span> Siklus (boleh, khas graph!)</span>
+            </div>
+
+            <!-- LOG -->
+            <div class="log-aktivitas" id="logAktivitas">
+              <div class="log-line log-info">Log aktivitas akan muncul di sini...</div>
+            </div>
+
+            <div class="feedback-box info show" id="feedbackBox">
+              <span class="fb-icon" id="fbIcon">💡</span>
+              <span class="fb-text" id="fbText">
+                Seret Rumah, Pasar, Jembatan, Gang Kecil, Sekolah ke kanvas. Hubungkan dengan jalan.
+                Coba bikin <strong>dua jalur</strong> dari Rumah ke Sekolah — itu khas graph!
+              </span>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnSelesaiLapis1" onclick="selesaiLapis1()" disabled>
+                ✅ Selesai Menjelajah
+              </button>
+              <button class="btn-game secondary" id="btnResetLapis1" onclick="resetPeta()">
+                🔄 Reset Kanvas
+              </button>
+            </div>
+
+            <div class="mindful-box" id="mindful1">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 1</div>
+              <div class="mb-text">
+                <strong>Perhatikan pola!</strong> Apakah peta jalanmu memiliki
+                <strong>lingkaran (siklus)</strong>? Apakah ada <strong>lebih dari satu jalur</strong>
+                dari Rumah ke Sekolah? Tulis 1–2 kalimat tentang pola yang kamu lihat.
+              </div>
+              <textarea id="mindful1Jawab" placeholder="Tulis pengamatanmu di sini..."></textarea>
+            </div>
+
+          </div>
+        </div><!-- end area-simulasi -->
+
+        <!-- AREA PILIH LEVEL -->
+        <div id="areaPilihLevel">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="pilih-level-box">
+              <div class="plb-title">★ Pilih Tingkat Tantanganmu</div>
+              <div class="plb-desc">
+                Sebelum masuk ke Lapis 2 (Tantangan Terarah), pilih tingkat yang paling
+                sesuai dengan kesiapanmu. <strong>Semua level dinilai sama</strong> —
+                yang berbeda hanya jumlah dan tingkat kesulitan tantangannya.
+              </div>
+
+              <div class="level-options" id="levelOptions">
+                <div class="level-option dasar" data-level="dasar">
+                  <span class="lo-icon">🟢</span>
+                  <span class="lo-name">Dasar</span>
+                  <span class="lo-desc">3 tantangan terbimbing dengan petunjuk lebih detail. Cocok kalau kamu ingin penguatan dulu.</span>
+                </div>
+                <div class="level-option reguler" data-level="reguler">
+                  <span class="lo-icon">🟡</span>
+                  <span class="lo-name">Reguler</span>
+                  <span class="lo-desc">3 tantangan standar. Cocok untuk sebagian besar siswa.</span>
+                </div>
+                <div class="level-option tantangan" data-level="tantangan">
+                  <span class="lo-icon">🔴</span>
+                  <span class="lo-name">Tantangan</span>
+                  <span class="lo-desc">3 tantangan standar + 1 tantangan bonus (studi kasus terbuka). Cocok kalau kamu ingin tantangan lebih.</span>
+                </div>
+              </div>
+
+              <div class="level-badge-terpilih" id="levelBadge">
+                <span>✅</span><span id="levelBadgeText">Kamu memilih level: —</span>
+              </div>
+            </div>
+
+            <div class="mindful-box" id="mindfulPilihLevel">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar — Sebelum Tantangan</div>
+              <div class="mb-text"><strong>Mengapa kamu memilih level ini?</strong> Tantangan apa yang kamu harapkan? Tulis 1 kalimat.</div>
+              <textarea id="mindfulPilihJawab" placeholder="Tulis alasanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis2" disabled>➡️ Lanjut ke Tantangan</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LAPIS 2 -->
+        <div id="areaLapis2" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-2">
+              <span class="lapis-num">LAPIS 2</span>
+              <span>🎯 Tantangan Terarah — Level <span id="lapis2LevelLabel">—</span></span>
+            </div>
+            <p style="font-size:0.92rem; color:#5c4638; margin-bottom:1rem;">
+              Jawab dengan teliti! Sistem hanya memberi umpan balik, bukan jawaban langsung.
+              <span id="lapis2JumlahTantangan">3 tantangan</span> yang harus diselesaikan.
+            </p>
+            <div class="tantangan-list" id="tantanganList"></div>
+
+            <div class="mindful-box" id="mindful2" style="display:none;">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 2</div>
+              <div class="mb-text"><strong>Refleksi:</strong> Setelah mencoba berbagai tantangan, apa pola yang kamu lihat dari semua aktivitas tadi? Tulis 1–2 kalimat tentang pola yang kamu temukan.</div>
+              <textarea id="mindful2Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutLapis3" disabled>➡️ Lapis 2 Selesai — Buka Penamaan Konsep</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LAPIS 3 -->
+        <div id="areaLapis3" style="display:none;">
+          <div class="scenario-panel" style="margin-top:1.5rem;">
+            <div class="lapis-header lapis-3">
+              <span class="lapis-num">LAPIS 3</span>
+              <span>📖 Penamaan Konsep — Istilah Resmi</span>
+            </div>
+
+            <div class="penamaan-box show" id="penamaanKonten">
+              <h3>🏷️ Sekarang, Kita Beri Nama!</h3>
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822;">
+                Semua yang kamu alami di simulasi peta jalan punya <strong>nama resmi</strong>
+                dalam ilmu komputer. Inilah saatnya menghubungkan pengalamanmu dengan
+                istilah formal.
+              </p>
+
+              <div class="notasi-box">
+                <strong>🕸️ Jaringan (Graph)</strong> adalah struktur data yang terdiri dari
+                <strong>simpul (vertex)</strong> yang dihubungkan oleh <strong>sisi (edge)</strong>.
+                Berbeda dengan pohon, jaringan <strong>boleh melingkar</strong> dan boleh memiliki
+                <strong>lebih dari satu jalur</strong> antara dua simpul.
+              </div>
+
+              <p style="font-size:0.92rem; line-height:1.7; color:#2f2822; margin-top:1rem;">
+                <strong>Istilah-istilah kunci yang perlu kamu pahami:</strong>
+              </p>
+
+              <table class="tabel-istilah">
+                <thead>
+                  <tr>
+                    <th>Istilah</th>
+                    <th>Makna</th>
+                    <th>Kaitannya dengan Simulasi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Jaringan (Graph)</strong></td>
+                    <td>Struktur data dari simpul dan sisi. Boleh melingkar dan banyak jalur.</td>
+                    <td>Peta jalan dengan beberapa jalur alternatif.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Simpul (Vertex)</strong></td>
+                    <td>Titik dalam jaringan.</td>
+                    <td>Rumah, Pasar, Sekolah.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sisi (Edge)</strong></td>
+                    <td>Garis yang menghubungkan simpul.</td>
+                    <td>Jalan dari Rumah ke Pasar.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Jalur (Path)</strong></td>
+                    <td>Rangkaian sisi yang menghubungkan dua simpul.</td>
+                    <td>Rumah → Pasar → Sekolah.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Siklus (Cycle)</strong></td>
+                    <td>Jalur yang kembali ke simpul awal.</td>
+                    <td>Rumah → Pasar → Jembatan → Rumah.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Derajat (Degree)</strong></td>
+                    <td>Banyaknya sisi yang terhubung ke suatu simpul.</td>
+                    <td>Rumah punya derajat 2 (Pasar &amp; Jembatan).</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Pembanding singkat -->
+              <div class="pembanding-grid-mini">
+                <div class="pembanding-mini tree">
+                  <div class="pm-title">🌳 Pohon (Tree)</div>
+                  <ul style="margin:0 0 0 1rem; font-size:0.8rem; padding:0;">
+                    <li>Tidak boleh siklus</li>
+                    <li>Satu akar</li>
+                    <li>Hanya satu jalur</li>
+                  </ul>
+                </div>
+                <div class="pembanding-mini graph">
+                  <div class="pm-title">🕸️ Jaringan (Graph)</div>
+                  <ul style="margin:0 0 0 1rem; font-size:0.8rem; padding:0;">
+                    <li>Boleh siklus</li>
+                    <li>Tidak harus punya akar</li>
+                    <li>Bisa banyak jalur</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="koneksi">
+                <strong>💡 Koneksi Dunia Nyata:</strong><br>
+                Saat kamu membuka <strong>Google Maps</strong> dan mencari rute, sistem
+                menampilkan beberapa alternatif jalan. Itu karena peta adalah
+                <strong>jaringan (graph)</strong> — ada banyak jalur dan siklus. Kamu bisa
+                memilih jalur tercepat, terpendek, atau menghindari macet. Contoh lain:
+                <strong>jaringan pertemanan</strong> di media sosial, <strong>jaringan
+                transportasi</strong> (angkot, bus, kereta), dan <strong>jaringan listrik</strong>
+                di rumahmu.
+              </div>
+            </div>
+
+            <div class="link-materi-wrapper">
+              <a href="materibk7" target="_blank" rel="noopener" class="link-materi-bawah">
+                📚 Baca Materi Lengkap (buka tab baru)
+              </a>
+            </div>
+
+            <div class="mindful-box" id="mindful3">
+              <div class="mb-title"><span class="mb-icon">🧘</span> Jeda Sadar 3</div>
+              <div class="mb-text">
+                Dengan istilah resmi: <strong>mengapa jaringan (graph) boleh melingkar</strong>,
+                sedangkan pohon (tree) tidak? Tulis dengan bahasamu sendiri, kaitkan dengan
+                pengalamanmu di simulasi peta jalan.
+              </div>
+              <textarea id="mindful3Jawab" placeholder="Tulis jawabanmu di sini..."></textarea>
+            </div>
+
+            <div class="kuis-kilat-box" id="kuisKilatBox">
+              <div class="kk-title">⚡ Kuis Kilat <span class="badge">2 SOAL</span></div>
+              <div id="kuisKilatContent"></div>
+              <div class="kk-hasil" id="kkHasil"></div>
+            </div>
+
+            <div class="game-actions" style="margin-top:1rem;">
+              <button class="btn-game primary" id="btnLanjutTes" disabled>➡️ Lanjut ke Tes Pemahaman</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TES PEMAHAMAN -->
+        <div class="tes-section" id="tesSection">
+          <div class="tes-header">
+            <div class="tes-info">📝 <strong>Tes Pemahaman:</strong> 4 soal · Minimal 3 benar untuk lanjut</div>
+            <div class="tes-progress" id="tesProgress">Terjawab: 0 / 4</div>
+          </div>
+          <div id="soalContainer"></div>
+          <button class="btn-submit-tes" id="btnPeriksaTes">✅ Periksa Jawaban</button>
+          <button class="btn-ulangi-tes" id="btnUlangiTes">🔄 Ulangi Tes Pemahaman</button>
+        </div>
+
+        <div class="hasil-tes" id="hasilTes">
+          <div class="hasil-icon" id="hasilIcon">🏆</div>
+          <div class="hasil-title" id="hasilTitle">Selamat!</div>
+          <div class="hasil-skor" id="hasilSkor">0 / 4</div>
+          <div class="hasil-desc" id="hasilDesc">Kamu telah menyelesaikan Bagian 2.</div>
+        </div>
+
+        <!-- REFLEKSI -->
+        <div class="refleksi-box" id="refleksiBox">
+          <h3>🪞 Refleksi</h3>
+
+          <div class="refleksi-item">
+            <label><span class="tag">PELAJARAN</span> Apa yang saya pelajari tentang jaringan (graph) dari aktivitas ini?</label>
+            <textarea id="refPelajaran" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="refleksi-item">
+            <label><span class="tag">PENERAPAN</span> Di mana lagi saya akan menggunakan konsep jaringan (graph)?</label>
+            <textarea id="refPenerapan" placeholder="Tulis di sini..."></textarea>
+          </div>
+
+          <div class="exit-ticket">
+            <div class="et-title">🎫 Exit Ticket</div>
+            <p style="font-size:0.85rem; color:#5c4638; margin-bottom:0.4rem;">
+              Sebutkan <strong>satu contoh jaringan</strong> yang kamu temukan di sekitarmu
+              (bukan yang sudah disebutkan di materi). Jelaskan mengapa itu disebut jaringan.
+            </p>
+            <textarea id="exitTicket" placeholder="Contoh: Jaringan angkot di kotaku — banyak rute yang saling terhubung dan bisa memutar."></textarea>
+          </div>
+
+          <div class="feedback-ai-box" id="feedbackAiBox">
+            <div class="fai-header">
+              <span class="fai-icon">🧑‍🏫</span>
+              <span>Catatan dari Guru</span>
+            </div>
+            <div class="fai-body" id="feedbackAiBody"></div>
+          </div>
+        </div>
+
+        <div class="game-actions" style="margin-top:0.6rem;">
+          <button type="button" class="btn-feedback-ai" id="btnMintaFeedback" disabled>
+            🧑‍🏫 Minta Feedback
+          </button>
+        </div>
+        <div class="feedback-ai-hint" id="feedbackAiHint" style="text-align:center;">
+          Isi Refleksi atau Exit Ticket dulu untuk mengaktifkan tombol.
+        </div>
+
+        <div class="status-kirim info" id="statusKirim">
+          <span class="spinner" id="statusSpinner"></span>
+          <span id="statusKirimText">Mengirim nilai...</span>
+        </div>
+
+        <div class="nav-bottom">
+          <a href="aktivitasbk7a" class="btn-nav-bawah">
+            <span class="back-arrow">←</span> Kembali ke Bagian 1
+          </a>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button class="btn-nav-bawah primary locked" id="btnLanjutBagian">
+              Lanjut ke Bagian 3: Beda Keduanya → 
+            </button>
+          </div>
+          <div class="nav-hint locked" id="hintLanjut">
+            🔒 Selesaikan semua tahap untuk membuka Bagian 3
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+  <script src="scriptbk.js"></script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================
+      // KONFIGURASI MODUL (spesifik Bagian 2)
+      // ============================================
+      const NAMA_SHEET = 'bk7';
+      const MODUL_KEY = 'bk7';
+      const TOTAL_BAGIAN = ['a', 'b', 'c', 'd'];
+      const AMBANG_LULUS = 3;
+      const STATE_KEY = 'labbk7_state_b';
+
+      // ============================================
+      // DATA TITIK (5 simpul)
+      // ============================================
+      const DAFTAR_TITIK = [
+        { id: 'rumah',    nama: 'Rumah',      ikon: '🏠', tipe: 'rumah' },
+        { id: 'pasar',    nama: 'Pasar',      ikon: '🏪', tipe: 'biasa' },
+        { id: 'jembatan', nama: 'Jembatan',   ikon: '🌉', tipe: 'biasa' },
+        { id: 'gang',     nama: 'Gang Kecil', ikon: '🛤️', tipe: 'biasa' },
+        { id: 'sekolah',  nama: 'Sekolah',    ikon: '🏫', tipe: 'sekolah' }
+      ];
+
+      // Jalur yang dianggap benar: Rumah → Sekolah (langsung/tidak langsung)
+      const TITIK_AWAL = 'rumah';
+      const TITIK_AKHIR = 'sekolah';
+
+      // ============================================
+      // DATA TANTANGAN
+      // ============================================
+      const tantanganDasar = [
+        {
+          id: 'D1',
+          teks: 'Dalam peta jalanmu, apa saja <strong>titik-titiknya</strong>?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Garis-garis yang menghubungkan', benar: false },
+            { v: 'B', label: 'Rumah, Pasar, Jembatan, Gang Kecil, Sekolah', benar: true },
+            { v: 'C', label: 'Hanya Rumah dan Sekolah', benar: false }
+          ],
+          hint: 'Titik disebut simpul (vertex). Ada 5 titik di peta.',
+          feedbackSalah: 'Titik-titik peta: Rumah, Pasar, Jembatan, Gang Kecil, Sekolah. Itulah simpul (vertex).'
+        },
+        {
+          id: 'D2',
+          teks: 'Garis yang menghubungkan titik dalam jaringan disebut...',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Sisi (edge)', benar: true },
+            { v: 'B', label: 'Akar (root)', benar: false },
+            { v: 'C', label: 'Daun (leaf)', benar: false }
+          ],
+          hint: 'Garis penghubung dalam graph disebut sisi (edge).',
+          feedbackSalah: 'Garis yang menghubungkan dua simpul disebut sisi (edge).'
+        },
+        {
+          id: 'D3',
+          teks: 'Berapa banyak <strong>jalur berbeda</strong> yang bisa dilalui dari Rumah ke Sekolah pada peta contoh (Rumah→Pasar→Sekolah dan Rumah→Jembatan→Gang Kecil→Sekolah)?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: '1 jalur', benar: false },
+            { v: 'B', label: '2 jalur', benar: true },
+            { v: 'C', label: '3 jalur', benar: false }
+          ],
+          hint: 'Hitung jalur berbeda: lewat Pasar, atau lewat Jembatan–Gang Kecil. Total 2.',
+          feedbackSalah: 'Ada 2 jalur berbeda: (1) Rumah→Pasar→Sekolah, (2) Rumah→Jembatan→Gang Kecil→Sekolah.'
+        }
+      ];
+
+      const tantanganReguler = [
+        {
+          id: 'R1',
+          teks: 'Apakah peta jalan boleh memiliki <strong>lingkaran (siklus)</strong>? Mengapa?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Tidak boleh — akan membingungkan', benar: false },
+            { v: 'B', label: 'Boleh — namanya siklus (cycle), khas graph', benar: true },
+            { v: 'C', label: 'Boleh, tapi harus dihapus sebelum disimpan', benar: false }
+          ],
+          hint: 'Berbeda dengan pohon, graph BOLEH memiliki siklus.',
+          feedbackSalah: 'Graph boleh memiliki siklus (cycle). Contoh: Rumah→Pasar→Jembatan→Rumah. Itu khas graph, berbeda dengan pohon.'
+        },
+        {
+          id: 'R2',
+          teks: 'Dewi berteman dengan Raka, Raka berteman dengan Siti, dan Siti berteman dengan Dewi. Apakah ini membentuk <strong>lingkaran</strong>? Apakah ini graph?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Ya membentuk lingkaran. Ya, ini graph.', benar: true },
+            { v: 'B', label: 'Ya membentuk lingkaran. Bukan graph, tapi pohon.', benar: false },
+            { v: 'C', label: 'Tidak membentuk lingkaran. Bukan graph.', benar: false }
+          ],
+          hint: 'Dewi→Raka→Siti→Dewi membentuk siklus. Karena ada siklus, ini graph (bukan pohon).',
+          feedbackSalah: 'Dewi→Raka→Siti→Dewi membentuk siklus. Karena ada siklus, ini graph — bukan pohon.'
+        },
+        {
+          id: 'R3',
+          teks: 'Apa perbedaan utama antara <strong>pohon (tree)</strong> dan <strong>jaringan (graph)</strong>?',
+          tipe: 'pilihan',
+          opsi: [
+            { v: 'A', label: 'Pohon boleh melingkar, jaringan tidak', benar: false },
+            { v: 'B', label: 'Jaringan boleh melingkar, pohon tidak', benar: true },
+            { v: 'C', label: 'Keduanya sama saja', benar: false }
+          ],
+          hint: 'Pohon tidak boleh siklus; graph boleh.',
+          feedbackSalah: 'Perbedaan utama: jaringan (graph) boleh melingkar, pohon (tree) tidak boleh melingkar.'
+        }
+      ];
+
+      const tantanganBonus = [
+        {
+          id: 'B1',
+          teks: '<strong>🔥 Tantangan Bonus (Pengayaan — Terbuka):</strong><br><br>"Dewi menggambar peta jalan ke sekolah. Menurutmu, mengapa peta jalan disebut \'jaringan\' dan bukan \'pohon\'? Jelaskan, minimal 3 kalimat."',
+          tipe: 'teks',
+          validasi: function(val) { return val.trim().length >= 80; },
+          hint: 'Pikirkan: (1) ada beberapa jalur, (2) boleh ada siklus, (3) tidak harus punya akar.',
+          feedbackSalah: 'Argumenmu masih terlalu pendek. Tulis minimal 3 kalimat: (1) ciri graph pada peta, (2) mengapa bukan pohon, (3) contoh siklus.'
+        }
+      ];
+
+      // KUIS KILAT
+      const kuisKilatData = [
+        {
+          pertanyaan: 'Apa yang dimaksud dengan "simpul" (vertex) dalam jaringan?',
+          opsi: [
+            'Garis penghubung.',
+            'Titik dalam jaringan.',
+            'Jalur.',
+            'Siklus.'
+          ],
+          kunci: 1,
+          penjelasan: 'Simpul (vertex) adalah titik dalam jaringan.'
+        },
+        {
+          pertanyaan: 'Manakah yang <strong>bukan</strong> contoh jaringan (graph)?',
+          opsi: [
+            'Peta jalan.',
+            'Jaringan pertemanan.',
+            'Silsilah keluarga.',
+            'Jaringan transportasi.'
+          ],
+          kunci: 2,
+          penjelasan: 'Silsilah keluarga adalah pohon (tree) — tidak boleh siklus, punya satu akar.'
+        }
+      ];
+
+      // TES PEMAHAMAN
+      const soalData = [
+        {
+          pertanyaan: 'Dalam jaringan, garis yang menghubungkan simpul disebut...',
+          opsi: ['Akar', 'Sisi', 'Daun', 'Cabang'],
+          kunci: 1,
+          penjelasan: 'Garis yang menghubungkan simpul disebut sisi (edge).'
+        },
+        {
+          pertanyaan: 'Apa perbedaan utama antara pohon dan jaringan?',
+          opsi: [
+            'Pohon boleh melingkar, jaringan tidak.',
+            'Jaringan boleh melingkar, pohon tidak.',
+            'Keduanya sama.',
+            'Pohon tidak punya simpul.'
+          ],
+          kunci: 1,
+          penjelasan: 'Jaringan (graph) boleh melingkar (siklus), pohon (tree) tidak boleh.'
+        },
+        {
+          pertanyaan: 'Manakah yang merupakan contoh jaringan?',
+          opsi: [
+            'Silsilah keluarga.',
+            'Folder komputer.',
+            'Peta jalan dengan jalur alternatif.',
+            'Struktur organisasi sekolah.'
+          ],
+          kunci: 2,
+          penjelasan: 'Peta jalan dengan jalur alternatif (dan siklus) adalah contoh jaringan.'
+        },
+        {
+          pertanyaan: 'Jalur yang kembali ke simpul awal disebut...',
+          opsi: ['Sisi', 'Simpul', 'Siklus', 'Akar'],
+          kunci: 2,
+          penjelasan: 'Jalur yang kembali ke simpul awal disebut siklus (cycle).'
+        }
+      ];
+
+      // ============================================
+      // STATE SIMULASI
+      // ============================================
+      let titikDiKanvas = {};      // {id: {x, y}}
+      let titikDiPalet = DAFTAR_TITIK.map(function(t) { return t.id; }); // id yang masih di palet
+      let jalanList = [];          // [{dari: id, ke: id}]
+      let lapis1Selesai = false;
+      let daftarSiswa = [];
+
+      // Canvas bounds
+      let kanvasRect = null;
+      const TITIK_W = 84;
+      const TITIK_H = 84;
+
+      // Drag state
+      let dragState = null;
+
+      // Hasil cek jalur terakhir
+      let cekJalurHasil = null;
+
+      // ============================================
+      // DOM REFS
+      // ============================================
+      const elAreaSimulasi   = document.getElementById('area-simulasi');
+      const elAreaPilihLevel = document.getElementById('areaPilihLevel');
+
+      const elKanvas        = document.getElementById('petaKanvas');
+      const elPkHint        = document.getElementById('pkHint');
+      const elPalet         = document.getElementById('paletTitik');
+      const elSelDari       = document.getElementById('selDari');
+      const elSelKe         = document.getElementById('selKe');
+      const elBtnSambung    = document.getElementById('btnSambungJalan');
+      const elBtnHapusJalan = document.getElementById('btnHapusJalan');
+      const elBtnCekJalur   = document.getElementById('btnCekJalur');
+      const elCjbResult     = document.getElementById('cjbResult');
+
+      const elMisiText   = document.getElementById('misiText');
+      const elStatTitik  = document.getElementById('statTitik');
+      const elStatJalan  = document.getElementById('statJalan');
+      const elStatSiklus = document.getElementById('statSiklus');
+      const elStatJalur  = document.getElementById('statJalur');
+
+      const elKibTitik  = document.getElementById('kibTitik');
+      const elKibJalan  = document.getElementById('kibJalan');
+      const elKibSiklus = document.getElementById('kibSiklus');
+      const elKibJalur  = document.getElementById('kibJalur');
+      const elKibValid  = document.getElementById('kibValid');
+
+      const elLogAktivitas     = document.getElementById('logAktivitas');
+      const elBtnSelesaiLapis1 = document.getElementById('btnSelesaiLapis1');
+      const elBtnResetLapis1   = document.getElementById('btnResetLapis1');
+      const elMindful1         = document.getElementById('mindful1');
+
+      // ============================================
+      // HELPER
+      // ============================================
+      function tambahLog(text, tipe) {
+        const emptyEl = elLogAktivitas.querySelector('.log-info');
+        if (emptyEl && emptyEl.textContent.indexOf('Log aktivitas akan') !== -1) emptyEl.remove();
+        const line = document.createElement('div');
+        line.className = 'log-line';
+        const cls = tipe ? 'log-' + tipe : 'log-info';
+        const now = new Date();
+        const waktu = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+        line.innerHTML = '<span class="log-time">[' + waktu + ']</span> <span class="' + cls + '">' + text + '</span>';
+        elLogAktivitas.appendChild(line);
+        elLogAktivitas.scrollTop = elLogAktivitas.scrollHeight;
+      }
+
+      function cariTitik(id) {
+        return DAFTAR_TITIK.find(function(t) { return t.id === id; });
+      }
+
+      // ============================================
+      // IDENTITAS — dari script.js (localStorage)
+      // ============================================
+      function refreshIdentitasUI() {
+        const s = window.ambilSession ? window.ambilSession() : null;
+        if (!s) return;
+
+        if (window.sinkronkanIdentitasDenganSession) {
+          window.sinkronkanIdentitasDenganSession();
+        }
+        const dd = window.ambilIdentitasSiswaMulti ? window.ambilIdentitasSiswaMulti() : null;
+        if (!dd) return;
+
+        daftarSiswa = [];
+        if (dd.tipe === 'login') {
+          if (dd.utama) daftarSiswa.push(dd.utama);
+          (dd.teman || []).forEach(function(t) { daftarSiswa.push(t); });
+        } else if (dd.tipe === 'tamu' && dd.tamu && Array.isArray(dd.tamu.daftarNama)) {
+          dd.tamu.daftarNama.forEach(function(nama) {
+            daftarSiswa.push({ nama: nama, kelas: dd.tamu.kelas, sekolah: dd.tamu.sekolah });
+          });
+        }
+      }
+
+      function formatNamaSiswa(daftar) {
+        if (!daftar || daftar.length === 0) return 'Siswa Informatika';
+        if (daftar.length === 1) return daftar[0].nama;
+        if (daftar.length === 2) return daftar[0].nama + ' & ' + daftar[1].nama;
+        const names = daftar.map(function(s) { return s.nama; });
+        const last = names.pop();
+        return names.join(', ') + ' & ' + last;
+      }
+
+      // ============================================
+      // SIMULASI PETA JALAN
+      // ============================================
+      function initSimulasi() {
+        titikDiKanvas = {};
+        titikDiPalet = DAFTAR_TITIK.map(function(t) { return t.id; });
+        jalanList = [];
+        lapis1Selesai = false;
+        cekJalurHasil = null;
+
+        elStatTitik.textContent = '0';
+        elStatJalan.textContent = '0';
+        elStatSiklus.textContent = '0';
+        elStatJalur.textContent = '0';
+
+        elLogAktivitas.innerHTML = '<div class="log-line log-info">Log aktivitas akan muncul di sini...</div>';
+
+        elCjbResult.className = 'cjb-result';
+        elCjbResult.textContent = '';
+
+        renderKanvas();
+        renderPalet();
+        updateSelects();
+        updateKanvasInfo();
+
+        elBtnSelesaiLapis1.disabled = true;
+        elMindful1.classList.remove('show');
+
+        elMisiText.innerHTML = 'Belum ada titik di kanvas. Seret titik dari palet bawah.';
+
+        DUTA_BK.tampilFeedback('info', '💡',
+          'Seret Rumah, Pasar, Jembatan, Gang Kecil, Sekolah ke kanvas. Hubungkan dengan jalan. ' +
+          'Coba bikin <strong>dua jalur</strong> dari Rumah ke Sekolah — itu khas graph!');
+
+        hitungKanvasBounds();
+      }
+
+      function hitungKanvasBounds() {
+        kanvasRect = elKanvas.getBoundingClientRect();
+      }
+
+      // ============================================
+      // RENDER KANVAS
+      // ============================================
+      function renderKanvas() {
+        elKanvas.querySelectorAll('.titik-simpul').forEach(function(el) { el.remove(); });
+        elKanvas.querySelectorAll('svg.kanvas-svg').forEach(function(el) { el.remove(); });
+
+        if (Object.keys(titikDiKanvas).length === 0) {
+          elPkHint.style.display = 'block';
+        } else {
+          elPkHint.style.display = 'none';
+        }
+
+        // SVG garis
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'kanvas-svg');
+        elKanvas.appendChild(svg);
+
+        // Hitung derajat tiap titik
+        const derajat = {};
+        DAFTAR_TITIK.forEach(function(t) { derajat[t.id] = 0; });
+        jalanList.forEach(function(g) {
+          if (derajat[g.dari] !== undefined) derajat[g.dari]++;
+          if (derajat[g.ke] !== undefined) derajat[g.ke]++;
+        });
+
+        // Render tiap titik
+        Object.keys(titikDiKanvas).forEach(function(id) {
+          const t = cariTitik(id);
+          if (!t) return;
+          const pos = titikDiKanvas[id];
+          const el = document.createElement('div');
+          el.className = 'titik-simpul ' + t.tipe + (derajat[id] > 0 ? ' terhubung' : '');
+          el.dataset.id = id;
+          el.style.left = pos.x + 'px';
+          el.style.top  = pos.y + 'px';
+
+          let badgeHtml = '';
+          if (derajat[id] > 0) {
+            badgeHtml = '<span class="ts-badge">' + derajat[id] + '</span>';
+          }
+
+          el.innerHTML =
+            badgeHtml +
+            '<span class="ts-ikon">' + t.ikon + '</span>' +
+            '<span class="ts-label">' + DUTA_BK.escapeHtml(t.nama) + '</span>';
+
+          el.addEventListener('pointerdown', function(e) { mulaiDrag(e, id); });
+          el.addEventListener('click', function(e) { e.stopPropagation(); });
+          elKanvas.appendChild(el);
+        });
+
+        // Gambar garis
+        gambarGaris(svg);
+
+        updateStats();
+      }
+
+      function renderPalet() {
+        elPalet.innerHTML = '<div class="pt-label">📍 Palet Titik — Seret ke Kanvas</div>';
+        if (titikDiPalet.length === 0) {
+          elPalet.innerHTML += '<div class="pt-empty">— semua titik sudah di kanvas —</div>';
+          return;
+        }
+        titikDiPalet.forEach(function(id) {
+          const t = cariTitik(id);
+          if (!t) return;
+          const el = document.createElement('div');
+          el.className = 'titik-simpul ' + t.tipe;
+          el.dataset.id = id;
+          el.innerHTML =
+            '<span class="ts-ikon">' + t.ikon + '</span>' +
+            '<span class="ts-label">' + DUTA_BK.escapeHtml(t.nama) + '</span>';
+          el.addEventListener('pointerdown', function(e) { mulaiDrag(e, id); });
+          elPalet.appendChild(el);
+        });
+      }
+
+      // ============================================
+      // DRAG & DROP (pointer events)
+      // ============================================
+      function mulaiDrag(e, id) {
+        e.preventDefault();
+        if (lapis1Selesai) return;
+
+        const dariPalet = titikDiPalet.indexOf(id) !== -1;
+
+        if (dariPalet) {
+          titikDiPalet = titikDiPalet.filter(function(x) { return x !== id; });
+          hitungKanvasBounds();
+          const x = (kanvasRect ? (e.clientX - kanvasRect.left) : 100) - (TITIK_W / 2);
+          const y = (kanvasRect ? (e.clientY - kanvasRect.top) : 100) - (TITIK_H / 2);
+          titikDiKanvas[id] = {
+            x: Math.max(4, Math.min(x, (kanvasRect ? kanvasRect.width : 400) - TITIK_W - 4)),
+            y: Math.max(4, Math.min(y, (kanvasRect ? kanvasRect.height : 400) - TITIK_H - 4))
+          };
+          renderPalet();
+          renderKanvas();
+          updateSelects();
+          updateKanvasInfo();
+          tambahLog('📥 Titik <strong>' + cariTitik(id).nama + '</strong> dipindahkan ke kanvas.', 'graph');
+
+          const elTitik = elKanvas.querySelector('.titik-simpul[data-id="' + id + '"]');
+          if (elTitik) mulaiDragDiKanvas(e, id, elTitik, 0, 0);
+          return;
+        }
+
+        const elTitik = elKanvas.querySelector('.titik-simpul[data-id="' + id + '"]');
+        if (!elTitik) return;
+        const rect = elTitik.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
+        mulaiDragDiKanvas(e, id, elTitik, offsetX, offsetY);
+      }
+
+      function mulaiDragDiKanvas(e, id, elTitik, offsetX, offsetY) {
+        dragState = { id: id, offsetX: offsetX, offsetY: offsetY };
+        elTitik.classList.add('dragging');
+        hitungKanvasBounds();
+        document.addEventListener('pointermove', doDrag);
+        document.addEventListener('pointerup', endDrag);
+      }
+
+      function doDrag(e) {
+        if (!dragState) return;
+        e.preventDefault();
+        hitungKanvasBounds();
+        const x = e.clientX - kanvasRect.left - dragState.offsetX;
+        const y = e.clientY - kanvasRect.top - dragState.offsetY;
+        const maxX = kanvasRect.width - TITIK_W - 4;
+        const maxY = kanvasRect.height - TITIK_H - 4;
+        const clampedX = Math.max(4, Math.min(x, maxX));
+        const clampedY = Math.max(4, Math.min(y, maxY));
+
+        titikDiKanvas[dragState.id] = { x: clampedX, y: clampedY };
+        const el = elKanvas.querySelector('.titik-simpul[data-id="' + dragState.id + '"]');
+        if (el) {
+          el.style.left = clampedX + 'px';
+          el.style.top  = clampedY + 'px';
+        }
+
+        const svg = elKanvas.querySelector('svg.kanvas-svg');
+        if (svg) gambarGaris(svg);
+      }
+
+      function endDrag(e) {
+        if (!dragState) return;
+        const el = elKanvas.querySelector('.titik-simpul[data-id="' + dragState.id + '"]');
+        if (el) el.classList.remove('dragging');
+        document.removeEventListener('pointermove', doDrag);
+        document.removeEventListener('pointerup', endDrag);
+
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+        dragState = null;
+        cekSiapSelesaiLapis1();
+      }
+
+      // ============================================
+      // GAMBAR GARIS
+      // ============================================
+      function gambarGaris(svg) {
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+        const jalurSet = cariJalurRumahSekolah();
+
+        jalanList.forEach(function(g) {
+          const dari = titikDiKanvas[g.dari];
+          const ke = titikDiKanvas[g.ke];
+          if (!dari || !ke) return;
+
+          const x1 = dari.x + TITIK_W / 2;
+          const y1 = dari.y + TITIK_H / 2;
+          const x2 = ke.x + TITIK_W / 2;
+          const y2 = ke.y + TITIK_H / 2;
+
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x1);
+          line.setAttribute('y1', y1);
+          line.setAttribute('x2', x2);
+          line.setAttribute('y2', y2);
+          line.setAttribute('stroke-linecap', 'round');
+
+          // Cek apakah edge ini bagian dari jalur Rumah → Sekolah
+          const diJalur = jalurSet.has(g.dari + '|' + g.ke) || jalurSet.has(g.ke + '|' + g.dari);
+          if (diJalur) {
+            line.setAttribute('class', 'jalur-utama');
+          } else if (adalahSiklus(g)) {
+            line.setAttribute('class', 'siklus');
+          }
+          svg.appendChild(line);
+        });
+      }
+
+      // Cek apakah edge ini bagian dari siklus
+      function adalahSiklus(edge) {
+        const siklusSet = deteksiSiklus();
+        return siklusSet.has(edge.dari + '|' + edge.ke) || siklusSet.has(edge.ke + '|' + edge.dari);
+      }
+
+      // ============================================
+      // DETEKSI SIKLUS (DFS)
+      // ============================================
+      function deteksiSiklus() {
+        const adj = {};
+        DAFTAR_TITIK.forEach(function(t) { adj[t.id] = []; });
+        jalanList.forEach(function(g) {
+          if (adj[g.dari]) adj[g.dari].push(g.ke);
+          if (adj[g.ke]) adj[g.ke].push(g.dari);
+        });
+
+        const siklusEdges = new Set();
+        const visited = {};
+        const parent = {};
+
+        function dfs(node, par) {
+          visited[node] = true;
+          parent[node] = par;
+          (adj[node] || []).forEach(function(next) {
+            if (next === parent[node]) return; // skip edge balik ke parent
+            if (visited[next]) {
+              // Siklus ditemukan → tandai edge
+              const a = node, b = next;
+              if (a < b) siklusEdges.add(a + '|' + b);
+              else siklusEdges.add(b + '|' + a);
+            } else {
+              dfs(next, node);
+            }
+          });
+        }
+
+        Object.keys(adj).forEach(function(n) {
+          if (!visited[n] && titikDiKanvas[n]) dfs(n, null);
+        });
+
+        return siklusEdges;
+      }
+
+      // ============================================
+      // CARI JALUR RUMAH → SEKOLAH (BFS)
+      // ============================================
+      function cariJalurRumahSekolah() {
+        const jalurEdges = new Set();
+        if (!titikDiKanvas[TITIK_AWAL] || !titikDiKanvas[TITIK_AKHIR]) return jalurEdges;
+
+        const adj = {};
+        DAFTAR_TITIK.forEach(function(t) { adj[t.id] = []; });
+        jalanList.forEach(function(g) {
+          if (adj[g.dari]) adj[g.dari].push(g.ke);
+          if (adj[g.ke]) adj[g.ke].push(g.dari);
+        });
+
+        // BFS dari rumah
+        const queue = [TITIK_AWAL];
+        const visited = {};
+        visited[TITIK_AWAL] = null;
+
+        while (queue.length > 0) {
+          const cur = queue.shift();
+          if (cur === TITIK_AKHIR) break;
+          (adj[cur] || []).forEach(function(next) {
+            if (!visited[next]) {
+              visited[next] = cur;
+              queue.push(next);
+            }
+          });
+        }
+
+        if (!visited[TITIK_AKHIR]) return jalurEdges;
+
+        // Rekonstruksi jalur
+        let cur = TITIK_AKHIR;
+        while (cur && visited[cur] !== null) {
+          const par = visited[cur];
+          jalurEdges.add(par + '|' + cur);
+          cur = par;
+        }
+        return jalurEdges;
+      }
+
+      // ============================================
+      // HITUNG DERAJAT & SIKLUS
+      // ============================================
+      function hitungSiklus() {
+        return deteksiSiklus().size;
+      }
+
+      function hitungJalur() {
+        return cariJalurRumahSekolah().size;
+      }
+
+      // ============================================
+      // PANEL JALAN
+      // ============================================
+      function updateSelects() {
+        const idsDiKanvas = Object.keys(titikDiKanvas);
+        const opsiHtml = idsDiKanvas.map(function(id) {
+          const t = cariTitik(id);
+          return '<option value="' + id + '">' + t.ikon + ' ' + DUTA_BK.escapeHtml(t.nama) + '</option>';
+        }).join('');
+
+        const valDari = elSelDari.value;
+        const valKe = elSelKe.value;
+
+        elSelDari.innerHTML = '<option value="">— Dari titik —</option>' + opsiHtml;
+        elSelKe.innerHTML   = '<option value="">— Ke titik —</option>' + opsiHtml;
+
+        if (idsDiKanvas.indexOf(valDari) !== -1) elSelDari.value = valDari;
+        if (idsDiKanvas.indexOf(valKe) !== -1) elSelKe.value = valKe;
+
+        cekTombolSambung();
+      }
+
+      function cekTombolSambung() {
+        const dari = elSelDari.value;
+        const ke = elSelKe.value;
+        const valid = !!(dari && ke && dari !== ke);
+        elBtnSambung.disabled = !valid;
+        const adaJalan = jalanList.some(function(g) {
+          return (g.dari === dari && g.ke === ke) || (g.dari === ke && g.ke === dari);
+        });
+        elBtnHapusJalan.disabled = !adaJalan;
+      }
+
+      elSelDari.addEventListener('change', cekTombolSambung);
+      elSelKe.addEventListener('change', cekTombolSambung);
+
+      elBtnSambung.addEventListener('click', function() {
+        const dari = elSelDari.value;
+        const ke = elSelKe.value;
+        if (!dari || !ke || dari === ke) return;
+
+        if (jalanList.some(function(g) {
+          return (g.dari === dari && g.ke === ke) || (g.dari === ke && g.ke === dari);
+        })) {
+          DUTA_BK.tampilFeedback('warn', '⚠️', 'Jalan <strong>' + cariTitik(dari).nama + ' ↔ ' + cariTitik(ke).nama + '</strong> sudah ada.');
+          return;
+        }
+
+        jalanList.push({ dari: dari, ke: ke });
+        const svg = elKanvas.querySelector('svg.kanvas-svg');
+        if (svg) gambarGaris(svg);
+
+        updateKanvasInfo();
+        tambahLog('🛣️ Sambung <strong>' + cariTitik(dari).nama + ' ↔ ' + cariTitik(ke).nama + '</strong>', 'graph');
+
+        cekTombolSambung();
+        cekSiapSelesaiLapis1();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+      });
+
+      elBtnHapusJalan.addEventListener('click', function() {
+        const dari = elSelDari.value;
+        const ke = elSelKe.value;
+        jalanList = jalanList.filter(function(g) {
+          return !((g.dari === dari && g.ke === ke) || (g.dari === ke && g.ke === dari));
+        });
+        const svg = elKanvas.querySelector('svg.kanvas-svg');
+        if (svg) gambarGaris(svg);
+        updateKanvasInfo();
+        tambahLog('🗑️ Hapus jalan <strong>' + cariTitik(dari).nama + ' ↔ ' + cariTitik(ke).nama + '</strong>', 'info');
+        cekTombolSambung();
+        cekSiapSelesaiLapis1();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+      });
+
+      // ============================================
+      // CEK JALUR
+      // ============================================
+      elBtnCekJalur.addEventListener('click', function() {
+        const jalur = cariJalurRumahSekolah();
+        const ada = jalur.size > 0;
+        const nSiklus = hitungSiklus();
+
+        cekJalurHasil = {
+          ada: ada,
+          jalur: jalur.size,
+          siklus: nSiklus
+        };
+
+        if (ada) {
+          elCjbResult.className = 'cjb-result show ok';
+          let txt = '✅ Ada jalur Rumah → Sekolah!';
+          if (nSiklus > 0) {
+            txt += ' Peta juga punya <strong>' + nSiklus + ' siklus</strong> — itu khas graph!';
+          } else {
+            txt += ' Tapi belum ada siklus. Coba bikin siklus, misal Rumah→Pasar→Jembatan→Rumah.';
+          }
+          elCjbResult.innerHTML = txt;
+          DUTA_BK.tampilFeedback('success', '✅',
+            'Jalur Rumah → Sekolah <strong>ditemukan</strong>! ' +
+            'Panjang jalur: <strong>' + jalur.size + ' sisi</strong>. ' +
+            (nSiklus > 0
+              ? 'Siklus: <strong>' + nSiklus + '</strong> — bagus, graph boleh siklus!'
+              : 'Coba tambahkan siklus (misal Rumah→Pasar→Jembatan→Rumah) untuk melihat bedanya dengan pohon.'));
+        } else {
+          elCjbResult.className = 'cjb-result show fail';
+          elCjbResult.innerHTML = '❌ Belum ada jalur dari Rumah ke Sekolah. Tambahkan jalan penghubung dulu.';
+          DUTA_BK.tampilFeedback('warn', '⚠️',
+            'Belum ada jalur dari <strong>Rumah</strong> ke <strong>Sekolah</strong>. ' +
+            'Hubungkan titik-titik dengan jalan hingga tersambung.');
+        }
+
+        cekSiapSelesaiLapis1();
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+      });
+
+      // ============================================
+      // INFO KANVAS
+      // ============================================
+      function updateStats() {
+        elStatTitik.textContent = Object.keys(titikDiKanvas).length;
+        elStatJalan.textContent = jalanList.length;
+        elStatSiklus.textContent = hitungSiklus();
+        elStatJalur.textContent = hitungJalur();
+      }
+
+      function updateKanvasInfo() {
+        const nTitik = Object.keys(titikDiKanvas).length;
+        const nJalan = jalanList.length;
+        const nSiklus = hitungSiklus();
+        const nJalur = hitungJalur();
+        const valid = (nTitik >= 5 && nJalur > 0);
+
+        elKibTitik.textContent = '📍 ' + nTitik + ' titik';
+        elKibTitik.className = 'kib-item' + (nTitik >= 5 ? ' ok' : '');
+
+        elKibJalan.textContent = '🛣️ ' + nJalan + ' jalan';
+        elKibJalan.className = 'kib-item' + (nJalan >= 4 ? ' ok' : '');
+
+        elKibSiklus.textContent = '🔄 ' + nSiklus + ' siklus';
+        elKibSiklus.className = 'kib-item' + (nSiklus > 0 ? ' ok' : ' warn');
+
+        elKibJalur.textContent = '🏁 ' + nJalur + ' jalur';
+        elKibJalur.className = 'kib-item' + (nJalur > 0 ? ' ok' : ' warn');
+
+        if (valid) {
+          elKibValid.textContent = '🕸️ Peta valid!';
+          elKibValid.className = 'kib-item ok';
+        } else if (nTitik < 5) {
+          elKibValid.textContent = '📍 Tambah titik dulu';
+          elKibValid.className = 'kib-item warn';
+        } else {
+          elKibValid.textContent = '🛣️ Sambung ke Sekolah';
+          elKibValid.className = 'kib-item warn';
+        }
+
+        // Tombol cek jalur aktif jika ada cukup jalan
+        elBtnCekJalur.disabled = (nJalan < 2);
+
+        updateStats();
+      }
+
+      function cekSiapSelesaiLapis1() {
+        const nTitik = Object.keys(titikDiKanvas).length;
+        const nJalur = hitungJalur();
+        if (nTitik >= 5 && nJalur > 0) {
+          elBtnSelesaiLapis1.disabled = false;
+          elMindful1.classList.add('show');
+        }
+      }
+
+      // ============================================
+      // RESET
+      // ============================================
+      window.resetPeta = function() {
+        initSimulasi();
+        tambahLog('🔄 Kanvas direset. Semua titik kembali ke palet.', 'info');
+      };
+
+      // ============================================
+      // SELESAI LAPIS 1
+      // ============================================
+      window.selesaiLapis1 = function() {
+        const nTitik = Object.keys(titikDiKanvas).length;
+        const nJalur = hitungJalur();
+        if (nTitik < 5 || nJalur === 0) {
+          alert('⚠️ Pastikan minimal 5 titik dan ada jalur dari Rumah ke Sekolah ya!');
+          return;
+        }
+        const mindfulJawab = document.getElementById('mindful1Jawab').value.trim();
+        if (mindfulJawab.length < 3) {
+          alert('📝 Isi dulu jawaban Jeda Sadar 1 sebelum lanjut!');
+          document.getElementById('mindful1Jawab').focus();
+          return;
+        }
+
+        lapis1Selesai = true;
+        if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+
+        elBtnSelesaiLapis1.disabled = true;
+        elBtnSelesaiLapis1.textContent = '✅ Lapis 1 Selesai';
+
+        elAreaSimulasi.style.display = 'none';
+        elAreaPilihLevel.classList.add('active');
+
+        setTimeout(function() { elAreaPilihLevel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
+      };
+
+      // ============================================
+      // SIMPAN SKOR BAGIAN 2 — BULK
+      // ============================================
+      function simpanSkorBagian2(correct, total) {
+        const skorBagian2 = Math.round(40 + (correct / total) * 60);
+        try {
+          const prev = JSON.parse(localStorage.getItem('labbk7_progress') || '{}');
+          prev.bagian = 2;
+          prev.skorBagian2 = skorBagian2;
+          localStorage.setItem('labbk7_progress', JSON.stringify(prev));
+        } catch (e) {}
+
+        refreshIdentitasUI();
+
+        if (window.dutaSimpanProgressBulk) {
+          window.dutaSimpanProgressBulk(
+            MODUL_KEY, 'b', { b: skorBagian2 }, 0, { kunciModul: false }
+          ).then(function(hasil) {
+            if (!hasil || !hasil.ok) {
+              console.warn('[bulk] gagal kirim bagian b:', hasil);
+            } else {
+              console.log('[bulk] bagian b terkirim:', hasil);
+            }
+          }).catch(function(err) {
+            console.warn('[bulk] error:', err);
+          });
+        }
+      }
+
+      // ============================================
+      // STATE KUSTOM
+      // ============================================
+      function stateKustom() {
+        return {
+          lapis1Selesai: lapis1Selesai,
+          titikDiKanvas: JSON.parse(JSON.stringify(titikDiKanvas)),
+          titikDiPalet: titikDiPalet.slice(),
+          jalanList: jalanList.slice(),
+          cekJalurHasil: cekJalurHasil ? JSON.parse(JSON.stringify(cekJalurHasil)) : null,
+          mindful1Jawab: (document.getElementById('mindful1Jawab') || {}).value || ''
+        };
+      }
+
+      // ============================================
+      // PULIHKAN TAMPILAN
+      // ============================================
+      function pulihkanTampilan(s) {
+        lapis1Selesai = !!s.lapis1Selesai;
+        titikDiKanvas = s.titikDiKanvas || {};
+        titikDiPalet = Array.isArray(s.titikDiPalet) ? s.titikDiPalet.slice() : DAFTAR_TITIK.map(function(t) { return t.id; });
+        jalanList = Array.isArray(s.jalanList) ? s.jalanList.slice() : [];
+        cekJalurHasil = s.cekJalurHasil || null;
+
+        const m1 = document.getElementById('mindful1Jawab');
+        if (m1 && s.mindful1Jawab) m1.value = s.mindful1Jawab;
+
+        renderKanvas();
+        renderPalet();
+        updateSelects();
+        updateKanvasInfo();
+
+        if (cekJalurHasil) {
+          if (cekJalurHasil.ada) {
+            elCjbResult.className = 'cjb-result show ok';
+            elCjbResult.innerHTML = '✅ Ada jalur Rumah → Sekolah! (panjang ' + cekJalurHasil.jalur + ' sisi)';
+          } else {
+            elCjbResult.className = 'cjb-result show fail';
+            elCjbResult.innerHTML = '❌ Belum ada jalur dari Rumah ke Sekolah.';
+          }
+        }
+
+        const lapis = s.__lapisTerakhir || hitungLapisTerakhir();
+        if (lapis === 'form') return;
+
+        elAreaSimulasi.classList.add('active');
+
+        if (lapis === 'lapis1') {
+          DUTA_BK.updateProgressLapis('lapis1');
+          cekSiapSelesaiLapis1();
+          return;
+        }
+
+        elAreaSimulasi.style.display = 'none';
+
+        if (lapis === 'lapis2') {
+          elAreaPilihLevel.classList.remove('active');
+          document.getElementById('areaLapis2').style.display = 'block';
+          DUTA_BK.updateProgressLapis('lapis2');
+          if (DUTA_BK.getLevel()) {
+            const lbl = document.getElementById('lapis2LevelLabel');
+            if (lbl) {
+              const lv = DUTA_BK.getLevel();
+              lbl.textContent = lv === 'dasar' ? '🟢 Dasar' : lv === 'reguler' ? '🟡 Reguler' : '🔴 Tantangan';
+            }
+            const jml = document.getElementById('lapis2JumlahTantangan');
+            if (jml) jml.textContent = DUTA_BK.getLevel() === 'tantangan' ? '4 tantangan (3 inti + 1 bonus)' : '3 tantangan';
+            DUTA_BK.buildTantangan();
+            Object.keys(DUTA_BK.state.tantanganSelesai || {}).forEach(function(id) {
+              const el = document.getElementById('tantangan_' + id);
+              if (el) {
+                el.classList.add('selesai');
+                const btn = document.getElementById('btn_' + id);
+                if (btn) btn.disabled = true;
+              }
+            });
+            if (Object.keys(DUTA_BK.state.tantanganSelesai || {}).length > 0) DUTA_BK.cekSemuaTantangan();
+          }
+          return;
+        }
+
+        if (lapis === 'lapis3' || lapis === 'tes') {
+          elAreaPilihLevel.classList.remove('active');
+          document.getElementById('areaLapis2').style.display = 'none';
+          document.getElementById('areaLapis3').style.display = 'block';
+          DUTA_BK.updateProgressLapis('lapis3');
+          if (DUTA_BK.getLevel()) {
+            const lv = DUTA_BK.getLevel();
+            const lbl = document.getElementById('lapis2LevelLabel');
+            if (lbl) lbl.textContent = lv === 'dasar' ? '🟢 Dasar' : lv === 'reguler' ? '🟡 Reguler' : '🔴 Tantangan';
+          }
+          const btnL3 = document.getElementById('btnLanjutLapis3');
+          if (btnL3) { btnL3.disabled = true; btnL3.textContent = '✅ Lapis 2 Selesai'; }
+
+          if (DUTA_BK.isLapis3Dibaca()) {
+            DUTA_BK.tampilkanKontenLapis3SetelahBaca();
+            if (DUTA_BK.state.kuisKilatSubmitted) DUTA_BK.restoreKuisKilat();
+          }
+        }
+
+        if (lapis === 'tes') {
+          document.getElementById('tesSection').classList.add('active');
+          document.getElementById('refleksiBox').classList.add('show');
+          DUTA_BK.renderSoal();
+          DUTA_BK.updateTesProgress();
+          DUTA_BK.updateProgressLapis('tes');
+          const btnLt = document.getElementById('btnLanjutTes');
+          if (btnLt) { btnLt.disabled = true; btnLt.textContent = '✅ Selesai'; }
+          if (DUTA_BK.state.tesSubmitted) DUTA_BK.restoreTes();
+        }
+      }
+
+      function hitungLapisTerakhir() {
+        if (DUTA_BK.state.tesSelesai || DUTA_BK.state.tesSubmitted) return 'tes';
+        if (DUTA_BK.state.lapis3Dibaca && DUTA_BK.getLevel()) return 'lapis3';
+        if (lapis1Selesai && (DUTA_BK.getLevel() || DUTA_BK.state.tantanganSelesai)) return 'lapis2';
+        return 'lapis1';
+      }
+
+      // ============================================
+      // INISIALISASI
+      // ============================================
+      document.addEventListener('DOMContentLoaded', function() {
+        refreshIdentitasUI();
+        window.addEventListener('storage', function(e) {
+          if (e.key === 'duta_identitas_siswa') refreshIdentitasUI();
+        });
+
+        window.addEventListener('resize', function() {
+          if (elKanvas) hitungKanvasBounds();
+        });
+
+        DUTA_BK.init({
+          namaSheet: NAMA_SHEET,
+          modulKey: MODUL_KEY,
+          totalBagian: TOTAL_BAGIAN,
+          ambangLulus: AMBANG_LULUS,
+          stateKey: STATE_KEY,
+          bagianAktif: 'b',
+          fileBerikutnya: 'aktivitasbk7c',
+          kuisKilatData: kuisKilatData,
+          soalTesData: soalData,
+          tantanganDasar: tantanganDasar,
+          tantanganReguler: tantanganReguler,
+          tantanganBonus: tantanganBonus,
+          onLulus: simpanSkorBagian2,
+          onLapis2Selesai: function() {
+            if (window.dutaSimpanState) window.dutaSimpanState(STATE_KEY, DUTA_BK.kumpulkanState(), { force: true });
+          },
+          stateKustom: stateKustom,
+          pulihkanTampilan: pulihkanTampilan,
+          ringkasHasilUntukAI: function() {
+            return 'Titik: ' + Object.keys(titikDiKanvas).length +
+                   ', Jalan: ' + jalanList.length +
+                   ', Siklus: ' + hitungSiklus() +
+                   ', Jalur R→S: ' + hitungJalur();
+          }
+        });
+
+        if (!window.dutaAmbilState || !window.dutaAmbilState(STATE_KEY)) {
+          elAreaSimulasi.classList.add('active');
+          initSimulasi();
+        }
+
+        setTimeout(function() { DUTA_BK.tawarkanRestore(); }, 60);
+      });
+
+      console.log('✅ BK7 Bagian 2 siap! (Simulasi peta jalan drag-drop + deteksi siklus + BFS jalur)');
+    })();
+  </script>
+
+</body>
+</html>

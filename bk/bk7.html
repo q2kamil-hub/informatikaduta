@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Pohon &amp; Jaringan (Tree &amp; Graph) · Portal · Informatika DUTA</title>
+  <link rel="stylesheet" href="../desain.css">
+  <style>
+    /* ===== AKSEN WARNA BK7: biru-ungu (beda dari BK6 hijau) ===== */
+    :root {
+      --bk7-utama: #5c7cfa;
+      --bk7-utama-dark: #3a5ad0;
+      --bk7-ungu: #8a4bbf;
+      --bk7-hijau: #6ecb8f;
+      --bk7-oranye: #f4b942;
+      --bk7-soft: #eef2ff;
+      --bk7-soft-2: #f3ecff;
+    }
+
+    .portal-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .portal-icon {
+      font-size: 5rem;
+      margin-bottom: 0.5rem;
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .portal-title {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--bk7-utama), var(--bk7-ungu), var(--bk7-hijau));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .portal-sub {
+      font-size: 1rem;
+      color: #5c4638;
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+
+    .portal-desc {
+      font-size: 0.95rem;
+      color: #5c4638;
+      line-height: 1.8;
+      max-width: 680px;
+      margin: 0 auto 2rem;
+      background: var(--bk7-soft);
+      padding: 1.2rem 1.8rem;
+      border-radius: 16px;
+      border-left: 6px solid var(--bk7-utama);
+      text-align: left;
+    }
+    .portal-desc strong { color: var(--bk7-utama-dark); }
+    .portal-desc ul { margin: 0.5rem 0 0 1.2rem; }
+    .portal-desc ul li { margin-bottom: 0.3rem; }
+
+    /* Peta konsep mini */
+    .mini-map {
+      background: #2f2822;
+      border-radius: 16px;
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      border: 3px solid var(--bk7-utama);
+    }
+    .mini-map pre {
+      font-family: 'Courier New', monospace;
+      color: #e5dbd0;
+      font-size: 0.7rem;
+      line-height: 1.5;
+      text-align: left;
+      margin: 0;
+    }
+    .mini-map .hl-1 { color: #b8f5d4; font-weight: bold; }  /* pohon */
+    .mini-map .hl-2 { color: #b8d4f5; font-weight: bold; }  /* jaringan */
+    .mini-map .hl-3 { color: #d4b8f5; font-weight: bold; }  /* beda */
+    .mini-map .hl-4 { color: #f5d4b8; font-weight: bold; }  /* kuis */
+
+    .portal-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .portal-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1.8rem 2rem;
+      border-radius: 24px;
+      border: 3px solid #d9cdbf;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      color: inherit;
+      font-family: inherit;
+      min-width: 220px;
+      max-width: 280px;
+      flex: 1;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    }
+    .portal-btn:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+    }
+    .portal-btn .btn-icon { font-size: 3rem; margin-bottom: 0.3rem; }
+    .portal-btn .btn-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #3b2b1e;
+      line-height: 1.3;
+    }
+    .portal-btn .btn-desc {
+      font-size: 0.8rem;
+      color: #7a6656;
+      line-height: 1.4;
+    }
+
+    /* Tombol Materi — aksen biru */
+    .portal-btn.btn-materi {
+      border-color: var(--bk7-utama);
+      background: var(--bk7-soft);
+    }
+    .portal-btn.btn-materi:hover {
+      border-color: var(--bk7-utama-dark);
+      background: #dde5ff;
+    }
+    .portal-btn.btn-materi .btn-title { color: var(--bk7-utama-dark); }
+
+    /* Tombol Materi + Aktivitas — aksen ungu (tombol pemicu modal) */
+    .portal-btn.btn-aktivitas {
+      border-color: var(--bk7-ungu);
+      background: var(--bk7-soft-2);
+    }
+    .portal-btn.btn-aktivitas:hover {
+      border-color: #6a2fa0;
+      background: #e8daff;
+    }
+    .portal-btn.btn-aktivitas .btn-title { color: #5c2f8a; }
+
+    /* Kotak info daftar file aktivitas */
+    .file-list {
+      background: #f8f4ef;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin-top: 1.5rem;
+      border: 2px dashed #d9cdbf;
+      text-align: left;
+    }
+    .file-list .fl-title {
+      font-weight: 700;
+      color: #3b2b1e;
+      font-size: 0.95rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .file-list ol {
+      margin: 0 0 0 1.2rem;
+      padding: 0;
+      list-style: none;
+      counter-reset: fl-counter;
+    }
+    .file-list li {
+      counter-increment: fl-counter;
+      margin-bottom: 0.6rem;
+      font-size: 0.88rem;
+      color: #2f2822;
+      line-height: 1.5;
+      padding-left: 0.2rem;
+    }
+    .file-list li::before {
+      content: counter(fl-counter) ".";
+      display: inline-block;
+      width: 1.4rem;
+      font-weight: 700;
+      color: var(--bk7-utama);
+      margin-right: 0.3rem;
+    }
+    .file-list li strong { color: #3b2b1e; }
+    .file-list li .file-desc { color: #7a6656; font-size: 0.82rem; }
+
+    .portal-info {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #7a6656;
+      padding: 0.8rem 1.2rem;
+      background: #f8f4ef;
+      border-radius: 12px;
+      border: 1px dashed #d9cdbf;
+      display: inline-block;
+      max-width: 640px;
+      line-height: 1.6;
+    }
+    .portal-info strong { color: #4d3829; }
+
+    /* Badge kecil "Selesai" */
+    .duta-status-selesai {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #e0f5e8, #c8ecd5);
+      color: #1f5f32;
+      border: 2px solid #8aaa7a;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    /* ================================================================
+       MODAL "MULAI BELAJAR" (asesmen + lanjut)
+       ================================================================ */
+    .duta-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(40, 20, 50, 0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      z-index: 10000;
+      padding: 1.2rem 1rem;
+      overflow-y: auto;
+      animation: dutaModalFadeIn 0.2s ease;
+    }
+    @keyframes dutaModalFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .duta-modal-box {
+      background: #fff;
+      border-radius: 22px;
+      padding: 0;
+      max-width: 640px;
+      width: 100%;
+      box-shadow: 0 24px 70px rgba(40, 20, 50, 0.30);
+      border: 3px solid var(--bk7-ungu);
+      animation: dutaModalSlideUp 0.28s ease;
+      overflow: hidden;
+      margin: auto;
+    }
+    @keyframes dutaModalSlideUp {
+      from { transform: translateY(24px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .dmb-header {
+      background: linear-gradient(135deg, var(--bk7-utama), var(--bk7-ungu));
+      color: #fff;
+      padding: 1.1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+    .dmb-header .dmbh-icon { font-size: 1.4rem; }
+
+    .dmb-body {
+      padding: 1.3rem 1.6rem 1.5rem;
+      max-height: 68vh;
+      overflow-y: auto;
+    }
+
+    /* Section pemantik */
+    .dmb-pemantik {
+      background: linear-gradient(135deg, #eef2ff, #f3ecff);
+      border: 2px solid var(--bk7-utama);
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.1rem;
+    }
+    .dmb-pemantik .dp-title {
+      font-weight: 800;
+      color: var(--bk7-utama-dark);
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .dmb-pemantik .dp-scenario {
+      background: #fff;
+      border-radius: 10px;
+      padding: 0.7rem 0.95rem;
+      font-size: 0.88rem;
+      color: #3b2b1e;
+      line-height: 1.6;
+      border-left: 4px solid var(--bk7-ungg);
+      margin-bottom: 0.6rem;
+    }
+    .dmb-pemantik .dp-scenario strong { color: var(--bk7-utama-dark); }
+    .dmb-pemantik .dp-questions {
+      font-size: 0.86rem;
+      color: #4d3829;
+      line-height: 1.7;
+      margin: 0 0 0 1.1rem;
+    }
+    .dmb-pemantik .dp-questions li { margin-bottom: 0.25rem; }
+
+    /* Tombol-tombol aksi di modal */
+    .dmb-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .dmb-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.85rem 1.3rem;
+      border-radius: 30px;
+      border: 2px solid transparent;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.94rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-decoration: none;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .dmb-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .dmb-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    .dmb-btn .dmb-emoji { font-size: 1.1rem; }
+
+    .dmb-btn-asesmen {
+      background: #fff;
+      border-color: var(--bk7-utama);
+      color: var(--bk7-utama-dark);
+    }
+    .dmb-btn-asesmen:hover:not(:disabled) {
+      background: var(--bk7-soft);
+      border-color: var(--bk7-utama-dark);
+    }
+
+    .dmb-btn-lanjut {
+      background: linear-gradient(135deg, #6ecb8f, #4fa86a);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(110, 203, 143, 0.30);
+    }
+    .dmb-btn-lanjut:hover:not(:disabled) {
+      filter: brightness(1.05);
+    }
+
+    .dmb-btn-ulang {
+      background: linear-gradient(135deg, #f4b942, #d4a030);
+      color: #5c3400;
+      box-shadow: 0 6px 18px rgba(244, 185, 66, 0.35);
+    }
+
+    .dmb-btn-langsung {
+      background: linear-gradient(135deg, var(--bk7-utama), var(--bk7-ungu));
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(92, 124, 250, 0.35);
+    }
+
+    .dmb-info-kecil {
+      font-size: 0.78rem;
+      color: #7a6656;
+      font-style: italic;
+      text-align: center;
+      line-height: 1.5;
+      margin-top: 0.2rem;
+    }
+
+    /* ================================================================
+       SPOILER ASESMEN
+       ================================================================ */
+    .asesmen-spoiler {
+      margin-top: 0.8rem;
+      border: 2px dashed var(--bk7-utama);
+      border-radius: 14px;
+      background: #fbfaff;
+      padding: 1rem 1.2rem;
+      display: none;
+      animation: dutaModalFadeIn 0.3s ease;
+    }
+    .asesmen-spoiler.show { display: block; }
+
+    .as-title {
+      font-weight: 800;
+      color: var(--bk7-utama-dark);
+      font-size: 0.92rem;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .as-sub {
+      font-size: 0.8rem;
+      color: #7a6656;
+      line-height: 1.5;
+      margin-bottom: 0.8rem;
+      font-style: italic;
+    }
+
+    .as-soal {
+      background: #fff;
+      border: 1.5px solid #e5dbd0;
+      border-radius: 10px;
+      padding: 0.7rem 0.9rem;
+      margin-bottom: 0.6rem;
+    }
+    .as-soal .as-q {
+      font-size: 0.87rem;
+      color: #3b2b1e;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+    }
+    .as-opsi {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .as-opsi label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+      padding: 0.4rem 0.7rem;
+      border: 1.5px solid #e5dbd0;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      color: #3d2c1f;
+      background: #fdfcfb;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      line-height: 1.45;
+    }
+    .as-opsi label:hover {
+      border-color: var(--bk7-utama);
+      background: var(--bk7-soft);
+    }
+    .as-opsi input[type="radio"] {
+      accent-color: var(--bk7-utama);
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+    }
+    .as-opsi input[type="radio"]:checked + span {
+      color: var(--bk7-utama-dark);
+      font-weight: 600;
+    }
+
+    .as-cek {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      width: 100%;
+      padding: 0.7rem 1.2rem;
+      margin-top: 0.5rem;
+      border-radius: 24px;
+      border: none;
+      background: linear-gradient(135deg, var(--bk7-utama), var(--bk7-ungu));
+      color: #fff;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      box-shadow: 0 4px 14px rgba(92, 124, 250, 0.3);
+    }
+    .as-cek:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(92, 124, 250, 0.42);
+    }
+    .as-cek:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .as-hasil {
+      margin-top: 0.8rem;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      display: none;
+      font-size: 0.87rem;
+      line-height: 1.6;
+      animation: dutaModalFadeIn 0.3s ease;
+    }
+    .as-hasil.show { display: block; }
+
+    .as-hasil.dasar {
+      background: #e8f5e0;
+      border: 2px solid #8aaa7a;
+      color: #2d5a1e;
+    }
+    .as-hasil.reguler {
+      background: #fff8e6;
+      border: 2px solid #d4a030;
+      color: #5c3400;
+    }
+    .as-hasil.tantangan {
+      background: #fde8e8;
+      border: 2px solid #d4a0a0;
+      color: #a84a3a;
+    }
+    .as-hasil .ah-level {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .as-hasil .ah-detail {
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+    .as-hasil .ah-skor {
+      font-size: 0.8rem;
+      margin-top: 0.35rem;
+      font-style: italic;
+      opacity: 0.85;
+    }
+
+    /* Responsif */
+    @media (max-width: 720px) {
+      .portal-title { font-size: 1.5rem; }
+      .portal-icon { font-size: 3.5rem; }
+      .portal-btn { min-width: unset; padding: 1.4rem 1.2rem; }
+      .portal-btn .btn-icon { font-size: 2.4rem; }
+      .portal-btn .btn-title { font-size: 1rem; }
+      .portal-desc { padding: 1rem 1.2rem; font-size: 0.9rem; }
+      .mini-map pre { font-size: 0.58rem; }
+      .dmb-body { padding: 1rem 1rem 1.2rem; }
+    }
+    @media (max-width: 480px) {
+      .portal-buttons { flex-direction: column; align-items: stretch; }
+      .portal-btn { max-width: unset; }
+      .file-list { padding: 1rem 1.1rem; }
+      .file-list li { font-size: 0.82rem; }
+      .dmb-pemantik .dp-questions { font-size: 0.82rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header-utama"></header>
+  <div id="duta-breadcrumb-host"></div>
+
+  <main class="container" id="konten-utama">
+    <article class="card">
+      <div class="portal-wrapper">
+
+        <div class="portal-icon">🌳🕸️</div>
+        <div class="portal-title">Pohon &amp; Jaringan</div>
+        <div class="portal-sub">Tree &amp; Graph · Organisasi Data Terstruktur</div>
+
+        <div class="portal-desc">
+          <strong>🌳🕸️ Selamat datang!</strong> Modul ini akan membimbingmu mengenal
+          dua struktur data yang sangat penting: <strong>pohon (tree)</strong> dan
+          <strong>jaringan (graph)</strong>. Kamu akan menemukan sendiri polanya melalui
+          simulasi, lalu memberi nama pengalamanmu dengan istilah resmi.
+          <br><br>
+          Kamu akan mempelajari:
+          <ul>
+            <li><strong>Pohon (Tree)</strong> — struktur bercabang dengan satu akar, tanpa siklus</li>
+            <li><strong>Jaringan (Graph)</strong> — struktur terhubung yang boleh melingkar</li>
+            <li><strong>Perbedaan keduanya</strong> — kapan pakai pohon, kapan pakai jaringan</li>
+          </ul>
+          <br>
+          Di setiap bagian, kamu bisa <strong>memilih tingkat tantangan</strong>:
+          🟢 Dasar · 🟡 Reguler · 🔴 Tantangan. Sesuaikan dengan kesiapanmu!
+        </div>
+
+        <!-- Peta konsep mini -->
+        <div class="mini-map">
+<pre>
+              ┌──────────────────────────────────────────┐
+              │   ORGANISASI DATA TERSTRUKTUR            │
+              │        POHON &amp; JARINGAN                  │
+              └──────────────────┬───────────────────────┘
+                                 │
+     ┌───────────────────────────┼───────────────────────────┐
+     │                           │                           │
+     ▼                           ▼                           ▼
+<span class="hl-1">┌───────────┐</span>             <span class="hl-2">┌───────────┐</span>             <span class="hl-3">┌───────────┐</span>
+<span class="hl-1">│ BAGIAN 1  │</span>────────────▶<span class="hl-2">│ BAGIAN 2  │</span>────────────▶<span class="hl-3">│ BAGIAN 3  │</span>
+<span class="hl-1">│ POHON     │</span>             <span class="hl-2">│ JARINGAN  │</span>             <span class="hl-3">│ BEDA      │</span>
+<span class="hl-1">│ (TREE)    │</span>             <span class="hl-2">│ (GRAPH)   │</span>             <span class="hl-3">│ KEDUANYA  │</span>
+<span class="hl-1">└───────────┘</span>             <span class="hl-2">└───────────┘</span>             <span class="hl-3">└───────────┘</span>
+     │                           │                           │
+     ▼                           ▼                           ▼
+Silsilah keluarga,        Peta jalan,               Pohon = graph
+folder komputer,          jaringan pertemanan,      tanpa siklus;
+struktur organisasi       jaringan transportasi     graph boleh
+                                                    melingkar
+     │                           │                           │
+     └───────────────────────────┼───────────────────────────┘
+                                 ▼
+                         <span class="hl-4">┌─────────────────┐</span>
+                         <span class="hl-4">│  KUIS AKHIR (10) │</span>
+                         <span class="hl-4">│  + SERTIFIKAT    │</span>
+                         <span class="hl-4">└─────────────────┘</span>
+</pre>
+        </div>
+
+        <!-- ===== BADGE SELESAI (dinamis) ===== -->
+        <div id="duta-badge-selesai-wrapper" style="display:none;"></div>
+
+        <div class="portal-buttons">
+          <!-- Tombol Materi Lengkap: link biasa -->
+          <a href="materibk7" class="portal-btn btn-materi">
+            <span class="btn-icon">📖</span>
+            <span class="btn-title">Materi Lengkap</span>
+            <span class="btn-desc">Baca materi tanpa aktivitas</span>
+          </a>
+
+          <!-- Tombol Materi + Aktivitas: MEMBUKA MODAL -->
+          <button type="button" class="portal-btn btn-aktivitas" id="btnBukaModalMulai">
+            <span class="btn-icon">🎮</span>
+            <span class="btn-title">Materi + Aktivitas</span>
+            <span class="btn-desc">Belajar sambil mengerjakan aktivitas interaktif</span>
+          </button>
+        </div>
+
+        <!-- Daftar file aktivitas -->
+        <div class="file-list">
+          <div class="fl-title">📂 Daftar Aktivitas dalam Modul Ini</div>
+          <ol>
+            <li>
+              <strong>Pohon (Tree) — Struktur Bercabang</strong>
+              <div class="file-desc">🌳 "Gambar Silsilahku" — menemukan pola struktur pohon melalui silsilah keluarga</div>
+            </li>
+            <li>
+              <strong>Jaringan (Graph) — Struktur Terhubung</strong>
+              <div class="file-desc">🕸️ "Peta Jaringan" — menemukan pola struktur jaringan melalui peta jalan</div>
+            </li>
+            <li>
+              <strong>Pohon vs Jaringan — Apa Bedanya?</strong>
+              <div class="file-desc">🔍 "Pohon atau Jaringan?" — membedakan keduanya berdasarkan ciri-ciri</div>
+            </li>
+            <li>
+              <strong>Kuis Akhir &amp; Sertifikat</strong>
+              <div class="file-desc">🏆 10 soal · lulus ≥7 · sertifikat digital (Emas/Perak/Perunggu/Dasar)</div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="portal-info">
+          💡 <strong>Rekomendasi:</strong> Klik <strong>"Materi + Aktivitas"</strong> untuk
+          memulai. Di sana kamu akan menemukan pertanyaan pemantik, <strong>tes asesmen
+          diagnostik</strong> (untuk merekomendasikan tingkat tantangan), dan tombol untuk
+          melanjutkan dari bagian terakhir.
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="footer-utama"></footer>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+
+  <script src="../script.js"></script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ============================================================
+      // KONFIGURASI MODUL
+      // ============================================================
+      const MODUL_KEY = 'bk7';
+      const MAP_FILE = {
+        a: 'aktivitasbk7a',
+        b: 'aktivitasbk7b',
+        c: 'aktivitasbk7c',
+        d: 'aktivitasbk7d'
+      };
+      const URUTAN_BAGIAN = ['a', 'b', 'c', 'd'];
+
+      // ============================================================
+      // SOAL ASESMEN DIAGNOSTIK (5 soal, wajib semua)
+      // Mayoritas A=Dasar, B=Reguler, C=Tantangan.
+      // Tie-break: ambil level TERENDAH (Dasar < Reguler < Tantangan).
+      // ============================================================
+      const SOAL_ASESMEN = [
+        {
+          q: 'Pernahkah kamu melihat gambar silsilah keluarga (pohon keluarga)?',
+          opsi: [
+            { v: 'A', label: 'Belum pernah.' },
+            { v: 'B', label: 'Pernah, tapi tidak memperhatikan bentuknya.' },
+            { v: 'C', label: 'Pernah, dan aku tahu itu seperti pohon bercabang.' }
+          ]
+        },
+        {
+          q: 'Jika kamu ingin menggambar hubungan pertemanan di kelas, bentuk apa yang paling cocok?',
+          opsi: [
+            { v: 'A', label: 'Daftar nama berurutan.' },
+            { v: 'B', label: 'Titik-titik yang dihubungkan garis.' },
+            { v: 'C', label: 'Tabel.' }
+          ]
+        },
+        {
+          q: 'Apa yang terjadi jika dua orang teman saling berteman, lalu teman itu berteman lagi dengan orang lain?',
+          opsi: [
+            { v: 'A', label: 'Hubungannya berhenti di satu orang.' },
+            { v: 'B', label: 'Hubungannya bisa bercabang dan membentuk jaringan.' },
+            { v: 'C', label: 'Tidak ada hubungan.' }
+          ]
+        },
+        {
+          q: 'Menurutmu, apakah "folder di komputer" dan "peta jalan" memiliki kesamaan?',
+          opsi: [
+            { v: 'A', label: 'Tidak tahu.' },
+            { v: 'B', label: 'Mungkin ada, tapi belum terbayang.' },
+            { v: 'C', label: 'Ya, keduanya punya titik dan garis penghubung.' }
+          ]
+        },
+        {
+          q: 'Jika kamu diminta menyusun jadwal pelajaran, apakah itu termasuk "pohon" atau "jaringan"?',
+          opsi: [
+            { v: 'A', label: 'Tidak tahu.' },
+            { v: 'B', label: 'Mungkin pohon.' },
+            { v: 'C', label: 'Bisa jadi keduanya, tergantung cara menyusunnya.' }
+          ]
+        }
+      ];
+
+      // ============================================================
+      // STATE MODAL & PROGRESS
+      // ============================================================
+      let modalEl = null;
+      let jawabanAsesmen = {}; // {index: 'A'|'B'|'C'}
+      let asesmenSudahDiCek = false;
+      let progressData = null; // {bagian_terakhir, nilai_akhir, status_modul}
+
+      // ============================================================
+      // HELPER
+      // ============================================================
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function labelBagian(b) {
+        const map = { a: 'Bagian 1 (Pohon)', b: 'Bagian 2 (Jaringan)', c: 'Bagian 3 (Beda Keduanya)', d: 'Kuis Akhir' };
+        return map[b] || ('Bagian ' + b.toUpperCase());
+      }
+
+      // ============================================================
+      // MUAT PROGRESS (getProgress bk7)
+      // ============================================================
+      async function muatProgress() {
+        try {
+          if (!window.ambilSession || !window.ambilSession()) return null;
+          const hasil = await window.dutaAmbilProgress(MODUL_KEY);
+          if (hasil && hasil.ok && hasil.progress && hasil.progress.length > 0) {
+            const p = hasil.progress[0];
+            progressData = {
+              bagian_terakhir: (p.bagian_terakhir || '').toLowerCase(),
+              nilai_akhir: Number(p.nilai_akhir) || 0,
+              status_modul: (p.status_modul || '').toString().trim().toLowerCase()
+            };
+            return progressData;
+          }
+        } catch (e) {
+          console.warn('[bk7] gagal muat progress:', e);
+        }
+        return null;
+      }
+
+      // ============================================================
+      // BUKA MODAL "MULAI BELAJAR"
+      // ============================================================
+      async function bukaModalMulai() {
+        // Muat progress dulu (kalau login)
+        const s = window.ambilSession ? window.ambilSession() : null;
+        const login = !!(s && s.tipe === 'login');
+
+        if (login) {
+          await muatProgress();
+        } else {
+          progressData = null;
+        }
+
+        // Bangun HTML modal
+        const sudahSelesai = !!(progressData && progressData.status_modul === 'selesai');
+        const bagianTerakhir = progressData ? progressData.bagian_terakhir : '';
+        const nilaiAkhir = progressData ? progressData.nilai_akhir : 0;
+
+        // Tentukan tombol lanjut/ulang
+        let tombolLanjutHtml = '';
+        if (!login) {
+          tombolLanjutHtml =
+            '<div class="dmb-info-kecil">🔒 Login atau masuk sebagai tamu untuk melanjutkan dari bagian terakhir &amp; menyimpan nilai.</div>';
+        } else if (sudahSelesai) {
+          tombolLanjutHtml =
+            '<button type="button" class="dmb-btn dmb-btn-ulang" id="btnUlangModul">' +
+              '<span class="dmb-emoji">🔄</span> Ulangi Modul Ini — Nilai Akhir: ' + nilaiAkhir +
+            '</button>';
+        } else if (bagianTerakhir && MAP_FILE[bagianTerakhir]) {
+          const idx = URUTAN_BAGIAN.indexOf(bagianTerakhir);
+          const berikutnya = (idx >= 0 && idx < URUTAN_BAGIAN.length - 1) ? URUTAN_BAGIAN[idx + 1] : bagianTerakhir;
+          tombolLanjutHtml =
+            '<button type="button" class="dmb-btn dmb-btn-lanjut" id="btnLanjutBagian">' +
+              '<span class="dmb-emoji">▶️</span> Lanjutkan dari ' + labelBagian(berikutnya) +
+            '</button>';
+        }
+        // Jika login tapi belum ada progress → tombol lanjut tidak ditampilkan (langsung ke aktivitas A).
+
+        // Section pemantik
+        const pemantikHtml =
+          '<div class="dmb-pemantik">' +
+            '<div class="dp-title">🤔 Pertanyaan Pemantik</div>' +
+            '<div class="dp-scenario">' +
+              '<strong>Bayangkan ini:</strong> Raka ingin pergi dari rumahnya ke sekolah. ' +
+              'Ia punya tiga pilihan jalan: lewat pasar, lewat jembatan, atau lewat gang kecil. ' +
+              'Ketiganya bisa sampai ke sekolah. Di papan tulis, guru menggambar titik-titik ' +
+              '(rumah, pasar, jembatan, sekolah) dan garis-garis yang menghubungkannya.' +
+            '</div>' +
+            '<ol class="dp-questions">' +
+              '<li>Pernahkah kamu melihat peta atau denah? Bagaimana bentuknya?</li>' +
+              '<li>Menurutmu, apa bedanya "peta jalan" dengan "silsilah keluarga"?</li>' +
+              '<li>Jika kamu ingin menyusun daftar lagu favorit secara berurutan, apakah itu termasuk "pohon" atau "jaringan"?</li>' +
+            '</ol>' +
+          '</div>';
+
+        // Build opsi asesmen
+        let asesmenHtml = '';
+        SOAL_ASESMEN.forEach(function(soal, idx) {
+          let opsiHtml = '';
+          soal.opsi.forEach(function(o) {
+            const idRadio = 'as_' + idx + '_' + o.v;
+            opsiHtml +=
+              '<label for="' + idRadio + '">' +
+                '<input type="radio" name="as_soal_' + idx + '" id="' + idRadio + '" value="' + o.v + '">' +
+                '<span>' + escapeHtml(o.label) + '</span>' +
+              '</label>';
+          });
+          asesmenHtml +=
+            '<div class="as-soal" data-idx="' + idx + '">' +
+              '<div class="as-q">' + (idx + 1) + '. ' + escapeHtml(soal.q) + '</div>' +
+              '<div class="as-opsi">' + opsiHtml + '</div>' +
+            '</div>';
+        });
+
+        const html =
+          '<div class="duta-modal-overlay" id="bk7ModalOverlay">' +
+            '<div class="duta-modal-box" role="dialog" aria-modal="true" aria-labelledby="bk7ModalTitle">' +
+              '<div class="dmb-header">' +
+                '<span class="dmbh-icon">🌳🕸️</span>' +
+                '<span id="bk7ModalTitle">Mulai Belajar: Pohon &amp; Jaringan</span>' +
+              '</div>' +
+              '<div class="dmb-body">' +
+                pemantikHtml +
+
+                '<div class="dmb-actions">' +
+                  '<button type="button" class="dmb-btn dmb-btn-asesmen" id="btnBukaAsesmen">' +
+                    '<span class="dmb-emoji">🔍</span> Tes Asesmen Diagnostik' +
+                  '</button>' +
+
+                  '<div class="asesmen-spoiler" id="asesmenSpoiler">' +
+                    '<div class="as-title">📝 Asesmen Diagnostik</div>' +
+                    '<div class="as-sub">' +
+                      'Jawab <strong>semua 5 soal</strong> dengan jujur. Hasilnya hanya untuk ' +
+                      'merekomendasikan tingkat tantangan — kamu tetap bisa memilih level sendiri ' +
+                      'saat aktivitas dimulai.' +
+                    '</div>' +
+                    asesmenHtml +
+                    '<button type="button" class="as-cek" id="btnCekAsesmen">✅ Cek Hasil Rekomendasi</button>' +
+                    '<div class="as-hasil" id="asHasil"></div>' +
+                  '</div>' +
+
+                  tombolLanjutHtml +
+
+                  '<a href="aktivitasbk7a" class="dmb-btn dmb-btn-langsung">' +
+                    '<span class="dmb-emoji">🚀</span> Langsung ke Aktivitas + Materi' +
+                  '</a>' +
+
+                  '<div class="dmb-info-kecil">' +
+                    'Pilih "Langsung ke Aktivitas" jika kamu ingin mulai dari Bagian 1 tanpa lanjut progress.' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+
+        // Hapus modal lama jika ada
+        if (modalEl) { modalEl.remove(); modalEl = null; }
+
+        // Pasang ke DOM
+        const wrap = document.createElement('div');
+        wrap.innerHTML = html;
+        modalEl = wrap.firstElementChild;
+        document.body.appendChild(modalEl);
+        document.body.style.overflow = 'hidden';
+
+        // Event: tutup saat klik overlay
+        modalEl.addEventListener('click', function(e) {
+          if (e.target === modalEl) tutupModal();
+        });
+
+        // Event: tombol asesmen toggle spoiler
+        const btnAsesmen = document.getElementById('btnBukaAsesmen');
+        const spoiler = document.getElementById('asesmenSpoiler');
+        if (btnAsesmen && spoiler) {
+          btnAsesmen.addEventListener('click', function() {
+            const shown = spoiler.classList.toggle('show');
+            btnAsesmen.innerHTML = shown
+              ? '<span class="dmb-emoji">🔍</span> Sembunyikan Asesmen'
+              : '<span class="dmb-emoji">🔍</span> Tes Asesmen Diagnostik';
+            if (shown) {
+              setTimeout(function() {
+                spoiler.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }, 100);
+            }
+          });
+        }
+
+        // Event: radio asesmen
+        SOAL_ASESMEN.forEach(function(soal, idx) {
+          const radios = modalEl.querySelectorAll('input[name="as_soal_' + idx + '"]');
+          radios.forEach(function(r) {
+            r.addEventListener('change', function() {
+              jawabanAsesmen[idx] = r.value;
+              // Reset hasil jika sudah pernah dicek
+              if (asesmenSudahDiCek) {
+                asesmenSudahDiCek = false;
+                const h = document.getElementById('asHasil');
+                if (h) h.classList.remove('show');
+              }
+            });
+          });
+        });
+
+        // Event: tombol cek asesmen
+        const btnCek = document.getElementById('btnCekAsesmen');
+        if (btnCek) {
+          btnCek.addEventListener('click', cekAsesmen);
+        }
+
+        // Event: tombol lanjut/ulang
+        const btnLanjut = document.getElementById('btnLanjutBagian');
+        if (btnLanjut) {
+          btnLanjut.addEventListener('click', function() {
+            const b = progressData ? progressData.bagian_terakhir : '';
+            const idx = URUTAN_BAGIAN.indexOf(b);
+            const berikutnya = (idx >= 0 && idx < URUTAN_BAGIAN.length - 1) ? URUTAN_BAGIAN[idx + 1] : b;
+            const file = MAP_FILE[berikutnya] || MAP_FILE[b] || MAP_FILE.a;
+            window.location.href = file;
+          });
+        }
+
+        const btnUlang = document.getElementById('btnUlangModul');
+        if (btnUlang) {
+          btnUlang.addEventListener('click', function() {
+            tampilkanKonfirmasiUlang(nilaiAkhir);
+          });
+        }
+      }
+
+      function tutupModal() {
+        if (modalEl) { modalEl.remove(); modalEl = null; }
+        document.body.style.overflow = '';
+      }
+
+      // ============================================================
+      // CEK ASESMEN
+      // ============================================================
+      function cekAsesmen() {
+        // Validasi: semua 5 soal wajib dijawab
+        const belum = [];
+        SOAL_ASESMEN.forEach(function(_, idx) {
+          if (!jawabanAsesmen[idx]) belum.push(idx + 1);
+        });
+
+        const hasilEl = document.getElementById('asHasil');
+        if (!hasilEl) return;
+
+        if (belum.length > 0) {
+          hasilEl.className = 'as-hasil show';
+          hasilEl.style.background = '#fdf0f0';
+          hasilEl.style.border = '2px solid #d4a0a0';
+          hasilEl.style.color = '#a84a3a';
+          hasilEl.innerHTML =
+            '⚠️ <strong>Lengkapi dulu semua soal!</strong><br>' +
+            'Soal yang belum dijawab: <strong>' + belum.join(', ') + '</strong>';
+          return;
+        }
+
+        // Hitung
+        let countA = 0, countB = 0, countC = 0;
+        SOAL_ASESMEN.forEach(function(_, idx) {
+          const v = jawabanAsesmen[idx];
+          if (v === 'A') countA++;
+          else if (v === 'B') countB++;
+          else if (v === 'C') countC++;
+        });
+
+        // Mayoritas + tie-break → ambil level TERENDAH
+        // Skor bobot: A=1, B=2, C=3. Level ditentukan oleh median terbawah.
+        // Aturan: urutkan jumlah tertinggi. Jika tie, ambil level paling rendah di antara yang tie.
+        // Implementasi sederhana: tentukan pemenang berdasarkan count tertinggi,
+        // lalu jika ada tie, pilih level terendah.
+        let level = 'dasar';
+        const maxCount = Math.max(countA, countB, countC);
+        const kandidat = [];
+        if (countA === maxCount) kandidat.push('dasar');
+        if (countB === maxCount) kandidat.push('reguler');
+        if (countC === maxCount) kandidat.push('tantangan');
+        // kandidat minimal berisi 1 level
+        if (kandidat.length > 1) {
+          // tie-break: pilih level terendah
+          const urut = ['dasar', 'reguler', 'tantangan'];
+          kandidat.sort(function(a, b) { return urut.indexOf(a) - urut.indexOf(b); });
+          level = kandidat[0];
+        } else {
+          level = kandidat[0];
+        }
+
+        const mapInfo = {
+          dasar: {
+            ikon: '🟢',
+            judul: 'Dasar',
+            kelas: 'dasar',
+            detail: 'Kamu akan belajar dari dasar dengan banyak contoh dan petunjuk. ' +
+                    'Cocok untuk memperkuat pemahaman.'
+          },
+          reguler: {
+            ikon: '🟡',
+            judul: 'Reguler',
+            kelas: 'reguler',
+            detail: 'Kamu sudah punya gambaran dasar. Kamu akan belajar dengan tantangan ' +
+                    'standar yang menantang.'
+          },
+          tantangan: {
+            ikon: '🔴',
+            judul: 'Tantangan',
+            kelas: 'tantangan',
+            detail: 'Kamu sudah paham dasar. Kamu akan mendapat tantangan lebih dan ' +
+                    'studi kasus terbuka.'
+          }
+        };
+        const info = mapInfo[level];
+
+        hasilEl.className = 'as-hasil show ' + info.kelas;
+        hasilEl.style.background = '';
+        hasilEl.style.border = '';
+        hasilEl.style.color = '';
+        hasilEl.innerHTML =
+          '<div class="ah-level">' + info.ikon + ' Rekomendasi: Tingkat ' + info.judul + '</div>' +
+          '<div class="ah-detail">' + info.detail + '</div>' +
+          '<div class="ah-skor">' +
+            'Jawabanmu: ' + countA + '× A · ' + countB + '× B · ' + countC + '× C. ' +
+            'Hasil ini hanya <strong>rekomendasi</strong> — kamu tetap bisa memilih level sendiri ' +
+            'saat aktivitas dimulai.' +
+          '</div>';
+
+        asesmenSudahDiCek = true;
+        try {
+          localStorage.setItem(MODUL_KEY + '_rekomendasi_level', level);
+        } catch (e) {}
+
+        // Scroll hasil ke view
+        setTimeout(function() {
+          hasilEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      }
+
+      // ============================================================
+      // KONFIRMASI ULANG MODUL (pakai tampilkanModal global)
+      // ============================================================
+      function tampilkanKonfirmasiUlang(nilaiAkhir) {
+        const judul = '🔄 Ulangi Modul Ini?';
+        const pesan =
+          '<p style="margin-bottom:0.7rem;">Nilai Akhir kamu sekarang <strong>' + nilaiAkhir +
+          '</strong> dan <strong>tidak akan berubah</strong> meskipun kamu mengulang modul ini.</p>' +
+          '<p style="margin-bottom:0.7rem;">Tapi tidak masalah! Kamu <strong>boleh mengulang</strong> ' +
+          'untuk mempelajari kembali materinya dan berlatih lagi.</p>' +
+          '<p style="background:#fff8e6; padding:0.6rem 0.9rem; border-radius:10px; ' +
+          'border-left:4px solid #d4a030; color:#5c3400; font-size:0.88rem; margin:0;">' +
+          '💡 <strong>Ingin nilai Akhirnya diperbarui?</strong> Sampaikan kepada ' +
+          'Bapak/Ibu Guru Informatika ya.' +
+          '</p>';
+
+        if (typeof window.tampilkanModal === 'function') {
+          window.tampilkanModal({
+            judul: judul,
+            pesan: pesan,
+            tombolLanjut: '🔄 Ya, Ulangi Modul',
+            onLanjut: function() {
+              tutupModal();
+              window.location.href = MAP_FILE.a;
+            }
+          });
+        } else {
+          if (confirm('Nilai Akhir kamu (' + nilaiAkhir + ') tidak akan berubah.\n\n' +
+                      'Kamu boleh mengulang modul ini untuk mempelajari kembali materinya.\n\n' +
+                      'Jika ingin nilai Akhirnya diperbarui, sampaikan kepada Bapak/Ibu Guru Informatika.\n\n' +
+                      'Lanjutkan mengulang modul?')) {
+            tutupModal();
+            window.location.href = MAP_FILE.a;
+          }
+        }
+      }
+
+      // ============================================================
+      // TOMBOL BUKA MODAL
+      // ============================================================
+      document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('btnBukaModalMulai');
+        if (btn) {
+          btn.addEventListener('click', function() {
+            bukaModalMulai().catch(function(err) {
+              console.error('[bk7] gagal buka modal:', err);
+              alert('⚠️ Gagal memuat modal. Coba refresh halaman.');
+            });
+          });
+        }
+
+        // Badge "Selesai" jika modul selesai (fetch saat load)
+        muatProgress().then(function(p) {
+          if (p && p.status_modul === 'selesai') {
+            const wrap = document.getElementById('duta-badge-selesai-wrapper');
+            if (wrap) {
+              wrap.style.display = 'block';
+              wrap.innerHTML =
+                '<span class="duta-status-selesai">✅ Modul sudah selesai · Nilai Akhir: ' +
+                p.nilai_akhir + '</span>';
+            }
+          }
+        });
+      });
+
+      console.log('✅ bk7.html siap — portal Pohon & Jaringan (modal asesmen + progress).');
+    })();
+  </script>
+
+</body>
+</html>
