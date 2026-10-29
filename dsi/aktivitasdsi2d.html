@@ -909,9 +909,19 @@
         }, 12000);
 
         try {
-          // Kirim ke SEMUA user (utama + teman) via bulk
+// PENTING:
+// - Kirim HANYA { kuis: skorKuis } — JANGAN kirim a/b/c/d/e/f supaya skor lama tidak tertimpa 0.
+// - Kirim nilaiAkhir: 0 — backend MENGHITUNG ULANG nilai_akhir saat kunciModul:true
+//   dengan rumus: round( rata(bagian di totalBagianAktif) × 0.5 + skor_kuis × 0.5 ).
+// - bagianTerakhir = bagian kuis akhir modul ini (bisa 'd', 'e', 'f', dst.).
+// - kunciModul: true → backend menandai status_modul = 'selesai' (modul terkunci).
+// - totalBagianAktif = SEMUA bagian aktivitas yang dinilai, TANPA bagian kuis akhir.
+//   Contoh: modul dengan halaman a–d (d=kuis) → ['a','b','c']
+//           modul dengan halaman a–f (f=kuis) → ['a','b','c','d','e']
+// - Pakai dutaSimpanProgressBulk → kirim ke utama + semua teman (multi-user)
           const hasil = await window.dutaSimpanProgressBulk(
-            MODUL_KEY, 'd', { kuis: skorKuis }, nilaiAkhir, { kunciModul: true }
+            MODUL_KEY, 'd', { kuis: skorKuis }, 0,
+            { kunciModul: true, totalBagianAktif: ['a', 'b', 'c'] }
           );
 
           if (selesaiKirim) return;
