@@ -1898,3 +1898,46 @@ body {
   background: linear-gradient(135deg, #8a4bbf, #4a6cf2);
   filter: brightness(1.05);
 }
+
+/* ================================================================
+   PWA: NOTIFIKASI INSTALL (POPUP)
+   ================================================================ */
+.duta-install-pwa-box {
+  max-width: 420px;
+  text-align: center;
+}
+
+.duta-install-pwa-box .duta-modal-title {
+  margin-top: 0;
+  color: #2d7d46;
+}
+
+.duta-install-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.duta-install-now {
+  background: linear-gradient(135deg, #2d7d46, #4fa86a);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(45, 125, 70, 0.35);
+}
+
+.duta-install-now:hover {
+  background: linear-gradient(135deg, #1f5f32, #3d8a52);
+  filter: brightness(1.05);
+}
+
+.duta-install-selesai {
+  background: #e8e8e8;
+  color: #444;
+  border: 2px solid #ccc;
+}
+
+.duta-install-selesai:hover {
+  background: #dcdcdc;
+  border-color: #bbb;
+}

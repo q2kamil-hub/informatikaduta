@@ -33,7 +33,9 @@
     manifestPath: (typeof window.DUTA_ROOT === 'string' && window.DUTA_ROOT !== '')
       ? window.DUTA_ROOT + 'manifest.json'
       : 'manifest.json',
-    keyVersiTerpasang: 'duta_versi_terpasang'
+    keyVersiTerpasang: 'duta_versi_terpasang',
+    deferredInstallPrompt: null,
+    pwaTelahDiinstal: false
   };
 
   const BATAS_SESI_MENIT = 60;
@@ -1843,6 +1845,7 @@
 
     overlay.querySelector('.duta-notif-selesai').addEventListener('click', function() {
       overlay.remove();
+      initPWAInstall(); // tampilkan notif install PWA setelah notif update ditutup
     });
 
     overlay.querySelector('.duta-notif-update').addEventListener('click', function() {
@@ -1866,12 +1869,87 @@
   }
 
   // ============================================
+  // PWA: BEFOREINSTALLPROMPT (tangkap event install)
+  // ============================================
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    window.DUTA_PWA.deferredInstallPrompt = e;
+    window.DUTA_PWA.pwaTelahDiinstal = false;
+    console.log('[PWA] beforeinstallprompt ditangkap, siap untuk ditampilkan');
+  });
+
+  // Deteksi apakah PWA sudah diinstal (berjalan dalam mode standalone)
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    window.DUTA_PWA.pwaTelahDiinstal = true;
+    window.DUTA_PWA.deferredInstallPrompt = null;
+  }
+
+  // ============================================
+  // PWA: TAMPILKAN NOTIFIKASI INSTALL (POPUP)
+  // ============================================
+  function tampilkanNotifInstallPWA() {
+    if (window.DUTA_PWA.pwaTelahDiinstal) return; // sudah diinstal, jangan tampilkan
+    if (document.getElementById('duta-install-pwa')) return; // sudah ada
+    if (!window.DUTA_PWA.deferredInstallPrompt) return; // tidak ada event install
+
+    const overlay = document.createElement('div');
+    overlay.id = 'duta-install-pwa';
+    overlay.className = 'duta-modal-overlay';
+    overlay.innerHTML =
+      '<div class="duta-modal-box duta-install-pwa-box">' +
+        '<h3 class="duta-modal-title">📱 Install Aplikasi</h3>' +
+        '<div class="duta-modal-body">Install Portal Informatika DUTA untuk akses lebih cepat dan fitur offline.</div>' +
+        '<div class="duta-modal-actions duta-install-actions">' +
+          '<button type="button" class="duta-modal-btn duta-install-selesai">Nanti saja</button>' +
+          '<button type="button" class="duta-modal-btn duta-install-now">Instal Sekarang</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('.duta-install-selesai').addEventListener('click', function() {
+      overlay.remove();
+      window.DUTA_PWA.pwaTelahDiinstal = true; // jangan tampilkan lagi
+      localStorage.setItem('duta_pwa_ditawakan', '1');
+    });
+
+    overlay.querySelector('.duta-install-now').addEventListener('click', function() {
+      overlay.remove();
+      if (window.DUTA_PWA.deferredInstallPrompt) {
+        window.DUTA_PWA.deferredInstallPrompt.prompt();
+        window.DUTA_PWA.deferredInstallPrompt.userChoice.then(function(choiceResult) {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('[PWA] User menerima install');
+          } else {
+            console.log('[PWA] User menolak install');
+          }
+          window.DUTA_PWA.deferredInstallPrompt = null;
+          window.DUTA_PWA.pwaTelahDiinstal = true;
+        });
+      }
+    });
+  }
+
+  // ============================================
+  // PWA: INIT INSTALL (dipanggil setelah notif update selesai)
+  // ============================================
+  function initPWAInstall() {
+    if (window.DUTA_PWA.pwaTelahDiinstal) return;
+    const sudahDitawakan = localStorage.getItem('duta_pwa_ditawakan');
+    if (sudahDitawakan === '1') return;
+    tampilkanNotifInstallPWA();
+  }
+
+  // ============================================
   // PWA: INIT
   // ============================================
   function initPWA() {
     injectManifestLink();
     registerServiceWorker();
     cekVersiAplikasi();
+    // Jika tidak ada notif update, langsung cek install PWA
+    if (!window.DUTA_PWA.versiBaru) {
+      initPWAInstall();
+    }
   }
 
   // ============================================
