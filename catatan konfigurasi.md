@@ -1,7 +1,6 @@
-## Perubahan dari v3.9 → v3.10
+## Perubahan dari v3.10 → v3.11
 
-1. **Mode pengembangan localhost** — bypass PWA-only dan Service Worker lokal dinonaktifkan agar file hasil edit mudah diuji.
-2. **Isolasi daftar teman** — daftar teman direset saat identitas akun aktif berbeda dari pemilik data identitas lokal; sinkronisasi identitas juga tidak merender User Bar secara rekursif.
+1. **Dashboard guru** — tambah filter kelas, urutkan aktivitas terbaru berdasarkan waktu, selaraskan kolom Status/Update/Waktu/Aksi, dan centang skor detail secara default.
 
 Berikut dokumen lengkapnya:
 
@@ -10,7 +9,7 @@ Berikut dokumen lengkapnya:
 
 > **Dokumen ini adalah "peta" proyek.** Saat pindah ke chat baru, cukup lampirkan dokumen ini + file sampel (script.js, desain.css, Code.gs, script aktivitas, css aktivitas, dan file yang relevan). AI akan langsung memahami arsitektur tanpa perlu membaca semua file.
 >
-> **Versi dokumen:** v3.10 (2026-11-10) — Bypass PWA Lokal + Isolasi Identitas Teman
+> **Versi dokumen:** v3.11 (2026-11-10) — Penyempurnaan Dashboard Guru
 > **Status migrasi DSI2 + BK6 + TIK4 + BK7:** ✅ LENGKAP
 > **Status fitur Siswa:** ⚠️ Ada isu rollback proteksi URL (ditunda)
 
@@ -733,7 +732,10 @@ Portal <modul>.html → klik "Materi + Aktivitas"
 ### 15.1 Halaman `dashboard/guru.html`
 - Cek session `ambilSessionGuru()`.
 - Muat via `dutaGetAllProgress()`.
-- Filter, Sort, Pagination.
+- Filter nama/user_id, kelas, modul, status, dan waktu; sort pada kolom yang didukung; pagination.
+- Panel "Aktivitas Terbaru" diurutkan berdasarkan `waktu_update` terbaru, tidak bergantung urutan data dari backend.
+- Kolom tabel akhir: Nilai Akhir | Status | Update (tanggal) | Waktu | Aksi.
+- **Tampilkan skor detail (a–f)** tercentang secara default.
 - Aksi baris: **hanya 🔓 Unlock**.
 - Bulk action: hapus tamu massal.
 - Export CSV, Backup/Restore JSON.
@@ -1061,6 +1063,14 @@ Jika modul baru punya data lama yang salah, tambahkan ke `PETA_BAGIAN` di `recom
 **Simpan sebagai `CATATAN_KONFIGURASI.md` di root proyek.**
 
 ---
+
+## 📝 CHANGELOG v3.11 (2026-11-10)
+
+### Dashboard Guru
+- **`dashboard/guru.html`**: Tambah filter Kelas yang diisi dari data progres.
+- **Aktivitas terbaru**: Urutkan eksplisit dengan `waktu_update` terbaru di atas; parsing mendukung format ISO dan tanggal lokal.
+- **Tabel progres**: Selaraskan kolom Status dan Aksi; pecah tanggal Update dan Waktu menjadi kolom terpisah.
+- **Skor detail**: Checkbox tampil tercentang saat dashboard dibuka.
 
 ## 📝 CHANGELOG v3.10 (2026-11-10)
 

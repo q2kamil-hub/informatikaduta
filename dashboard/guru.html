@@ -804,6 +804,8 @@
           <input type="text" id="filterCari" placeholder="Nama / user_id / kelas" style="min-width:200px;">
           <label>Modul:</label>
           <select id="filterModul"><option value="">Semua</option></select>
+          <label>Kelas:</label>
+          <select id="filterKelas"><option value="">Semua</option></select>
           <label>Status:</label>
           <select id="filterStatus">
             <option value="">Semua</option>
@@ -820,7 +822,7 @@
         </div>
         <div class="fb-row">
           <label class="fb-toggle">
-            <input type="checkbox" id="toggleSkorDetail">
+            <input type="checkbox" id="toggleSkorDetail" checked>
             Tampilkan skor detail (a–f)
           </label>
         </div>
@@ -851,12 +853,14 @@
               <th class="col-skor no-sort">f</th>
               <th data-sort="skor_kuis">Kuis <span class="sort-arrow">▲▼</span></th>
               <th data-sort="nilai_akhir">Nilai Akhir <span class="sort-arrow">▲▼</span></th>
+              <th class="no-sort">Status</th>
               <th data-sort="waktu_update">Update <span class="sort-arrow">▲▼</span></th>
+              <th class="no-sort">Waktu</th>
               <th class="no-sort aksi-cell">Aksi</th>
             </tr>
           </thead>
           <tbody id="tabelBody">
-            <tr><td colspan="15" class="empty-state">Memuat data...</td></tr>
+            <tr><td colspan="17" class="empty-state">Memuat data...</td></tr>
           </tbody>
         </table>
       </div>
@@ -900,7 +904,7 @@
       let sortKolom = 'waktu_update';
       let sortAsc = false;
       let dipilih = new Set();
-      let tampilSkorDetail = false;
+      let tampilSkorDetail = true;
       let autoRefreshTimer = null;
       const AUTO_REFRESH_MS = 60000;
 
@@ -936,13 +940,35 @@
       }
       function formatTanggal(s) {
         if (!s) return '–';
-        const tgl = s.substring(0, 10);
-        const jam = s.substring(11, 16);
+        const nilai = String(s);
+        const tgl = nilai.substring(0, 10);
+        const jam = nilai.substring(11, 16);
         return tgl + ' ' + jam;
+      }
+      function formatWaktu(s) {
+        if (!s) return '–';
+        const nilai = String(s);
+        const jam = nilai.substring(11, 16);
+        return jam || '–';
       }
       function parseTanggal(s) {
         if (!s) return null;
-        try { return new Date(s.replace(' ', 'T')); } catch (e) { return null; }
+        const nilai = String(s).trim();
+        const iso = nilai.match(/^(\d{4}-\d{2}-\d{2})(?:[ T](.*))?$/);
+        if (iso) {
+          const parsedIso = new Date(iso[1] + (iso[2] ? 'T' + iso[2] : 'T00:00:00'));
+          return Number.isNaN(parsedIso.getTime()) ? null : parsedIso;
+        }
+        const lokal = nilai.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+        if (lokal) {
+          const parsedLokal = new Date(
+            Number(lokal[3]), Number(lokal[2]) - 1, Number(lokal[1]),
+            Number(lokal[4] || 0), Number(lokal[5] || 0), Number(lokal[6] || 0)
+          );
+          return Number.isNaN(parsedLokal.getTime()) ? null : parsedLokal;
+        }
+        const parsed = new Date(nilai);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
       }
 
       function ambilSessionGuruLokal() {
@@ -953,7 +979,7 @@
       // ===== MUAT DATA =====
       async function muatData() {
         if (!dataGuru || !dataGuru.username) return;
-        elBody.innerHTML = '<tr><td colspan="15" class="empty-state">Memuat data...</td></tr>';
+        elBody.innerHTML = '<tr><td colspan="17" class="empty-state">Memuat data...</td></tr>';
 
         const hasil = await window.dutaGetAllProgress(
           dataGuru.username,
@@ -961,7 +987,7 @@
         );
 
         if (!hasil || !hasil.ok) {
-          elBody.innerHTML = '<tr><td colspan="15" class="empty-state">⚠️ ' +
+          elBody.innerHTML = '<tr><td colspan="17" class="empty-state">⚠️ ' +
             escapeHtml((hasil && hasil.error) || 'Gagal memuat data') + '</td></tr>';
           return;
         }
@@ -977,12 +1003,13 @@
         elSekolahGuru.textContent = dataGuru.sekolah || '(sekolah belum diisi)';
 
         isiFilterModul();
+        isiFilterKelas();
         renderStats();
         renderPanel();
         renderTabel();
 
         if (hasil.message && semuaData.length === 0) {
-          elBody.innerHTML = '<tr><td colspan="15" class="empty-state">ℹ️ ' +
+          elBody.innerHTML = '<tr><td colspan="17" class="empty-state">ℹ️ ' +
             escapeHtml(hasil.message) + '</td></tr>';
         }
       }
@@ -994,6 +1021,21 @@
         elModul.innerHTML = '<option value="">Semua</option>' +
           moduls.map(function(m) { return '<option value="' + escapeHtml(m) + '">' + escapeHtml(m).toUpperCase() + '</option>'; }).join('');
         if (nilaiSekarang) elModul.value = nilaiSekarang;
+      }
+
+      function isiFilterKelas() {
+        const elKelas = document.getElementById('filterKelas');
+        const nilaiSekarang = elKelas.value;
+        const kelas = [...new Set(semuaData.map(function(d) {
+          return String(d.kelas || '').trim();
+        }).filter(Boolean))].sort(function(a, b) {
+          return a.localeCompare(b, 'id', { numeric: true, sensitivity: 'base' });
+        });
+        elKelas.innerHTML = '<option value="">Semua</option>' +
+          kelas.map(function(k) {
+            return '<option value="' + escapeHtml(k) + '">' + escapeHtml(k) + '</option>';
+          }).join('');
+        if (nilaiSekarang && kelas.indexOf(nilaiSekarang) !== -1) elKelas.value = nilaiSekarang;
       }
 
       function renderStats() {
@@ -1033,7 +1075,11 @@
         }
 
         const elAktivitas = document.getElementById('panelAktivitas');
-        const aktivitas = semuaData.slice(0, 8);
+        const aktivitas = semuaData.slice().sort(function(a, b) {
+          const waktuA = parseTanggal(a.waktu_update);
+          const waktuB = parseTanggal(b.waktu_update);
+          return (waktuB ? waktuB.getTime() : 0) - (waktuA ? waktuA.getTime() : 0);
+        }).slice(0, 8);
         if (aktivitas.length === 0) {
           elAktivitas.innerHTML = '<li class="ip-empty">Belum ada aktivitas.</li>';
         } else {
@@ -1050,6 +1096,7 @@
       function terapkanFilter() {
         const cari = document.getElementById('filterCari').value.trim().toLowerCase();
         const modul = document.getElementById('filterModul').value;
+        const kelas = document.getElementById('filterKelas').value;
         const status = document.getElementById('filterStatus').value;
         const waktu = document.getElementById('filterWaktu').value;
 
@@ -1070,6 +1117,7 @@
             if (teks.indexOf(cari) === -1) return false;
           }
           if (modul && d.modul !== modul) return false;
+          if (kelas && String(d.kelas || '').trim() !== kelas) return false;
           if (status === 'selesai' && !(d.status_modul === 'selesai')) return false;
           if (status === 'berlangsung' && d.status_modul === 'selesai') return false;
           if (batasWaktu !== null) {
@@ -1091,8 +1139,10 @@
             va = (a.nama || a.user_id || '').toLowerCase();
             vb = (b.nama || b.user_id || '').toLowerCase();
           } else if (kolom === 'waktu_update') {
-            va = a.waktu_update || '';
-            vb = b.waktu_update || '';
+            const waktuA = parseTanggal(a.waktu_update);
+            const waktuB = parseTanggal(b.waktu_update);
+            va = waktuA ? waktuA.getTime() : 0;
+            vb = waktuB ? waktuB.getTime() : 0;
           } else if (typeof va === 'number' || typeof vb === 'number') {
             va = Number(va) || 0;
             vb = Number(vb) || 0;
@@ -1138,7 +1188,7 @@
         });
 
         if (pageData.length === 0) {
-          elBody.innerHTML = '<tr><td colspan="15" class="empty-state">Tidak ada data yang cocok.</td></tr>';
+          elBody.innerHTML = '<tr><td colspan="17" class="empty-state">Tidak ada data yang cocok.</td></tr>';
           renderPagination();
           return;
         }
@@ -1198,7 +1248,8 @@
             '<td class="nilai-akhir ' + nilaiAkhirClass + '" data-label="Nilai Akhir">' +
               (d.nilai_akhir > 0 ? d.nilai_akhir : '–') + '</td>' +
             '<td data-label="Status">' + badgeStatus + '</td>' +
-            '<td data-label="Update" style="font-size:0.75rem; color:#7a6656; white-space:nowrap;">' + formatTanggal(d.waktu_update) + '</td>' +
+            '<td data-label="Update" style="font-size:0.75rem; color:#7a6656; white-space:nowrap;">' + (d.waktu_update ? String(d.waktu_update).substring(0, 10) : '–') + '</td>' +
+            '<td data-label="Waktu" style="font-size:0.75rem; color:#7a6656; white-space:nowrap;">' + formatWaktu(d.waktu_update) + '</td>' +
             '<td class="aksi-cell">' + btnUnlock + '</td>' +
           '</tr>';
         }).join('');
@@ -1902,7 +1953,7 @@
       });
 
       // ===== FILTER EVENTS =====
-      ['filterCari', 'filterModul', 'filterStatus', 'filterWaktu'].forEach(function(id) {
+      ['filterCari', 'filterModul', 'filterKelas', 'filterStatus', 'filterWaktu'].forEach(function(id) {
         const el = document.getElementById(id);
         el.addEventListener('input', function() { halaman = 1; renderTabel(); });
         el.addEventListener('change', function() { halaman = 1; renderTabel(); });
