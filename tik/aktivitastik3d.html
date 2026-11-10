@@ -713,7 +713,8 @@
           // - Kirim opsi {kunciModul: true} — backend menandai status_modul = 'selesai'.
           // - Pakai dutaSimpanProgressBulk → kirim ke utama + semua teman (multi-user).
           const hasil = await window.dutaSimpanProgressBulk(
-            MODUL_KEY, 'd', { kuis: skorKuis }, 0, { kunciModul: true }
+            MODUL_KEY, 'd', { kuis: skorKuis }, 0,
+            { kunciModul: true, totalBagianAktif: ['a', 'b', 'c'] }
           );
 
           if (selesaiKirim) return;
