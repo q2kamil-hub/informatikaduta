@@ -1,7 +1,7 @@
 // sw.js — Service Worker Portal Informatika DUTA
 // Versi: 1.0.0
 
-const CACHE_NAME = 'duta-pwa-v1';
+const CACHE_NAME = 'duta-pwa-v2';
 const OFFLINE_URL = '/informatikaduta/index.html';
 
 // Aset statis yang dicache saat install

@@ -25,7 +25,7 @@
   // KONFIGURASI PWA
   // ============================================
   window.DUTA_PWA = {
-    versiApp: '1.0.0',
+    versiApp: '1.0.1',
     versiFile: 'versi.json',
     swPath: (typeof window.DUTA_ROOT === 'string' && window.DUTA_ROOT !== '')
       ? window.DUTA_ROOT + 'sw.js'
@@ -139,13 +139,15 @@
   }
   window.ambilIdentitasSiswaMulti = ambilIdentitasSiswaMulti;
 
-  function simpanIdentitasSiswaMulti(obj) {
+  function simpanIdentitasSiswaMulti(obj, janganRenderUserBar) {
     try {
       if (!obj || !obj.tipe) { localStorage.removeItem(KEY_IDENTITAS); return; }
       if (!Array.isArray(obj.teman)) obj.teman = [];
       localStorage.setItem(KEY_IDENTITAS, JSON.stringify(obj));
     } catch (e) {}
-    try { renderUserBar(); } catch (e) {}
+    if (!janganRenderUserBar) {
+      try { renderUserBar(); } catch (e) {}
+    }
   }
   window.simpanIdentitasSiswaMulti = simpanIdentitasSiswaMulti;
 
@@ -160,14 +162,18 @@
     const d = ambilIdentitasSiswaMulti();
     if (!s) return null;
 
-    if (!d || d.tipe !== s.tipe) {
+    const userIdSesi = String(s.user_id || '').trim().toLowerCase();
+    const userIdIdentitas = d && d.utama && d.utama.username
+      ? String(d.utama.username).trim().toLowerCase()
+      : '';
+    if (!d || d.tipe !== s.tipe || !userIdIdentitas || userIdIdentitas !== userIdSesi) {
       if (s.tipe === 'login') {
         const baru = {
           tipe: 'login',
           utama: { username: s.user_id, nama: s.nama, kelas: s.kelas, sekolah: s.sekolah },
           teman: []
         };
-        simpanIdentitasSiswaMulti(baru);
+        simpanIdentitasSiswaMulti(baru, true);
         return baru;
       } else {
         const baru = {
@@ -176,7 +182,7 @@
           teman: [],
           tamu: null
         };
-        simpanIdentitasSiswaMulti(baru);
+        simpanIdentitasSiswaMulti(baru, true);
         return baru;
       }
     }
@@ -187,7 +193,7 @@
       kelas: s.kelas,
       sekolah: s.sekolah
     };
-    simpanIdentitasSiswaMulti(d);
+    simpanIdentitasSiswaMulti(d, true);
     return d;
   }
   window.sinkronkanIdentitasDenganSession = sinkronkanIdentitasDenganSession;
@@ -1783,6 +1789,50 @@
   // ============================================
   // PWA: REGISTER SERVICE WORKER
   // ============================================
+  function isLocalDevelopmentHost() {
+    const host = window.location.hostname.toLowerCase();
+    return host === 'localhost' || host === '::1' || host === '[::1]' ||
+      host.endsWith('.localhost') || /^127(?:\.\d{1,3}){3}$/.test(host);
+  }
+
+  function disableLocalDevelopmentServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+
+    const swUrl = new URL(window.DUTA_PWA.swPath, window.location.href);
+    const appScopePath = new URL('./', swUrl).pathname;
+    navigator.serviceWorker.getRegistrations()
+      .then(function(registrations) {
+        const appRegistrations = registrations.filter(function(reg) {
+          const scopeUrl = new URL(reg.scope);
+          return scopeUrl.origin === window.location.origin &&
+            scopeUrl.pathname === appScopePath;
+        });
+        if (appRegistrations.length === 0) return;
+
+        return Promise.all(appRegistrations.map(function(reg) {
+          return reg.unregister().then(function(unregistered) {
+            if (!unregistered) {
+              console.warn('[SW] Gagal menonaktifkan Service Worker lokal:', reg.scope);
+            }
+          });
+        })).then(function() {
+          if (!navigator.serviceWorker.controller) return;
+
+          try {
+            const reloadKey = 'duta_pwa_local_bypass_reloaded';
+            if (sessionStorage.getItem(reloadKey) === '1') return;
+            sessionStorage.setItem(reloadKey, '1');
+            window.location.reload();
+          } catch (err) {
+            console.warn('[PWA] Tidak dapat menyiapkan reload untuk bypass localhost:', err);
+          }
+        });
+      })
+      .catch(function(err) {
+        console.warn('[SW] Gagal memeriksa Service Worker lokal:', err);
+      });
+  }
+
   function registerServiceWorker() {
     if (!('serviceWorker' in navigator)) return;
     navigator.serviceWorker.register(window.DUTA_PWA.swPath)
@@ -1873,6 +1923,7 @@
   // ============================================
   window.addEventListener('beforeinstallprompt', function(e) {
     e.preventDefault();
+    if (isLocalDevelopmentHost()) return;
     window.DUTA_PWA.deferredInstallPrompt = e;
     window.DUTA_PWA.pwaTelahDiinstal = false;
     console.log('[PWA] beforeinstallprompt ditangkap, siap untuk ditampilkan');
@@ -2008,6 +2059,13 @@
   // PWA: INIT (PWA-ONLY — prioritas install dulu)
   // ============================================
   function initPWA() {
+    if (isLocalDevelopmentHost()) {
+      window.DUTA_PWA.pwaTelahDiinstal = true;
+      disableLocalDevelopmentServiceWorker();
+      console.log('[PWA] Bypass aktif untuk pengembangan lokal.');
+      return;
+    }
+
     // Daftarkan manifest dan service worker sebelum browser mengevaluasi kelayakan instal.
     injectManifestLink();
     registerServiceWorker();

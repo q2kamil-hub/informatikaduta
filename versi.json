@@ -1,10 +1,11 @@
 {
-  "versi": "1.0.0",
+  "versi": "1.0.1",
   "daftarFile": [
     "script.js",
+    "sw.js",
     "desain.css",
     "index.html",
     "manifest.json"
   ],
-  "pesanUpdate": "Ada Update Fitur dan Perbaikan, update sekarang"
+  "pesanUpdate": "Ada perbaikan login multi-akun dan dukungan pengembangan lokal. Update sekarang."
 }

@@ -1,7 +1,7 @@
-## Perubahan dari v3.8 → v3.9
+## Perubahan dari v3.9 → v3.10
 
-1. **Peta portal TIK3 direvisi** — portal kini menggunakan bagian a–d sesuai file yang tersedia; bagian d adalah kuis akhir.
-2. **Catatan konsistensi diperjelas** — daftar portal dan aktivitas yang masih memakai pola lama ditambahkan di §19.8.
+1. **Mode pengembangan localhost** — bypass PWA-only dan Service Worker lokal dinonaktifkan agar file hasil edit mudah diuji.
+2. **Isolasi daftar teman** — daftar teman direset saat identitas akun aktif berbeda dari pemilik data identitas lokal; sinkronisasi identitas juga tidak merender User Bar secara rekursif.
 
 Berikut dokumen lengkapnya:
 
@@ -10,7 +10,7 @@ Berikut dokumen lengkapnya:
 
 > **Dokumen ini adalah "peta" proyek.** Saat pindah ke chat baru, cukup lampirkan dokumen ini + file sampel (script.js, desain.css, Code.gs, script aktivitas, css aktivitas, dan file yang relevan). AI akan langsung memahami arsitektur tanpa perlu membaca semua file.
 >
-> **Versi dokumen:** v3.9 (2026-11-10) — Revisi Peta TIK3 + Catatan Konsistensi Pola
+> **Versi dokumen:** v3.10 (2026-11-10) — Bypass PWA Lokal + Isolasi Identitas Teman
 > **Status migrasi DSI2 + BK6 + TIK4 + BK7:** ✅ LENGKAP
 > **Status fitur Siswa:** ⚠️ Ada isu rollback proteksi URL (ditunda)
 
@@ -376,6 +376,8 @@ Form identitas lokal di setiap file aktivitas **DIHAPUS** (kecuali file pertama 
 - **Login**: `teman` maks 4. Progress dikirim ke `[utama.username, ...teman.username]`.
 - **Tamu**: pakai `tamu.daftarNama`. Progress dikirim ke `[session.user_id]`.
 - **Tambah/Hapus Teman**: via modal `⚙️ Identitas` → `cariUser` + verifikasi password → update array `teman`.
+- Saat session aktif berbeda tipe atau `user_id` dari `utama.username` yang tersimpan, `sinkronkanIdentitasDenganSession()` membuat data identitas baru dengan daftar teman kosong. Daftar teman hanya dipertahankan untuk akun yang sama.
+- Logout menghapus identitas lokal; pemeriksaan pemilik akun saat sinkronisasi menjadi pengaman tambahan ketika state lama masih tertinggal atau akun berganti.
 
 ---
 
@@ -875,7 +877,8 @@ rata = sum(skor[b] untuk b di totalBagianAktif) / len(totalBagianAktif)
 5. `localStorage['duta_versi_terpasang']` diupdate, notifikasi tidak muncul lagi sampai versi berikutnya
 
 **Cara Kerja PWA-Only Access:**
-- `manifest.json` dan Service Worker didaftarkan pada semua halaman sebelum pemeriksaan mode aplikasi. Ini memungkinkan browser menilai kelayakan instalasi saat situs dibuka.
+- Di host pengembangan lokal (`localhost`, `127.x.x.x`, `::1`, dan subdomain `.localhost`), pemeriksaan PWA-only dilewati dan Service Worker aplikasi tidak didaftarkan. Jika ada Service Worker aplikasi lokal lama, script mencoba melepas registrasi pada scope aplikasi tersebut lalu memuat ulang halaman sekali.
+- Di host non-lokal, `manifest.json` dan Service Worker didaftarkan pada semua halaman sebelum pemeriksaan mode aplikasi. Ini memungkinkan browser menilai kelayakan instalasi saat situs dibuka.
 - Aplikasi terpasang dikenali melalui `display-mode: standalone`, `display-mode: window-controls-overlay`, atau `navigator.standalone` (iOS).
 - Jika belum berjalan sebagai aplikasi terpasang, overlay PWA-only muncul dan konten disembunyikan.
 - Pengguna wajib install PWA terlebih dahulu untuk mengakses portal
@@ -891,6 +894,7 @@ rata = sum(skor[b] untuk b di totalBagianAktif) / len(totalBagianAktif)
 **Cara Deploy Update:**
 - Ubah `versi` di `versi.json` (misal `1.0.0` → `1.0.1`)
 - Pengguka akan melihat popup notifikasi update saat membuka halaman
+- Untuk perbaikan ini, versi aplikasi dinaikkan ke `1.0.1` dan cache Service Worker ke `duta-pwa-v2` agar client tidak terus memakai `script.js` lama.
 
 **Ikon PWA:** `informatikaduta-192.png` dan `informatikaduta-512.png` di root folder.
 
@@ -1057,6 +1061,13 @@ Jika modul baru punya data lama yang salah, tambahkan ke `PETA_BAGIAN` di `recom
 **Simpan sebagai `CATATAN_KONFIGURASI.md` di root proyek.**
 
 ---
+
+## 📝 CHANGELOG v3.10 (2026-11-10)
+
+### Pengembangan Lokal dan Isolasi Identitas
+- **`script.js`**: Bypass PWA-only untuk localhost/loopback dan nonaktifkan Service Worker aplikasi lokal agar tidak menyajikan cache saat pengembangan.
+- **`script.js`**: Reset daftar teman saat `user_id` atau tipe session aktif tidak sama dengan identitas pemilik data lokal; cegah render User Bar rekursif saat sinkronisasi.
+- **`sw.js` / `versi.json`**: Naikkan cache ke `duta-pwa-v2` dan versi aplikasi ke `1.0.1` untuk mengirim perubahan ke client terpasang.
 
 ## 📝 CHANGELOG v3.9 (2026-11-10)
 
