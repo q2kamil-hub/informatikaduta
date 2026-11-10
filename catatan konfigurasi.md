@@ -40,8 +40,10 @@ Berikut dokumen lengkapnya:
 | **Root URL** | `/informatikaduta/` |
 | **Bahasa** | Indonesia |
 | **Encoding** | UTF-8 |
-| **Versi script.js** | v3.4 (Multi-Bagian + Bulk Progress) |
+| **Versi script.js** | v3.4 (Multi-Bagian + Bulk Progress + PWA) |
 | **Versi Code.gs** | v3.6 (Fix nilai_akhir + totalBagianAktif) |
+| **Versi PWA** | v1.0.0 |
+| **File PWA** | `manifest.json`, `sw.js`, `versi.json` |
 | **Terbit** | 2026-10-29 |
 
 ---
@@ -58,6 +60,9 @@ Berikut dokumen lengkapnya:
 ├── desain.css                      # CSS global (semua halaman)
 ├── script.js                       # JS global (v3.4: totalBagianAktif)
 ├── favicon.png
+├── manifest.json                 # Web App Manifest (PWA v1.0.0)
+├── sw.js                         # Service Worker (PWA offline + cache)
+├── versi.json                    # Versi aplikasi (untuk deteksi update)
 │
 ├── partials/
 │   └── breadcrumb.json             # Mapping URL → breadcrumb
@@ -866,7 +871,37 @@ rata = sum(skor[b] untuk b di totalBagianAktif) / len(totalBagianAktif)
 - Hard reload (`Ctrl+Shift+R`) setiap kali ubah `script.js` / `.css` / `.html`.
 - Deploy ulang `Code.gs` setiap ubah backend.
 
-### 19.6 ⚠️ ATURAN ASESMEN DIAGNOSTIK & PORTAL MODAL (v3.7)
+### 19.6 PWA — Progressive Web App (v1.0.0)
+
+**File PWA:**
+| File | Fungsi |
+|------|--------|
+| `manifest.json` | Web App Manifest — nama app, ikon, warna tema, display standalone, lang ID |
+| `sw.js` | Service Worker — cache aset statis (HTML, CSS, JS, gambar), offline fallback, versi.json tidak dicache |
+| `versi.json` | Berisi `versi`, `daftarFile`, dan `pesanUpdate` untuk deteksi update aplikasi |
+
+**Cara Kerja Notifikasi Update:**
+1. Setiap halaman yang memuat `script.js` akan fetch `versi.json` (bypass cache SW)
+2. Bandingkan `versi` di `versi.json` dengan `localStorage['duta_versi_terpasang']`
+3. Jika berbeda → tampilkan popup: "Ada Update Fitur dan Perbaikan, update sekarang"
+4. User klik **Update** → `reg.update()` + `location.reload(true)` → halaman dimuat ulang (kesamaannya dengan hard refresh)
+5. `localStorage['duta_versi_terpasang']` diupdate, notifikasi tidak muncul lagi sampai versi berikutnya
+
+**Cara Kerja PWA-Only Access:**
+- `window.matchMedia('(display-mode: standalone)').matches` — jika false (via browser biasa), overlay PWA-only muncul dan konten disembunyikan
+- Pengguna wajib install PWA terlebih dahulu untuk mengakses portal
+- Jika PWA di-uninstall dan diakses ulang via browser biasa → overlay PWA-only akan muncul lagi (deteksi ulang setiap page load)
+- Tombol "Buka di Browser Lain" tersedia untuk development/testing
+
+**Auto Logout:** 60 menit (`BATAS_SESI_MENIT = 60` di `script.js`)
+
+**Cara Deploy Update:**
+- Ubah `versi` di `versi.json` (misal `1.0.0` → `1.0.1`)
+- Pengguka akan melihat popup notifikasi update saat membuka halaman
+
+**Ikon PWA:** `informatikaduta-192.png` dan `informatikaduta-512.png` di root folder (ditambahkan nanti)
+
+### 19.7 ⚠️ ATURAN ASESMEN DIAGNOSTIK & PORTAL MODAL (v3.7)
 
 **Berlaku untuk SEMUA modul:** BK6, BK7, DSI1, DSI2, TIK2, TIK3, TIK4, dan modul-modul berikutnya.
 
@@ -1056,6 +1091,13 @@ Jika modul baru punya data lama yang salah, tambahkan ke `PETA_BAGIAN` di `recom
 - **Map bagian per modul** (BK: a–d, DSI1: a–e, DSI2: a–d, TIK2/3: a–f, TIK4: a–d).
 - **Aksen warna per modul** (BK6 hijau, BK7 biru-ungu, DSI ungu, TIK2/4 oranye, TIK3 cyan-teal).
 - **File tengah (b/c) tanpa form identitas** — identitas cukup di awal & akhir.
+
+#### PWA (v1.0.0)
+- **`manifest.json`**: BARU — Web App Manifest PWA
+- **`sw.js`**: BARU — Service Worker (cache aset statis, offline fallback)
+- **`versi.json`**: BARU — File versi untuk deteksi update aplikasi
+- **`script.js`**: Tambah logika PWA (install prompt, notifikasi update, PWA-only access)
+- **`desain.css`**: Tambah styling popup notifikasi update dan overlay PWA-only
 
 ### Yang TIDAK Berubah
 - `desain.css`, `script.js` (v3.4), `Code.gs` (v3.6).

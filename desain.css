@@ -1941,3 +1941,53 @@ body {
   background: #dcdcdc;
   border-color: #bbb;
 }
+
+/* ================================================================
+   PWA: OVERLAY PWA-ONLY (untuk browser biasa)
+   ================================================================ */
+.duta-pwa-only-box {
+  max-width: 460px;
+  text-align: center;
+}
+
+.duta-pwa-only-box .duta-modal-title {
+  margin-top: 0;
+  color: #b07be0;
+}
+
+.duta-pwa-only-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.duta-pwa-install-now {
+  background: linear-gradient(135deg, #b07be0, #5c7cfa);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(176, 123, 224, 0.35);
+}
+
+.duta-pwa-install-now:hover {
+  background: linear-gradient(135deg, #8a4bbf, #4a6cf2);
+  filter: brightness(1.05);
+}
+
+.duta-pwa-tunggu {
+  background: #ccc;
+  color: #666;
+  border: 2px solid #999;
+}
+
+.duta-pwa-buka-browser {
+  background: #f5f5f5;
+  color: #444;
+  border: 2px solid #ccc;
+}
+
+.duta-pwa-buka-browser:hover {
+  background: #e8e8e8;
+  border-color: #bbb;
+}
