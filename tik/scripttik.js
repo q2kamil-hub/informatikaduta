@@ -2,11 +2,19 @@
    scripttik.js — modul global Aktivitas TIK (tik1, tik2, tik3, ...)
    Berisi helper, modal Lapis 3, diferensiasi level, kuis kilat,
    tes pemahaman, kirim nilai, feedback guru, dan pemulihan state.
-   Dipakai oleh aktivitastik2a.html s/d f.html (dan modul TIK lain).
+   Dipakai oleh aktivitastik1a–c.html, aktivitastik2a–f.html, dst.
    Panggil SETELAH script.js:
      <script src="../script.js"></script>
      <script src="scripttik.js"></script>
    encoding: UTF-8
+
+   PERBAIKAN (v3.8):
+   - periksaTantangan(): validasi kustom dipanggil LEBIH DULU;
+     syarat panjang minimum 30 karakter hanya fallback untuk
+     tantangan teks TANPA validasi kustom. Jawaban benar yang
+     singkat (mis. "a dan c") tidak lagi ditolak.
+   - restoreKuisKilat(): jaga agar label jawaban benar tidak
+     mendapat class "benar" ganda.
    ================================================================ */
 
 (function () {
@@ -220,6 +228,19 @@
     });
   };
 
+  // ============================================================
+  // PERIKSA TANTANGAN — PERBAIKAN UTAMA
+  // ------------------------------------------------------------
+  // Alur baru untuk tipe teks:
+  //   1) Jika kosong → minta isi.
+  //   2) Jika ada validasi kustom:
+  //        - panggil t.validasi(val) LEBIH DULU.
+  //        - jika true → terima (berapa pun panjangnya).
+  //        - jika false → jika val terlalu pendek (< 30 char), beri hint;
+  //          jika tidak, beri feedbackSalah.
+  //   3) Jika TIDAK ada validasi kustom (fallback):
+  //        - wajib >= 30 karakter, lalu anggap benar.
+  // ============================================================
   D.periksaTantangan = function (t) {
     const fb = document.getElementById('fb_' + t.id);
     const item = document.getElementById('tantangan_' + t.id);
@@ -233,21 +254,46 @@
         fb.innerHTML = '⚠️ Tulis jawabanmu dulu ya!';
         return;
       }
-      if (val.length < 30) {
-        fb.className = 't-feedback show hint';
-        fb.innerHTML = '🤔 Jawabanmu terlalu pendek. ' + t.hint;
-        return;
+
+      let benar = false;
+
+      if (typeof t.validasi === 'function') {
+        // Validasi kustom dipanggil LEBIH DULU.
+        try {
+          benar = !!t.validasi(val);
+        } catch (e) {
+          benar = false;
+        }
+
+        if (!benar) {
+          // Jika jawaban masih sangat pendek, beri hint lebih ramah
+          // (bukan menolak jawaban benar — validasi kustom sudah gagal di atas).
+          if (val.length < 15) {
+            fb.className = 't-feedback show hint';
+            fb.innerHTML = '🤔 Jawabanmu masih sangat pendek. ' + t.hint;
+          } else {
+            fb.className = 't-feedback show no';
+            fb.innerHTML = '❌ ' + t.feedbackSalah + '<br><br>💡 ' + t.hint;
+          }
+          return;
+        }
+      } else {
+        // Fallback: tanpa validasi kustom, wajib >= 30 karakter.
+        if (val.length < 30) {
+          fb.className = 't-feedback show hint';
+          fb.innerHTML = '🤔 Jawabanmu terlalu pendek. ' + t.hint;
+          return;
+        }
+        benar = true;
       }
-      if (t.validasi(val)) {
+
+      if (benar) {
         fb.className = 't-feedback show ok';
         fb.innerHTML = '✅ <strong>Bagus!</strong> Jawabanmu sudah menyentuh inti masalahnya.';
         item.classList.add('selesai');
         const btn = document.getElementById('btn_' + t.id);
         if (btn) btn.disabled = true;
         S.tantanganSelesai[t.id] = true;
-      } else {
-        fb.className = 't-feedback show no';
-        fb.innerHTML = '❌ ' + t.feedbackSalah + '<br><br>💡 ' + t.hint;
       }
     } else if (t.tipe === 'pilihan') {
       const selected = document.querySelector('input[name="opsi_' + t.id + '"]:checked');
@@ -282,6 +328,9 @@
     if (semuaSelesai) {
       if (E.mindful2) { E.mindful2.classList.add('show'); E.mindful2.style.display = 'block'; }
       if (E.btnLanjutLapis3) E.btnLanjutLapis3.disabled = false;
+      if (typeof D.onLapis2Selesai === 'function') {
+        try { D.onLapis2Selesai(); } catch (e) {}
+      }
       setTimeout(function () {
         if (E.mindful2) E.mindful2.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 200);
@@ -528,7 +577,9 @@
           const ic = lbl.querySelector('.check-icon');
           if (ic) ic.textContent = benar ? '✅' : '❌';
         }
-        if (oi === soal.kunci && selected !== soal.kunci) {
+        // PERBAIKAN: jangan tambah class "benar" ganda jika label
+        // sudah mendapatkannya dari blok di atas.
+        if (oi === soal.kunci && selected !== soal.kunci && !lbl.classList.contains('benar')) {
           lbl.classList.add('benar');
           const ic = lbl.querySelector('.check-icon');
           if (ic) ic.textContent = '✅';
@@ -1251,5 +1302,5 @@
   D.getAiFeedback = function () { return S.aiFeedback; };
   D.setAiFeedback = function (v) { S.aiFeedback = v || ''; };
 
-  console.log('✅ scripttik.js siap — panggil DUTA_TIK.init({...}) di tiap file aktivitas TIK.');
+  console.log('✅ scripttik.js v3.8 siap — periksaTantangan() memanggil validasi kustom lebih dulu; syarat 30 karakter hanya fallback.');
 })();

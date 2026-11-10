@@ -6,9 +6,19 @@
   <title>Antarmuka Berbasis Grafis (GUI) · Portal · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
   <style>
-    /* ===== GAYA PORTAL ===== */
+    /* ===== Aksen warna TIK1 (oranye) ===== */
+    :root {
+      --tik1-utama: #ff8a5b;
+      --tik1-utama-dark: #e0673a;
+      --tik1-ink-dark: #b34614;
+      --tik1-soft: #fff5f0;
+      --tik1-soft-2: #ffe9dd;
+      --tik1-kuning: #f4b942;
+      --tik1-kuning-dark: #d4a030;
+    }
+
     .portal-wrapper {
-      max-width: 800px;
+      max-width: 820px;
       margin: 0 auto;
       text-align: center;
       padding: 1rem 0;
@@ -19,7 +29,6 @@
       margin-bottom: 0.5rem;
       animation: floatIcon 3s ease-in-out infinite;
     }
-
     @keyframes floatIcon {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
@@ -28,7 +37,7 @@
     .portal-title {
       font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #ff6b6b, #f4b942, #4fb0c6);
+      background: linear-gradient(135deg, var(--tik1-utama), var(--tik1-kuning), #4fb0c6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -47,16 +56,15 @@
       font-size: 0.95rem;
       color: #5c4638;
       line-height: 1.8;
-      max-width: 660px;
+      max-width: 680px;
       margin: 0 auto 2rem;
-      background: #fff5f0;
+      background: var(--tik1-soft);
       padding: 1.2rem 1.8rem;
       border-radius: 16px;
-      border-left: 6px solid #ff8a5b;
+      border-left: 6px solid var(--tik1-utama);
       text-align: left;
     }
-
-    .portal-desc strong { color: #b34614; }
+    .portal-desc strong { color: var(--tik1-ink-dark); }
     .portal-desc ul { margin: 0.5rem 0 0 1.2rem; }
     .portal-desc ul li { margin-bottom: 0.3rem; }
 
@@ -67,7 +75,7 @@
       padding: 1.2rem;
       margin: 1.5rem 0;
       overflow-x: auto;
-      border: 3px solid #ff8a5b;
+      border: 3px solid var(--tik1-utama);
     }
     .mini-map pre {
       font-family: 'Courier New', monospace;
@@ -77,10 +85,9 @@
       text-align: left;
       margin: 0;
     }
-    .mini-map .hl-1 { color: #ffb890; font-weight: bold; }
-    .mini-map .hl-2 { color: #b8d4f5; font-weight: bold; }
-    .mini-map .hl-3 { color: #b8f5d4; font-weight: bold; }
-    .mini-map .hl-4 { color: #f5b8d4; font-weight: bold; }
+    .mini-map .hl-1 { color: #b8d4f5; font-weight: bold; }
+    .mini-map .hl-2 { color: #b8f5d4; font-weight: bold; }
+    .mini-map .hl-3 { color: #f5e0a8; font-weight: bold; }
 
     .portal-buttons {
       display: flex;
@@ -109,49 +116,44 @@
       flex: 1;
       box-shadow: 0 4px 14px rgba(0,0,0,0.04);
     }
-
     .portal-btn:hover {
       transform: translateY(-6px);
       box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-      border-color: #b09b88;
     }
-
     .portal-btn .btn-icon { font-size: 3rem; margin-bottom: 0.3rem; }
-
     .portal-btn .btn-title {
       font-size: 1.1rem;
       font-weight: 700;
       color: #3b2b1e;
       line-height: 1.3;
     }
-
     .portal-btn .btn-desc {
       font-size: 0.8rem;
       color: #7a6656;
       line-height: 1.4;
     }
 
-    /* Tombol Materi — warna aksen TIK (oranye) */
+    /* Tombol Materi — oranye */
     .portal-btn.btn-materi {
-      border-color: #ff8a5b;
-      background: #fff5f0;
+      border-color: var(--tik1-utama);
+      background: var(--tik1-soft);
     }
     .portal-btn.btn-materi:hover {
-      border-color: #e06a3b;
-      background: #ffe9dd;
+      border-color: var(--tik1-utama-dark);
+      background: var(--tik1-soft-2);
     }
-    .portal-btn.btn-materi .btn-title { color: #b34614; }
+    .portal-btn.btn-materi .btn-title { color: var(--tik1-ink-dark); }
 
-    /* Tombol Aktivitas — hijau mint */
+    /* Tombol Materi + Aktivitas — kuning (pemicu modal) */
     .portal-btn.btn-aktivitas {
-      border-color: #8aaa7a;
-      background: #f0f8eb;
+      border-color: var(--tik1-kuning);
+      background: #fffbf0;
     }
     .portal-btn.btn-aktivitas:hover {
-      border-color: #6a8a5a;
-      background: #e5f2dc;
+      border-color: var(--tik1-kuning-dark);
+      background: #fff3d6;
     }
-    .portal-btn.btn-aktivitas .btn-title { color: #2d5a1e; }
+    .portal-btn.btn-aktivitas .btn-title { color: #8a5e00; }
 
     /* Kotak info daftar file aktivitas */
     .file-list {
@@ -190,7 +192,7 @@
       display: inline-block;
       width: 1.4rem;
       font-weight: 700;
-      color: #ff8a5b;
+      color: var(--tik1-utama);
       margin-right: 0.3rem;
     }
     .file-list li strong { color: #3b2b1e; }
@@ -205,20 +207,12 @@
       border-radius: 12px;
       border: 1px dashed #d9cdbf;
       display: inline-block;
-      max-width: 640px;
+      max-width: 660px;
       line-height: 1.6;
     }
-
     .portal-info strong { color: #4d3829; }
 
-    /* ===== TOMBOL LANJUTKAN BELAJAR ===== */
-    #duta-lanjut-container {
-      margin: 1.5rem auto 0.5rem;
-      max-width: 620px;
-      display: none;
-    }
-
-    /* Badge kecil "Selesai" untuk modul yang sudah tuntas */
+    /* Badge kecil "Selesai" */
     .duta-status-selesai {
       display: inline-flex;
       align-items: center;
@@ -233,114 +227,427 @@
       font-weight: 700;
     }
 
-    /* ===== RESPONSIF ===== */
+    /* ================================================================
+       MODAL "MULAI BELAJAR" — TIK1 oranye
+       ================================================================ */
+    .duta-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(40, 20, 50, 0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      z-index: 10000;
+      padding: 1.2rem 1rem;
+      overflow-y: auto;
+      animation: dutaModalFadeIn 0.2s ease;
+    }
+    @keyframes dutaModalFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .duta-modal-box {
+      background: #fff;
+      border-radius: 22px;
+      padding: 0;
+      max-width: 640px;
+      width: 100%;
+      box-shadow: 0 24px 70px rgba(40, 20, 50, 0.30);
+      border: 3px solid var(--tik1-utama);
+      animation: dutaModalSlideUp 0.28s ease;
+      overflow: hidden;
+      margin: auto;
+    }
+    @keyframes dutaModalSlideUp {
+      from { transform: translateY(24px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .dmb-header {
+      background: linear-gradient(135deg, var(--tik1-utama), var(--tik1-utama-dark));
+      color: #fff;
+      padding: 1.1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+    .dmb-header .dmbh-icon { font-size: 1.4rem; }
+
+    .dmb-body {
+      padding: 1.3rem 1.6rem 1.5rem;
+      max-height: 68vh;
+      overflow-y: auto;
+    }
+
+    /* Section pemantik */
+    .dmb-pemantik {
+      background: linear-gradient(135deg, var(--tik1-soft), #ffe9dd);
+      border: 2px solid var(--tik1-utama);
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.1rem;
+    }
+    .dmb-pemantik .dp-title {
+      font-weight: 800;
+      color: var(--tik1-ink-dark);
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .dmb-pemantik .dp-scenario {
+      background: #fff;
+      border-radius: 10px;
+      padding: 0.7rem 0.95rem;
+      font-size: 0.88rem;
+      color: #3b2b1e;
+      line-height: 1.6;
+      border-left: 4px solid var(--tik1-utama);
+      margin-bottom: 0.6rem;
+    }
+    .dmb-pemantik .dp-scenario strong { color: var(--tik1-ink-dark); }
+    .dmb-pemantik .dp-questions {
+      font-size: 0.86rem;
+      color: #4d3829;
+      line-height: 1.7;
+      margin: 0 0 0 1.1rem;
+    }
+    .dmb-pemantik .dp-questions li { margin-bottom: 0.25rem; }
+
+    /* Tombol aksi di modal */
+    .dmb-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .dmb-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.85rem 1.3rem;
+      border-radius: 30px;
+      border: 2px solid transparent;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.94rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-decoration: none;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .dmb-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .dmb-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    .dmb-btn .dmb-emoji { font-size: 1.1rem; }
+
+    .dmb-btn-asesmen {
+      background: #fff;
+      border-color: var(--tik1-utama);
+      color: var(--tik1-ink-dark);
+    }
+    .dmb-btn-asesmen:hover:not(:disabled) {
+      background: var(--tik1-soft);
+      border-color: var(--tik1-utama-dark);
+    }
+
+    .dmb-btn-lanjut {
+      background: linear-gradient(135deg, var(--tik1-utama), var(--tik1-utama-dark));
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(255, 138, 91, 0.35);
+    }
+    .dmb-btn-lanjut:hover:not(:disabled) {
+      filter: brightness(1.05);
+    }
+
+    .dmb-btn-ulang {
+      background: linear-gradient(135deg, #f4b942, #d4a030);
+      color: #5c3400;
+      box-shadow: 0 6px 18px rgba(244, 185, 66, 0.35);
+    }
+
+    .dmb-btn-langsung {
+      background: linear-gradient(135deg, var(--tik1-utama), var(--tik1-utama-dark));
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(255, 138, 91, 0.35);
+    }
+
+    .dmb-info-kecil {
+      font-size: 0.78rem;
+      color: #7a6656;
+      font-style: italic;
+      text-align: center;
+      line-height: 1.5;
+      margin-top: 0.2rem;
+    }
+
+    /* ================================================================
+       SPOILER ASESMEN
+       ================================================================ */
+    .asesmen-spoiler {
+      margin-top: 0.8rem;
+      border: 2px dashed var(--tik1-utama);
+      border-radius: 14px;
+      background: #fdfcfb;
+      padding: 1rem 1.2rem;
+      display: none;
+      animation: dutaModalFadeIn 0.3s ease;
+    }
+    .asesmen-spoiler.show { display: block; }
+
+    .as-title {
+      font-weight: 800;
+      color: var(--tik1-ink-dark);
+      font-size: 0.92rem;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .as-sub {
+      font-size: 0.8rem;
+      color: #7a6656;
+      line-height: 1.5;
+      margin-bottom: 0.8rem;
+      font-style: italic;
+    }
+
+    .as-soal {
+      background: #fff;
+      border: 1.5px solid #e5dbd0;
+      border-radius: 10px;
+      padding: 0.7rem 0.9rem;
+      margin-bottom: 0.6rem;
+    }
+    .as-soal .as-q {
+      font-size: 0.87rem;
+      color: #3b2b1e;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+    }
+    .as-opsi {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .as-opsi label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+      padding: 0.4rem 0.7rem;
+      border: 1.5px solid #e5dbd0;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      color: #3d2c1f;
+      background: #fdfcfb;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      line-height: 1.45;
+    }
+    .as-opsi label:hover {
+      border-color: var(--tik1-utama);
+      background: var(--tik1-soft);
+    }
+    .as-opsi input[type="radio"] {
+      accent-color: var(--tik1-utama);
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+    }
+    .as-opsi input[type="radio"]:checked + span {
+      color: var(--tik1-ink-dark);
+      font-weight: 600;
+    }
+
+    .as-cek {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      width: 100%;
+      padding: 0.7rem 1.2rem;
+      margin-top: 0.5rem;
+      border-radius: 24px;
+      border: none;
+      background: linear-gradient(135deg, var(--tik1-utama), var(--tik1-utama-dark));
+      color: #fff;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      box-shadow: 0 4px 14px rgba(255, 138, 91, 0.3);
+    }
+    .as-cek:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(255, 138, 91, 0.42);
+    }
+    .as-cek:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .as-hasil {
+      margin-top: 0.8rem;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      display: none;
+      font-size: 0.87rem;
+      line-height: 1.6;
+      animation: dutaModalFadeIn 0.3s ease;
+    }
+    .as-hasil.show { display: block; }
+
+    .as-hasil.dasar {
+      background: #e8f5e0;
+      border: 2px solid #8aaa7a;
+      color: #2d5a1e;
+    }
+    .as-hasil.reguler {
+      background: #fff8e6;
+      border: 2px solid #d4a030;
+      color: #5c3400;
+    }
+    .as-hasil.tantangan {
+      background: #fde8e8;
+      border: 2px solid #d4a0a0;
+      color: #a84a3a;
+    }
+    .as-hasil .ah-level {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .as-hasil .ah-detail {
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+    .as-hasil .ah-skor {
+      font-size: 0.8rem;
+      margin-top: 0.35rem;
+      font-style: italic;
+      opacity: 0.85;
+    }
+
+    /* Responsif */
     @media (max-width: 720px) {
-      .portal-title { font-size: 1.5rem; }
+      .portal-title { font-size: 1.6rem; }
       .portal-icon { font-size: 3.5rem; }
       .portal-btn { min-width: unset; padding: 1.4rem 1.2rem; }
       .portal-btn .btn-icon { font-size: 2.4rem; }
       .portal-btn .btn-title { font-size: 1rem; }
       .portal-desc { padding: 1rem 1.2rem; font-size: 0.9rem; }
-      .mini-map pre { font-size: 0.6rem; }
+      .mini-map pre { font-size: 0.58rem; }
+      .dmb-body { padding: 1rem 1rem 1.2rem; }
     }
-
     @media (max-width: 480px) {
       .portal-buttons { flex-direction: column; align-items: stretch; }
       .portal-btn { max-width: unset; }
       .file-list { padding: 1rem 1.1rem; }
       .file-list li { font-size: 0.82rem; }
+      .dmb-pemantik .dp-questions { font-size: 0.82rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER (dinamis dari script.js) -->
   <header id="header-utama"></header>
 
-  <!-- BREADCRUMB (statis, 3 level) -->
+  <!-- BREADCRUMB statis -->
   <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
     <ol class="breadcrumb">
       <li><a href="../index.html">Beranda</a></li>
       <li><a href="materitik.html">Teknologi Informasi dan Komunikasi</a></li>
-      <li>Menjelaskan Antarmuka Berbasis Grafis</li>
+      <li>Antarmuka Berbasis Grafis (GUI)</li>
     </ol>
   </nav>
 
-  <!-- KONTEN UTAMA: PORTAL -->
   <main class="container" id="konten-utama">
     <article class="card">
       <div class="portal-wrapper">
 
         <div class="portal-icon">🖥️</div>
-        <div class="portal-title">Antarmuka Berbasis Grafis (GUI) &amp; Komponennya</div>
-        <div class="portal-sub">Jembatan Manusia–Komputer · Komponen GUI · Interaksi dengan GUI</div>
+        <div class="portal-title">Antarmuka Berbasis Grafis (GUI) dan Komponennya</div>
+        <div class="portal-sub">Mengenal Tampilan Digital yang Ramah Pengguna</div>
 
         <div class="portal-desc">
-          <strong>📚 Selamat datang!</strong> Modul ini akan membimbingmu memahami bagaimana
-          <strong>antarmuka berbasis grafis (GUI)</strong> menjadi jembatan antara manusia
-          dan komputer — mulai dari mengenali perbedaan antarmuka teks (CLI) dengan
-          antarmuka grafis (GUI), menemukan komponen-komponen GUI, hingga mempraktikkan
-          berbagai interaksi dengan GUI.
+          <strong>📚 Selamat datang!</strong> Modul ini akan membimbingmu memahami
+          <strong>antarmuka berbasis grafis (GUI)</strong> — tampilan yang memungkinkan
+          kita berinteraksi dengan komputer menggunakan gambar, ikon, dan tombol.
           <br><br>
           Kamu akan mempelajari:
           <ul>
-            <li><strong>Antarmuka</strong> — "jembatan" antara manusia dan komputer (CLI vs GUI)</li>
-            <li><strong>Komponen GUI</strong> — title bar, menu bar, toolbar, area kerja, scrollbar, tombol kontrol</li>
-            <li><strong>Interaksi GUI</strong> — klik, double-click, klik kanan, drag-and-drop, scroll, ketik</li>
-            <li><strong>Kontekstualisasi</strong> — bagaimana GUI dipakai di Gojek, Ruangguru, Tokopedia, ATM</li>
+            <li><strong>Apa itu GUI</strong> — antarmuka berbasis gambar vs antarmuka teks</li>
+            <li><strong>Mengapa GUI lebih mudah</strong> — gambar dikenali lebih cepat daripada tulisan</li>
+            <li><strong>Komponen-komponen GUI</strong> — desktop, ikon, taskbar, jendela, tombol kontrol, start menu</li>
+            <li><strong>Penerapan di kehidupan sehari-hari</strong> — HP Android, laptop, mesin ATM, tablet</li>
           </ul>
           <br>
-          Silakan pilih mode pembelajaran yang kamu inginkan:
+          Di setiap bagian, kamu bisa <strong>memilih tingkat tantangan</strong>:
+          🟢 Dasar · 🟡 Reguler · 🔴 Tantangan. Sesuaikan dengan kesiapanmu!
         </div>
 
         <!-- Peta konsep mini -->
         <div class="mini-map">
 <pre>
-              ┌──────────────────────────────────────┐
-              │    ANTARMUKA BERBASIS GRAFIS (GUI)   │
-              └──────────────────┬───────────────────┘
-                                 │
-     ┌───────────────────────────┼───────────────────────────┐
-     │                           │                           │
-     ▼                           ▼                           ▼
-<span class="hl-1">┌───────────┐</span>             <span class="hl-2">┌───────────┐</span>             <span class="hl-3">┌───────────┐</span>
-<span class="hl-1">│ BAGIAN 1  │</span>────────────▶<span class="hl-2">│ BAGIAN 2  │</span>────────────▶<span class="hl-3">│ BAGIAN 3  │</span>
-<span class="hl-1">│ Antarmuka │</span>             <span class="hl-2">│ Komponen  │</span>             <span class="hl-3">│ Interaksi │</span>
-<span class="hl-1">│ Jembatan  │</span>             <span class="hl-2">│  GUI      │</span>             <span class="hl-3">│ dengan GUI│</span>
-<span class="hl-1">└───────────┘</span>             <span class="hl-2">└───────────┘</span>             <span class="hl-3">└───────────┘</span>
-     │                           │                           │
-     ▼                           ▼                           ▼
-"CLI vs GUI:              "Title bar, menu bar,       "Klik, geser,
- mengapa GUI               toolbar, scrollbar,         ketik — kapan
- lebih ramah?"             tombol kontrol"            pakai yang mana?"
-     │                           │                           │
-     └───────────────────────────┼───────────────────────────┘
-                                 ▼
-                      ┌─────────────────────┐
-                      │  <span class="hl-4">KUIS AKHIR (10)</span>    │
-                      │  Level & Sertifikat │
-                      └─────────────────────┘
+              ┌──────────────────────────────────────────────┐
+              │    ANTARMUKA BERBASIS GRAFIS (GUI)           │
+              │          DAN KOMPONENNYA                     │
+              └──────────────────────┬───────────────────────┘
+                                     │
+     ┌───────────────────────────────┼───────────────────────────────┐
+     │                               │                               │
+     ▼                               ▼                               ▼
+<span class="hl-1">┌───────────┐</span>                 <span class="hl-2">┌───────────┐</span>                 <span class="hl-3">┌───────────┐</span>
+<span class="hl-1">│ BAGIAN 1  │</span>────────────────▶<span class="hl-2">│ BAGIAN 2  │</span>────────────────▶<span class="hl-3">│ BAGIAN 3  │</span>
+<span class="hl-1">│ APA ITU   │</span>                 <span class="hl-2">│ KOMPONEN  │</span>                 <span class="hl-3">│ KUIS AKHIR│</span>
+<span class="hl-1">│ GUI?      │</span>                 <span class="hl-2">│ GUI       │</span>                 <span class="hl-3">│ &amp;         │</span>
+<span class="hl-1">│           │</span>                 <span class="hl-2">│           │</span>                 <span class="hl-3">│ SERTIFIKAT│</span>
+<span class="hl-1">└───────────┘</span>                 <span class="hl-2">└───────────┘</span>                 <span class="hl-3">└───────────┘</span>
+     │                               │                               │
+     ▼                               ▼                               ▼
+"Jelajahi layar                 "Kenali desktop,                "Uji pemahaman
+ digital — klik                 taskbar, jendela,               &amp; raih
+ ikon dan amati"                tombol kontrol"                 sertifikat"
 </pre>
         </div>
 
-        <!-- ===== TOMBOL LANJUTKAN BELAJAR (dinamis) ===== -->
-        <div id="duta-lanjut-container"></div>
-
-        <!-- ===== BADGE SELESAI (dinamis, muncul kalau status_modul = selesai) ===== -->
+        <!-- ===== BADGE SELESAI (dinamis) ===== -->
         <div id="duta-badge-selesai-wrapper" style="display:none;"></div>
 
         <div class="portal-buttons">
+          <!-- Tombol Materi: link biasa -->
           <a href="materitik1.html" class="portal-btn btn-materi">
             <span class="btn-icon">📖</span>
-            <span class="btn-title">Materi Lengkap</span>
-            <span class="btn-desc">Baca materi tanpa aktivitas</span>
+            <span class="btn-title">Materi GUI</span>
+            <span class="btn-desc">Baca materi lengkap tanpa aktivitas</span>
           </a>
 
-          <a href="aktivitastik1a.html" class="portal-btn btn-aktivitas">
+          <!-- Tombol Materi + Aktivitas: MEMBUKA MODAL -->
+          <button type="button" class="portal-btn btn-aktivitas" id="btnBukaModalMulai">
             <span class="btn-icon">🎮</span>
             <span class="btn-title">Materi + Aktivitas</span>
             <span class="btn-desc">Belajar sambil mengerjakan aktivitas interaktif</span>
-          </a>
+          </button>
         </div>
 
         <!-- Daftar file aktivitas -->
@@ -348,16 +655,12 @@
           <div class="fl-title">📂 Daftar Aktivitas dalam Modul Ini</div>
           <ol>
             <li>
-              <strong>Antarmuka — CLI vs GUI</strong>
-              <div class="file-desc">🖥️ "Dua Dunia: Teks vs Grafis" — mencoba dua antarmuka &amp; menemukan polanya</div>
+              <strong>Jelajahi Layar Digital</strong>
+              <div class="file-desc">🔍 "Mengenal GUI" — mengklik ikon dan menemukan pola antarmuka grafis</div>
             </li>
             <li>
-              <strong>Komponen-Komponen GUI</strong>
-              <div class="file-desc">🔍 "Bedah Jendela: Temukan Komponennya" — menemukan &amp; menamai komponen</div>
-            </li>
-            <li>
-              <strong>Interaksi dengan GUI</strong>
-              <div class="file-desc">🖱️ "Tiga Gerakan Ajaib: Klik, Geser, Ketik" — mencoba berbagai interaksi GUI</div>
+              <strong>Kenali Komponen Layar</strong>
+              <div class="file-desc">🪟 "Komponen GUI" — mengenal desktop, taskbar, jendela, dan tombol kontrol</div>
             </li>
             <li>
               <strong>Kuis Akhir &amp; Sertifikat</strong>
@@ -367,141 +670,470 @@
         </div>
 
         <div class="portal-info">
-          💡 <strong>Rekomendasi:</strong> Pilih <strong>"Materi + Aktivitas"</strong> untuk
-          pengalaman belajar yang lebih lengkap dan interaktif. Kamu akan menjelajahi
-          <strong>GUI Lab</strong> dan menyelesaikan tantangan antarmuka!
+          💡 <strong>Rekomendasi:</strong> Klik <strong>"Materi + Aktivitas"</strong> untuk
+          memulai. Di sana kamu akan menemukan pertanyaan pemantik, <strong>tes asesmen
+          diagnostik</strong> (untuk merekomendasikan tingkat tantangan), dan tombol untuk
+          melanjutkan dari bagian terakhir.
         </div>
 
       </div>
     </article>
   </main>
 
-  <!-- FOOTER -->
   <footer id="footer-utama"></footer>
-
-  <!-- Tombol floating -->
   <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
 
-  <!-- script.js + root -->
   <script src="../script.js"></script>
   <script>window.DUTA_ROOT = '../';</script>
 
-    <!-- ===== RENDER TOMBOL "LANJUTKAN BELAJAR" + BADGE SELESAI ===== -->
   <script>
-    document.addEventListener('DOMContentLoaded', async function() {
-      // Tunggu script.js selesai init
-      await new Promise(r => setTimeout(r, 100));
+    (function() {
+      "use strict";
 
-      // Hanya render kalau user sudah login / tamu berkode
-      if (!window.ambilSession || !window.ambilSession()) return;
-
-      const container = document.getElementById('duta-lanjut-container');
-      const badgeWrapper = document.getElementById('duta-badge-selesai-wrapper');
-      if (!container) return;
-
-      // Ambil progress modul 'tik1'
-      let progress = null;
-      try {
-        const hasil = await window.dutaAmbilProgress('tik1');
-        if (hasil && hasil.ok && hasil.progress && hasil.progress.length > 0) {
-          progress = hasil.progress[0];
-        }
-      } catch (e) {
-        return;
-      }
-
-      if (!progress) return;
-
-      const bagianTerakhir = (progress.bagian_terakhir || '').toLowerCase();
-      const nilaiAkhir = Number(progress.nilai_akhir) || 0;
-      const statusModul = (progress.status_modul || '').toString().trim().toLowerCase();
-      const sudahSelesai = (statusModul === 'selesai');
-
-      // Map bagian → file
-      const mapFile = {
+      // ============================================================
+      // KONFIGURASI MODUL
+      // ============================================================
+      const MODUL_KEY = 'tik1';
+      const MAP_FILE = {
         a: 'aktivitastik1a.html',
         b: 'aktivitastik1b.html',
-        c: 'aktivitastik1c.html',
-        d: 'aktivitastik1d.html'
+        c: 'aktivitastik1c.html'
       };
+      const URUTAN_BAGIAN = ['a', 'b', 'c'];
 
-      // ============================================
-      // KASUS 1: Modul SUDAH SELESAI
-      // ============================================
-      if (sudahSelesai) {
-        // Badge "Selesai"
-        if (badgeWrapper) {
-          badgeWrapper.style.display = 'block';
-          badgeWrapper.innerHTML =
-            '<span class="duta-status-selesai">✅ Modul sudah selesai · Nilai Akhir: ' +
-            nilaiAkhir + '</span>';
+      // ============================================================
+      // SOAL ASESMEN DIAGNOSTIK (5 soal GUI)
+      // Mayoritas A=Dasar, B=Reguler, C=Tantangan.
+      // Tie-break: ambil level TERENDAH.
+      // ============================================================
+      const SOAL_ASESMEN = [
+        {
+          q: 'Pernahkah kamu membuka aplikasi di HP atau laptop dengan cara mengklik gambar/ikon?',
+          opsi: [
+            { v: 'A', label: 'Belum pernah / tidak memperhatikan apa yang diklik.' },
+            { v: 'B', label: 'Pernah, tapi tidak memperhatikan apa yang diklik.' },
+            { v: 'C', label: 'Pernah, dan aku tahu itu disebut ikon.' }
+          ]
+        },
+        {
+          q: 'Menurutmu, apa yang dimaksud dengan "antarmuka" pada perangkat digital?',
+          opsi: [
+            { v: 'A', label: 'Tidak tahu.' },
+            { v: 'B', label: 'Mungkin tampilan di layar.' },
+            { v: 'C', label: 'Tampilan yang memungkinkan pengguna berinteraksi dengan perangkat.' }
+          ]
+        },
+        {
+          q: 'Saat membuka laptop, kamu melihat deretan tombol di bagian bawah layar. Bagian itu biasanya disebut...',
+          opsi: [
+            { v: 'A', label: 'Tidak tahu.' },
+            { v: 'B', label: 'Taskbar.' },
+            { v: 'C', label: 'Taskbar, tempat tombol Start dan aplikasi yang terbuka.' }
+          ]
+        },
+        {
+          q: 'Apa bedanya "jendela" (window) dengan "ikon" di layar komputer?',
+          opsi: [
+            { v: 'A', label: 'Tidak tahu.' },
+            { v: 'B', label: 'Mungkin jendela lebih besar.' },
+            { v: 'C', label: 'Ikon adalah gambar kecil yang bisa diklik, jendela adalah area tampilan aplikasi yang terbuka.' }
+          ]
+        },
+        {
+          q: 'Mengapa tampilan berbasis grafis (gambar) lebih mudah digunakan daripada hanya tulisan?',
+          opsi: [
+            { v: 'A', label: 'Tidak tahu.' },
+            { v: 'B', label: 'Karena lebih berwarna.' },
+            { v: 'C', label: 'Karena gambar/ikon lebih cepat dikenali daripada tulisan.' }
+          ]
+        }
+      ];
+
+      // ============================================================
+      // STATE MODAL & PROGRESS
+      // ============================================================
+      let modalEl = null;
+      let jawabanAsesmen = {};
+      let asesmenSudahDiCek = false;
+      let progressData = null;
+
+      // ============================================================
+      // HELPER
+      // ============================================================
+      function escapeHtml(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function labelBagian(b) {
+        const map = {
+          a: 'Bagian 1 (Jelajahi Layar Digital)',
+          b: 'Bagian 2 (Kenali Komponen Layar)',
+          c: 'Bagian 3 (Kuis Akhir &amp; Sertifikat)'
+        };
+        return map[b] || ('Bagian ' + b.toUpperCase());
+      }
+
+      // ============================================================
+      // MUAT PROGRESS (getProgress tik1)
+      // ============================================================
+      async function muatProgress() {
+        try {
+          if (!window.ambilSession || !window.ambilSession()) return null;
+          const hasil = await window.dutaAmbilProgress(MODUL_KEY);
+          if (hasil && hasil.ok && hasil.progress && hasil.progress.length > 0) {
+            const p = hasil.progress[0];
+            progressData = {
+              bagian_terakhir: (p.bagian_terakhir || '').toLowerCase(),
+              nilai_akhir: Number(p.nilai_akhir) || 0,
+              status_modul: (p.status_modul || '').toString().trim().toLowerCase()
+            };
+            return progressData;
+          }
+        } catch (e) {
+          console.warn('[tik1] gagal muat progress:', e);
+        }
+        return null;
+      }
+
+      // ============================================================
+      // BUKA MODAL "MULAI BELAJAR"
+      // ============================================================
+      async function bukaModalMulai() {
+        const s = window.ambilSession ? window.ambilSession() : null;
+        const login = !!(s && s.tipe === 'login');
+
+        if (login) {
+          await muatProgress();
+        } else {
+          progressData = null;
         }
 
-        // Tombol "Ulangi Modul Ini"
-        const btn = document.createElement('a');
-        btn.className = 'duta-lanjut-btn';
-        btn.href = '#';
-        btn.innerHTML = '🔄 <strong>Ulangi Modul Ini</strong> — Nilai Akhir: ' + nilaiAkhir;
+        const sudahSelesai = !!(progressData && progressData.status_modul === 'selesai');
+        const bagianTerakhir = progressData ? progressData.bagian_terakhir : '';
+        const nilaiAkhir = progressData ? progressData.nilai_akhir : 0;
 
-        btn.addEventListener('click', function(e) {
-          e.preventDefault();
+        let tombolLanjutHtml = '';
+        if (!login) {
+          tombolLanjutHtml =
+            '<div class="dmb-info-kecil">🔒 Login atau masuk sebagai tamu untuk melanjutkan dari bagian terakhir &amp; menyimpan nilai.</div>';
+        } else if (sudahSelesai) {
+          tombolLanjutHtml =
+            '<button type="button" class="dmb-btn dmb-btn-ulang" id="btnUlangModul">' +
+              '<span class="dmb-emoji">🔄</span> Ulangi Modul Ini — Nilai Akhir: ' + nilaiAkhir +
+            '</button>';
+        } else if (bagianTerakhir && MAP_FILE[bagianTerakhir]) {
+          const idx = URUTAN_BAGIAN.indexOf(bagianTerakhir);
+          const berikutnya = (idx >= 0 && idx < URUTAN_BAGIAN.length - 1) ? URUTAN_BAGIAN[idx + 1] : bagianTerakhir;
+          tombolLanjutHtml =
+            '<button type="button" class="dmb-btn dmb-btn-lanjut" id="btnLanjutBagian">' +
+              '<span class="dmb-emoji">▶️</span> Lanjutkan dari ' + labelBagian(berikutnya) +
+            '</button>';
+        }
 
-          if (typeof window.tampilkanModal === 'function') {
-            window.tampilkanModal({
-              judul: '🔄 Ulangi Modul Ini?',
-              pesan:
-                '<p style="margin-bottom:0.7rem;">Nilai Akhir kamu sekarang <strong>' + nilaiAkhir + '</strong> ' +
-                'dan <strong>tidak akan berubah</strong> meskipun kamu mengulang modul ini.</p>' +
-                '<p style="margin-bottom:0.7rem;">Tapi tidak masalah! Kamu <strong>boleh mengulang</strong> ' +
-                'untuk mempelajari kembali materinya dan berlatih lagi.</p>' +
-                '<p style="background:#fff8e6; padding:0.6rem 0.9rem; border-radius:10px; ' +
-                'border-left:4px solid #d4a030; color:#5c3400; font-size:0.88rem; margin:0;">' +
-                '💡 <strong>Ingin nilai Akhirnya diperbarui?</strong> Sampaikan kepada ' +
-                'Bapak/Ibu Guru Informatika ya.' +
-                '</p>',
-              tombolLanjut: '🔄 Ya, Ulangi Modul',
-              onLanjut: function() {
-                window.location.href = 'aktivitastik1a.html';
+        const pemantikHtml =
+          '<div class="dmb-pemantik">' +
+            '<div class="dp-title">🤔 Pertanyaan Pemantik</div>' +
+            '<div class="dp-scenario">' +
+              '<strong>Bayangkan ini:</strong> Budi membuka laptop. Ia melihat layar dengan banyak gambar kecil: ' +
+              'folder kuning, dokumen putih, dan gambar bola dunia. Ia juga melihat deretan tombol di bagian bawah layar. ' +
+              'Budi mengklik gambar bola dunia itu, dan tiba-tiba terbuka jendela baru berisi halaman pencarian.' +
+            '</div>' +
+            '<ol class="dp-questions">' +
+              '<li>Pernahkah kamu membuka HP atau laptop? Apa yang pertama kali kamu lihat di layar?</li>' +
+              '<li>Menurutmu, mengapa layar menampilkan gambar-gambar kecil, bukan hanya tulisan saja?</li>' +
+              '<li>Apa yang terjadi jika kamu mengklik salah satu gambar itu?</li>' +
+            '</ol>' +
+          '</div>';
+
+        let asesmenHtml = '';
+        SOAL_ASESMEN.forEach(function(soal, idx) {
+          let opsiHtml = '';
+          soal.opsi.forEach(function(o) {
+            const idRadio = 'as_' + idx + '_' + o.v;
+            opsiHtml +=
+              '<label for="' + idRadio + '">' +
+                '<input type="radio" name="as_soal_' + idx + '" id="' + idRadio + '" value="' + o.v + '">' +
+                '<span>' + escapeHtml(o.label) + '</span>' +
+              '</label>';
+          });
+          asesmenHtml +=
+            '<div class="as-soal" data-idx="' + idx + '">' +
+              '<div class="as-q">' + (idx + 1) + '. ' + escapeHtml(soal.q) + '</div>' +
+              '<div class="as-opsi">' + opsiHtml + '</div>' +
+            '</div>';
+        });
+
+        const html =
+          '<div class="duta-modal-overlay" id="tik1ModalOverlay">' +
+            '<div class="duta-modal-box" role="dialog" aria-modal="true" aria-labelledby="tik1ModalTitle">' +
+              '<div class="dmb-header">' +
+                '<span class="dmbh-icon">🖥️</span>' +
+                '<span id="tik1ModalTitle">Mulai Belajar: Antarmuka Berbasis Grafis</span>' +
+              '</div>' +
+              '<div class="dmb-body">' +
+                pemantikHtml +
+
+                '<div class="dmb-actions">' +
+                  '<button type="button" class="dmb-btn dmb-btn-asesmen" id="btnBukaAsesmen">' +
+                    '<span class="dmb-emoji">🔍</span> Tes Asesmen Diagnostik' +
+                  '</button>' +
+
+                  '<div class="asesmen-spoiler" id="asesmenSpoiler">' +
+                    '<div class="as-title">📝 Asesmen Diagnostik</div>' +
+                    '<div class="as-sub">' +
+                      'Jawab <strong>semua 5 soal</strong> dengan jujur. Hasilnya hanya untuk ' +
+                      'merekomendasikan tingkat tantangan — kamu tetap bisa memilih level sendiri ' +
+                      'saat aktivitas dimulai.' +
+                    '</div>' +
+                    asesmenHtml +
+                    '<button type="button" class="as-cek" id="btnCekAsesmen">✅ Cek Hasil Rekomendasi</button>' +
+                    '<div class="as-hasil" id="asHasil"></div>' +
+                  '</div>' +
+
+                  tombolLanjutHtml +
+
+                  '<a href="aktivitastik1a.html" class="dmb-btn dmb-btn-langsung">' +
+                    '<span class="dmb-emoji">🚀</span> Langsung ke Aktivitas + Materi' +
+                  '</a>' +
+
+                  '<div class="dmb-info-kecil">' +
+                    'Pilih "Langsung ke Aktivitas" jika kamu ingin mulai dari Bagian 1 tanpa lanjut progress.' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+
+        if (modalEl) { modalEl.remove(); modalEl = null; }
+
+        const wrap = document.createElement('div');
+        wrap.innerHTML = html;
+        modalEl = wrap.firstElementChild;
+        document.body.appendChild(modalEl);
+        document.body.style.overflow = 'hidden';
+
+        modalEl.addEventListener('click', function(e) {
+          if (e.target === modalEl) tutupModal();
+        });
+
+        const btnAsesmen = document.getElementById('btnBukaAsesmen');
+        const spoiler = document.getElementById('asesmenSpoiler');
+        if (btnAsesmen && spoiler) {
+          btnAsesmen.addEventListener('click', function() {
+            const shown = spoiler.classList.toggle('show');
+            btnAsesmen.innerHTML = shown
+              ? '<span class="dmb-emoji">🔍</span> Sembunyikan Asesmen'
+              : '<span class="dmb-emoji">🔍</span> Tes Asesmen Diagnostik';
+            if (shown) {
+              setTimeout(function() {
+                spoiler.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }, 100);
+            }
+          });
+        }
+
+        SOAL_ASESMEN.forEach(function(soal, idx) {
+          const radios = modalEl.querySelectorAll('input[name="as_soal_' + idx + '"]');
+          radios.forEach(function(r) {
+            r.addEventListener('change', function() {
+              jawabanAsesmen[idx] = r.value;
+              if (asesmenSudahDiCek) {
+                asesmenSudahDiCek = false;
+                const h = document.getElementById('asHasil');
+                if (h) h.classList.remove('show');
               }
             });
-          } else {
-            if (confirm(
-              'Nilai Akhir kamu (' + nilaiAkhir + ') tidak akan berubah.\n\n' +
-              'Kamu boleh mengulang modul ini untuk mempelajari kembali materinya.\n\n' +
-              'Jika ingin nilai Akhirnya diperbarui, sampaikan kepada Bapak/Ibu Guru Informatika.\n\n' +
-              'Lanjutkan mengulang modul?'
-            )) {
-              window.location.href = 'aktivitastik1a.html';
+          });
+        });
+
+        const btnCek = document.getElementById('btnCekAsesmen');
+        if (btnCek) btnCek.addEventListener('click', cekAsesmen);
+
+        const btnLanjut = document.getElementById('btnLanjutBagian');
+        if (btnLanjut) {
+          btnLanjut.addEventListener('click', function() {
+            const b = progressData ? progressData.bagian_terakhir : '';
+            const idx = URUTAN_BAGIAN.indexOf(b);
+            const berikutnya = (idx >= 0 && idx < URUTAN_BAGIAN.length - 1) ? URUTAN_BAGIAN[idx + 1] : b;
+            const file = MAP_FILE[berikutnya] || MAP_FILE[b] || MAP_FILE.a;
+            window.location.href = file;
+          });
+        }
+
+        const btnUlang = document.getElementById('btnUlangModul');
+        if (btnUlang) {
+          btnUlang.addEventListener('click', function() {
+            tampilkanKonfirmasiUlang(nilaiAkhir);
+          });
+        }
+      }
+
+      function tutupModal() {
+        if (modalEl) { modalEl.remove(); modalEl = null; }
+        document.body.style.overflow = '';
+      }
+
+      // ============================================================
+      // CEK ASESMEN
+      // ============================================================
+      function cekAsesmen() {
+        const belum = [];
+        SOAL_ASESMEN.forEach(function(_, idx) {
+          if (!jawabanAsesmen[idx]) belum.push(idx + 1);
+        });
+
+        const hasilEl = document.getElementById('asHasil');
+        if (!hasilEl) return;
+
+        if (belum.length > 0) {
+          hasilEl.className = 'as-hasil show';
+          hasilEl.style.background = '#fdf0f0';
+          hasilEl.style.border = '2px solid #d4a0a0';
+          hasilEl.style.color = '#a84a3a';
+          hasilEl.innerHTML =
+            '⚠️ <strong>Lengkapi dulu semua soal!</strong><br>' +
+            'Soal yang belum dijawab: <strong>' + belum.join(', ') + '</strong>';
+          return;
+        }
+
+        let countA = 0, countB = 0, countC = 0;
+        SOAL_ASESMEN.forEach(function(_, idx) {
+          const v = jawabanAsesmen[idx];
+          if (v === 'A') countA++;
+          else if (v === 'B') countB++;
+          else if (v === 'C') countC++;
+        });
+
+        let level = 'dasar';
+        const maxCount = Math.max(countA, countB, countC);
+        const kandidat = [];
+        if (countA === maxCount) kandidat.push('dasar');
+        if (countB === maxCount) kandidat.push('reguler');
+        if (countC === maxCount) kandidat.push('tantangan');
+        if (kandidat.length > 1) {
+          const urut = ['dasar', 'reguler', 'tantangan'];
+          kandidat.sort(function(a, b) { return urut.indexOf(a) - urut.indexOf(b); });
+          level = kandidat[0];
+        } else {
+          level = kandidat[0];
+        }
+
+        const mapInfo = {
+          dasar: {
+            ikon: '🟢',
+            judul: 'Dasar',
+            kelas: 'dasar',
+            detail: 'Kamu akan belajar dari dasar dengan banyak contoh dan petunjuk. ' +
+                    'Cocok untuk memperkuat pemahaman.'
+          },
+          reguler: {
+            ikon: '🟡',
+            judul: 'Reguler',
+            kelas: 'reguler',
+            detail: 'Kamu sudah punya gambaran dasar. Kamu akan belajar dengan tantangan ' +
+                    'standar yang menantang.'
+          },
+          tantangan: {
+            ikon: '🔴',
+            judul: 'Tantangan',
+            kelas: 'tantangan',
+            detail: 'Kamu sudah paham dasar. Kamu akan mendapat tantangan lebih dan ' +
+                    'studi kasus terbuka.'
+          }
+        };
+        const info = mapInfo[level];
+
+        hasilEl.className = 'as-hasil show ' + info.kelas;
+        hasilEl.style.background = '';
+        hasilEl.style.border = '';
+        hasilEl.style.color = '';
+        hasilEl.innerHTML =
+          '<div class="ah-level">' + info.ikon + ' Rekomendasi: Tingkat ' + info.judul + '</div>' +
+          '<div class="ah-detail">' + info.detail + '</div>' +
+          '<div class="ah-skor">' +
+            'Jawabanmu: ' + countA + '× A · ' + countB + '× B · ' + countC + '× C. ' +
+            'Hasil ini hanya <strong>rekomendasi</strong> — kamu tetap bisa memilih level sendiri ' +
+            'saat aktivitas dimulai.' +
+          '</div>';
+
+        asesmenSudahDiCek = true;
+        try {
+          localStorage.setItem(MODUL_KEY + '_rekomendasi_level', level);
+        } catch (e) {}
+
+        setTimeout(function() {
+          hasilEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      }
+
+      // ============================================================
+      // KONFIRMASI ULANG MODUL
+      // ============================================================
+      function tampilkanKonfirmasiUlang(nilaiAkhir) {
+        const judul = '🔄 Ulangi Modul Ini?';
+        const pesan =
+          '<p style="margin-bottom:0.7rem;">Nilai Akhir kamu sekarang <strong>' + nilaiAkhir +
+          '</strong> dan <strong>tidak akan berubah</strong> meskipun kamu mengulang modul ini.</p>' +
+          '<p style="margin-bottom:0.7rem;">Tapi tidak masalah! Kamu <strong>boleh mengulang</strong> ' +
+          'untuk mempelajari kembali materinya dan berlatih lagi.</p>' +
+          '<p style="background:#fff8e6; padding:0.6rem 0.9rem; border-radius:10px; ' +
+          'border-left:4px solid #d4a030; color:#5c3400; font-size:0.88rem; margin:0;">' +
+          '💡 <strong>Ingin nilai Akhirnya diperbarui?</strong> Sampaikan kepada ' +
+          'Bapak/Ibu Guru Informatika ya.' +
+          '</p>';
+
+        if (typeof window.tampilkanModal === 'function') {
+          window.tampilkanModal({
+            judul: judul,
+            pesan: pesan,
+            tombolLanjut: '🔄 Ya, Ulangi Modul',
+            onLanjut: function() {
+              tutupModal();
+              window.location.href = MAP_FILE.a;
+            }
+          });
+        } else {
+          if (confirm('Nilai Akhir kamu (' + nilaiAkhir + ') tidak akan berubah.\n\n' +
+                      'Kamu boleh mengulang modul ini untuk mempelajari kembali materinya.\n\n' +
+                      'Jika ingin nilai Akhirnya diperbarui, sampaikan kepada Bapak/Ibu Guru Informatika.\n\n' +
+                      'Lanjutkan mengulang modul?')) {
+            tutupModal();
+            window.location.href = MAP_FILE.a;
+          }
+        }
+      }
+
+      // ============================================================
+      // TOMBOL BUKA MODAL
+      // ============================================================
+      document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('btnBukaModalMulai');
+        if (btn) {
+          btn.addEventListener('click', function() {
+            bukaModalMulai().catch(function(err) {
+              console.error('[tik1] gagal buka modal:', err);
+              alert('⚠️ Gagal memuat modal. Coba refresh halaman.');
+            });
+          });
+        }
+
+        muatProgress().then(function(p) {
+          if (p && p.status_modul === 'selesai') {
+            const wrap = document.getElementById('duta-badge-selesai-wrapper');
+            if (wrap) {
+              wrap.style.display = 'block';
+              wrap.innerHTML =
+                '<span class="duta-status-selesai">✅ Modul sudah selesai · Nilai Akhir: ' +
+                p.nilai_akhir + '</span>';
             }
           }
         });
+      });
 
-        container.innerHTML = '';
-        container.appendChild(btn);
-        container.style.display = 'block';
-        return;
-      }
-
-      // ============================================
-      // KASUS 2: Modul BELUM SELESAI
-      // ============================================
-      if (bagianTerakhir && mapFile[bagianTerakhir]) {
-        const urutan = ['a', 'b', 'c', 'd'];
-        const idx = urutan.indexOf(bagianTerakhir);
-        const berikutnya = (idx >= 0 && idx < urutan.length - 1) ? urutan[idx + 1] : bagianTerakhir;
-
-        const btn = document.createElement('a');
-        btn.className = 'duta-lanjut-btn';
-        btn.href = mapFile[berikutnya] || mapFile[bagianTerakhir];
-        btn.innerHTML = '▶️ <strong>Lanjutkan dari Bagian ' + berikutnya.toUpperCase() +
-                        '</strong> — Progres tersimpan';
-
-        container.innerHTML = '';
-        container.appendChild(btn);
-        container.style.display = 'block';
-        return;
-      }
-    });
+      console.log('✅ tik1.html siap — portal Antarmuka Berbasis Grafis (modal asesmen + progress).');
+    })();
   </script>
 
 </body>

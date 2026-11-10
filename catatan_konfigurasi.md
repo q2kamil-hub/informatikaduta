@@ -1,4 +1,6 @@
-## Perubahan dari v3.10 → v3.11
+## Perubahan dari v3.11 → v3.12
+
+1. **TIK1 dimigrasikan** — portal asesmen/progres, materi GUI, aktivitas A–B berbasis `DUTA_TIK`, kuis akhir C dengan sertifikat, dan `desaintik1.css`.
 
 1. **Dashboard guru** — tambah filter kelas, urutkan aktivitas terbaru berdasarkan waktu, selaraskan kolom Status/Update/Waktu/Aksi, dan centang skor detail secara default.
 
@@ -9,8 +11,8 @@ Berikut dokumen lengkapnya:
 
 > **Dokumen ini adalah "peta" proyek.** Saat pindah ke chat baru, cukup lampirkan dokumen ini + file sampel (script.js, desain.css, Code.gs, script aktivitas, css aktivitas, dan file yang relevan). AI akan langsung memahami arsitektur tanpa perlu membaca semua file.
 >
-> **Versi dokumen:** v3.11 (2026-11-10) — Penyempurnaan Dashboard Guru
-> **Status migrasi DSI2 + BK6 + TIK4 + BK7:** ✅ LENGKAP
+> **Versi dokumen:** v3.12 (2026-11-10) — Migrasi TIK1
+> **Status migrasi DSI2 + BK6 + TIK1 + TIK4 + BK7:** ✅ LENGKAP
 > **Status fitur Siswa:** ⚠️ Ada isu rollback proteksi URL (ditunda)
 
 ---
@@ -64,13 +66,14 @@ Berikut dokumen lengkapnya:
 │   ├── materitik.html
 │   ├── tik1.html ... tik10.html    # Portal modul
 │   ├── materitik1.html ... 10      # Materi lengkap
-│   ├── aktivitastik1a.html ...
+│   ├── aktivitastik1a.html ... c  # ✅ MIGRASI — a/b aktivitas, c kuis akhir
 │   ├── aktivitastik2a.html ... f    # ✅ MIGRASI (6 bagian)
 │   ├── aktivitastik3a.html ... d    # ✅ MIGRASI (4 bagian; d = kuis akhir)
 │   ├── aktivitastik4a.html ... d    # ✅ MIGRASI v3.6 (4 bagian)
 │   ├── desaintik2.css               # CSS mandiri TIK2
 │   ├── desaintik3.css               # CSS mandiri TIK3
 │   ├── desaintik4.css               # ✅ BARU — CSS mandiri TIK4 (v3.6)
+│   ├── desaintik1.css               # ✅ CSS mandiri TIK1
 │   └── scripttik.js                 # Helper global TIK (DUTA_TIK)
 │
 ├── sk/                             # Sistem Komputer (10 modul)
@@ -945,9 +948,11 @@ Berikut pola yang saat ini berbeda dan perlu dipertimbangkan saat migrasi/penyun
 
 | Cakupan | Halaman | Pola saat ini |
 |---------|---------|---------------|
-| Portal lama | `bk/bk2.html`–`bk/bk5.html`, `jki/jki1.html`–`jki/jki3.html`, `tik/tik1.html` | Tombol Materi + Aktivitas membuka bagian pertama langsung; belum memakai modal asesmen diagnostik dan progress seperti portal BK6/BK7, DSI1/DSI2, TIK2–TIK4. |
-| Aktivitas lama | `bk/aktivitasbk2*.html`–`aktivitasbk5*.html`, `jki/aktivitasjki*.html`, `tik/aktivitastik1*.html` | Polanya belum seragam. Sebagian halaman masih memakai form/identitas lokal dan metode simpan progress yang berbeda; belum memakai pola `dutaSimpanProgressBulk` yang seragam seperti modul baru. |
-| Aktivitas baru | BK6/BK7, DSI1/DSI2, TIK2/TIK3/TIK4 | Pola identitas dan progress sudah seragam: halaman pertama dan kuis akhir menampilkan identitas; bagian tengah langsung ke aktivitas; progress memakai `dutaSimpanProgressBulk`. Simulasi dan tampilan tetap khusus per modul. |
+| Portal lama | `bk/bk2.html`–`bk/bk5.html`, `jki/jki1.html`–`jki/jki3.html` | Tombol Materi + Aktivitas membuka bagian pertama langsung; belum memakai modal asesmen diagnostik dan progress seperti portal BK6/BK7, DSI1/DSI2, TIK1–TIK4. |
+| Aktivitas lama | `bk/aktivitasbk2*.html`–`aktivitasbk5*.html`, `jki/aktivitasjki*.html` | Polanya belum seragam. Sebagian halaman masih memakai form/identitas lokal dan metode simpan progress yang berbeda; belum memakai pola `dutaSimpanProgressBulk` yang seragam seperti modul baru. |
+| Aktivitas baru | BK6/BK7, DSI1/DSI2, TIK1/TIK2/TIK3/TIK4 | Pola identitas dan progress sudah seragam: halaman pertama dan kuis akhir menampilkan identitas; bagian tengah langsung ke aktivitas; progress memakai `dutaSimpanProgressBulk`. Simulasi dan tampilan tetap khusus per modul. |
+
+**Peta file TIK1 yang berlaku:** `a`–`b` adalah aktivitas belajar; `c` adalah kuis akhir dan sertifikat. Urutan portal/progress: `['a','b','c']`. File `aktivitastik1d.html` bukan bagian dari alur baru.
 
 **Peta file TIK3 yang berlaku:** `a`–`c` adalah aktivitas belajar, `d` adalah kuis akhir & sertifikat. Portal dan peta progress harus menggunakan urutan `['a','b','c','d']`; jangan menautkan ke `aktivitastik3e.html` atau `aktivitastik3f.html` karena file tersebut tidak tersedia.
 
@@ -1210,10 +1215,11 @@ Jika modul baru punya data lama yang salah, tambahkan ke `PETA_BAGIAN` di `recom
 | **BK7** | ✅ (BARU) | ✅ (BARU) | ✅ (BARU) | ✅ a–d (BARU) | ✅ |
 | **DSI1** | ✅ (v3.7 modal) | ✅ | ✅ | ✅ a–e | ✅ |
 | **DSI2** | ✅ (v3.7 modal) | ✅ | ✅ | ✅ a–d | ✅ |
+| **TIK1** | ✅ (v3.12 modal) | ✅ | ✅ `desaintik1.css` | ✅ a–b | ✅ c |
 | **TIK2** | ✅ (v3.7 modal) | ✅ | ✅ | ✅ a–f | ✅ |
 | **TIK3** | ✅ (v3.7 modal) | ✅ | ✅ | ✅ a–d | ✅ |
 | **TIK4** | ✅ (v3.7 modal) | ✅ | ✅ | ✅ a–d | ✅ |
 
-**Pola lama yang belum dimigrasikan:** portal BK2–BK5, JKI1–JKI3, TIK1 dan aktivitasnya. Rincian ada di §19.8.
+**Pola lama yang belum dimigrasikan:** portal BK2–BK5 dan JKI1–JKI3 beserta aktivitasnya. Rincian ada di §19.8.
 
 Simpan dokumen ini sebagai `CATATAN_KONFIGURASI.md`. Untuk pindah ke chat baru, lampirkan dokumen ini + 10 file sampel (§20). 🚀

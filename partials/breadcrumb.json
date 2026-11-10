@@ -59,12 +59,6 @@
     { "label": "Modul 1", "href": "tik/tik1" },
     { "label": "Aktivitas C" }
   ],
-  "tik/aktivitastik1d": [
-    { "label": "Beranda", "href": "" },
-    { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },
-    { "label": "Modul 1", "href": "tik/tik1" },
-    { "label": "Kuis Akhir" }
-  ],
   "tik/tik2": [
     { "label": "Beranda", "href": "" },
     { "label": "Teknologi Informasi dan Komunikasi", "href": "tik/materitik" },

@@ -1,0 +1,1466 @@
+/* ================================================================
+   desaintik1.css — CSS MANDIRI untuk modul TIK1 (aktivitastik1a–c)
+   ----------------------------------------------------------------
+   ⚠️ FILE INI BERDIRI SENDIRI (SELF-CONTAINED).
+   Cukup dipanggil bersama ../desain.css (root). TIDAK butuh
+   desaintik2.css, desaintik3.css, atau file CSS lain.
+
+   Pola pemanggilan di setiap file aktivitas TIK1:
+     <link rel="stylesheet" href="../desain.css">
+     <link rel="stylesheet" href="desaintik1.css">
+
+   Aksen warna TIK1: oranye #ff8a5b → kuning #f4b942.
+   encoding: UTF-8
+   ================================================================ */
+
+
+/* ================================================================
+   1. PROGRESS BAR VISUAL (LAPIS)
+   ================================================================ */
+.progress-lapis {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.4rem; margin: 1.2rem auto 1.5rem;
+  flex-wrap: wrap; max-width: 700px;
+}
+.progress-lapis .pl-step {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.45rem 1rem; border-radius: 30px;
+  background: #f5ede6; border: 2px solid #e5dbd0;
+  font-size: 0.78rem; font-weight: 700; color: #7a6656;
+  transition: all 0.3s ease; white-space: nowrap;
+}
+.progress-lapis .pl-step.active {
+  background: linear-gradient(135deg, #ff8a5b, #f4b942);
+  border-color: #ff8a5b; color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 138, 91, 0.25);
+}
+.progress-lapis .pl-step.done {
+  background: #8aaa7a; border-color: #8aaa7a; color: #fff;
+}
+.progress-lapis .pl-step .pl-num {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+}
+.progress-lapis .pl-sep {
+  color: #c79bd9; font-weight: 700; font-size: 0.9rem;
+}
+
+
+/* ================================================================
+   2. HEADER LAPIS (LAPIS 1 / 2 / 3)
+   ================================================================ */
+.lapis-header {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.7rem 1.2rem; margin: 1.2rem 0 1rem;
+  border-radius: 14px; font-weight: 700;
+  font-size: 0.95rem; color: #fff;
+}
+.lapis-header.lapis-1 { background: linear-gradient(135deg, #ff8a5b, #e0673a); }
+.lapis-header.lapis-2 { background: linear-gradient(135deg, #f4b942, #d4a030); }
+.lapis-header.lapis-3 { background: linear-gradient(135deg, #6ecb8f, #4fa86a); }
+.lapis-header .lapis-num {
+  background: rgba(255,255,255,0.3); padding: 0.15rem 0.7rem;
+  border-radius: 20px; font-size: 0.75rem; letter-spacing: 0.5px;
+}
+
+
+/* ================================================================
+   3. SCENARIO PANEL (container utama tiap lapis)
+   ================================================================ */
+.scenario-panel {
+  background: #fffffffa; border-radius: 24px;
+  border: 2px solid #e5dbd0; padding: 2rem;
+  min-height: 400px; position: relative; transition: all 0.3s ease;
+}
+.scenario-panel .scenario-title {
+  font-size: 1.4rem; font-weight: 700; color: #3b2b1e; margin-bottom: 0.3rem;
+}
+.scenario-panel .scenario-story {
+  font-size: 0.95rem; color: #5c4638; background: #fff5f0;
+  padding: 0.8rem 1.2rem; border-radius: 12px;
+  margin: 0.5rem 0 1.2rem 0; border-left: 4px solid #ff8a5b;
+  line-height: 1.7;
+}
+.scenario-panel .scenario-story ul {
+  margin: 0.5rem 0 0 1.2rem; font-size: 0.9rem; line-height: 1.7;
+}
+
+
+/* ================================================================
+   4. AREA SIMULASI (wrapper, active class)
+   ================================================================ */
+#area-simulasi { display: none; margin-top: 0.5rem; }
+#area-simulasi.active { display: block; }
+
+
+/* ================================================================
+   5. INFO IDENTITAS (read-only dari User Bar)
+   ================================================================ */
+.info-identitas-box {
+  background: linear-gradient(135deg, #fff5f0, #ffe9dd);
+  border: 2px solid #ff8a5b;
+  border-radius: 18px; padding: 1.1rem 1.3rem;
+  margin: 1.2rem 0;
+  box-shadow: 0 6px 18px rgba(255, 138, 91, 0.12);
+}
+.iib-header {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin-bottom: 0.7rem; padding-bottom: 0.6rem;
+  border-bottom: 2px dashed #f0c896;
+}
+.iib-icon { font-size: 1.3rem; line-height: 1; }
+.iib-title {
+  font-weight: 800; color: #b34614;
+  font-size: 0.95rem; flex: 1;
+}
+.iib-badge {
+  background: #fff; color: #b34614;
+  border: 2px solid #ff8a5b;
+  padding: 0.15rem 0.7rem; border-radius: 20px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px;
+}
+.iib-body {
+  background: #fff; border-radius: 12px;
+  padding: 0.8rem 1rem; margin-bottom: 0.8rem; line-height: 1.5;
+}
+.iib-nama {
+  font-weight: 800; color: #3b2b1e;
+  font-size: 1rem; margin-bottom: 0.15rem; word-break: break-word;
+}
+.iib-meta { font-size: 0.82rem; color: #5c4638; }
+.iib-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+.btn-ubah-identitas {
+  padding: 0.75rem 1.5rem; border-radius: 30px;
+  border: 2px solid #ff8a5b; background: #fff;
+  color: #b34614; font-weight: 700; font-size: 0.88rem;
+  font-family: inherit; cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.btn-ubah-identitas:hover {
+  background: #fff5f0; transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 138, 91, 0.25);
+}
+
+.btn-mulai {
+  padding: 0.75rem 2rem; font-size: 0.95rem;
+  font-weight: 700; color: #fff;
+  background: linear-gradient(135deg, #ff8a5b, #f4b942);
+  border-radius: 30px; border: none; cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(255, 138, 91, 0.30);
+  font-family: inherit;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-mulai:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(255, 138, 91, 0.35);
+}
+.btn-mulai:disabled {
+  opacity: 0.45; cursor: not-allowed; transform: none !important;
+}
+.iib-hint {
+  font-size: 0.78rem; color: #7a6656;
+  font-style: italic; margin-top: 0.6rem; line-height: 1.5;
+}
+
+
+/* ================================================================
+   6. TOMBOL GAME (primary / secondary)
+   ================================================================ */
+.btn-game {
+  padding: 0.6rem 1.8rem; border-radius: 30px; border: none;
+  font-weight: 700; font-size: 0.9rem;
+  cursor: pointer; transition: all 0.2s ease;
+  font-family: inherit; display: inline-flex;
+  align-items: center; gap: 0.4rem;
+}
+.btn-game.primary {
+  background: linear-gradient(135deg, #ff8a5b, #f4b942);
+  color: #fff; box-shadow: 0 4px 14px rgba(255, 138, 91, 0.25);
+}
+.btn-game.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 138, 91, 0.35);
+}
+.btn-game.secondary {
+  background: #f5ede6; color: #4d3829; border: 2px solid #d9cdbf;
+}
+.btn-game.secondary:hover { background: #e8dcd0; transform: translateY(-2px); }
+.btn-game:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.game-actions {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  justify-content: center; margin-top: 1rem;
+}
+
+
+/* ================================================================
+   7. FEEDBACK BOX (info / success / warn / error)
+   ================================================================ */
+.feedback-box {
+  background: #f5ede6; border-radius: 16px;
+  padding: 1rem 1.5rem; margin: 1.5rem 0;
+  border-left: 8px solid #dbb9a6;
+  display: none; animation: fadeIn 0.4s ease;
+}
+.feedback-box.show { display: block; }
+.feedback-box.success { border-color: #2d7d46; background: #e8f5ee; }
+.feedback-box.error { border-color: #b33c3c; background: #fde8e8; }
+.feedback-box.info { border-color: #ff8a5b; background: #fff5f0; }
+.feedback-box.warn { border-color: #d4a030; background: #fff8e6; }
+.feedback-box .fb-icon { font-size: 1.5rem; margin-right: 0.5rem; }
+.feedback-box .fb-text { color: #2f2822; line-height: 1.6; }
+.feedback-box .fb-text strong { color: #4d3829; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ================================================================
+   8. MINDFUL BOX (Jeda Sadar)
+   ================================================================ */
+.mindful-box {
+  background: linear-gradient(135deg, #fff8e6, #fff5f0);
+  border: 2px dashed #ff8a5b;
+  border-radius: 16px; padding: 1rem 1.5rem;
+  margin: 1.2rem 0; display: none;
+}
+.mindful-box.show { display: block; animation: fadeIn 0.5s ease; }
+.mindful-box .mb-icon { font-size: 1.4rem; margin-right: 0.4rem; }
+.mindful-box .mb-title {
+  font-weight: 700; color: #b34614; font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+.mindful-box .mb-text {
+  font-size: 0.92rem; color: #2f2822; line-height: 1.6;
+  margin-bottom: 0.6rem;
+}
+.mindful-box textarea {
+  width: 100%; padding: 0.6rem 0.9rem;
+  border: 2px solid #f0c896; border-radius: 10px;
+  font-family: inherit; font-size: 0.9rem;
+  color: #2f2822; background: #fff; resize: vertical;
+  min-height: 60px; outline: none;
+}
+.mindful-box textarea:focus {
+  border-color: #ff8a5b;
+  box-shadow: 0 0 0 3px rgba(255, 138, 91, 0.15);
+}
+
+
+/* ================================================================
+   9. PILIH LEVEL (Diferensiasi 3 Level)
+   ================================================================ */
+#areaPilihLevel { display: none; margin-top: 0.5rem; }
+#areaPilihLevel.active { display: block; }
+
+.pilih-level-box {
+  background: linear-gradient(135deg, #fff5f0, #fff8e6, #eef8fb);
+  border: 3px solid #ff8a5b;
+  border-radius: 20px; padding: 1.5rem 1.8rem;
+  margin: 1.2rem 0; position: relative;
+}
+.pilih-level-box::before {
+  content: '★'; position: absolute;
+  top: -14px; left: 1.5rem;
+  background: #fff; padding: 0 0.5rem;
+  font-size: 1.3rem; color: #ff8a5b;
+}
+.pilih-level-box .plb-title {
+  font-size: 1.2rem; font-weight: 800;
+  color: #b34614; margin-bottom: 0.3rem; text-align: center;
+}
+.pilih-level-box .plb-desc {
+  font-size: 0.9rem; color: #5c4638;
+  text-align: center; margin-bottom: 1.2rem; line-height: 1.6;
+}
+
+.level-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.8rem; margin-bottom: 1rem;
+}
+.level-option {
+  background: #fff; border: 3px solid #e5dbd0;
+  border-radius: 16px; padding: 1rem 1.1rem;
+  cursor: pointer; transition: all 0.2s ease;
+  text-align: center; position: relative;
+  display: flex; flex-direction: column;
+  gap: 0.3rem; align-items: center;
+}
+.level-option:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+}
+.level-option .lo-icon { font-size: 2rem; line-height: 1; margin-bottom: 0.2rem; }
+.level-option .lo-name { font-weight: 800; font-size: 1.05rem; line-height: 1.2; }
+.level-option .lo-desc { font-size: 0.8rem; color: #5c4638; line-height: 1.5; }
+.level-option.dasar { border-color: #a8d8b8; }
+.level-option.dasar .lo-name { color: #2d5a1e; }
+.level-option.dasar:hover { border-color: #6a8a5a; background: #f0f8eb; }
+.level-option.reguler { border-color: #f0d9a8; }
+.level-option.reguler .lo-name { color: #8a5e00; }
+.level-option.reguler:hover { border-color: #d4a030; background: #fff8e6; }
+.level-option.tantangan { border-color: #f0c0c0; }
+.level-option.tantangan .lo-name { color: #a84a3a; }
+.level-option.tantangan:hover { border-color: #d4a0a0; background: #fdf0f0; }
+.level-option.terpilih {
+  box-shadow: 0 0 0 4px rgba(255, 138, 91, 0.35);
+  transform: translateY(-2px);
+}
+.level-option.terpilih.dasar { border-color: #2d5a1e; background: #e0f2d8; }
+.level-option.terpilih.reguler { border-color: #8a5e00; background: #fff3d6; }
+.level-option.terpilih.tantangan { border-color: #a84a3a; background: #fde0e0; }
+
+.level-badge-terpilih {
+  display: none; align-items: center; justify-content: center;
+  gap: 0.5rem; padding: 0.6rem 1.2rem;
+  background: #fff; border-radius: 30px;
+  border: 2px solid #ff8a5b; font-size: 0.9rem;
+  font-weight: 700; color: #b34614;
+  margin: 0.8rem auto 0; width: fit-content;
+}
+.level-badge-terpilih.show { display: flex; animation: fadeIn 0.4s ease; }
+
+#mindfulPilihLevel { display: none; }
+#mindfulPilihLevel.show { display: block; }
+
+
+/* ================================================================
+   10. TANTANGAN LIST
+   ================================================================ */
+.tantangan-list {
+  display: flex; flex-direction: column; gap: 0.8rem; margin: 1rem 0;
+}
+.tantangan-item {
+  background: #fff; border-radius: 14px;
+  padding: 1rem 1.3rem; border: 2px solid #e5dbd0;
+  transition: all 0.3s ease;
+}
+.tantangan-item.selesai {
+  border-color: #8aaa7a; background: #f0f8eb;
+}
+.tantangan-item .t-header {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-weight: 700; color: #3b2b1e; margin-bottom: 0.4rem;
+}
+.tantangan-item .t-num {
+  background: #4d3829; color: #fff;
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; flex-shrink: 0;
+}
+.tantangan-item .t-text {
+  font-size: 0.92rem; color: #2f2822; line-height: 1.6;
+  margin-bottom: 0.6rem;
+}
+.tantangan-item .t-input-row {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+}
+.tantangan-item .t-input-row input[type="text"],
+.tantangan-item .t-input-row textarea {
+  flex: 1; min-width: 180px;
+  padding: 0.5rem 0.9rem; border-radius: 10px;
+  border: 2px solid #d9cdbf; font-family: inherit;
+  font-size: 0.9rem; color: #2f2822; background: #fcfaf7; outline: none;
+}
+.tantangan-item .t-input-row textarea { min-height: 70px; resize: vertical; }
+.tantangan-item .t-input-row input:focus,
+.tantangan-item .t-input-row textarea:focus {
+  border-color: #ff8a5b; background: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 138, 91, 0.15);
+}
+.tantangan-item .t-input-row button {
+  padding: 0.5rem 1.4rem; border-radius: 20px;
+  border: none; font-weight: 700; font-size: 0.85rem;
+  cursor: pointer; background: #4d3829; color: #fff;
+  font-family: inherit; transition: all 0.2s ease;
+  align-self: flex-end;
+}
+.tantangan-item .t-input-row button:hover:not(:disabled) {
+  background: #6b4f3a; transform: translateY(-1px);
+}
+.tantangan-item .t-input-row button:disabled {
+  opacity: 0.5; cursor: not-allowed;
+}
+.tantangan-item .t-feedback {
+  margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+  border-radius: 8px; font-size: 0.85rem;
+  line-height: 1.5; display: none;
+}
+.tantangan-item .t-feedback.show { display: block; }
+.tantangan-item .t-feedback.ok {
+  background: #d4e8cb; color: #3d6b2c;
+  border-left: 4px solid #6b8c5e;
+}
+.tantangan-item .t-feedback.hint {
+  background: #fff3d6; color: #8a5e00;
+  border-left: 4px solid #f4b942;
+}
+.tantangan-item .t-feedback.no {
+  background: #f5d6d0; color: #a84a3a;
+  border-left: 4px solid #d97a6a;
+}
+.tantangan-item .t-opsi-col {
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.tantangan-item .t-opsi-col label {
+  display: flex; gap: 0.5rem; padding: 0.5rem 0.8rem;
+  border: 2px solid #d9cdbf; border-radius: 10px;
+  cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+  background: #fff; transition: all 0.15s ease;
+}
+.tantangan-item .t-opsi-col label:hover { border-color: #ff8a5b; background: #fff5f0; }
+.tantangan-item .t-opsi-col input[type="radio"] { accent-color: #ff8a5b; }
+
+
+/* ================================================================
+   11. PENAMAAN KONSEP (LAPIS 3)
+   ================================================================ */
+.penamaan-box {
+  background: linear-gradient(135deg, #fff5f0, #ffe9dd);
+  border-radius: 16px; padding: 1.5rem 1.8rem;
+  margin: 1.2rem 0; border: 2px solid #ff8a5b;
+  display: none;
+}
+.penamaan-box.show { display: block; animation: fadeIn 0.6s ease; }
+.penamaan-box h3 {
+  font-size: 1.1rem; color: #b34614; margin-bottom: 0.6rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.penamaan-box .notasi-box {
+  background: #fff; border-radius: 12px;
+  padding: 0.8rem 1.2rem; margin: 0.6rem 0;
+  border: 2px dashed #ff8a5b;
+  font-size: 0.95rem; color: #2f2822; line-height: 1.7;
+}
+.penamaan-box .notasi-box strong { color: #b34614; }
+.penamaan-box .notasi-box ul,
+.penamaan-box .notasi-box ol {
+  margin: 0.4rem 0 0 1.2rem; line-height: 1.7;
+}
+.penamaan-box .notasi-box table {
+  width: 100%; border-collapse: collapse;
+  margin-top: 0.6rem; font-size: 0.86rem;
+}
+.penamaan-box .notasi-box table th {
+  background: #fff5f0; color: #b34614;
+  padding: 0.5rem 0.8rem; text-align: left;
+  border-bottom: 2px solid #ff8a5b;
+}
+.penamaan-box .notasi-box table td {
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid #e5dbd0;
+  vertical-align: top;
+}
+.penamaan-box .koneksi {
+  background: #fff8e6; border-left: 5px solid #f4b942;
+  border-radius: 10px; padding: 0.8rem 1.2rem;
+  margin-top: 0.8rem; font-size: 0.9rem;
+  color: #5c3400; line-height: 1.6;
+}
+.penamaan-box .koneksi strong { color: #8a5e00; }
+
+.link-materi-bawah {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin: 1rem auto 0;
+  padding: 0.7rem 1.8rem; border-radius: 30px;
+  background: #fff; color: #b34614;
+  border: 2px solid #ff8a5b; text-decoration: none;
+  font-weight: 700; font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+.link-materi-bawah:hover {
+  background: #fff5f0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 138, 91, 0.25);
+}
+.link-materi-wrapper { text-align: center; margin-top: 1rem; }
+
+
+/* ================================================================
+   12. MODAL PENAMAAN KONSEP (LAPIS 3 — overlay baca 12 detik)
+   ================================================================ */
+.duta-penamaan-overlay {
+  position: fixed; inset: 0;
+  background: rgba(40, 20, 50, 0.65);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  display: flex; align-items: flex-start; justify-content: center;
+  z-index: 10000; padding: 1.5rem 1rem; overflow-y: auto;
+  animation: dutaModalFadeIn 0.25s ease;
+}
+@keyframes dutaModalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.duta-penamaan-box {
+  background: #fff; border-radius: 24px; padding: 0;
+  max-width: 760px; width: 100%;
+  box-shadow: 0 24px 70px rgba(40, 20, 50, 0.35);
+  border: 3px solid #ff8a5b;
+  animation: dutaModalSlideUp 0.3s ease;
+  overflow: hidden; margin: auto;
+}
+@keyframes dutaModalSlideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.duta-penamaan-header {
+  background: linear-gradient(135deg, #ff8a5b, #e0673a);
+  color: #fff; padding: 1.1rem 1.6rem;
+  display: flex; align-items: center; gap: 0.6rem;
+  font-weight: 800; font-size: 1.05rem;
+}
+.duta-penamaan-header .dph-icon { font-size: 1.4rem; }
+.duta-penamaan-body {
+  padding: 1.4rem 1.8rem 1.2rem;
+  max-height: 60vh; overflow-y: auto;
+}
+.duta-penamaan-body .penamaan-box {
+  display: block !important;
+  margin: 0; border: none; padding: 0; background: transparent;
+}
+.duta-penamaan-footer {
+  padding: 1rem 1.6rem 1.3rem; background: #f8f4ef;
+  border-top: 2px solid #e5dbd0; text-align: center;
+  position: sticky; bottom: 0;
+}
+.btn-sudah-baca {
+  padding: 0.85rem 2.5rem; border-radius: 40px; border: none;
+  background: linear-gradient(135deg, #ff8a5b, #e0673a);
+  color: #fff; font-weight: 800; font-size: 1rem;
+  font-family: inherit; cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 18px rgba(255, 138, 91, 0.3);
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  position: relative; overflow: hidden;
+}
+.btn-sudah-baca:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(255, 138, 91, 0.4);
+  filter: brightness(1.05);
+}
+.btn-sudah-baca:disabled {
+  opacity: 0.7; cursor: not-allowed; transform: none !important;
+}
+.btn-sudah-baca .bsb-progress {
+  position: absolute; left: 0; bottom: 0;
+  height: 4px; background: rgba(255,255,255,0.65);
+  width: 0%; transition: width 1s linear;
+}
+.duta-penamaan-timer {
+  font-size: 0.8rem; color: #7a6656;
+  margin-top: 0.5rem; font-style: italic;
+}
+
+
+/* ================================================================
+   13. KUIS KILAT
+   ================================================================ */
+.kuis-kilat-box {
+  background: #fff; border-radius: 16px;
+  padding: 1.3rem 1.6rem; margin: 1.5rem 0;
+  border: 2px solid #ff8a5b;
+  box-shadow: 0 4px 14px rgba(255, 138, 91, 0.10);
+  display: none;
+}
+.kuis-kilat-box.show { display: block; animation: fadeIn 0.5s ease; }
+.kuis-kilat-box .kk-title {
+  font-weight: 700; color: #b34614; font-size: 1rem;
+  margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.kuis-kilat-box .kk-title .badge {
+  background: #ff8a5b; color: #fff; font-size: 0.65rem;
+  padding: 0.15rem 0.6rem; border-radius: 20px;
+}
+.kuis-kilat-box .kk-soal {
+  background: #fff5f0; border-radius: 10px;
+  padding: 0.8rem 1.1rem; margin-bottom: 0.8rem;
+}
+.kuis-kilat-box .kk-soal .kk-q {
+  font-weight: 600; color: #3b2b1e;
+  font-size: 0.92rem; margin-bottom: 0.5rem;
+}
+.kuis-kilat-box .kk-opsi {
+  display: flex; flex-direction: column; gap: 0.35rem;
+}
+.kuis-kilat-box .kk-opsi label {
+  display: flex; align-items: center; gap: 0.5rem;
+  cursor: pointer; font-size: 0.87rem; color: #3d2c1f;
+  padding: 0.4rem 0.8rem; border-radius: 10px;
+  border: 2px solid #e5dbd0; transition: all 0.15s;
+}
+.kuis-kilat-box .kk-opsi label:hover:not(.disabled) {
+  background: #fff5f0; border-color: #ff8a5b;
+}
+.kuis-kilat-box .kk-opsi label.disabled { cursor: default; }
+.kuis-kilat-box .kk-opsi label.benar {
+  border-color: #8aaa7a; background: #e8f5e0;
+}
+.kuis-kilat-box .kk-opsi label.salah {
+  border-color: #d4a0a0; background: #f5e0e0;
+}
+.kuis-kilat-box .kk-opsi input[type="radio"] { accent-color: #ff8a5b; }
+.kuis-kilat-box .kk-opsi .check-icon {
+  margin-left: auto; font-size: 0.9rem;
+}
+.kuis-kilat-box .kk-hasil {
+  background: #f5ede6; border-radius: 10px;
+  padding: 0.7rem 1rem; margin-top: 0.6rem;
+  font-size: 0.88rem; color: #4d3829;
+  display: none; text-align: center; font-weight: 600;
+}
+.kuis-kilat-box .kk-hasil.show { display: block; }
+
+
+/* ================================================================
+   14. TES PEMAHAMAN
+   ================================================================ */
+.tes-section {
+  margin-top: 1.8rem; padding-top: 1.5rem;
+  border-top: 2px solid #e5dbd0; display: none;
+}
+.tes-section.active { display: block; animation: fadeIn 0.4s ease; }
+.tes-header {
+  background: #fff5f0; border-radius: 12px;
+  padding: 0.9rem 1.2rem; margin-bottom: 1rem;
+  border-left: 5px solid #ff8a5b;
+  display: flex; flex-wrap: wrap; justify-content: space-between;
+  align-items: center; gap: 0.5rem;
+}
+.tes-header .tes-info {
+  font-size: 0.95rem; color: #3b2b1e; font-weight: 600;
+}
+.tes-header .tes-progress {
+  font-size: 0.82rem; color: #8a5e00; font-weight: 700;
+  background: #fff; padding: 0.25rem 0.9rem;
+  border-radius: 30px; border: 2px solid #e5dbd0;
+}
+.soal-kuis {
+  background: #fff; padding: 1.1rem 1.3rem;
+  border-radius: 14px; border: 2px solid #e5dbd0;
+  margin-bottom: 0.9rem; transition: all 0.3s ease;
+}
+.soal-kuis.correct { border-color: #8aaa7a; background: #f0f8eb; }
+.soal-kuis.wrong { border-color: #d4a0a0; background: #fdf0f0; }
+.soal-kuis .pertanyaan {
+  font-weight: 600; font-size: 0.95rem; color: #3b2b1e;
+  margin-bottom: 0.5rem; display: flex; gap: 0.5rem;
+  align-items: flex-start; line-height: 1.6;
+}
+.soal-kuis .pertanyaan .soal-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #ff8a5b; color: #fff;
+  width: 24px; height: 24px; border-radius: 50%;
+  font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+}
+.soal-kuis .opsi-kuis {
+  display: flex; flex-direction: column; gap: 0.35rem; padding-left: 0.2rem;
+}
+.soal-kuis .opsi-kuis label {
+  display: flex; align-items: flex-start; gap: 0.5rem;
+  cursor: pointer; font-size: 0.88rem; color: #3d2c1f;
+  padding: 0.45rem 0.8rem; border-radius: 10px;
+  border: 2px solid #e5dbd0; transition: all 0.15s; line-height: 1.5;
+}
+.soal-kuis .opsi-kuis label:hover:not(.disabled) {
+  background: #fff5f0; border-color: #ff8a5b;
+}
+.soal-kuis .opsi-kuis label.disabled { cursor: default; }
+.soal-kuis .opsi-kuis label.selected {
+  border-color: #ff8a5b; background: #fff5f0;
+}
+.soal-kuis .opsi-kuis label.correct-answer {
+  border-color: #8aaa7a; background: #e8f5e0;
+}
+.soal-kuis .opsi-kuis label.wrong-answer {
+  border-color: #d4a0a0; background: #f5e0e0;
+}
+.soal-kuis .opsi-kuis input[type="radio"] {
+  accent-color: #ff8a5b;
+  width: 16px; height: 16px;
+  margin-top: 0.15rem; flex-shrink: 0;
+}
+.soal-kuis .opsi-kuis .check-icon {
+  margin-left: auto; font-size: 0.9rem; flex-shrink: 0;
+}
+.soal-kuis .jawaban-feedback {
+  margin-top: 0.6rem; padding: 0.6rem 0.9rem;
+  border-radius: 8px; display: none;
+  font-size: 0.85rem; line-height: 1.5;
+}
+.soal-kuis .jawaban-feedback.benar {
+  display: block; background: #d4e8cb; color: #3d6b2c;
+  border-left: 4px solid #6b8c5e;
+}
+.soal-kuis .jawaban-feedback.salah {
+  display: block; background: #f5d6d0; color: #a84a3a;
+  border-left: 4px solid #d97a6a;
+}
+.soal-kuis .jawaban-feedback .kunci { font-weight: 700; color: #4d7a3b; }
+.btn-submit-tes {
+  display: block; margin: 1.2rem auto 0;
+  padding: 0.7rem 2.5rem; border-radius: 30px; border: none;
+  background: linear-gradient(135deg, #ff8a5b, #f4b942);
+  color: #fff; font-weight: 700; font-size: 0.95rem;
+  cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+}
+.btn-submit-tes:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 138, 91, 0.35);
+}
+.btn-submit-tes:disabled {
+  opacity: 0.5; cursor: not-allowed; transform: none !important;
+}
+.btn-ulangi-tes {
+  display: none; margin: 1rem auto 0;
+  padding: 0.7rem 2rem; border-radius: 30px;
+  background: #fff; color: #b34614;
+  border: 2px solid #ff8a5b;
+  font-weight: 700; font-size: 0.95rem;
+  cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+}
+.btn-ulangi-tes.show { display: block; }
+.btn-ulangi-tes:hover {
+  background: #fff5f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(255, 138, 91, 0.20);
+}
+.hasil-tes {
+  display: none; margin-top: 1.2rem; padding: 1.2rem;
+  background: #fff5f0; border-radius: 14px;
+  border: 3px double #ff8a5b; text-align: center;
+}
+.hasil-tes.show { display: block; animation: fadeIn 0.4s ease; }
+.hasil-tes .hasil-icon { font-size: 2.8rem; margin-bottom: 0.3rem; }
+.hasil-tes .hasil-title {
+  font-size: 1.15rem; font-weight: 700;
+  color: #3b2b1e; margin-bottom: 0.2rem;
+}
+.hasil-tes .hasil-skor {
+  font-size: 2rem; font-weight: 800; color: #8a5e00; margin: 0.3rem 0;
+}
+.hasil-tes .hasil-desc {
+  font-size: 0.9rem; color: #5c4638;
+  margin-bottom: 0.8rem; line-height: 1.5;
+}
+
+
+/* ================================================================
+   15. REFLEKSI (2 atau 4 pertanyaan + exit ticket)
+   ================================================================ */
+.refleksi-box {
+  background: linear-gradient(135deg, #eef8fb, #fff5f0);
+  border: 2px solid #ff8a5b; border-radius: 16px;
+  padding: 1.3rem 1.6rem; margin: 1.5rem 0;
+  display: none;
+}
+.refleksi-box.show { display: block; animation: fadeIn 0.5s ease; }
+.refleksi-box h3 {
+  color: #b34614; font-size: 1.05rem; margin-bottom: 0.8rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.refleksi-box .refleksi-item { margin-bottom: 0.8rem; }
+.refleksi-box .refleksi-item label {
+  display: block; font-weight: 700;
+  color: #b34614; font-size: 0.88rem; margin-bottom: 0.3rem;
+}
+.refleksi-box .refleksi-item label .tag {
+  background: #ff8a5b; color: #fff;
+  padding: 0.1rem 0.6rem; border-radius: 20px;
+  font-size: 0.65rem; margin-right: 0.4rem;
+}
+.refleksi-box textarea {
+  width: 100%; padding: 0.6rem 0.9rem;
+  border: 2px solid #f0c896; border-radius: 10px;
+  font-family: inherit; font-size: 0.88rem;
+  color: #2f2822; background: #fff;
+  resize: vertical; min-height: 50px; outline: none;
+}
+.refleksi-box textarea:focus {
+  border-color: #ff8a5b;
+  box-shadow: 0 0 0 3px rgba(255, 138, 91, 0.15);
+}
+.refleksi-box .exit-ticket {
+  background: #fff; border-radius: 12px;
+  padding: 0.9rem 1.2rem; margin-top: 1rem;
+  border: 2px dashed #ff8a5b;
+}
+.refleksi-box .exit-ticket .et-title {
+  font-weight: 700; color: #b34614;
+  font-size: 0.9rem; margin-bottom: 0.4rem;
+}
+.refleksi-box .exit-ticket textarea { border-color: #f0c896; }
+
+
+/* ================================================================
+   16. FEEDBACK AI (Catatan dari Guru)
+   ================================================================ */
+.feedback-ai-box {
+  background: linear-gradient(135deg, #eef4ff, #e6ecff);
+  border: 2px solid #5c7cfa;
+  border-radius: 16px; padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0 1rem 0; display: none;
+}
+.feedback-ai-box.show { display: block; animation: fadeIn 0.5s ease; }
+.feedback-ai-box .fai-header {
+  display: flex; align-items: center; gap: 0.6rem;
+  font-weight: 800; color: #3b4a9a;
+  font-size: 1rem; margin-bottom: 0.6rem;
+}
+.feedback-ai-box .fai-header .fai-icon {
+  font-size: 1.4rem; line-height: 1;
+}
+.feedback-ai-box .fai-body {
+  background: #fff; border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  font-size: 0.92rem; line-height: 1.7;
+  color: #2f2822; border-left: 5px solid #5c7cfa;
+  white-space: pre-wrap; word-wrap: break-word;
+}
+.btn-feedback-ai {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.7rem 1.8rem; border-radius: 30px;
+  border: none; cursor: pointer;
+  background: linear-gradient(135deg, #5c7cfa, #7a5cf0);
+  color: #fff; font-weight: 700; font-size: 0.9rem;
+  font-family: inherit;
+  box-shadow: 0 6px 16px rgba(92, 124, 250, 0.30);
+  transition: all 0.2s ease; margin: 0.6rem 0 0.2rem 0;
+}
+.btn-feedback-ai:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(92, 124, 250, 0.40);
+  filter: brightness(1.05);
+}
+.btn-feedback-ai:disabled {
+  opacity: 0.55; cursor: not-allowed; transform: none !important;
+}
+.btn-feedback-ai .fai-spin {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid currentColor; border-top-color: transparent;
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+.feedback-ai-hint {
+  font-size: 0.8rem; color: #7a6656;
+  margin-top: 0.3rem; font-style: italic;
+}
+
+
+/* ================================================================
+   17. STATUS KIRIM (info / success / error + retry)
+   ================================================================ */
+.status-kirim {
+  max-width: 520px; margin: 1rem auto; padding: 0.8rem 1.2rem;
+  border-radius: 12px; font-size: 0.88rem; font-weight: 600;
+  line-height: 1.5; display: none; align-items: center;
+  gap: 0.6rem; text-align: left;
+}
+.status-kirim.show { display: flex; flex-wrap: wrap; }
+.status-kirim.info {
+  background: #fff5f0; border: 2px solid #ff8a5b; color: #b34614;
+}
+.status-kirim.success { background: #d4e8cb; border: 2px solid #8aaa7a; color: #2d5a1e; }
+.status-kirim.error { background: #f5d6d0; border: 2px solid #d4a0a0; color: #a84a3a; }
+.status-kirim .spinner {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid currentColor; border-top-color: transparent;
+  border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.status-kirim .btn-retry {
+  margin-left: auto; padding: 0.35rem 1rem;
+  border-radius: 20px; border: 2px solid currentColor;
+  background: transparent; color: inherit;
+  font-weight: 700; font-size: 0.82rem;
+  cursor: pointer; font-family: inherit;
+  transition: all 0.15s ease; white-space: nowrap;
+}
+.status-kirim .btn-retry:hover {
+  background: rgba(255,255,255,0.6);
+  transform: translateY(-1px);
+}
+
+
+/* ================================================================
+   18. NAVIGASI BAWAH (kembali / lanjut)
+   ================================================================ */
+.nav-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem; margin-top: 2rem;
+  padding-top: 1.5rem; border-top: 2px solid #e5dbd0;
+}
+.btn-nav-bawah {
+  padding: 0.6rem 1.8rem; border-radius: 30px;
+  border: 2px solid #d9cdbf; background: #fff;
+  font-weight: 600; font-size: 0.9rem; color: #3b2b1e;
+  cursor: pointer; transition: all 0.2s ease;
+  font-family: inherit; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.btn-nav-bawah:hover {
+  background: #fff5f0; border-color: #ff8a5b;
+  transform: translateY(-2px);
+}
+.btn-nav-bawah.primary {
+  background: #4d3829; border-color: #4d3829; color: #fff;
+}
+.btn-nav-bawah.primary:hover {
+  background: #6b4f3a; border-color: #6b4f3a;
+}
+.btn-nav-bawah.locked {
+  opacity: 0.4; cursor: not-allowed;
+  transform: none !important; pointer-events: none;
+}
+.btn-nav-bawah .back-arrow { font-size: 1.2rem; }
+.nav-hint {
+  font-size: 0.8rem; color: #7a6656; text-align: center;
+  width: 100%; margin-top: 0.3rem;
+}
+.nav-hint.locked { color: #d4a0a0; }
+.nav-hint.ready { color: #2d5a1e; font-weight: 600; }
+.nav-hint.warn { color: #a84a3a; font-weight: 600; }
+
+
+/* ================================================================
+   19. IKON GRID & JENDELA SIMULASI (Khusus TIK1a — Jelajahi Layar)
+   ================================================================ */
+.ikon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.9rem; margin: 1.2rem 0;
+}
+.ikon-app {
+  background: #fff;
+  border: 3px solid #e5dbd0;
+  border-radius: 18px;
+  padding: 1.1rem 0.8rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.ikon-app:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+}
+.ikon-app.terpilih {
+  border-color: #ff8a5b;
+  background: #fff5f0;
+  box-shadow: 0 0 0 4px rgba(255, 138, 91, 0.25);
+}
+.ikon-app.dikunjungi { border-color: #8aaa7a; }
+.ikon-app.dikunjungi::after {
+  content: '✓';
+  position: absolute;
+  top: 0.4rem; right: 0.6rem;
+  background: #8aaa7a; color: #fff;
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700;
+}
+.ikon-app .ia-emoji {
+  font-size: 2.5rem; line-height: 1; margin-bottom: 0.4rem; display: block;
+}
+.ikon-app .ia-name {
+  font-weight: 700; font-size: 0.88rem; color: #3b2b1e; line-height: 1.3;
+}
+.ikon-app .ia-brand {
+  font-size: 0.7rem; color: #a08674; margin-top: 0.15rem;
+}
+
+/* Jendela simulasi GUI */
+.jendela-sim {
+  background: #fff;
+  border: 3px solid #4d3829;
+  border-radius: 14px;
+  margin: 1.2rem 0;
+  overflow: hidden;
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+.jendela-sim.show { display: block; }
+.jendela-sim .js-bar {
+  background: #4d3829; padding: 0.5rem 0.8rem;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.jendela-sim .js-dot { width: 12px; height: 12px; border-radius: 50%; }
+.jendela-sim .js-dot.red { background: #ff6b6b; }
+.jendela-sim .js-dot.yellow { background: #f4b942; }
+.jendela-sim .js-dot.green { background: #6ecb8f; }
+.jendela-sim .js-title {
+  color: #e5dbd0; font-size: 0.75rem;
+  margin-left: 0.5rem; font-family: inherit;
+}
+.jendela-sim .js-content {
+  padding: 1.2rem 1.5rem;
+  min-height: 120px;
+  background: #fff;
+}
+.jendela-sim .jw-title {
+  font-size: 1.1rem; font-weight: 700; color: #b34614;
+  margin-bottom: 0.5rem;
+}
+.jendela-sim .jw-body {
+  font-size: 0.9rem; color: #5c4638; line-height: 1.6;
+}
+.jendela-sim .jw-fitur {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem;
+}
+.jendela-sim .jw-fitur span {
+  background: #fff5f0; color: #b34614;
+  padding: 0.25rem 0.7rem; border-radius: 20px;
+  font-size: 0.78rem; font-weight: 700;
+  border: 1px solid #f0c896;
+}
+.jendela-sim .jw-ikon-besar {
+  font-size: 3rem; text-align: center;
+  margin: 0.6rem 0;
+}
+.jendela-sim .jw-apps {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  margin-top: 0.8rem; justify-content: center;
+}
+.jendela-sim .jw-app-mini {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.2rem; padding: 0.5rem 0.8rem;
+  background: #f8f4ef; border-radius: 12px;
+  font-size: 0.72rem; color: #4d3829;
+  min-width: 64px;
+}
+.jendela-sim .jw-app-mini .ja-icon { font-size: 1.5rem; }
+.jendela-sim .jw-note {
+  margin-top: 0.8rem;
+  font-size: 0.8rem; font-style: italic;
+  color: #a84a3a;
+  background: #fdf0f0;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border-left: 3px solid #d4a0a0;
+}
+
+
+/* ================================================================
+   20. STATS BAR (dipakai TIK1a & TIK1b)
+   ================================================================ */
+.stats-bar {
+  display: flex; flex-wrap: wrap; gap: 1rem;
+  justify-content: space-between; align-items: center;
+  padding: 0.8rem 1.2rem; background: #fff;
+  border-radius: 16px; border: 2px solid #e5dbd0;
+  margin-bottom: 1rem;
+}
+.stats-bar .stat {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.9rem; color: #4d3829;
+}
+.stats-bar .stat .num {
+  font-weight: 700; font-size: 1.1rem; color: #3b2b1e;
+}
+.stats-bar .stat .num.dipilih { color: #2d7d46; }
+
+
+/* ================================================================
+   21. KOMPONEN GRID (Khusus TIK1b — Komponen GUI)
+   ================================================================ */
+.komponen-grid-interaktif {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.8rem; margin: 1.2rem 0;
+}
+.komponen-item {
+  background: #fff;
+  border: 3px solid #e5dbd0;
+  border-radius: 16px;
+  padding: 1rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.komponen-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+  border-color: #ff8a5b;
+}
+.komponen-item.terpilih {
+  border-color: #ff8a5b;
+  background: #fff5f0;
+  box-shadow: 0 0 0 4px rgba(255, 138, 91, 0.25);
+}
+.komponen-item.dikunjungi { border-color: #8aaa7a; }
+.komponen-item.dikunjungi::after {
+  content: '✓';
+  position: absolute;
+  top: 0.4rem; right: 0.6rem;
+  background: #8aaa7a; color: #fff;
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700;
+}
+.komponen-item .ki-icon { font-size: 2.2rem; line-height: 1; margin-bottom: 0.3rem; display: block; }
+.komponen-item .ki-name { font-weight: 700; font-size: 0.9rem; color: #3b2b1e; }
+
+/* ================================================================
+   22. DESKTOP SIMULASI (Khusus TIK1b — komponen layar)
+   ================================================================ */
+.desktop-sim {
+  background: linear-gradient(135deg, #1e3a5f, #2a5298);
+  border-radius: 16px;
+  border: 4px solid #4d3829;
+  padding: 1rem 1rem 0 1rem;
+  margin: 1.2rem 0;
+  min-height: 380px;
+  position: relative;
+  overflow: hidden;
+  display: none;
+}
+.desktop-sim.show { display: block; animation: fadeIn 0.4s ease; }
+
+.desktop-sim .ds-icons {
+  display: flex; flex-direction: column;
+  gap: 0.8rem; width: 90px;
+}
+.desktop-sim .ds-icon {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.2rem; cursor: pointer;
+  padding: 0.4rem; border-radius: 8px;
+  transition: background 0.15s ease;
+}
+.desktop-sim .ds-icon:hover { background: rgba(255,255,255,0.15); }
+.desktop-sim .ds-icon .di-emoji { font-size: 1.8rem; }
+.desktop-sim .ds-icon .di-label {
+  font-size: 0.65rem; color: #fff; text-align: center;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5); line-height: 1.2;
+}
+
+.desktop-sim .ds-window {
+  position: absolute;
+  top: 1.2rem; left: 110px; right: 1rem;
+  background: #fff; border-radius: 10px 10px 0 0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+.desktop-sim .ds-window-bar {
+  background: #e8e8e8; padding: 0.4rem 0.7rem;
+  display: flex; align-items: center; gap: 0.4rem;
+  border-bottom: 1px solid #ccc;
+}
+.desktop-sim .ds-window-title {
+  flex: 1; font-size: 0.78rem; font-weight: 700; color: #3b2b1e;
+}
+.desktop-sim .ds-btn-kontrol {
+  width: 22px; height: 22px; border-radius: 5px;
+  border: 1.5px solid #bbb; background: #f5f5f5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: #4d3829;
+  cursor: pointer; transition: all 0.15s ease;
+}
+.desktop-sim .ds-btn-kontrol:hover { background: #fff; border-color: #888; }
+.desktop-sim .ds-btn-kontrol.min:hover { border-color: #f4b942; color: #8a5e00; }
+.desktop-sim .ds-btn-kontrol.max:hover { border-color: #4fb0c6; color: #1f6b7d; }
+.desktop-sim .ds-btn-kontrol.close:hover { border-color: #d4a0a0; background: #fde8e8; color: #a84a3a; }
+.desktop-sim .ds-window-content {
+  padding: 1.2rem 1rem; min-height: 180px;
+  background: #fafafa;
+  font-size: 0.82rem; color: #4d3829; line-height: 1.5;
+}
+
+.desktop-sim .ds-taskbar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 46px; background: rgba(20, 30, 50, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0 0.7rem; cursor: pointer;
+}
+.desktop-sim .ds-start {
+  display: flex; align-items: center; gap: 0.4rem;
+  background: rgba(255,255,255,0.15);
+  padding: 0.35rem 0.8rem; border-radius: 8px;
+  color: #fff; font-size: 0.75rem; font-weight: 700;
+  cursor: pointer; transition: all 0.15s ease;
+}
+.desktop-sim .ds-start:hover { background: rgba(255,255,255,0.3); }
+.desktop-sim .ds-task-apps {
+  display: flex; gap: 0.3rem; flex: 1;
+}
+.desktop-sim .ds-task-app {
+  width: 32px; height: 32px; border-radius: 6px;
+  background: rgba(255,255,255,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.15s ease;
+}
+.desktop-sim .ds-task-app:hover { background: rgba(255,255,255,0.25); }
+.desktop-sim .ds-task-app.aktif { border-bottom-color: #ff8a5b; background: rgba(255,138,91,0.25); }
+.desktop-sim .ds-task-clock {
+  color: #fff; font-size: 0.72rem; font-weight: 600;
+  padding: 0 0.4rem;
+}
+
+.desktop-sim .ds-start-menu {
+  position: absolute;
+  bottom: 46px; left: 0;
+  width: 240px;
+  background: rgba(30, 40, 60, 0.96);
+  backdrop-filter: blur(12px);
+  border-radius: 10px 10px 0 0;
+  padding: 0.6rem;
+  display: none;
+  box-shadow: 0 -8px 24px rgba(0,0,0,0.4);
+}
+.desktop-sim .ds-start-menu.show { display: block; animation: fadeIn 0.2s ease; }
+.desktop-sim .ds-start-menu .dsm-title {
+  font-size: 0.7rem; color: #bbb; padding: 0.3rem 0.5rem;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.desktop-sim .ds-start-menu .dsm-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.45rem 0.6rem; border-radius: 6px;
+  color: #fff; font-size: 0.8rem; cursor: pointer;
+  transition: background 0.15s ease;
+}
+.desktop-sim .ds-start-menu .dsm-item:hover { background: rgba(255,255,255,0.15); }
+
+
+/* ================================================================
+   23. TIPS BOX (Khusus TIK1b — penjelasan komponen)
+   ================================================================ */
+.komponen-detail-box {
+  background: linear-gradient(135deg, #fff5f0, #ffe9dd);
+  border: 2px solid #ff8a5b;
+  border-radius: 14px;
+  padding: 1rem 1.3rem;
+  margin: 1rem 0;
+  display: none;
+}
+.komponen-detail-box.show { display: block; animation: fadeIn 0.3s ease; }
+.komponen-detail-box .kdb-head {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.komponen-detail-box .kdb-icon { font-size: 1.6rem; }
+.komponen-detail-box .kdb-title {
+  font-weight: 800; color: #b34614; font-size: 1rem;
+}
+.komponen-detail-box .kdb-body {
+  font-size: 0.88rem; color: #3b2b1e; line-height: 1.6;
+}
+.komponen-detail-box .kdb-body strong { color: #b34614; }
+.komponen-detail-box .kdb-body ul { margin: 0.4rem 0 0 1.2rem; }
+
+
+/* ================================================================
+   24. SERTIFIKAT (Khusus TIK1c — Kuis Akhir)
+   ================================================================ */
+.sertifikat-wrapper { display: none; margin: 1.5rem 0; }
+.sertifikat-wrapper.show { display: block; animation: fadeIn 0.6s ease; }
+
+.sertifikat-box {
+  background: linear-gradient(135deg, #fffbef, #fff5e6, #fff9f0);
+  border: 6px double #d4a030;
+  border-radius: 20px;
+  padding: 2rem 2.4rem;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 12px 32px rgba(180, 120, 30, 0.15);
+  max-width: 720px;
+  margin: 0 auto;
+}
+.sertifikat-box::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 2px solid #e8c890;
+  border-radius: 12px;
+  pointer-events: none;
+}
+.sertifikat-box .sf-header {
+  font-size: 0.85rem; letter-spacing: 4px;
+  text-transform: uppercase; color: #8a5e00;
+  margin-bottom: 0.4rem; font-weight: 700;
+}
+.sertifikat-box .sf-title {
+  font-size: 1.6rem; font-weight: 800; color: #5c3400;
+  margin-bottom: 0.8rem; letter-spacing: 1px;
+}
+.sertifikat-box .sf-divider {
+  width: 80px; height: 3px;
+  background: linear-gradient(90deg, #d4a030, #f4b942, #d4a030);
+  margin: 0.8rem auto 1rem;
+  border-radius: 3px;
+}
+.sertifikat-box .sf-label {
+  font-size: 0.8rem; color: #8a5e00;
+  text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 0.3rem;
+}
+.sertifikat-box .sf-nama {
+  font-size: 1.7rem; font-weight: 800; color: #3b2b1e;
+  margin-bottom: 0.3rem; line-height: 1.3;
+}
+.sertifikat-box .sf-kelas {
+  font-size: 0.95rem; color: #5c4638; margin-bottom: 1.2rem;
+}
+.sertifikat-box .sf-level-badge {
+  display: inline-block;
+  padding: 0.5rem 1.6rem;
+  border-radius: 40px;
+  font-size: 1.05rem; font-weight: 800;
+  margin: 0.5rem 0 0.8rem; letter-spacing: 1px;
+}
+.sertifikat-box .sf-level-badge.emas {
+  background: linear-gradient(135deg, #ffd700, #ffb800);
+  color: #5c3400;
+  box-shadow: 0 6px 18px rgba(255, 184, 0, 0.4);
+}
+.sertifikat-box .sf-level-badge.perak {
+  background: linear-gradient(135deg, #e8e8e8, #b8b8b8);
+  color: #3a3a3a;
+  box-shadow: 0 6px 18px rgba(180, 180, 180, 0.4);
+}
+.sertifikat-box .sf-level-badge.perunggu {
+  background: linear-gradient(135deg, #e8a87c, #c88a5a);
+  color: #4d2a10;
+  box-shadow: 0 6px 18px rgba(200, 138, 90, 0.4);
+}
+.sertifikat-box .sf-level-badge.dasar {
+  background: linear-gradient(135deg, #b8d4e8, #8ab4d4);
+  color: #1a4a6b;
+  box-shadow: 0 6px 18px rgba(138, 180, 212, 0.4);
+}
+.sertifikat-box .sf-skor {
+  font-size: 1.1rem; color: #5c4638;
+  margin-bottom: 1rem; font-weight: 700;
+}
+.sertifikat-box .sf-skor strong { color: #8a5e00; font-size: 1.3rem; }
+.sertifikat-box .sf-meta {
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem;
+  justify-content: center; margin-top: 1.2rem;
+  padding-top: 1rem; border-top: 2px dashed #e8c890;
+  font-size: 0.82rem; color: #7a6656;
+}
+.sertifikat-box .sf-meta div { text-align: center; }
+.sertifikat-box .sf-meta .m-label {
+  font-size: 0.7rem; text-transform: uppercase;
+  letter-spacing: 1px; color: #a08674;
+}
+.sertifikat-box .sf-meta .m-val {
+  font-weight: 700; color: #5c3400; font-size: 0.9rem;
+}
+.sertifikat-actions {
+  display: flex; flex-wrap: wrap; gap: 0.8rem;
+  justify-content: center; margin-top: 1.2rem;
+}
+.btn-sertifikat {
+  padding: 0.7rem 1.8rem; border-radius: 30px;
+  border: 2px solid #d4a030; background: #fff;
+  color: #8a5e00; font-weight: 700; font-size: 0.9rem;
+  cursor: pointer; font-family: inherit;
+  transition: all 0.2s ease;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  text-decoration: none;
+}
+.btn-sertifikat:hover {
+  background: #fff8e6; transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(212, 160, 48, 0.25);
+}
+
+
+/* ================================================================
+   25. GAGAL BOX (Khusus TIK1c — Belum Lulus)
+   ================================================================ */
+.gagal-box {
+  display: none; margin-top: 1.5rem;
+  background: #fdf0f0; border: 3px solid #d4a0a0;
+  border-radius: 20px; padding: 1.8rem 2rem;
+  text-align: center;
+}
+.gagal-box.show { display: block; animation: fadeIn 0.5s ease; }
+.gagal-box .gb-icon { font-size: 3rem; margin-bottom: 0.4rem; }
+.gagal-box .gb-title {
+  font-size: 1.2rem; font-weight: 700; color: #a84a3a;
+  margin-bottom: 0.4rem;
+}
+.gagal-box .gb-desc {
+  font-size: 0.92rem; color: #5c4638;
+  line-height: 1.6; margin-bottom: 1rem;
+}
+
+
+/* ================================================================
+   26. RESPONSIF
+   ================================================================ */
+@media (max-width: 820px) {
+  .scenario-panel { padding: 1.2rem; }
+  .penamaan-box { padding: 1rem 1.2rem; }
+  .kuis-kilat-box { padding: 1rem 1.2rem; }
+  .refleksi-box { padding: 1rem 1.2rem; }
+  .progress-lapis { gap: 0.3rem; }
+  .progress-lapis .pl-step { font-size: 0.7rem; padding: 0.35rem 0.8rem; }
+  .pilih-level-box { padding: 1.2rem 1rem; }
+  .ikon-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .komponen-grid-interaktif { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .desktop-sim .ds-window { left: 90px; }
+  .desktop-sim .ds-window-content { min-height: 140px; }
+}
+
+@media (max-width: 480px) {
+  .scenario-panel { padding: 0.8rem; }
+  .scenario-panel .scenario-title { font-size: 1.1rem; }
+  .nav-bottom { flex-direction: column; align-items: stretch; }
+  .btn-nav-bawah { justify-content: center; }
+  .soal-kuis { padding: 1rem; }
+  .soal-kuis .pertanyaan { font-size: 0.92rem; }
+  .soal-kuis .opsi-kuis label { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
+  .tes-header { flex-direction: column; align-items: flex-start; }
+  .status-kirim .btn-retry { margin-left: 0; width: 100%; text-align: center; }
+  .lapis-header { font-size: 0.85rem; padding: 0.6rem 1rem; }
+  .progress-lapis .pl-step .pl-label { display: none; }
+  .progress-lapis .pl-step { padding: 0.35rem 0.6rem; }
+  .level-options { grid-template-columns: 1fr; }
+  .duta-penamaan-body { padding: 1rem 1rem 0.8rem; max-height: 55vh; }
+  .duta-penamaan-header { font-size: 0.95rem; padding: 0.9rem 1.1rem; }
+  .btn-sudah-baca { padding: 0.75rem 1.8rem; font-size: 0.92rem; }
+  .duta-penamaan-box { border-radius: 18px; }
+  .ikon-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+  .ikon-app .ia-emoji { font-size: 2rem; }
+  .ikon-app .ia-name { font-size: 0.78rem; }
+  .komponen-grid-interaktif { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+  .komponen-item .ki-icon { font-size: 1.8rem; }
+  .komponen-item .ki-name { font-size: 0.82rem; }
+  .desktop-sim { min-height: 320px; padding: 0.7rem 0.7rem 0 0.7rem; }
+  .desktop-sim .ds-icons { width: 70px; }
+  .desktop-sim .ds-icon .di-emoji { font-size: 1.4rem; }
+  .desktop-sim .ds-icon .di-label { font-size: 0.58rem; }
+  .desktop-sim .ds-window { left: 78px; top: 0.8rem; right: 0.6rem; }
+  .desktop-sim .ds-window-content { padding: 0.8rem 0.7rem; min-height: 120px; font-size: 0.75rem; }
+  .desktop-sim .ds-taskbar { height: 40px; padding: 0 0.4rem; }
+  .desktop-sim .ds-start { padding: 0.25rem 0.5rem; font-size: 0.68rem; }
+  .desktop-sim .ds-task-app { width: 26px; height: 26px; font-size: 0.85rem; }
+  .desktop-sim .ds-task-clock { display: none; }
+  .desktop-sim .ds-start-menu { width: 200px; }
+  .sertifikat-box { padding: 1.5rem 1.2rem; }
+  .sertifikat-box .sf-nama { font-size: 1.2rem; }
+  .sertifikat-box .sf-title { font-size: 1.15rem; }
+  .sertifikat-box .sf-level-badge { font-size: 0.9rem; padding: 0.4rem 1.2rem; }
+  .sertifikat-actions { flex-direction: column; }
+  .btn-sertifikat { width: 100%; justify-content: center; }
+  .iib-actions { flex-direction: column; }
+  .btn-ubah-identitas,
+  .iib-actions .btn-mulai { width: 100%; justify-content: center; }
+}
+
+
+/* ================================================================
+   27. PRINT (untuk sertifikat TIK1c)
+   ================================================================ */
+@media print {
+  .nav-bottom, .btn-sertifikat, #scrollTopBtn,
+  .status-kirim, .feedback-box, .progress-lapis { display: none !important; }
+  .sertifikat-box { box-shadow: none; border-color: #8a5e00; }
+  .scenario-panel { border: none; padding: 0; }
+}
