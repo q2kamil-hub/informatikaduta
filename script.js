@@ -909,13 +909,13 @@
   // NAVBAR
   // ============================================
   var MENU_MODUL = [
-    { label: 'Teknologi Informasi dan Komunikasi',  href: 'tik/materitik', ikon: '🖥️' },
-    { label: 'Sistem Komputer',   href: 'sk/materisk',   ikon: '⚙️' },
-    { label: 'Jaringan Komputer dan Internet',  href: 'jki/materijki', ikon: '🌐' },
-    { label: 'Dampak Sosial dan Informatika',  href: 'dsi/materidsi', ikon: '⚖️' },
-    { label: 'Analisis Data',   href: 'ad/materiad',   ikon: '📊' },
-    { label: 'Berpikir Komputasional',   href: 'bk/materibk',   ikon: '🧠' },
-    { label: 'Algoritma Pemrograman',   href: 'ap/materidap',  ikon: '💻' }
+    { label: '[TIK] Teknologi Informasi dan Komunikasi',  href: 'tik/materitik', ikon: '🖥️' },
+    { label: '[SK] Sistem Komputer',   href: 'sk/materisk',   ikon: '⚙️' },
+    { label: '[JKI] Jaringan Komputer dan Internet',  href: 'jki/materijki', ikon: '🌐' },
+    { label: '[DSI] Dampak Sosial dan Informatika',  href: 'dsi/materidsi', ikon: '⚖️' },
+    { label: '[AD] Analisis Data',   href: 'ad/materiad',   ikon: '📊' },
+    { label: '[BK] Berpikir Komputasional',   href: 'bk/materibk',   ikon: '🧠' },
+    { label: '[AP] Algoritma Pemrograman',   href: 'ap/materidap',  ikon: '💻' }
   ];
 
   function renderNavbar() {

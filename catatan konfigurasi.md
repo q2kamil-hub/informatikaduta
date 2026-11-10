@@ -1,20 +1,6 @@
-## Perubahan dari v3.6 → v3.7
+## Perubahan dari v3.7 → v3.8
 
-1. **Portal semua modul** (BK6, BK7, DSI1, DSI2, TIK2, TIK3, TIK4) kini memakai **modal "Mulai Belajar"** dengan:
-   - Pertanyaan pemantik (dari materi)
-   - Tombol **🔍 Tes Asesmen Diagnostik** (spoiler 5 soal + cek hasil)
-   - Tombol **▶️ Lanjutkan dari Bagian X** / **🔄 Ulangi Modul Ini** (dinamis dari progress)
-   - Tombol **🚀 Langsung ke Aktivitas + Materi**
-   - Sembunyikan tombol lanjut/ulang jika belum login
-2. **Aturan asesmen diagnostik seragam** (§19.6) — berlaku untuk semua modul
-3. **BK7 LENGKAP** — portal + materi + CSS + aktivitas a/b/c/d
-4. **TIK2/TIK3/TIK4 portal** sudah dirombak
-5. **DSI1/DSI2 portal** sudah dirombak
-6. **BK6 portal** sudah dirombak
-7. Tabel warna aksen per modul (BK6 hijau, BK7 biru-ungu, DSI ungu, TIK2/4 oranye, TIK3 cyan-teal)
-8. Map bagian per modul (BK: a–d, DSI1: a–e, DSI2: a–d, TIK2/3: a–f, TIK4: a–d)
-9. **Aktivitas BK7a & BK7c** tanpa form identitas lokal (pola BK7b) — identitas hanya di awal (a) dan akhir (d)
-10. **Bug fix BK7a** — `Identifier 'offsetX' has already been declared` (deklarasi ganda)
+1. **Perbaikan instalasi PWA** — manifest dan Service Worker didaftarkan sebelum overlay PWA-only; tombol instal dan petunjuk lintas perangkat diperbarui.
 
 Berikut dokumen lengkapnya:
 
@@ -23,7 +9,7 @@ Berikut dokumen lengkapnya:
 
 > **Dokumen ini adalah "peta" proyek.** Saat pindah ke chat baru, cukup lampirkan dokumen ini + file sampel (script.js, desain.css, Code.gs, script aktivitas, css aktivitas, dan file yang relevan). AI akan langsung memahami arsitektur tanpa perlu membaca semua file.
 >
-> **Versi dokumen:** v3.7 (2026-10-29) — Portal Modal Asesmen Seragam + BK7 Lengkap + TIK/DSI Portal Baru
+> **Versi dokumen:** v3.8 (2026-11-10) — Perbaikan Alur Instalasi PWA
 > **Status migrasi DSI2 + BK6 + TIK4 + BK7:** ✅ LENGKAP
 > **Status fitur Siswa:** ⚠️ Ada isu rollback proteksi URL (ditunda)
 
@@ -888,10 +874,16 @@ rata = sum(skor[b] untuk b di totalBagianAktif) / len(totalBagianAktif)
 5. `localStorage['duta_versi_terpasang']` diupdate, notifikasi tidak muncul lagi sampai versi berikutnya
 
 **Cara Kerja PWA-Only Access:**
-- `window.matchMedia('(display-mode: standalone)').matches` — jika false (via browser biasa), overlay PWA-only muncul dan konten disembunyikan
+- `manifest.json` dan Service Worker didaftarkan pada semua halaman sebelum pemeriksaan mode aplikasi. Ini memungkinkan browser menilai kelayakan instalasi saat situs dibuka.
+- Aplikasi terpasang dikenali melalui `display-mode: standalone`, `display-mode: window-controls-overlay`, atau `navigator.standalone` (iOS).
+- Jika belum berjalan sebagai aplikasi terpasang, overlay PWA-only muncul dan konten disembunyikan.
 - Pengguna wajib install PWA terlebih dahulu untuk mengakses portal
 - Jika PWA di-uninstall dan diakses ulang via browser biasa → overlay PWA-only akan muncul lagi (deteksi ulang setiap page load)
-- Tombol "Buka di Browser Lain" tersedia untuk development/testing
+- Tombol **Instal Aplikasi InformatikaDuta** selalu tersedia. Browser yang mendukung `beforeinstallprompt` membuka dialog instalasi; jika tidak, tombol menampilkan petunjuk manual sesuai platform.
+- `appinstalled` menandai instalasi selesai dan memuat ulang halaman ke mode aplikasi.
+- Petunjuk: Windows/Chromebook gunakan Chrome atau Edge dan pilih opsi/ikon instalasi; Android gunakan menu Chrome; iPhone/iPad buka di Safari, pilih **Bagikan → Tambahkan ke Layar Utama**.
+- Tombol "Buka di Browser Lain" saat ini hanya menutup overlay dan melewati pembatasan PWA-only pada halaman tersebut; tombol ini tidak membuka aplikasi browser lain.
+- Instalasi memerlukan origin aman (HTTPS; `localhost` untuk pengembangan) dan browser yang mendukung PWA. Dialog instalasi otomatis tidak tersedia di semua browser/perangkat; iOS menggunakan langkah manual di Safari.
 
 **Auto Logout:** 60 menit (`BATAS_SESI_MENIT = 60` di `script.js`)
 
@@ -899,7 +891,7 @@ rata = sum(skor[b] untuk b di totalBagianAktif) / len(totalBagianAktif)
 - Ubah `versi` di `versi.json` (misal `1.0.0` → `1.0.1`)
 - Pengguka akan melihat popup notifikasi update saat membuka halaman
 
-**Ikon PWA:** `informatikaduta-192.png` dan `informatikaduta-512.png` di root folder (ditambahkan nanti)
+**Ikon PWA:** `informatikaduta-192.png` dan `informatikaduta-512.png` di root folder.
 
 ### 19.7 ⚠️ ATURAN ASESMEN DIAGNOSTIK & PORTAL MODAL (v3.7)
 
@@ -1052,6 +1044,14 @@ Jika modul baru punya data lama yang salah, tambahkan ke `PETA_BAGIAN` di `recom
 **Simpan sebagai `CATATAN_KONFIGURASI.md` di root proyek.**
 
 ---
+
+## 📝 CHANGELOG v3.8 (2026-11-10)
+
+### Perbaikan PWA
+- **`script.js`**: Daftarkan manifest dan Service Worker sebelum menampilkan overlay PWA-only agar browser dapat mengevaluasi instalasi.
+- **Tombol instal**: Selalu tampil dengan label "Instal Aplikasi InformatikaDuta"; gunakan prompt native jika tersedia atau tampilkan petunjuk manual jika tidak.
+- **Kompatibilitas perangkat**: Tambah deteksi mode standalone iOS serta petunjuk instal untuk Windows/Chromebook, Android, dan iPhone/iPad.
+- **Status instalasi**: Jangan menganggap aplikasi terinstal hanya karena prompt diterima; gunakan event `appinstalled` dan deteksi mode aplikasi.
 
 ## 📝 CHANGELOG v3.7 (2026-10-29)
 
