@@ -21,6 +21,21 @@
 
   window.DUTA_BOBOT = { aktivitas: 0.5, kuis: 0.5 };
 
+  // ============================================
+  // KONFIGURASI PWA
+  // ============================================
+  window.DUTA_PWA = {
+    versiApp: '1.0.0',
+    versiFile: 'versi.json',
+    swPath: (typeof window.DUTA_ROOT === 'string' && window.DUTA_ROOT !== '')
+      ? window.DUTA_ROOT + 'sw.js'
+      : 'sw.js',
+    manifestPath: (typeof window.DUTA_ROOT === 'string' && window.DUTA_ROOT !== '')
+      ? window.DUTA_ROOT + 'manifest.json'
+      : 'manifest.json',
+    keyVersiTerpasang: 'duta_versi_terpasang'
+  };
+
   const BATAS_SESI_MENIT = 60;
   const KEY_AKTIVITAS = 'duta_aktivitas_terakhir';
   const THROTTLE_AKTIVITAS_MS = 60 * 1000;
@@ -1753,6 +1768,113 @@
   }
 
   // ============================================
+  // PWA: INJECT MANIFEST LINK (untuk semua halaman)
+  // ============================================
+  function injectManifestLink() {
+    if (document.querySelector('link[rel="manifest"]')) return;
+    const link = document.createElement('link');
+    link.rel = 'manifest';
+    link.href = window.DUTA_PWA.manifestPath;
+    document.head.appendChild(link);
+  }
+
+  // ============================================
+  // PWA: REGISTER SERVICE WORKER
+  // ============================================
+  function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.register(window.DUTA_PWA.swPath)
+      .then(function(reg) {
+        console.log('[SW] Terdaftar:', reg.scope);
+        // Listener untuk update SW
+        reg.addEventListener('updatefound', function() {
+          const installing = reg.installing;
+          if (!installing) return;
+          installing.addEventListener('statechange', function() {
+            if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+              // Ada versi SW baru — tandai untuk reload saat user klik Update
+              window.DUTA_PWA.swBaru = true;
+            }
+          });
+        });
+      })
+      .catch(function(err) {
+        console.warn('[SW] Gagal mendaftar:', err);
+      });
+  }
+
+  // ============================================
+  // PWA: CEK VERSI (fetch versi.json bypass cache SW)
+  // ============================================
+  async function cekVersiAplikasi() {
+    try {
+      const res = await fetch(window.DUTA_PWA.versiFile + '?t=' + Date.now(), { cache: 'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      const versiTerpasang = localStorage.getItem(window.DUTA_PWA.keyVersiTerpasang);
+      if (data.versi && versiTerpasang !== data.versi) {
+        window.DUTA_PWA.versiBaru = data;
+        tampilkanNotifikasiUpdate(data);
+      }
+    } catch (err) {
+      console.warn('[PWA] Gagal cek versi:', err);
+    }
+  }
+
+  // ============================================
+  // PWA: TAMPILKAN NOTIFIKASI UPDATE (POPUP)
+  // ============================================
+  function tampilkanNotifikasiUpdate(data) {
+    if (document.getElementById('duta-notif-update')) return; // sudah ada, jangan duplikat
+    const pesan = data.pesanUpdate || 'Ada update aplikasi tersedia.';
+    const overlay = document.createElement('div');
+    overlay.id = 'duta-notif-update';
+    overlay.className = 'duta-modal-overlay';
+    overlay.innerHTML =
+      '<div class="duta-modal-box duta-notif-box">' +
+        '<h3 class="duta-modal-title">🔔 Update Tersedia</h3>' +
+        '<div class="duta-modal-body">' + escapeHtml(pesan) + '</div>' +
+        '<div class="duta-modal-actions duta-notif-actions">' +
+          '<button type="button" class="duta-modal-btn duta-notif-selesai">Nanti saja</button>' +
+          '<button type="button" class="duta-modal-btn duta-notif-update">Update</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('.duta-notif-selesai').addEventListener('click', function() {
+      overlay.remove();
+    });
+
+    overlay.querySelector('.duta-notif-update').addEventListener('click', function() {
+      // Simpan versi baru terlebih dahulu
+      if (data.versi) {
+        localStorage.setItem(window.DUTA_PWA.keyVersiTerpasang, data.versi);
+      }
+      // Minta SW update jika ada
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.ready.then(function(reg) {
+          reg.update().then(function() {
+            location.reload(true);
+          });
+        });
+      } else {
+        location.reload(true);
+      }
+    });
+
+    // Klik di luar modal tidak menutup (harus pilih tombol)
+  }
+
+  // ============================================
+  // PWA: INIT
+  // ============================================
+  function initPWA() {
+    injectManifestLink();
+    registerServiceWorker();
+    cekVersiAplikasi();
+  }
+
+  // ============================================
   // EKSEKUSI
   // ============================================
   document.addEventListener('DOMContentLoaded', function() {
@@ -1770,6 +1892,7 @@
     initInfoToggle();
     initScrollButton();
     initAktivitasListener();
+    initPWA();
 
     window.initDutaPage = initDutaPage;
   });

@@ -1,0 +1,78 @@
+# ============================================================
+# .htaccess — Portal Informatika DUTA
+# Untuk XAMPP lokal. Di GitHub Pages, file ini diabaikan
+# (GitHub Pages otomatis serve /login ← /login.html).
+# ============================================================
+
+Options -Indexes
+DirectoryIndex index.html
+
+# ============================================================
+# 1. HAPUS EKSTENSI .html DARI URL
+# ============================================================
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /informatikaduta/
+
+  # Jangan rewrite file/folder yang benar-benar ada
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Redirect /index.html → /
+  RewriteRule ^index\.html$ /informatikaduta/ [R=301,L]
+
+  # Redirect /folder/index.html → /folder/
+  RewriteRule ^(.+)/index\.html$ /informatikaduta/$1/ [R=301,L]
+
+  # Redirect /halaman.html → /halaman (301, biar URL rapi)
+  RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
+  RewriteRule ^ /informatikaduta/%1 [R=301,L]
+
+  # Tambahkan .html secara internal kalau file ada
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+?)/?$ /informatikaduta/$1.html [L]
+</IfModule>
+
+# ============================================================
+# 2. CUSTOM 404
+# ============================================================
+ErrorDocument 404 /informatikaduta/404.html
+
+# ============================================================
+# 3. CACHE CONTROL (CSS/JS/gambar)
+# ============================================================
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType image/x-icon "access plus 30 days"
+</IfModule>
+
+# ============================================================
+# 4. GZIP COMPRESSION
+# ============================================================
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ============================================================
+# 5. SECURITY HEADERS (ringan)
+# ============================================================
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ============================================================
+# 6. BLOKIR FILE SENSITIF
+# ============================================================
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|bak|old|txt)$">
+  Require all denied
+</FilesMatch>

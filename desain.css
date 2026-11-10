@@ -1855,3 +1855,46 @@ body {
   .tambah-teman-row { flex-direction: column; align-items: stretch; }
   .btn-cek, .btn-tambah { width: 100%; }
 }
+
+/* ================================================================
+   PWA: NOTIFIKASI UPDATE (POPUP)
+   ================================================================ */
+.duta-notif-box {
+  max-width: 420px;
+  text-align: center;
+}
+
+.duta-notif-box .duta-modal-title {
+  margin-top: 0;
+  color: #2d7d46;
+}
+
+.duta-notif-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.duta-notif-selesai {
+  background: #e8e8e8;
+  color: #444;
+  border: 2px solid #ccc;
+}
+
+.duta-notif-selesai:hover {
+  background: #dcdcdc;
+  border-color: #bbb;
+}
+
+.duta-notif-update {
+  background: linear-gradient(135deg, #b07be0, #5c7cfa);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(176, 123, 224, 0.35);
+}
+
+.duta-notif-update:hover {
+  background: linear-gradient(135deg, #8a4bbf, #4a6cf2);
+  filter: brightness(1.05);
+}

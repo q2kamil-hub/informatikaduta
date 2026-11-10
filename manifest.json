@@ -1,0 +1,26 @@
+{
+  "name": "Portal Informatika DUTA",
+  "short_name": "Informatika DUTA",
+  "description": "Portal pembelajaran Informatika SMPN 2 Talegong",
+  "start_url": "/informatikaduta/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fdf6ec",
+  "theme_color": "#b07be0",
+  "icons": [
+    {
+      "src": "informatikaduta-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "informatikaduta-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "reference"],
+  "lang": "id"
+}

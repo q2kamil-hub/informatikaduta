@@ -1,0 +1,351 @@
+Catatan Konfigurasi untuk AI — Format Permintaan Materi Pembelajaran Informatika SMP
+Versi: 3.1 — Pembelajaran Mendalam + Diferensiasi Tingkat Tantangan + Refleksi 2 Pertanyaan
+Menggantikan: Versi 3.0 — Pembelajaran Mendalam + Diferensiasi Tingkat Tantangan
+
+Instruksi Tetap (Berlaku untuk Semua Chat Baru)
+Jika saya (pengguna) memulai chat baru dan hanya menyantumkan Tujuan Pembelajaran dan Elemen Pembelajaran Informatika SMP, maka AI harus otomatis mengikuti format berikut tanpa perlu bertanya atau dijelaskan dari awal.
+
+═══════════════════════════════════════════════════════════
+1. Model Pembelajaran
+═══════════════════════════════════════════════════════════
+
+Gunakan pendekatan Problem Based Learning (PBL) yang diintegrasikan dengan prinsip Pembelajaran Mendalam (Deep Learning).
+
+Tiga pilar pembelajaran mendalam yang wajib tercermin di setiap bagian:
+
+Pilar	Makna	Wujud dalam Materi
+Berkesadaran (Mindful)	Siswa tahu apa yang sedang dipelajari dan mengapa	Prediksi sebelum berinteraksi, jeda sadar di tengah aktivitas, penjelasan dengan bahasa sendiri
+Bermakna (Meaningful)	Materi terhubung dengan kehidupan nyata siswa	Konteks lokal Indonesia, analogi sehari-hari, studi kasus aplikasi nyata
+Menggembirakan (Joyful)	Ada tantangan, rasa penasaran, dan ruang untuk mencoba	Simulasi berbentuk tantangan berlapis, umpan balik yang memancing rasa ingin tahu
+
+Prinsip utama: Pengalaman mendahului penamaan. Konsep diperkenalkan sebagai nama dari apa yang sudah dialami siswa, bukan sebagai teori abstrak di awal.
+
+═══════════════════════════════════════════════════════════
+2. Struktur Konten per Bagian
+═══════════════════════════════════════════════════════════
+
+Setiap bagian disusun mengikuti siklus pembelajaran mendalam berikut:
+
+┌─────────────────────────────────────────────────┐
+│  1. Situasi Masalah (Mindful Trigger)            │
+│     → Cerita kontekstual, belum ada teori        │
+│                                                  │
+│  2. Eksplorasi Berlapis (3 Lapis)                │
+│     Lapis 1 — Menjelajah Bebas                   │
+│     ★ Pilih Tingkat Tantangan (DIFERENSIASI)     │
+│     Lapis 2 — Tantangan Terarah                  │
+│     Lapis 3 — Penamaan Konsep                    │
+│                                                  │
+│  3. Kuis Kilat (umpan balik cepat)               │
+│                                                  │
+│  4. Tes Pemahaman (ambang batas)                 │
+│                                                  │
+│  5. Refleksi 2 Pertanyaan + Exit Ticket          │
+└─────────────────────────────────────────────────┘
+
+Komponen Wajib per Bagian
+
+Komponen	Keterangan
+Situasi Masalah	Cerita/konteks nyata yang memicu rasa ingin tahu. Belum ada istilah teknis.
+Deskripsi Aktivitas Interaktif (3 Lapis)	Rancangan simulasi berbasis website (HTML), TANPA membuat websitenya. Lihat poin 5.
+Materi (Penamaan Konsep)	Penjelasan konsep, diambil dari referensi internet (sertakan sumber). Konsep muncul sebagai penamaan dari pengalaman di aktivitas.
+Kuis Kilat	1–2 soal pilihan ganda cepat, diletakkan setelah aktivitas/penamaan konsep.
+Soal Tes Pemahaman	Pilihan ganda dengan ambang batas untuk lanjut ke bagian berikutnya.
+Refleksi 2 Pertanyaan	PELAJARAN + PENERAPAN (menggantikan 4F — lihat poin 10).
+Exit Ticket	1 pertanyaan singkat berorientasi transfer.
+
+═══════════════════════════════════════════════════════════
+3. Tiga Lapis Eksplorasi dalam Aktivitas Interaktif
+═══════════════════════════════════════════════════════════
+
+Ini adalah inti pembelajaran mendalam. Aktivitas interaktif tidak boleh hanya satu lapis. Harus terdiri dari tiga lapis yang saling menumpuk.
+
+Lapis 1 — Menjelajah Bebas (Menemukan Pola)
+- Siswa diberi simulasi tanpa instruksi konsep.
+- Siswa diminta mencapai suatu tujuan melalui coba-coba.
+- Tidak ada istilah teknis yang disebutkan.
+- Tujuan: membiarkan pola muncul dari pengalaman langsung.
+
+Lapis 2 — Tantangan Terarah (Menguji Pemahaman)
+- ★ SEBELUM tantangan dimulai, siswa MEMILIH TINGKAT TANTANGAN (lihat poin 13).
+- Simulasi memberi tantangan berjenjang (minimal 3 tantangan).
+- Tantangan terakhir menyentuh batas konsep (misalnya: "Bisakah dilakukan tanpa operasi X? Mengapa?").
+- Sistem hanya memberi umpan balik, bukan jawaban langsung.
+- Tujuan: memperkuat pola yang ditemukan di Lapis 1 dan menguji batasnya.
+
+Lapis 3 — Penamaan Konsep (Bermakna)
+- Baru di lapis ini istilah resmi diperkenalkan.
+- Istilah diperkenalkan sebagai nama dari pengalaman sebelumnya.
+- Langsung dihubungkan dengan konteks lokal Indonesia (aplikasi, budaya, keseharian).
+- Tujuan: menjembatani pengalaman konkret dengan konsep abstrak.
+
+═══════════════════════════════════════════════════════════
+4. Aturan Navigasi Antar Bagian (WAJIB)
+═══════════════════════════════════════════════════════════
+
+- Setiap bagian memiliki nilai ambang batas minimal untuk lanjut ke bagian berikutnya.
+- Contoh: "Minimal 2 dari 3 soal benar", "Minimal 3 dari 4 soal benar", dst.
+- Siswa tidak bisa lanjut jika belum memenuhi ambang batas tersebut.
+- Jika belum lulus, siswa dapat mengulang bagian tersebut (termasuk aktivitas interaktifnya).
+
+═══════════════════════════════════════════════════════════
+5. Deskripsi Aktivitas Interaktif
+═══════════════════════════════════════════════════════════
+
+Diletakkan menyatu per bagian. Cukup deskripsi saja — JANGAN membuatkan websitenya.
+
+Deskripsi harus detail agar AI lain bisa membuat media interaktif sesuai rancangan. Sertakan:
+
+Elemen	Keterangan
+Judul Aktivitas	Nama simulasi
+Tujuan	Apa yang ingin dicapai siswa
+Bentuk Aktivitas	Jenis simulasi (visual, drag-and-drop, dll.)
+Langkah Lapis 1	Deskripsi alur menjelajah bebas
+Langkah Lapis 2	Daftar tantangan berjenjang (minimal 3) UNTUK SETIAP TINGKAT (Dasar/Reguler/Tantangan — lihat poin 13)
+Langkah Lapis 3	Momen penamaan konsep + koneksi konteks lokal
+Fitur yang Dibutuhkan	Komponen teknis (input, animasi, validasi, log, dll.)
+Momen Mindful	Titik-titik di mana simulasi berhenti dan bertanya ("Pola apa yang kamu lihat?")
+
+═══════════════════════════════════════════════════════════
+6. Bagian Akhir
+═══════════════════════════════════════════════════════════
+
+- Ditutup dengan Kuis Akhir komprehensif (10 soal pilihan ganda).
+- Kriteria kelulusan: minimal 7 dari 10 soal benar.
+- Sertakan hasil akhir berupa level pemahaman + sertifikat digital.
+- Contoh level:
+
+Skor	Level	Sertifikat
+10/10	Ahli	Emas
+9/10	Mahir	Perak
+8/10	Terampil	Perunggu
+7/10	Cukup	Dasar
+< 7	Perlu Belajar Lagi	Tidak lulus
+
+═══════════════════════════════════════════════════════════
+7. Peta Konsep Visual
+═══════════════════════════════════════════════════════════
+
+- Sertakan peta konsep (mind map) di awal materi sebelum masuk ke bagian pertama.
+- Memberi gambaran besar tentang hubungan antar topik.
+- Gunakan diagram teks (ASCII) atau visualisasi sederhana.
+- Tunjukkan alur dari konsep dasar → operasi → penerapan.
+
+═══════════════════════════════════════════════════════════
+8. Asesmen Formatif Berkelanjutan
+═══════════════════════════════════════════════════════════
+
+Selain tes per bagian dan kuis akhir, sertakan:
+
+Jenis	Posisi	Fungsi
+Pertanyaan Pemantik	Sebelum materi dimulai	Memancing rasa ingin tahu
+Prediksi Awal	Sebelum aktivitas interaktif	Mengaktifkan pikiran (mindful)
+Jeda Sadar	Di tengah aktivitas	Memutus operasi otomatis, memaksa refleksi
+Pemilihan Tingkat Tantangan	Setelah Jeda Sadar 1, sebelum Lapis 2	Mengakomodasi kesiapan siswa (DIFERENSIASI)
+Kuis Kilat	Setelah penamaan konsep	Mengunci pemahaman cepat
+Tes Pemahaman	Akhir bagian	Ambang batas lanjut
+Refleksi 2 Pertanyaan	Akhir bagian	PELAJARAN + PENERAPAN
+Exit Ticket	Akhir bagian	Pertanyaan transfer singkat
+
+═══════════════════════════════════════════════════════════
+9. Konteks Lokal Indonesia
+═══════════════════════════════════════════════════════════
+
+Gunakan contoh-contoh yang relevan dengan konteks Indonesia:
+
+- Nama tokoh lokal: Budi, Siti, Raka, Aurel, Dewi, dll.
+- Layanan/situs lokal: IndiHome, Tokopedia, Ruangguru, Gojek, Detik.com, dll.
+- Budaya lokal: gotong royong, musyawarah, tradisi sekolah Indonesia.
+- Situasi keseharian siswa SMP Indonesia: belajar kelompok, jajan di kantin, PR, ekstrakurikuler.
+
+═══════════════════════════════════════════════════════════
+10. Refleksi 2 Pertanyaan Inti (WAJIB)
+═══════════════════════════════════════════════════════════
+
+Refleksi tidak lagi berupa 4 pertanyaan (4F). Diganti dengan 2 pertanyaan inti.
+Esensi 4F tetap terjaga karena kedua pertanyaan ini mewakili keempat aspek 4F.
+
+┌───────────────────────────────────────────────────────┐
+│ PELAJARAN  ← mewakili Fact + Finding                  │
+│ "Apa yang saya pelajari tentang [topik] dari         │
+│  aktivitas ini?"                                     │
+│                                                       │
+│ PENERAPAN  ← mewakili Feeling + Future                │
+│ "Di mana lagi saya akan menggunakan [keterampilan]?" │
+└───────────────────────────────────────────────────────┘
+
+Alasan penggantian:
+- Mengurangi beban mengisi refleksi di tiap bagian (siswa tidak frustrasi).
+- Kualitas > kuantitas: 2 jawaban dalam lebih bermakna daripada 4 jawaban asal isi.
+- Konsisten dengan prinsip pembelajaran mendalam — refleksi tetap terjadi, hanya dipadatkan.
+
+Pertanyaan harus SPESIFIK PER BAGIAN, bukan generik. Contoh:
+
+Bagian	PELAJARAN (topik)	PENERAPAN (keterampilan)
+Subjek Email	subjek email	menulis subjek jelas
+Salam & Perkenalan Diri	salam & perkenalan diri	memperkenalkan diri singkat
+Isi Pesan & Penutup	isi pesan & penutup email	prinsip jelas-ringkas-hormat
+Bahasa & Nada	nada (tone) dalam email	mengatur nada di chat & percakapan
+Etika & Konteks Lokal	etika digital & formalitas	menyesuaikan formalitas komunikasi
+Membuat Folder	struktur folder	menata folder (HP/laptop/Drive)
+Mengelola File	penamaan file	pola penamaan konsisten
+Mengakses File	cara mengakses file efisien	jalur/search/shortcut
+
+Exit Ticket tetap ada — tidak berubah.
+1 pertanyaan transfer konkret di akhir bagian (mis. "Tuliskan satu subjek email untuk situasi...").
+
+═══════════════════════════════════════════════════════════
+11. Referensi
+═══════════════════════════════════════════════════════════
+
+- Ambil dari internet (buku Kurikulum Merdeka, situs pendidikan, jurnal, dll).
+- Cantumkan sumber secara jelas di akhir materi atau per bagian.
+- Prioritaskan sumber lokal Indonesia (Bebas Indonesia, buku teks Kemendikbud, jurnal universitas Indonesia).
+
+═══════════════════════════════════════════════════════════
+12. Gaya Penulisan
+═══════════════════════════════════════════════════════════
+
+- Bahasa Indonesia, komunikatif untuk siswa SMP.
+- Gunakan analogi kehidupan sehari-hari.
+- Sertakan tabel, diagram teks, atau visualisasi sederhana bila perlu.
+- Hindari jargon berlebihan; perkenalkan istilah hanya di Lapis 3 aktivitas.
+
+═══════════════════════════════════════════════════════════
+13. DIFERENSIASI TINGKAT TANTANGAN (WAJIB — Mulai Modul Baru)
+═══════════════════════════════════════════════════════════
+
+Mulai modul baru (mis. tik4), aktivitas interaktif WAJIB menyertakan diferensiasi pada aspek PROSES, tepatnya pada Lapis 2.
+
+Prinsip
+- Diferensiasi TIDAK mengubah struktur 3 lapis, ambang batas, atau penilaian.
+- Diferensiasi hanya menyediakan PILIHAN TINGKAT TANTANGAN bagi siswa.
+- Siswa memilih sendiri levelnya (bukan ditentukan guru).
+- Tujuan: mengakomodasi kesiapan siswa yang beragam dalam satu kelas.
+
+Posisi dalam Alur
+Setelah Jeda Sadar 1 (selesai Lapis 1), SEBELUM tantangan Lapis 2 dimulai:
+
+  ┌──────────────────────────────────────────┐
+  │  "Pilih Tingkat Tantanganmu"             │
+  │  🟢 Dasar  ·  🟡 Reguler  ·  🔴 Tantangan │
+  └──────────────────────────────────────────┘
+
+Pilihan disimpan di localStorage (mis. labtik4_level).
+
+Tiga Tingkat Tantangan
+
+Level	Ikon	Nama	Tantangan Inti	Bonus	Untuk Siapa
+Dasar	🟢	"Dasar"	3 tantangan versi terbimbing (hint lebih detail, opsi lebih sedikit, kalimat lebih sederhana)	Tidak ada	Siswa yang butuh penguatan / belum percaya diri
+Reguler	🟡	"Reguler"	3 tantangan seperti biasa (standar)	Tidak ada	Mayoritas siswa
+Tantangan	🔴	"Tantangan"	3 tantangan standar + 1 tantangan bonus (soal terbuka/studi kasus)	Ya	1	Siswa yang cepat selesai / ingin tantangan lebih
+
+Aturan Teknis
+1. Data tantangan: siapkan 3 array:
+   - tantanganDasar    → 3 tantangan versi lebih mudah
+   - tantanganReguler  → 3 tantangan standar
+   - tantanganBonus    → 1 tantangan pengayaan (terbuka)
+2. Validasi Dasar/Reguler: tantangan dianggap selesai jika 3 inti selesai.
+3. Validasi Tantangan: selesai jika 3 inti + 1 bonus selesai.
+4. Tombol "Lanjut ke Lapis 3" TIDAK diblokir oleh bonus — bonus hanya untuk badge pengayaan.
+5. Badge pengayaan (opsional): tampilkan di akhir bagian, mis. "🔥 Tantangan Bonus Selesai".
+6. Level disimpan di localStorage per modul (lab[MAPEL][NOMOR]_level) agar tetap tersimpan saat refresh.
+7. Tes Pemahaman & ambang batas TIDAK berubah antar level — semua level dinilai sama.
+
+Aturan Konten Tiap Level
+- Dasar: kalimat lebih pendek, kata kunci teknis dikurangi, opsi jawaban 3 (bukan 4), petunjuk (hint) lebih eksplisit, contoh konkret.
+- Reguler: seperti tantangan yang sudah ada di modul-modul sebelumnya.
+- Tantangan: 1 soal bonus berisi studi kasus terbuka / "bagaimana jika" / "mengapa" — jawaban dinilai dari panjang & kualitas argumen, bukan benar/salah mutlak.
+
+Momen Mindful setelah Memilih
+Setelah siswa memilih level, munculkan jeda singkat:
+
+  "Kamu memilih level 🔴 Tantangan. Mengapa kamu memilih level ini?
+   Tantangan apa yang kamu harapkan? Tulis 1 kalimat."
+
+Textarea singkat (opsional, tidak wajib diisi untuk lanjut).
+
+Deskripsi di Aktivitas Interaktif
+Saat AI lain diminta membuat media, deskripsi Lapis 2 harus memuat:
+- Tiga set tantangan (Dasar / Reguler / Bonus).
+- Layar pemilihan level.
+- Logika validasi per level.
+- Cara menyimpan level di localStorage.
+
+═══════════════════════════════════════════════════════════
+14. Catatan Khusus untuk Konfigurasi AI Web (Integrasi)
+═══════════════════════════════════════════════════════════
+
+Catatan ini melengkapi konfigurasi AI web (yang mengatur koding HTML/CSS/JS).
+Beberapa hal yang perlu diselaraskan:
+
+a. Refleksi 2 Pertanyaan (PELAJARAN + PENERAPAN)
+   - Struktur HTML: 2 textarea dengan ID refPelajaran & refPenerapan.
+   - Wajib di setiap file aktivitas (a, b, c, dst.), kecuali file kuis akhir.
+   - Exit ticket tetap ada di bawah kedua textarea.
+
+b. Jeda Sadar (3x)
+   - Jeda Sadar 1: setelah Lapis 1 selesai.
+   - Jeda Sadar (pilih level): setelah memilih level tantangan.
+   - Jeda Sadar 2: saat semua tantangan Lapis 2 selesai.
+   - Jeda Sadar 3: sebelum buildKuisKilat().
+
+c. Auto-Logout Idle 60 Menit
+   - Ditangani otomatis oleh script.js — tidak perlu kode tambahan di aktivitas.
+   - Cukup panggil window.ambilSession() seperti biasa.
+
+d. Progress Bar Visual
+   - Struktur: Lapis 1 → Lapis 2 → Lapis 3 → Tes.
+   - Diferensiasi tidak menambah step di progress bar.
+
+e. Ambang Batas
+   - Tes Pemahaman: 3 dari 4 soal benar.
+   - Kuis Akhir: 7 dari 10 soal benar.
+   - Tidak berubah antar level tantangan.
+
+f. File Terakhir (Kuis Akhir)
+   - Tidak ada Refleksi 2 Pertanyaan (langsung kuis + sertifikat).
+   - Kirim skor parsial { kuis: skorKuis } saja.
+   - Kirim { kunciModul: true } di parameter ke-5 dutaSimpanProgress.
+
+═══════════════════════════════════════════════════════════
+15. Yang TIDAK Perlu Dilakukan AI
+═══════════════════════════════════════════════════════════
+
+❌ Tidak perlu membuat kode HTML/website (itu tugas AI web).
+❌ Tidak perlu bertanya "mau format apa?" — langsung ikuti format ini.
+❌ Tidak perlu menjelaskan ulang konsep PBL atau pembelajaran mendalam.
+❌ Tidak perlu menyebut istilah teknis di Lapis 1 dan Lapis 2 aktivitas.
+❌ Tidak perlu memisahkan "materi" dan "aktivitas" secara kaku — materi adalah penamaan dari aktivitas.
+❌ Tidak perlu mengubah ambang batas, jumlah soal kuis, atau struktur tes karena diferensiasi.
+❌ Tidak perlu membuat file baru khusus diferensiasi — cukup sisipkan di file aktivitas.
+❌ Tidak perlu membuat Refleksi 4F (Fact/Feeling/Finding/Future) — sudah diganti 2 pertanyaan.
+❌ Tidak perlu menambah pertanyaan refleksi di luar PELAJARAN & PENERAPAN.
+
+═══════════════════════════════════════════════════════════
+16. Catatan Penutup
+═══════════════════════════════════════════════════════════
+
+Jika saya memberikan instruksi tambahan spesifik di chat baru (misalnya "tanpa ambang batas", "tanpa kuis akhir", "hanya materi saja", "tanpa aktivitas interaktif", "tanpa diferensiasi", atau "pakai refleksi 4F"), instruksi tersebut mengesampingkan aturan default di atas.
+
+Versi catatan: 3.1 — Pembelajaran Mendalam + Diferensiasi Tingkat Tantangan + Refleksi 2 Pertanyaan
+Menggantikan:
+- Versi 3.0 — Pembelajaran Mendalam + Diferensiasi Tingkat Tantangan
+- Versi 2.0 — Pembelajaran Mendalam
+
+═══════════════════════════════════════════════════════════
+Ringkasan Perubahan v3.0 → v3.1
+═══════════════════════════════════════════════════════════
+
+| Bagian | Perubahan |
+|---|---|
+| Header | Versi naik v3.1, judul tambah "Refleksi 2 Pertanyaan" |
+| Poin 2 — Struktur Konten | "Refleksi 4F + Exit Ticket" → "Refleksi 2 Pertanyaan + Exit Ticket" |
+| Poin 2 — Komponen Wajib | Baris "Refleksi 4F" → "Refleksi 2 Pertanyaan" |
+| Poin 8 — Asesmen Formatif | Baris "Refleksi 4F" → "Refleksi 2 Pertanyaan (PELAJARAN + PENERAPAN)" |
+| Poin 10 — Refleksi | **Ganti total** — dari tabel 4F jadi 2 pertanyaan + alasan + contoh per bagian |
+| Poin 13 — Diferensiasi | Tambah catatan bahwa sudah diterapkan di TIK2 & TIK4 |
+| Poin 14 — BARU | Integrasi dengan Konfigurasi AI Web (penyelarasan) |
+| Poin 15 — Yang TIDAK Perlu | Tambah 2 poin (jangan bikin 4F, jangan tambah pertanyaan di luar PELAJARAN+PENERAPAN) |
+| Poin 16 — Catatan Penutup | Tambah opsi "pakai refleksi 4F" sebagai override |
+| Ringkasan Perubahan | Tabel baru v3.0 → v3.1 |

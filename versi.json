@@ -1,0 +1,10 @@
+{
+  "versi": "1.0.0",
+  "daftarFile": [
+    "script.js",
+    "desain.css",
+    "index.html",
+    "manifest.json"
+  ],
+  "pesanUpdate": "Ada Update Fitur dan Perbaikan, update sekarang"
+}
