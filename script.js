@@ -1876,12 +1876,41 @@
     window.DUTA_PWA.deferredInstallPrompt = e;
     window.DUTA_PWA.pwaTelahDiinstal = false;
     console.log('[PWA] beforeinstallprompt ditangkap, siap untuk ditampilkan');
+    const hint = document.querySelector('#duta-pwa-only .duta-pwa-only-hint');
+    if (hint) {
+      hint.textContent = 'Tekan tombol instal untuk memasang aplikasi.';
+    }
   });
 
-  // Deteksi apakah PWA sudah diinstal (berjalan dalam mode standalone)
-  if (window.matchMedia('(display-mode: standalone)').matches) {
+  function pwaBerjalanStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+      window.matchMedia('(display-mode: window-controls-overlay)').matches ||
+      window.navigator.standalone === true;
+  }
+
+  // Deteksi mode standalone, termasuk aplikasi web di iPhone/iPad.
+  if (pwaBerjalanStandalone()) {
     window.DUTA_PWA.pwaTelahDiinstal = true;
     window.DUTA_PWA.deferredInstallPrompt = null;
+  }
+
+  function petunjukInstalPWA() {
+    const ua = navigator.userAgent || '';
+    const platform = navigator.userAgentData && navigator.userAgentData.platform
+      ? navigator.userAgentData.platform
+      : navigator.platform || '';
+
+    if (/iPhone|iPad|iPod/i.test(ua) ||
+        (/Mac/i.test(platform) && navigator.maxTouchPoints > 1)) {
+      return 'Di iPhone/iPad, buka halaman ini di Safari, ketuk tombol Bagikan, lalu pilih "Tambahkan ke Layar Utama". Setelah itu, buka aplikasi dari ikon InformatikaDuta.';
+    }
+    if (/Android/i.test(ua)) {
+      return 'Di Android, buka menu ⋮ Chrome lalu pilih "Instal aplikasi" atau "Tambahkan ke layar utama". Jika memakai browser lain, buka halaman ini di Chrome.';
+    }
+    if (/Windows|ChromeOS|CrOS/i.test(platform + ' ' + ua)) {
+      return 'Di Windows/Chromebook, gunakan Chrome atau Edge, lalu pilih ikon Instal di bilah alamat atau menu browser > "Instal Informatika DUTA".';
+    }
+    return 'Gunakan Chrome atau Edge di komputer, Chrome di Android, atau Safari di iPhone/iPad. Buka menu browser dan pilih "Instal aplikasi" / "Tambahkan ke Layar Utama".';
   }
 
   // ============================================
@@ -1899,39 +1928,55 @@
         '<h3 class="duta-modal-title">📱 Akses Hanya Lewat PWA</h3>' +
         '<div class="duta-modal-body">' +
           '<p>Portal Informatika DUTA hanya dapat diakses melalui aplikasi PWA terinstall.</p>' +
-          '<p>Silakan install aplikasi terlebih dahulu untuk melanjutkan.</p>' +
+          '<p>Instal aplikasi untuk melanjutkan. Jika dialog instal tidak muncul, ikuti petunjuk perangkat di bawah.</p>' +
         '</div>' +
         '<div class="duta-modal-actions duta-pwa-only-actions">' +
-          (window.DUTA_PWA.deferredInstallPrompt
-            ? '<button type="button" class="duta-modal-btn duta-pwa-install-now">Instal Sekarang</button>'
-            : '<button type="button" class="duta-modal-btn duta-pwa-tunggu" disabled>Tunggu browser siap...</button>') +
+          '<button type="button" class="duta-modal-btn duta-pwa-install-now">Instal Aplikasi InformatikaDuta</button>' +
           '<button type="button" class="duta-modal-btn duta-pwa-buka-browser">Buka di Browser Lain</button>' +
         '</div>' +
-        '<div class="duta-pwa-only-hint" style="margin-top:1rem; font-size:0.85rem; color:#666;">' +
-          'Cari ikon <strong>"Instal aplikasi"</strong> di bilah alamat browser Anda.' +
+        '<div class="duta-pwa-only-hint" role="status" aria-live="polite" style="margin-top:1rem; font-size:0.85rem; color:#666;">' +
+          escapeHtml(petunjukInstalPWA()) +
         '</div>' +
       '</div>';
     document.body.appendChild(overlay);
 
     const btnInstall = overlay.querySelector('.duta-pwa-install-now');
-    if (btnInstall) {
-      btnInstall.addEventListener('click', function() {
-        if (window.DUTA_PWA.deferredInstallPrompt) {
-          window.DUTA_PWA.deferredInstallPrompt.prompt();
-          window.DUTA_PWA.deferredInstallPrompt.userChoice.then(function(choiceResult) {
-            if (choiceResult.outcome === 'accepted') {
-              console.log('[PWA] User menerima install');
-            } else {
-              console.log('[PWA] User menolak install');
-            }
-            window.DUTA_PWA.deferredInstallPrompt = null;
-            window.DUTA_PWA.pwaTelahDiinstal = true;
-            // Reload untuk masuk ke mode standalone setelah install
-            setTimeout(function() { location.reload(); }, 500);
-          });
+    btnInstall.addEventListener('click', function() {
+      const installPrompt = window.DUTA_PWA.deferredInstallPrompt;
+      const hint = overlay.querySelector('.duta-pwa-only-hint');
+      if (!installPrompt) {
+        hint.textContent = petunjukInstalPWA();
+        return;
+      }
+
+      try {
+        installPrompt.prompt();
+      } catch (err) {
+        console.warn('[PWA] Gagal membuka dialog instalasi:', err);
+        hint.textContent = petunjukInstalPWA();
+        return;
+      }
+
+      installPrompt.userChoice.then(function(choiceResult) {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('[PWA] User menerima install');
+          hint.textContent = 'Instalasi dimulai. Setelah selesai, buka aplikasi dari ikon InformatikaDuta.';
+        } else {
+          console.log('[PWA] User menunda install');
+          hint.textContent = 'Instalasi belum dilakukan. Anda dapat mencoba lagi atau mengikuti petunjuk perangkat di bawah.';
         }
+        window.DUTA_PWA.deferredInstallPrompt = null;
+      }).catch(function(err) {
+        console.warn('[PWA] Gagal membuka dialog instalasi:', err);
+        hint.textContent = petunjukInstalPWA();
       });
-    }
+    });
+
+    window.addEventListener('appinstalled', function() {
+      window.DUTA_PWA.deferredInstallPrompt = null;
+      window.DUTA_PWA.pwaTelahDiinstal = true;
+      location.reload();
+    }, { once: true });
 
     overlay.querySelector('.duta-pwa-buka-browser').addEventListener('click', function() {
       overlay.remove();
@@ -1963,6 +2008,10 @@
   // PWA: INIT (PWA-ONLY — prioritas install dulu)
   // ============================================
   function initPWA() {
+    // Daftarkan manifest dan service worker sebelum browser mengevaluasi kelayakan instal.
+    injectManifestLink();
+    registerServiceWorker();
+
     // Jika belum diinstal dan diakses via browser biasa → tampilkan overlay PWA-only
     if (!window.DUTA_PWA.pwaTelahDiinstal) {
       sembunyikanKontenUntukPWAOnly();
@@ -1971,8 +2020,6 @@
     }
 
     // Sudah via PWA standalone → lanjut ke inisialisasi normal
-    injectManifestLink();
-    registerServiceWorker();
     cekVersiAplikasi();
   }
 
