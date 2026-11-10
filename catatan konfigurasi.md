@@ -1,6 +1,7 @@
-## Perubahan dari v3.7 → v3.8
+## Perubahan dari v3.8 → v3.9
 
-1. **Perbaikan instalasi PWA** — manifest dan Service Worker didaftarkan sebelum overlay PWA-only; tombol instal dan petunjuk lintas perangkat diperbarui.
+1. **Peta portal TIK3 direvisi** — portal kini menggunakan bagian a–d sesuai file yang tersedia; bagian d adalah kuis akhir.
+2. **Catatan konsistensi diperjelas** — daftar portal dan aktivitas yang masih memakai pola lama ditambahkan di §19.8.
 
 Berikut dokumen lengkapnya:
 
@@ -9,7 +10,7 @@ Berikut dokumen lengkapnya:
 
 > **Dokumen ini adalah "peta" proyek.** Saat pindah ke chat baru, cukup lampirkan dokumen ini + file sampel (script.js, desain.css, Code.gs, script aktivitas, css aktivitas, dan file yang relevan). AI akan langsung memahami arsitektur tanpa perlu membaca semua file.
 >
-> **Versi dokumen:** v3.8 (2026-11-10) — Perbaikan Alur Instalasi PWA
+> **Versi dokumen:** v3.9 (2026-11-10) — Revisi Peta TIK3 + Catatan Konsistensi Pola
 > **Status migrasi DSI2 + BK6 + TIK4 + BK7:** ✅ LENGKAP
 > **Status fitur Siswa:** ⚠️ Ada isu rollback proteksi URL (ditunda)
 
@@ -66,7 +67,7 @@ Berikut dokumen lengkapnya:
 │   ├── materitik1.html ... 10      # Materi lengkap
 │   ├── aktivitastik1a.html ...
 │   ├── aktivitastik2a.html ... f    # ✅ MIGRASI (6 bagian)
-│   ├── aktivitastik3a.html ... f    # ✅ MIGRASI (6 bagian)
+│   ├── aktivitastik3a.html ... d    # ✅ MIGRASI (4 bagian; d = kuis akhir)
 │   ├── aktivitastik4a.html ... d    # ✅ MIGRASI v3.6 (4 bagian)
 │   ├── desaintik2.css               # CSS mandiri TIK2
 │   ├── desaintik3.css               # CSS mandiri TIK3
@@ -188,7 +189,7 @@ nilai_akhir = round(100×0.5 + 100×0.5) = 100  ← BENAR
 | Modul | `TOTAL_BAGIAN` | Bagian kuis | `totalBagianAktif` |
 |-------|----------------|-------------|---------------------|
 | TIK2 | `['a','b','c','d','e','f']` | `f` | `['a','b','c','d','e']` |
-| TIK3 | `['a','b','c','d','e','f']` | `f` | `['a','b','c','d','e']` |
+| TIK3 | `['a','b','c','d']` | `d` | `['a','b','c']` |
 | TIK4 | `['a','b','c','d']` | `d` | `['a','b','c']` |
 | TIK5 (contoh) | `['a','b','c','d','e','f']` | `f` | `['a','b','c','d','e']` |
 | DSI1 | `['a','b','c','d','e']` | `e` | `['a','b','c','d']` |
@@ -599,15 +600,15 @@ Untuk sertifikat, form identitas tetap ada (menampilkan penerima). Sama seperti 
 - `penamaanKonten`, `mindful3`, `kuisKilatBox`, `btnLanjutTes`
 - `tesSection`, `soalContainer`, `tesProgress`, `btnPeriksaTes`, `hasilTes`, `refleksiBox`
 - `btnLanjutBagian`, `statusKirim`
-- **File a/d/e (form identitas):** `infoIdentitasBox`, `iibBadge`, `iibNama`, `iibMeta`, `btnUbahIdentitas`, `btnMulai`
+- **File pertama dan kuis akhir (pola baru, jika memakai kartu identitas):** `infoIdentitasBox`, `iibBadge`, `iibNama`, `iibMeta`, `btnUbahIdentitas`, `btnMulai`
 
-### 11.5 Patch A/B/C (File Non-Form b/c)
+### 11.5 Patch File Aktivitas Tanpa Kartu Identitas (bagian tengah)
 - **A**: Tambah `let daftarSiswa = [];` + `refreshIdentitasUI()` (jika perlu untuk AI/ringkasan).
 - **B**: `simpanSkorBagianX()` → gunakan `dutaSimpanProgressBulk`.
 - **C**: `DOMContentLoaded` panggil `refreshIdentitasUI()` (jika ada) + listener `storage`.
-- **D (v3.7)**: Tidak ada `.info-identitas-box`, langsung `#area-simulasi.active`.
+- **Pola baru**: Tidak ada `.info-identitas-box`, langsung `#area-simulasi.active`. Umumnya bagian di antara aktivitas pertama dan kuis akhir (b–c atau b–e, sesuai modul).
 
-### 11.6 JS — File a/d/e
+### 11.6 JS — File Pertama dan Kuis Akhir (pola baru)
 - Sertakan `#infoIdentitasBox`, listener `btnUbahIdentitas`, dan logic `mulaiAktivitas()`.
 - Kirim `dutaSimpanProgressBulk(..., {kunciModul: true, totalBagianAktif: [...]})` di bagian kuis akhir.
 
@@ -921,7 +922,7 @@ rata = sum(skor[b] untuk b di totalBagianAktif) / len(totalBagianAktif)
 | DSI1 | a, b, c, d, e | e | Ungu `#b07be0` |
 | DSI2 | a, b, c, d | d | Ungu `#b07be0` |
 | TIK2 | a, b, c, d, e, f | f | Oranye `#ff8a5b` |
-| TIK3 | a, b, c, d, e, f | f | Cyan-teal `#4fb0c6` |
+| TIK3 | a, b, c, d | d | Cyan-teal `#4fb0c6` |
 | TIK4 | a, b, c, d | d | Oranye `#ff8a5b` |
 
 **Subfolder & DUTA_ROOT:**
@@ -931,6 +932,18 @@ rata = sum(skor[b] untuk b di totalBagianAktif) / len(totalBagianAktif)
 **Tombol di portal:**
 - **"Materi Lengkap"** → link biasa ke `materi<modul>.html` (tanpa modal).
 - **"Materi + Aktivitas"** → **membuka modal** (`id="btnBukaModalMulai"`).
+
+### 19.8 Catatan Konsistensi Portal dan Aktivitas
+
+Berikut pola yang saat ini berbeda dan perlu dipertimbangkan saat migrasi/penyuntingan:
+
+| Cakupan | Halaman | Pola saat ini |
+|---------|---------|---------------|
+| Portal lama | `bk/bk2.html`–`bk/bk5.html`, `jki/jki1.html`–`jki/jki3.html`, `tik/tik1.html` | Tombol Materi + Aktivitas membuka bagian pertama langsung; belum memakai modal asesmen diagnostik dan progress seperti portal BK6/BK7, DSI1/DSI2, TIK2–TIK4. |
+| Aktivitas lama | `bk/aktivitasbk2*.html`–`aktivitasbk5*.html`, `jki/aktivitasjki*.html`, `tik/aktivitastik1*.html` | Polanya belum seragam. Sebagian halaman masih memakai form/identitas lokal dan metode simpan progress yang berbeda; belum memakai pola `dutaSimpanProgressBulk` yang seragam seperti modul baru. |
+| Aktivitas baru | BK6/BK7, DSI1/DSI2, TIK2/TIK3/TIK4 | Pola identitas dan progress sudah seragam: halaman pertama dan kuis akhir menampilkan identitas; bagian tengah langsung ke aktivitas; progress memakai `dutaSimpanProgressBulk`. Simulasi dan tampilan tetap khusus per modul. |
+
+**Peta file TIK3 yang berlaku:** `a`–`c` adalah aktivitas belajar, `d` adalah kuis akhir & sertifikat. Portal dan peta progress harus menggunakan urutan `['a','b','c','d']`; jangan menautkan ke `aktivitastik3e.html` atau `aktivitastik3f.html` karena file tersebut tidak tersedia.
 
 ---
 
@@ -1045,6 +1058,13 @@ Jika modul baru punya data lama yang salah, tambahkan ke `PETA_BAGIAN` di `recom
 
 ---
 
+## 📝 CHANGELOG v3.9 (2026-11-10)
+
+### Revisi Portal TIK3 dan Catatan Konsistensi
+- **`tik/tik3.html`**: Peta aktivitas dan urutan progress diubah menjadi a–d; bagian d dikenali sebagai kuis akhir & sertifikat.
+- **Catatan konfigurasi**: Peta bagian TIK3 diperbarui; pola portal/aktivitas lama dan baru dicatat di §19.8.
+- **BK6**: Keterangan aktivitas mengikuti kondisi aktual; file `aktivitasbk6e.html` sudah dihapus manual.
+
 ## 📝 CHANGELOG v3.8 (2026-11-10)
 
 ### Perbaikan PWA
@@ -1088,7 +1108,7 @@ Jika modul baru punya data lama yang salah, tambahkan ke `PETA_BAGIAN` di `recom
 - **Asesmen diagnostik seragam** untuk semua modul: 5 soal, wajib semua, mayoritas A→Dasar/B→Reguler/C→Tantangan, tie-break level terendah.
 - **Modal "Mulai Belajar"** standar: pemantik + asesmen + lanjut/ulang + langsung.
 - **Sembunyikan tombol lanjut/ulang** jika belum login.
-- **Map bagian per modul** (BK: a–d, DSI1: a–e, DSI2: a–d, TIK2/3: a–f, TIK4: a–d).
+- **Map bagian per modul saat v3.7** (BK: a–d, DSI1: a–e, DSI2: a–d, TIK2/3: a–f, TIK4: a–d; peta TIK3 diperbarui ke a–d di v3.9).
 - **Aksen warna per modul** (BK6 hijau, BK7 biru-ungu, DSI ungu, TIK2/4 oranye, TIK3 cyan-teal).
 - **File tengah (b/c) tanpa form identitas** — identitas cukup di awal & akhir.
 
@@ -1170,11 +1190,9 @@ Jika modul baru punya data lama yang salah, tambahkan ke `PETA_BAGIAN` di `recom
 | **DSI1** | ✅ (v3.7 modal) | ✅ | ✅ | ✅ a–e | ✅ |
 | **DSI2** | ✅ (v3.7 modal) | ✅ | ✅ | ✅ a–d | ✅ |
 | **TIK2** | ✅ (v3.7 modal) | ✅ | ✅ | ✅ a–f | ✅ |
-| **TIK3** | ✅ (v3.7 modal) | ✅ | ✅ | ✅ a–f | ✅ |
+| **TIK3** | ✅ (v3.7 modal) | ✅ | ✅ | ✅ a–d | ✅ |
 | **TIK4** | ✅ (v3.7 modal) | ✅ | ✅ | ✅ a–d | ✅ |
 
-**Yang perlu ditambahkan menyusul:**
-- File aktivitas `tik2f`, `tik3f`, `tik4d` — pastikan `totalBagianAktif` benar (tanpa bagian kuis).
-- Modul lain (`sk`, `jki`, `ad`, `ap`) — masih menggunakan pola lama (form identitas lokal di setiap file). **Bisa dimigrasikan ke pola v3.7** jika diinginkan.
+**Pola lama yang belum dimigrasikan:** portal BK2–BK5, JKI1–JKI3, TIK1 dan aktivitasnya. Rincian ada di §19.8.
 
 Simpan dokumen ini sebagai `CATATAN_KONFIGURASI.md`. Untuk pindah ke chat baru, lampirkan dokumen ini + 10 file sampel (§20). 🚀
