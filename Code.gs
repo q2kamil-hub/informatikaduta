@@ -1,10 +1,10 @@
 /**
- * Code.gs — Backend Google Apps Script untuk Portal Informatika DUTA
+ * Code.gs ï¿½ Backend Google Apps Script untuk Portal Informatika DUTA
  * Versi: v3.6 (2026-10-28)
  *   + FIX: nilai_akhir dihitung dari bagian aktivitas yang VALID
  *     (menerima `totalBagianAktif` dari frontend, mis. ['a','b','c'] untuk TIK4)
  *   + FIX: handleSimpanProgressBulk meneruskan totalBagianAktif ke per-user
- *   + TAMBAH: recomputeNilaiAkhirSemua() — util sekali jalan untuk perbaiki data lama
+ *   + TAMBAH: recomputeNilaiAkhirSemua() ï¿½ util sekali jalan untuk perbaiki data lama
  *
  * Endpoint Action:
  *   A) register          ? daftar siswa baru
@@ -19,8 +19,6 @@
  *   H) resetUser         ? reset tamu (hapus data)
  *   I) getAllProgress    ? ambil semua progress (guru, filter sekolah)
  *   J) unlockModul       ? buka kunci modul untuk user tertentu (guru)
- *   K) listUjian         ? baca sheet LinkUjian
- *   L) verifyToken       ? verifikasi token ujian
  *   M) updateSiswa       ? edit identitas siswa (guru)
  *   N) hapusTamuBulk     ? hapus tamu massal (guru)
  *   O) getBackupData     ? ambil semua data (guru)
@@ -32,28 +30,33 @@
  *   U) getProgressSiswaDetail ? detail progress siswa (dashboard siswa)
  *   V) listSekolahGuru   ? daftar sekolah unik (publik)
  *   W) registerGuru      ? daftar guru baru (status tunggu)
+ *   X) simpanUjian       ? simpan hasil ujian
+ *   Y) listSekolahUsers  ? daftar sekolah dari sheet Users
+ *   Z) listUjian         ? baca tab DaftarUjian
+ *   AA) verifyTokenUjian ? verifikasi token dari DaftarUjian
+ *   AB) getUjianXML      ? ambil XML dari Drive setelah verifikasi token
  *   + (tanpa action) + nama ? INSERT baris (lama)
  *   + (tanpa action) + id   ? UPDATE baris (lama)
  *
  * Deploy:
  *   Extensions ? Apps Script ? paste ? Save
  *   Deploy ? Manage deployments ? Version: New version ? Deploy
- *   Execute as: Me · Who has access: Anyone
+ *   Execute as: Me ï¿½ Who has access: Anyone
  */
 
 // ===== KONFIGURASI =====
 const NAMA_SHEET_DEFAULT = 'default';
 const KOLOM_STATIS = ['id', 'waktu', 'sekolah', 'nama', 'kelas'];
 const KOLOM_AKHIR = 'nilai_akhir';
-const NAMA_SHEET_UJIAN = 'LinkUjian';
-const HEADER_SHEET_UJIAN = ['No', 'Nama_Ujian', 'Link_Ujian', 'Token'];
-
 const NAMA_SHEET_USERS    = 'Users';
 const NAMA_SHEET_TAMU     = 'Tamu';
 const NAMA_SHEET_PROGRESS = 'Progress';
 const NAMA_SHEET_GURU     = 'Guru';
+const NAMA_SHEET_DAFTAR_UJIAN = 'DaftarUjian';
+const FOLDER_UJIAN_DRIVE_ID = '1bTxjoi_zg31i7woYOV0sQsr7Lb43oioC';
+const HEADER_DAFTAR_UJIAN = ['id', 'nama_ujian', 'file_ujian', 'token', 'waktu', 'tampil_nilai', 'tampil_pembahasan'];
 
-// Header Users: urutan baru — sekolah di kolom 5 (sebelum waktu_daftar)
+// Header Users: urutan baru ï¿½ sekolah di kolom 5 (sebelum waktu_daftar)
 const HEADER_USERS        = ['username', 'password', 'nama', 'kelas', 'sekolah', 'waktu_daftar'];
 const HEADER_TAMU         = ['kode_tamu', 'sekolah', 'nama', 'kelas', 'waktu_dibuat', 'waktu_kadaluarsa'];
 
@@ -155,9 +158,12 @@ function doPost(e) {
     if (action === 'getPasswordSiswa') return handleGetPasswordSiswa(data);
     if (action === 'getProgressSiswaDetail') return handleGetProgressSiswaDetail(data);
 
-    // LAMA
-    if (action === 'listUjian')      return handleListUjian();
-    if (action === 'verifyToken')    return handleVerifyToken(data);
+    if (action === 'tambahUjianGuru') return handleTambahUjianGuru(data);
+    if (action === 'simpanUjian')    return handleSimpanUjian(data);
+    if (action === 'listSekolahUsers') return handleListSekolahUsers(data);
+    if (action === 'listUjian') return handleListUjian();
+    if (action === 'verifyTokenUjian') return handleVerifyTokenUjian(data);
+    if (action === 'getUjianXML') return handleGetUjianXML(data);
 
     // ALUR LAMA INSERT / UPDATE
     const sheetName = (data.sheetName || NAMA_SHEET_DEFAULT).toString().trim();
@@ -308,91 +314,7 @@ function applyColumnWidths(sheet, header) {
 }
 
 // ================================================================
-// ============ FUNGSI LAMA: DAFTAR UJIAN & VERIFY TOKEN ==========
-// ================================================================
-
-function handleListUjian() {
-  try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = ss.getSheetByName(NAMA_SHEET_UJIAN);
-
-    if (!sheet) {
-      return corsResponse({
-        ok: false,
-        error: 'Sheet "' + NAMA_SHEET_UJIAN + '" tidak ditemukan. ' +
-               'Buat sheet dengan header: ' + HEADER_SHEET_UJIAN.join(', ')
-      });
-    }
-
-    const lastRow = sheet.getLastRow();
-    if (lastRow < 2) return corsResponse({ ok: true, ujian: [], total: 0, message: 'Belum ada data ujian' });
-
-    const values = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
-    const ujian = [];
-
-    values.forEach(function(row, i) {
-      const no = row[0];
-      const nama = (row[1] || '').toString().trim();
-      const link = (row[2] || '').toString().trim();
-      const token = (row[3] || '').toString().trim();
-      if (!nama || !link) return;
-
-      ujian.push({
-        no: no || (i + 1),
-        nama: nama,
-        link: link,
-        pakaiToken: token.length > 0
-      });
-    });
-
-    return corsResponse({ ok: true, ujian: ujian, total: ujian.length });
-
-  } catch (err) {
-    return corsResponse({ ok: false, error: 'Gagal membaca ' + NAMA_SHEET_UJIAN + ': ' + err.message });
-  }
-}
-
-function handleVerifyToken(data) {
-  try {
-    const namaUjian = (data.namaUjian || '').toString().trim();
-    const tokenInput = (data.token || '').toString().trim();
-
-    if (!namaUjian) return corsResponse({ ok: false, error: 'namaUjian wajib diisi' });
-    if (!tokenInput) return corsResponse({ ok: false, error: 'token wajib diisi' });
-
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = ss.getSheetByName(NAMA_SHEET_UJIAN);
-    if (!sheet) return corsResponse({ ok: false, error: 'Sheet "' + NAMA_SHEET_UJIAN + '" tidak ditemukan' });
-
-    const lastRow = sheet.getLastRow();
-    if (lastRow < 2) return corsResponse({ ok: false, error: 'Belum ada data ujian' });
-
-    const values = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
-
-    for (let i = 0; i < values.length; i++) {
-      const row = values[i];
-      const nama = (row[1] || '').toString().trim();
-      const link = (row[2] || '').toString().trim();
-      const token = (row[3] || '').toString().trim();
-
-      if (nama === namaUjian) {
-        if (token === '') return corsResponse({ ok: true, valid: true, link: link, message: 'Ujian ini tidak memerlukan token' });
-        if (token.toLowerCase() === tokenInput.toLowerCase()) {
-          return corsResponse({ ok: true, valid: true, link: link, message: 'Token valid' });
-        }
-        return corsResponse({ ok: true, valid: false, message: 'Token salah' });
-      }
-    }
-
-    return corsResponse({ ok: false, error: 'Ujian "' + namaUjian + '" tidak ditemukan' });
-
-  } catch (err) {
-    return corsResponse({ ok: false, error: 'Gagal verifikasi token: ' + err.message });
-  }
-}
-
-// ================================================================
-// ==================== FASE A — FUNGSI BARU ======================
+// ==================== FASE A ï¿½ FUNGSI BARU ======================
 // ================================================================
 
 function pastikanSheet(ss, namaSheet, header) {
@@ -645,7 +567,7 @@ function handleCariUser(data) {
 
 /**
  * handleListSekolahGuru
- * Publik — tanpa login. Untuk dropdown sekolah di daftar siswa.
+ * Publik ï¿½ tanpa login. Untuk dropdown sekolah di daftar siswa.
  */
 function handleListSekolahGuru(data) {
   try {
@@ -994,12 +916,12 @@ function handleSimpanProgressBulk(data) {
  * simpanProgressSatuUser(userId, data)
  * data: {
  *   modul, bagianTerakhir, skor, nilaiAkhir, namaSiswa, kunciModul,
- *   totalBagianAktif: ['a','b','c']  // ?? BARU — bagian aktivitas yang dinilai
+ *   totalBagianAktif: ['a','b','c']  // ?? BARU ï¿½ bagian aktivitas yang dinilai
  * }
  *
  * Saat kunciModul: true, nilai_akhir DIHITUNG ULANG dari:
  *   rata-rata skor HANYA bagian di totalBagianAktif (fallback: a..f)
- *   × 0.5 + skor_kuis × 0.5
+ *   ï¿½ 0.5 + skor_kuis ï¿½ 0.5
  */
 function simpanProgressSatuUser(userId, data) {
   const uid = (userId || '').toString().trim();
@@ -1205,7 +1127,7 @@ function handleResetUser(data) {
 }
 
 // ================================================================
-// ============ DASHBOARD — FUNGSI BARU ==========================
+// ============ DASHBOARD ï¿½ FUNGSI BARU ==========================
 // ================================================================
 
 /**
@@ -1716,7 +1638,7 @@ function handleListSiswaGuru(data) {
       hasil.push({
         username: uname,
         nama: nama || '(tanpa nama)',
-        kelas: kelas || '—',
+        kelas: kelas || 'ï¿½',
         sekolah: sekolah
       });
     });
@@ -2093,7 +2015,7 @@ function bangunPromptFeedbackAI(data) {
   function potong(s, n) {
     s = String(s || '').trim();
     if (s.length <= n) return s;
-    return s.substring(0, n) + '…';
+    return s.substring(0, n) + 'ï¿½';
   }
 
   const j1 = potong(mindful.j1, 400);
@@ -2112,7 +2034,7 @@ function bangunPromptFeedbackAI(data) {
     'Beri umpan balik singkat untuk siswa berdasarkan data belajar berikut.\n\n' +
     'ATURAN OUTPUT (WAJIB):\n' +
     '- Bahasa Indonesia, hangat, tidak menghakimi, cocok untuk siswa SMP.\n' +
-    '- Panjang 3–4 kalimat. Maksimal ~90 kata.\n' +
+    '- Panjang 3ï¿½4 kalimat. Maksimal ~90 kata.\n' +
     '- Struktur: (1) apresiasi singkat, (2) 1 hal yang sudah bagus, (3) 1 saran konkret & spesifik.\n' +
     '- JANGAN membocorkan jawaban kuis/tes.\n' +
     '- JANGAN memakai markdown, bullet, atau emoji berlebihan (maks 1 emoji).\n' +
@@ -2190,7 +2112,7 @@ function panggilGemini(prompt) {
   teks = teks.trim();
   if (!teks) throw new Error('Feedback kosong dari Gemini.');
 
-  if (teks.length > 700) teks = teks.substring(0, 700).trim() + '…';
+  if (teks.length > 700) teks = teks.substring(0, 700).trim() + 'ï¿½';
 
   return teks;
 }
@@ -2245,6 +2167,452 @@ function handleGetFeedbackAI(data) {
  * Peta modul ? bagian aktivitas yang valid (TANPA kuis akhir).
  * Sesuaikan dengan modul yang ada di proyek Anda.
  */
+// ================================================================
+// ============ UJIAN BARU: SIMPAN JAWABAN ==========================
+// ================================================================
+
+function pastikanSheetDaftarUjian() {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = ss.getSheetByName(NAMA_SHEET_DAFTAR_UJIAN);
+    if (!sheet) sheet = ss.insertSheet(NAMA_SHEET_DAFTAR_UJIAN);
+
+    const lastColumn = sheet.getLastColumn();
+    let header = lastColumn
+      ? sheet.getRange(1, 1, 1, lastColumn).getValues()[0].map(function(value) {
+          return String(value || '').trim().toLowerCase();
+        })
+      : [];
+    if (!header.some(function(value) { return Boolean(value); })) {
+      header = HEADER_DAFTAR_UJIAN.slice();
+      sheet.getRange(1, 1, 1, header.length).setValues([header]);
+      sheet.getRange(1, 1, 1, header.length)
+        .setFontWeight('bold')
+        .setBackground('#e8dcd0');
+      sheet.setFrozenRows(1);
+    } else {
+      HEADER_DAFTAR_UJIAN.forEach(function(column) {
+        if (header.indexOf(column) === -1) {
+          header.push(column);
+          sheet.getRange(1, header.length).setValue(column);
+        }
+      });
+    }
+    return { sheet: sheet, header: header };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function ambilUjianDariSheet(idUjian) {
+  const daftar = pastikanSheetDaftarUjian();
+  const idxId = daftar.header.indexOf('id');
+  const idxNama = daftar.header.indexOf('nama_ujian');
+  const idxFile = daftar.header.indexOf('file_ujian');
+  const idxToken = daftar.header.indexOf('token');
+  const idxWaktu = daftar.header.indexOf('waktu');
+  const idxTampilNilai = daftar.header.indexOf('tampil_nilai');
+  const idxTampilPembahasan = daftar.header.indexOf('tampil_pembahasan');
+  const lastRow = daftar.sheet.getLastRow();
+  if (lastRow < 2) return null;
+
+  const values = daftar.sheet.getRange(2, 1, lastRow - 1, daftar.header.length).getValues();
+  for (let i = 0; i < values.length; i++) {
+    const row = values[i];
+    const nama = String(row[idxNama] || '').trim();
+    const file = String(row[idxFile] || '').trim();
+    if (!nama || !file) continue;
+
+    let id = String(row[idxId] || '').trim();
+    if (!id) {
+      id = Utilities.getUuid();
+      daftar.sheet.getRange(i + 2, idxId + 1).setValue(id);
+    }
+    if (id === idUjian) {
+      return {
+        id: id,
+        nama: nama,
+        file: file,
+        token: String(row[idxToken] || '').trim(),
+        waktu: row[idxWaktu],
+        tampilNilai: row[idxTampilNilai],
+        tampilPembahasan: row[idxTampilPembahasan]
+      };
+    }
+  }
+  return null;
+}
+
+function bacaWaktuUjian(value, nilaiDefault, label) {
+  if (value === null || typeof value === 'undefined' || String(value).trim() === '') return nilaiDefault;
+  const waktu = Number(value);
+  if (!Number.isInteger(waktu) || waktu < 0) {
+    throw new Error('Kolom ' + label + ' harus berupa bilangan bulat menit >= 0.');
+  }
+  return waktu;
+}
+
+function bacaFlagUjian(value, nilaiDefault, label) {
+  if (value === null || typeof value === 'undefined' || String(value).trim() === '') return nilaiDefault;
+  if (value === true || value === 1) return true;
+  if (value === false || value === 0) return false;
+  const nilai = String(value).trim().toLowerCase();
+  if (['1', 'true', 'ya', 'yes'].indexOf(nilai) !== -1) return true;
+  if (['0', 'false', 'tidak', 'no'].indexOf(nilai) !== -1) return false;
+  throw new Error('Kolom ' + label + ' hanya menerima 1 atau 0.');
+}
+
+function cariFileUjianDrive(namaFile) {
+  if (!/^[^\\/:*?"<>|]+\.xml$/i.test(namaFile)) {
+    throw new Error('Nama file_ujian harus berupa nama file XML yang valid.');
+  }
+  const folder = DriveApp.getFolderById(FOLDER_UJIAN_DRIVE_ID);
+  const files = folder.getFilesByName(namaFile);
+  if (!files.hasNext()) throw new Error('File "' + namaFile + '" tidak ditemukan di folder Drive ujian.');
+  const file = files.next();
+  if (files.hasNext()) throw new Error('Ada lebih dari satu file bernama "' + namaFile + '" di folder Drive ujian.');
+  return file;
+}
+
+function otorisasiAksesDriveUjian() {
+  const folder = DriveApp.getFolderById(FOLDER_UJIAN_DRIVE_ID);
+  const namaFolder = folder.getName();
+  Logger.log('Akses Drive berhasil. Folder ujian: ' + namaFolder);
+  return 'Akses Drive berhasil: ' + namaFolder;
+}
+
+function handleListUjian() {
+  try {
+    const daftar = pastikanSheetDaftarUjian();
+    const lock = LockService.getScriptLock();
+    lock.waitLock(10000);
+    try {
+      const idxId = daftar.header.indexOf('id');
+      const idxNama = daftar.header.indexOf('nama_ujian');
+      const idxFile = daftar.header.indexOf('file_ujian');
+      const idxToken = daftar.header.indexOf('token');
+      const lastRow = daftar.sheet.getLastRow();
+      if (lastRow < 2) return corsResponse({ ok: true, ujian: [] });
+
+      const values = daftar.sheet.getRange(2, 1, lastRow - 1, daftar.header.length).getValues();
+      const ujian = [];
+      values.forEach(function(row, i) {
+        const nama = String(row[idxNama] || '').trim();
+        const file = String(row[idxFile] || '').trim();
+        if (!nama || !file) return;
+
+        let id = String(row[idxId] || '').trim();
+        if (!id) {
+          id = Utilities.getUuid();
+          daftar.sheet.getRange(i + 2, idxId + 1).setValue(id);
+        }
+        ujian.push({
+          id: id,
+          nama: nama,
+          pakaiToken: Boolean(String(row[idxToken] || '').trim())
+        });
+      });
+      return corsResponse({ ok: true, ujian: ujian });
+    } finally {
+      lock.releaseLock();
+    }
+  } catch (err) {
+    return corsResponse({ ok: false, error: 'Gagal memuat DaftarUjian: ' + err.message });
+  }
+}
+
+function handleVerifyTokenUjian(data) {
+  try {
+    const id = String(data.id || '').trim();
+    const token = String(data.token || '').trim();
+    if (!id) return corsResponse({ ok: false, error: 'id ujian wajib diisi' });
+
+    const ujian = ambilUjianDariSheet(id);
+    if (!ujian) return corsResponse({ ok: false, error: 'Ujian tidak ditemukan.' });
+    if (!ujian.token) return corsResponse({ ok: true, valid: true });
+    if (!token || token.length > 80) {
+      return corsResponse({ ok: true, valid: false, message: 'Token kosong atau terlalu panjang.' });
+    }
+    const valid = ujian.token.toLowerCase() === token.toLowerCase();
+    return corsResponse({
+      ok: true,
+      valid: valid,
+      message: valid ? 'Token valid' : 'Token salah. Coba lagi.'
+    });
+  } catch (err) {
+    return corsResponse({ ok: false, error: 'Gagal memverifikasi token ujian: ' + err.message });
+  }
+}
+
+function handleGetUjianXML(data) {
+  try {
+    const id = String(data.id || '').trim();
+    const token = String(data.token || '').trim();
+    if (!id) return corsResponse({ ok: false, error: 'id ujian wajib diisi' });
+
+    const ujian = ambilUjianDariSheet(id);
+    if (!ujian) return corsResponse({ ok: false, error: 'Ujian tidak ditemukan atau belum memiliki file XML.' });
+    if (ujian.token && ujian.token.toLowerCase() !== token.toLowerCase()) {
+      return corsResponse({ ok: false, error: 'Token ujian tidak valid.' });
+    }
+
+    const file = cariFileUjianDrive(ujian.file);
+    if (file.getSize() > 5 * 1024 * 1024) {
+      return corsResponse({ ok: false, error: 'Ukuran file XML ujian melebihi batas 5 MB.' });
+    }
+    const xml = file.getBlob().getDataAsString('UTF-8');
+    if (!xml || !/<ujian(?:\s|>)/i.test(xml)) {
+      return corsResponse({ ok: false, error: 'Isi file bukan dokumen XML ujian yang valid.' });
+    }
+    let dokumenXml;
+    try {
+      dokumenXml = XmlService.parse(xml);
+    } catch (xmlErr) {
+      return corsResponse({
+        ok: false,
+        error: 'XML file "' + ujian.file + '" tidak valid: ' + xmlErr.message
+      });
+    }
+    const rootXml = dokumenXml.getRootElement();
+    const konfigurasiXml = rootXml.getChild('konfigurasi');
+    const waktuXml = bacaWaktuUjian(
+      konfigurasiXml ? konfigurasiXml.getChildText('waktu') : '',
+      0,
+      'konfigurasi XML waktu'
+    );
+    const waktu = bacaWaktuUjian(ujian.waktu, waktuXml, 'waktu');
+    const tampilNilai = bacaFlagUjian(ujian.tampilNilai, true, 'tampil_nilai');
+    const tampilPembahasan = bacaFlagUjian(ujian.tampilPembahasan, true, 'tampil_pembahasan');
+    return corsResponse({
+      ok: true,
+      nama: ujian.nama,
+      xml: xml,
+      pengaturan: {
+        waktu: waktu,
+        tampilNilai: tampilNilai,
+        tampilPembahasan: tampilPembahasan
+      }
+    });
+  } catch (err) {
+    const pesan = String(err.message || err);
+    if (pesan.indexOf('permissions are not sufficient') !== -1 ||
+        pesan.indexOf('Required permissions') !== -1) {
+      return corsResponse({
+        ok: false,
+        error: 'GAS belum mendapat otorisasi Google Drive. Jalankan fungsi otorisasiAksesDriveUjian dari editor Apps Script dan setujui izin Drive, lalu coba lagi.'
+      });
+    }
+    return corsResponse({ ok: false, error: 'Gagal memuat file ujian: ' + pesan });
+  }
+}
+
+function handleTambahUjianGuru(data) {
+  try {
+    const username = String(data.username || '').trim().toLowerCase();
+    const password = String(data.password || '');
+    const nama = String(data.namaUjian || '').trim();
+    const file = String(data.fileUjian || '').trim();
+    const token = String(data.token || '').trim().toUpperCase();
+    const waktu = Number(data.waktu);
+
+    if (!username || !password) {
+      return corsResponse({ ok: false, error: 'Sesi guru tidak valid. Silakan login ulang.' });
+    }
+    if (!nama || nama.length > 100) {
+      return corsResponse({ ok: false, error: 'Nama ujian wajib diisi (maksimal 100 karakter).' });
+    }
+    if (!/^[^\\/:*?"<>|]+\.xml$/i.test(file)) {
+      return corsResponse({ ok: false, error: 'Nama file ujian harus berupa nama file XML, misalnya ujian_kelas7.xml.' });
+    }
+    if (!Number.isInteger(waktu) || waktu < 0 || waktu > 1440) {
+      return corsResponse({ ok: false, error: 'Waktu harus bilangan bulat antara 0 sampai 1440 menit.' });
+    }
+    if (token && !/^[A-Z0-9-]{4,40}$/.test(token)) {
+      return corsResponse({ ok: false, error: 'Token hanya boleh berisi 4-40 huruf, angka, atau tanda hubung.' });
+    }
+    const tampilNilai = bacaFlagUjian(data.tampilNilai, true, 'tampil_nilai');
+    const tampilPembahasan = bacaFlagUjian(data.tampilPembahasan, true, 'tampil_pembahasan');
+
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const verif = verifikasiGuru(ss, username, password);
+    if (!verif.ok) return corsResponse({ ok: false, error: verif.error });
+
+    const fileDrive = cariFileUjianDrive(file);
+    if (fileDrive.getSize() > 5 * 1024 * 1024) {
+      return corsResponse({ ok: false, error: 'Ukuran file XML ujian melebihi batas 5 MB.' });
+    }
+    const xml = fileDrive.getBlob().getDataAsString('UTF-8');
+    const dokumenXml = XmlService.parse(xml);
+    if (dokumenXml.getRootElement().getName() !== 'ujian') {
+      return corsResponse({ ok: false, error: 'Root dokumen XML harus berupa <ujian>.' });
+    }
+
+    const daftar = pastikanSheetDaftarUjian();
+    const lock = LockService.getScriptLock();
+    lock.waitLock(10000);
+    try {
+      const idxFile = daftar.header.indexOf('file_ujian');
+      const lastRow = daftar.sheet.getLastRow();
+      if (lastRow >= 2) {
+        const files = daftar.sheet.getRange(2, idxFile + 1, lastRow - 1, 1).getValues();
+        if (files.some(function(row) { return String(row[0] || '').trim().toLowerCase() === file.toLowerCase(); })) {
+          return corsResponse({ ok: false, error: 'File ini sudah terdaftar di DaftarUjian.' });
+        }
+      }
+
+      const row = new Array(daftar.header.length).fill('');
+      row[daftar.header.indexOf('id')] = Utilities.getUuid();
+      row[daftar.header.indexOf('nama_ujian')] = nama;
+      row[idxFile] = file;
+      row[daftar.header.indexOf('token')] = token;
+      row[daftar.header.indexOf('waktu')] = waktu;
+      row[daftar.header.indexOf('tampil_nilai')] = tampilNilai ? 1 : 0;
+      row[daftar.header.indexOf('tampil_pembahasan')] = tampilPembahasan ? 1 : 0;
+      daftar.sheet.appendRow(row);
+
+      return corsResponse({
+        ok: true,
+        message: 'Ujian berhasil ditambahkan ke DaftarUjian.',
+        id: row[daftar.header.indexOf('id')]
+      });
+    } finally {
+      lock.releaseLock();
+    }
+  } catch (err) {
+    return corsResponse({ ok: false, error: 'Gagal menambahkan ujian: ' + err.message });
+  }
+}
+
+/**
+ * handleSimpanUjian
+ * Simpan hasil ujian siswa ke sheet "Ujian" (dibuat otomatis jika belum ada).
+ * Kolom: id, waktu, sekolah, nama, kelas, fileUjian, nilai, waktuPengerjaan, jawabanJSON
+ */
+function handleSimpanUjian(data) {
+  try {
+    const sekolah = normalisasiSekolah(data.sekolah || '');
+    const nama    = normalisasiNama(data.nama || '');
+    const kelas   = normalisasiKelas(data.kelas || '');
+    const fileUjian = (data.fileUjian || '').toString().trim();
+    const nilai   = Number(data.nilai);
+    const waktuPengerjaan = (data.waktuPengerjaan || '').toString().trim();
+    const jawabanJSON = (data.jawabanJSON || '{}').toString();
+
+    if (!nama)  return corsResponse({ ok: false, error: 'nama wajib diisi' });
+    if (!kelas) return corsResponse({ ok: false, error: 'kelas wajib diisi' });
+    if (!sekolah) return corsResponse({ ok: false, error: 'sekolah wajib diisi' });
+    if (!fileUjian) return corsResponse({ ok: false, error: 'fileUjian wajib diisi' });
+    if (nama.length > 100 || kelas.length > 20 || sekolah.length > 150 || fileUjian.length > 150) {
+      return corsResponse({ ok: false, error: 'Data identitas atau nama ujian terlalu panjang' });
+    }
+    if (!Number.isFinite(nilai) || nilai < 0 || nilai > 100) {
+      return corsResponse({ ok: false, error: 'nilai harus berupa angka antara 0 dan 100' });
+    }
+    if (waktuPengerjaan.length > 100 || jawabanJSON.length > 50000) {
+      return corsResponse({ ok: false, error: 'Data hasil ujian terlalu panjang' });
+    }
+    let jawaban;
+    try {
+      jawaban = JSON.parse(jawabanJSON);
+    } catch (err) {
+      return corsResponse({ ok: false, error: 'jawabanJSON bukan JSON yang valid' });
+    }
+    if (!jawaban || typeof jawaban !== 'object' || Array.isArray(jawaban)) {
+      return corsResponse({ ok: false, error: 'jawabanJSON harus berupa objek jawaban' });
+    }
+
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const NAMA_SHEET_UJIAN_BARU = 'Ujian';
+    const HEADER_UJIAN = ['id', 'waktu', 'sekolah', 'nama', 'kelas', 'fileUjian', 'nilai', 'waktuPengerjaan', 'jawabanJSON'];
+
+    let sheet = ss.getSheetByName(NAMA_SHEET_UJIAN_BARU);
+    if (!sheet) {
+      sheet = ss.insertSheet(NAMA_SHEET_UJIAN_BARU);
+    }
+    let header = sheet.getLastColumn() > 0
+      ? sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(function(v) { return String(v || '').trim(); })
+      : [];
+    if (!header.some(function(v) { return Boolean(v); })) {
+      header = HEADER_UJIAN.slice();
+      sheet.getRange(1, 1, 1, header.length).setValues([header]);
+      sheet.getRange(1, 1, 1, header.length)
+        .setFontWeight('bold')
+        .setBackground('#e8dcd0');
+      sheet.setFrozenRows(1);
+    } else {
+      HEADER_UJIAN.forEach(function(kolom) {
+        if (header.indexOf(kolom) === -1) {
+          header.push(kolom);
+          sheet.getRange(1, header.length).setValue(kolom);
+        }
+      });
+    }
+
+    const id = generateId(NAMA_SHEET_UJIAN_BARU);
+    const waktu = formatWaktu(new Date());
+
+    const row = new Array(header.length).fill('');
+    setKolom(row, header, 'id', id);
+    setKolom(row, header, 'waktu', waktu);
+    setKolom(row, header, 'sekolah', sekolah);
+    setKolom(row, header, 'nama', nama);
+    setKolom(row, header, 'kelas', kelas);
+    setKolom(row, header, 'fileUjian', fileUjian);
+    setKolom(row, header, 'nilai', nilai);
+    setKolom(row, header, 'waktuPengerjaan', waktuPengerjaan);
+    setKolom(row, header, 'jawabanJSON', JSON.stringify(jawaban));
+
+    sheet.appendRow(row);
+
+    return corsResponse({
+      ok: true, id: id, sheet: NAMA_SHEET_UJIAN_BARU,
+      nilai: nilai, message: 'Hasil ujian berhasil disimpan'
+    });
+
+  } catch (err) {
+    return corsResponse({ ok: false, error: 'Gagal simpan ujian: ' + err.message });
+  }
+}
+
+/**
+ * handleListSekolahUsers
+ * Publik â€” tanpa login. Ambil daftar sekolah unik dari sheet Users kolom sekolah.
+ */
+function handleListSekolahUsers(data) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName(NAMA_SHEET_USERS);
+
+    if (!sheet || sheet.getLastRow() < 2) {
+      return corsResponse({ ok: true, sekolah: [] });
+    }
+
+    const lastCol = sheet.getLastColumn();
+    const header = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+    const idxSekolah = header.indexOf('sekolah');
+    if (idxSekolah === -1) {
+      return corsResponse({ ok: true, sekolah: [] });
+    }
+
+    const values = sheet.getRange(2, 1, sheet.getLastRow() - 1, lastCol).getValues();
+    const setSekolah = {};
+
+    for (let i = 0; i < values.length; i++) {
+      const s = normalisasiSekolah(values[i][idxSekolah]);
+      if (s) setSekolah[s] = true;
+    }
+
+    const sekolahList = Object.keys(setSekolah).sort();
+
+    return corsResponse({ ok: true, sekolah: sekolahList });
+
+  } catch (err) {
+    return corsResponse({ ok: false, error: 'Gagal ambil sekolah: ' + err.message });
+  }
+}
+
 function recomputeNilaiAkhirSemua() {
   const PETA_BAGIAN = {
     'tik2': ['a','b','c','d','e'],   // f = kuis akhir

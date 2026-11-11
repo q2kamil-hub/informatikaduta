@@ -462,6 +462,59 @@
       font-size: 0.72rem; color: #a08674;
       margin-top: 0.2rem; font-style: italic;
     }
+    .ujian-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1rem; }
+    .ujian-token-row { display: flex; gap: 0.5rem; align-items: center; }
+    .ujian-token-row input { flex: 1; min-width: 0; }
+    .ujian-token-row button { flex-shrink: 0; }
+    .ujian-options { display: flex; flex-wrap: wrap; gap: 0.7rem 1.2rem; margin: 0.2rem 0 1rem; }
+    .ujian-options label { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.82rem; font-weight: 700; color: #4d3829; cursor: pointer; }
+    .ujian-options input { width: auto; }
+    .ujian-form-status { min-height: 1.3rem; margin-top: 0.5rem; font-size: 0.84rem; font-weight: 700; }
+    .ujian-form-status.error { color: #a3123c; }
+    .ujian-form-status.success { color: #23643a; }
+    .live-score-overlay {
+      position: fixed; inset: 0; z-index: 12000; display: grid;
+      grid-template-rows: auto minmax(0, 1fr); background: #f7f4ef;
+      color: #3b2b1e;
+    }
+    .live-score-header {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: 0.8rem 1.2rem; background: #4d3829; color: #fff;
+    }
+    .live-score-heading { min-width: 0; }
+    .live-score-heading h1 { margin: 0; font-size: 1.25rem; }
+    .live-score-heading p { margin: 0.2rem 0 0; color: #f0dfcf; font-size: 0.82rem; }
+    .live-score-status { margin-top: 0.25rem; color: #f9d99b; font-size: 0.75rem; }
+    .live-score-status.error { color: #ffc2c2; }
+    .live-score-exit {
+      flex: 0 0 auto; padding: 0.55rem 1rem; border: 0; border-radius: 999px;
+      background: #ef476f; color: #fff; font: inherit; font-weight: 800; cursor: pointer;
+    }
+    .live-score-exit:hover { background: #d93860; }
+    .live-score-scroll { min-height: 0; overflow: auto; overscroll-behavior: contain; }
+    .live-score-table { width: 100%; min-width: 1180px; border-collapse: collapse; background: #fff; }
+    .live-score-table th {
+      position: sticky; top: 0; z-index: 1; padding: 0.8rem 0.65rem;
+      background: #5a4030; color: #fff; font-size: 0.82rem; text-align: left;
+      white-space: nowrap;
+    }
+    .live-score-table td {
+      padding: 0.75rem 0.65rem; border-bottom: 1px solid #e5dbd0;
+      font-size: 0.9rem; white-space: nowrap;
+    }
+    .live-score-table tbody tr:nth-child(even) { background: #fcfaf7; }
+    .live-score-table tbody tr.row-tuntas { background: #eef7ee; }
+    .live-score-table tbody tr.row-perhatian { background: #fff7e8; }
+    .live-score-table .score-number { text-align: center; font-weight: 700; }
+    .live-score-table .score-final { text-align: center; color: #23643a; font-size: 1rem; font-weight: 900; }
+    .live-score-empty { padding: 2rem; color: #796556; text-align: center; }
+    @media (max-width: 600px) {
+      .ujian-form-grid { grid-template-columns: 1fr; }
+      .ujian-token-row { flex-wrap: wrap; }
+      .live-score-header { padding: 0.7rem; }
+      .live-score-heading h1 { font-size: 1rem; }
+      .live-score-exit { padding: 0.5rem 0.7rem; }
+    }
 
     /* Tombol modal */
     .modal-actions {
@@ -740,6 +793,8 @@
             </label>
             <button class="btn-dash" id="btnStatistik">📊 Statistik</button>
             <button class="btn-dash accent" id="btnLihatSiswa">👥 Lihat Data Siswa</button>
+            <button class="btn-dash" id="btnLiveScore">📺 Tampilkan Live Score Siswa</button>
+            <button class="btn-dash" id="btnTambahSoal">➕ Tambah Soal</button>
             <button class="btn-dash" id="btnExport">📥 Export CSV</button>
             <button class="btn-dash" id="btnBackup">💾 Backup</button>
             <button class="btn-dash" id="btnRestore">📤 Restore</button>
@@ -906,7 +961,20 @@
       let dipilih = new Set();
       let tampilSkorDetail = true;
       let autoRefreshTimer = null;
+      let liveScoreAktif = false;
+      let liveScoreFrame = null;
+      let liveScoreTimeout = null;
+      let liveScoreFilters = null;
+      let liveScoreOverflowSebelumnya = '';
+      let liveScoreDataDiperbaruiPada = 0;
       const AUTO_REFRESH_MS = 60000;
+      const LIVE_SCORE_JEDA_BAWAH_MS = 10000;
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          const modal = document.getElementById('guru-modal');
+          if (modal) modal.remove();
+        }
+      });
 
       // State untuk modal Lihat Data Siswa
       let listKelasCache = null;      // array kelas
@@ -926,6 +994,8 @@
       const elBtnRestore = document.getElementById('btnRestore');
       const elBtnLogout = document.getElementById('btnLogout');
       const elBtnLihatSiswa = document.getElementById('btnLihatSiswa');
+      const elBtnLiveScore = document.getElementById('btnLiveScore');
+      const elBtnTambahSoal = document.getElementById('btnTambahSoal');
       const elStatistikSection = document.getElementById('statistikSection');
       const elBulkBar = document.getElementById('bulkBar');
       const elBulkInfo = document.getElementById('bulkInfo');
@@ -1344,11 +1414,378 @@
         modal.addEventListener('click', function(e) {
           if (e.target === modal) modal.remove();
         });
-        const esc = function(e) {
-          if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', esc); }
-        };
-        document.addEventListener('keydown', esc);
         return modal;
+      }
+
+      function bukaModalFilterLiveScore() {
+        const modul = [...new Set(semuaData.map(function(d) { return d.modul; }).filter(Boolean))].sort();
+        const kelas = [...new Set(semuaData.map(function(d) { return String(d.kelas || '').trim(); }).filter(Boolean))]
+          .sort(function(a, b) { return a.localeCompare(b, 'id', { numeric: true, sensitivity: 'base' }); });
+        const bodyHtml =
+          '<p>Atur data yang akan ditampilkan. Mode live score hanya memuat data yang dapat diakses akun guru Anda.</p>' +
+          '<div class="ujian-form-grid">' +
+            '<div class="form-group"><label for="liveFilterModul">Modul</label><select id="liveFilterModul"><option value="">Semua modul</option>' +
+              modul.map(function(m) { return '<option value="' + escapeHtml(m) + '">' + escapeHtml(m.toUpperCase()) + '</option>'; }).join('') +
+            '</select></div>' +
+            '<div class="form-group"><label for="liveFilterKelas">Kelas</label><select id="liveFilterKelas"><option value="">Semua kelas</option>' +
+              kelas.map(function(k) { return '<option value="' + escapeHtml(k) + '">' + escapeHtml(k) + '</option>'; }).join('') +
+            '</select></div>' +
+            '<div class="form-group"><label for="liveFilterStatus">Status</label><select id="liveFilterStatus">' +
+              '<option value="">Semua status</option><option value="selesai">Selesai</option><option value="berlangsung">Berlangsung</option>' +
+            '</select></div>' +
+            '<div class="form-group"><label for="liveFilterWaktu">Waktu update</label><select id="liveFilterWaktu">' +
+              '<option value="">Semua waktu</option><option value="hari_ini">Hari ini</option><option value="7_hari">7 hari terakhir</option><option value="30_hari">30 hari terakhir</option>' +
+            '</select></div>' +
+          '</div>';
+        const modal = buatModal('📺 Tampilkan Live Score Siswa', bodyHtml,
+          '<button class="modal-btn batal" data-act="batal">Batal</button>' +
+          '<button class="modal-btn simpan" data-act="mulai">▶ Mulai Live Score</button>',
+          { wide: true });
+
+        modal.querySelector('[data-act="batal"]').addEventListener('click', function() { modal.remove(); });
+        modal.querySelector('[data-act="mulai"]').addEventListener('click', function() {
+          liveScoreFilters = {
+            modul: modal.querySelector('#liveFilterModul').value,
+            kelas: modal.querySelector('#liveFilterKelas').value,
+            status: modal.querySelector('#liveFilterStatus').value,
+            waktu: modal.querySelector('#liveFilterWaktu').value
+          };
+          modal.remove();
+          bukaTampilanLiveScore();
+        });
+      }
+
+      function filterDataLiveScore(data) {
+        const filters = liveScoreFilters || {};
+        let batasWaktu = null;
+        const sekarang = new Date();
+        if (filters.waktu === 'hari_ini') {
+          batasWaktu = new Date(sekarang.getFullYear(), sekarang.getMonth(), sekarang.getDate()).getTime();
+        } else if (filters.waktu === '7_hari') {
+          batasWaktu = Date.now() - 7 * 24 * 60 * 60 * 1000;
+        } else if (filters.waktu === '30_hari') {
+          batasWaktu = Date.now() - 30 * 24 * 60 * 60 * 1000;
+        }
+
+        return data.filter(function(d) {
+          if (filters.modul && d.modul !== filters.modul) return false;
+          if (filters.kelas && String(d.kelas || '').trim() !== filters.kelas) return false;
+          if (filters.status === 'selesai' && d.status_modul !== 'selesai') return false;
+          if (filters.status === 'berlangsung' && d.status_modul === 'selesai') return false;
+          if (batasWaktu !== null) {
+            const waktu = parseTanggal(d.waktu_update);
+            if (!waktu || waktu.getTime() < batasWaktu) return false;
+          }
+          return true;
+        }).sort(function(a, b) {
+          const waktuA = parseTanggal(a.waktu_update);
+          const waktuB = parseTanggal(b.waktu_update);
+          return (waktuB ? waktuB.getTime() : 0) - (waktuA ? waktuA.getTime() : 0);
+        });
+      }
+
+      function renderLiveScore() {
+        const overlay = document.getElementById('liveScoreOverlay');
+        if (!overlay) return;
+        const scroll = overlay.querySelector('#liveScoreScroll');
+        const body = overlay.querySelector('#liveScoreBody');
+        const data = filterDataLiveScore(semuaData);
+        const labelFilter = [];
+        if (liveScoreFilters.modul) labelFilter.push(liveScoreFilters.modul.toUpperCase());
+        if (liveScoreFilters.kelas) labelFilter.push('Kelas ' + liveScoreFilters.kelas);
+        if (liveScoreFilters.status) labelFilter.push(liveScoreFilters.status === 'selesai' ? 'Selesai' : 'Berlangsung');
+        if (liveScoreFilters.waktu) labelFilter.push({
+          hari_ini: 'Hari ini', '7_hari': '7 hari terakhir', '30_hari': '30 hari terakhir'
+        }[liveScoreFilters.waktu]);
+        overlay.querySelector('#liveScoreFilterLabel').textContent = labelFilter.length
+          ? labelFilter.join(' · ')
+          : 'Semua modul, kelas, status, dan waktu';
+        overlay.querySelector('#liveScoreCount').textContent = data.length + ' baris';
+
+        if (!data.length) {
+          body.innerHTML = '<tr><td class="live-score-empty" colspan="15">Tidak ada skor yang cocok dengan filter.</td></tr>';
+        } else {
+          body.innerHTML = data.map(function(d) {
+            const nama = d.nama || d.nama_siswa || d.user_id || '(tanpa nama)';
+            const badgeTipe = d.tipe === 'tamu'
+              ? '<span class="badge-tipe tamu">tamu</span>'
+              : '';
+            const selesai = d.status_modul === 'selesai';
+            const badgeStatus = selesai
+              ? '<span class="badge-status selesai">✅ selesai</span>'
+              : '<span class="badge-status proses">⏳ proses</span>';
+            const rowClass = selesai && d.nilai_akhir >= 70
+              ? 'row-tuntas'
+              : d.nilai_akhir > 0 && d.nilai_akhir < 70 ? 'row-perhatian' : '';
+            const skor = function(value) {
+              return '<td class="score-number">' + (Number(value) > 0 ? escapeHtml(value) : '–') + '</td>';
+            };
+            return '<tr class="' + rowClass + '">' +
+              '<td>' + escapeHtml(nama) + ' ' + badgeTipe + '</td>' +
+              '<td>' + escapeHtml(d.kelas || '–') + '</td>' +
+              '<td><span class="badge-modul">' + escapeHtml(d.modul || '–') + '</span></td>' +
+              '<td class="score-number">' + escapeHtml(String(d.bagian_terakhir || '–').toUpperCase()) + '</td>' +
+              skor(d.skor_a) + skor(d.skor_b) + skor(d.skor_c) + skor(d.skor_d) + skor(d.skor_e) + skor(d.skor_f) +
+              skor(d.skor_kuis) +
+              '<td class="score-final">' + (Number(d.nilai_akhir) > 0 ? escapeHtml(d.nilai_akhir) : '–') + '</td>' +
+              '<td>' + badgeStatus + '</td>' +
+              '<td>' + escapeHtml(d.waktu_update ? String(d.waktu_update).substring(0, 10) : '–') + '</td>' +
+              '<td>' + escapeHtml(formatWaktu(d.waktu_update)) + '</td>' +
+            '</tr>';
+          }).join('');
+        }
+        scroll.scrollTop = 0;
+        const now = new Date();
+        overlay.querySelector('#liveScoreStatus').textContent =
+          'Diperbarui ' + now.toLocaleTimeString('id-ID') + ' · ' + (dataGuru.sekolah || 'Sekolah guru');
+        overlay.querySelector('#liveScoreStatus').classList.remove('error');
+      }
+
+      async function muatDataLiveScore() {
+        const overlay = document.getElementById('liveScoreOverlay');
+        if (!overlay || !dataGuru) return false;
+        const status = overlay.querySelector('#liveScoreStatus');
+        status.textContent = 'Memperbarui data...';
+        status.classList.remove('error');
+        const hasil = await window.dutaGetAllProgress(dataGuru.username, dataGuru.password || '');
+        if (!hasil || !hasil.ok) {
+          status.textContent = 'Gagal memperbarui: ' + ((hasil && hasil.error) || 'Tidak diketahui');
+          status.classList.add('error');
+          return false;
+        }
+        semuaData = hasil.progress || [];
+        if (hasil.guru) {
+          dataGuru.nama = hasil.guru.nama || dataGuru.nama;
+          dataGuru.sekolah = hasil.guru.sekolah || dataGuru.sekolah;
+          if (window.simpanSessionGuru) window.simpanSessionGuru(dataGuru);
+        }
+        liveScoreDataDiperbaruiPada = Date.now();
+        renderLiveScore();
+        return true;
+      }
+
+      function hentikanSiklusLiveScore() {
+        if (liveScoreFrame !== null) cancelAnimationFrame(liveScoreFrame);
+        if (liveScoreTimeout !== null) clearTimeout(liveScoreTimeout);
+        liveScoreFrame = null;
+        liveScoreTimeout = null;
+      }
+
+      function jadwalkanUlangLiveScore() {
+        if (!liveScoreAktif) return;
+        hentikanSiklusLiveScore();
+        liveScoreTimeout = setTimeout(function() {
+          if (!liveScoreAktif) return;
+          muatDataLiveScore().then(function(ok) {
+            if (ok) mulaiSiklusLiveScore();
+            else jadwalkanUlangLiveScore();
+          });
+        }, 60000);
+      }
+
+      function jadwalkanLanjutLiveScore() {
+        if (!liveScoreAktif) return;
+        hentikanSiklusLiveScore();
+        liveScoreTimeout = setTimeout(async function() {
+          if (!liveScoreAktif) return;
+          if (Date.now() - liveScoreDataDiperbaruiPada >= AUTO_REFRESH_MS) {
+            if (await muatDataLiveScore()) mulaiSiklusLiveScore();
+            else jadwalkanUlangLiveScore();
+          } else {
+            mulaiSiklusLiveScore();
+          }
+        }, LIVE_SCORE_JEDA_BAWAH_MS);
+      }
+
+      function mulaiSiklusLiveScore() {
+        hentikanSiklusLiveScore();
+        const scroll = document.querySelector('#liveScoreOverlay #liveScoreScroll');
+        if (!scroll || !liveScoreAktif) return;
+        scroll.scrollTop = 0;
+        liveScoreTimeout = setTimeout(function() {
+          if (!liveScoreAktif) return;
+          const jarakMaksimum = scroll.scrollHeight - scroll.clientHeight;
+          if (jarakMaksimum <= 1) {
+            jadwalkanLanjutLiveScore();
+            return;
+          }
+
+          let waktuFrameSebelumnya = null;
+          function gulir(waktuFrame) {
+            if (!liveScoreAktif) return;
+            if (waktuFrameSebelumnya === null) waktuFrameSebelumnya = waktuFrame;
+            const delta = Math.min(waktuFrame - waktuFrameSebelumnya, 100);
+            waktuFrameSebelumnya = waktuFrame;
+            const batas = scroll.scrollHeight - scroll.clientHeight;
+            scroll.scrollTop = Math.min(batas, scroll.scrollTop + delta * 25 / 1000);
+            if (scroll.scrollTop >= batas - 1) {
+              liveScoreFrame = null;
+              jadwalkanLanjutLiveScore();
+              return;
+            }
+            liveScoreFrame = requestAnimationFrame(gulir);
+          }
+          liveScoreFrame = requestAnimationFrame(gulir);
+        }, 5000);
+      }
+
+      function keluarLiveScore() {
+        if (!liveScoreAktif) return;
+        liveScoreAktif = false;
+        hentikanSiklusLiveScore();
+        document.removeEventListener('keydown', tanganiEscapeLiveScore);
+        const overlay = document.getElementById('liveScoreOverlay');
+        if (overlay) overlay.remove();
+        document.body.style.overflow = liveScoreOverflowSebelumnya;
+        renderStats();
+        renderPanel();
+        renderTabel();
+      }
+
+      function tanganiEscapeLiveScore(event) {
+        if (event.key === 'Escape') keluarLiveScore();
+      }
+
+      function bukaTampilanLiveScore() {
+        const overlay = document.createElement('section');
+        overlay.id = 'liveScoreOverlay';
+        overlay.className = 'live-score-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', 'Live score siswa');
+        overlay.innerHTML =
+          '<header class="live-score-header">' +
+            '<div class="live-score-heading"><h1>📺 Live Score Siswa</h1>' +
+              '<p id="liveScoreFilterLabel"></p><div id="liveScoreStatus" class="live-score-status">Memuat skor...</div></div>' +
+            '<div style="display:flex;align-items:center;gap:0.8rem;"><strong id="liveScoreCount">0 baris</strong>' +
+              '<button type="button" class="live-score-exit" id="liveScoreExit">✕ Keluar</button></div>' +
+          '</header>' +
+          '<div class="live-score-scroll" id="liveScoreScroll" tabindex="0">' +
+            '<table class="live-score-table"><thead><tr>' +
+              '<th>Nama</th><th>Kelas</th><th>Modul</th><th>Bagian</th>' +
+              '<th>a</th><th>b</th><th>c</th><th>d</th><th>e</th><th>f</th>' +
+              '<th>Kuis</th><th>Nilai Akhir</th><th>Status</th><th>Update</th><th>Waktu</th>' +
+            '</tr></thead><tbody id="liveScoreBody"></tbody></table>' +
+          '</div>';
+        document.body.appendChild(overlay);
+        liveScoreAktif = true;
+        liveScoreOverflowSebelumnya = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        overlay.querySelector('#liveScoreExit').addEventListener('click', keluarLiveScore);
+        document.addEventListener('keydown', tanganiEscapeLiveScore);
+        muatDataLiveScore().then(function(ok) {
+          if (liveScoreAktif) {
+            if (ok) mulaiSiklusLiveScore();
+            else jadwalkanUlangLiveScore();
+          }
+        });
+        overlay.querySelector('#liveScoreExit').focus();
+      }
+
+      function buatTokenUjian() {
+        if (!window.crypto || !window.crypto.getRandomValues) {
+          throw new Error('Browser tidak mendukung generator token aman. Perbarui browser terlebih dahulu.');
+        }
+        const karakter = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        const acak = new Uint8Array(12);
+        window.crypto.getRandomValues(acak);
+        return Array.from(acak).map(function(nilai) {
+          return karakter[nilai % karakter.length];
+        }).join('');
+      }
+
+      function bukaModalTambahSoal() {
+        let tokenAwal;
+        try {
+          tokenAwal = buatTokenUjian();
+        } catch (err) {
+          alert(err.message);
+          return;
+        }
+
+        const bodyHtml =
+          '<p>Tambahkan ujian baru ke daftar ujian sekolah Anda.</p>' +
+          '<div class="ujian-form-grid">' +
+            '<div class="form-group"><label for="ujianNama">Nama Ujian</label><input id="ujianNama" type="text" maxlength="100" required placeholder="Contoh: Ujian Informatika Kelas 7"></div>' +
+            '<div class="form-group"><label for="ujianFile">Nama File Ujian</label><input id="ujianFile" type="text" maxlength="255" required placeholder="contoh_soal.xml"><div class="hint">File XML harus sudah ada di folder Drive ujian.</div></div>' +
+            '<div class="form-group"><label for="ujianToken">Token</label><div class="ujian-token-row"><input id="ujianToken" type="text" maxlength="40" pattern="[A-Za-z0-9-]{4,40}" title="4-40 huruf, angka, atau tanda hubung" required><button type="button" class="modal-btn batal" id="ujianTokenBaru">🔄 Buat ulang</button></div><div class="hint">Token dibuat otomatis dan boleh diubah. Kosongkan centang untuk ujian tanpa token.</div></div>' +
+            '<div class="form-group"><label for="ujianWaktu">Waktu pengerjaan (menit)</label><input id="ujianWaktu" type="number" min="0" max="1440" step="1" value="60" required><div class="hint">Isi 0 untuk tanpa batas waktu.</div></div>' +
+          '</div>' +
+          '<div class="ujian-options">' +
+            '<label><input id="ujianPakaiToken" type="checkbox" checked> Gunakan token</label>' +
+            '<label><input id="ujianTampilNilai" type="checkbox" checked> Tampilkan nilai setelah ujian</label>' +
+            '<label><input id="ujianTampilPembahasan" type="checkbox" checked> Tampilkan pembahasan</label>' +
+          '</div>' +
+          '<div id="ujianFormStatus" class="ujian-form-status" role="status" aria-live="polite"></div>';
+        const modal = buatModal('➕ Tambah Ujian', bodyHtml,
+          '<button class="modal-btn batal" data-act="tutup">Tutup</button>' +
+          '<button class="modal-btn simpan" data-act="simpan">💾 Simpan Ujian</button>',
+          { wide: true });
+
+        const elToken = modal.querySelector('#ujianToken');
+        const elPakaiToken = modal.querySelector('#ujianPakaiToken');
+        const elBuatToken = modal.querySelector('#ujianTokenBaru');
+        const elStatus = modal.querySelector('#ujianFormStatus');
+        const elSimpan = modal.querySelector('[data-act="simpan"]');
+        elToken.value = tokenAwal;
+        elPakaiToken.addEventListener('change', function() {
+          elToken.disabled = !this.checked;
+          elToken.required = this.checked;
+          elBuatToken.disabled = !this.checked;
+        });
+        elBuatToken.addEventListener('click', function() {
+          try {
+            elToken.value = buatTokenUjian();
+            elStatus.textContent = '';
+            elStatus.className = 'ujian-form-status';
+          } catch (err) {
+            elStatus.textContent = err.message;
+            elStatus.className = 'ujian-form-status error';
+          }
+        });
+
+        elSimpan.addEventListener('click', async function() {
+          const nama = modal.querySelector('#ujianNama');
+          const file = modal.querySelector('#ujianFile');
+          const waktu = modal.querySelector('#ujianWaktu');
+          if (!nama.reportValidity() || !file.reportValidity() ||
+              (elPakaiToken.checked && !elToken.reportValidity()) || !waktu.reportValidity()) return;
+          elSimpan.disabled = true;
+          elStatus.textContent = 'Menyimpan ujian...';
+          elStatus.className = 'ujian-form-status';
+          try {
+            const hasil = await window.dutaFetch({
+              action: 'tambahUjianGuru',
+              username: dataGuru.username,
+              password: dataGuru.password || '',
+              namaUjian: nama.value.trim(),
+              fileUjian: file.value.trim(),
+              token: elPakaiToken.checked ? elToken.value : '',
+              waktu: Number(waktu.value),
+              tampilNilai: modal.querySelector('#ujianTampilNilai').checked,
+              tampilPembahasan: modal.querySelector('#ujianTampilPembahasan').checked
+            });
+            if (!hasil || !hasil.ok) throw new Error((hasil && hasil.error) || 'Server gagal menambahkan ujian.');
+            elStatus.textContent = elPakaiToken.checked
+              ? 'Ujian tersimpan. Token ujian: ' + elToken.value
+              : 'Ujian tersimpan tanpa token.';
+            elStatus.className = 'ujian-form-status success';
+            elSimpan.textContent = '✅ Tersimpan';
+            modal.querySelector('#ujianNama').disabled = true;
+            modal.querySelector('#ujianFile').disabled = true;
+            modal.querySelector('#ujianWaktu').disabled = true;
+            elToken.disabled = true;
+            elPakaiToken.disabled = true;
+            modal.querySelector('#ujianTampilNilai').disabled = true;
+            modal.querySelector('#ujianTampilPembahasan').disabled = true;
+          } catch (err) {
+            elStatus.textContent = err.message;
+            elStatus.className = 'ujian-form-status error';
+            elSimpan.disabled = false;
+          }
+        });
+        modal.querySelector('[data-act="tutup"]').addEventListener('click', function() { modal.remove(); });
+        modal.querySelector('#ujianNama').focus();
       }
 
       // ===== KONFIRMASI UNLOCK (dipertahankan) =====
@@ -1982,6 +2419,8 @@
       elBtnLihatSiswa.addEventListener('click', function() {
         bukaModalLihatSiswa();
       });
+      elBtnLiveScore.addEventListener('click', bukaModalFilterLiveScore);
+      elBtnTambahSoal.addEventListener('click', bukaModalTambahSoal);
 
       // ===== MUAT ULANG =====
       elBtnMuatUlang.addEventListener('click', async function() {
@@ -1997,6 +2436,7 @@
         hentikanAutoRefresh();
         autoRefreshTimer = setInterval(function() {
           if (document.hidden) return;
+          if (liveScoreAktif) return;
           if (document.getElementById('guru-modal')) return;
           muatData();
         }, AUTO_REFRESH_MS);

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ujian>
+  <!-- ============================================================
+       FORMAT BAKU &amp; SAMPLE FILE UJIAN — Informatika DUTA
+       Unggah ke folder Google Drive khusus ujian.
+       File ini dibaca melalui Google Apps Script, bukan fetch langsung dari browser.
+       Atribut gambar pada pilihan opsional; path harus dapat diakses dari
+       browser (misalnya URL gambar publik).
+       Daftar nama ujian, nama file, token, waktu, dan tampilan hasil
+       dikelola di sheet DaftarUjian.
+       ============================================================ -->
+
+  <!-- Konfigurasi umum ujian -->
+  <konfigurasi>
+    <nama>Contoh Ujian Format Baku</nama>
+    <mapel>Informatika</mapel>
+    <kelas>7, 8, 9</kelas>
+    <!-- Waktu pengerjaan dalam menit; dipakai jika kolom waktu di DaftarUjian kosong. -->
+    <waktu>60</waktu>
+    <!-- Skor default per soal jika soal tidak memiliki atribut skor -->
+    <skorDefault>10</skorDefault>
+  </konfigurasi>
+
+  <!-- Daftar soal -->
+  <soalList>
+    <!-- ===========================================================
+         1. PILIHAN GANDA (satu jawaban benar)
+         =========================================================== -->
+    <soal id="s1" tipe="pilihan_ganda" skor="10">
+      <pertanyaan>Apa singkatan dari HTML?</pertanyaan>
+      <pilihan label="A">Hyper Text Markup Language</pilihan>
+      <pilihan label="B">Hyper Transfer Markup Language</pilihan>
+      <pilihan label="C">Home Tool Markup Language</pilihan>
+      <pilihan label="D">Hyper Tool Markup Language</pilihan>
+      <kunci>Jawaban A</kunci>
+      <penjelasan>HTML singkatan dari Hyper Text Markup Language.</penjelasan>
+    </soal>
+
+    <!-- ===========================================================
+         2. KATEGORI BENAR-SALAH
+         =========================================================== -->
+    <soal id="s2" tipe="benar_salah" skor="5">
+      <pertanyaan>CSS digunakan untuk menata tampilan halaman web.</pertanyaan>
+      <kunci>Benar</kunci>
+      <penjelasan>CSS (Cascading Style Sheets) digunakan untuk styling halaman web.</penjelasan>
+    </soal>
+
+    <soal id="s3" tipe="benar_salah" skor="5">
+      <pertanyaan>Java adalah bahasa pemrograman yang hanya bisa berjalan di browser.</pertanyaan>
+      <kunci>Salah</kunci>
+      <penjelasan>Java bisa berjalan di berbagai platform, tidak hanya browser.</penjelasan>
+    </soal>
+
+    <!-- ===========================================================
+         3. PILIHAN GANDA KOMPLEKS (pilih semua jawaban benar; gambar opsional)
+         =========================================================== -->
+    <soal id="s4" tipe="pilihan_ganda_kompleks" skor="15">
+      <pertanyaan>Manakah di antara berikut yang merupakan contoh perangkat lunak sistem operasi?</pertanyaan>
+      <!-- Tambahkan gambar="nama-file.png" hanya jika gambar tersebut tersedia di folder ujian/. -->
+      <pilihan label="A">Microsoft Windows</pilihan>
+      <pilihan label="B">Linux</pilihan>
+      <pilihan label="C">macOS</pilihan>
+      <pilihan label="D">Android</pilihan>
+      <pilihan label="E">Google Chrome</pilihan>
+      <kunci>Jawaban A, B, C, D</kunci>
+      <penjelasan>Windows, Linux, macOS, dan Android adalah sistem operasi. Chrome adalah browser.</penjelasan>
+    </soal>
+
+    <!-- ===========================================================
+         4. MENCOCOOKKAN (pasangkan kiri dengan kanan)
+         =========================================================== -->
+    <soal id="s5" tipe="mencocokan" skor="20">
+      <pertanyaan>Pasangkan singkatan dengan artinya!</pertanyaan>
+      <pasangan>
+        <item sisi="kiri" id="k1">CPU</item>
+        <item sisi="kanan" id="v1">Central Processing Unit</item>
+      </pasangan>
+      <pasangan>
+        <item sisi="kiri" id="k2">RAM</item>
+        <item sisi="kanan" id="v2">Random Access Memory</item>
+      </pasangan>
+      <pasangan>
+        <item sisi="kiri" id="k3">ROM</item>
+        <item sisi="kanan" id="v3">Read Only Memory</item>
+      </pasangan>
+      <pasangan>
+        <item sisi="kiri" id="k4">GPU</item>
+        <item sisi="kanan" id="v4">Graphics Processing Unit</item>
+      </pasangan>
+      <kunci>
+        <pasangan kiri="k1" kanan="v1"/>
+        <pasangan kiri="k2" kanan="v2"/>
+        <pasangan kiri="k3" kanan="v3"/>
+        <pasangan kiri="k4" kanan="v4"/>
+      </kunci>
+      <penjelasan>CPU = Central Processing Unit, RAM = Random Access Memory, ROM = Read Only Memory, GPU = Graphics Processing Unit.</penjelasan>
+    </soal>
+  </soalList>
+</ujian>

@@ -6,406 +6,83 @@
   <title>Daftar Ujian Aktif · Informatika DUTA</title>
   <link rel="stylesheet" href="../desain.css">
   <style>
-    /* ===== GAYA DAFTAR UJIAN ===== */
-    .ujian-wrapper {
-      max-width: 900px;
-      margin: 0 auto;
+    .ujian-wrapper { max-width: 900px; margin: 0 auto; }
+    .ujian-header { text-align: center; margin-bottom: 2rem; }
+    .ujian-header .ujian-icon { font-size: 4rem; margin-bottom: 0.5rem; display: block; animation: floatIcon 3s ease-in-out infinite; }
+    @keyframes floatIcon { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+    .ujian-header h1 { font-size: 2rem; font-weight: 700; color: #3b2b1e; background: linear-gradient(135deg,#ef476f,#d4a030); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom: 0.5rem; }
+    .ujian-header .ujian-sub { font-size: 1rem; color: #5c4638; font-style: italic; }
+    .ujian-loading,.ujian-empty,.ujian-error { text-align: center; padding: 2.5rem 1.5rem; background: #fff; border-radius: 20px; border: 2px solid #e5dbd0; margin: 1rem 0; }
+    .ujian-loading .spinner { display: inline-block; width: 40px; height: 40px; border: 4px solid #e5dbd0; border-top-color: #ef476f; border-radius: 50%; animation: spin 0.9s linear infinite; margin-bottom: 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .ujian-loading p,.ujian-empty p,.ujian-error p { color: #5c4638; font-size: 0.95rem; line-height: 1.6; }
+    .ujian-empty .empty-icon,.ujian-error .error-icon { font-size: 3rem; display: block; margin-bottom: 0.8rem; }
+    .ujian-error { border-color: #d4a0a0; background: #fdf0f0; }
+    .ujian-error p { color: #a84a3a; }
+    .form-identitas { background: #fff; border-radius: 20px; padding: 1.8rem 2rem; border: 2px solid #e5dbd0; margin-bottom: 1.5rem; }
+    .form-identitas h2 { font-size: 1.25rem; margin-bottom: 1rem; color: #3b2b1e; display: flex; align-items: center; gap: 0.5rem; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label { font-size: 0.85rem; font-weight: 700; color: #5c4638; }
+    .form-group input,.form-group select { width: 100%; padding: 0.7rem 1rem; border-radius: 10px; border: 2px solid #e5dbd0; background: #fcfaf7; font-size: 0.95rem; font-family: inherit; outline: none; transition: all 0.15s; }
+    .form-group input:focus,.form-group select:focus { border-color: #ef476f; background: #fff; box-shadow: 0 0 0 3px rgba(239,71,111,0.15); }
+    .form-group-small { grid-column: span 1; }
+    .sekolah-toggle { display: flex; gap: 0.6rem; margin-bottom: 0.5rem; }
+    .sekolah-toggle label { flex: 1; padding: 0.7rem 1rem; border-radius: 10px; border: 2px solid #e5dbd0; background: #fcfaf7; font-size: 0.85rem; font-weight: 700; color: #5c4638; cursor: pointer; text-align: center; transition: all 0.15s; user-select: none; }
+    .sekolah-toggle input[type="radio"] { display: none; }
+    .sekolah-toggle input[type="radio"]:checked + label { border-color: #ef476f; background: #fff; box-shadow: 0 0 0 3px rgba(239,71,111,0.15); color: #a3123c; }
+    .pilih-dari-daftar { display: block; }
+    .isi-sendiri { display: none; }
+    .isi-sendiri:not(.hide) { display: block; }
+    .pilih-dari-daftar.hide,.isi-sendiri.hide { display: none !important; }
+    .ujian-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 1rem; margin-top: 1rem; }
+    .ujian-card { appearance: none; width: 100%; min-height: 165px; padding: 1.25rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.7rem; border: 2px solid #e5dbd0; border-radius: 18px; background: linear-gradient(145deg, #fff, #fcfaf7); color: #3b2b1e; text-align: left; font: inherit; cursor: pointer; box-shadow: 0 5px 16px rgba(59,43,30,0.07); transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease; }
+    .ujian-card:hover { border-color: #ef9a6f; box-shadow: 0 10px 24px rgba(59,43,30,0.12); transform: translateY(-3px); }
+    .ujian-card:focus-visible { outline: 3px solid rgba(239,71,111,0.35); outline-offset: 3px; }
+    .card-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #fff0e8; font-size: 1.35rem; }
+    .card-title { color: #3b2b1e; font-size: 1.08rem; font-weight: 800; line-height: 1.35; }
+    .card-meta { width: 100%; margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; color: #796556; font-size: 0.78rem; }
+    .card-badge { padding: 0.3rem 0.65rem; border-radius: 999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap; }
+    .badge-token { background: #fff2d6; color: #805500; }
+    .badge-free { background: #e8f5ee; color: #23643a; }
+    .ujian-card.tidak-aktif { opacity: 0.6; cursor: not-allowed; }
+    @media (max-width: 600px) {
+      .ujian-wrapper { width: 100%; }
+      .form-identitas { padding: 1.25rem; }
+      .identitas-info { padding: 0.9rem 1rem; }
+      .ujian-card { min-height: 145px; }
     }
 
-    .ujian-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .ujian-header .ujian-icon {
-      font-size: 4rem;
-      margin-bottom: 0.5rem;
-      display: block;
-      animation: floatIcon 3s ease-in-out infinite;
-    }
-
-    @keyframes floatIcon {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .ujian-header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #3b2b1e;
-      background: linear-gradient(135deg, #ef476f, #d4a030);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.5rem;
-    }
-
-    .ujian-header .ujian-sub {
-      font-size: 1rem;
-      color: #5c4638;
-      font-style: italic;
-    }
-
-    /* ===== LOADING / EMPTY STATE ===== */
-    .ujian-loading,
-    .ujian-empty,
-    .ujian-error {
-      text-align: center;
-      padding: 2.5rem 1.5rem;
-      background: #fff;
-      border-radius: 20px;
-      border: 2px solid #e5dbd0;
-      margin: 1rem 0;
-    }
-
-    .ujian-loading .spinner {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      border: 4px solid #e5dbd0;
-      border-top-color: #ef476f;
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
-      margin-bottom: 1rem;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .ujian-loading p,
-    .ujian-empty p,
-    .ujian-error p {
-      color: #5c4638;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    .ujian-empty .empty-icon,
-    .ujian-error .error-icon {
-      font-size: 3rem;
-      display: block;
-      margin-bottom: 0.8rem;
-    }
-
-    .ujian-error {
-      border-color: #d4a0a0;
-      background: #fdf0f0;
-    }
-
-    .ujian-error p {
-      color: #a84a3a;
-    }
-
-    /* ===== DAFTAR TOMBOL UJIAN ===== */
-    .ujian-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.2rem;
-      margin-top: 1.5rem;
-    }
-
-    .ujian-card {
-      display: flex;
-      flex-direction: column;
-      background: #fff;
-      border-radius: 20px;
-      padding: 1.5rem 1.6rem;
-      text-decoration: none;
-      color: inherit;
-      border: 3px solid #e5dbd0;
-      transition: all 0.25s ease;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      font-family: inherit;
-      text-align: left;
-    }
-
-    .ujian-card::before {
-      content: '';
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 8px;
-      background: linear-gradient(180deg, #ef476f, #d4a030);
-    }
-
-    .ujian-card::after {
-      content: '';
-      position: absolute;
-      top: -40px;
-      right: -40px;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: #ef476f;
-      opacity: 0.08;
-      transition: transform 0.35s ease, opacity 0.35s ease;
-      pointer-events: none;
-    }
-
-    .ujian-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 36px rgba(239, 71, 111, 0.18);
-      border-color: #ef476f;
-    }
-
-    .ujian-card:hover::after {
-      transform: scale(1.4);
-      opacity: 0.15;
-    }
-
-    .ujian-card .card-icon {
-      font-size: 2.2rem;
-      margin-bottom: 0.6rem;
-      line-height: 1;
-    }
-
-    .ujian-card .card-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #3b2b1e;
-      margin-bottom: 0.4rem;
-      line-height: 1.4;
-    }
-
-    .ujian-card .card-meta {
-      font-size: 0.82rem;
-      color: #7a6656;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 0.3rem;
-    }
-
-    .ujian-card .card-badge {
-      display: inline-block;
-      padding: 0.15rem 0.7rem;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-    }
-
-    .ujian-card .card-badge.badge-token {
-      background: #fde8ec;
-      color: #a3123c;
-      border: 1px solid #f5b8c4;
-    }
-
-    .ujian-card .card-badge.badge-free {
-      background: #e8f5e0;
-      color: #2d5a1e;
-      border: 1px solid #b8dfa8;
-    }
-
-    /* ===== MODAL TOKEN ===== */
-    .token-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(43, 29, 46, 0.55);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      padding: 1rem;
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-    }
-
-    .token-modal.show {
-      display: flex;
-      animation: fadeIn 0.25s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .token-modal .modal-box {
-      background: #fff;
-      border-radius: 24px;
-      padding: 2rem 1.8rem;
-      max-width: 420px;
-      width: 100%;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-      border: 3px solid #ef476f;
-      position: relative;
-      animation: slideUp 0.3s ease;
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    .token-modal .modal-icon {
-      font-size: 3rem;
-      text-align: center;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-
-    .token-modal .modal-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #3b2b1e;
-      text-align: center;
-      margin-bottom: 0.3rem;
-    }
-
-    .token-modal .modal-sub {
-      font-size: 0.88rem;
-      color: #5c4638;
-      text-align: center;
-      margin-bottom: 1.2rem;
-      line-height: 1.5;
-    }
-
-    .token-modal .modal-ujian-nama {
-      background: #fde8ec;
-      border-radius: 10px;
-      padding: 0.7rem 1rem;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #a3123c;
-      text-align: center;
-      margin-bottom: 1rem;
-      border-left: 5px solid #ef476f;
-      line-height: 1.4;
-    }
-
-    .token-modal input[type="text"] {
-      width: 100%;
-      padding: 0.9rem 1.2rem;
-      border-radius: 12px;
-      border: 2px solid #e5dbd0;
-      font-size: 1.1rem;
-      font-weight: 700;
-      font-family: 'Courier New', monospace;
-      letter-spacing: 2px;
-      text-align: center;
-      text-transform: uppercase;
-      color: #3d2c1f;
-      outline: none;
-      transition: all 0.15s;
-      box-sizing: border-box;
-      background: #fcfaf7;
-    }
-
-    .token-modal input[type="text"]:focus {
-      border-color: #ef476f;
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(239, 71, 111, 0.15);
-    }
-
-    .token-modal .modal-error {
-      display: none;
-      background: #fdf0f0;
-      border: 2px solid #d4a0a0;
-      color: #a84a3a;
-      padding: 0.6rem 1rem;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-top: 0.8rem;
-      text-align: center;
-    }
-
-    .token-modal .modal-error.show {
-      display: block;
-      animation: fadeIn 0.25s ease;
-    }
-
-    .token-modal .modal-actions {
-      display: flex;
-      gap: 0.6rem;
-      margin-top: 1.2rem;
-      flex-wrap: wrap;
-    }
-
-    .token-modal .btn-modal {
-      flex: 1;
-      padding: 0.75rem 1.2rem;
-      border-radius: 30px;
-      border: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: inherit;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      min-width: 100px;
-    }
-
-    .token-modal .btn-modal.primary {
-      background: linear-gradient(135deg, #ef476f, #d4a030);
-      color: #fff;
-      box-shadow: 0 4px 14px rgba(239, 71, 111, 0.3);
-    }
-
-    .token-modal .btn-modal.primary:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(239, 71, 111, 0.4);
-    }
-
-    .token-modal .btn-modal.secondary {
-      background: #f5ede6;
-      color: #4d3829;
-      border: 2px solid #d9cdbf;
-    }
-
-    .token-modal .btn-modal.secondary:hover {
-      background: #e8dcd0;
-      transform: translateY(-2px);
-    }
-
-    .token-modal .btn-modal:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    .token-modal .modal-spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid currentColor;
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-
-    /* ===== RESPONSIF ===== */
-    @media (max-width: 720px) {
-      .ujian-header h1 { font-size: 1.6rem; }
-      .ujian-header .ujian-icon { font-size: 3rem; }
-      .ujian-grid { grid-template-columns: 1fr; gap: 0.9rem; }
-    }
-
-    @media (max-width: 480px) {
-      .ujian-card { padding: 1.2rem 1.3rem; }
-      .ujian-card .card-title { font-size: 1rem; }
-      .token-modal .modal-box { padding: 1.5rem 1.2rem; }
-      .token-modal .modal-actions { flex-direction: column; }
-    }
+    .identitas-info { background: linear-gradient(135deg,#e8f5ee,#d4ebd8); border: 2px solid #8aaa7a; border-radius: 16px; padding: 1rem 1.4rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+    .identitas-info .avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg,#4fa86a,#2d7d46); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; flex-shrink: 0; }
+    .identitas-info .detail { flex: 1; min-width: 180px; line-height: 1.35; }
+    .identitas-info .nama { font-weight: 800; color: #1f5f32; font-size: 0.95rem; }
+    .identitas-info .meta { font-size: 0.75rem; color: #3d6b2c; }
+    .identitas-info .badge-mode { background: #fff; color: #2d5a1e; border: 2px solid #8aaa7a; padding: 0.15rem 0.6rem; border-radius: 20px; font-size: 0.65rem; font-weight: 700; flex-shrink: 0; }
+    .token-modal { position: fixed; inset: 0; z-index: 10000; display: none; align-items: center; justify-content: center; padding: 1rem; background: rgba(32, 24, 20, 0.65); }
+    .token-modal.show { display: flex; }
+    .modal-box { width: min(100%, 420px); padding: 1.8rem; border: 2px solid #e5dbd0; border-radius: 20px; background: #fff; box-shadow: 0 16px 48px rgba(0,0,0,0.25); text-align: center; }
+    .modal-icon { display: block; margin-bottom: 0.5rem; font-size: 2.5rem; }
+    .modal-title { color: #3b2b1e; font-size: 1.25rem; font-weight: 800; }
+    .modal-sub { margin: 0.5rem 0 1rem; color: #5c4638; font-size: 0.9rem; }
+    .modal-ujian-nama { margin-bottom: 0.8rem; color: #a3123c; font-weight: 800; }
+    #inputToken { width: 100%; padding: 0.8rem 1rem; border: 2px solid #e5dbd0; border-radius: 10px; font: inherit; text-align: center; text-transform: uppercase; }
+    #inputToken:focus { border-color: #ef476f; outline: none; box-shadow: 0 0 0 3px rgba(239,71,111,0.15); }
+    .modal-error { display: none; margin-top: 0.7rem; color: #a3123c; font-size: 0.85rem; }
+    .modal-error.show { display: block; }
+    .modal-actions { display: flex; justify-content: center; gap: 0.7rem; margin-top: 1.2rem; }
+    .btn-modal { padding: 0.7rem 1rem; border: 0; border-radius: 24px; font: inherit; font-weight: 800; cursor: pointer; }
+    .btn-modal:disabled { opacity: 0.6; cursor: wait; }
+    .btn-modal.secondary { background: #f5ede6; color: #4d3829; }
+    .btn-modal.primary { background: linear-gradient(135deg,#ef476f,#d4a030); color: #fff; }
+    .modal-spinner { display: inline-block; width: 0.9rem; height: 0.9rem; margin-right: 0.4rem; border: 2px solid rgba(255,255,255,0.5); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; }
   </style>
 </head>
 <body>
 
   <header id="header-utama"></header>
 
-  <nav class="breadcrumb-wrapper" aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li><a href="../index.html">Beranda</a></li>
-      <li>Daftar Ujian Aktif</li>
-    </ol>
-  </nav>
+  <div id="duta-breadcrumb-host"></div>
 
   <main class="container" id="konten-utama">
     <article class="card">
@@ -417,25 +94,67 @@
           <p class="ujian-sub">Pilih ujian yang ingin kamu kerjakan. Kerjakan dengan jujur dan teliti.</p>
         </div>
 
-        <!-- Loading state -->
-        <div class="ujian-loading" id="ujianLoading">
-          <span class="spinner"></span>
-          <p>Memuat daftar ujian...</p>
+        <form id="formIdentitas" novalidate>
+          <div class="form-identitas">
+            <h2>👤 Identitas Peserta Ujian</h2>
+
+            <div class="form-grid">
+              <div class="form-group form-group-small">
+                <label for="inputNama">Nama Lengkap</label>
+                <input type="text" id="inputNama" placeholder="Contoh: Jhon Doe" maxlength="60" autocomplete="off" autocapitalize="words" spellcheck="false">
+                <small style="font-size:0.75rem;color:#7a6656;">Akan otomatis huruf awal kapital setiap kata.</small>
+              </div>
+              <div class="form-group form-group-small">
+                <label for="inputKelasAngka">Kelas (Angka)</label>
+                <select id="inputKelasAngka"><option value="">Pilih</option><option value="7">7</option><option value="8">8</option><option value="9">9</option></select>
+              </div>
+              <div class="form-group form-group-small">
+                <label for="inputKelasHuruf">Kelas (Huruf)</label>
+                <select id="inputKelasHuruf"><option value="-">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select>
+                <small style="font-size:0.75rem;color:#7a6656;">"-" artinya 1 rombel saja.</small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Sekolah</label>
+              <div class="sekolah-toggle">
+                <input type="radio" name="jenisSekolah" value="pilih" id="radPilih" checked>
+                <label for="radPilih">📋 Pilih dari daftar</label>
+                <input type="radio" name="jenisSekolah" value="sendiri" id="radSendiri">
+                <label for="radSendiri">✏️ Isi sendiri</label>
+              </div>
+              <div class="pilih-dari-daftar" id="sekolahPilihDaftar">
+                <select id="inputSekolahDaftar"><option value="">Memuat daftar sekolah...</option></select>
+              </div>
+              <div class="isi-sendiri hide" id="sekolahIsiSendiri">
+                <input type="text" id="inputSekolahSendiri" placeholder="Contoh: SMP N 2 Talegong" maxlength="60" autocomplete="off">
+                <small style="font-size:0.75rem;color:#7a6656;">Dinormalisasi ke penamaan baku (contoh: SMPN 2 TALEGONG).</small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputUjian">Pilih Ujian</label>
+              <select id="inputUjian"><option value="">Memuat daftar ujian...</option></select>
+            </div>
+
+            <div id="pesanError" class="pesan-error"></div>
+            <div id="pesanSukses" class="pesan-sukses"></div>
+
+            <button type="submit" id="btnLanjutUjian" style="width:100%;padding:0.9rem 1.5rem;border-radius:30px;border:none;background:linear-gradient(135deg,#ef476f,#d4a030);color:#fff;font-weight:800;font-size:1rem;font-family:inherit;cursor:pointer;margin-top:0.6rem;box-shadow:0 4px 12px rgba(239,71,111,0.3);transition:all 0.2s ease;">🚀 Lanjut ke Ujian</button>
+          </div>
+        </form>
+        <div id="identitasInfo" class="identitas-info" style="display:none;">
+          <div class="avatar">👤</div>
+          <div class="detail">
+            <div class="nama" id="identitasNama">—</div>
+            <div class="meta" id="identitasMeta">—</div>
+          </div>
+          <div class="badge-mode" id="identitasBadge">—</div>
         </div>
 
-        <!-- Empty state -->
-        <div class="ujian-empty" id="ujianEmpty" style="display:none;">
-          <span class="empty-icon">📭</span>
-          <p><strong>Belum ada ujian yang aktif saat ini.</strong><br>Silakan kembali lagi nanti.</p>
-        </div>
-
-        <!-- Error state -->
-        <div class="ujian-error" id="ujianError" style="display:none;">
-          <span class="error-icon">⚠️</span>
-          <p id="ujianErrorText">Terjadi kesalahan saat memuat daftar ujian.</p>
-        </div>
-
-        <!-- Daftar ujian -->
+        <div class="ujian-loading" id="ujianLoading"><span class="spinner"></span><p>Memuat daftar ujian...</p></div>
+        <div class="ujian-empty" id="ujianEmpty" style="display:none;"><span class="empty-icon">📭</span><p><strong>Belum ada ujian yang aktif saat ini.</strong><br>Silakan kembali lagi nanti.</p></div>
+        <div class="ujian-error" id="ujianError" style="display:none;"><span class="error-icon">⚠️</span><p id="ujianErrorText">Terjadi kesalahan saat memuat daftar ujian.</p></div>
         <div class="ujian-grid" id="ujianGrid" style="display:none;"></div>
 
       </div>
@@ -443,21 +162,18 @@
   </main>
 
   <footer id="footer-utama"></footer>
-  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">⬆</button>
+  <button id="scrollTopBtn" aria-label="Kembali ke atas" title="Kembali ke atas">↑</button>
 
-  <!-- ===== MODAL TOKEN ===== -->
+  <script>window.DUTA_ROOT = '../';</script>
+  <script src="../script.js"></script>
   <div class="token-modal" id="tokenModal" role="dialog" aria-modal="true" aria-labelledby="tokenModalTitle">
     <div class="modal-box">
-      <span class="modal-icon">🔐</span>
+      <span class="modal-icon">🔑</span>
       <div class="modal-title" id="tokenModalTitle">Masukkan Token Ujian</div>
       <div class="modal-sub">Ujian ini dilindungi token. Mintalah token kepada gurumu.</div>
-
       <div class="modal-ujian-nama" id="modalUjianNama">—</div>
-
-      <input type="text" id="inputToken" placeholder="TOKEN" maxlength="20" autocomplete="off">
-
+      <input type="text" id="inputToken" placeholder="TOKEN" maxlength="80" autocomplete="off">
       <div class="modal-error" id="modalError"></div>
-
       <div class="modal-actions">
         <button class="btn-modal secondary" id="btnBatalToken" type="button">Batal</button>
         <button class="btn-modal primary" id="btnKirimToken" type="button">🔓 Buka Ujian</button>
@@ -465,240 +181,334 @@
     </div>
   </div>
 
-  <script src="../script.js"></script>
   <script>
     (function() {
       "use strict";
-
-      // ============================================
-      // KONFIGURASI
-      // ============================================
       const API_URL = (window.DUTA_API && window.DUTA_API.url) || '';
-
-      // ============================================
-      // STATE
-      // ============================================
       let daftarUjian = [];
       let ujianDipilih = null;
-
-      // ============================================
-      // DOM REFS
-      // ============================================
+      let sessionUser = null;
+      let identitasForm = null;
       const elLoading = document.getElementById('ujianLoading');
       const elEmpty = document.getElementById('ujianEmpty');
       const elError = document.getElementById('ujianError');
       const elErrorText = document.getElementById('ujianErrorText');
       const elGrid = document.getElementById('ujianGrid');
-
+      const elFormIdentitas = document.getElementById('formIdentitas');
+      const elIdentitasInfo = document.getElementById('identitasInfo');
+      const elIdentitasNama = document.getElementById('identitasNama');
+      const elIdentitasMeta = document.getElementById('identitasMeta');
+      const elIdentitasBadge = document.getElementById('identitasBadge');
+      const elInputNama = document.getElementById('inputNama');
+      const elInputKelasAngka = document.getElementById('inputKelasAngka');
+      const elInputKelasHuruf = document.getElementById('inputKelasHuruf');
+      const elRadPilih = document.getElementById('radPilih');
+      const elRadSendiri = document.getElementById('radSendiri');
+      const elSekolahPilihDaftar = document.getElementById('sekolahPilihDaftar');
+      const elSekolahIsiSendiri = document.getElementById('sekolahIsiSendiri');
+      const elInputSekolahDaftar = document.getElementById('inputSekolahDaftar');
+      const elInputSekolahSendiri = document.getElementById('inputSekolahSendiri');
+      const elInputUjian = document.getElementById('inputUjian');
+      const elPesanError = document.getElementById('pesanError');
+      const elPesanSukses = document.getElementById('pesanSukses');
+      const elBtnLanjut = document.getElementById('btnLanjutUjian');
       const elModal = document.getElementById('tokenModal');
       const elModalUjianNama = document.getElementById('modalUjianNama');
       const elInputToken = document.getElementById('inputToken');
       const elModalError = document.getElementById('modalError');
       const elBtnBatal = document.getElementById('btnBatalToken');
       const elBtnKirim = document.getElementById('btnKirimToken');
-
-      // ============================================
-      // LOAD DAFTAR UJIAN
-      // ============================================
-      async function muatDaftarUjian() {
+      function normalisasiNama(str) {
+        return String(str || '').trim().toLowerCase().replace(/\s+/g,' ').split(' ').map(function(k){ if(!k) return ''; return k.charAt(0).toUpperCase() + k.slice(1); }).join(' ').trim();
+      }
+      function normalisasiSekolah(str) {
+        return String(str || '').trim().replace(/\s+/g,' ').toUpperCase();
+      }
+      function gabungKelas(angka, huruf) {
+        if (!angka) return '';
+        if (huruf === '-') return angka;
+        return angka + huruf;
+      }
+      function escapeHtml(s) {
+        return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+      }
+      function tampilkanPesan(el, pesan, jenis) {
+        el.textContent = pesan; el.className = 'pesan-' + jenis; el.classList.add('show');
+        setTimeout(function(){ el.classList.remove('show'); }, 5000);
+      }
+      function sembunyikanPesan() {
+        elPesanError.classList.remove('show'); elPesanSukses.classList.remove('show');
+      }
+      function deteksiSession() {
+        const s = window.ambilSession ? window.ambilSession() : null;
+        if (!s) return null;
+        return { tipe: s.tipe, user_id: s.user_id || '', nama: s.nama || s.user_id || '—', kelas: s.kelas || '—', sekolah: s.sekolah || '—' };
+      }
+      function deteksiIdentitasTamu() {
+        const d = window.ambilIdentitasSiswaMulti ? window.ambilIdentitasSiswaMulti() : null;
+        if (d && d.tipe === 'tamu' && d.utama) {
+          return { nama: d.utama.nama || d.utama.username || '—', kelas: d.utama.kelas || '—', sekolah: d.utama.sekolah || '—' };
+        }
+        const lama = window.ambilIdentitasSiswa ? window.ambilIdentitasSiswa() : null;
+        if (lama) {
+          return { nama: lama.nama || '—', kelas: lama.kelas || '—', sekolah: lama.sekolah || '—' };
+        }
+        return null;
+      }
+      function renderIdentitas() {
+        sessionUser = deteksiSession();
+        if (sessionUser) {
+          elFormIdentitas.style.display = 'none';
+          elIdentitasInfo.style.display = 'flex';
+          const labelMode = sessionUser.tipe === 'login' ? 'Siswa Login' : 'Tamu';
+          elIdentitasNama.textContent = sessionUser.nama;
+          elIdentitasMeta.textContent = sessionUser.kelas + ' · ' + sessionUser.sekolah;
+          elIdentitasBadge.textContent = labelMode;
+          identitasForm = { nama: sessionUser.nama, kelas: sessionUser.kelas, sekolah: sessionUser.sekolah };
+        } else {
+          elFormIdentitas.style.display = 'block';
+          elIdentitasInfo.style.display = 'none';
+          const tamu = deteksiIdentitasTamu();
+          if (tamu) {
+            elInputNama.value = tamu.nama;
+            const kelasMatch = String(tamu.kelas || '').toUpperCase().match(/^(\d+)([A-Z])?$/);
+            if (kelasMatch) { elInputKelasAngka.value = kelasMatch[1]; elInputKelasHuruf.value = kelasMatch[2] || '-'; }
+            elInputSekolahSendiri.value = tamu.sekolah;
+            elRadSendiri.checked = true;
+            elSekolahPilihDaftar.classList.add('hide');
+            elSekolahIsiSendiri.classList.remove('hide');
+          }
+          identitasForm = null;
+        }
+      }
+      async function muatDaftarSekolah() {
         if (!API_URL) {
-          tampilkanError('URL API tidak tersedia. Hubungi gurumu.');
+          elInputSekolahDaftar.innerHTML = '<option value="">API daftar sekolah belum dikonfigurasi</option>';
           return;
         }
-
         try {
+          const resp = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'listSekolahUsers' }) });
+          if (!resp.ok) throw new Error('Server sekolah merespons HTTP ' + resp.status);
+          const hasil = await resp.json();
+          if (!hasil || !hasil.ok) throw new Error((hasil && hasil.error) || 'Server gagal mengirim daftar sekolah.');
+          elInputSekolahDaftar.innerHTML = '<option value="">Pilih sekolah</option>';
+          if (Array.isArray(hasil.sekolah)) {
+            hasil.sekolah.filter(function(s) { return typeof s === 'string' && s.trim(); }).forEach(function(s) {
+              const o = document.createElement('option'); o.value = s; o.textContent = s; elInputSekolahDaftar.appendChild(o);
+            });
+          }
+          if (elInputSekolahDaftar.options.length === 1) {
+            elInputSekolahDaftar.options[0].textContent = 'Daftar sekolah kosong — isi sendiri';
+          }
+        } catch (err) {
+          console.warn('Gagal muat sekolah:', err);
+          elInputSekolahDaftar.innerHTML = '<option value="">Gagal memuat sekolah</option>';
+        }
+      }
+      async function muatDaftarUjian() {
+        elLoading.style.display = 'block'; elGrid.style.display = 'none'; elEmpty.style.display = 'none'; elError.style.display = 'none';
+        try {
+          if (!API_URL) throw new Error('URL API belum dikonfigurasi.');
           const resp = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({ action: 'listUjian' })
           });
-
+          if (!resp.ok) throw new Error('Server daftar ujian merespons HTTP ' + resp.status);
           const hasil = await resp.json();
-
-          if (!hasil || !hasil.ok) {
-            tampilkanError((hasil && hasil.error) || 'Gagal memuat daftar ujian.');
-            return;
+          if (!hasil || !hasil.ok || !Array.isArray(hasil.ujian)) {
+            throw new Error((hasil && hasil.error) || 'Format daftar ujian tidak valid.');
           }
-
-          daftarUjian = Array.isArray(hasil.ujian) ? hasil.ujian : [];
-
-          if (daftarUjian.length === 0) {
-            elLoading.style.display = 'none';
-            elEmpty.style.display = 'block';
-            return;
-          }
-
-          renderDaftarUjian(daftarUjian);
+          daftarUjian = hasil.ujian.filter(function(u) {
+            return u && typeof u.id === 'string' && u.id &&
+              typeof u.nama === 'string' && u.nama.trim();
+          });
+          renderDaftarUjianForm(daftarUjian);
+          renderDaftarUjianGrid(daftarUjian);
           elLoading.style.display = 'none';
-          elGrid.style.display = 'grid';
-
+          if (daftarUjian.length === 0) { elEmpty.style.display = 'block'; } else { elGrid.style.display = 'grid'; }
         } catch (err) {
-          tampilkanError('Kesalahan jaringan: ' + err.message);
+          elLoading.style.display = 'none'; elError.style.display = 'block'; elErrorText.textContent = 'Gagal memuat daftar ujian: ' + err.message;
         }
       }
-
-      function tampilkanError(msg) {
-        elLoading.style.display = 'none';
-        elError.style.display = 'block';
-        elErrorText.textContent = msg;
+      function renderDaftarUjianForm(list) {
+        elInputUjian.innerHTML = '<option value="">Pilih ujian</option>';
+        list.forEach(function(u) {
+          const o = document.createElement('option');
+          o.value = u.id; o.textContent = u.nama;
+          elInputUjian.appendChild(o);
+        });
       }
-
-      // ============================================
-      // RENDER TOMBOL UJIAN
-      // ============================================
-      function renderDaftarUjian(list) {
+      function renderDaftarUjianGrid(list) {
         elGrid.innerHTML = '';
-
-        list.forEach((u, index) => {
-          const btn = document.createElement('button');
-          btn.className = 'ujian-card';
-          btn.type = 'button';
-          btn.setAttribute('aria-label', 'Mulai ujian: ' + u.nama);
-
-          const badge = u.pakaiToken
-            ? '<span class="card-badge badge-token">🔐 Perlu Token</span>'
-            : '<span class="card-badge badge-free">✓ Tanpa Token</span>';
-
-          btn.innerHTML = `
-            <span class="card-icon">${u.pakaiToken ? '🔐' : '📄'}</span>
-            <span class="card-title">${escapeHtml(u.nama)}</span>
-            <span class="card-meta">
-              <span>Ujian #${escapeHtml(String(u.no))}</span>
-              ${badge}
-            </span>
-          `;
-
-          btn.addEventListener('click', () => klikUjian(u));
-          elGrid.appendChild(btn);
+        list.forEach(function(u) {
+          const pakaiToken = u.pakaiToken === true;
+          const card = document.createElement('button');
+          card.type = 'button';
+          card.className = 'ujian-card';
+          card.innerHTML = '<div class="card-icon">📄</div>' +
+            '<div class="card-title">' + escapeHtml(u.nama) + '</div>' +
+            '<div class="card-meta">' +
+            '<span>Ujian tersedia</span>' +
+            '<span class="card-badge ' + (pakaiToken ? 'badge-token' : 'badge-free') + '">' +
+            (pakaiToken ? 'Butuh Token' : 'Tanpa Token') + '</span></div>';
+          card.addEventListener('click', function() { klikUjian(u); });
+          elGrid.appendChild(card);
         });
       }
 
-      function escapeHtml(s) {
-        return String(s)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;');
-      }
+      elInputNama.addEventListener('input', function() {
+        const val = this.value; const normalized = normalisasiNama(val);
+        if (normalized !== val) this.value = normalized;
+      });
+      elInputSekolahSendiri.addEventListener('blur', function() {
+        const val = this.value.trim();
+        if (val) this.value = normalisasiSekolah(val);
+      });
+      elRadPilih.addEventListener('change', function() {
+        if (this.checked) { elSekolahPilihDaftar.classList.remove('hide'); elSekolahIsiSendiri.classList.add('hide'); }
+      });
+      elRadSendiri.addEventListener('change', function() {
+        if (this.checked) { elSekolahPilihDaftar.classList.add('hide'); elSekolahIsiSendiri.classList.remove('hide'); }
+      });
 
-      // ============================================
-      // KLIK UJIAN
-      // ============================================
+      elFormIdentitas.addEventListener('submit', function(e) {
+        e.preventDefault(); sembunyikanPesan();
+        const nama = normalisasiNama(elInputNama.value);
+        const kelasAngka = elInputKelasAngka.value;
+        const kelasHuruf = elInputKelasHuruf.value;
+        const kelas = gabungKelas(kelasAngka, kelasHuruf);
+        let sekolah = '';
+        if (elRadPilih.checked) { sekolah = elInputSekolahDaftar.value; } else { sekolah = normalisasiSekolah(elInputSekolahSendiri.value); }
+        const ujianId = elInputUjian.value;
+        if (!nama) { tampilkanPesan(elPesanError, 'Nama lengkap wajib diisi.', 'error'); elInputNama.focus(); return; }
+        if (nama.length < 2) { tampilkanPesan(elPesanError, 'Nama minimal 2 karakter.', 'error'); elInputNama.focus(); return; }
+        if (!kelasAngka) { tampilkanPesan(elPesanError, 'Pilih angka kelas (7/8/9).', 'error'); elInputKelasAngka.focus(); return; }
+        if (!sekolah) { tampilkanPesan(elPesanError, 'Sekolah wajib diisi.', 'error'); (elRadPilih.checked ? elInputSekolahDaftar : elInputSekolahSendiri).focus(); return; }
+        if (!ujianId) { tampilkanPesan(elPesanError, 'Pilih ujian terlebih dahulu.', 'error'); elInputUjian.focus(); return; }
+        const u = daftarUjian.find(function(x) { return x.id === ujianId; });
+        if (!u) { tampilkanPesan(elPesanError, 'Ujian tidak ditemukan.', 'error'); return; }
+        identitasForm = { nama: nama, kelas: kelas, sekolah: sekolah };
+        try { localStorage.setItem('duta_ujian_identitas', JSON.stringify(identitasForm)); } catch (err) {}
+        if (u.pakaiToken) { bukaModalToken(u); } else { arahkanKeUjian(u, identitasForm); }
+      });
+
       function klikUjian(u) {
+        if (!u || !u.id) {
+          tampilkanPesan(elPesanError, 'Data ujian tidak valid. Muat ulang halaman.', 'error');
+          return;
+        }
+        if (!sessionUser && !identitasForm) {
+          const nama = normalisasiNama(elInputNama.value);
+          const kelasAngka = elInputKelasAngka.value;
+          const kelasHuruf = elInputKelasHuruf.value;
+          const kelas = gabungKelas(kelasAngka, kelasHuruf);
+          let sekolah = '';
+          if (elRadPilih.checked) { sekolah = elInputSekolahDaftar.value; } else { sekolah = normalisasiSekolah(elInputSekolahSendiri.value); }
+          if (!nama || !kelasAngka || !sekolah) {
+            tampilkanPesan(elPesanError, 'Silakan lengkapi identitas (Nama, Kelas, Sekolah) terlebih dahulu.', 'error');
+            elInputNama.focus(); return;
+          }
+          identitasForm = { nama: nama, kelas: kelas, sekolah: sekolah };
+          try { localStorage.setItem('duta_ujian_identitas', JSON.stringify(identitasForm)); } catch (err) {}
+        }
         if (u.pakaiToken) {
           bukaModalToken(u);
         } else {
-          window.location.href = u.link;
+          const ident = identitasForm || (sessionUser ? { nama: sessionUser.nama, kelas: sessionUser.kelas, sekolah: sessionUser.sekolah } : null);
+          if (!ident) { tampilkanPesan(elPesanError, 'Identitas tidak tersedia.', 'error'); return; }
+          arahkanKeUjian(u, ident);
         }
       }
 
-      // ============================================
-      // MODAL TOKEN
-      // ============================================
+      function arahkanKeUjian(u, ident, token) {
+        if (!u || !u.id) {
+          tampilkanPesan(elPesanError, 'Data ujian tidak valid. Muat ulang halaman.', 'error');
+          return;
+        }
+        const storageKeyToken = 'duta_ujian_token_' + encodeURIComponent(u.id);
+        try {
+          if (token) sessionStorage.setItem(storageKeyToken, token);
+          else sessionStorage.removeItem(storageKeyToken);
+        } catch (err) {
+          tampilkanPesan(elPesanError, 'Browser tidak dapat menyimpan akses ujian. Periksa pengaturan penyimpanan browser.', 'error');
+          return;
+        }
+        const params = new URLSearchParams();
+        params.set('ujianId', u.id);
+        params.set('namaUjian', u.nama || '');
+        params.set('nama', ident.nama || '');
+        params.set('kelas', ident.kelas || '');
+        params.set('sekolah', ident.sekolah || '');
+        const url = 'kerjakan.html?' + params.toString();
+        elBtnLanjut.disabled = true; elBtnLanjut.textContent = '⏳ Memuat ujian...';
+        setTimeout(function() { window.location.href = url; }, 400);
+      }
+
       function bukaModalToken(u) {
         ujianDipilih = u;
-        elModalUjianNama.textContent = u.nama;
+        elModalUjianNama.textContent = escapeHtml(u.nama);
         elInputToken.value = '';
         elModalError.classList.remove('show');
         elBtnKirim.disabled = false;
         elBtnKirim.innerHTML = '🔓 Buka Ujian';
-
         elModal.classList.add('show');
-
-        setTimeout(() => elInputToken.focus(), 200);
+        setTimeout(function() { elInputToken.focus(); }, 200);
       }
-
       function tutupModalToken() {
-        elModal.classList.remove('show');
-        ujianDipilih = null;
+        elModal.classList.remove('show'); ujianDipilih = null;
       }
-
-      // ============================================
-      // VERIFIKASI TOKEN
-      // ============================================
       async function verifikasiToken() {
         if (!ujianDipilih) return;
-
         const token = elInputToken.value.trim();
-
-        if (!token) {
-          elModalError.textContent = '⚠️ Token tidak boleh kosong.';
-          elModalError.classList.add('show');
-          return;
-        }
-
+        if (!token) { elModalError.textContent = '⚠️ Token tidak boleh kosong.'; elModalError.classList.add('show'); return; }
         elModalError.classList.remove('show');
         elBtnKirim.disabled = true;
         elBtnKirim.innerHTML = '<span class="modal-spinner"></span> Memeriksa...';
-
         try {
+          if (!API_URL) throw new Error('URL API belum dikonfigurasi.');
           const resp = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-              action: 'verifyToken',
-              namaUjian: ujianDipilih.nama,
-              token: token
-            })
+            body: JSON.stringify({ action: 'verifyTokenUjian', id: ujianDipilih.id, token: token })
           });
-
+          if (!resp.ok) throw new Error('Server ujian merespons HTTP ' + resp.status);
           const hasil = await resp.json();
-
-          if (hasil && hasil.ok && hasil.valid) {
-            elBtnKirim.innerHTML = '✅ Berhasil! Membuka...';
-            setTimeout(() => {
-              window.location.href = hasil.link || ujianDipilih.link;
-            }, 600);
+          if (!hasil || !hasil.ok) throw new Error((hasil && hasil.error) || 'Server gagal memverifikasi token.');
+          if (!hasil.valid) {
+            elModalError.textContent = hasil.message || '❌ Token salah. Coba lagi.';
+            elModalError.classList.add('show');
+            elInputToken.select();
             return;
           }
-
-          // Gagal
-          elBtnKirim.disabled = false;
-          elBtnKirim.innerHTML = '🔓 Buka Ujian';
-          elModalError.textContent = (hasil && hasil.message) || '❌ Token salah. Coba lagi.';
-          elModalError.classList.add('show');
-          elInputToken.select();
-
+          const ident = identitasForm || (sessionUser ? { nama: sessionUser.nama, kelas: sessionUser.kelas, sekolah: sessionUser.sekolah } : null);
+          if (!ident) throw new Error('Identitas peserta tidak tersedia.');
+          elBtnKirim.innerHTML = '✅ Berhasil! Membuka...';
+          setTimeout(function() { arahkanKeUjian(ujianDipilih, ident, token); }, 400);
         } catch (err) {
-          elBtnKirim.disabled = false;
-          elBtnKirim.innerHTML = '🔓 Buka Ujian';
-          elModalError.textContent = '⚠️ Kesalahan jaringan: ' + err.message;
+          elModalError.textContent = '⚠️ ' + err.message;
           elModalError.classList.add('show');
+        } finally {
+          if (elModal.classList.contains('show')) {
+            elBtnKirim.disabled = false;
+            if (elBtnKirim.innerHTML.indexOf('Berhasil') === -1) elBtnKirim.innerHTML = '🔓 Buka Ujian';
+          }
         }
       }
 
-      // ============================================
-      // EVENT LISTENERS
-      // ============================================
       elBtnBatal.addEventListener('click', tutupModalToken);
       elBtnKirim.addEventListener('click', verifikasiToken);
+      elInputToken.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); verifikasiToken(); } });
+      elModal.addEventListener('click', function(e) { if (e.target === elModal) tutupModalToken(); });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && elModal.classList.contains('show')) { tutupModalToken(); } });
 
-      elInputToken.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          verifikasiToken();
-        }
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.initDutaPage) { window.DUTA_ROOT = '../'; window.initDutaPage(); }
+        renderIdentitas();
+        muatDaftarSekolah();
+        muatDaftarUjian();
+        console.log('✅ Daftar Ujian siap!');
       });
-
-      // Klik backdrop untuk tutup modal
-      elModal.addEventListener('click', function(e) {
-        if (e.target === elModal) tutupModalToken();
-      });
-
-      // Esc untuk tutup modal
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && elModal.classList.contains('show')) {
-          tutupModalToken();
-        }
-      });
-
-      // ============================================
-      // INISIALISASI
-      // ============================================
-      document.addEventListener('DOMContentLoaded', muatDaftarUjian);
-
-      console.log('✅ Daftar Ujian siap!');
     })();
   </script>
 </body>

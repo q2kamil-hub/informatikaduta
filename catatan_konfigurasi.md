@@ -127,7 +127,8 @@ Berikut dokumen lengkapnya:
 | `Tamu` | `kode_tamu, sekolah, nama, kelas, waktu_dibuat, waktu_kadaluarsa` | Akun tamu (24 jam) |
 | `Progress` | `user_id, modul, bagian_terakhir, skor_a...skor_f, skor_kuis, nilai_akhir, nama_siswa, status_modul, waktu_update` | Progres belajar |
 | `Guru` | `username, password, nama, sekolah, kontak, status` | Akun guru (v3.5: + kontak, status) |
-| `LinkUjian` | `No, Nama_Ujian, Link_Ujian, Token` | Daftar ujian |
+| `DaftarUjian` | `id, nama_ujian, file_ujian, token, waktu, tampil_nilai, tampil_pembahasan` | Daftar ujian dan pengaturan (dibuat otomatis oleh GAS) |
+| `Ujian` | `id, waktu, sekolah, nama, kelas, fileUjian, nilai, waktuPengerjaan, jawabanJSON` | Hasil ujian |
 
 ### 3.3 Daftar Action API (v3.6)
 
@@ -156,8 +157,11 @@ Berikut dokumen lengkapnya:
 | `getPasswordSiswa` | username, password, userId | `{ok, username, password}` |
 | `listSekolahGuru` | (tanpa login) | `{ok, sekolah:[...]}` |
 | `getProgressSiswaDetail` | userId, temanUserIds:[...] | `{ok, siswa, teman[], progress[]}` |
-| `listUjian` | — | `{ok, ujian:[...]}` |
-| `verifyToken` | namaUjian, token | `{ok, valid, link, message}` |
+| `listSekolahUsers` | — | `{ok, sekolah:[...]}` |
+| `simpanUjian` | sekolah, nama, kelas, fileUjian, nilai, waktuPengerjaan, jawabanJSON | `{ok, id, sheet, nilai}` |
+| `listUjian` | — | `{ok, ujian:[{id, nama, pakaiToken}]}` |
+| `verifyTokenUjian` | id, token | `{ok, valid, message}` |
+| `getUjianXML` | id, token | `{ok, nama, xml}` |
 
 ### 3.4 Aturan Penting Backend
 
@@ -656,17 +660,29 @@ guru.html → List Data Siswa → listKelasGuru + listSiswaGuru → tabel
 Aksi: getPasswordSiswa / updateSiswa
 ```
 
-### 12.8 Pendaftaran Guru
+### 12.8 Dashboard Guru — Live Score Siswa
+```
+guru.html → Tampilkan Live Score Siswa → filter modul/kelas/status/waktu
+  → getAllProgress (data sekolah akun guru) → tabel skor layar penuh
+  → scroll 25 px/detik → kembali ke atas dengan data yang sama
+  → saat mencapai bawah, refresh hanya jika data sudah berumur minimal 60 detik
+  → jika tidak perlu scroll, refresh saat data mencapai umur 60 detik
+```
+- Jeda 5 detik di atas sebelum scroll; tombol **Keluar** atau tombol `Esc` menutup tampilan.
+- Saat mencapai baris terakhir, tampilan menunggu 10 detik. Setelah jeda, data yang sama digulir kembali dari atas; data baru hanya dimuat jika sudah berumur minimal 60 detik.
+- Data tamu mengikuti data yang memang tersedia pada dashboard guru; filter yang dipilih dipertahankan pada setiap refresh.
+
+### 12.9 Pendaftaran Guru
 ```
 daftarguru.html → registerGuru → simpan ke sheet Guru (status='tunggu') → modal sukses + tombol WA Admin
 ```
 
-### 12.9 Pendaftaran Siswa
+### 12.10 Pendaftaran Siswa
 ```
 daftar.html → pilih sekolah dari dropdown (listSekolahGuru) → register → cek sekolah di sheet Guru → simpan Users
 ```
 
-### 12.10 Kuis Akhir (v3.6)
+### 12.11 Kuis Akhir (v3.6)
 ```
 File aktivitas akhir → jawab kuis → simpanNilaiKuis()
   → dutaSimpanProgressBulk(modul, bagianKuis, {kuis: skorKuis}, 0,
@@ -675,7 +691,7 @@ File aktivitas akhir → jawab kuis → simpanNilaiKuis()
   → status_modul = 'selesai'
 ```
 
-### 12.11 Portal Modul (v3.7) — Modal "Mulai Belajar"
+### 12.12 Portal Modul (v3.7) — Modal "Mulai Belajar"
 ```
 Portal <modul>.html → klik "Materi + Aktivitas"
   → modal terbuka
@@ -769,7 +785,16 @@ Portal <modul>.html → klik "Materi + Aktivitas"
 ## 17. DAFTAR UJIAN & FORM DAFTAR
 
 ### 17.1 Daftar Ujian
-- Muat via `listUjian`, render kartu, modal token → `verifyToken` → redirect.
+- GAS membuat tab `DaftarUjian` secara otomatis dengan header `id`, `nama_ujian`, `file_ujian`, `token`, `waktu`, `tampil_nilai`, `tampil_pembahasan`.
+- Isi `nama_ujian`, `file_ujian` (nama file XML termasuk ekstensi `.xml`), dan `token` langsung di sheet. ID dibuat otomatis saat daftar ujian dimuat.
+- `waktu` diisi sebagai bilangan bulat menit. Kosong berarti memakai waktu dari konfigurasi XML; `0` berarti tanpa batas waktu.
+- `tampil_nilai` menerima `1` (nilai ditampilkan di akhir) atau `0` (nilai disembunyikan). `tampil_pembahasan` menerima `1` (review jawaban, kunci, dan pembahasan ditampilkan) atau `0` (semuanya disembunyikan). Jika kosong, masing-masing dianggap `1`.
+- Saat Web App membaca sheet lama, kolom pengaturan yang belum ada akan ditambahkan otomatis di sebelah kanan kolom terakhir.
+- Dashboard guru menyediakan tombol **Tambah Soal** untuk mendaftarkan file ujian melalui modal. Token dibuat otomatis di browser; penyimpanan tetap diverifikasi GAS dengan akun guru yang sudah disetujui dan file XML harus tersedia di folder Drive ujian. Perubahan ini memerlukan deploy versi baru `Code.gs`.
+- File XML harus ada di folder Drive ujian yang dikonfigurasi dalam `Code.gs`; GAS mencari nama file tepat di folder itu. Nama file duplikat ditolak.
+- Setelah menambahkan akses Drive, jalankan `otorisasiAksesDriveUjian` dari editor Apps Script dan setujui permintaan izin Drive satu kali; setelah itu deploy versi terbaru Web App.
+- Browser meminta daftar ujian lewat `listUjian`, memverifikasi token lewat `verifyTokenUjian`, lalu mengambil XML lewat `getUjianXML`. File di folder Drive tidak perlu dibuka untuk publik.
+- Hasil ujian dikirim lewat `simpanUjian` ke sheet `Ujian`.
 
 ### 17.2 Pendaftaran Siswa (`daftar.html` v3.5)
 - **Sekolah:** `<select>` dropdown dari `listSekolahGuru` (**tidak bisa ketik manual**).
@@ -1149,7 +1174,7 @@ Jika modul baru punya data lama yang salah, tambahkan ke `PETA_BAGIAN` di `recom
 - `desain.css`, `script.js` (v3.4), `Code.gs` (v3.6).
 - `scriptbk.js`, `scriptdsi.js`, `scripttik.js`.
 - `desaindsi1.css`, `desaindsi2.css`, `desainbk6.css`, `desaintik3.css`, `desaintik4.css`.
-- Struktur sheet Progress, Tamu, Users, LinkUjian.
+- Struktur sheet Progress, Tamu, Users, `DaftarUjian`, dan `Ujian`.
 - Logika Session, User Bar, Modal Identitas.
 
 ---

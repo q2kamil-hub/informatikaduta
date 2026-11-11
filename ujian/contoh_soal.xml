@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ujian>
+  <!-- ============================================================
+       FILE UJIAN PERCOBAAN — Informatika DUTA
+       10 soal campuran untuk tes format
+       ============================================================ -->
+
+  <konfigurasi>
+    <nama>Tes Soal Percobaan</nama>
+    <mapel>Informatika</mapel>
+    <kelas>7, 8, 9</kelas>
+    <waktu>30</waktu>
+    <skorDefault>10</skorDefault>
+  </konfigurasi>
+
+  <soalList>
+    <!-- ========== PILIHAN GANDA (4 soal) ========== -->
+    <soal id="s1" tipe="pilihan_ganda" skor="10">
+      <pertanyaan>Apa kepanjangan dari CPU?</pertanyaan>
+      <pilihan label="A">Central Processing Unit</pilihan>
+      <pilihan label="B">Computer Personal Unit</pilihan>
+      <pilihan label="C">Central Program Utility</pilihan>
+      <pilihan label="D">Control Processing Unit</pilihan>
+      <kunci>Jawaban A</kunci>
+      <penjelasan>CPU adalah Central Processing Unit, unit pemroses utama komputer.</penjelasan>
+    </soal>
+
+    <soal id="s2" tipe="pilihan_ganda" skor="10">
+      <pertanyaan>Perangkat yang berfungsi sebagai otak komputer adalah...</pertanyaan>
+      <pilihan label="A">Monitor</pilihan>
+      <pilihan label="B">Keyboard</pilihan>
+      <pilihan label="C">CPU</pilihan>
+      <pilihan label="D">Printer</pilihan>
+      <kunci>Jawaban C</kunci>
+      <penjelasan>CPU memproses semua instruksi dan data pada komputer.</penjelasan>
+    </soal>
+
+    <soal id="s3" tipe="pilihan_ganda" skor="10">
+      <pertanyaan>Bahasa pemrograman yang digunakan untuk membuat halaman web adalah...</pertanyaan>
+      <pilihan label="A">Python</pilihan>
+      <pilihan label="B">HTML</pilihan>
+      <pilihan label="C">Java</pilihan>
+      <pilihan label="D">C++</pilihan>
+      <kunci>Jawaban B</kunci>
+      <penjelasan>HTML (Hyper Text Markup Language) adalah bahasa dasar pembuatan halaman web.</penjelasan>
+    </soal>
+
+    <soal id="s4" tipe="pilihan_ganda" skor="10">
+      <pertanyaan>Berikut ini yang termasuk perangkat output adalah...</pertanyaan>
+      <pilihan label="A">Mouse</pilihan>
+      <pilihan label="B">Scanner</pilihan>
+      <pilihan label="C">Monitor</pilihan>
+      <pilihan label="D">Microphone</pilihan>
+      <kunci>Jawaban C</kunci>
+      <penjelasan>Monitor menampilkan hasil proses sehingga termasuk perangkat output.</penjelasan>
+    </soal>
+
+    <!-- ========== BENAR-SALAH (3 soal) ========== -->
+    <soal id="s5" tipe="benar_salah" skor="5">
+      <pertanyaan>RAM adalah memori yang bersifat sementara (volatile).</pertanyaan>
+      <kunci>Benar</kunci>
+      <penjelasan>RAM kehilangan datanya saat komputer dimatikan, sehingga bersifat volatile.</penjelasan>
+    </soal>
+
+    <soal id="s6" tipe="benar_salah" skor="5">
+      <pertanyaan>Keyboard termasuk perangkat output.</pertanyaan>
+      <kunci>Salah</kunci>
+      <penjelasan>Keyboard adalah perangkat input karena memasukkan data ke komputer.</penjelasan>
+    </soal>
+
+    <soal id="s7" tipe="benar_salah" skor="5">
+      <pertanyaan>Internet dan World Wide Web (WWW) adalah hal yang sama.</pertanyaan>
+      <kunci>Salah</kunci>
+      <penjelasan>Internet adalah jaringan fisiknya, sedangkan WWW adalah layanan yang berjalan di atas internet.</penjelasan>
+    </soal>
+
+    <!-- ========== PILIHAN GANDA KOMPLEKS (2 soal) ========== -->
+    <soal id="s8" tipe="pilihan_ganda_kompleks" skor="15">
+      <pertanyaan>Manakah yang termasuk perangkat keras (hardware) komputer?</pertanyaan>
+      <pilihan label="A">Monitor</pilihan>
+      <pilihan label="B">Microsoft Word</pilihan>
+      <pilihan label="C">Keyboard</pilihan>
+      <pilihan label="D">RAM</pilihan>
+      <pilihan label="E">Windows 11</pilihan>
+      <kunci>Jawaban A, C, D</kunci>
+      <penjelasan>Monitor, keyboard, dan RAM adalah hardware. Microsoft Word dan Windows 11 adalah software.</penjelasan>
+    </soal>
+
+    <soal id="s9" tipe="pilihan_ganda_kompleks" skor="15">
+      <pertanyaan>Manakah yang termasuk bahasa pemrograman?</pertanyaan>
+      <pilihan label="A">Python</pilihan>
+      <pilihan label="B">HTML</pilihan>
+      <pilihan label="C">Java</pilihan>
+      <pilihan label="D">C++</pilihan>
+      <pilihan label="E">Linux</pilihan>
+      <kunci>Jawaban A, C, D</kunci>
+      <penjelasan>Python, Java, dan C++ adalah bahasa pemrograman. HTML adalah markup, Linux adalah sistem operasi.</penjelasan>
+    </soal>
+
+    <!-- ========== MENCOCOOKKAN (1 soal) ========== -->
+    <soal id="s10" tipe="mencocokkan" skor="20">
+      <pertanyaan>Pasangkan perangkat dengan jenisnya!</pertanyaan>
+      <pasangan>
+        <item sisi="kiri" id="k1">Mouse</item>
+        <item sisi="kanan" id="v1">Perangkat Input</item>
+      </pasangan>
+      <pasangan>
+        <item sisi="kiri" id="k2">Monitor</item>
+        <item sisi="kanan" id="v2">Perangkat Output</item>
+      </pasangan>
+      <pasangan>
+        <item sisi="kiri" id="k3">RAM</item>
+        <item sisi="kanan" id="v3">Memori</item>
+      </pasangan>
+      <pasangan>
+        <item sisi="kiri" id="k4">CPU</item>
+        <item sisi="kanan" id="v4">Pemroses</item>
+      </pasangan>
+      <kunci>
+        <pasangan kiri="k1" kanan="v1"/>
+        <pasangan kiri="k2" kanan="v2"/>
+        <pasangan kiri="k3" kanan="v3"/>
+        <pasangan kiri="k4" kanan="v4"/>
+      </kunci>
+      <penjelasan>Mouse = input, Monitor = output, RAM = memori, CPU = pemroses.</penjelasan>
+    </soal>
+  </soalList>
+</ujian>
