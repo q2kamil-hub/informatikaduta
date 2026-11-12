@@ -962,7 +962,7 @@
       let tampilSkorDetail = true;
       let autoRefreshTimer = null;
       let liveScoreAktif = false;
-      let liveScoreFrame = null;
+      let liveScoreTimer = null;
       let liveScoreTimeout = null;
       let liveScoreFilters = null;
       let liveScoreOverflowSebelumnya = '';
@@ -1565,9 +1565,9 @@
       }
 
       function hentikanSiklusLiveScore() {
-        if (liveScoreFrame !== null) cancelAnimationFrame(liveScoreFrame);
+        if (liveScoreTimer !== null) clearTimeout(liveScoreTimer);
         if (liveScoreTimeout !== null) clearTimeout(liveScoreTimeout);
-        liveScoreFrame = null;
+        liveScoreTimer = null;
         liveScoreTimeout = null;
       }
 
@@ -1610,22 +1610,22 @@
             return;
           }
 
-          let waktuFrameSebelumnya = null;
-          function gulir(waktuFrame) {
+          let waktuSebelumnya = Date.now();
+          function gulir() {
             if (!liveScoreAktif) return;
-            if (waktuFrameSebelumnya === null) waktuFrameSebelumnya = waktuFrame;
-            const delta = Math.min(waktuFrame - waktuFrameSebelumnya, 100);
-            waktuFrameSebelumnya = waktuFrame;
+            const sekarang = Date.now();
+            const delta = Math.min(sekarang - waktuSebelumnya, 1000);
+            waktuSebelumnya = sekarang;
             const batas = scroll.scrollHeight - scroll.clientHeight;
             scroll.scrollTop = Math.min(batas, scroll.scrollTop + delta * 25 / 1000);
             if (scroll.scrollTop >= batas - 1) {
-              liveScoreFrame = null;
+              liveScoreTimer = null;
               jadwalkanLanjutLiveScore();
               return;
             }
-            liveScoreFrame = requestAnimationFrame(gulir);
+            liveScoreTimer = setTimeout(gulir, 50);
           }
-          liveScoreFrame = requestAnimationFrame(gulir);
+          liveScoreTimer = setTimeout(gulir, 50);
         }, 5000);
       }
 
