@@ -1,10 +1,9 @@
 // sw.js — Service Worker Portal Informatika DUTA
-// Versi: 1.0.0
-
-const CACHE_NAME = 'duta-pwa-v2';
+// Versi: 1.0.3 — NETWORK-FIRST untuk konten inti (perbaikan cache basi)
+const CACHE_NAME = 'duta-pwa-v3';
 const OFFLINE_URL = '/informatikaduta/index.html';
 
-// Aset statis yang dicache saat install
+// Aset yang dipanaskan saat install (untuk offline pertama kali)
 const STATIC_ASSETS = [
   '/informatikaduta/',
   '/informatikaduta/index.html',
@@ -14,13 +13,8 @@ const STATIC_ASSETS = [
   '/informatikaduta/manifest.json'
 ];
 
-// Aset yang JANGAN dicache (selalu fetch langsung dari jaringan)
-const NO_CACHE_ASSETS = [
-  '/informatikaduta/versi.json'
-];
-
 // ============================================
-// INSTALL: cache aset statis
+// INSTALL: cache aset statis + ambil alih segera
 // ============================================
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -34,7 +28,7 @@ self.addEventListener('install', (event) => {
 });
 
 // ============================================
-// ACTIVATE: hapus cache lama
+// ACTIVATE: hapus cache lama (v1/v2) + claim klien
 // ============================================
 self.addEventListener('activate', (event) => {
   event.waitUntil(
@@ -50,41 +44,61 @@ self.addEventListener('activate', (event) => {
 });
 
 // ============================================
-// FETCH: intercept request untuk offline & cache
+// FETCH: network-first untuk konten inti
 // ============================================
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
+  const req = event.request;
 
-  // Jangan cache versi.json — selalu fetch dari jaringan
-  if (NO_CACHE_ASSETS.some((path) => url.pathname.endsWith(path))) {
+  // Hanya tangani GET
+  if (req.method !== 'GET') return;
+
+  const url = new URL(req.url);
+
+  // Jangan intersep lintas origin (API Apps Script, CDN, dll)
+  if (url.origin !== self.location.origin) return;
+
+  // versi.json: SELALU jaringan dulu (deteksi update), fallback cache saat offline
+  if (url.pathname.endsWith('/versi.json')) {
     event.respondWith(
-      fetch(event.request).catch(() => {
-        return caches.match(event.request);
+      fetch(req).catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // Konten inti (halaman, JS, CSS, manifest, gambar, JSON):
+  // NETWORK-FIRST → sukses = perbarui cache; gagal (offline) → fallback cache
+  const isCoreAsset = req.mode === 'navigate' ||
+    /\.(html?|js|css|json|png|svg|ico)(\?|$)/i.test(url.pathname);
+
+  if (isCoreAsset) {
+    event.respondWith(
+      fetch(req).then((res) => {
+        if (res && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+        }
+        return res;
+      }).catch(() => {
+        return caches.match(req).then((cached) => {
+          if (cached) return cached;
+          if (req.mode === 'navigate') return caches.match(OFFLINE_URL);
+          return Response.error();
+        });
       })
     );
     return;
   }
 
-  // Cache-first untuk aset statis, fallback ke jaringan
+  // Aset lain: cache-first → fallback jaringan
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
-        // Cache response baru untuk halaman & aset yang diizinkan
-        if (networkResponse.ok && event.request.method === 'GET') {
-          const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
+    caches.match(req).then((cached) => {
+      if (cached) return cached;
+      return fetch(req).then((res) => {
+        if (res && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
         }
-        return networkResponse;
-      }).catch(() => {
-        // Offline fallback untuk navigasi HTML
-        if (event.request.mode === 'navigate') {
-          return caches.match(OFFLINE_URL);
-        }
+        return res;
       });
     })
   );
