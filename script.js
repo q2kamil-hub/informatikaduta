@@ -1896,13 +1896,9 @@
     overlay.querySelector('.duta-notif-selesai').addEventListener('click', function() {
       overlay.remove();
       // Tampilkan banner install PWA setelah notif update ditutup
-      // (jika PWA belum terinstall dan user belum pilih "Jangan tampilkan lagi")
+      // (jika PWA belum terinstall)
       if (!window.DUTA_PWA.pwaTelahDiinstal) {
-        try {
-          if (localStorage.getItem('duta_pwa_install_dismissed') !== '1') {
-            tampilkanBannerInstallPWA();
-          }
-        } catch (e) {}
+        tampilkanBannerInstallPWA();
       }
     });
 
@@ -2092,10 +2088,7 @@ function tampilkanBannerInstallPWA() {
         '<button type=\"button\" class=\"duta-pwa-banner-btn duta-pwa-banner-later\" id=\"dutaPwaLaterBtn\" title=\"Tutup\">' +
           '✕' +
         '</button>' +
-        '<label class=\"duta-pwa-banner-remember\">' +
-          '<input type=\"checkbox\" id=\"dutaPwaRemember\"> ' +
-          '<span>Jangan tampilkan lagi</span>' +
-        '</label>' +
+
       '</div>' +
     '</div>';
   document.body.appendChild(banner);
@@ -2107,7 +2100,6 @@ function tampilkanBannerInstallPWA() {
 
   const btnInstall = document.getElementById('dutaPwaInstallBtn');
   const btnLater = document.getElementById('dutaPwaLaterBtn');
-  const chkRemember = document.getElementById('dutaPwaRemember');
 
   // Handler tombol Instal
   btnInstall.addEventListener('click', function() {
@@ -2117,7 +2109,7 @@ function tampilkanBannerInstallPWA() {
         prompt.prompt();
         prompt.userChoice.then(function(choice) {
           if (choice.outcome === 'accepted') {
-            tutupBanner(false);
+            tutupBanner();
           } else {
             // User menolak — tampilkan petunjuk manual
             tampilkanPetunjukManual();
@@ -2137,27 +2129,25 @@ function tampilkanBannerInstallPWA() {
 
   // Handler tombol Tutup (Nanti)
   btnLater.addEventListener('click', function() {
-    const remember = chkRemember.checked;
-    tutupBanner(remember);
+    tutupBanner();
   });
 
   // Listener: jika PWA berhasil terinstal → tutup banner otomatis
   window.addEventListener('appinstalled', function() {
     window.DUTA_PWA.deferredInstallPrompt = null;
     window.DUTA_PWA.pwaTelahDiinstal = true;
-    tutupBanner(true);
+    tutupBanner();
   }, { once: true });
 }
 
-function tutupBanner(simpanJanganTampilkan) {
+function tutupBanner() {
   const banner = document.getElementById('duta-pwa-banner');
   if (!banner) return;
   banner.classList.remove('duta-pwa-banner-visible');
   banner.classList.add('duta-pwa-banner-hiding');
   setTimeout(function() { banner.remove(); }, 300);
-  if (simpanJanganTampilkan) {
-    try { localStorage.setItem('duta_pwa_install_dismissed', '1'); } catch (e) {}
-  }
+  // Simpan timestamp kapan banner ditutup
+  try { localStorage.setItem('duta_pwa_banner_dismissed_at', String(Date.now())); } catch (e) {}
 }
 
 function tampilkanPetunjukManual() {
@@ -2191,9 +2181,10 @@ function initPWA() {
   // Jika sudah standalone (PWA terpasang) → tidak perlu tampilkan banner
   if (window.DUTA_PWA.pwaTelahDiinstal) return;
 
-  // Jika user pernah memilih "Jangan tampilkan lagi" → jangan tampilkan banner
+  // Cek apakah banner pernah ditutup dalam 5 menit terakhir
   try {
-    if (localStorage.getItem('duta_pwa_install_dismissed') === '1') return;
+    const dismissedAt = Number(localStorage.getItem('duta_pwa_banner_dismissed_at')) || 0;
+    if (dismissedAt > 0 && (Date.now() - dismissedAt) < 5 * 60 * 1000) return; // 5 menit
   } catch (e) {}
 
   // Tampilkan banner ajakan install (non-intrusif)
