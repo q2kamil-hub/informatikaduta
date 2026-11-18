@@ -255,6 +255,14 @@
         }
         return null;
       }
+      function terapkanVisibilitasKartuUjian() {
+        const session = window.ambilSession ? window.ambilSession() : null;
+        if (!session && elGrid) {
+          // Mode anonim (belum login dan belum tamu): sembunyikan kartu ujian
+          elGrid.style.display = 'none';
+        }
+      }
+
       function renderIdentitas() {
         sessionUser = deteksiSession();
         if (sessionUser) {
@@ -327,6 +335,7 @@
           renderDaftarUjianGrid(daftarUjian);
           elLoading.style.display = 'none';
           if (daftarUjian.length === 0) { elEmpty.style.display = 'block'; } else { elGrid.style.display = 'grid'; }
+          terapkanVisibilitasKartuUjian();
         } catch (err) {
           elLoading.style.display = 'none'; elError.style.display = 'block'; elErrorText.textContent = 'Gagal memuat daftar ujian: ' + err.message;
         }
@@ -357,7 +366,7 @@
         });
       }
 
-      elInputNama.addEventListener('input', function() {
+      elInputNama.addEventListener('blur', function() {
         const val = this.value; const normalized = normalisasiNama(val);
         if (normalized !== val) this.value = normalized;
       });
@@ -371,6 +380,8 @@
       elRadSendiri.addEventListener('change', function() {
         if (this.checked) { elSekolahPilihDaftar.classList.add('hide'); elSekolahIsiSendiri.classList.remove('hide'); }
       });
+
+      elInputUjian.addEventListener('change', terapkanVisibilitasKartuUjian);
 
       elFormIdentitas.addEventListener('submit', function(e) {
         e.preventDefault(); sembunyikanPesan();
@@ -507,6 +518,7 @@
         renderIdentitas();
         muatDaftarSekolah();
         muatDaftarUjian();
+        terapkanVisibilitasKartuUjian();
         console.log('✅ Daftar Ujian siap!');
       });
     })();

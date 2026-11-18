@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ujian>
+  <konfigurasi>
+    <nama>Uji Coba Multi-Paket</nama>
+    <mapel>Pengetahuan Umum</mapel>
+    <kelas>7</kelas>
+    <waktu>30</waktu>
+    <skorDefault>10</skorDefault>
+    <acakPaket>true</acakPaket>
+    <acakOpsi>true</acakOpsi>
+  </konfigurasi>
+
+  <paketList>
+
+    <!-- ============ PAKET A ============ -->
+    <paket id="A">
+      <soalList>
+
+        <!-- A1: pilihan_ganda -->
+        <soal id="a1" tipe="pilihan_ganda" skor="10">
+          <pertanyaan>Ibu kota Indonesia yang baru adalah?</pertanyaan>
+          <pilihan label="A">Jakarta</pilihan>
+          <pilihan label="B">Nusantara</pilihan>
+          <pilihan label="C">Surabaya</pilihan>
+          <pilihan label="D">Bandung</pilihan>
+          <kunci>Jawaban B</kunci>
+          <penjelasan>Ibu kota baru Indonesia adalah Nusantara di Kalimantan Timur.</penjelasan>
+        </soal>
+
+        <!-- A2: pilihan_ganda -->
+        <soal id="a2" tipe="pilihan_ganda" skor="10">
+          <pertanyaan>Planet terdekat dari Matahari adalah?</pertanyaan>
+          <pilihan label="A">Venus</pilihan>
+          <pilihan label="B">Bumi</pilihan>
+          <pilihan label="C">Merkurius</pilihan>
+          <pilihan label="D">Mars</pilihan>
+          <kunci>Jawaban C</kunci>
+          <penjelasan>Merkurius adalah planet terdekat dari Matahari.</penjelasan>
+        </soal>
+
+        <!-- A3: benar_salah -->
+        <soal id="a3" tipe="benar_salah" skor="10">
+          <pertanyaan>Proses tumbuhan membuat makanan sendiri disebut fotosintesis.</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>Fotosintesis adalah proses pembuatan makanan oleh tumbuhan hijau dengan bantuan cahaya.</penjelasan>
+        </soal>
+
+        <!-- A4: pilihan_ganda_kompleks -->
+        <soal id="a4" tipe="pilihan_ganda_kompleks" skor="15">
+          <pertanyaan>Manakah yang termasuk bahasa pemrograman? (pilih semua)</pertanyaan>
+          <pilihan label="A">Python</pilihan>
+          <pilihan label="B">HTML</pilihan>
+          <pilihan label="C">JavaScript</pilihan>
+          <pilihan label="D">Microsoft Word</pilihan>
+          <pilihan label="E">Java</pilihan>
+          <kunci>Jawaban A, C, E</kunci>
+          <penjelasan>Python, JavaScript, dan Java adalah bahasa pemrograman. HTML adalah bahasa markup, Word adalah aplikasi.</penjelasan>
+        </soal>
+
+        <!-- A5: mencocokan -->
+        <soal id="a5" tipe="mencocokan" skor="20">
+          <pertanyaan>Pasangkan negara dengan ibu kotanya!</pertanyaan>
+          <pasangan>
+            <item sisi="kiri" id="k1">Indonesia</item>
+            <item sisi="kanan" id="v1">Jakarta</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k2">Jepang</item>
+            <item sisi="kanan" id="v2">Tokyo</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k3">Thailand</item>
+            <item sisi="kanan" id="v3">Bangkok</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k4">Malaysia</item>
+            <item sisi="kanan" id="v4">Kuala Lumpur</item>
+          </pasangan>
+          <kunci>
+            <pasangan kiri="k1" kanan="v1"/>
+            <pasangan kiri="k2" kanan="v2"/>
+            <pasangan kiri="k3" kanan="v3"/>
+            <pasangan kiri="k4" kanan="v4"/>
+          </kunci>
+          <penjelasan>Ibu kota: Indonesia=Jakarta, Jepang=Tokyo, Thailand=Bangkok, Malaysia=Kuala Lumpur.</penjelasan>
+        </soal>
+
+      </soalList>
+    </paket>
+
+    <!-- ============ PAKET B ============ -->
+    <paket id="B">
+      <soalList>
+
+        <!-- B1: pilihan_ganda -->
+        <soal id="b1" tipe="pilihan_ganda" skor="10">
+          <pertanyaan>Benua terbesar di dunia adalah?</pertanyaan>
+          <pilihan label="A">Afrika</pilihan>
+          <pilihan label="B">Amerika</pilihan>
+          <pilihan label="C">Asia</pilihan>
+          <pilihan label="D">Eropa</pilihan>
+          <kunci>Jawaban C</kunci>
+          <penjelasan>Asia adalah benua terbesar di dunia.</penjelasan>
+        </soal>
+
+        <!-- B2: pilihan_ganda -->
+        <soal id="b2" tipe="pilihan_ganda" skor="10">
+          <pertanyaan>Alat untuk mengukur suhu adalah?</pertanyaan>
+          <pilihan label="A">Barometer</pilihan>
+          <pilihan label="B">Termometer</pilihan>
+          <pilihan label="C">Hygrometer</pilihan>
+          <pilihan label="D">Anemometer</pilihan>
+          <kunci>Jawaban B</kunci>
+          <penjelasan>Termometer digunakan untuk mengukur suhu.</penjelasan>
+        </soal>
+
+        <!-- B3: benar_salah -->
+        <soal id="b3" tipe="benar_salah" skor="10">
+          <pertanyaan>Pancasila terdiri dari 6 sila.</pertanyaan>
+          <kunci>Salah</kunci>
+          <penjelasan>Pancasila terdiri dari 5 sila, bukan 6.</penjelasan>
+        </soal>
+
+        <!-- B4: pilihan_ganda_kompleks -->
+        <soal id="b4" tipe="pilihan_ganda_kompleks" skor="15">
+          <pertanyaan>Manakah yang termasuk hewan mamalia? (pilih semua)</pertanyaan>
+          <pilihan label="A">Lumba-lumba</pilihan>
+          <pilihan label="B">Buaya</pilihan>
+          <pilihan label="C">Kelelawar</pilihan>
+          <pilihan label="D">Paus</pilihan>
+          <pilihan label="E">Elang</pilihan>
+          <kunci>Jawaban A, C, D</kunci>
+          <penjelasan>Lumba-lumba, kelelawar, dan paus adalah mamalia. Buaya reptil, elang aves.</penjelasan>
+        </soal>
+
+        <!-- B5: mencocokan -->
+        <soal id="b5" tipe="mencocokan" skor="20">
+          <pertanyaan>Pasangkan istilah dengan artinya!</pertanyaan>
+          <pasangan>
+            <item sisi="kiri" id="k1">Hematofagus</item>
+            <item sisi="kanan" id="v1">Pemakan darah</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k2">Herbivora</item>
+            <item sisi="kanan" id="v2">Pemakan tumbuhan</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k3">Karnivora</item>
+            <item sisi="kanan" id="v3">Pemakan daging</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k4">Omnivora</item>
+            <item sisi="kanan" id="v4">Pemakan segalanya</item>
+          </pasangan>
+          <kunci>
+            <pasangan kiri="k1" kanan="v1"/>
+            <pasangan kiri="k2" kanan="v2"/>
+            <pasangan kiri="k3" kanan="v3"/>
+            <pasangan kiri="k4" kanan="v4"/>
+          </kunci>
+          <penjelasan>Hematofagus=pemakan darah, Herbivora=tumbuhan, Karnivora=daging, Omnivora=segalanya.</penjelasan>
+        </soal>
+
+      </soalList>
+    </paket>
+
+  </paketList>
+</ujian>

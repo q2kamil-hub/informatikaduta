@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ujian>
+  <!-- ============================================================
+  FORMAT UJIAN MULTI-PAKET v2 — Informatika DUTA
+  Unggah ke folder Google Drive khusus ujian.
+  
+  FITUR BARU:
+  - Multi-paket: 1 file XML bisa berisi paket A, B, C, D, dst
+  - Paket acak: siswa mendapat paket berbeda (deterministic)
+  - Acak opsi: opsi jawaban A/B/C/D diacak per siswa
+  
+  BACKWARD COMPATIBLE:
+  - File XML lama (tanpa <paketList>) tetap jalan
+  - Jika tidak ada <paketList>, semua <soal> di <soalList> root 
+    dianggap sebagai 1 paket default "A"
+  ============================================================ -->
+  
+  <konfigurasi>
+    <nama>Contoh Ujian Multi-Paket v2</nama>
+    <mapel>Informatika</mapel>
+    <kelas>7, 8, 9</kelas>
+    <waktu>60</waktu>
+    <skorDefault>10</skorDefault>
+    
+    <!-- FITUR BARU v2 -->
+    <acakPaket>true</acakPaket>
+    <acakOpsi>true</acakOpsi>
+  </konfigurasi>
+  
+  <!-- ===========================================================
+  DAFTAR PAKET SOAL
+  Setiap <paket> berisi <soalList> sendiri.
+  Jumlah paket bebas (minimal 1, maksimal 26 A-Z).
+  ID paket harus unik (A, B, C, D, dst).
+  ============================================================ -->
+  <paketList>
+    
+    <!-- PAKET A -->
+    <paket id="A">
+      <soalList>
+        <soal id="a1" tipe="pilihan_ganda" skor="10">
+          <pertanyaan>Apa singkatan dari HTML? (Paket A)</pertanyaan>
+          <pilihan label="A">Hyper Text Markup Language</pilihan>
+          <pilihan label="B">Hyper Transfer Markup Language</pilihan>
+          <pilihan label="C">Home Tool Markup Language</pilihan>
+          <pilihan label="D">Hyper Tool Markup Language</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>HTML singkatan dari Hyper Text Markup Language.</penjelasan>
+        </soal>
+        
+        <soal id="a2" tipe="benar_salah" skor="5">
+          <pertanyaan>CSS digunakan untuk menata tampilan halaman web. (Paket A)</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>CSS (Cascading Style Sheets) digunakan untuk styling halaman web.</penjelasan>
+        </soal>
+      </soalList>
+    </paket>
+    
+    <!-- PAKET B -->
+    <paket id="B">
+      <soalList>
+        <soal id="b1" tipe="pilihan_ganda" skor="10">
+          <pertanyaan>Apa singkatan dari CSS? (Paket B)</pertanyaan>
+          <pilihan label="A">Cascading Style Sheets</pilihan>
+          <pilihan label="B">Computer Style Sheets</pilihan>
+          <pilihan label="C">Creative Style Sheets</pilihan>
+          <pilihan label="D">Colorful Style Sheets</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>CSS singkatan dari Cascading Style Sheets.</penjelasan>
+        </soal>
+        
+        <soal id="b2" tipe="benar_salah" skor="5">
+          <pertanyaan>JavaScript adalah bahasa pemrograman untuk membuat halaman web interaktif. (Paket B)</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>JavaScript digunakan untuk membuat halaman web menjadi interaktif.</penjelasan>
+        </soal>
+      </soalList>
+    </paket>
+    
+    <!-- PAKET C -->
+    <paket id="C">
+      <soalList>
+        <soal id="c1" tipe="pilihan_ganda" skor="10">
+          <pertanyaan>Manakah yang merupakan bahasa markup? (Paket C)</pertanyaan>
+          <pilihan label="A">HTML</pilihan>
+          <pilihan label="B">Python</pilihan>
+          <pilihan label="C">Java</pilihan>
+          <pilihan label="D">C++</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>HTML adalah bahasa markup untuk membuat struktur halaman web.</penjelasan>
+        </soal>
+        
+        <soal id="c2" tipe="benar_salah" skor="5">
+          <pertanyaan>XML digunakan untuk menyimpan dan mengirim data. (Paket C)</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>XML (eXtensible Markup Language) digunakan untuk menyimpan dan mengirim data.</penjelasan>
+        </soal>
+      </soalList>
+    </paket>
+    
+    <!-- PAKET D -->
+    <paket id="D">
+      <soalList>
+        <soal id="d1" tipe="pilihan_ganda" skor="10">
+          <pertanyaan>Apa fungsi utama dari browser web? (Paket D)</pertanyaan>
+          <pilihan label="A">Menampilkan halaman web</pilihan>
+          <pilihan label="B">Membuat program</pilihan>
+          <pilihan label="C">Menyimpan file</pilihan>
+          <pilihan label="D">Mengedit foto</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>Browser web digunakan untuk menampilkan halaman web dari internet.</penjelasan>
+        </soal>
+        
+        <soal id="d2" tipe="benar_salah" skor="5">
+          <pertanyaan>URL adalah alamat dari halaman web. (Paket D)</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>URL (Uniform Resource Locator) adalah alamat unik dari halaman web.</penjelasan>
+        </soal>
+      </soalList>
+    </paket>
+    
+  </paketList>
+</ujian>

@@ -30,7 +30,7 @@ Berikut dokumen lengkapnya:
 | **Encoding** | UTF-8 |
 | **Versi script.js** | v3.4 (Multi-Bagian + Bulk Progress + PWA) |
 | **Versi Code.gs** | v3.6 (Fix nilai_akhir + totalBagianAktif) |
-| **Versi PWA** | v1.0.0 |
+| **Versi PWA** | v1.0.4 |
 | **File PWA** | `manifest.json`, `sw.js`, `versi.json` |
 | **Terbit** | 2026-10-29 |
 
@@ -890,13 +890,13 @@ rata = sum(skor[b] untuk b di totalBagianAktif) / len(totalBagianAktif)
 - Hard reload (`Ctrl+Shift+R`) setiap kali ubah `script.js` / `.css` / `.html`.
 - Deploy ulang `Code.gs` setiap ubah backend.
 
-### 19.6 PWA — Progressive Web App (v1.0.0)
+### 19.6 PWA — Progressive Web App (Update v1.0.4: Banner Auto-Show 5 Menit)
 
 **File PWA:**
 | File | Fungsi |
 |------|--------|
 | `manifest.json` | Web App Manifest — nama app, ikon, warna tema, display standalone, lang ID |
-| `sw.js` | Service Worker — cache aset statis (HTML, CSS, JS, gambar), offline fallback, versi.json tidak dicache |
+| `sw.js` | Service Worker — cache `duta-pwa-v3`, **network-first** untuk konten inti (HTML/JS/CSS/JSON/gambar), fallback cache saat offline, `versi.json` selalu jaringan dulu, lintas origin (API GAS, CDN) tidak diintersep |
 | `versi.json` | Berisi `versi`, `daftarFile`, dan `pesanUpdate` untuk deteksi update aplikasi |
 
 **Cara Kerja Notifikasi Update:**
@@ -906,25 +906,43 @@ rata = sum(skor[b] untuk b di totalBagianAktif) / len(totalBagianAktif)
 4. User klik **Update** → `reg.update()` + `location.reload(true)` → halaman dimuat ulang (kesamaannya dengan hard refresh)
 5. `localStorage['duta_versi_terpasang']` diupdate, notifikasi tidak muncul lagi sampai versi berikutnya
 
-**Cara Kerja PWA-Only Access:**
-- Di host pengembangan lokal (`localhost`, `127.x.x.x`, `::1`, dan subdomain `.localhost`), pemeriksaan PWA-only dilewati dan Service Worker aplikasi tidak didaftarkan. Jika ada Service Worker aplikasi lokal lama, script mencoba melepas registrasi pada scope aplikasi tersebut lalu memuat ulang halaman sekali.
-- Di host non-lokal, `manifest.json` dan Service Worker didaftarkan pada semua halaman sebelum pemeriksaan mode aplikasi. Ini memungkinkan browser menilai kelayakan instalasi saat situs dibuka.
-- Aplikasi terpasang dikenali melalui `display-mode: standalone`, `display-mode: window-controls-overlay`, atau `navigator.standalone` (iOS).
-- Jika belum berjalan sebagai aplikasi terpasang, overlay PWA-only muncul dan konten disembunyikan.
-- Pengguna wajib install PWA terlebih dahulu untuk mengakses portal
-- Jika PWA di-uninstall dan diakses ulang via browser biasa → overlay PWA-only akan muncul lagi (deteksi ulang setiap page load)
-- Tombol **Instal Aplikasi InformatikaDuta** selalu tersedia. Browser yang mendukung `beforeinstallprompt` membuka dialog instalasi; jika tidak, tombol menampilkan petunjuk manual sesuai platform.
-- `appinstalled` menandai instalasi selesai dan memuat ulang halaman ke mode aplikasi.
-- Petunjuk: Windows/Chromebook gunakan Chrome atau Edge dan pilih opsi/ikon instalasi; Android gunakan menu Chrome; iPhone/iPad buka di Safari, pilih **Bagikan → Tambahkan ke Layar Utama**.
-- Tombol "Buka di Browser Lain" saat ini hanya menutup overlay dan melewati pembatasan PWA-only pada halaman tersebut; tombol ini tidak membuka aplikasi browser lain.
-- Instalasi memerlukan origin aman (HTTPS; `localhost` untuk pengembangan) dan browser yang mendukung PWA. Dialog instalasi otomatis tidak tersedia di semua browser/perangkat; iOS menggunakan langkah manual di Safari.
+**Cara Kerja Akses PWA (Opsional dari v1.0.2):**
+- Portal **tidak lagi memblokir** browser biasa. Konten tetap terlihat dan dapat diakses tanpa install PWA.
+- Di host pengembangan lokal (`localhost`, `127.x.x.x`, `::1`, dan subdomain `.localhost`), pemeriksaan PWA dilewati dan Service Worker aplikasi tidak didaftarkan.
+- Di host non-lokal, `manifest.json` dan Service Worker didaftarkan pada semua halaman.
+- Aplikasi terpasang dikenali melalui `display-mode: standalone`, `display-mode: window-controls-overlay`, atau `navigator.standalone` (iOS). Jika sudah terpasang (`pwaTelahDiinstal === true`), banner install tidak ditampilkan.
+
+**Banner Rekomendasi Install (non-intrusif, fixed di bawah layar):**
+- Tampilkan otomatis di bawah layar (`position: fixed, bottom`) untuk user yang mengakses via browser biasa dan belum install PWA.
+- Banner berisi ikon 📱, judul "Pasang aplikasi Informatika DUTA", tombol **⬇️ Instal**, dan tombol **✕ Tutup**.
+- Klik **Instal**: memicu `beforeinstallprompt.prompt()`; jika dialog diterima → `tutupBanner()`; jika ditolak → tampilkan petunjuk instal manual. Jika `beforeinstallprompt` tidak tersedia → langsung tampilkan petunjuk manual.
+- Klik **✕ Tutup**: banner disembunyikan dengan animasi, dan timestamp disimpan ke `localStorage.duta_pwa_banner_dismissed_at`.
+- **Auto-show setiap 5 menit (v1.0.4):** `initPWA()` mengecek `duta_pwa_banner_dismissed_at`. Jika selisih waktu sekarang dengan timestamp < 5 menit (300.000 ms), banner **tidak** ditampilkan. Jika ≥ 5 menit atau belum ada timestamp, banner muncul kembali.
+- Jika PWA sudah terinstall atau user memilih "Jangan tampilkan lagi" sebelumnya (flag lama `duta_pwa_install_dismissed` sudah tidak dipakai, diganti timestamp di atas), banner tidak muncul.
+- Menutup popup notifikasi update dengan "Nanti saja" akan langsung memicu `tampilkanBannerInstallPWA()` jika PWA belum terinstall.
+- Listener `appinstalled` → `pwaTelahDiinstal = true`, `deferredInstallPrompt = nil`, lalu `tutupBanner()`.
+
+**Perubahan Penting (v1.0.4):**
+Perilaku banner diubah dari opsi "Jangan tampilkan lagi" (permanen di `localStorage`) menjadi **auto-show setiap 5 menit**.
+- **Masalah yang Diperbaiki:** Opsi "Jangan tampilkan lagi" bersifat permanen, membuat pengguna yang tidak sengaja menutup banner kehilangan kesempatan melihat anjuran install.
+- **Solusi:** Checkbox "Jangan tampilkan lagi" dihapus dari UI banner. Saat user menutup banner (klik ✕), sistem menyimpan timestamp saat ini ke `localStorage.duta_pwa_banner_dismissed_at`. Fungsi `initPWA()` mengecek timestamp tersebut; jika selisih < 5 menit, banner tidak ditampilkan. Jika ≥ 5 menit, banner muncul kembali.
+- **File yang terpengaruh:** `script.js` (logika timestamp 5 menit), `versi.json` (v1.0.4).
+
+**Riwayat Versi PWA:**
+| Versi | Perubahan |
+|-------|-----------|
+| v1.0.0 | PWA-only — overlay pemblokir, konten disembunyikan, cache-first `duta-pwa-v2` |
+| v1.0.1 | `script.js` v3.4, multi-bagian + bulk progress |
+| v1.0.2 | Banner non-intrusif mengganti overlay PWA-only, akses browser biasa dibuka, `duta-pwa-install-dismissed` flag permanen |
+| v1.0.3 | SW `duta-pwa-v3`, **network-first** untuk konten inti (perbaikan cache basi), lintas origin dilewati |
+| v1.0.4 | Banner auto-show setiap 5 menit, hapus checkbox "Jangan tampilkan lalu", pakai `duta_pwa_banner_dismissed_at` timestamp |
 
 **Auto Logout:** 60 menit (`BATAS_SESI_MENIT = 60` di `script.js`)
 
 **Cara Deploy Update:**
-- Ubah `versi` di `versi.json` (misal `1.0.0` → `1.0.1`)
-- Pengguka akan melihat popup notifikasi update saat membuka halaman
-- Untuk perbaikan ini, versi aplikasi dinaikkan ke `1.0.1` dan cache Service Worker ke `duta-pwa-v2` agar client tidak terus memakai `script.js` lama.
+- Ubah `versi` di `versi.json` (misal `1.0.3` → `1.0.4`)
+- Pengguna akan melihat popup notifikasi update saat membuka halaman
+- Service Worker cache dinaikkan ke `duta-pwa-v3` agar client tidak terus memakai cache basi (`duta-pwa-v2`).
 
 **Ikon PWA:** `informatikaduta-192.png` dan `informatikaduta-512.png` di root folder.
 
