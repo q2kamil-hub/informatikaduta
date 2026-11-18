@@ -1,11 +1,12 @@
 {
-  "versi": "1.0.6",
+  "versi": "1.1.0",
   "daftarFile": [
     "script.js",
     "sw.js",
     "desain.css",
     "index.html",
-    "manifest.json"
+    "manifest.json",
+    "ujian/kerjakan.html"
   ],
-  "pesanUpdate": "Fitur Ujian Online telah diperbarui, silahkan periksa menu Ujian Online untuk melihat fitur terbaru."
+  "pesanUpdate": "Fitur Ujian Online telah diperbarui: mode layar penuh (fullscreen) dengan Layar Mulai, deteksi standalone PWA, banner fallback untuk Chrome, log kecurangan human-readable, dan perbaikan false-positive peringatan blur saat submit."
 }

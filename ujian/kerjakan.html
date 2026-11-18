@@ -385,6 +385,35 @@
       .blur-countdown-ring { width: 64px; height: 64px; }
       .blur-countdown-number { font-size: 1.2rem; }
     }
+
+    /* ==================== LAYAR MULAI ==================== */
+    .layar-mulai {
+      position: fixed; inset: 0; z-index: 10003;
+      background: linear-gradient(135deg, #fdf6ec 0%, #f3ecff 100%);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem; overflow-y: auto;
+    }
+    .layar-mulai-kotak {
+      background: #fff; border: 3px solid #e0d4ff; border-radius: 24px;
+      padding: 2rem 1.8rem; max-width: 520px; width: 100%; text-align: center;
+      box-shadow: 0 20px 60px rgba(80,40,100,0.15);
+      animation: dutaModalSlideUp 0.3s ease;
+    }
+    .lm-ikon { font-size: 3rem; margin-bottom: 0.5rem; }
+    .layar-mulai-kotak h2 { font-size: 1.4rem; font-weight: 800; color: #5c2f8a; margin-bottom: 1rem; }
+    .lm-info { font-size: 0.95rem; color: #3a2b3e; line-height: 1.7; margin-bottom: 1.2rem; }
+    .lm-info strong { color: #5c2f8a; }
+    .lm-peringatan {
+      background: #fff8e6; border: 2px solid #f0c896; border-radius: 14px;
+      padding: 1rem 1.2rem; margin-bottom: 1.5rem; text-align: left;
+    }
+    .lm-peringatan p { font-size: 0.85rem; color: #7a4a00; margin: 0.35rem 0; line-height: 1.5; }
+    #btnMulaiUjian { width: 100%; justify-content: center; font-size: 1.05rem; padding: 1rem; }
+    @media (max-width: 480px) {
+      .layar-mulai-kotak { padding: 1.5rem 1.2rem; }
+      .layar-mulai-kotak h2 { font-size: 1.2rem; }
+      .lm-peringatan p { font-size: 0.8rem; }
+    }
   </style>
 </head>
 <body>
@@ -422,6 +451,21 @@
         <div id="ujian-watermark" class="ujian-watermark"></div>
 
         <div class="area-soal" id="areaSoal"><div id="soalKonten">Memuat soal...</div></div>
+
+        <!-- ==================== LAYAR MULAI UI ==================== -->
+        <div id="layarMulai" class="layar-mulai" style="display:none;">
+          <div class="layar-mulai-kotak">
+            <div class="lm-ikon">📝</div>
+            <h2 id="lmJudul">Siap Mengerjakan Ujian?</h2>
+            <div class="lm-info" id="lmInfo"></div>
+            <div class="lm-peringatan">
+              <p>⚠️ Halaman akan masuk <strong>mode layar penuh</strong> saat dimulai.</p>
+              <p>🚫 Keluar tab/jendela akan <strong>tercatat</strong> sebagai aktivitas mencurigakan.</p>
+              <p>🔒 Teks soal <strong>tidak dapat disalin</strong> dan klik kanan diblokir.</p>
+            </div>
+            <button id="btnMulaiUjian" class="btn-nav btn-kirim" type="button">🚀 Mulai Ujian</button>
+          </div>
+        </div>
 
         <div class="nav-tombol" id="navTombol">
           <button class="btn-nav btn-sebelumnya" id="btnSebelumnya" type="button">← Sebelumnya</button>
@@ -473,6 +517,7 @@
       document.getElementById('identMode').textContent =
         sessionPeserta && sessionPeserta.tipe === 'login' ? 'Siswa Login' : 'Tamu';
       let soalList = [];
+      let cfgMulai = null; // { resume, state, xml, userId, acakOpsi, ... }
       let konfigurasi = {};
       let indeksSekarang = 0;
       let jawaban = {};
@@ -481,6 +526,7 @@
       let waktuMulai = Date.now();
       let timerInterval = null;
       let ujianSelesai = false;
+      let izinKeluarFullscreen = false;
       const elGridNomor = document.getElementById('gridNomor');
       const elAreaSoal = document.getElementById('areaSoal');
       const elSoalKonten = document.getElementById('soalKonten');
@@ -774,17 +820,27 @@
       }
 
       // ==================== ANTI-CHEAT: FULLSCREEN MODE ====================
+      function isStandaloneMode() {
+        return (window.matchMedia && (
+          window.matchMedia('(display-mode: standalone)').matches ||
+          window.matchMedia('(display-mode: fullscreen)').matches
+        )) || window.navigator.standalone === true;
+      }
+
       function masukFullscreen() {
-        const elem = document.documentElement;
-        try {
-          if (elem.requestFullscreen) elem.requestFullscreen();
-          else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-          else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
-          console.log('[fullscreen] Berhasil masuk fullscreen');
-        } catch (err) {
-          console.warn('[fullscreen] Diblokir browser (butuh interaksi user):', err);
-          tampilkanBannerFullscreenManual();
-        }
+        return new Promise(function(resolve) {
+          if (isStandaloneMode()) { console.log('[fullscreen] Standalone, skip'); resolve('standalone'); return; }
+          const elem = document.documentElement;
+          const req = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
+          if (!req) { tampilkanBannerFullscreenManual(); resolve('unsupported'); return; }
+          try {
+            const p = req.call(elem);
+            if (p && typeof p.then === 'function') {
+              p.then(function() { console.log('[fullscreen] OK'); resolve('ok'); })
+               .catch(function() { console.warn('[fullscreen] Ditolak browser'); tampilkanBannerFullscreenManual(); resolve('blocked'); });
+            } else { resolve('ok'); }
+          } catch (e) { console.warn('[fullscreen] Error', e); tampilkanBannerFullscreenManual(); resolve('error'); }
+        });
       }
 
       function tampilkanBannerFullscreenManual() {
@@ -815,6 +871,7 @@
       }
 
       function keluarFullscreen() {
+        izinKeluarFullscreen = true;
         if (document.exitFullscreen) {
           document.exitFullscreen().catch(function(err) {
             console.log('[fullscreen] Gagal keluar fullscreen:', err);
@@ -828,11 +885,11 @@
 
       // Deteksi jika user keluar fullscreen secara manual
       document.addEventListener('fullscreenchange', function() {
-        if (!document.fullscreenElement) {
+        if (!document.fullscreenElement && !izinKeluarFullscreen && !ujianSelesai && !sedangProsesSubmit) {
           console.log('[ujian-fullscreen] User keluar fullscreen manual');
           if (typeof catatBlurEvent === 'function') catatBlurEvent();
           setTimeout(function() {
-            if (!document.fullscreenElement) masukFullscreen();
+            if (!document.fullscreenElement && !izinKeluarFullscreen && !ujianSelesai && !sedangProsesSubmit) masukFullscreen();
           }, 500);
         }
       });
@@ -1168,8 +1225,65 @@
         mulaiTimer();
         mulaiUpdateWatermark();
         document.getElementById('headerNamaUjian').textContent = konfigurasi.nama || namaUjian;
-        // Paksa fullscreen saat ujian dimulai
-        masukFullscreen();
+        // Fullscreen dipicu dari tombol Mulai (user gesture), tidak di sini
+      }
+
+      // ==================== LAYAR MULAI UI ====================
+      function tampilkanLayarMulai(cfg) {
+        cfgMulai = cfg;
+        const elLayar = document.getElementById('layarMulai');
+        const elInfo = document.getElementById('lmInfo');
+        const elJudul = document.getElementById('lmJudul');
+        const elBtn = document.getElementById('btnMulaiUjian');
+        if (!elLayar) return;
+
+        const jumlahSoal = cfg.resume ? (cfg.state.soalOrder ? cfg.state.soalOrder.length : 0) : (cfg.paketSoalList ? cfg.paketSoalList.length : 0);
+        const waktuMenit = cfg.pengaturanWaktu || 0;
+        let infoHtml = '<div><strong>' + escapeHtml(cfg.namaUjian || namaUjian) + '</strong></div>';
+        if (cfg.paketId) infoHtml += '<div>Paket soal: <strong>' + escapeHtml(cfg.paketId) + '</strong></div>';
+        infoHtml += '<div>Jumlah soal: <strong>' + jumlahSoal + '</strong></div>';
+        infoHtml += '<div>Waktu: <strong>' + (waktuMenit > 0 ? waktuMenit + ' menit' : 'Tanpa batas waktu') + '</strong></div>';
+        if (cfg.resume) {
+          const terjawab = Object.keys(cfg.state.jawabanUser || {}).length;
+          infoHtml += '<div style="margin-top:0.5rem;color:#2d7d46;">✅ Progres tersimpan: ' + terjawab + ' jawaban. Kamu bisa melanjutkan.</div>';
+          elJudul.textContent = 'Lanjutkan Ujian?';
+          elBtn.textContent = '▶️ Lanjutkan Ujian';
+        } else {
+          elJudul.textContent = 'Siap Mengerjakan Ujian?';
+          elBtn.textContent = '🚀 Mulai Ujian';
+        }
+        elInfo.innerHTML = infoHtml;
+
+        elAreaSoal.style.display = 'none';
+        document.getElementById('gridNomor').style.display = 'none';
+        document.getElementById('navTombol').style.display = 'none';
+        document.querySelector('.progres-container').style.display = 'none';
+        elLayar.style.display = 'flex';
+      }
+
+      function sembunyikanLayarMulai() {
+        const elLayar = document.getElementById('layarMulai');
+        if (elLayar) elLayar.style.display = 'none';
+      }
+
+      async function mulaiDariGesture() {
+        if (!cfgMulai) return;
+        const elBtn = document.getElementById('btnMulaiUjian');
+        if (elBtn) elBtn.disabled = true;
+        await masukFullscreen(); // DIPICU OLEH KLIK USER → gesture valid
+        sembunyikanLayarMulai();
+        elAreaSoal.style.display = '';
+        document.getElementById('gridNomor').style.display = '';
+        document.getElementById('navTombol').style.display = '';
+        document.querySelector('.progres-container').style.display = '';
+        if (cfgMulai.resume) {
+          resumeUjianDariState(cfgMulai.state);
+        } else {
+          waktuMulai = Date.now();
+          simpanStateUjian({ waktuMulai: waktuMulai });
+          mulaiUjian(cfgMulai.xml, cfgMulai.userId, ujianId, cfgMulai.acakOpsi);
+        }
+        if (elBtn) elBtn.disabled = false;
       }
 
       async function loadUjian() {
@@ -1201,7 +1315,7 @@
             parsed.paketList.forEach(function(p) { allSoal.push.apply(allSoal, p.soalList); });
             const paketDipilih = parsed.paketList.find(function(p) { return p.id === stateTersimpan.paketId; }) || parsed.paketList[0];
             soalList = paketDipilih.soalList.slice();
-            resumeUjianDariState(stateTersimpan);
+            tampilkanLayarMulai({ resume: true, state: stateTersimpan, namaUjian: stateTersimpan.namaUjian || namaUjian, paketId: stateTersimpan.paketId, pengaturanWaktu: stateTersimpan.pengaturan && stateTersimpan.pengaturan.waktu });
             return;
           }
 
@@ -1209,7 +1323,9 @@
           const sessionPeserta = window.ambilSession ? window.ambilSession() : null;
           const userId = (sessionPeserta && sessionPeserta.user_id) || ('anon-' + Date.now());
           const acakOpsiDariSheet = (pengaturan && typeof pengaturan.acakSoal === 'number') ? pengaturan.acakSoal : 0;
-          mulaiUjian(text, userId, ujianId, acakOpsiDariSheet);
+          const parsedN = parseXMLUjian(text);
+          const paketN = pilihPaketDeterministik(parsedN.paketList, userId, ujianId);
+          tampilkanLayarMulai({ resume: false, xml: text, userId: userId, acakOpsi: acakOpsiDariSheet, namaUjian: parsedN.konfigurasi.nama || namaUjian, paketId: parsedN.paketList.length > 1 ? paketN.id : null, paketSoalList: paketN.soalList, pengaturanWaktu: parsedN.konfigurasi.waktu });
         } catch (err) {
           elSoalKonten.innerHTML = '<div style="color:#a3123c;padding:2rem;">Gagal memuat ujian: ' + escapeHtml(err.message) + '</div>';
         }
@@ -1463,6 +1579,9 @@
         if (!confirm('Yakin ingin mengirim jawaban? Nilai akan dihitung dan tidak bisa diubah lagi.')) return;
         selesaiUjian();
       });
+
+      const elBtnMulai = document.getElementById('btnMulaiUjian');
+      if (elBtnMulai) elBtnMulai.addEventListener('click', mulaiDariGesture);
 
       function hitungNilai() {
         let nilaiDapat = 0;
