@@ -1648,9 +1648,22 @@
             benar = kunciPasangan.length ? benarPasangan / kunciPasangan.length : 0;
             console.log('[mc] skor mencocokan:', s.id, 'benar:', benarPasangan, '/', kunciPasangan.length, '=', benar);
           } else if (s.tipe === 'pilihan_ganda_kompleks') {
-            const dipilih = Array.isArray(jw) ? jw.slice().sort() : [];
-            const kunci = s.kunci.slice().sort();
-            benar = dipilih.length === kunci.length && dipilih.every(function(label, i) { return label === kunci[i]; }) ? 1 : 0;
+            const dipilih = Array.isArray(jw) ? jw : [];
+            const kunci = Array.isArray(s.kunci) ? s.kunci : [];
+            const kunciSet = {};
+            kunci.forEach(function(k) { kunciSet[k] = true; });
+            let benarCount = 0;
+            let salahCount = 0;
+            dipilih.forEach(function(label) {
+              if (kunciSet[label]) benarCount++;
+              else salahCount++;
+            });
+            const totalKunci = kunci.length;
+            const nilaiParsial = totalKunci > 0
+              ? Math.max(0, (benarCount - salahCount)) / totalKunci
+              : 0;
+            benar = nilaiParsial; // nilai 0..1, akan dikali s.skor di baris berikutnya
+            console.log('[pgk-parsial] soal=' + s.id + ' benar=' + benarCount + ' salah=' + salahCount + ' parsial=' + nilaiParsial.toFixed(3));
           } else {
             benar = String(jw).toLowerCase() === String(s.kunci).toLowerCase() ? 1 : 0;
           }
@@ -1685,17 +1698,45 @@
             const benarPasangan = s.kunci.filter(function(k) { return mapping[k.kiri] === k.kanan; }).length;
             benar = s.kunci.length ? benarPasangan / s.kunci.length : 0;
           } else if (s.tipe === 'pilihan_ganda_kompleks') {
-            const dipilih = Array.isArray(jw) ? jw.slice().sort() : [];
-            const kunci = s.kunci.slice().sort();
-            benar = dipilih.length === kunci.length && dipilih.every(function(label, i) { return label === kunci[i]; }) ? 1 : 0;
+            const dipilih = Array.isArray(jw) ? jw : [];
+            const kunci = Array.isArray(s.kunci) ? s.kunci : [];
+            const kunciSet = {};
+            kunci.forEach(function(k) { kunciSet[k] = true; });
+            let benarCount = 0;
+            let salahCount = 0;
+            dipilih.forEach(function(label) {
+              if (kunciSet[label]) benarCount++;
+              else salahCount++;
+            });
+            const totalKunci = kunci.length;
+            const nilaiParsial = totalKunci > 0
+              ? Math.max(0, (benarCount - salahCount)) / totalKunci
+              : 0;
+            benar = nilaiParsial; // nilai 0..1
+            console.log('[pgk-parsial] soal=' + s.id + ' benar=' + benarCount + ' salah=' + salahCount + ' parsial=' + nilaiParsial.toFixed(3));
           } else {
             benar = String(jw).toLowerCase() === String(s.kunci).toLowerCase() ? 1 : 0;
           }
+
+          let infoParsial = '';
+          if (s.tipe === 'pilihan_ganda_kompleks') {
+            const dipilih2 = Array.isArray(jw) ? jw : [];
+            const kunci2 = Array.isArray(s.kunci) ? s.kunci : [];
+            const kunciSet2 = {};
+            kunci2.forEach(function(k) { kunciSet2[k] = true; });
+            let b2 = 0, sa2 = 0;
+            dipilih2.forEach(function(l) { if (kunciSet2[l]) b2++; else sa2++; });
+            const parsial = kunci2.length > 0 ? Math.max(0, (b2 - sa2)) / kunci2.length : 0;
+            infoParsial = '<div style="font-size:0.8rem; color:#7a6656; margin-top:0.2rem;">' +
+              'Benar: ' + b2 + ' | Salah: ' + sa2 + ' | Parsial: ' + (parsial * 100).toFixed(0) + '%</div>';
+          }
+
           reviewHtml += '<div class="review-item ' + (benar === 1 ? 'review-benar' : 'review-salah') + '">' +
             '<div class="review-soal">Soal ' + (i + 1) + ' (' + s.tipe.replace(/_/g, ' ') + '):</div>' +
             '<div>' + escapeHtml(s.pertanyaan) + '</div>' +
             '<div class="review-jawaban-user">Jawaban Anda: ' + escapeHtml(formatJawaban(s, jw)) + '</div>' +
             '<div class="review-kunci">Kunci: ' + escapeHtml(formatKunci(s)) + '</div>' +
+            infoParsial +
             (s.penjelasan ? '<div style="font-size:0.85rem;color:#5c4638;margin-top:0.3rem;">' + escapeHtml(s.penjelasan) + '</div>' : '') +
             '</div>';
         });

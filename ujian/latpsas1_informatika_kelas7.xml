@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ujian>
+  <konfigurasi>
+    <nama>Latihan PSAS I Informatika</nama>
+    <mapel>Informatika</mapel>
+    <kelas>7</kelas>
+    <waktu>60</waktu>
+    <skorDefault>3</skorDefault>
+    <acakPaket>false</acakPaket>
+    <acakOpsi>true</acakOpsi>
+  </konfigurasi>
+
+  <paketList>
+    <paket id="A">
+      <soalList>
+
+        <!-- ============ MATERI 1: GUI ============ -->
+
+        <soal id="a1" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Nenek Rina baru pertama kali memakai mesin ATM. Ia bisa menarik uang hanya dengan menyentuh tombol bergambar dan bertuliskan "Tarik Tunai", tanpa mengetik perintah apa pun. Jenis antarmuka yang dipakai mesin ATM tersebut adalah ...</pertanyaan>
+          <pilihan label="A">antarmuka teks (CLI)</pilihan>
+          <pilihan label="B">antarmuka berbasis grafis (GUI)</pilihan>
+          <pilihan label="C">antarmuka suara</pilihan>
+          <pilihan label="D">antarmuka kode program</pilihan>
+          <kunci>Jawaban B</kunci>
+          <penjelasan>ATM dipakai dengan menyentuh tombol bergambar tanpa mengetik perintah, ciri GUI.</penjelasan>
+        </soal>
+
+        <soal id="a2" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Di lab sekolah, Dimas memakai komputer lama yang hanya menampilkan layar hitam dengan tulisan putih. Untuk membuka folder ia harus mengetik perintah, dan perintahnya gagal ketika ia salah mengetik satu huruf. Pernyataan yang tepat tentang komputer tersebut adalah ...</pertanyaan>
+          <pilihan label="A">memakai GUI karena layarnya penuh ikon</pilihan>
+          <pilihan label="B">memakai GUI karena pengguna harus mengetik perintah</pilihan>
+          <pilihan label="C">memakai CLI karena layarnya berwarna dan penuh ikon</pilihan>
+          <pilihan label="D">memakai CLI karena pengguna harus menghafal dan mengetik perintah dengan tepat</pilihan>
+          <kunci>Jawaban D</kunci>
+          <penjelasan>Layar hitam-putih dan perintah yang diketik adalah ciri CLI; salah ketik membuat perintah gagal.</penjelasan>
+        </soal>
+
+        <soal id="a3" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Raka sedang memutar musik dan membuka browser. Ia ingin berpindah dari jendela browser ke aplikasi musik tanpa menutup salah satunya. Komponen GUI yang paling tepat ia gunakan adalah ...</pertanyaan>
+          <pilihan label="A">desktop</pilihan>
+          <pilihan label="B">start menu</pilihan>
+          <pilihan label="C">taskbar</pilihan>
+          <pilihan label="D">tombol close</pilihan>
+          <kunci>Jawaban C</kunci>
+          <penjelasan>Taskbar menampilkan ikon aplikasi yang sedang terbuka sehingga pengguna bisa berpindah jendela.</penjelasan>
+        </soal>
+
+        <soal id="a4" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Sinta menekan tombol garis (—) di pojok kanan atas jendela aplikasi musik saat lagu sedang diputar. Jendela hilang dari layar, tetapi lagu tetap terdengar. Penyebabnya adalah ...</pertanyaan>
+          <pilihan label="A">tombol garis (minimize) hanya menyembunyikan jendela ke taskbar, aplikasi tetap berjalan</pilihan>
+          <pilihan label="B">tombol garis menutup aplikasi, tetapi lagu tersimpan di taskbar</pilihan>
+          <pilihan label="C">tombol garis memperbesar jendela sehingga lagu diputar otomatis</pilihan>
+          <pilihan label="D">komputer mengalami kerusakan</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>Minimize hanya menyembunyikan jendela ke taskbar; aplikasi tetap berjalan.</penjelasan>
+        </soal>
+
+        <soal id="a5" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Area utama layar tempat ikon-ikon ditampilkan, yang diibaratkan sebagai "meja kerja" digital, disebut ...</pertanyaan>
+          <pilihan label="A">taskbar</pilihan>
+          <pilihan label="B">ikon</pilihan>
+          <pilihan label="C">start menu</pilihan>
+          <pilihan label="D">desktop</pilihan>
+          <kunci>Jawaban D</kunci>
+          <penjelasan>Desktop adalah area utama layar tempat ikon ditampilkan, "meja kerja" digital.</penjelasan>
+        </soal>
+
+        <soal id="a6" tipe="benar_salah" skor="2">
+          <pertanyaan>Budi mengklik tombol silang (✕) pada jendela aplikasi catatan. Setelah itu aplikasi catatan hanya tersembunyi di taskbar dan masih berjalan di belakang.</pertanyaan>
+          <kunci>Salah</kunci>
+          <penjelasan>Tombol silang (close) menutup aplikasi; yang hanya bersembunyi di taskbar adalah minimize.</penjelasan>
+        </soal>
+
+        <soal id="a7" tipe="benar_salah" skor="2">
+          <pertanyaan>Mesin ATM, HP Android, dan tablet sama-sama menggunakan antarmuka berbasis grafis (GUI).</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>ATM, HP Android, dan tablet sama-sama memakai ikon dan tombol grafis.</penjelasan>
+        </soal>
+
+        <soal id="a8" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Kakak mengajari Ibu memakai laptop untuk pertama kalinya. Ibu cepat paham karena laptop memakai GUI. Pilihlah semua alasan yang tepat mengapa GUI mudah digunakan oleh pemula!</pertanyaan>
+          <pilihan label="A">Ikon lebih cepat dikenali daripada tulisan</pilihan>
+          <pilihan label="B">Pengguna tidak perlu menghafal perintah</pilihan>
+          <pilihan label="C">Pengguna harus mengetik perintah dengan tepat</pilihan>
+          <pilihan label="D">GUI hanya dapat dipakai oleh programmer</pilihan>
+          <pilihan label="E">Hasil klik langsung terlihat (umpan balik langsung)</pilihan>
+          <kunci>Jawaban A, B, E</kunci>
+          <penjelasan>C adalah ciri CLI dan D keliru karena GUI dirancang untuk semua orang.</penjelasan>
+        </soal>
+
+        <soal id="a9" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Rina sedang mengerjakan tugas di jendela aplikasi yang kecil. Ia ingin memperbesar jendela itu hingga memenuhi layar, lalu menutup aplikasi lain yang sudah tidak dipakai. Pilihlah semua pernyataan yang benar tentang tombol kontrol jendela!</pertanyaan>
+          <pilihan label="A">Tombol garis (minimize) memperkecil jendela ke taskbar</pilihan>
+          <pilihan label="B">Tombol kotak (maximize) memperbesar jendela memenuhi layar</pilihan>
+          <pilihan label="C">Tombol silang (close) memperkecil jendela ke taskbar</pilihan>
+          <pilihan label="D">Tombol silang (close) menutup jendela</pilihan>
+          <pilihan label="E">Tombol garis (minimize) menutup aplikasi sepenuhnya</pilihan>
+          <kunci>Jawaban A, B, D</kunci>
+          <penjelasan>C dan E keliru: close menutup jendela, sedangkan minimize hanya menyembunyikannya ke taskbar.</penjelasan>
+        </soal>
+
+        <soal id="a10" tipe="mencocokan" skor="6">
+          <pertanyaan>Budi sedang memakai laptop sekolah. Pasangkan setiap situasi Budi dengan komponen GUI yang tepat!</pertanyaan>
+          <pasangan>
+            <item sisi="kiri" id="k1">Budi ingin melihat daftar aplikasi yang terpasang di laptop</item>
+            <item sisi="kanan" id="v1">Start menu</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k2">Budi ingin berpindah ke aplikasi yang sedang terbuka</item>
+            <item sisi="kanan" id="v2">Taskbar</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k3">Budi ingin menaruh file di "meja kerja" layar</item>
+            <item sisi="kanan" id="v3">Desktop</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k4">Budi melihat area tampilan browser yang terbuka di layar</item>
+            <item sisi="kanan" id="v4">Jendela (window)</item>
+          </pasangan>
+          <kunci>
+            <pasangan kiri="k1" kanan="v1"/>
+            <pasangan kiri="k2" kanan="v2"/>
+            <pasangan kiri="k3" kanan="v3"/>
+            <pasangan kiri="k4" kanan="v4"/>
+          </kunci>
+          <penjelasan>Start menu: daftar aplikasi; taskbar: berpindah aplikasi terbuka; desktop: tempat ikon dan file; jendela: area tampilan aplikasi.</penjelasan>
+        </soal>
+
+        <!-- ============ MATERI 2: SUREL ============ -->
+
+        <soal id="a11" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Raka mengirim surel kepada Bu Dewi dengan subjek "PENTING!!!" dan isi hanya berupa lampiran file tanpa penjelasan. Bu Dewi bingung dan menunda membukanya. Kekurangan subjek tersebut adalah ...</pertanyaan>
+          <pilihan label="A">terlalu panjang sehingga membosankan</pilihan>
+          <pilihan label="B">memakai huruf kapital menandakan surel resmi</pilihan>
+          <pilihan label="C">tidak spesifik karena tidak menyebut topik maupun identitas pengirim</pilihan>
+          <pilihan label="D">terlalu singkat sehingga pasti ditolak</pilihan>
+          <kunci>Jawaban C</kunci>
+          <penjelasan>Subjek "PENTING!!!" tidak menyebut topik maupun pengirim sehingga tidak spesifik.</penjelasan>
+        </soal>
+
+        <soal id="a12" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Raka mengirim surel kepada Bu Dewi: "Bu, kelompok saya belum selesai. Anggota saya sakit. Jadi tolong diperpanjang ya Bu. Makasih." Masalah utama pada surel tersebut adalah ...</pertanyaan>
+          <pilihan label="A">nadanya menuntut dan tidak ada salam pembuka, perkenalan diri, serta penutup yang hormat</pilihan>
+          <pilihan label="B">terlalu panjang dan bertele-tele</pilihan>
+          <pilihan label="C">memakai terlalu banyak salam sehingga maksudnya tidak jelas</pilihan>
+          <pilihan label="D">memakai bahasa yang terlalu formal</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>Nadanya menuntut ("tolong diperpanjang ya") dan tidak ada salam, perkenalan, serta penutup yang hormat.</penjelasan>
+        </soal>
+
+        <soal id="a13" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Seorang guru menerima surel dari alamat dragon_slayer_999@email.com dengan isi: "Pak, besok saya tidak masuk ya. Ada acara keluarga." Guru tidak tahu siapa pengirimnya. Bagian yang paling perlu ditambahkan pengirim adalah ...</pertanyaan>
+          <pilihan label="A">emoji agar pesan lebih ramah</pilihan>
+          <pilihan label="B">perkenalan diri berisi nama lengkap, kelas, dan konteks</pilihan>
+          <pilihan label="C">foto pengirim sebagai lampiran</pilihan>
+          <pilihan label="D">seluruh isi pesan ditulis dengan huruf kapital</pilihan>
+          <kunci>Jawaban B</kunci>
+          <penjelasan>Guru perlu mengetahui nama lengkap, kelas, dan konteks pengirim.</penjelasan>
+        </soal>
+
+        <soal id="a14" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Siti akan mengirim surel kepada Kepala Sekolah untuk meminta izin kegiatan OSIS. Salam pembuka yang paling tepat adalah ...</pertanyaan>
+          <pilihan label="A">"Hai Pak,"</pilihan>
+          <pilihan label="B">"Halo Pak"</pilihan>
+          <pilihan label="C">"Yo Pak,"</pilihan>
+          <pilihan label="D">"Yth. Bapak Kepala Sekolah,"</pilihan>
+          <kunci>Jawaban D</kunci>
+          <penjelasan>Kepada kepala sekolah dipakai salam sangat formal, "Yth. Bapak Kepala Sekolah,".</penjelasan>
+        </soal>
+
+        <soal id="a15" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Tiga informasi minimal yang sebaiknya ada dalam perkenalan diri pada surel kepada guru adalah ...</pertanyaan>
+          <pilihan label="A">nama lengkap, kelas, dan konteks</pilihan>
+          <pilihan label="B">nama panggilan, alamat rumah, dan nomor HP</pilihan>
+          <pilihan label="C">nama, hobi, dan cita-cita</pilihan>
+          <pilihan label="D">nama, usia, dan asal kota</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>Perkenalan diri minimal berisi nama lengkap, kelas, dan konteks.</penjelasan>
+        </soal>
+
+        <soal id="a16" tipe="benar_salah" skor="2">
+          <pertanyaan>Aurel menulis surel kepada gurunya dalam satu kalimat sangat panjang yang berisi alasan berputar-putar. Surel seperti ini baik karena guru jadi memahami semua alasan Aurel.</pertanyaan>
+          <kunci>Salah</kunci>
+          <penjelasan>Kalimat panjang yang bertele-tele menyita waktu penerima; isi surel harus jelas dan ringkas.</penjelasan>
+        </soal>
+
+        <soal id="a17" tipe="benar_salah" skor="2">
+          <pertanyaan>Subjek surel yang baik bersifat singkat, spesifik, dan mengidentifikasi pengirim.</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>Tiga ciri subjek yang baik: singkat, spesifik, dan mengidentifikasi pengirim.</penjelasan>
+        </soal>
+
+        <soal id="a18" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Raka akan menulis surel kepada Bu Dewi untuk meminta tenggat tugas kelompok diperpanjang karena salah satu anggotanya sakit. Pilihlah semua ciri isi surel yang baik yang perlu ia terapkan!</pertanyaan>
+          <pilihan label="A">Jelas, maksudnya langsung terbaca</pilihan>
+          <pilihan label="B">Ringkas, tidak bertele-tele, tetapi tidak terlalu pendek hingga tidak sopan</pilihan>
+          <pilihan label="C">Memakai singkatan gaya chat seperti "yg" dan "gpp" agar terkesan akrab</pilihan>
+          <pilihan label="D">Hormat, berupa permohonan dan bukan tuntutan</pilihan>
+          <pilihan label="E">Menyalahkan penerima agar cepat dibalas</pilihan>
+          <kunci>Jawaban A, B, D</kunci>
+          <penjelasan>C dan E keliru: singkatan chat dihindari, dan surel tidak boleh menuntut atau menyalahkan.</penjelasan>
+        </soal>
+
+        <soal id="a19" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Siti ingin menulis surel formal kepada guru. Pilihlah semua unsur yang tepat untuk ada dalam surel formal tersebut!</pertanyaan>
+          <pilihan label="A">Subjek dikosongkan agar singkat</pilihan>
+          <pilihan label="B">Salam pembuka, misalnya "Yth. Ibu Dewi,"</pilihan>
+          <pilihan label="C">Perkenalan diri berisi nama, kelas, dan konteks</pilihan>
+          <pilihan label="D">Penutup "Udah ya Bu"</pilihan>
+          <pilihan label="E">Salam penutup, misalnya "Hormat saya, [nama]"</pilihan>
+          <kunci>Jawaban B, C, E</kunci>
+          <penjelasan>A keliru karena subjek harus jelas; D keliru karena penutupnya tidak hormat.</penjelasan>
+        </soal>
+
+        <soal id="a20" tipe="mencocokan" skor="6">
+          <pertanyaan>Siti akan mengirim surel kepada beberapa penerima. Pasangkan setiap penerima dengan salam pembuka yang tepat!</pertanyaan>
+          <pasangan>
+            <item sisi="kiri" id="k1">Guru yang dikenal, Bu Dewi</item>
+            <item sisi="kanan" id="v1">"Yth. Bu Dewi,"</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k2">Kepala sekolah</item>
+            <item sisi="kanan" id="v2">"Yth. Bapak Kepala Sekolah,"</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k3">Ketua OSIS</item>
+            <item sisi="kanan" id="v3">"Yth. Ketua OSIS,"</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k4">Teman sekelas (untuk tugas formal)</item>
+            <item sisi="kanan" id="v4">"Halo Raka,"</item>
+          </pasangan>
+          <kunci>
+            <pasangan kiri="k1" kanan="v1"/>
+            <pasangan kiri="k2" kanan="v2"/>
+            <pasangan kiri="k3" kanan="v3"/>
+            <pasangan kiri="k4" kanan="v4"/>
+          </kunci>
+          <penjelasan>Semakin tinggi jabatan dan semakin formal konteksnya, semakin formal salamnya; teman sekelas cukup "Halo Raka,".</penjelasan>
+        </soal>
+
+        <!-- ============ MATERI 3: PERAMBAN & PENCARIAN INFORMASI ============ -->
+
+        <soal id="a21" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Siti ingin mengetahui penemu lampu pijar. Ia mengetik "lampu" di mesin pencari, tetapi muncul sekitar 987 juta hasil berupa iklan lampu, cara mengganti lampu, dan lampu disko. Kata kunci yang lebih tepat untuk Siti adalah ...</pertanyaan>
+          <pilihan label="A">"lampu pijar murah"</pilihan>
+          <pilihan label="B">"penemu lampu pijar Thomas Edison"</pilihan>
+          <pilihan label="C">"lampu"</pilihan>
+          <pilihan label="D">"cara ganti lampu"</pilihan>
+          <kunci>Jawaban B</kunci>
+          <penjelasan>Kata kunci spesifik menyempitkan hasil dan lebih relevan.</penjelasan>
+        </soal>
+
+        <soal id="a22" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Dimas mencari lagu "Indonesia Raya", tetapi hasilnya banyak halaman yang memuat kata "Indonesia" dan "raya" secara terpisah. Agar hanya muncul halaman yang memuat frasa persis tersebut, Dimas sebaiknya ...</pertanyaan>
+          <pilihan label="A">menambahkan kata "gratis" di belakangnya</pilihan>
+          <pilihan label="B">mengetik semuanya dengan huruf kapital</pilihan>
+          <pilihan label="C">membungkus frasa dengan tanda kutip, yaitu "Indonesia Raya"</pilihan>
+          <pilihan label="D">menghapus kata "Raya"</pilihan>
+          <kunci>Jawaban C</kunci>
+          <penjelasan>Tanda kutip mencari frasa persis.</penjelasan>
+        </soal>
+
+        <soal id="a23" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Ani ingin mencari data curah hujan hanya dari situs resmi BMKG (bmkg.go.id). Cara penulisan kata kunci yang tepat adalah ...</pertanyaan>
+          <pilihan label="A">"data curah hujan" site:bmkg.go.id</pilihan>
+          <pilihan label="B">"data curah hujan" #bmkg.go.id</pilihan>
+          <pilihan label="C">data curah hujan @bmkg.go.id</pilihan>
+          <pilihan label="D">"data curah hujan" bmkg saja</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>Operator site: membatasi hasil pada situs tertentu.</penjelasan>
+        </soal>
+
+        <soal id="a24" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Siti menerima pesan berantai di WhatsApp: "AWAS!!! BAHAYA!!! SEBARKAN KE SEMUA GRUP! Kata orang dalam, minuman X sembuh total dalam 1 hari!" Tindakan yang paling tepat dilakukan Siti adalah ...</pertanyaan>
+          <pilihan label="A">langsung menyebarkannya agar orang lain waspada</pilihan>
+          <pilihan label="B">membiarkannya tanpa membaca isinya</pilihan>
+          <pilihan label="C">membalasnya dengan huruf kapital agar terlihat marah</pilihan>
+          <pilihan label="D">memeriksa sumbernya lalu membandingkannya dengan situs resmi seperti Kemenkes</pilihan>
+          <kunci>Jawaban D</kunci>
+          <penjelasan>Huruf kapital, ajakan menyebarkan, tanpa sumber, dan klaim berlebihan adalah ciri hoaks; periksa ke sumber resmi.</penjelasan>
+        </soal>
+
+        <soal id="a25" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Dimas menemukan dua artikel tentang manfaat air lemon. Artikel A adalah blog pribadi tanpa nama penulis dan tanggal, tetapi dibagikan 50.000 kali. Artikel B ada di situs resmi Kemenkes dengan nama penulis, tanggal, dan referensi. Artikel B lebih dapat dipercaya karena ...</pertanyaan>
+          <pilihan label="A">lebih banyak dibagikan di media sosial</pilihan>
+          <pilihan label="B">kredibilitas sumbernya jelas, yaitu ada penulis, tanggal, dan bukti</pilihan>
+          <pilihan label="C">judulnya lebih menarik</pilihan>
+          <pilihan label="D">tulisannya lebih panjang</pilihan>
+          <kunci>Jawaban B</kunci>
+          <penjelasan>Yang menentukan adalah kredibilitas sumber, bukan jumlah orang yang membagikan.</penjelasan>
+        </soal>
+
+        <soal id="a26" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Peramban (browser) adalah ...</pertanyaan>
+          <pilihan label="A">perangkat keras untuk menyimpan data internet</pilihan>
+          <pilihan label="B">mesin pencari seperti Google dan Bing</pilihan>
+          <pilihan label="C">aplikasi yang menjadi "jendela" untuk membuka halaman web dan layanan internet</pilihan>
+          <pilihan label="D">penyedia jaringan internet di rumah</pilihan>
+          <kunci>Jawaban C</kunci>
+          <penjelasan>Peramban adalah jendela ke internet; Google dan Bing adalah mesin pencari.</penjelasan>
+        </soal>
+
+        <soal id="a27" tipe="benar_salah" skor="2">
+          <pertanyaan>Karena berasal dari situs resmi, sebuah informasi pasti selalu benar sehingga tidak perlu diperiksa buktinya.</pertanyaan>
+          <kunci>Salah</kunci>
+          <penjelasan>Sumber resmi tidak selalu benar; buktinya tetap diperiksa.</penjelasan>
+        </soal>
+
+        <soal id="a28" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Dimas mendapat tugas membuat laporan tentang penyebab banjir di Indonesia. Pilihlah semua sumber yang cocok dijadikan sumber utama laporan tersebut!</pertanyaan>
+          <pilihan label="A">Jurnal Universitas Indonesia "Analisis Penyebab Banjir 2023"</pilihan>
+          <pilihan label="B">Blog pribadi "Pengalaman Saya Kena Banjir"</pilihan>
+          <pilihan label="C">Situs BMKG "Data Curah Hujan Indonesia"</pilihan>
+          <pilihan label="D">Forum online "Kenapa sih banjir terus?"</pilihan>
+          <pilihan label="E">Berita "Banjir Jakarta Hari Ini" sebagai satu-satunya sumber utama</pilihan>
+          <kunci>Jawaban A, C</kunci>
+          <penjelasan>Laporan memprioritaskan sumber akademik dan data resmi; berita hanya konteks, blog dan forum tidak cocok.</penjelasan>
+        </soal>
+
+        <soal id="a29" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Ani menemukan artikel tentang obat herbal yang menyebut penyakit bisa sembuh total dalam sehari. Sebelum memercayainya, Ani menerapkan lima pertanyaan detektif informasi. Pilihlah semua pertanyaan yang tepat untuk ia ajukan!</pertanyaan>
+          <pilihan label="A">Siapa yang menulis artikel ini?</pilihan>
+          <pilihan label="B">Kapan artikel ini ditulis?</pilihan>
+          <pilihan label="C">Berapa banyak teman yang membagikan artikel ini?</pilihan>
+          <pilihan label="D">Apa buktinya, berupa data atau referensi, atau hanya klaim?</pilihan>
+          <pilihan label="E">Apa warna latar halaman artikel ini?</pilihan>
+          <kunci>Jawaban A, B, D</kunci>
+          <penjelasan>Pertanyaan detektif: siapa, kapan, dari mana, apa buktinya, mengapa. Jumlah pembagian dan warna latar bukan ukuran kredibilitas.</penjelasan>
+        </soal>
+
+        <soal id="a30" tipe="mencocokan" skor="6">
+          <pertanyaan>Ani sedang mencari informasi untuk tugas sekolah dan menemui beberapa masalah pencarian. Pasangkan setiap masalah dengan strategi kata kunci yang tepat!</pertanyaan>
+          <pasangan>
+            <item sisi="kiri" id="k1">Hasil terlalu luas karena Ani hanya mengetik "makanan"</item>
+            <item sisi="kanan" id="v1">Membuat kata kunci lebih spesifik</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k2">Ani ingin halaman yang memuat frasa persis "gotong royong"</item>
+            <item sisi="kanan" id="v2">Memakai tanda kutip</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k3">Ani ingin jadwal Piala Dunia pada tahun tertentu, bukan tahun lain</item>
+            <item sisi="kanan" id="v3">Menambahkan konteks (tahun, tempat, topik)</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k4">Ani ingin hasil hanya dari situs bps.go.id</item>
+            <item sisi="kanan" id="v4">Memakai operator site:</item>
+          </pasangan>
+          <kunci>
+            <pasangan kiri="k1" kanan="v1"/>
+            <pasangan kiri="k2" kanan="v2"/>
+            <pasangan kiri="k3" kanan="v3"/>
+            <pasangan kiri="k4" kanan="v4"/>
+          </kunci>
+          <penjelasan>Spesifik untuk hasil terlalu luas, kutip untuk frasa persis, konteks untuk tahun tertentu, site: untuk situs tertentu.</penjelasan>
+        </soal>
+
+      </soalList>
+    </paket>
+  </paketList>
+</ujian>

@@ -1,5 +1,5 @@
 {
-  "versi": "1.2.0",
+  "versi": "1.3.0",
   "daftarFile": [
     "script.js",
     "sw.js",
@@ -9,5 +9,5 @@
     "ujian/daftarujian.html",
     "ujian/kerjakan.html"
   ],
-  "pesanUpdate": "Fitur Ujian Online v2: support multi-paket (A/B/C/D) dalam 1 XML, pemilihan paket deterministic, acak soal & opsi jawaban, anti-kecurangan (watermark, blur detection, fullscreen, disable copy), resume ujian via localStorage, UI mencocokan klik-to-pair, dan dashboard guru untuk pengaturan acak."
+  "pesanUpdate": "Fitur Ujian Online v3: penilaian pilihan_ganda_kompleks diubah dari all-or-nighting menjadi parsial dengan formula (benar - salah) / total kunci (tidak negatif), review menampilkan detail Benar/Salah/Parsial persen, dan berbagai perbaikan UI."
 }
