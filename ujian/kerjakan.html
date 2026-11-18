@@ -250,6 +250,141 @@
         padding: 1rem;
       }
     }
+
+    /* ==================== ANTI-CHEAT: DISABLE TEXT SELECTION ==================== */
+    .area-soal,
+    .area-soal *,
+    .soal-container,
+    .soal-container *,
+    .mc-item,
+    .mc-item *,
+    .opsi-kuis,
+    .opsi-kuis *,
+    .pertanyaan-soal,
+    .pertanyaan-soal * {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .area-soal input[type="text"],
+    .area-soal textarea {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
+
+    /* ==================== ANTI-CHEAT: BLUR WARNING POPUP ==================== */
+    .ujian-blur-warning {
+      position: fixed;
+      inset: 0;
+      background: rgba(40, 20, 50, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+      animation: blurWarnFadeIn 0.25s ease;
+    }
+
+    @keyframes blurWarnFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .blur-warning-box {
+      background: #fff;
+      border: 3px solid #ef476f;
+      border-radius: 20px;
+      padding: 1.8rem 2rem 1.5rem;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(239, 71, 111, 0.35);
+      animation: blurWarnSlideUp 0.3s ease;
+    }
+
+    @keyframes blurWarnSlideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .blur-warning-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .blur-warning-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #ef476f;
+      margin-bottom: 0.7rem;
+    }
+
+    .blur-warning-message {
+      font-size: 0.92rem;
+      color: #3a2b3e;
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+    }
+
+    .blur-warning-message strong {
+      color: #ef476f;
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    /* Circle countdown */
+    .blur-countdown-ring {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto;
+    }
+
+    .blur-countdown-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .blur-countdown-bg {
+      fill: none;
+      stroke: #f0e6ff;
+      stroke-width: 6;
+    }
+
+    .blur-countdown-fg {
+      fill: none;
+      stroke: #ef476f;
+      stroke-width: 6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.1s linear;
+    }
+
+    .blur-countdown-number {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #ef476f;
+    }
+
+    @media (max-width: 480px) {
+      .blur-warning-box { padding: 1.4rem 1.2rem 1.2rem; }
+      .blur-warning-icon { font-size: 2.5rem; }
+      .blur-warning-title { font-size: 1.05rem; }
+      .blur-warning-message { font-size: 0.85rem; }
+      .blur-countdown-ring { width: 64px; height: 64px; }
+      .blur-countdown-number { font-size: 1.2rem; }
+    }
   </style>
 </head>
 <body>
@@ -464,6 +599,244 @@
       // Variabel untuk menyimpan urutan kanan yang diacak saat resume
       let matchingKananOrderAktif = {};
 
+      // ==================== BLUR DETECTION (KECURANGAN) ====================
+      let blurStartTime = null;
+      let sedangProsesSubmit = false;
+      let logKecurangan = { blurEvents: [], totalBlur: 0, totalDurasiBlur: 0 };
+
+      function catatBlurEvent() {
+        if (sedangProsesSubmit) return;
+        blurStartTime = Date.now();
+        console.log('[ujian-blur] Blur dimulai:', new Date(blurStartTime).toLocaleTimeString());
+      }
+
+      function catatFocusEvent() {
+        if (sedangProsesSubmit) return;
+        if (!blurStartTime) return;
+        const blurEndTime = Date.now();
+        const durasi = blurEndTime - blurStartTime;
+
+        logKecurangan.blurEvents.push({
+          waktu: blurStartTime,
+          durasi: durasi
+        });
+        logKecurangan.totalBlur++;
+        logKecurangan.totalDurasiBlur += durasi;
+
+        console.log('[ujian-blur] Blur berakhir, durasi:', durasi, 'ms');
+        console.log('[ujian-blur] Total blur:', logKecurangan.totalBlur, 'kali');
+        console.log('[ujian-kecurangan] Log:', logKecurangan);
+
+        // Simpan ke state ujian
+        simpanStateUjian({ logKecurangan: logKecurangan });
+
+        // Tampilkan popup peringatan blur
+        tampilkanPeringatanBlur(durasi);
+
+        blurStartTime = null;
+      }
+
+      window.addEventListener('blur', catatBlurEvent);
+      window.addEventListener('focus', catatFocusEvent);
+
+      // ==================== ANTI-CHEAT: DISABLE RIGHT-CLICK & SHORTCUTS ====================
+      document.addEventListener('contextmenu', function(e) {
+        const areaUjian = document.querySelector('.ujian-kerjakan-wrapper') ||
+                          document.querySelector('.area-soal');
+        if (areaUjian && areaUjian.contains(e.target)) {
+          e.preventDefault();
+          console.log('[ujian-anti-cheat] Right-click diblokir');
+        }
+      });
+
+      document.addEventListener('keydown', function(e) {
+        const areaUjian = document.querySelector('.ujian-kerjakan-wrapper');
+        if (!areaUjian) return;
+
+        const tag = (e.target.tagName || '').toLowerCase();
+        if (tag === 'input' || tag === 'textarea') return;
+
+        if (e.ctrlKey || e.metaKey) {
+          const key = (e.key || '').toLowerCase();
+          if (['c', 'v', 'a', 'p', 's', 'u'].indexOf(key) !== -1) {
+            e.preventDefault();
+            console.log('[ujian-anti-cheat] Shortcut Ctrl+' + key.toUpperCase() + ' diblokir');
+          }
+        }
+
+        if (e.key === 'F12') {
+          e.preventDefault();
+          console.log('[ujian-anti-cheat] F12 diblokir');
+        }
+
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
+          const key = (e.key || '').toLowerCase();
+          if (['i', 'j', 'c'].indexOf(key) !== -1) {
+            e.preventDefault();
+            console.log('[ujian-anti-cheat] DevTools shortcut diblokir');
+          }
+        }
+      });
+
+      // ==================== ANTI-CHEAT: BLUR WARNING POPUP FUNCTIONS ====================
+      let blurWarningTimerId = null;
+      let blurCountdownAnimId = null;
+      const BLUR_WARNING_DURATION_MS = 4000;
+
+      function formatDurasiBlur(ms) {
+        if (ms < 1000) return 'kurang dari 1 detik';
+        const detik = Math.floor(ms / 1000);
+        if (detik < 60) return detik + ' detik';
+        const menit = Math.floor(detik / 60);
+        const sisaDetik = detik % 60;
+        if (menit < 60) {
+          return menit + ' menit' + (sisaDetik > 0 ? ' ' + sisaDetik + ' detik' : '');
+        }
+        const jam = Math.floor(menit / 60);
+        const sisaMenit = menit % 60;
+        return jam + ' jam ' + sisaMenit + ' menit';
+      }
+
+      function tampilkanPeringatanBlur(durasiMs) {
+        const popup = document.getElementById('ujian-blur-warning');
+        if (!popup) return;
+
+        if (blurWarningTimerId) {
+          clearTimeout(blurWarningTimerId);
+          blurWarningTimerId = null;
+        }
+        if (blurCountdownAnimId) {
+          cancelAnimationFrame(blurCountdownAnimId);
+          blurCountdownAnimId = null;
+        }
+
+        const elDurasi = document.getElementById('blur-durasi');
+        if (elDurasi) elDurasi.textContent = formatDurasiBlur(durasiMs);
+
+        const fg = popup.querySelector('.blur-countdown-fg');
+        const numEl = document.getElementById('blur-countdown-number');
+        if (fg) fg.style.strokeDashoffset = '0';
+        if (numEl) numEl.textContent = '4';
+
+        popup.style.display = 'flex';
+
+        const startTime = performance.now();
+        const totalDash = 283;
+
+        function animateCountdown(now) {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / BLUR_WARNING_DURATION_MS, 1);
+
+          if (fg) fg.style.strokeDashoffset = String(totalDash * progress);
+
+          const remaining = Math.ceil((BLUR_WARNING_DURATION_MS - elapsed) / 1000);
+          if (numEl) numEl.textContent = String(Math.max(0, remaining));
+
+          if (progress < 1) {
+            blurCountdownAnimId = requestAnimationFrame(animateCountdown);
+          } else {
+            sembunyikanPeringatanBlur();
+          }
+        }
+
+        blurCountdownAnimId = requestAnimationFrame(animateCountdown);
+
+        console.log('[ujian-blur-warning] Peringatan ditampilkan, durasi blur:', formatDurasiBlur(durasiMs));
+      }
+
+      function sembunyikanPeringatanBlur() {
+        const popup = document.getElementById('ujian-blur-warning');
+        if (popup) popup.style.display = 'none';
+
+        if (blurWarningTimerId) {
+          clearTimeout(blurWarningTimerId);
+          blurWarningTimerId = null;
+        }
+        if (blurCountdownAnimId) {
+          cancelAnimationFrame(blurCountdownAnimId);
+          blurCountdownAnimId = null;
+        }
+      }
+
+      // ==================== ANTI-CHEAT: STOP BLUR DETECTION ====================
+      function hentikanDeteksiBlur() {
+        window.removeEventListener('blur', catatBlurEvent);
+        window.removeEventListener('focus', catatFocusEvent);
+        blurStartTime = null;
+        console.log('[ujian-blur] Deteksi blur dihentikan');
+      }
+
+      // ==================== ANTI-CHEAT: HUMAN-READABLE LOG ====================
+      function buatLogHumanReadable(log) {
+        if (!log || log.totalBlur === 0) return '✅ Tidak ada aktivitas mencurigakan terdeteksi.';
+        const durasiText = formatDurasiBlur(log.totalDurasiBlur);
+        return '⚠️ Terdeteksi ' + log.totalBlur + ' kali pindah tab/jendela. Total durasi di luar ujian: ' + durasiText + '.';
+      }
+
+      // ==================== ANTI-CHEAT: FULLSCREEN MODE ====================
+      function masukFullscreen() {
+        const elem = document.documentElement;
+        try {
+          if (elem.requestFullscreen) elem.requestFullscreen();
+          else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+          else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+          console.log('[fullscreen] Berhasil masuk fullscreen');
+        } catch (err) {
+          console.warn('[fullscreen] Diblokir browser (butuh interaksi user):', err);
+          tampilkanBannerFullscreenManual();
+        }
+      }
+
+      function tampilkanBannerFullscreenManual() {
+        if (document.getElementById('banner-fs-manual')) return;
+
+        const banner = document.createElement('div');
+        banner.id = 'banner-fs-manual';
+        banner.style.cssText =
+          'position: fixed; top: 10px; left: 50%; transform: translateX(-50%); ' +
+          'background: #fff3cd; border: 2px solid #ffc107; color: #856404; ' +
+          'padding: 0.8rem 1.2rem; border-radius: 12px; z-index: 10002; ' +
+          'display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); ' +
+          'font-size: 0.9rem; font-weight: 600;';
+        banner.innerHTML =
+          '<span>⚠️ Mode layar penuh diblokir browser.</span>' +
+          '<button id="btn-aktifkan-fs" style="padding:0.4rem 0.8rem; background:#ffc107; border:none; border-radius:6px; font-weight:700; cursor:pointer; color:#000;">Klik di Sini</button>' +
+          '<button id="btn-tutup-fs" style="padding:0.4rem; background:transparent; border:none; cursor:pointer; font-size:1.2rem;">✕</button>';
+        document.body.appendChild(banner);
+
+        document.getElementById('btn-aktifkan-fs').addEventListener('click', function() {
+          masukFullscreen();
+          banner.remove();
+        });
+
+        document.getElementById('btn-tutup-fs').addEventListener('click', function() {
+          banner.remove();
+        });
+      }
+
+      function keluarFullscreen() {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.log('[fullscreen] Gagal keluar fullscreen:', err);
+          });
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+
+      // Deteksi jika user keluar fullscreen secara manual
+      document.addEventListener('fullscreenchange', function() {
+        if (!document.fullscreenElement) {
+          console.log('[ujian-fullscreen] User keluar fullscreen manual');
+          if (typeof catatBlurEvent === 'function') catatBlurEvent();
+          setTimeout(function() {
+            if (!document.fullscreenElement) masukFullscreen();
+          }, 500);
+        }
+      });
+
       // ==================== WATERMARK ====================
       let watermarkIntervalId = null;
 
@@ -551,6 +924,10 @@
         waktuMulai = state.waktuMulai || Date.now();
 
         matchingKananOrderAktif = state.matchingKananOrder || {};
+
+        // Restore log kecurangan (blur events)
+        logKecurangan = state.logKecurangan || { blurEvents: [], totalBlur: 0, totalDurasiBlur: 0 };
+        console.log('[ujian-kecurangan] Log dikembalikan:', logKecurangan);
 
         const soalById = {};
         soalList.forEach(function(s) { soalById[s.id] = s; });
@@ -778,7 +1155,8 @@
           soalOrder: soalOrder,
           opsiOrder: opsiOrder,
           namaUjian: konfigurasi.nama || namaUjian,
-          pengaturan: { acakOpsi: konfigurasi.acakOpsi, waktu: konfigurasi.waktu, skorDefault: konfigurasi.skorDefault }
+          pengaturan: { acakOpsi: konfigurasi.acakOpsi, waktu: konfigurasi.waktu, skorDefault: konfigurasi.skorDefault },
+          logKecurangan: logKecurangan
         });
         console.log('[ujian-state] key:', buatKeyStateUjian());
         console.log('[ujian-state] existing state preserved:', !!ambilStateUjianTersimpan());
@@ -790,6 +1168,8 @@
         mulaiTimer();
         mulaiUpdateWatermark();
         document.getElementById('headerNamaUjian').textContent = konfigurasi.nama || namaUjian;
+        // Paksa fullscreen saat ujian dimulai
+        masukFullscreen();
       }
 
       async function loadUjian() {
@@ -1217,6 +1597,10 @@
       }
 
       async function kirimKeGAS(nilai, nilaiMaks, waktuPengerjaan) {
+        // 1. MATIKAN deteksi blur segera agar tidak false-positive saat transisi klik submit
+        sedangProsesSubmit = true;
+        hentikanDeteksiBlur();
+
         try {
           if (!API_URL) throw new Error('URL API belum dikonfigurasi.');
           const resp = await fetch(API_URL, {
@@ -1232,18 +1616,23 @@
               waktuPengerjaan: waktuPengerjaan,
               jawabanJSON: JSON.stringify(jawaban),
               paket: window.paketIdAktif || 'A',
-              nama_ujian: window.namaUjianAktif || namaUjian
+              nama_ujian: window.namaUjianAktif || namaUjian,
+              logKecurangan: JSON.stringify(logKecurangan),
+              logKecuranganHuman: buatLogHumanReadable(logKecurangan),
+              logKecuranganJSON: JSON.stringify(logKecurangan)
             })
           });
           if (!resp.ok) throw new Error('Server gagal menyimpan hasil (HTTP ' + resp.status + ').');
           const hasil = await resp.json();
-          console.log('[ujian-submit] Payload dikirim:', { paket: window.paketIdAktif || 'A', nama_ujian: window.namaUjianAktif || namaUjian, nilai: nilai });
+          console.log('[ujian-submit] Payload dikirim:', { paket: window.paketIdAktif || 'A', nama_ujian: window.namaUjianAktif || namaUjian, nilai: nilai, logKecurangan: logKecurangan });
           if (hasil.ok) {
             elStatusKirim.textContent = 'Hasil ujian berhasil disimpan.';
             elStatusKirim.style.color = '#2d7d46';
             hapusStorage();
             hapusStateUjian();
             hentikanUpdateWatermark();
+            hentikanDeteksiBlur();
+            keluarFullscreen();
             console.log('[ujian-state] State dihapus setelah submit berhasil');
             try { sessionStorage.removeItem(TOKEN_STORAGE_KEY); } catch (err) {
               console.warn('Token ujian tidak dapat dihapus dari session browser:', err.message);
@@ -1282,5 +1671,26 @@
       });
     })();
   </script>
+
+  <!-- ==================== ANTI-CHEAT: BLUR WARNING POPUP ==================== -->
+  <div id="ujian-blur-warning" class="ujian-blur-warning" style="display:none;">
+    <div class="blur-warning-box">
+      <div class="blur-warning-icon">⚠️</div>
+      <div class="blur-warning-title">Peringatan Kecurangan</div>
+      <div class="blur-warning-message">
+        Anda meninggalkan halaman ujian selama <strong id="blur-durasi">0</strong>.
+        Aktivitas ini tercatat dan dapat dilaporkan kepada guru.
+      </div>
+      <div class="blur-countdown-ring">
+        <svg viewBox="0 0 100 100" class="blur-countdown-svg">
+          <circle class="blur-countdown-bg" cx="50" cy="50" r="45"></circle>
+          <circle class="blur-countdown-fg" cx="50" cy="50" r="45"
+                  stroke-dasharray="283" stroke-dashoffset="0"></circle>
+        </svg>
+        <div class="blur-countdown-number" id="blur-countdown-number">4</div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
