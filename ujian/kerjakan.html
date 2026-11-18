@@ -967,12 +967,13 @@
         console.log('[ujian] paketIdAktif di-set:', window.paketIdAktif);
 
         konfigurasi = {
-          nama: state.namaUjian || 'Ujian',
+          nama: window.namaUjianDariBackend || state.namaUjian || 'Ujian',
           waktu: (state.pengaturan && state.pengaturan.waktu) || 0,
           skorDefault: (state.pengaturan && state.pengaturan.skorDefault) || 10,
           tampilNilai: (state.pengaturan && state.pengaturan.tampilNilai) !== undefined ? state.pengaturan.tampilNilai : true,
           tampilPembahasan: (state.pengaturan && state.pengaturan.tampilPembahasan) !== undefined ? state.pengaturan.tampilPembahasan : true,
-          acakOpsi: (state.pengaturan && state.pengaturan.acakOpsi) || false
+          acakSoal: (state.pengaturan && state.pengaturan.acakSoal) !== undefined ? state.pengaturan.acakSoal : 0,
+          acakJawaban: (state.pengaturan && state.pengaturan.acakJawaban) !== undefined ? state.pengaturan.acakJawaban : 0
         };
 
         jawaban = state.jawabanUser || {};
@@ -1172,21 +1173,51 @@
         });
       }
 
-      function mulaiUjian(xmlString, userId, ujianId, acakOpsiDariSheet) {
+      // ==================== FUNGSI ACAK ====================
+      function acakSoalList(list) {
+        const shuffled = list.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      }
+
+      function mulaiUjian(xmlString, userId, ujianId, pengaturan) {
         const parsed = parseXMLUjian(xmlString);
-        konfigurasi = parsed.konfigurasi;
+        pengaturan = pengaturan || {};
+        konfigurasi = {
+          nama: window.namaUjianDariBackend || parsed.konfigurasi.nama || 'Ujian',
+          waktu: pengaturan.waktu !== undefined ? pengaturan.waktu : (parsed.konfigurasi.waktu || 0),
+          skorDefault: parsed.konfigurasi.skorDefault || 10,
+          tampilNilai: pengaturan.tampilNilai !== undefined ? pengaturan.tampilNilai : true,
+          tampilPembahasan: pengaturan.tampilPembahasan !== undefined ? pengaturan.tampilPembahasan : true,
+          acakSoal: pengaturan.acakSoal !== undefined ? pengaturan.acakSoal : 0,
+          acakJawaban: pengaturan.acakJawaban !== undefined ? pengaturan.acakJawaban : 0
+        };
         const paketDipilih = pilihPaketDeterministik(parsed.paketList, userId, ujianId);
         console.log('Paket terpilih: ' + paketDipilih.id);
         window.paketIdAktif = paketDipilih.id;
         window.namaUjianAktif = konfigurasi.nama || namaUjian;
         console.log('[ujian] paketIdAktif di-set:', window.paketIdAktif);
         let soalListBaru = paketDipilih.soalList;
-        const acakOpsiAktif = konfigurasi.acakOpsi || acakOpsiDariSheet === 1;
+
+        // 1. Acak Soal (jika diaktifkan di sheet)
+        const acakSoalAktif = Number(pengaturan.acakSoal) === 1;
+        if (acakSoalAktif) {
+          soalListBaru = acakSoalList(soalListBaru);
+          console.log('[ujian] Soal diacak: true');
+        } else {
+          console.log('[ujian] Soal diacak: false');
+        }
+
+        // 2. Acak Opsi Jawaban (jika diaktifkan di sheet)
+        const acakOpsiAktif = Number(pengaturan.acakJawaban) === 1;
         if (acakOpsiAktif) {
           soalListBaru = acakOpsiJawaban(soalListBaru);
-          console.log('Soal diacak: true');
+          console.log('[ujian] Opsi jawaban diacak: true');
         } else {
-          console.log('Soal diacak: false');
+          console.log('[ujian] Opsi jawaban diacak: false');
         }
         soalList = soalListBaru;
         const elInfoPaket = document.getElementById('info-paket');
@@ -1211,8 +1242,15 @@
           paketId: paketDipilih.id,
           soalOrder: soalOrder,
           opsiOrder: opsiOrder,
-          namaUjian: konfigurasi.nama || namaUjian,
-          pengaturan: { acakOpsi: konfigurasi.acakOpsi, waktu: konfigurasi.waktu, skorDefault: konfigurasi.skorDefault },
+          namaUjian: konfigurasi.nama,
+          pengaturan: {
+            waktu: konfigurasi.waktu,
+            skorDefault: konfigurasi.skorDefault,
+            tampilNilai: konfigurasi.tampilNilai,
+            tampilPembahasan: konfigurasi.tampilPembahasan,
+            acakSoal: konfigurasi.acakSoal,
+            acakJawaban: konfigurasi.acakJawaban
+          },
           logKecurangan: logKecurangan
         });
         console.log('[ujian-state] key:', buatKeyStateUjian());
@@ -1238,7 +1276,7 @@
         if (!elLayar) return;
 
         const jumlahSoal = cfg.resume ? (cfg.state.soalOrder ? cfg.state.soalOrder.length : 0) : (cfg.paketSoalList ? cfg.paketSoalList.length : 0);
-        const waktuMenit = cfg.pengaturanWaktu || 0;
+        const waktuMenit = (cfg.pengaturan && cfg.pengaturan.waktu) || 0;
         let infoHtml = '<div><strong>' + escapeHtml(cfg.namaUjian || namaUjian) + '</strong></div>';
         if (cfg.paketId) infoHtml += '<div>Paket soal: <strong>' + escapeHtml(cfg.paketId) + '</strong></div>';
         infoHtml += '<div>Jumlah soal: <strong>' + jumlahSoal + '</strong></div>';
@@ -1281,7 +1319,7 @@
         } else {
           waktuMulai = Date.now();
           simpanStateUjian({ waktuMulai: waktuMulai });
-          mulaiUjian(cfgMulai.xml, cfgMulai.userId, ujianId, cfgMulai.acakOpsi);
+          mulaiUjian(cfgMulai.xml, cfgMulai.userId, ujianId, cfgMulai.pengaturan);
         }
         if (elBtn) elBtn.disabled = false;
       }
@@ -1300,6 +1338,7 @@
           });
           if (!resp.ok) throw new Error('Server ujian merespons HTTP ' + resp.status);
           const hasil = await resp.json();
+          window.namaUjianDariBackend = hasil.nama || namaUjian;
           if (!hasil || !hasil.ok) throw new Error((hasil && hasil.error) || 'Server gagal memuat file ujian.');
           const text = hasil.xml;
           if (typeof text !== 'string' || !text.trim()) throw new Error('Server tidak mengirim isi file XML.');
@@ -1315,17 +1354,16 @@
             parsed.paketList.forEach(function(p) { allSoal.push.apply(allSoal, p.soalList); });
             const paketDipilih = parsed.paketList.find(function(p) { return p.id === stateTersimpan.paketId; }) || parsed.paketList[0];
             soalList = paketDipilih.soalList.slice();
-            tampilkanLayarMulai({ resume: true, state: stateTersimpan, namaUjian: stateTersimpan.namaUjian || namaUjian, paketId: stateTersimpan.paketId, pengaturanWaktu: stateTersimpan.pengaturan && stateTersimpan.pengaturan.waktu });
+            tampilkanLayarMulai({ resume: true, state: stateTersimpan, pengaturan: stateTersimpan.pengaturan || {}, namaUjian: window.namaUjianDariBackend || stateTersimpan.namaUjian || namaUjian, paketId: stateTersimpan.paketId });
             return;
           }
 
           const pengaturan = hasil.pengaturan && typeof hasil.pengaturan === 'object' ? hasil.pengaturan : {};
           const sessionPeserta = window.ambilSession ? window.ambilSession() : null;
           const userId = (sessionPeserta && sessionPeserta.user_id) || ('anon-' + Date.now());
-          const acakOpsiDariSheet = (pengaturan && typeof pengaturan.acakSoal === 'number') ? pengaturan.acakSoal : 0;
           const parsedN = parseXMLUjian(text);
           const paketN = pilihPaketDeterministik(parsedN.paketList, userId, ujianId);
-          tampilkanLayarMulai({ resume: false, xml: text, userId: userId, acakOpsi: acakOpsiDariSheet, namaUjian: parsedN.konfigurasi.nama || namaUjian, paketId: parsedN.paketList.length > 1 ? paketN.id : null, paketSoalList: paketN.soalList, pengaturanWaktu: parsedN.konfigurasi.waktu });
+          tampilkanLayarMulai({ resume: false, xml: text, userId: userId, pengaturan: pengaturan, namaUjian: window.namaUjianDariBackend || parsedN.konfigurasi.nama || namaUjian, paketId: parsedN.paketList.length > 1 ? paketN.id : null, paketSoalList: paketN.soalList });
         } catch (err) {
           elSoalKonten.innerHTML = '<div style="color:#a3123c;padding:2rem;">Gagal memuat ujian: ' + escapeHtml(err.message) + '</div>';
         }
@@ -1576,8 +1614,16 @@
       });
 
       elBtnKirim.addEventListener('click', function() {
-        if (!confirm('Yakin ingin mengirim jawaban? Nilai akan dihitung dan tidak bisa diubah lagi.')) return;
-        selesaiUjian();
+        window.tampilkanModal({
+          judul: '⚠️ Konfirmasi Pengiriman',
+          pesan: '<p>Yakin ingin mengirim jawaban?</p>' +
+                 '<p style="font-size:0.85rem; color:#7a6656; margin-top:0.5rem;">' +
+                 'Nilai akan dihitung dan <strong>tidak bisa diubah lagi</strong>.</p>',
+          tombolLanjut: '📤 Ya, Kirim Jawaban',
+          onLanjut: function() {
+            selesaiUjian();
+          }
+        });
       });
 
       const elBtnMulai = document.getElementById('btnMulaiUjian');
@@ -1670,10 +1716,11 @@
       function formatJawaban(s, jw) {
         if (!sudahDijawab(s)) return 'Belum dijawab';
         if (s.tipe === 'mencocokan') {
-          const mapping = jw && typeof jw === 'object' ? jw : {};
-          return s.pasangan.filter(function(p) { return p.sisi === 'kiri'; }).map(function(kiri) {
-            const kanan = s.pasangan.find(function(p) { return p.sisi === 'kanan' && p.id === mapping[kiri.id]; });
-            return kiri.teks + ' → ' + (kanan ? kanan.teks : 'Belum dipasangkan');
+          const mapping = (jw && typeof jw === 'object') ? jw : {};
+          return s.pasangan.map(function(p) {
+            const kananId = mapping[p.kiri.id];
+            const kananItem = s.pasangan.find(function(x) { return x.kanan.id === kananId; });
+            return p.kiri.teks + ' → ' + (kananItem ? kananItem.kanan.teks : 'Belum dipasangkan');
           }).join('; ');
         }
         if (Array.isArray(jw)) return jw.join(', ');
@@ -1682,10 +1729,10 @@
 
       function formatKunci(s) {
         if (s.tipe === 'mencocokan') {
-          return s.kunci.map(function(k) {
-            const kiri = s.pasangan.find(function(p) { return p.id === k.kiri; });
-            const kanan = s.pasangan.find(function(p) { return p.id === k.kanan; });
-            return (kiri ? kiri.teks : k.kiri) + ' → ' + (kanan ? kanan.teks : k.kanan);
+          return s.kunciPasangan.map(function(k) {
+            const kiriItem = s.pasangan.find(function(p) { return p.kiri.id === k.kiriId; });
+            const kananItem = s.pasangan.find(function(p) { return p.kanan.id === k.kananId; });
+            return (kiriItem ? kiriItem.kiri.teks : k.kiriId) + ' → ' + (kananItem ? kananItem.kanan.teks : k.kananId);
           }).join('; ');
         }
         return Array.isArray(s.kunci) ? s.kunci.join(', ') : String(s.kunci);

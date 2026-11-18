@@ -11,7 +11,7 @@ Berikut dokumen lengkapnya:
 
 > **Dokumen ini adalah "peta" proyek.** Saat pindah ke chat baru, cukup lampirkan dokumen ini + file sampel (script.js, desain.css, Code.gs, script aktivitas, css aktivitas, dan file yang relevan). AI akan langsung memahami arsitektur tanpa perlu membaca semua file.
 >
-> **Versi dokumen:** v3.12 (2026-11-10) — Migrasi TIK1
+> **Versi dokumen:** v3.13 (2026-11-18) — Fitur Ujian Multi-Paket & Anti-Kecurangan
 > **Status migrasi DSI2 + BK6 + TIK1 + TIK4 + BK7:** ✅ LENGKAP
 > **Status fitur Siswa:** ⚠️ Ada isu rollback proteksi URL (ditunda)
 
@@ -127,8 +127,8 @@ Berikut dokumen lengkapnya:
 | `Tamu` | `kode_tamu, sekolah, nama, kelas, waktu_dibuat, waktu_kadaluarsa` | Akun tamu (24 jam) |
 | `Progress` | `user_id, modul, bagian_terakhir, skor_a...skor_f, skor_kuis, nilai_akhir, nama_siswa, status_modul, waktu_update` | Progres belajar |
 | `Guru` | `username, password, nama, sekolah, kontak, status` | Akun guru (v3.5: + kontak, status) |
-| `DaftarUjian` | `id, nama_ujian, file_ujian, token, waktu, tampil_nilai, tampil_pembahasan` | Daftar ujian dan pengaturan (dibuat otomatis oleh GAS) |
-| `Ujian` | `id, waktu, sekolah, nama, kelas, fileUjian, nilai, waktuPengerjaan, jawabanJSON` | Hasil ujian |
+| `DaftarUjian` | `id, nama_ujian, file_ujian, token, waktu, tampil_nilai, tampil_pembahasan, acak_soal, acak_jawaban` | Daftar ujian dan pengaturan (dibuat otomatis oleh GAS) |
+| `Ujian` | `id, waktu, sekolah, nama, kelas, fileUjian, nama_ujian, paket, nilai, waktuPengerjaan, jawabanJSON, logKecurangan, log_readable, status` | Hasil ujian + log kecurangan human-readable |
 
 ### 3.3 Daftar Action API (v3.6)
 
@@ -161,7 +161,7 @@ Berikut dokumen lengkapnya:
 | `simpanUjian` | sekolah, nama, kelas, fileUjian, nilai, waktuPengerjaan, jawabanJSON | `{ok, id, sheet, nilai}` |
 | `listUjian` | — | `{ok, ujian:[{id, nama, pakaiToken}]}` |
 | `verifyTokenUjian` | id, token | `{ok, valid, message}` |
-| `getUjianXML` | id, token | `{ok, nama, xml}` |
+| `getUjianXML` | id, token | `{ok, nama, xml, pengaturan:{waktu, tampilNilai, tampilPembahasan, acakSoal, acakJawaban}}` |
 
 ### 3.4 Aturan Penting Backend
 
@@ -809,6 +809,32 @@ Portal <modul>.html → klik "Materi + Aktivitas"
 - **Modal Sukses:** Menampilkan status "tunggu" + Tombol WhatsApp ke Admin (`wa.me/6285222250973`).
 - **FAB Siswa:** Tombol melayang 🎓 kanan bawah → `daftar.html`.
 
+### 17.4 Fitur Ujian v2 — Multi-Paket & Anti-Kecurangan
+**Arsitektur Multi-Paket:**
+- File XML mendukung tag `<paketList>` berisi multiple `<paket id="A">`, `<paket id="B">`, dst.
+- Backward compatible: XML lama tanpa `<paketList>` otomatis dianggap 1 paket default "A".
+- Pemilihan paket menggunakan **deterministic random** (seed: `userId + ujianId + waktuMulai`). Reload halaman = paket sama. Submit baru = paket baru.
+
+**Pengaturan Acak (via Sheet DaftarUjian & Dashboard Guru):**
+- `acak_soal = 1`: Urutan soal diacak per siswa (Fisher-Yates).
+- `acak_jawaban = 1`: Opsi A/B/C/D diacak per siswa, kunci jawaban otomatis ikut menyesuaikan.
+
+**State Persistence (Anti-Reload):**
+- State ujian (paket, jawaban, index soal, timer, log kecurangan) disimpan di `localStorage` dengan key `duta_ujian_state_v1::<ujianId>::<participantId>`.
+- State dihapus otomatis hanya setelah `kirimKeGAS()` menerima response `ok: true`.
+
+**Anti-Kecurangan (Defense in Depth):**
+1. **Watermark Overlay**: Nama siswa + timestamp transparan di atas soal (update tiap 30 detik).
+2. **Blur Detection**: Catat durasi pindah tab/jendela, tampilkan popup peringatan dengan circle countdown 4 detik.
+3. **Disable Selection & Right-Click**: Blokir copy-paste teks soal dan klik kanan.
+4. **Fullscreen Mode**: Dipicu via "Layar Mulai Ujian" (user gesture) agar tidak diblokir browser. Skip jika PWA standalone.
+5. **Log Kecurangan**: Dikirim ke backend, disimpan di kolom `logKecurangan` (JSON) dan `log_readable` (teks manusia).
+
+**UI Mencocokan (Matching):**
+- Layout 2 kolom (Istilah vs Arti).
+- Interaksi klik-to-pair (klik kiri → klik kanan).
+- Urutan kolom kanan diacak (Fisher-Yates) dan disimpan di state.
+
 ---
 
 ## 18. NILAI & BOBOT
@@ -1025,6 +1051,15 @@ Minimal lampirkan **10 file** ini:
 - `tik2.html` / `tik3.html` / `tik4.html` (contoh portal subfolder).
 - `dsi1.html` / `dsi2.html`.
 - `login.html` + `guru.html` + `daftarguru.html`.
+
+## 📝 CHANGELOG v3.13 (2026-11-18)
+
+### Fitur Ujian Online v2 (Multi-Paket & Anti-Kecurangan)
+- **`ujian/kerjakan.html`**: Parser XML multi-paket (backward compatible), deterministic random, acak soal & opsi, state persistence (localStorage), resume ujian, watermark overlay, blur detection + popup countdown, disable text selection & right-click, fullscreen mode via Layar Mulai, UI mencocokan klik-to-pair 2 kolom.
+- **`ujian/daftarujian.html`**: Fix bug spasi di input nama (pindah ke event `blur`), sembunyikan kartu ujian di mode anonim.
+- **`dashboard/guru.html`**: Tambah checkbox "Acak urutan soal" dan "Acak opsi jawaban" di modal Tambah Soal.
+- **`Code.js` (Backend)**: Tambah kolom `acak_soal`, `acak_jawaban` di `DaftarUjian`. Tambah kolom `nama_ujian`, `paket`, `logKecurangan`, `log_readable`, `status` di `Ujian`. `handleGetUjianXML` kini mengirim `pengaturan.acakSoal` dan `pengaturan.acakJawaban`.
+- **`versi.json`**: Naik ke v1.2.0.
 
 ---
 

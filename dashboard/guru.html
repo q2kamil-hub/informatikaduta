@@ -1715,6 +1715,10 @@
             '<label><input id="ujianPakaiToken" type="checkbox" checked> Gunakan token</label>' +
             '<label><input id="ujianTampilNilai" type="checkbox" checked> Tampilkan nilai setelah ujian</label>' +
             '<label><input id="ujianTampilPembahasan" type="checkbox" checked> Tampilkan pembahasan</label>' +
+            '<div class="ujian-options-acak" style="margin-top:0.5rem;">' +
+            '<label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;"><input id="ujianAcakSoal" type="checkbox" value="1"> <span>Acak urutan soal</span></label>' +
+            '<label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;"><input id="ujianAcakJawaban" type="checkbox" value="1"> <span>Acak opsi jawaban (A/B/C/D)</span></label>' +
+            '</div>' +
           '</div>' +
           '<div id="ujianFormStatus" class="ujian-form-status" role="status" aria-live="polite"></div>';
         const modal = buatModal('➕ Tambah Ujian', bodyHtml,
@@ -1763,7 +1767,9 @@
               token: elPakaiToken.checked ? elToken.value : '',
               waktu: Number(waktu.value),
               tampilNilai: modal.querySelector('#ujianTampilNilai').checked,
-              tampilPembahasan: modal.querySelector('#ujianTampilPembahasan').checked
+              tampilPembahasan: modal.querySelector('#ujianTampilPembahasan').checked,
+              acakSoal: modal.querySelector('#ujianAcakSoal').checked ? 1 : 0,
+              acakJawaban: modal.querySelector('#ujianAcakJawaban').checked ? 1 : 0
             });
             if (!hasil || !hasil.ok) throw new Error((hasil && hasil.error) || 'Server gagal menambahkan ujian.');
             elStatus.textContent = elPakaiToken.checked
@@ -1778,6 +1784,8 @@
             elPakaiToken.disabled = true;
             modal.querySelector('#ujianTampilNilai').disabled = true;
             modal.querySelector('#ujianTampilPembahasan').disabled = true;
+            modal.querySelector('#ujianAcakSoal').disabled = true;
+            modal.querySelector('#ujianAcakJawaban').disabled = true;
           } catch (err) {
             elStatus.textContent = err.message;
             elStatus.className = 'ujian-form-status error';
