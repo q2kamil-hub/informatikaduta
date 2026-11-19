@@ -1301,6 +1301,12 @@
         if (cfg.paketId) infoHtml += '<div>Paket soal: <strong>' + escapeHtml(cfg.paketId) + '</strong></div>';
         infoHtml += '<div>Jumlah soal: <strong>' + jumlahSoal + '</strong></div>';
         infoHtml += '<div>Waktu: <strong>' + (waktuMenit > 0 ? waktuMenit + ' menit' : 'Tanpa batas waktu') + '</strong></div>';
+        const batasPercobaan = cfg.pengaturan && cfg.pengaturan.percobaan ? Number(cfg.pengaturan.percobaan) : 0;
+        if (batasPercobaan > 0) {
+          infoHtml += '<div style="margin-top:0.5rem; color:#ef476f; font-weight:700;">⚠️ Ujian ini dapat dikerjakan maksimal ' + batasPercobaan + ' kali.</div>';
+        } else {
+          infoHtml += '<div style="margin-top:0.5rem; color:#2d7d46;">✅ Ujian ini dapat diulang tanpa batas.</div>';
+        }
         if (cfg.resume) {
           const terjawab = Object.keys(cfg.state.jawabanUser || {}).length;
           infoHtml += '<div style="margin-top:0.5rem;color:#2d7d46;">✅ Progres tersimpan: ' + terjawab + ' jawaban. Kamu bisa melanjutkan.</div>';
@@ -1334,6 +1340,12 @@
         document.getElementById('gridNomor').style.display = '';
         document.getElementById('navTombol').style.display = '';
         document.querySelector('.progres-container').style.display = '';
+        // Simpan deadline saat mulai ujian baru (bukan resume)
+        const waktuMenitStart = cfgMulai.pengaturan && cfgMulai.pengaturan.waktu ? Number(cfgMulai.pengaturan.waktu) : 0;
+        if (waktuMenitStart > 0 && !cfgMulai.resume) {
+          const deadlineStart = Date.now() + (waktuMenitStart * 60000);
+          simpanStateUjian({ deadline: deadlineStart });
+        }
         if (cfgMulai.resume) {
           resumeUjianDariState(cfgMulai.state);
         } else {
@@ -1367,6 +1379,13 @@
           const stateTersimpan = ambilStateUjianTersimpan();
           console.log('[ujian-state] Cek state tersimpan:', !!stateTersimpan);
           if (stateTersimpan && stateTersimpan.paketId && stateTersimpan.soalOrder && stateTersimpan.soalOrder.length > 0) {
+            // Cek deadline sebelum resume
+            const deadline = stateTersimpan.deadline || 0;
+            if (deadline > 0 && Date.now() >= deadline) {
+              console.log('[ujian-deadline] Waktu habis, paksa submit.');
+              selesaiUjian();
+              return;
+            }
             console.log('[ujian-resume] Resume dari state, paket:', stateTersimpan.paketId);
             const parsed = parseXMLUjian(text);
             konfigurasi = parsed.konfigurasi;
@@ -1900,7 +1919,9 @@
               nama_ujian: window.namaUjianAktif || namaUjian,
               logKecurangan: JSON.stringify(logKecurangan),
               logKecuranganHuman: buatLogHumanReadable(logKecurangan),
-              logKecuranganJSON: JSON.stringify(logKecurangan)
+              logKecuranganJSON: JSON.stringify(logKecurangan),
+              user_id: window.ambilUserId ? window.ambilUserId() : '',
+              percobaanMax: (cfgMulai && cfgMulai.pengaturan && cfgMulai.pengaturan.percobaan) ? Number(cfgMulai.pengaturan.percobaan) : 0
             })
           });
           if (!resp.ok) throw new Error('Server gagal menyimpan hasil (HTTP ' + resp.status + ').');
@@ -1919,7 +1940,17 @@
               console.warn('Token ujian tidak dapat dihapus dari session browser:', err.message);
             }
           } else {
-            throw new Error(hasil.error || 'Server menolak penyimpanan hasil.');
+            const errorMsg = hasil.error || 'Server menolak penyimpanan hasil.';
+            if (errorMsg.indexOf('Batas percobaan') !== -1) {
+              window.tampilkanModal({
+                judul: '⚠️ Batas Percobaan Tercapai',
+                pesan: '<p>' + errorMsg + '</p><p style="font-size:0.85rem; color:#7a6656; margin-top:0.5rem;">Silakan hubungi guru jika ingin mengulang.</p>',
+                tombolLanjut: '🏠 Kembali ke Daftar Ujian',
+                onLanjut: function() { window.location.href = '../daftarujian'; }
+              });
+              return;
+            }
+            throw new Error(errorMsg);
           }
         } catch (err) {
           console.error('Gagal mengirim hasil ujian:', err);

@@ -1710,6 +1710,7 @@
             '<div class="form-group"><label for="ujianFile">Nama File Ujian</label><input id="ujianFile" type="text" maxlength="255" required placeholder="contoh_soal.xml"><div class="hint">File XML harus sudah ada di folder Drive ujian.</div></div>' +
             '<div class="form-group"><label for="ujianToken">Token</label><div class="ujian-token-row"><input id="ujianToken" type="text" maxlength="40" pattern="[A-Za-z0-9-]{4,40}" title="4-40 huruf, angka, atau tanda hubung" required><button type="button" class="modal-btn batal" id="ujianTokenBaru">🔄 Buat ulang</button></div><div class="hint">Token dibuat otomatis dan boleh diubah. Kosongkan centang untuk ujian tanpa token.</div></div>' +
             '<div class="form-group"><label for="ujianWaktu">Waktu pengerjaan (menit)</label><input id="ujianWaktu" type="number" min="0" max="1440" step="1" value="60" required><div class="hint">Isi 0 untuk tanpa batas waktu.</div></div>' +
+'<div class="form-group"><label for="ujianPercobaan">Batas Percobaan (0 = Unlimited)</label><input id="ujianPercobaan" type="number" min="0" max="10" value="0" style="width:100px; padding:0.5rem; border:2px solid #e5dbd0; border-radius:8px;"><div class="hint">Isi 0 jika siswa boleh mengulang tanpa batas.</div></div>' +
           '</div>' +
           '<div class="ujian-options">' +
             '<label><input id="ujianPakaiToken" type="checkbox" checked> Gunakan token</label>' +
@@ -1769,7 +1770,8 @@
               tampilNilai: modal.querySelector('#ujianTampilNilai').checked,
               tampilPembahasan: modal.querySelector('#ujianTampilPembahasan').checked,
               acakSoal: modal.querySelector('#ujianAcakSoal').checked ? 1 : 0,
-              acakJawaban: modal.querySelector('#ujianAcakJawaban').checked ? 1 : 0
+              acakJawaban: modal.querySelector('#ujianAcakJawaban').checked ? 1 : 0,
+              percobaan: Number(modal.querySelector('#ujianPercobaan').value) || 0
             });
             if (!hasil || !hasil.ok) throw new Error((hasil && hasil.error) || 'Server gagal menambahkan ujian.');
             elStatus.textContent = elPakaiToken.checked
