@@ -142,19 +142,39 @@
       transform: translateY(-1px);
     }
 
-    .mc-item.mc-selected {
-      background: linear-gradient(135deg, #e0d4ff, #d0c4ff);
-      border-color: #8a4bbf;
-      color: #5c2f8a;
+    /* STATE: MATCHED (Sudah terpasang) */
+    .mc-item.mc-state-matched {
+      background: var(--pair-color, #2d7d46);
+      border-color: var(--pair-color, #2d7d46);
+      color: #ffffff;
       font-weight: 700;
-      box-shadow: 0 0 0 3px rgba(138, 75, 191, 0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    .mc-item.mc-terpasang {
-      background: linear-gradient(135deg, #e0f5e8, #d0edd8);
-      border-color: #4fa86a;
-      color: #1f5f32;
+    /* STATE: SELECTED (Item kiri yang sedang diklik) */
+    .mc-item.mc-state-selected {
+      background: #ffffff;
+      border: 3px solid var(--pair-color, #2d7d46);
+      color: var(--pair-color, #2d7d46);
+      font-weight: 800;
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* STATE: HIGHLIGHT (Item kanan yang tersedia untuk dipasangkan) */
+    .mc-item.mc-state-highlight {
+      background: #ffffff;
+      border: 2px dashed var(--pair-color, #2d7d46);
+      color: var(--pair-color, #2d7d46);
       font-weight: 600;
+      opacity: 0.9;
+    }
+
+    .mc-item.mc-state-highlight:hover {
+      background: var(--pair-color, #2d7d46);
+      color: #ffffff;
+      border-style: solid;
+      opacity: 1;
     }
 
     .mc-status {
@@ -1413,6 +1433,8 @@
         const pasanganUserSekarang = pasanganUser[idSoal] || {};
         const sudahTerjawab = Object.keys(pasanganUserSekarang).length > 0;
 
+        const PALET_WARNA = ['#2d7d46', '#4fb0c6', '#b07be0', '#ff8a5b', '#f26d8a', '#5c7cfa', '#f4b942', '#6ecb8f'];
+
         // Acak urutan item KANAN (Fisher-Yates) atau gunakan urutan yang tersimpan saat resume
         const kananItems = soal.pasangan.map(function(p) { return p.kanan; });
         const savedKananOrder = matchingKananOrderAktif[idSoal];
@@ -1431,9 +1453,11 @@
             [kananItems[i], kananItems[j]] = [kananItems[j], kananItems[i]];
           }
         }
-        // Simpan urutan kanan yang diacak ke state
+        // Simpan urutan kanan yang diacak ke state DAN ke memori
+        const urutanKanan = kananItems.map(function(p) { return p.id; });
+        matchingKananOrderAktif[idSoal] = urutanKanan; // ⬅️ UPDATE VARIABEL MEMORI
         const matchingKananOrderPatch = {};
-        matchingKananOrderPatch[idSoal] = kananItems.map(function(p) { return p.id; });
+        matchingKananOrderPatch[idSoal] = urutanKanan;
         simpanStateUjian({ matchingKananOrder: matchingKananOrderPatch }, { hanyaLog: true });
 
         let html = '<div class="mc-container" data-soal-id="' + escapeHtml(idSoal) + '">';
@@ -1443,11 +1467,24 @@
         // KOLOM KIRI
         html += '<div class="mc-kolom mc-kiri">';
         html += '<div class="mc-label">Istilah</div>';
-        soal.pasangan.forEach(function(p) {
-          const terpasang = Boolean(pasanganUserSekarang[p.kiri.id]);
-          const dipilih = selectedKiri === p.kiri.id && !terpasang;
-          const cls = 'mc-item' + (terpasang ? ' mc-terpasang' : '') + (dipilih ? ' mc-selected' : '');
-          html += '<div class="' + cls + '" data-tindakan="pilih-kiri" data-soal="' + escapeHtml(idSoal) + '" data-kiri-id="' + escapeHtml(p.kiri.id) + '" data-kiri-text="' + escapeHtml(p.kiri.teks) + '">' +
+        soal.pasangan.forEach(function(p, i) {
+          const warna = PALET_WARNA[i % PALET_WARNA.length];
+          const pasanganSekarang = pasanganUser[idSoal] || {};
+          const kananIdTerpasang = pasanganSekarang[p.kiri.id];
+          const isMatched = Boolean(kananIdTerpasang);
+          const isSelected = (selectedKiri === p.kiri.id);
+
+          let stateClass = '';
+          let styleAttr = 'style="--pair-color: ' + warna + ';"';
+
+          if (isMatched) {
+            stateClass = 'mc-state-matched';
+          } else if (isSelected) {
+            stateClass = 'mc-state-selected';
+          }
+
+          html += '<div class="mc-item ' + stateClass + '" ' + styleAttr + ' ' +
+            'data-tindakan="pilih-kiri" data-soal="' + escapeHtml(idSoal) + '" data-kiri-id="' + escapeHtml(p.kiri.id) + '">' +
             escapeHtml(p.kiri.teks) + '</div>';
         });
         html += '</div>';
@@ -1456,10 +1493,47 @@
         html += '<div class="mc-kolom mc-kanan">';
         html += '<div class="mc-label">Arti</div>';
         kananItems.forEach(function(p) {
-          const kiriIdForKanan = Object.keys(pasanganUserSekarang).find(function(k) { return pasanganUserSekarang[k] === p.id; });
-          const terpasang = Boolean(kiriIdForKanan);
-          const cls = 'mc-item' + (terpasang ? ' mc-terpasang' : '') + (selectedKiri && !terpasang ? ' mc-selected' : '');
-          html += '<div class="' + cls + '" data-tindakan="pilih-kanan" data-soal="' + escapeHtml(idSoal) + '" data-kanan-id="' + escapeHtml(p.id) + '" data-kanan-text="' + escapeHtml(p.teks) + '">' +
+          // Cari apakah item kanan ini sudah terpasang dengan kiri mana pun
+          let kiriIdYangMemilikiKananIni = null;
+          let indexPasanganAsli = -1;
+
+          const pasanganSekarang = pasanganUser[idSoal] || {};
+
+          // Cek di pasanganUser
+          for (let kId in pasanganSekarang) {
+            if (pasanganSekarang[kId] === p.id) {
+              kiriIdYangMemilikiKananIni = kId;
+              break;
+            }
+          }
+
+          // Cari index asli di soal.pasangan untuk menentukan warna
+          if (kiriIdYangMemilikiKananIni) {
+            for (let j = 0; j < soal.pasangan.length; j++) {
+              if (soal.pasangan[j].kiri.id === kiriIdYangMemilikiKananIni) {
+                indexPasanganAsli = j;
+                break;
+              }
+            }
+          }
+
+          const warna = PALET_WARNA[indexPasanganAsli % PALET_WARNA.length];
+          const isMatched = Boolean(kiriIdYangMemilikiKananIni);
+
+          // Logic Highlight: Jika ada selectedKiri, dan kanan ini BELUM terpasang, beri highlight
+          const isHighlight = (selectedKiri !== null && !isMatched);
+
+          let stateClass = '';
+          let styleAttr = 'style="--pair-color: ' + warna + ';"';
+
+          if (isMatched) {
+            stateClass = 'mc-state-matched';
+          } else if (isHighlight) {
+            stateClass = 'mc-state-highlight';
+          }
+
+          html += '<div class="mc-item ' + stateClass + '" ' + styleAttr + ' ' +
+            'data-tindakan="pilih-kanan" data-soal="' + escapeHtml(idSoal) + '" data-kanan-id="' + escapeHtml(p.id) + '">' +
             escapeHtml(p.teks) + '</div>';
         });
         html += '</div>';

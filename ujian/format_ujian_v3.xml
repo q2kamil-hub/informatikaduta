@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ujian>
+  <!-- ============================================================
+  FORMAT UJIAN MULTI-PAKET v3 · Informatika DUTA
+  Unggah ke folder Google Drive khusus ujian.
+
+  RINGKASAN
+  - Multi-paket: 1 file XML berisi paket A, B, C, D, dst (minimal 1, maksimal 26: A sampai Z).
+  - Pemilihan paket: jika ada lebih dari 1 paket, setiap siswa otomatis mendapat satu paket
+    berdasarkan hash (userId + ujianId), sehingga siswa yang sama selalu mendapat paket yang sama.
+  - Acak soal dan acak opsi jawaban diatur lewat pengaturan ujian di sheet (acakSoal dan acakJawaban),
+    bukan lewat tag XML. Acak opsi hanya berlaku untuk pilihan_ganda dan pilihan_ganda_kompleks.
+  - Empat tipe soal: pilihan_ganda, pilihan_ganda_kompleks, benar_salah, mencocokan.
+  - File lama tanpa paketList tetap jalan: semua soal di soalList root dianggap paket default "A".
+
+  ============================================================
+  DAFTAR TIPE SOAL DAN FORMAT KUNCI
+
+  | tipe                   | elemen yang dipakai                        | format kunci                    |
+  | pilihan_ganda          | pertanyaan, pilihan (label A,B,C,...)      | Jawaban B                       |
+  | pilihan_ganda_kompleks | pertanyaan, pilihan (label A,B,C,...)      | Jawaban A, C, E (lebih dari 1)  |
+  | benar_salah            | pertanyaan (berupa pernyataan)             | Benar   atau   Salah            |
+  | mencocokan             | pertanyaan, pasangan (item kiri dan kanan) | elemen kunci berisi pasangan    |
+
+  ============================================================
+  ATURAN PENILAIAN (dihitung per soal, lalu dijumlahkan)
+
+  Nilai soal = skor soal × bobot jawaban (bobot 0 sampai 1).
+  Skor soal diambil dari atribut skor; jika atribut skor tidak ditulis, dipakai skorDefault.
+  Soal yang tidak dijawab bernilai 0.
+
+  1) pilihan_ganda dan benar_salah: TIDAK PARSIAL
+     Bobot 1 jika jawaban sama dengan kunci, selain itu 0.
+
+  2) pilihan_ganda_kompleks (PGK): PARSIAL DENGAN PENGURANGAN
+     Bobot = maks(0, jumlah pilihan benar − jumlah pilihan salah) ÷ jumlah kunci.
+     Pilihan benar menambah nilai, pilihan salah mengurangi nilai, hasil tidak pernah negatif.
+     Contoh: skor 4, kunci A, C, E (3 kunci)
+       - pilih A, C, E     → (3 − 0) ÷ 3 = 1,00 → nilai 4,00
+       - pilih A, C        → (2 − 0) ÷ 3 = 0,67 → nilai 2,67
+       - pilih A, C, B     → (2 − 1) ÷ 3 = 0,33 → nilai 1,33
+       - pilih B, D        → maks(0, 0 − 2) = 0 → nilai 0
+       - pilih semua opsi  → (3 − 2) ÷ 3 = 0,33 → nilai 1,33 (menebak semua opsi tidak menguntungkan)
+
+  3) mencocokan: PARSIAL PER PASANGAN
+     Bobot = jumlah pasangan yang benar ÷ jumlah pasangan pada kunci.
+     Tidak ada pengurangan untuk pasangan yang salah.
+     Contoh: skor 6, 4 pasangan
+       - 4 pasangan benar → 4 ÷ 4 = 1,00 → nilai 6,00
+       - 3 pasangan benar → 3 ÷ 4 = 0,75 → nilai 4,50
+       - 1 pasangan benar → 1 ÷ 4 = 0,25 → nilai 1,50
+
+  TIPS MENYUSUN SKOR
+  - Jumlah skor semua soal dalam satu paket sebaiknya sama di setiap paket
+    (misalnya 100) agar nilai antarpaket adil.
+  - Contoh komposisi 30 soal bernilai 100: pilihan ganda 3, benar-salah 2,
+    PGK 4, mencocokan 6 (16 PG + 5 BS + 6 PGK + 3 mencocokan = 100).
+  - ID soal harus unik di dalam satu file (a1, a2, ..., b1, b2, ...).
+  - Gunakan &amp; untuk tanda &, &lt; untuk tanda <, dan &gt; untuk tanda >.
+  ============================================================ -->
+
+  <konfigurasi>
+    <nama>Contoh Ujian Multi-Paket v3</nama>
+    <mapel>Informatika</mapel>
+    <kelas>7</kelas>
+    <waktu>60</waktu>
+    <!-- skorDefault dipakai untuk soal yang tidak punya atribut skor -->
+    <skorDefault>3</skorDefault>
+
+    <!-- acakPaket dan acakOpsi dibaca dari XML tetapi pada halaman kerjakan.html versi saat ini
+         tidak memengaruhi pengacakan (paket dipilih otomatis berdasarkan hash bila ada lebih dari 1 paket;
+         acak opsi mengikuti pengaturan acakJawaban di sheet). Tag dipertahankan demi kompatibilitas. -->
+    <acakPaket>true</acakPaket>
+    <acakOpsi>true</acakOpsi>
+  </konfigurasi>
+
+  <!-- ===========================================================
+  DAFTAR PAKET SOAL
+  Setiap paket berisi soalList sendiri dan boleh memuat semua tipe soal.
+  Jumlah paket bebas (minimal 1, maksimal 26). ID paket harus unik (A, B, C, D, dst).
+  Paket di bawah ini masing-masing memuat satu contoh untuk setiap tipe soal.
+  Tambahkan paket baru dengan menyalin satu blok paket dan mengganti id serta soalnya.
+  ============================================================ -->
+  <paketList>
+
+    <!-- ============ PAKET A ============ -->
+    <paket id="A">
+      <soalList>
+
+        <!-- PILIHAN GANDA: 1 jawaban benar. Nilai penuh atau 0. Kunci: Jawaban X -->
+        <soal id="a1" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Area utama layar tempat ikon-ikon ditampilkan, yang diibaratkan sebagai "meja kerja" digital, disebut ...</pertanyaan>
+          <pilihan label="A">taskbar</pilihan>
+          <pilihan label="B">ikon</pilihan>
+          <pilihan label="C">start menu</pilihan>
+          <pilihan label="D">desktop</pilihan>
+          <kunci>Jawaban D</kunci>
+          <penjelasan>Desktop adalah area utama layar tempat ikon ditampilkan.</penjelasan>
+        </soal>
+
+        <!-- BENAR-SALAH: pertanyaan berupa pernyataan. Nilai penuh atau 0. Kunci: Benar atau Salah -->
+        <soal id="a2" tipe="benar_salah" skor="2">
+          <pertanyaan>Tombol silang (close) pada jendela hanya menyembunyikan aplikasi ke taskbar.</pertanyaan>
+          <kunci>Salah</kunci>
+          <penjelasan>Tombol close menutup aplikasi; yang menyembunyikan ke taskbar adalah minimize.</penjelasan>
+        </soal>
+
+        <!-- PILIHAN GANDA KOMPLEKS: lebih dari 1 jawaban benar. PARSIAL: skor × maks(0, benar − salah) ÷ jumlah kunci.
+             Contoh soal ini (skor 4, kunci A, B, E): pilih A dan B = 2,67; pilih A, B, C = 1,33; pilih C dan D = 0 -->
+        <soal id="a3" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Pilihlah semua alasan yang tepat mengapa GUI mudah digunakan oleh pemula!</pertanyaan>
+          <pilihan label="A">Ikon lebih cepat dikenali daripada tulisan</pilihan>
+          <pilihan label="B">Pengguna tidak perlu menghafal perintah</pilihan>
+          <pilihan label="C">Pengguna harus mengetik perintah dengan tepat</pilihan>
+          <pilihan label="D">GUI hanya dapat dipakai oleh programmer</pilihan>
+          <pilihan label="E">Hasil klik langsung terlihat</pilihan>
+          <kunci>Jawaban A, B, E</kunci>
+          <penjelasan>C adalah ciri antarmuka teks (CLI) dan D keliru karena GUI dirancang untuk semua orang.</penjelasan>
+        </soal>
+
+        <!-- MENCOCOKAN: setiap pasangan berisi 1 item kiri dan 1 item kanan.
+             Kunci berisi pasangan id kiri dan id kanan yang benar.
+             PARSIAL: skor × pasangan benar ÷ jumlah pasangan.
+             Contoh soal ini (skor 6, 4 pasangan): 3 pasangan benar = 4,50; 1 pasangan benar = 1,50 -->
+        <soal id="a4" tipe="mencocokan" skor="6">
+          <pertanyaan>Pasangkan setiap situasi dengan komponen GUI yang tepat!</pertanyaan>
+          <pasangan>
+            <item sisi="kiri" id="k1">Melihat daftar aplikasi yang terpasang</item>
+            <item sisi="kanan" id="v1">Start menu</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k2">Berpindah ke aplikasi yang sedang terbuka</item>
+            <item sisi="kanan" id="v2">Taskbar</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k3">Menaruh file di "meja kerja" layar</item>
+            <item sisi="kanan" id="v3">Desktop</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k4">Area tampilan browser yang terbuka</item>
+            <item sisi="kanan" id="v4">Jendela (window)</item>
+          </pasangan>
+          <kunci>
+            <pasangan kiri="k1" kanan="v1"/>
+            <pasangan kiri="k2" kanan="v2"/>
+            <pasangan kiri="k3" kanan="v3"/>
+            <pasangan kiri="k4" kanan="v4"/>
+          </kunci>
+          <penjelasan>Start menu: daftar aplikasi; taskbar: berpindah aplikasi; desktop: tempat ikon dan file; jendela: area tampilan aplikasi.</penjelasan>
+        </soal>
+
+      </soalList>
+    </paket>
+
+    <!-- ============ PAKET B ============ -->
+    <paket id="B">
+      <soalList>
+
+        <soal id="b1" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Tiga informasi minimal yang sebaiknya ada dalam perkenalan diri pada surel kepada guru adalah ...</pertanyaan>
+          <pilihan label="A">nama lengkap, kelas, dan konteks</pilihan>
+          <pilihan label="B">nama panggilan, alamat rumah, dan nomor HP</pilihan>
+          <pilihan label="C">nama, hobi, dan cita-cita</pilihan>
+          <pilihan label="D">nama, usia, dan asal kota</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>Perkenalan diri minimal berisi nama lengkap, kelas, dan konteks.</penjelasan>
+        </soal>
+
+        <soal id="b2" tipe="benar_salah" skor="2">
+          <pertanyaan>Subjek surel yang baik bersifat singkat, spesifik, dan mengidentifikasi pengirim.</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>Itulah tiga ciri subjek surel yang baik.</penjelasan>
+        </soal>
+
+        <!-- Contoh PGK (skor 4, kunci B, C, E): pilih B dan C = 2,67; pilih B, C, A = 1,33 -->
+        <soal id="b3" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Pilihlah semua unsur yang tepat untuk ada dalam surel formal kepada guru!</pertanyaan>
+          <pilihan label="A">Subjek dikosongkan agar singkat</pilihan>
+          <pilihan label="B">Salam pembuka, misalnya "Yth. Ibu Dewi,"</pilihan>
+          <pilihan label="C">Perkenalan diri berisi nama, kelas, dan konteks</pilihan>
+          <pilihan label="D">Penutup "Udah ya Bu"</pilihan>
+          <pilihan label="E">Salam penutup, misalnya "Hormat saya, [nama]"</pilihan>
+          <kunci>Jawaban B, C, E</kunci>
+          <penjelasan>Subjek harus jelas dan penutup harus hormat, sehingga A dan D keliru.</penjelasan>
+        </soal>
+
+        <!-- Contoh mencocokan dengan 3 pasangan (skor 6): 2 pasangan benar = 4,00 -->
+        <soal id="b4" tipe="mencocokan" skor="6">
+          <pertanyaan>Pasangkan setiap penerima surel dengan salam pembuka yang tepat!</pertanyaan>
+          <pasangan>
+            <item sisi="kiri" id="k1">Kepala sekolah</item>
+            <item sisi="kanan" id="v1">"Yth. Bapak Kepala Sekolah,"</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k2">Ketua OSIS</item>
+            <item sisi="kanan" id="v2">"Yth. Ketua OSIS,"</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k3">Teman sekelas (tugas formal)</item>
+            <item sisi="kanan" id="v3">"Halo Raka,"</item>
+          </pasangan>
+          <kunci>
+            <pasangan kiri="k1" kanan="v1"/>
+            <pasangan kiri="k2" kanan="v2"/>
+            <pasangan kiri="k3" kanan="v3"/>
+          </kunci>
+          <penjelasan>Semakin tinggi jabatan dan semakin formal konteksnya, semakin formal salamnya.</penjelasan>
+        </soal>
+
+      </soalList>
+    </paket>
+
+    <!-- ============ PAKET C ============ -->
+    <paket id="C">
+      <soalList>
+
+        <soal id="c1" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Dimas ingin mencari frasa persis "Indonesia Raya". Cara yang tepat adalah ...</pertanyaan>
+          <pilihan label="A">menambahkan kata "gratis" di belakangnya</pilihan>
+          <pilihan label="B">mengetik semuanya dengan huruf kapital</pilihan>
+          <pilihan label="C">membungkus frasa dengan tanda kutip</pilihan>
+          <pilihan label="D">menghapus kata "Raya"</pilihan>
+          <kunci>Jawaban C</kunci>
+          <penjelasan>Tanda kutip mencari frasa persis.</penjelasan>
+        </soal>
+
+        <soal id="c2" tipe="benar_salah" skor="2">
+          <pertanyaan>Karena berasal dari situs resmi, sebuah informasi pasti selalu benar sehingga tidak perlu diperiksa buktinya.</pertanyaan>
+          <kunci>Salah</kunci>
+          <penjelasan>Sumber resmi tidak selalu benar; buktinya tetap diperiksa.</penjelasan>
+        </soal>
+
+        <!-- Contoh PGK dengan 2 kunci (skor 4, kunci A, C): pilih A saja = 2,00; pilih A, B = 0 -->
+        <soal id="c3" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Pilihlah semua sumber yang cocok dijadikan sumber utama laporan tentang penyebab banjir!</pertanyaan>
+          <pilihan label="A">Jurnal Universitas Indonesia "Analisis Penyebab Banjir 2023"</pilihan>
+          <pilihan label="B">Blog pribadi "Pengalaman Saya Kena Banjir"</pilihan>
+          <pilihan label="C">Situs BMKG "Data Curah Hujan Indonesia"</pilihan>
+          <pilihan label="D">Forum online "Kenapa sih banjir terus?"</pilihan>
+          <kunci>Jawaban A, C</kunci>
+          <penjelasan>Laporan memprioritaskan sumber akademik dan data resmi.</penjelasan>
+        </soal>
+
+        <soal id="c4" tipe="mencocokan" skor="6">
+          <pertanyaan>Pasangkan setiap masalah pencarian dengan strategi kata kunci yang tepat!</pertanyaan>
+          <pasangan>
+            <item sisi="kiri" id="k1">Hasil terlalu luas karena hanya mengetik "makanan"</item>
+            <item sisi="kanan" id="v1">Membuat kata kunci lebih spesifik</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k2">Ingin frasa persis "gotong royong"</item>
+            <item sisi="kanan" id="v2">Memakai tanda kutip</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k3">Ingin jadwal Piala Dunia tahun tertentu</item>
+            <item sisi="kanan" id="v3">Menambahkan konteks</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k4">Ingin hasil hanya dari bps.go.id</item>
+            <item sisi="kanan" id="v4">Memakai operator site:</item>
+          </pasangan>
+          <kunci>
+            <pasangan kiri="k1" kanan="v1"/>
+            <pasangan kiri="k2" kanan="v2"/>
+            <pasangan kiri="k3" kanan="v3"/>
+            <pasangan kiri="k4" kanan="v4"/>
+          </kunci>
+          <penjelasan>Spesifik, tanda kutip, konteks, dan site: adalah empat strategi kata kunci.</penjelasan>
+        </soal>
+
+      </soalList>
+    </paket>
+
+    <!-- PAKET D, E, dst: salin satu blok paket di atas, ganti id paket dan id soal (d1, d2, ...), lalu isi soalnya -->
+
+  </paketList>
+</ujian>

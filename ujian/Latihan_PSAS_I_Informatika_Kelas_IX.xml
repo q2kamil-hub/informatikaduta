@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ujian>
+  <konfigurasi>
+    <nama>Latihan PSAS I Informatika Kelas IX</nama>
+    <mapel>Informatika</mapel>
+    <kelas>8</kelas>
+    <waktu>60</waktu>
+    <skorDefault>3</skorDefault>
+    <acakPaket>true</acakPaket>
+    <acakOpsi>true</acakOpsi>
+  </konfigurasi>
+
+  <paketList>
+    <paket id="A">
+      <soalList>
+
+        <!-- ===== BK2 Berpikir Komputasional ===== -->
+        <soal id="a1" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Panitia pentas seni sekolah membagi pekerjaan menjadi seksi acara, konsumsi, dekorasi, dan dokumentasi agar setiap kelompok mengerjakan bagian yang lebih kecil. Langkah panitia ini termasuk pilar berpikir komputasional ...</pertanyaan>
+          <pilihan label="A">pengenalan pola</pilihan>
+          <pilihan label="B">dekomposisi</pilihan>
+          <pilihan label="C">abstraksi</pilihan>
+          <pilihan label="D">algoritma</pilihan>
+          <kunci>Jawaban B</kunci>
+          <penjelasan>Memecah masalah besar menjadi bagian-bagian kecil adalah dekomposisi.</penjelasan>
+        </soal>
+
+        <soal id="a2" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Rani mencatat bahwa setiap Senin, Rabu, dan Jumat gorengan di kantin habis pukul 09.30, sedangkan hari lain masih tersisa. Rani lalu menyiapkan lebih banyak gorengan pada tiga hari tersebut. Kemampuan Rani menemukan keteraturan ini disebut ...</pertanyaan>
+          <pilihan label="A">dekomposisi</pilihan>
+          <pilihan label="B">algoritma</pilihan>
+          <pilihan label="C">pengenalan pola</pilihan>
+          <pilihan label="D">abstraksi</pilihan>
+          <kunci>Jawaban C</kunci>
+          <penjelasan>Menemukan keteraturan yang berulang adalah pengenalan pola.</penjelasan>
+        </soal>
+
+        <soal id="a3" tipe="benar_salah" skor="2">
+          <pertanyaan>Abstraksi berarti menyembunyikan atau mengabaikan detail yang tidak penting dan hanya mengambil informasi yang relevan untuk menyelesaikan masalah.</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>Itulah inti abstraksi, misalnya denah sekolah yang hanya memuat ruangan dan jalur.</penjelasan>
+        </soal>
+
+        <!-- ===== BK3 Mesin Komputasi ===== -->
+        <soal id="a4" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Mamat memasukkan uang Rp5.000 ke mesin penjual minuman otomatis, lalu menekan tombol "teh". Mesin mengeluarkan teh botol dan kembalian Rp1.000. Yang berperan sebagai input pada mesin tersebut adalah ...</pertanyaan>
+          <pilihan label="A">teh botol</pilihan>
+          <pilihan label="B">kembalian Rp1.000</pilihan>
+          <pilihan label="C">mekanisme di dalam mesin</pilihan>
+          <pilihan label="D">uang Rp5.000 dan tombol "teh"</pilihan>
+          <kunci>Jawaban D</kunci>
+          <penjelasan>Input adalah yang dimasukkan ke mesin; teh dan kembalian adalah output, mekanisme dalam mesin adalah proses.</penjelasan>
+        </soal>
+
+        <soal id="a5" tipe="benar_salah" skor="2">
+          <pertanyaan>Sebuah mesin komputasi memiliki aturan: kalikan input dengan 2, lalu tambahkan 3. Jika Dika memasukkan angka 5, maka outputnya adalah 15.</pertanyaan>
+          <kunci>Salah</kunci>
+          <penjelasan>(5 x 2) + 3 = 13, bukan 15.</penjelasan>
+        </soal>
+
+        <soal id="a6" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Pilihlah semua pernyataan yang benar tentang konsep "kotak hitam" (black box) pada fungsi!</pertanyaan>
+          <pilihan label="A">Pengguna cukup mengetahui input dan output tanpa perlu tahu isi prosesnya</pilihan>
+          <pilihan label="B">Pengguna wajib memahami proses di dalam sebelum dapat memakainya</pilihan>
+          <pilihan label="C">Input yang sama pada fungsi yang sama menghasilkan output yang sama</pilihan>
+          <pilihan label="D">Kotak hitam tidak memiliki aturan proses apa pun</pilihan>
+          <pilihan label="E">Cara kerja kotak hitam dapat ditebak dengan mencoba beberapa input dan mengamati outputnya</pilihan>
+          <kunci>Jawaban A, C, E</kunci>
+          <penjelasan>B dan D keliru: pengguna tidak wajib tahu proses, dan kotak hitam tetap memiliki aturan proses yang tersembunyi.</penjelasan>
+        </soal>
+
+        <!-- ===== BK4 Himpunan ===== -->
+        <soal id="a7" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Di kelas VIII A terdapat 30 siswa. Sebanyak 18 siswa mengikuti Pramuka, 15 siswa mengikuti PMR, dan 7 siswa mengikuti keduanya. Banyak siswa yang mengikuti Pramuka atau PMR adalah ...</pertanyaan>
+          <pilihan label="A">26</pilihan>
+          <pilihan label="B">33</pilihan>
+          <pilihan label="C">22</pilihan>
+          <pilihan label="D">15</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>18 + 15 - 7 = 26 (n(P gabung M) = n(P) + n(M) - n(P irisan M)).</penjelasan>
+        </soal>
+
+        <soal id="a8" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Siswa yang menyukai basket: {Ali, Budi, Cici, Dedi}. Siswa yang menyukai voli: {Cici, Dedi, Eka}. Siswa yang menyukai basket tetapi tidak menyukai voli adalah ...</pertanyaan>
+          <pilihan label="A">{Cici, Dedi}</pilihan>
+          <pilihan label="B">{Eka}</pilihan>
+          <pilihan label="C">{Ali, Budi}</pilihan>
+          <pilihan label="D">{Ali, Budi, Cici, Dedi, Eka}</pilihan>
+          <kunci>Jawaban C</kunci>
+          <penjelasan>Ini selisih basket - voli = {Ali, Budi}.</penjelasan>
+        </soal>
+
+        <soal id="a9" tipe="benar_salah" skor="2">
+          <pertanyaan>Sebuah lomba mensyaratkan peserta menguasai Python dan HTML. Himpunan peserta yang memenuhi syarat dimodelkan dengan operasi gabungan (union) himpunan penguasa Python dan himpunan penguasa HTML.</pertanyaan>
+          <kunci>Salah</kunci>
+          <penjelasan>Kata "dan" (AND) berpadanan dengan irisan, bukan gabungan.</penjelasan>
+        </soal>
+
+        <!-- ===== BK5 Representasi Data ===== -->
+        <soal id="a10" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Seorang agen rahasia menerima pesan sandi berupa bilangan biner 1101. Nilai desimal dari sandi tersebut adalah ...</pertanyaan>
+          <pilihan label="A">11</pilihan>
+          <pilihan label="B">13</pilihan>
+          <pilihan label="C">14</pilihan>
+          <pilihan label="D">15</pilihan>
+          <kunci>Jawaban B</kunci>
+          <penjelasan>1x8 + 1x4 + 0x2 + 1x1 = 13.</penjelasan>
+        </soal>
+
+        <soal id="a11" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Tim agen rahasia memeriksa hasil konversi bilangan dari beberapa anggota. Pilihlah semua konversi yang benar!</pertanyaan>
+          <pilihan label="A">1010 (biner) = 10 (desimal)</pilihan>
+          <pilihan label="B">111 (biner) = 8 (desimal)</pilihan>
+          <pilihan label="C">100 (biner) = 3 (desimal)</pilihan>
+          <pilihan label="D">12 (oktal) = 1010 (biner)</pilihan>
+          <pilihan label="E">25 (desimal) = 11001 (biner)</pilihan>
+          <kunci>Jawaban A, D, E</kunci>
+          <penjelasan>111 (biner) = 7 dan 100 (biner) = 4. Untuk D: 1 = 001 dan 2 = 010, sehingga 001010 = 1010.</penjelasan>
+        </soal>
+
+        <soal id="a12" tipe="benar_salah" skor="2">
+          <pertanyaan>Komputer menggunakan sistem biner karena perangkat elektroniknya pada dasarnya hanya mengenali dua kondisi, yaitu ada arus dan tidak ada arus.</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>Dua kondisi tersebut dilambangkan dengan 1 dan 0.</penjelasan>
+        </soal>
+
+        <!-- ===== BK6 Tumpukan (Stack) ===== -->
+        <soal id="a13" tipe="benar_salah" skor="2">
+          <pertanyaan>Operasi pop pada tumpukan (stack) mengambil sekaligus menghapus elemen yang berada paling bawah.</pertanyaan>
+          <kunci>Salah</kunci>
+          <penjelasan>Pop mengambil dan menghapus elemen paling atas (top).</penjelasan>
+        </soal>
+
+        <soal id="a14" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Di kantin, nampan A diletakkan pertama pada tumpukan, disusul nampan B, lalu nampan C. Seorang siswa mengambil satu nampan. Nampan yang terambil dan prinsip yang berlaku adalah ...</pertanyaan>
+          <pilihan label="A">nampan A, FIFO</pilihan>
+          <pilihan label="B">nampan B, LIFO</pilihan>
+          <pilihan label="C">nampan C, LIFO</pilihan>
+          <pilihan label="D">nampan C, FIFO</pilihan>
+          <kunci>Jawaban C</kunci>
+          <penjelasan>Yang terakhir diletakkan diambil lebih dahulu (LIFO).</penjelasan>
+        </soal>
+
+        <soal id="a15" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Sebuah stack awalnya kosong. Dijalankan operasi berurutan: push(5), push(8), pop, push(3), push(7), pop. Elemen top setelah semua operasi selesai adalah ...</pertanyaan>
+          <pilihan label="A">5</pilihan>
+          <pilihan label="B">3</pilihan>
+          <pilihan label="C">7</pilihan>
+          <pilihan label="D">8</pilihan>
+          <kunci>Jawaban B</kunci>
+          <penjelasan>Isi stack: [5], [5,8], [5], [5,3], [5,3,7], lalu [5,3]. Top = 3.</penjelasan>
+        </soal>
+
+        <soal id="a16" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Sebuah program memakai stack berkapasitas 4 elemen dan saat ini sudah berisi 4 elemen. Program kemudian menjalankan operasi push lagi. Kondisi yang terjadi adalah ...</pertanyaan>
+          <pilihan label="A">stack overflow</pilihan>
+          <pilihan label="B">stack underflow</pilihan>
+          <pilihan label="C">stack empty</pilihan>
+          <pilihan label="D">stack top</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>Menambah elemen ke stack yang penuh menyebabkan overflow.</penjelasan>
+        </soal>
+
+        <soal id="a17" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Di aplikasi pengolah kata, Nita mengetik "Halo", lalu "dunia", lalu "!". Setelah itu ia menekan Undo (Ctrl+Z) satu kali. Bagian yang terhapus adalah ...</pertanyaan>
+          <pilihan label="A">"Halo"</pilihan>
+          <pilihan label="B">"dunia"</pilihan>
+          <pilihan label="C">"Halo dunia!"</pilihan>
+          <pilihan label="D">"!"</pilihan>
+          <kunci>Jawaban D</kunci>
+          <penjelasan>Undo membatalkan aksi terakhir, seperti pop pada stack riwayat aksi.</penjelasan>
+        </soal>
+
+        <soal id="a18" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Rafi membuka halaman web berurutan: A, lalu B, lalu C, lalu D. Ia menekan tombol Back sebanyak dua kali. Halaman yang tampil adalah ...</pertanyaan>
+          <pilihan label="A">halaman B</pilihan>
+          <pilihan label="B">halaman A</pilihan>
+          <pilihan label="C">halaman C</pilihan>
+          <pilihan label="D">halaman D</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>Back pertama: D ke C. Back kedua: C ke B.</penjelasan>
+        </soal>
+
+        <soal id="a19" tipe="benar_salah" skor="2">
+          <pertanyaan>Program kasir menumpuk struk transaksi dalam sebuah stack. Ketika tumpukan sudah kosong, program tetap menjalankan operasi pop sehingga muncul pesan kesalahan stack underflow. Kesalahan ini wajar terjadi karena tidak ada elemen yang dapat diambil.</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>Pop pada stack kosong menyebabkan underflow.</penjelasan>
+        </soal>
+
+        <soal id="a20" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Bu Guru meminta siswa mencari contoh kehidupan sehari-hari yang menerapkan prinsip stack (LIFO). Pilihlah semua contoh yang tepat!</pertanyaan>
+          <pilihan label="A">Antrean membeli tiket kereta</pilihan>
+          <pilihan label="B">Tombol Undo pada aplikasi pengolah kata</pilihan>
+          <pilihan label="C">Tombol Back pada peramban (browser)</pilihan>
+          <pilihan label="D">Antrean dokumen yang dicetak oleh printer</pilihan>
+          <pilihan label="E">Pakaian dalam koper yang dimasukkan satu per satu, lalu diambil dari yang terakhir dimasukkan</pilihan>
+          <kunci>Jawaban B, C, E</kunci>
+          <penjelasan>A dan D bersifat FIFO (antrean).</penjelasan>
+        </soal>
+
+        <soal id="a21" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Sebuah stack awalnya kosong, lalu dijalankan: push(A), push(B), push(C), pop, push(D). Pilihlah semua pernyataan yang benar tentang kondisi stack akhir!</pertanyaan>
+          <pilihan label="A">Elemen C masih berada di dalam stack</pilihan>
+          <pilihan label="B">Elemen top adalah D</pilihan>
+          <pilihan label="C">Stack berisi empat elemen</pilihan>
+          <pilihan label="D">Elemen B berada di antara A dan D</pilihan>
+          <pilihan label="E">Stack berisi tiga elemen</pilihan>
+          <kunci>Jawaban B, D, E</kunci>
+          <penjelasan>Isi akhir dari bawah ke atas: A, B, D.</penjelasan>
+        </soal>
+
+        <soal id="a22" tipe="mencocokan" skor="6">
+          <pertanyaan>Pasangkan setiap situasi pada tumpukan piring di warung makan dengan operasi stack yang tepat!</pertanyaan>
+          <pasangan>
+            <item sisi="kiri" id="k1">Menaruh piring bersih baru di atas tumpukan</item>
+            <item sisi="kanan" id="v1">Push</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k2">Mengambil piring paling atas dan mengeluarkannya dari tumpukan</item>
+            <item sisi="kanan" id="v2">Pop</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k3">Melihat piring paling atas tanpa mengambilnya</item>
+            <item sisi="kanan" id="v3">Top (Peek)</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k4">Memeriksa apakah sudah tidak ada piring sama sekali</item>
+            <item sisi="kanan" id="v4">Empty</item>
+          </pasangan>
+          <kunci>
+            <pasangan kiri="k1" kanan="v1"/>
+            <pasangan kiri="k2" kanan="v2"/>
+            <pasangan kiri="k3" kanan="v3"/>
+            <pasangan kiri="k4" kanan="v4"/>
+          </kunci>
+          <penjelasan>Push menambah, pop mengambil dan menghapus, top hanya melihat, empty memeriksa kekosongan.</penjelasan>
+        </soal>
+
+        <!-- ===== BK7 Pohon dan Jaringan ===== -->
+        <soal id="a23" tipe="benar_salah" skor="2">
+          <pertanyaan>Pohon (tree) adalah jaringan (graph) yang tidak memiliki siklus.</pertanyaan>
+          <kunci>Benar</kunci>
+          <penjelasan>Pohon adalah graf terhubung tanpa siklus.</penjelasan>
+        </soal>
+
+        <soal id="a24" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Pak Anton memiliki dua anak, Budi dan Citra. Budi memiliki dua anak, Dedi dan Eka. Jika silsilah ini digambar dengan titik dan garis, strukturnya adalah ...</pertanyaan>
+          <pilihan label="A">graf yang memiliki siklus</pilihan>
+          <pilihan label="B">pohon dengan Anton sebagai akar</pilihan>
+          <pilihan label="C">pohon dengan Dedi sebagai akar</pilihan>
+          <pilihan label="D">bukan pohon karena Budi memiliki dua cabang</pilihan>
+          <kunci>Jawaban B</kunci>
+          <penjelasan>Anton adalah simpul paling atas (akar), dan tidak ada siklus.</penjelasan>
+        </soal>
+
+        <soal id="a25" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Struktur folder di laptop Sinta: folder Dokumen berisi folder Tugas dan Foto; folder Tugas berisi folder Informatika dan Matematika. Jika Dokumen adalah akar, banyak daun (simpul tanpa anak) adalah ...</pertanyaan>
+          <pilihan label="A">1</pilihan>
+          <pilihan label="B">2</pilihan>
+          <pilihan label="C">4</pilihan>
+          <pilihan label="D">3</pilihan>
+          <kunci>Jawaban D</kunci>
+          <penjelasan>Daun: Informatika, Matematika, dan Foto.</penjelasan>
+        </soal>
+
+        <soal id="a26" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Peta jalan sederhana: Rumah (R), Pasar (P), Jembatan (J), dan Sekolah (S). Jalan yang ada: R-P, R-J, P-S, dan J-S. Struktur ini bukan pohon karena ...</pertanyaan>
+          <pilihan label="A">jumlah simpulnya hanya empat</pilihan>
+          <pilihan label="B">garis penghubungnya tidak memiliki arah</pilihan>
+          <pilihan label="C">ada dua jalur berbeda dari R ke S sehingga terbentuk siklus</pilihan>
+          <pilihan label="D">tidak ada simpul yang menjadi akar</pilihan>
+          <kunci>Jawaban C</kunci>
+          <penjelasan>Siklus R-P-S-J-R membuatnya hanya berupa graf, bukan pohon.</penjelasan>
+        </soal>
+
+        <soal id="a27" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Seorang admin ingin menghubungkan 5 komputer di lab agar semuanya saling terhubung dengan jumlah kabel paling sedikit dan tanpa membentuk lingkaran. Struktur yang terbentuk dan jumlah kabelnya adalah ...</pertanyaan>
+          <pilihan label="A">pohon, 4 kabel</pilihan>
+          <pilihan label="B">graf dengan siklus, 5 kabel</pilihan>
+          <pilihan label="C">pohon, 5 kabel</pilihan>
+          <pilihan label="D">graf dengan siklus, 10 kabel</pilihan>
+          <kunci>Jawaban A</kunci>
+          <penjelasan>Pohon dengan n simpul memiliki n - 1 sisi, jadi 5 - 1 = 4 kabel.</penjelasan>
+        </soal>
+
+        <soal id="a28" tipe="pilihan_ganda" skor="3">
+          <pertanyaan>Sebuah aplikasi navigasi harus menampilkan beberapa rute alternatif dari rumah ke bandara, dan sebuah persimpangan bisa dicapai lewat beberapa jalan. Struktur data yang paling tepat untuk memodelkan peta jalan ini adalah ...</pertanyaan>
+          <pilihan label="A">tumpukan (stack)</pilihan>
+          <pilihan label="B">pohon (tree)</pilihan>
+          <pilihan label="C">antrean (queue)</pilihan>
+          <pilihan label="D">jaringan (graph)</pilihan>
+          <kunci>Jawaban D</kunci>
+          <penjelasan>Ada banyak jalur dan boleh ada siklus, sehingga cocok dimodelkan dengan jaringan (graph).</penjelasan>
+        </soal>
+
+        <soal id="a29" tipe="benar_salah" skor="2">
+          <pertanyaan>Struktur organisasi OSIS: Ketua membawahi Sekretaris dan Bendahara. Kemudian ditambahkan garis langsung antara Sekretaris dan Bendahara sehingga terbentuk lingkaran Ketua-Sekretaris-Bendahara. Struktur ini tetap termasuk pohon.</pertanyaan>
+          <kunci>Salah</kunci>
+          <penjelasan>Garis tambahan membentuk siklus, sehingga menjadi graf biasa.</penjelasan>
+        </soal>
+
+        <soal id="a30" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Dimas menggambar struktur folder komputernya dalam bentuk titik dan garis, dan ternyata strukturnya berupa pohon. Pilihlah semua ciri pohon yang benar!</pertanyaan>
+          <pilihan label="A">Memiliki satu simpul akar</pilihan>
+          <pilihan label="B">Boleh memiliki siklus</pilihan>
+          <pilihan label="C">Setiap simpul selain akar memiliki tepat satu induk</pilihan>
+          <pilihan label="D">Tidak memiliki siklus</pilihan>
+          <pilihan label="E">Dua simpul dapat dihubungkan oleh dua jalur berbeda</pilihan>
+          <kunci>Jawaban A, C, D</kunci>
+          <penjelasan>B dan E keliru karena pohon tidak memiliki siklus sehingga hanya ada satu jalur antara dua simpul.</penjelasan>
+        </soal>
+
+        <soal id="a31" tipe="pilihan_ganda_kompleks" skor="4">
+          <pertanyaan>Jaringan transportasi sebuah kota memiliki jalur: A-B, B-C, C-D, D-A, dan B-D. Pilihlah semua pernyataan yang benar!</pertanyaan>
+          <pilihan label="A">Struktur ini adalah pohon</pilihan>
+          <pilihan label="B">Struktur ini adalah graf (jaringan)</pilihan>
+          <pilihan label="C">Terdapat siklus A-B-D-A</pilihan>
+          <pilihan label="D">Dari A ke C hanya ada satu jalur</pilihan>
+          <pilihan label="E">Jika jalur D-A ditiadakan, A masih dapat mencapai D melalui B</pilihan>
+          <kunci>Jawaban B, C, E</kunci>
+          <penjelasan>A salah karena ada siklus; D salah karena ada jalur A-B-C dan A-D-C.</penjelasan>
+        </soal>
+
+        <soal id="a32" tipe="mencocokan" skor="6">
+          <pertanyaan>Pasangkan setiap situasi pada silsilah keluarga dan peta jalan dengan istilah yang tepat!</pertanyaan>
+          <pasangan>
+            <item sisi="kiri" id="k1">Anggota paling atas pada silsilah keluarga yang tidak memiliki orang tua dalam bagan</item>
+            <item sisi="kanan" id="v1">Akar (root)</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k2">Anggota keluarga dalam bagan yang tidak memiliki anak</item>
+            <item sisi="kanan" id="v2">Daun (leaf)</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k3">Titik yang mewakili sebuah kota pada peta jalan</item>
+            <item sisi="kanan" id="v3">Simpul (node)</item>
+          </pasangan>
+          <pasangan>
+            <item sisi="kiri" id="k4">Garis yang menghubungkan dua kota pada peta jalan</item>
+            <item sisi="kanan" id="v4">Sisi (edge)</item>
+          </pasangan>
+          <kunci>
+            <pasangan kiri="k1" kanan="v1"/>
+            <pasangan kiri="k2" kanan="v2"/>
+            <pasangan kiri="k3" kanan="v3"/>
+            <pasangan kiri="k4" kanan="v4"/>
+          </kunci>
+          <penjelasan>Akar: simpul teratas; daun: simpul tanpa anak; simpul: titik; sisi: garis penghubung.</penjelasan>
+        </soal>
+
+      </soalList>
+    </paket>
+  </paketList>
+</ujian>

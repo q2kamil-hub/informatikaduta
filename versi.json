@@ -1,5 +1,5 @@
 {
-  "versi": "1.3.0",
+  "versi": "1.3.1",
   "daftarFile": [
     "script.js",
     "sw.js",
@@ -9,5 +9,5 @@
     "ujian/daftarujian.html",
     "ujian/kerjakan.html"
   ],
-  "pesanUpdate": "Fitur Ujian Online v3: penilaian pilihan_ganda_kompleks diubah dari all-or-nighting menjadi parsial dengan formula (benar - salah) / total kunci (tidak negatif), review menampilkan detail Benar/Salah/Parsial persen, dan berbagai perbaikan UI."
+  "pesanUpdate": "Fitur Ujian Online v3.1: Color-Coded Pairs untuk soal Mencocokan (setiap pasangan warna unik berdasarkan urutan, state Matched/Selected/Highlight via CSS variable --pair-color), dan fix bug posisi opsi kanan berubah setiap render ulang (matchingKananOrderAktif kini diupdate di memori)."
 }
